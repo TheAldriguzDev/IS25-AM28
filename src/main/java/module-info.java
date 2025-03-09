@@ -6,4 +6,6 @@ module it.polimi.ingsw.is25am28 {
 
     opens it.polimi.ingsw.is25am28 to javafx.fxml;
     exports it.polimi.ingsw.is25am28;
+    exports it.polimi.ingsw.is25am28.exceptions;
+    opens it.polimi.ingsw.is25am28.exceptions to javafx.fxml;
 }
