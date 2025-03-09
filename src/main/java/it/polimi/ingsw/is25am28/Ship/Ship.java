@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Ship;
 
+import it.polimi.ingsw.is25am28.Cargo;
 import it.polimi.ingsw.is25am28.Component;
 import it.polimi.ingsw.is25am28.exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.exceptions.OutOfGridException;
@@ -60,7 +61,7 @@ public class Ship {
     // TODO: Errors are due to the missing implementation of the Cargo class
     // Returns a list of all the Cargo onboard of the ship
     public List<Cargo> getAllCargo() {
-        List<Cargo> cargoList = new List<Cargo>();
+        List<Cargo> cargoList = new ArrayList<Cargo>();
 
         traverse(
             (Component c) -> {
