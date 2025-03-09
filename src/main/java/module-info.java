@@ -8,4 +8,6 @@ module it.polimi.ingsw.is25am28 {
     exports it.polimi.ingsw.is25am28;
     exports it.polimi.ingsw.is25am28.exceptions;
     opens it.polimi.ingsw.is25am28.exceptions to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.Ship;
+    opens it.polimi.ingsw.is25am28.Ship to javafx.fxml;
 }

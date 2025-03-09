@@ -1,5 +1,6 @@
-package it.polimi.ingsw.is25am28;
+package it.polimi.ingsw.is25am28.Ship;
 
+import it.polimi.ingsw.is25am28.Component;
 import it.polimi.ingsw.is25am28.exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.exceptions.OutOfGridException;
 
