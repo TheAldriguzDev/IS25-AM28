@@ -19,8 +19,9 @@ public class Ship {
     // Ship constructor
     public Ship(Component[][] components, Component core) {
         this.components = components;
-        this.energy = 0;
         this.core = core;
+        this.setEnergy();
+        this.setProtectedSides();
     }
 
     // Traverses the ship's grid in search of Component::Engine
