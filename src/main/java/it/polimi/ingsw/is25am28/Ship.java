@@ -5,23 +5,25 @@ import it.polimi.ingsw.is25am28.exceptions.OutOfGridException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.function.Consumer;
 
 public class Ship {
     private int energy;
-    private boolean[] protectedSides;
-    final private Component[][] components;
-    private Component core;
-    // TODO: Read the TODOs below in "getComponent" method about the use of these two attributes
-    private int grid_rows;
-    private int grid_cols;
+    private final boolean[] protectedSides;
+    private final Component[][] components;
+    // TODO: Find an optimal value for grid_size (I don't know how big the level II ship is, but this surely captures it)
+    // NOTE: The grid MUST be a square matrix with ODD side length, otherwise
+    //       the core position is ambiguous (must be chosen between two cells)
+    private final int grid_size = 7;
 
     // Ship constructor
-    public Ship(Component[][] components, Component core) {
-        this.components = components;
-        this.core = core;
-        this.setEnergy();
-        this.setProtectedSides();
+    public Ship() {
+        this.components = new Component[grid_size][grid_size];
+        // TODO: Implement the following instruction when the Component::Cabin is implemented
+        // TODO: such that the first component inserted in the ship's grid is the core.
+        // this.addComponent(new Cabin(inhabitants=[human, human], isCore=true));
+        this.energy = 0;
+        this.protectedSides = new boolean[4];
     }
 
     // Traverses the ship's grid in search of Component::Engine
@@ -30,10 +32,10 @@ public class Ship {
         int enginePower = 0;
 
         traverse(
-                (Component c) -> {
-                    // if (c.type == "engine") { enginePower += c.getEnginePower(); }
-                    return 0;   // Here just to remove errors
-                }
+            (Component c) -> {
+                // TODO: Implement once Component::Engine is implemented
+                // if (c.type == "engine") { enginePower += c.getEnginePower(); }
+            }
         );
 
         return enginePower;
@@ -45,13 +47,36 @@ public class Ship {
         int firePower = 0;
 
         traverse(
-                (Component c) -> {
-                    // if (c.type == "cannon") { firePower += c.getFirePower(); }
-                    return 0;   // Here just to remove errors
-                }
+            (Component c) -> {
+                // TODO: Implement once Component::Cannon is implemented
+                // if (c.type == "cannon") { firePower += c.getFirePower(); }
+            }
         );
 
         return firePower;
+    }
+
+    // TODO: Errors are due to the missing implementation of the Cargo class
+    // Returns a list of all the Cargo onboard of the ship
+    public List<Cargo> getAllCargo() {
+        List<Cargo> cargoList = new List<Cargo>();
+
+        traverse(
+            (Component c) -> {
+                // TODO: Implement once Component::Storage is implemented
+                // if (c.type == "storage") { cargoList.add(c.getCargo()); }
+            }
+        );
+
+        return cargoList;
+    }
+
+    // TODO: Errors are due to the missing implementation of the Cargo class
+    // Returns the total value of all the Cargo onboard the ship
+    public int getAllCargoValue() {
+        return this.getAllCargo().stream()
+                .mapToInt(c -> c.getValue())
+                .sum();
     }
 
     // Traverses the ship's grid in search of Component::Shield
@@ -59,10 +84,10 @@ public class Ship {
     // as booleans inside the protectedSides attribute array
     public void setProtectedSides() {
         traverse(
-                (Component c) -> {
-                    // if (c.type == "shield") { // Update protectedSides based on shield orientation }
-                    return 0;   // Here just to remove errors
-                }
+            (Component c) -> {
+                // TODO: Implement once Component::Shield is implemented
+                // if (c.type == "shield") { // Update protectedSides based on shield orientation }
+            }
         );
     }
 
@@ -71,56 +96,54 @@ public class Ship {
     // combined are storing into the energy attribute
     public void setEnergy() {
         traverse(
-                (Component c) -> {
-                    // if (c.type == "battery") { this.energy += c.getStoredEnergy();}
-                    return 0;   // Here just to remove errors
-                }
+            (Component c) -> {
+                // TODO: Implement once Component::Battery is implemented
+                // if (c.type == "battery") { this.energy += c.getStoredEnergy();}
+            }
         );
     }
 
     // TODO: Discuss about the return type of the "traverse" method (since it uses lambdas, it needs to output something)
     // Applies lambda function to apply to each component found in the ship
     // by exploring its grid using an adapted version of the BFS algorithm
-    public <R> void traverse(Function<Component, R> lambda) throws NullPointerException {
+    public void traverse(Consumer<Component> lambda) {
         List<Component> currLayer = new ArrayList<Component>();
         List<Component> nextLayer = new ArrayList<Component>();
         List<Component> alreadyChecked = new ArrayList<Component>();
         Component[] neighbours;
         boolean borderReached;
 
-        if (components == null) {
-            throw new NullPointerException("Ship's component grid is null. Can't apply given lambda function.");
-        }
-        else {
-            // Starting the expansion from the core of the ship
-            currLayer.add(core);
-            borderReached = false;
+        // Starting the expansion from the core of the ship, which is
+        // positioned at coordinates (grid_size/2, grid_size/2)
+        currLayer.add(components[grid_size / 2][grid_size / 2]);
+        borderReached = false;
 
-            while (!borderReached) {
-                borderReached = true;
-                for (Component currComp : currLayer) {
-                    lambda.apply(currComp);
-                    neighbours = getNearestComponents(currComp);
-                    alreadyChecked.add(currComp);
+        while (!borderReached) {
+            borderReached = true;
+            for (Component currComp : currLayer) {
+                // Applying the lambda to currComp
+                lambda.accept(currComp);
 
-                    // Creating the nextLayer list of components for next iteration
-                    // by populating it with the neighbours of each component in
-                    // found in the currLayer list, except the ones that are already there
-                    // (avoids overlapping) or were already checked (avoids backtracking)
-                    for (int i = 0; i < 3; i++) {
-                        //      !nextLayer.contains(neighbours[i]) ==> Avoids overlapping
-                        // !alreadyChecked.contains(neighbours[i]) ==> Avoids backtracking
-                        if (!nextLayer.contains(neighbours[i]) && !alreadyChecked.contains(neighbours[i])) {
-                            nextLayer.add(neighbours[i]);
-                            borderReached = false;
-                        }
+                neighbours = getNearestComponents(currComp);
+                alreadyChecked.add(currComp);
+
+                // Creating the nextLayer list of components for next iteration
+                // by populating it with the neighbours of each component in
+                // found in the currLayer list, except the ones that are already there
+                // (avoids overlapping) or were already checked (avoids backtracking)
+                for (int i = 0; i < 3; i++) {
+                    //      !nextLayer.contains(neighbours[i]) ==> Avoids overlapping
+                    // !alreadyChecked.contains(neighbours[i]) ==> Avoids backtracking
+                    if (!nextLayer.contains(neighbours[i]) && !alreadyChecked.contains(neighbours[i])) {
+                        nextLayer.add(neighbours[i]);
+                        borderReached = false;
                     }
                 }
+            }
 
-                if (!borderReached) {
-                    currLayer = nextLayer;
-                    nextLayer = new ArrayList<Component>();
-                }
+            if (!borderReached) {
+                currLayer = nextLayer;
+                nextLayer = new ArrayList<Component>();
             }
         }
     }
@@ -131,8 +154,7 @@ public class Ship {
         Component[] neighbours = new Component[4];
         int[] positionInGrid;
 
-        if (component == null)
-        {
+        if (component == null) {
             // If passed component is null, there's no need to find its neighbours
             throw new NullComponentException("Passed component is null");
         }
@@ -185,21 +207,32 @@ public class Ship {
         return neighbours;
     }
 
+    // Adds the given component at the given coordinates (row, col) in the ship's component grid.
+    public void addComponent(Component component, int row, int col) throws NullComponentException, OutOfGridException {
+        if (component == null) {
+            throw new NullComponentException("Given component to add is null");
+        }
+        if (row < 0 || col < 0 || row >= grid_size || col >= grid_size) {
+            throw new OutOfGridException("Cannot insert a component outside of the ship's grid");
+        }
+
+        this.components[row][col] = component;
+    }
+
     // Returns the component that is identified by the coordinates (i, j) in the
     // ship's component grid, where i is the row index and j is the column index
     public Component getComponent(int i, int j) throws OutOfGridException, NullComponentException {
         Component selectedComponent;
 
-        // TODO: Clarify if there's the need to introduce the private attribute "grid_rows" and "grid_cols"
-        // TODO: to indicate the grid size, or maybe if components is a square matrix then a private attribute
-        // TODO: (for example, called "") is sufficient, with the sole purpose of determining the amount of components per row.
-
-        if (i < 0 || j < 0 || i >= grid_rows || j >= grid_cols) {
+        // Checking if the wanted component is actually on the ship's grid
+        if (i < 0 || j < 0 || i >= grid_size || j >= grid_size) {
             throw new OutOfGridException("Requested component is not in the Ship component grid");
         }
         else {
             selectedComponent = components[i][j];
 
+            // If it's on the ship's grid, then check whether it could be null
+            // (i.e.: empty space) or an actual component.
             if (selectedComponent == null) {
                 throw new NullComponentException("Requested component is null");
             }
