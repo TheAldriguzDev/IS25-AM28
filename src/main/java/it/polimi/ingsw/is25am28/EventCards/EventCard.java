@@ -1,13 +1,15 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 abstract class EventCard {
-    private final String name;
-    private final int cardLevel;
+    protected String name;
+    protected int cardLevel;
 
+    // Abstract does not have any instances, overriding is required
+    /*
     public EventCard(String name, int cardLevel) {
         this.name = name;
         this.cardLevel = cardLevel;
-    }
+    }*/
 
     public String getCardName() {
         return name;
