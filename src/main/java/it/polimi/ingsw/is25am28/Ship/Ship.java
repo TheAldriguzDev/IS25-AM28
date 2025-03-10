@@ -209,16 +209,28 @@ public class Ship {
         return neighbours;
     }
 
-    // Adds the given component at the given coordinates (row, col) in the ship's component grid.
-    public void addComponent(Component component, int row, int col) throws NullComponentException, OutOfGridException {
+    // Adds the given component at the given coordinates (i, j) in the ship's component grid.
+    public void addComponent(Component component, int i, int j) throws NullComponentException, OutOfGridException {
         if (component == null) {
             throw new NullComponentException("Given component to add is null");
         }
-        if (row < 0 || col < 0 || row >= grid_size || col >= grid_size) {
+        if (i < 0 || j < 0 || i >= grid_size || j >= grid_size) {
             throw new OutOfGridException("Cannot insert a component outside of the ship's grid");
         }
 
-        this.components[row][col] = component;
+        this.components[i][j] = component;
+    }
+
+    // Removes the component from the ship's grid at the given coordinates
+    public void removeComponent(int i, int j) throws OutOfGridException {
+        try {
+            // Setting to null removes the reference to that component, thus
+            // prompting the garbage collector to remove it
+            components[i][j] = null;
+        }
+        catch (ArrayIndexOutOfBoundsException e) {
+            throw new OutOfGridException("Cannot remove a component outside of the ship's grid");
+        }
     }
 
     // Returns the component that is identified by the coordinates (i, j) in the
