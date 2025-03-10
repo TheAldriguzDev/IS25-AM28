@@ -105,6 +105,21 @@ public class Ship {
         );
     }
 
+    // Traverses the ship's grid in search of Component::Cabin
+    // and returns a list of all the Lifeforms present on the ship
+    public List<Lifeform> getAllLifeforms() {
+        List<Lifeform> lifeforms = new ArrayList<Lifeform>();
+
+        traverse(
+            (Component c) -> {
+                // TODO: Implement once Component::Lifeform is implemented
+                // if (c.type == "cabin") { lifeforms.addAll(c.getInhabitants()); }
+            }
+        );
+
+        return lifeforms;
+    }
+
     // TODO: Discuss about the return type of the "traverse" method (since it uses lambdas, it needs to output something)
     // Applies lambda function to apply to each component found in the ship
     // by exploring its grid using an adapted version of the BFS algorithm
