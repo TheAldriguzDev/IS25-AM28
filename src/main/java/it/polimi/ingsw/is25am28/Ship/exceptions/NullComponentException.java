@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.exceptions;
+package it.polimi.ingsw.is25am28.Ship.exceptions;
 
 public class NullComponentException extends RuntimeException {
     // Creates a NullComponentException with an included message

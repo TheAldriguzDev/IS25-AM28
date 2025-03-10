@@ -2,8 +2,8 @@ package it.polimi.ingsw.is25am28.Ship;
 
 import it.polimi.ingsw.is25am28.Cargo;
 import it.polimi.ingsw.is25am28.Component;
-import it.polimi.ingsw.is25am28.exceptions.NullComponentException;
-import it.polimi.ingsw.is25am28.exceptions.OutOfGridException;
+import it.polimi.ingsw.is25am28.Ship.exceptions.NullComponentException;
+import it.polimi.ingsw.is25am28.Ship.exceptions.OutOfGridException;
 
 import java.util.ArrayList;
 import java.util.List;
