@@ -3,33 +3,21 @@ package it.polimi.ingsw.is25am28.EventCards;
 import it.polimi.ingsw.is25am28.Player;
 
 public class AbandonedShip extends EventCard {
-    private final int requireCrew;
+    private final int requiredCrew;
     private final int movementStep;
     private final int givenCredits;
 
     public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits) {
         this.name = name;
         this.cardLevel = cardLevel;
-        this.requireCrew = requireCrew;
+        this.requiredCrew = requireCrew;
         this.movementStep = movementStep;
         this.givenCredits = givenCredits;
     }
-
-    public int getRequirementCrew() {
-        return requireCrew;
-    }
-
-    public int getMovementStep() {
-        return movementStep;
-    }
-
-    public int getGivenCredits() {
-        return givenCredits;
-    }
-
+    
     protected void useCard(Player[] players) {
         for (Player player : players) {
-            if (player.getShip().getLifeForms() > requireCrew) {
+            if (player.getShip().getLifeForms() > requiredCrew) {
                 //method getChoice: ask player to make a choice
                 if (getChoice()) {
                     bonusEffect(player);
@@ -46,6 +34,6 @@ public class AbandonedShip extends EventCard {
     }
 
     protected void malusEffect(Player player) {
-        player.getShip().setLifeForms(player.getShip().getLifeForms() - this.requireCrew);
+        player.getShip().setLifeForms(player.getShip().getLifeForms() - this.requiredCrew);
     }
 }

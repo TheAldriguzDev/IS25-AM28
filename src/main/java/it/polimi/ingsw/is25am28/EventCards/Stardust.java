@@ -16,7 +16,7 @@ public class Stardust extends EventCard {
         for (Player player : players) {
             offsetsList.add(player.getShip().traverse(
                     (Component c) -> {
-                        // Checks foe each component the number of exposed sides
+                        // Checks for each component the number of exposed sides
                         // Return
                     }
             ));
