@@ -1,5 +1,8 @@
 package it.polimi.ingsw.is25am28;
 
+import it.polimi.ingsw.is25am28.Board.Cell;
+
+
 
 public class Player {
       private final Color color;

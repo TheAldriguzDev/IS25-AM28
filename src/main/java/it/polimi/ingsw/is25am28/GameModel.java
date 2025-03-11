@@ -1,5 +1,8 @@
 package it.polimi.ingsw.is25am28;
 
+import it.polimi.ingsw.is25am28.Board.Board;
+import it.polimi.ingsw.is25am28.Board.BoardLevel2;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -21,7 +24,7 @@ public class GameModel {
       public GameModel( int level ){
             players = new HashSet<>();
             deck = generateDeck( level );
-            board = new Board();
+            board = new BoardLevel2(); // We need to have different constructor for different types of games
       }
 
       /**
