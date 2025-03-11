@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Ship;
 
 import it.polimi.ingsw.is25am28.Component;
+import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform;
 import it.polimi.ingsw.is25am28.exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.exceptions.OutOfGridException;
@@ -60,8 +61,8 @@ public class Ship {
 
     // TODO: Errors are due to the missing implementation of the Items class
     // Returns a list of all the Items onboard of the ship
-    public List<Items> getAllItems() {
-        List<Items> itemList = new ArrayList<Items>();
+    public List<Item> getAllItems() {
+        List<Item> itemList = new ArrayList<Item>();
 
         traverse(
             (Component c) -> {
