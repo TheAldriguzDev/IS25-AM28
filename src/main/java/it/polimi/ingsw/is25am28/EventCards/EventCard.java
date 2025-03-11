@@ -1,6 +1,6 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-abstract class EventCard {
+public abstract class EventCard {
     protected String name;
     protected int cardLevel;
 

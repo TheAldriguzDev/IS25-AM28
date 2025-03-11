@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-import it.polimi.ingsw.is25am28.EventCard;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.Player;
 
@@ -8,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MeteorShower extends EventCard {
+public class MeteorShower {
     private final List<Meteor> meteorSequence = new ArrayList<>();
 
     public void useCard(Player[] players) {
