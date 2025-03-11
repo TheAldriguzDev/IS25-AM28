@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Storage extends Component {
-      private int capacity;
-      private boolean isSpecialStorage;
+      final int capacity;
+      final boolean isSpecialStorage;
       final List<Item> storedItems;
 
       public Storage(int capacity, boolean isSpecialStorage) {
@@ -36,8 +36,6 @@ public final class Storage extends Component {
             if (!isSpecialStorage && item.getColor() == ItemColor.RED) {
                   throw new IllegalArgumentException("You can't store a special item in a normal storage unit!");
             }
-
-            // Ask the user if he wants to drop some items --> Or better can be implemented in the card logic
 
             if (this.capacity == storedItems.size()) {
                   throw new IllegalArgumentException("You can't store more than " + this.capacity + " items!");
