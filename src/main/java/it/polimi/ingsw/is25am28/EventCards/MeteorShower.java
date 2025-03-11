@@ -11,7 +11,7 @@ import java.util.Random;
 public class MeteorShower extends EventCard {
     private final List<Meteor> meteorSequence = new ArrayList<>();
 
-    protected void useCard(Player[] players) {
+    public void useCard(Player[] players) {
         Random dice = new Random();
         int strikePath; // Colonna o riga che il meteorite percorrerà
         for (Meteor meteor : meteorSequence) {

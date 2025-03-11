@@ -20,7 +20,7 @@ public class Pirates extends EventCard {
         this.movementSteps = movementSteps;
     }
 
-    protected void useCard(Player[] players) {
+    public void useCard(Player[] players) {
         for (Player player : players) {
             if (player.getShip().getFirePower() >= requiredFirepower) {
                 if(getChoice()) {

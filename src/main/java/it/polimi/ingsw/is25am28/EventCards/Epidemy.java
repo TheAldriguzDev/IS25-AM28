@@ -6,7 +6,11 @@ public class Epidemy extends EventCard {
 
     protected void useCard(Player[] players) {
         for (Player player : players) {
-            player.getShip().traverse(//Lambda per identificare le cabine);
+            player.getShip().traverse(
+                    (Component c) -> {
+                        // check type and use getNearest()
+                    }
+            );
         }
     }
 

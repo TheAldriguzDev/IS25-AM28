@@ -18,7 +18,7 @@ public class Smugglers extends EventCard {
         this.movementStep = movementStep;
     }
 
-    protected void useCard(Player[] players) {
+    public void useCard(Player[] players) {
         for (Player player : players) {
             if (player.getShip().getFirePower() >= requiredFirepower) {
                 if(getChoice()) {

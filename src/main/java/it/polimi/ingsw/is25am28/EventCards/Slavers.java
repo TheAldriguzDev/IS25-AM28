@@ -17,7 +17,7 @@ public class Slavers extends EventCard {
         this.takenCrew = takenCrew;
     }
 
-    protected void useCard(Player[] players) {
+    public void useCard(Player[] players) {
         for (Player player : players) {
             if (player.getShip().getFirePower() >= requiredFirepower) {
                 if(getChoice()) {

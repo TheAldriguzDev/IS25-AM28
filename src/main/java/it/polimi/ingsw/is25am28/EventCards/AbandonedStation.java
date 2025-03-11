@@ -17,7 +17,7 @@ public class AbandonedStation extends EventCard {
         this.planetItems = planetItems;
     }
 
-    protected void useCard(Player[] players) {
+    public void useCard(Player[] players) {
         for (Player player : players) {
             if (player.getShip().getLifeForms() > requiredCrew) {
                 //method getChoice: ask player to make a choice

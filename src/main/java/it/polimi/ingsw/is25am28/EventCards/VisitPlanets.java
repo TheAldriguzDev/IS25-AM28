@@ -11,7 +11,7 @@ public class VisitPlanets extends EventCard {
         super(nome, cardLevel);
         this.movementStep = movementStep;
     }
-    protected void useCard(Player[] players) {
+    public void useCard(Player[] players) {
 
     }
 

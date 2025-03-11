@@ -11,7 +11,7 @@ public class Stardust extends EventCard {
         this.cardLevel = cardLevel;
     }
 
-    protected void useCard(Player[] players) {
+    public void useCard(Player[] players) {
         ArrayList<Integer> offsetsList = new ArrayList<>();
         for (Player player : players) {
             offsetsList.add(player.getShip().traverse(
