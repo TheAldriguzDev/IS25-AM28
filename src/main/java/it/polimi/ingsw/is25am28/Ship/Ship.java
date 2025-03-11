@@ -1,9 +1,8 @@
 package it.polimi.ingsw.is25am28.Ship;
 
-import it.polimi.ingsw.is25am28.Cargo;
 import it.polimi.ingsw.is25am28.Component;
-import it.polimi.ingsw.is25am28.Lifeform;
-import it.polimi.ingsw.is25am28.exceptions.*;
+import it.polimi.ingsw.is25am28.exceptions.NullComponentException;
+import it.polimi.ingsw.is25am28.exceptions.OutOfGridException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,10 +57,10 @@ public class Ship {
         return firePower;
     }
 
-    // TODO: Errors are due to the missing implementation of the Cargo class
-    // Returns a list of all the Cargo onboard of the ship
-    public List<Cargo> getAllCargo() {
-        List<Cargo> cargoList = new ArrayList<Cargo>();
+    // TODO: Errors are due to the missing implementation of the Item class
+    // Returns a list of all the Item onboard of the ship
+    public List<Item> getAllItems() {
+        List<Item> cargoList = new ArrayList<Item>();
 
         traverse(
             (Component c) -> {
@@ -73,11 +72,11 @@ public class Ship {
         return cargoList;
     }
 
-    // TODO: Errors are due to the missing implementation of the Cargo class
-    // Returns the total value of all the Cargo onboard the ship
-    public int getAllCargoValue() {
-        return this.getAllCargo().stream()
-                .mapToInt(c -> c.getValue())
+    // TODO: Errors are due to the missing implementation of the Item class
+    // Returns the total value of all the Items onboard the ship
+    public int getAllItemsValue() {
+        return this.getAllItems().stream()
+                .mapToInt(c -> /*c.getValue()*/0)
                 .sum();
     }
 
