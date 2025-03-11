@@ -17,11 +17,11 @@ public class Ship {
     private int grid_cols;
 
     // Ship constructor
-    public Ship(Component[][] components, Component core) {
-        this.components = components;
-        this.core = core;
+    public Ship() {
+        this.core = null;
         this.setEnergy();
         this.setProtectedSides();
+        throw new Error("Gabriele fix");
     }
 
     // Traverses the ship's grid in search of Component::Engine
@@ -123,6 +123,10 @@ public class Ship {
                 }
             }
         }
+    }
+
+    public boolean check(){
+        return true;
     }
 
     // Returns a Component[] array of size 4 which contains the components neighbouring the given one
