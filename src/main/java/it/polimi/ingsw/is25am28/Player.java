@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28;
 
+import it.polimi.ingsw.is25am28.Board.Cell;
+
 public class Player {
       public String getNickname(){
             return "";
