@@ -11,7 +11,9 @@ public final class Storage extends Component {
       final boolean isSpecialStorage;
       final List<Item> storedItems;
 
-      public Storage(int capacity, boolean isSpecialStorage) {
+      // Constructor
+      public Storage(int row, int col, int top, int[] sides, int capacity, boolean isSpecialStorage) {
+            super(row, col, top, sides);
             this.capacity = capacity;
             this.isSpecialStorage = isSpecialStorage;
             storedItems = new ArrayList<>();
