@@ -12,9 +12,9 @@ public class WarZone extends EventCard {
     private List<PlasmaShot> shootingSequenceForLowestFirePower = new ArrayList<>();
 
     public WarZone(String name, int cardLevel, int movementStepsForLowestCrew, int takenCrewForLowestEnginePower) {
-        this.name = name;
-        this.cardLevel = cardLevel;
+        super(name, cardLevel);
         this.movementStepsForLowestCrew = movementStepsForLowestCrew;
+        this.takenCrewForLowestEnginePower = takenCrewForLowestEnginePower;
     }
 
     public int getMovementSteps() {
@@ -34,7 +34,7 @@ public class WarZone extends EventCard {
         Player LowestFirePowerPlayer =  players[0];
         Player LowestEnginePowerPlayer = players[0];
         for (Player player : players) {
-            if (player.getShip().getLifeForms() < LowestCrewPlayer.getShip().getLifeForms()) {
+            if ((long) player.getShip().getAllLifeforms().size() < (long) LowestCrewPlayer.getShip().getAllLifeforms().size()) {
                 LowestCrewPlayer = player;
             }
             if (player.getShip().getFirePower() < LowestFirePowerPlayer.getShip().getFirePower()) {
@@ -49,7 +49,14 @@ public class WarZone extends EventCard {
         }
     }
 
-    protected void bonusEffect(Player player) {
+    @Override
+    void bonusEffect(Player player) {
+
+    }
+
+    @Override
+    void malusEffect(Player player) {
+
     }
 
     protected void malusEffect(Player player, Player LowestCrewPlayer, Player LowestFirePowerPlayer, Player LowestEnginePowerPlayer) {
@@ -60,7 +67,8 @@ public class WarZone extends EventCard {
             // Exposed to shooting sequence
         }
         if (player == LowestEnginePowerPlayer) {
-            player.getShip().setLifeForms(player.getShip().getLifeForms() - takenCrewForLowestEnginePower);
+            // TODO: Needs to be rewritten
+            // player.getShip().setLifeForms(player.getShip().getLifeForms() - takenCrewForLowestEnginePower);
         }
     }
 }
