@@ -9,8 +9,7 @@ public class Slavers extends EventCard {
     private final int takenCrew;
 
     public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew) {
-        this.name = name;
-        this.cardLevel = cardLevel;
+        super(name, cardLevel);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.givenCredits = givenCredits;
@@ -20,7 +19,7 @@ public class Slavers extends EventCard {
     public void useCard(Player[] players) {
         for (Player player : players) {
             if (player.getShip().getFirePower() >= requiredFirepower) {
-                if(getChoice()) {
+                if(/* getChoice()*/ false) {
                     bonusEffect(player);
                     player.setCursor(player.getCursor() - this.movementSteps);
                 }
@@ -35,6 +34,7 @@ public class Slavers extends EventCard {
     }
 
     protected void malusEffect(Player player) {
-        player.getShip().setLifeforms(player.getShip().getLifeforms() - this.takenCrew);
+        // TODO: Needs to be rewritten
+        // player.getShip().setLifeforms(player.getShip().getLifeforms() - this.takenCrew);
     }
 }
