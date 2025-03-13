@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Ship;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
