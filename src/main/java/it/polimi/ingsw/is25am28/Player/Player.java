@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28;
+package it.polimi.ingsw.is25am28.Player;
 
 import it.polimi.ingsw.is25am28.Board.Cell;
 import it.polimi.ingsw.is25am28.Ship.Ship;

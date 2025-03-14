@@ -1,11 +1,9 @@
 package it.polimi.ingsw.is25am28.Ship;
 
-import it.polimi.ingsw.is25am28.Component;
 import it.polimi.ingsw.is25am28.Items.Item;
-import it.polimi.ingsw.is25am28.Lifeform;
-import it.polimi.ingsw.is25am28.exceptions.NullComponentException;
-import it.polimi.ingsw.is25am28.exceptions.OutOfGridException;
-
+import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
+import it.polimi.ingsw.is25am28.Components.Component;
+import it.polimi.ingsw.is25am28.Exceptions.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -35,10 +33,10 @@ public class Ship {
         int enginePower = 0;
 
         traverse(
-            (Component c) -> {
-                // TODO: Implement once Component::Engine is implemented
-                // if (c.type == "engine") { enginePower += c.getEnginePower(); }
-            }
+                (Component c) -> {
+                    // TODO: Implement once Component::Engine is implemented
+                    // if (c.type == "engine") { enginePower += c.getEnginePower(); }
+                }
         );
 
         return enginePower;
@@ -50,34 +48,34 @@ public class Ship {
         int firePower = 0;
 
         traverse(
-            (Component c) -> {
-                // TODO: Implement once Component::Cannon is implemented
-                // if (c.type == "cannon") { firePower += c.getFirePower(); }
-            }
+                (Component c) -> {
+                    // TODO: Implement once Component::Cannon is implemented
+                    // if (c.type == "cannon") { firePower += c.getFirePower(); }
+                }
         );
 
         return firePower;
     }
 
-    // TODO: Errors are due to the missing implementation of the Items class
-    // Returns a list of all the Items onboard of the ship
-    public List<Item> getAllItems() {
-        List<Item> itemList = new ArrayList<Item>();
+    // TODO: Errors are due to the missing implementation of the Item class
+    // Returns a list of all the Item onboard of the ship
+    public List<Item> getAllItem() {
+        List<Item> ItemList = new ArrayList<Item>();
 
         traverse(
-            (Component c) -> {
-                // TODO: Implement once Component::Storage is implemented
-                // if (c.type == "storage") { itemList.add(c.getItems()); }
-            }
+                (Component c) -> {
+                    // TODO: Implement once Component::Storage is implemented
+                    // if (c.type == "storage") { ItemList.add(c.getItem()); }
+                }
         );
 
-        return itemList;
+        return ItemList;
     }
 
-    // TODO: Errors are due to the missing implementation of the Items class
-    // Returns the total value of all the Items onboard the ship
-    public int getAllItemsValue() {
-        return this.getAllItems().stream()
+    // TODO: Errors are due to the missing implementation of the Item class
+    // Returns the total value of all the Item onboard the ship
+    public int getAllItemValue() {
+        return this.getAllItem().stream()
                 .mapToInt(c -> c.getValue())
                 .sum();
     }
@@ -87,10 +85,10 @@ public class Ship {
     // as booleans inside the protectedSides attribute array
     public void setProtectedSides() {
         traverse(
-            (Component c) -> {
-                // TODO: Implement once Component::Shield is implemented
-                // if (c.type == "shield") { // Update protectedSides based on shield orientation }
-            }
+                (Component c) -> {
+                    // TODO: Implement once Component::Shield is implemented
+                    // if (c.type == "shield") { // Update protectedSides based on shield orientation }
+                }
         );
     }
 
@@ -99,10 +97,10 @@ public class Ship {
     // combined are storing into the energy attribute
     public void setEnergy() {
         traverse(
-            (Component c) -> {
-                // TODO: Implement once Component::Battery is implemented
-                // if (c.type == "battery") { this.energy += c.getStoredEnergy();}
-            }
+                (Component c) -> {
+                    // TODO: Implement once Component::Battery is implemented
+                    // if (c.type == "battery") { this.energy += c.getStoredEnergy();}
+                }
         );
     }
 
@@ -112,13 +110,27 @@ public class Ship {
         List<Lifeform> lifeforms = new ArrayList<Lifeform>();
 
         traverse(
-            (Component c) -> {
-                // TODO: Implement once Component::Lifeform is implemented
-                // if (c.type == "cabin") { lifeforms.addAll(c.getInhabitants()); }
-            }
+                (Component c) -> {
+                    // TODO: Implement once Component::Lifeform is implemented
+                    // if (c.type == "cabin") { lifeforms.addAll(c.getInhabitants()); }
+                }
         );
 
         return lifeforms;
+    }
+
+
+    public List<Component> getWrongComponents(){
+
+        List<Component> wrongs = new ArrayList<>();
+
+        traverse( component -> {
+            if( !component.check( getNearestComponents(component) ) ){
+                wrongs.add(component);
+            }
+        });
+
+        return wrongs;
     }
 
     // TODO: Discuss about the return type of the "traverse" method (since it uses lambdas, it needs to output something)
@@ -179,7 +191,7 @@ public class Ship {
         else
         {
             // Getting the passed component's position in the grid
-            positionInGrid = component.getComponentPosition();
+            positionInGrid = component.getPosition();
 
             // TODO: Discuss if a different, more elegant, approach is better than this first implementation
             // After checking if the given component is in a legal position, each neighbouring position

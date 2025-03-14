@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.components;
+package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;

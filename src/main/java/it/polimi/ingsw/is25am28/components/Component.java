@@ -1,14 +1,60 @@
-package it.polimi.ingsw.is25am28.components;
+package it.polimi.ingsw.is25am28.Components;
 
-public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield {
+public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield, Structural {
       private int col;
       private int row;
-      private int[] sides;
+
+      protected int[] sides;
       /**
        * index between 0 to 3, 
-       * that indicates which is the top side of the component
+       * that indicates which is the direction side of the component
        */
-      private int top;
+      protected int direction;
+
+      /**
+       *
+       * @param nearest order is direction[0], right[1], bottom[2], left[3]
+       * @return if the component is placed correctly
+       */
+      public boolean check( Component[] nearest ) {
+            if(
+                    nearest[0] != null && (
+                            ( getdirectionSide() == 0 && nearest[0].getBottomSide() != 0 ) || // they are not both 0
+                                    ( getdirectionSide() != 3 && nearest[0].getBottomSide() != 3 && getdirectionSide() != nearest[0].getBottomSide() ) // they are not equals (even with 3 piped conjunction)
+                    )
+            ){
+                  return false;
+            }
+
+            if(
+                    nearest[1] != null && (
+                            ( getRightSide() == 0 && nearest[1].getLeftSide() != 0 ) || // they are not both 0
+                                    ( getRightSide() != 3 && nearest[1].getLeftSide() != 3 && getRightSide() != nearest[1].getLeftSide() ) // they are not equals (even with 3 piped conjunction)
+                    )
+            ){
+                  return false;
+            }
+
+            if(
+                    nearest[2] != null && (
+                            ( getBottomSide() == 0 && nearest[2].getdirectionSide() != 0 ) || // they are not both 0
+                                    ( getBottomSide() != 3 && nearest[2].getdirectionSide() != 3 && getBottomSide() != nearest[2].getdirectionSide() ) // they are not equals (even with 3 piped conjunction)
+                    )
+            ){
+                  return false;
+            }
+
+            if(
+                    nearest[3] != null && (
+                            ( getLeftSide() == 0 && nearest[3].getRightSide() != 0 ) || // they are not both 0
+                                    ( getLeftSide() != 3 && nearest[3].getRightSide() != 3 && getLeftSide() != nearest[3].getRightSide() ) // they are not equals (even with 3 piped conjunction)
+                    )
+            ){
+                  return false;
+            }
+
+            return true;
+      }
 
       /**
        * coordinates into the ship
@@ -24,43 +70,38 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       }
 
       public Component rotateLeft(){
-            top--;
+            direction--;
 
-            if( top < 0 )
-                  top = 3;
+            if( direction < 0 )
+                  direction = 3;
 
             return this;
       }
 
       public Component rotateRight(){
-            top++;
+            direction++;
 
-            if( top > 3 )
-                  top = 0;
+            if( direction > 3 )
+                  direction = 0;
 
             return this;
       }
 
       public int getLeftSide(){
-            return sides[sides[ (top + 3)%4 ]];
+            return sides[sides[ (direction + 3)%4 ]];
       }
 
       public int getRightSide(){
-            return sides[ (top + 1)%4 ];
+            return sides[ (direction + 1)%4 ];
       }
 
-      public int getTopSide(){
-            return sides[top];
+      public int getdirectionSide(){
+            return sides[direction];
       }
 
       public int getBottomSide(){
-            return sides[ (top + 2)%4 ];
+            return sides[ (direction + 2)%4 ];
       }
 
-      /**
-       * 
-       * @param nearest order is top[0], right[1], bottom[2], left[3]
-       * @return if the component is placed correctly
-       */
-      public abstract boolean check( Component[] nearest );
+
 }
