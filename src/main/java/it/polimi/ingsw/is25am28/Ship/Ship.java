@@ -92,16 +92,27 @@ public class Ship {
         );
     }
 
-    // Traverses the ship's grid in search of Component::Battery
-    // and stores the total amount of energy that all the batteries
-    // combined are storing into the energy attribute
-    public void setEnergy() {
+    // Returns the total energy of the ship
+    public void updateCurrentEnergy() {
+        this.energy = 0;
+
         traverse(
                 (Component c) -> {
                     // TODO: Implement once Component::Battery is implemented
                     // if (c.type == "battery") { this.energy += c.getStoredEnergy();}
                 }
         );
+    }
+
+    public int getEnergy() {
+        return this.energy;
+    }
+
+    // Traverses the ship's grid in search of Component::Battery
+    // and stores the total amount of energy that all the batteries
+    // combined are storing into the energy attribute
+    public void setEnergy(int energy) {
+        this.energy = energy;
     }
 
     // Traverses the ship's grid in search of Component::Cabin

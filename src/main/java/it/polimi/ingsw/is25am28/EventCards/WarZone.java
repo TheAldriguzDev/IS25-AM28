@@ -12,7 +12,8 @@ public class WarZone extends EventCard {
     private List<PlasmaShot> shootingSequenceForLowestFirePower = new ArrayList<>();
 
     public WarZone(String name, int cardLevel, int movementStepsForLowestCrew, int takenCrewForLowestEnginePower) {
-        super(name, cardLevel);
+        this.name = name;
+        this.cardLevel = cardLevel;
         this.movementStepsForLowestCrew = movementStepsForLowestCrew;
         this.takenCrewForLowestEnginePower = takenCrewForLowestEnginePower;
     }

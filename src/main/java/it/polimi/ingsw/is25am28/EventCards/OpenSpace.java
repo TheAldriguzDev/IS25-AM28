@@ -4,20 +4,30 @@ import it.polimi.ingsw.is25am28.Player.Player;
 
 public class OpenSpace extends EventCard {
 
-    public OpenSpace(String name, int cardLevel) {
-        super(name, cardLevel);
-    }
-
     public void useCard(Player[] players) {
         for (Player player : players) {
-            bonusEffect(player);
-            malusEffect(player);
+            bonusEffect();
+            malusEffect();
             player.setCursor(player.getCursor() + player.getShip().getEnginePower());
         }
     }
 
-    protected void bonusEffect(Player player) {}
+    protected void bonusEffect() {
 
-    protected void malusEffect(Player player) {}
+    }
+
+    protected void malusEffect() {
+
+    }
+
+    @Override
+    public EventCard useCard(Object response) {
+        return null;
+    }
+
+    @Override
+    public Object generateState() {
+        return null;
+    }
 
 }

@@ -34,6 +34,7 @@ public class AbandonedShip extends EventCard {
     }
 
     protected void malusEffect(Player player) {
-        player.getShip().setLifeForms(player.getShip().getLifeForms() - this.requiredCrew);
+        // Redo implementation with updated Ship methods
+        // player.getShip().setLifeForms(player.getShip().getLifeForms() - this.requiredCrew);
     }
 }
