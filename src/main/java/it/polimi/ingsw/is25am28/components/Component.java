@@ -1,6 +1,6 @@
 package it.polimi.ingsw.is25am28.components;
 
-public abstract sealed class Component permits Cannon, Cabin, Storage, Vitals, Engine, Battery, Shield {
+public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield {
       private int col;
       private int row;
       private int[] sides;
