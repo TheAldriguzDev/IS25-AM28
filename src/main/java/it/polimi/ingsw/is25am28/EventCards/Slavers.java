@@ -1,6 +1,6 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-import it.polimi.ingsw.is25am28.Player;
+import it.polimi.ingsw.is25am28.Player.Player;
 
 public class Slavers extends EventCard {
     private final int requiredFirepower;
@@ -22,7 +22,7 @@ public class Slavers extends EventCard {
             if (player.getShip().getFirePower() >= requiredFirepower) {
                 if(getChoice()) {
                     bonusEffect(player);
-                    player.setCursor(player.getCursor() - this.movementStep);
+                    player.setCursor(player.getCursor() - this.movementSteps);
                 }
                 break;
             }

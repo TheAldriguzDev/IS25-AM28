@@ -1,7 +1,4 @@
-package it.polimi.ingsw.is25am28.components;
-
-import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
-import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+package it.polimi.ingsw.is25am28.Components;
 
 import java.util.ArrayList;
 

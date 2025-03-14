@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.components;
+package it.polimi.ingsw.is25am28.Components;
 
 public final class Vital extends Component {
       private final VitalType vitalType;

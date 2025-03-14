@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.exceptions;
+package it.polimi.ingsw.is25am28.Exceptions;
 
 public class OutOfGridException extends RuntimeException {
     // Creates an OutOfGridException with an included message

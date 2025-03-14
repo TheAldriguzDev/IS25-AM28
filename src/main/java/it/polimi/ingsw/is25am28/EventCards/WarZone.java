@@ -1,7 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
-import it.polimi.ingsw.is25am28.Player;
+import it.polimi.ingsw.is25am28.Player.Player;
 
 import java.util.ArrayList;
 import java.util.List;

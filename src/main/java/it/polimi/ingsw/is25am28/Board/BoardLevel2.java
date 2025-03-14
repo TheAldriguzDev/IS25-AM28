@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Board;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BoardLevel2 extends Board {
 

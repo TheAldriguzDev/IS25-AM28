@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28;
+package it.polimi.ingsw.is25am28.TimeObserver;
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
