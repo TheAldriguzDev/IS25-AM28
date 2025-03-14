@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28;
 
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
+import it.polimi.ingsw.is25am28.EventCards.EventCard;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -31,7 +32,7 @@ public class GameModel {
        * @return the deck used to play the actual game
        * for level 2 game, the length of the list is 8;
        */
-      private List<EventCard> generateDeck( int level ) {
+      private List<EventCard> generateDeck(int level ) {
             ArrayList<EventCard> deck = new ArrayList<>();
             int size = NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + DECK_SIZE;
 

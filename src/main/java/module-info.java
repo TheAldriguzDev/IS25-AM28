@@ -3,11 +3,12 @@ module it.polimi.ingsw.is25am28 {
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
+    requires java.desktop;
 
     opens it.polimi.ingsw.is25am28 to javafx.fxml;
     exports it.polimi.ingsw.is25am28;
     exports it.polimi.ingsw.is25am28.exceptions;
     opens it.polimi.ingsw.is25am28.exceptions to javafx.fxml;
-    exports it.polimi.ingsw.is25am28.Board;
-    opens it.polimi.ingsw.is25am28.Board to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.Ship;
+    opens it.polimi.ingsw.is25am28.Ship to javafx.fxml;
 }
