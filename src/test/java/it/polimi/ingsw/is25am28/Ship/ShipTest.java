@@ -1,11 +1,10 @@
 package it.polimi.ingsw.is25am28.Ship;
 
-import it.polimi.ingsw.is25am28.components.Engine;
+import it.polimi.ingsw.is25am28.Components.Engine;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static it.polimi.ingsw.is25am28.Connector.*;
-import static org.junit.jupiter.api.Assertions.*;
 
 class ShipTest {
 
