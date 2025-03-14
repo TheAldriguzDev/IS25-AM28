@@ -3,10 +3,8 @@ package it.polimi.ingsw.is25am28.Player;
 import it.polimi.ingsw.is25am28.Board.Cell;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
-
-
 public class Player {
-      private final Color color;
+      private final PlayerColor color;
       private final String nickname;
       private final Ship ship = new Ship();
       private int cursor = 0;
@@ -14,13 +12,13 @@ public class Player {
       private int lostPieces = 0;
       private Cell cell;
 
-      public Player( String nickname, Color color, int cursor ){
+      public Player( String nickname, PlayerColor color, int cursor ){
             this.color = color;
             this.cursor = cursor;
             this.nickname = nickname;
       }
 
-      public Player( String nickname, Color color ){
+      public Player( String nickname, PlayerColor color ){
             this.color = color;
             this.nickname = nickname;
       }
@@ -38,7 +36,7 @@ public class Player {
             return this;
       }
 
-      public Color getColor(){
+      public PlayerColor getPlayerColor(){
             return color;
       }
 
@@ -70,6 +68,10 @@ public class Player {
       public Player setCurrentCell( Cell cell ){
             this.cell = cell;
             return this;
+      }
+
+      public boolean hasLost(){
+            return cell == null;
       }
 
       public int getLostPieces(){

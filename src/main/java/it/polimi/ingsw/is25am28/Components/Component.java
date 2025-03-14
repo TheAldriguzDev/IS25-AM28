@@ -6,10 +6,15 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
       protected int[] sides;
       /**
-       * index between 0 to 3, 
+       * index between 0 and 3,
        * that indicates which is the direction side of the component
        */
       protected int direction;
+
+
+      public Component() {
+
+      }
 
       /**
        *
@@ -19,8 +24,8 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       public boolean check( Component[] nearest ) {
             if(
                     nearest[0] != null && (
-                            ( getdirectionSide() == 0 && nearest[0].getBottomSide() != 0 ) || // they are not both 0
-                                    ( getdirectionSide() != 3 && nearest[0].getBottomSide() != 3 && getdirectionSide() != nearest[0].getBottomSide() ) // they are not equals (even with 3 piped conjunction)
+                            ( getTopSide() == 0 && nearest[0].getBottomSide() != 0 ) || // they are not both 0
+                                    ( getTopSide() != 3 && nearest[0].getBottomSide() != 3 && getTopSide() != nearest[0].getBottomSide() ) // they are not equals (even with 3 piped conjunction)
                     )
             ){
                   return false;
@@ -37,8 +42,8 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
             if(
                     nearest[2] != null && (
-                            ( getBottomSide() == 0 && nearest[2].getdirectionSide() != 0 ) || // they are not both 0
-                                    ( getBottomSide() != 3 && nearest[2].getdirectionSide() != 3 && getBottomSide() != nearest[2].getdirectionSide() ) // they are not equals (even with 3 piped conjunction)
+                            ( getBottomSide() == 0 && nearest[2].getTopSide() != 0 ) || // they are not both 0
+                                    ( getBottomSide() != 3 && nearest[2].getTopSide() != 3 && getBottomSide() != nearest[2].getTopSide() ) // they are not equals (even with 3 piped conjunction)
                     )
             ){
                   return false;
@@ -54,6 +59,11 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
             }
 
             return true;
+      }
+
+      // Returns the component's direction
+      public int getDirection() {
+            return this.direction;
       }
 
       /**
@@ -95,7 +105,7 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
             return sides[ (direction + 1)%4 ];
       }
 
-      public int getdirectionSide(){
+      public int getTopSide(){
             return sides[direction];
       }
 

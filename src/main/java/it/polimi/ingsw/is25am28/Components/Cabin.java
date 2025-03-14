@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Components;
 
+import it.polimi.ingsw.is25am28.Lifeform.*;
 import java.util.ArrayList;
 
 public final class Cabin extends Component {

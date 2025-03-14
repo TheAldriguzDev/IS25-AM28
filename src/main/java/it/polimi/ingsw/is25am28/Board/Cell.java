@@ -20,10 +20,10 @@ public class Cell {
     }
 
     /**
-    * Cell constructor when the player is given
+     * Cell constructor when the player is given
      * @param idx The index of the cell
      * @param player The player initially set in the cell
-    */
+     */
     public Cell(int idx, Player player) {
         this.idx = idx;
         this.player = Optional.of(player);

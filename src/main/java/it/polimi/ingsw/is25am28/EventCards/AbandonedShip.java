@@ -8,17 +8,18 @@ public class AbandonedShip extends EventCard {
     private final int givenCredits;
 
     public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits) {
-        super(name, cardLevel);
+        this.name = name;
+        this.cardLevel = cardLevel;
         this.requiredCrew = requireCrew;
         this.movementStep = movementStep;
         this.givenCredits = givenCredits;
     }
-    
+
     public void useCard(Player[] players) {
         for (Player player : players) {
             if (player.getShip().getAllLifeforms().stream().count() > requiredCrew) {
                 //method getChoice: ask player to make a choice
-                if (/* getChoice()*/ false) {
+                if (getChoice()) {
                     bonusEffect(player);
                     malusEffect(player);
                     player.setCursor(player.getCursor() - this.movementStep);
@@ -33,7 +34,6 @@ public class AbandonedShip extends EventCard {
     }
 
     protected void malusEffect(Player player) {
-        // TODO: Needs to be rewritten
-        // player.getShip().setLifeForms(player.getShip().getLifeforms() - this.requiredCrew);
+        player.getShip().setLifeForms(player.getShip().getLifeForms() - this.requiredCrew);
     }
 }

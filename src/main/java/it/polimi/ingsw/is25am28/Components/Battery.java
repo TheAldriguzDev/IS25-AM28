@@ -44,4 +44,5 @@ public final class Battery extends Component {
 
             return this;
       }
+
 }

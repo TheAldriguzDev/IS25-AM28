@@ -1,4 +1,5 @@
 package it.polimi.ingsw.is25am28.GameModel;
+
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +10,6 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.Request.Request;
 
 public class GameModel {
 

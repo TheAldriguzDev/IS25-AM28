@@ -3,7 +3,7 @@ import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
 
 public class TimerObserver {
-      private final HashSet<TimeSubscriber> subscribed; 
+      private final HashSet<TimeSubscriber> subscribed;
       private Thread thd;
 
       public TimerObserver(){
@@ -51,5 +51,5 @@ public class TimerObserver {
 
             return this;
       }
-      
+
 }

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.Player.Player;
-
+import it.polimi.ingsw.is25am28.Components.Component;
 import java.util.ArrayList;
 
 public class Stardust extends EventCard {
@@ -14,12 +14,12 @@ public class Stardust extends EventCard {
     public void useCard(Player[] players) {
         ArrayList<Integer> offsetsList = new ArrayList<>();
         for (Player player : players) {
-            offsetsList.add(player.getShip().traverse(
-                    (Component c) -> {
-                        // Checks for each component the number of exposed sides
-                        // Return
-                    }
-            ));
+//            offsetsList.add(player.getShip().traverse(
+//                    (Component c) -> {
+//                        // Checks for each component the number of exposed sides
+//                        // Return
+//                    }
+//            ));
         }
         // Inverse iteration necessary for the positions update
         for (int i = players.length - 1; i >= 0; i--) {
