@@ -119,7 +119,6 @@ public class Ship {
         return lifeforms;
     }
 
-
     public List<Component> getWrongComponents(){
 
         List<Component> wrongs = new ArrayList<>();
@@ -133,7 +132,6 @@ public class Ship {
         return wrongs;
     }
 
-    // TODO: Discuss about the return type of the "traverse" method (since it uses lambdas, it needs to output something)
     // Applies lambda function to apply to each component found in the ship
     // by exploring its grid using an adapted version of the BFS algorithm
     public void traverse(Consumer<Component> lambda) {
@@ -249,6 +247,9 @@ public class Ship {
         this.components[i][j] = component;
     }
 
+    // TODO: Implement logic to receive a choice from the user on which part of the ship
+    // TODO: he intends to keep in those cases where the removal of a component separates
+    // TODO: the ship in more than one section
     // Removes the component from the ship's grid at the given coordinates
     public void removeComponent(int i, int j) throws OutOfGridException {
         try {

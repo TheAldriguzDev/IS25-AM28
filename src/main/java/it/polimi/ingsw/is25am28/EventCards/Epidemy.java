@@ -26,10 +26,6 @@ public class Epidemy extends EventCard {
         }
     }
 
-    protected void bonusEffect(Player player) {}
-
-    protected void malusEffect(Player player) {}
-
     @Override
     protected void bonusEffect() {
 
