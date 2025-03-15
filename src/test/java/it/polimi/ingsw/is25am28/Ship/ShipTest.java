@@ -1,27 +1,64 @@
 package it.polimi.ingsw.is25am28.Ship;
 
-import it.polimi.ingsw.is25am28.Components.Engine;
-import org.junit.jupiter.api.Assertions;
+import it.polimi.ingsw.is25am28.Components.*;
+
 import org.junit.jupiter.api.Test;
 
-import static it.polimi.ingsw.is25am28.Connector.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ShipTest {
 
     @Test
-    void getEnginePower() {
-        Ship ship = new Ship();
-        int[] sides = new int[4];
-        sides[0] = ZERO_PIPES.ordinal();
-        sides[1] = ZERO_PIPES.ordinal();
-        sides[2] = THREE_PIPES.ordinal();
-        sides[3] = TWO_PIPES.ordinal();
+    void generateComponentSubLists() {
+        Ship ship = new Ship(5, 5);
 
-        Engine engine = new Engine(0, 0, 0, sides);
+        Battery battery = new Battery(0, 0, 0, null, 3);
+        Cannon cannon = new Cannon(0, 0, 0, null, 1);
+        Vital vital = new Vital(0, 0, 0, null, null);
+        Cabin core = new Cabin(0, 0, 0, null, true);
 
-        ship.addComponent(engine, 2, 2);
+        ship.addComponent(battery, 0, 0);
+        ship.addComponent(cannon, 0, 1);
+        ship.addComponent(vital, 0, 2);
+        ship.addComponent(core, 0, 3);
 
-        Assertions.assertEquals(engine.hashCode(), ship.getComponent(2, 2).hashCode());
+        assertEquals(, );
+    }
+
+    @Test
+    void getBatteryList() {
+    }
+
+    @Test
+    void getCabinList() {
+    }
+
+    @Test
+    void getCannonList() {
+    }
+
+    @Test
+    void getEngineList() {
+    }
+
+    @Test
+    void getShieldList() {
+    }
+
+    @Test
+    void getStorageList() {
+    }
+
+    @Test
+    void getVitalList() {
+    }
+
+    @Test
+    void getAvailableEnergy() {
+    }
+
+    @Test
+    void getAllLifeforms() {
     }
 
     @Test
@@ -29,23 +66,23 @@ class ShipTest {
     }
 
     @Test
+    void getEnginePower() {
+    }
+
+    @Test
     void getAllItems() {
     }
 
     @Test
-    void getAllItemsValue() {
+    void getAllItemValue() {
     }
 
     @Test
-    void setProtectedSides() {
+    void getWrongComponents() {
     }
 
     @Test
-    void setEnergy() {
-    }
-
-    @Test
-    void getAllLifeforms() {
+    void validateShip() {
     }
 
     @Test
@@ -58,6 +95,12 @@ class ShipTest {
 
     @Test
     void addComponent() {
+        Ship ship = new Ship(5, 5);
+        Cabin core = new Cabin(true);
+
+        ship.addComponent(core, 5/2, 5/2);
+
+        assertEquals(core, ship.getComponent(5/2, 5/2));
     }
 
     @Test
@@ -66,5 +109,6 @@ class ShipTest {
 
     @Test
     void getComponent() {
+
     }
 }
