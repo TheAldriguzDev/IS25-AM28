@@ -9,6 +9,11 @@ public abstract class EventCard {
     private List<Player> players;
     private int currentPlayer;
 
+    public EventCard(String name, int cardLevel) {
+        this.name = name;
+        this.cardLevel = cardLevel;
+    }
+
     protected abstract void bonusEffect();
 
     protected abstract void malusEffect();

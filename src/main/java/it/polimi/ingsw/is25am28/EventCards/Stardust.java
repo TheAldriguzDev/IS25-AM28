@@ -2,33 +2,57 @@ package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Component;
-import java.util.ArrayList;
+import it.polimi.ingsw.is25am28.Ship.Ship;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Stardust extends EventCard {
 
     public Stardust(String name, int cardLevel) {
-        this.name = name;
-        this.cardLevel = cardLevel;
+        super(name, cardLevel);
     }
 
-    public void useCard(Player[] players) {
-        ArrayList<Integer> offsetsList = new ArrayList<>();
-        for (Player player : players) {
-//            offsetsList.add(player.getShip().traverse(
-//                    (Component c) -> {
-//                        // Checks for each component the number of exposed sides
-//                        // Return
-//                    }
-//            ));
-        }
-        // Inverse iteration necessary for the positions update
-        for (int i = players.length - 1; i >= 0; i--) {
-            players[i].setCursor(players[i].getCursor() - offsetsList.get(i));
-        }
+    public EventCard useCard(Object response) throws ClassCastException {
+        Player player = getCurrent();
+        AtomicInteger movementSteps = new AtomicInteger();
+        Ship ship = player.getShip();
+        ship.traverse(
+                (Component c) -> {
+                    // For each exposed side movementsSteps++;
+                    Component[] otherC = ship.getNearestComponents(c);
+                    if (otherC[0] == null) {
+                        if (c.getTopSide() != 0) {
+                            movementSteps.getAndIncrement();
+                        }
+                    }
+                    if (otherC[1] == null) {
+                        if (c.getRightSide() != 0) {
+                            movementSteps.getAndIncrement();
+                        }
+                    }
+                    if (otherC[2] == null) {
+                        if (c.getBottomSide() != 0) {
+                            movementSteps.getAndIncrement();
+                        }
+                    }
+                    if (otherC[3] == null) {
+                        if (c.getLeftSide() != 0) {
+                            movementSteps.getAndIncrement();
+                        }
+                    }
+                }
+        );
+        player.setCursor(player.getCursor() - movementSteps.get());
+        getNext();
+        return this;
     }
 
-    protected void bonusEffect(Player player) {}
+    protected void bonusEffect() {}
 
-    protected void malusEffect(Player player) {}
+    protected void malusEffect() {}
 
+    @Override
+    public Object generateState() {
+        return null;
+    }
 }

@@ -6,13 +6,14 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Battery;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Components.Storage;
+import it.polimi.ingsw.is25am28.Response.SmugglersResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Smugglers extends EventCard {
     private final int requiredFirepower;
-    private final int movementStep;
+    private final int movementSteps;
     private List<Item> givenItems = new ArrayList<>();
     private final int takenItems;
 
@@ -24,26 +25,34 @@ public class Smugglers extends EventCard {
         this.takenItems = takenItems;
     }
 
-    public void useCard(Player[] players) {
-        for (Player player : players) {
-            if (player.getShip().getFirePower() >= requiredFirepower) {
-                if(getChoice()) {
-                    bonusEffect(player);
-                    player.setCursor(player.getCursor() - this.movementStep);
-                }
-                break;
+    /*
+    * Se il tipo di response non è corretto la classe
+    * lancia un'eccezione di tipo ClassCastException
+    * */
+
+    public EventCard useCard(Object response) throws ClassCastException {
+        SmugglersResponse smugglersResponse = (SmugglersResponse) response;
+        Player player = getCurrent();
+        if(player.getShip().getFirePower() >= requiredFirepower) {
+            if (smugglersResponse.getTakeLoot()) {
+                bonusEffect();
+                player.setCursor(player.getCursor() - this.movementSteps);
             }
-            malusEffect(player);
+        } else {
+            malusEffect();
         }
+        getNext();
+        return this;
     }
 
-    protected void bonusEffect(Player player) {
+    protected void bonusEffect() {
         //GiveItem
         // loadNewItems() dal controller
     }
 
-    protected void malusEffect(Player player) {
+    protected void malusEffect() {
         //TakeItem
+        Player player = getCurrent();
         List<Storage> storages = new ArrayList<>();
         List<Battery> batteries = new ArrayList<>();
         player.getShip().traverse(
@@ -82,5 +91,8 @@ public class Smugglers extends EventCard {
 
     }
 
-
+    @Override
+    public Object generateState() {
+        return null;
+    }
 }
