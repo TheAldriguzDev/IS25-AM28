@@ -1,33 +1,32 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.Player.Player;
+import org.json.simple.JSONObject;
 
 public class OpenSpace extends EventCard {
 
-    public void useCard(Player[] players) {
-        for (Player player : players) {
-            bonusEffect();
-            malusEffect();
-            player.setCursor(player.getCursor() + player.getShip().getEnginePower());
-        }
+    // TODO: Implement the specific constructor to build the card with the necessary data
+    public OpenSpace() {
+
     }
 
+    @Override
     protected void bonusEffect() {
 
     }
 
+    @Override
     protected void malusEffect() {
 
     }
 
     @Override
-    public EventCard useCard(Object response) {
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
         return null;
     }
 
     @Override
-    public Object generateState() {
+    public JSONObject generateState() {
         return null;
     }
-
 }

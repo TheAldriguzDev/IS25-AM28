@@ -2,48 +2,62 @@ package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.Player.Player;
 import java.util.List;
+import java.util.Optional;
+
+import org.json.simple.JSONObject;
 
 public abstract class EventCard {
     protected String name;
     protected int cardLevel;
-    private List<Player> players;
-    private int currentPlayer;
+    protected List<Player> players;
+    protected Optional<Player> currentPlayer;
+
+    /**
+     * General constructor shared between the classes
+     * */
+    protected EventCard(String name, int cardLevel) {
+        this.name = name;
+        this.cardLevel = cardLevel;
+    }
+
+    /**
+     * This method is immediately invoked when the card a new card is extracted.
+     * Can be overridden to specify different initialization modes (like reverse player order)
+     */
+    public void initCardPlayers( List<Player> players ) throws IllegalArgumentException {
+        if ( players == null || players.isEmpty() || players.size() < 2 ) {
+            throw new IllegalArgumentException("The player list is null or contains less than two player");
+        } else {
+            this.players = players;
+            currentPlayer = Optional.of(players.getFirst());
+        }
+    }
 
     protected abstract void bonusEffect();
 
     protected abstract void malusEffect();
 
-    protected Player getNext() {
+    // We will override this method if we need a more specific usage
+    protected Player getNextPlayer() {
 
-        if( players == null )
-            throw new Error("Players are not settled, you must call startUsingCard method before");
+        if( players == null || players.isEmpty() )
+            throw new Error("Players are not set, you must call startUsingCard method before");
 
-        currentPlayer++;
-
-        return players.get(currentPlayer);
+        if ( currentPlayer.isPresent() ) {
+            currentPlayer = Optional.of(players.get( players.indexOf(currentPlayer.get()) + 1 ));
+            return players.get( players.indexOf(currentPlayer.get()) + 1 );
+        } else {
+            currentPlayer = Optional.of(players.getFirst());
+            return players.getFirst();
+        }
     }
 
-    protected Player getCurrent() {
-
-        if( players == null )
-            throw new Error("Players are not settled, you must call startUsingCard method before");
-
-        return players.get(currentPlayer);
+    protected Optional<Player> getCurrentPlayer() {
+        return currentPlayer;
     }
 
     public boolean hasFinished(){
-        if( currentPlayer >= players.size() - 1 )
-            return false;
-        return true;
-    }
-
-    /**
-     * to call first when the card is extracted.
-     * In here will be encapsulated initialization of the card.
-     */
-    public void startUsingCard( List<Player> players ){
-        this.players = players;
-        currentPlayer = 0;
+        return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false);
     }
 
     public String getCardName() {
@@ -55,11 +69,20 @@ public abstract class EventCard {
     }
 
     /**
-     * the effect applied to each player.
-     * return a request to send to the turn player, that
-     * contains a list of all effects and changes applied to the turn player.
-     * The request must be broadcasted
-     */
-    public abstract EventCard useCard( Object response );
-    public abstract Object generateState();
+     * useCard will be used when a player send some data to the server to complete an action.
+     * The method will elaborate the given data and if the actions are valid we return a EventCard that contains the new state that can be return to the client
+     * Instead, if the data is not valid we return an exception that will be returned to the client
+     *
+     * The communication of the new, valid or invalid, state will be sent (broadcast) to all the clients.
+     * */
+
+    public abstract EventCard useCard( JSONObject data ) throws IllegalArgumentException;
+
+    /**
+     * generateState return a JSONObject that return the current state of the card. It MUST contains all the specific information like:
+     * - currentPlayer
+     * - cardName
+     * - cardData (e.g. planets list with all the related resources)
+     * */
+    public abstract JSONObject generateState();
 }

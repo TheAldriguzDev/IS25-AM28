@@ -59,10 +59,10 @@ public class GameModel {
             return this;
       }
 
-      public GameModel removePlayer( Player player ){
-            players.remove(player);
-            return this;
-      }
+//      public GameModel removePlayer( Player player ){
+//            players.remove(player);
+//            return this;
+//      }
 
       /**
        * show the "decoy" deck used in ship-building phase.

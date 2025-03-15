@@ -3,6 +3,10 @@ package it.polimi.ingsw.is25am28.Player;
 import it.polimi.ingsw.is25am28.Board.Cell;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
+/*
+* Noi crediamo che sia meglio inizializzare tutte le cose nel costruttore, non nella parte dichiarativa degli attributi
+* */
+
 public class Player {
       private final PlayerColor color;
       private final String nickname;
@@ -11,11 +15,13 @@ public class Player {
       private int credits = 0;
       private int lostPieces = 0;
       private Cell cell;
+      private boolean isEliminated;
 
       public Player( String nickname, PlayerColor color, int cursor ){
             this.color = color;
-            this.cursor = cursor;
             this.nickname = nickname;
+            this.cursor = cursor;
+            this.isEliminated = false;
       }
 
       public Player( String nickname, PlayerColor color ){
@@ -86,5 +92,15 @@ public class Player {
       public Player addLostPieces( int lost ){
             this.lostPieces += lost;
             return this;
+      }
+
+      // AGGIUNTI METODI PER PLAYER ELIMINATI
+
+      public boolean isEliminated(){
+            return isEliminated;
+      }
+
+      public void eliminate(){
+            this.isEliminated = true;
       }
 }
