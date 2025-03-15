@@ -8,14 +8,20 @@ module it.polimi.ingsw.is25am28 {
 
     opens it.polimi.ingsw.is25am28 to javafx.fxml;
     exports it.polimi.ingsw.is25am28;
-    exports it.polimi.ingsw.is25am28.Exceptions;
-    opens it.polimi.ingsw.is25am28.Exceptions to javafx.fxml;
-    exports it.polimi.ingsw.is25am28.Ship;
-    opens it.polimi.ingsw.is25am28.Ship to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.Board;
+    exports it.polimi.ingsw.is25am28.Components;
     exports it.polimi.ingsw.is25am28.Player;
-    opens it.polimi.ingsw.is25am28.Player to javafx.fxml;
-    exports it.polimi.ingsw.is25am28.TimeObserver;
-    opens it.polimi.ingsw.is25am28.TimeObserver to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.Ship;
+    exports it.polimi.ingsw.is25am28.Exceptions;
+    exports it.polimi.ingsw.is25am28.Lifeform;
+    exports it.polimi.ingsw.is25am28.EventCards;
     exports it.polimi.ingsw.is25am28.GameModel;
+    exports it.polimi.ingsw.is25am28.Items;
+    exports it.polimi.ingsw.is25am28.Response;
+    exports it.polimi.ingsw.is25am28.TimeObserver;
+    opens it.polimi.ingsw.is25am28.Exceptions to javafx.fxml;
+    opens it.polimi.ingsw.is25am28.Ship to javafx.fxml;
+    opens it.polimi.ingsw.is25am28.Player to javafx.fxml;
+    opens it.polimi.ingsw.is25am28.TimeObserver to javafx.fxml;
     opens it.polimi.ingsw.is25am28.GameModel to javafx.fxml;
 }

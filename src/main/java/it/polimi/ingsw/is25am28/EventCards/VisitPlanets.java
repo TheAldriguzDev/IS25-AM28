@@ -2,7 +2,8 @@ package it.polimi.ingsw.is25am28.EventCards;
 
 
 import it.polimi.ingsw.is25am28.Items.Item;
-import it.polimi.ingsw.is25am28.Player;
+import it.polimi.ingsw.is25am28.Player.Player;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
@@ -19,12 +20,22 @@ public class VisitPlanets extends EventCard {
     }
 
     @Override
-    void bonusEffect(Player player) {
+    protected void bonusEffect() {
 
     }
 
     @Override
-    void malusEffect(Player player) {
+    protected void malusEffect() {
 
+    }
+
+    @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public JSONObject generateState() {
+        return null;
     }
 }

@@ -1,30 +1,84 @@
 package it.polimi.ingsw.is25am28.Board;
 
+import it.polimi.ingsw.is25am28.GameModel.GameModel;
 import it.polimi.ingsw.is25am28.Player.Player;
+import it.polimi.ingsw.is25am28.Player.PlayerColor;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class Board {
     private int size;
     private Cell head;
     final ArrayList<Cell> initialCells = new ArrayList<>();
+    private final List<Player> players;
+    private final List<Player> eliminatedPlayer;
+
+    public Board() {
+        this.players = new ArrayList<>();
+        this.eliminatedPlayer = new ArrayList<>();
+    }
 
     public int getSize() { return size; }
 
     public void setSize(int size) { this.size = size; }
 
-    private Cell getHead() { return head; }
-
-    private void setHead(Cell head) { this.head = head; }
-
-    protected ArrayList<Cell> getInitialCells() { return initialCells; }
+    /**
+     * Returns the initials cells of the game where the players will be set when they finish their ship
+     * */
+    protected ArrayList<Cell> getInitialCells() {
+        return initialCells;
+    }
 
     protected void setInitialCells(ArrayList<Cell> initialCells) {
         this.initialCells.clear();
         this.initialCells.addAll(initialCells);
     }
 
+    /**
+     * Returns the current playing players
+     * */
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    /**
+     * Returns the eliminated players
+     * */
+    public List<Player> getEliminatedPlayers() {
+        return eliminatedPlayer;
+    }
+
+    /**
+     * Add a new player in the game if the nickname and the color is unique in the session
+     * */
+    public Board newPlayer(String nickname, PlayerColor color) throws IllegalArgumentException {
+        if (!players.stream().filter(p -> p.getNickname().equals(nickname) || p.getPlayerColor().equals(color)).toList().isEmpty()) {
+            throw new IllegalArgumentException("The selected nickname or color has been already used");
+        }
+
+        players.add(new Player(nickname, color));
+        return this;
+    }
+
+    /**
+     * Eliminates the given player from the game for some other reason that ARE NOT being doubled
+     * */
+    public Board eliminatePlayer(Player player) throws IllegalArgumentException {
+        if (players.remove(player)) {
+            eliminatedPlayer.add(player);
+        } else {
+            throw new IllegalArgumentException("The given player is not in the players list");
+        }
+
+        return this;
+    }
+
+    /**
+     * Utility method to add Cells to the Board
+     * */
     protected Cell addCell(int idx) {
         Cell newCell = new Cell(idx);
 
@@ -43,76 +97,102 @@ public abstract class Board {
         return newCell;
     }
 
+    /**
+     * This method will be implemented in each specific implementation of the board to realize the specific board for each level
+     * */
     public abstract void buildBoard();
 
-    public void addNewPlayer(Player player) {
+    /**
+     * Add the given player to the board in the first initial cell that is currently empty.
+     * It is synchronized since multiple clients can request to be added to the board in the same time
+     * */
+    public synchronized void addPlayerToBoard(Player player) {
         for (Cell cell : initialCells) {
             if (cell.isEmpty()) {
                 cell.setPlayer(player);
+
+                player.setCurrentCell(cell);
+                player.setCursor(cell.getIdx());
                 return;
             }
         }
     }
 
-    public ArrayList<Player> movePlayerForward(Player player, Cell currCell, int steps) {
-        ArrayList<Player> doubledPlayers = new ArrayList<>();
-        Cell tmpCell = currCell;
+    /**
+     * Move the given player from its cell of the given steps
+     * */
+    public void movePlayerForward(Player player, int steps) {
+        Cell tmpCell = player.getCurrentCell();
 
         while (steps > 0) {
             tmpCell = tmpCell.getNextCell();
 
-            // Check if the player in the current cell has been doubled by the moving one
-            if (!tmpCell.isEmpty()) {
-                Optional<Player> playerOptional = tmpCell.getPlayer();
-                if (playerOptional.isPresent() && player.getCursor() >= 2 * playerOptional.get().getCursor()) {
-                    doubledPlayers.add(playerOptional.get());
-                    tmpCell.removePlayer();
-                }
-
-                continue;
+            // Decrease the current step counter only if the cell is actually empty (no player)
+            if (tmpCell.isEmpty()) {
+                steps--;
             }
 
             player.setCursor(player.getCursor() + 1);
-            steps--;
         }
 
-        if (!tmpCell.equals(currCell)) {
-            currCell.removePlayer();
+        if (!tmpCell.equals(player.getCurrentCell())) {
+            player.getCurrentCell().removePlayer();
             tmpCell.setPlayer(player);
-        }
 
-        return doubledPlayers;
+            player.setCurrentCell(tmpCell);
+        }
     }
 
-    public ArrayList<Player> movePlayerBackwards(Player player, Cell currCell, int steps) {
-        ArrayList<Player> doubledPlayers = new ArrayList<>();
-        Cell tmpCell = currCell;
+    public void movePlayerBackwards(Player player, int steps) {
+        Cell tmpCell = player.getCurrentCell();
 
         while (steps > 0) {
             tmpCell = tmpCell.getPrevCell();
 
-            // Check if the moving player has been doubled by the player in the current cell
-            if (!tmpCell.isEmpty()) {
-                Optional<Player> playerOptional = tmpCell.getPlayer();
-                if (playerOptional.isPresent() && 2 * player.getCursor() <= playerOptional.get().getCursor()) {
-                    doubledPlayers.add(player);
-                    currCell.removePlayer();
-                    break;
-                }
-
-                continue;
+            // Decrease the current step counter only if the cell is actually empty (no player)
+            if (tmpCell.isEmpty()) {
+                steps--;
             }
 
             player.setCursor(player.getCursor() - 1);
-            steps--;
         }
 
-        if (doubledPlayers.isEmpty() && !tmpCell.equals(currCell)) {
-            currCell.removePlayer();
+        if (!tmpCell.equals(player.getCurrentCell())) {
+            player.getCurrentCell().removePlayer();
             tmpCell.setPlayer(player);
+
+            player.setCurrentCell(tmpCell);
+        }
+    }
+
+    /**
+     * Method that check the players cursor to identify eventual doubled players and eliminate them.
+     * It also reset the player list to maintain a correct order
+     * */
+    public void validatePlayersPosition() {
+        int maxCursor = players.stream()
+                        .mapToInt(Player::getCursor)
+                        .max()
+                        .orElse(0);
+
+        List<Player> doubledPlayers = players
+                                        .stream()
+                                        .filter(player -> player.getCursor() + this.getSize() < maxCursor)
+                                        .toList();
+
+        // Remove the player from the current players and add it to the eliminated ones
+        // Set the cell to null, since it has been removed from the board and mark the player as eliminated
+        for (Player player : doubledPlayers) {
+            players.remove(player);
+            eliminatedPlayer.add(player);
+
+            player.getCurrentCell().removePlayer();
+            player.eliminate();
+            player.setCurrentCell(null); // TODO: CAPIRE SE ESISTE UN ALTRO MODO, COSI A ME NON PIACE
         }
 
-        return doubledPlayers;
+        // Re-order the current players by theirs cursor
+        players.sort((p1, p2) -> Integer.compare(p2.getCursor(), p1.getCursor()));
     }
 
     public void printBoard() {

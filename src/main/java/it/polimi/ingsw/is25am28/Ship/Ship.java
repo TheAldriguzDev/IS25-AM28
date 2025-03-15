@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 
 public class Ship {
     private int energy;
-    private final boolean[] protectedSides;
+    private final boolean[] protectedSides; // Che senso ha in questo modo, io farei un Set di direzioni in questo modo possiamo identificare quali direzioni sono protette
     private final Component[][] components;
     // TODO: Find an optimal value for grid_size (I don't know how big the level II ship is, but this surely captures it)
     // NOTE: The grid MUST be a square matrix with ODD side length, otherwise

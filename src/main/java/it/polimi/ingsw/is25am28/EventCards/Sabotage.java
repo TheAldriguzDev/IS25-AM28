@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-import it.polimi.ingsw.is25am28.Player;
+import it.polimi.ingsw.is25am28.Player.Player;
+import org.json.simple.JSONObject;
 
 public class Sabotage extends EventCard {
 
@@ -9,17 +10,22 @@ public class Sabotage extends EventCard {
     }
 
     @Override
-    void useCard(Player[] players) {
+    protected void bonusEffect() {
 
     }
 
     @Override
-    void bonusEffect(Player player) {
+    protected void malusEffect() {
 
     }
 
     @Override
-    void malusEffect(Player player) {
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
 
+    @Override
+    public JSONObject generateState() {
+        return null;
     }
 }

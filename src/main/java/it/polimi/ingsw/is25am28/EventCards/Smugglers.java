@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Battery;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Components.Storage;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,8 +18,7 @@ public class Smugglers extends EventCard {
     private final int takenItems;
 
     public Smugglers(String name, int cardLevel, int requiredFirepower, int movementStep, int takenItems) {
-        this.name = name;
-        this.cardLevel = cardLevel;
+        super(name, cardLevel);
         this.requiredFirepower = requiredFirepower;
         this.movementStep = movementStep;
         this.takenItems = takenItems;
@@ -27,10 +27,10 @@ public class Smugglers extends EventCard {
     public void useCard(Player[] players) {
         for (Player player : players) {
             if (player.getShip().getFirePower() >= requiredFirepower) {
-                if(getChoice()) {
-                    bonusEffect(player);
-                    player.setCursor(player.getCursor() - this.movementStep);
-                }
+//                if(getChoice()) {
+//                    bonusEffect(player);
+//                    player.setCursor(player.getCursor() - this.movementStep);
+//                }
                 break;
             }
             malusEffect(player);
@@ -83,4 +83,23 @@ public class Smugglers extends EventCard {
     }
 
 
+    @Override
+    protected void bonusEffect() {
+
+    }
+
+    @Override
+    protected void malusEffect() {
+
+    }
+
+    @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public JSONObject generateState() {
+        return null;
+    }
 }

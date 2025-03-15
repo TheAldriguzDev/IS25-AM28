@@ -37,9 +37,9 @@ public class Player {
             return cursor;
       }
 
-      public Player setCursor( int cursor ){
+      public void setCursor( int cursor ){
             this.cursor = cursor;
-            return this;
+            // return this;
       }
 
       public PlayerColor getPlayerColor(){
@@ -53,14 +53,12 @@ public class Player {
             return credits - lostPieces;
       }
 
-      public Player setCredits( int credits ){
+      public void setCredits( int credits ){
             this.credits = credits;
-            return this;
       }
 
-      public Player addCredits( int credits ){
+      public void addCredits( int credits ){
             this.credits += credits;
-            return this;
       }
 
       public Ship getShip(){
@@ -68,12 +66,12 @@ public class Player {
       }
 
       public Cell getCurrentCell(){
-            return cell;
+            return this.cell;
       }
 
-      public Player setCurrentCell( Cell cell ){
+      public void setCurrentCell( Cell cell ) {
             this.cell = cell;
-            return this;
+            // return this;
       }
 
       public boolean hasLost(){
