@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.is25am28.Connector.*;
 
@@ -129,7 +130,7 @@ public class Ship {
     public List<Vital> getVitalList() { return this.vitalList; }
 
     /**
-     * @return The ship's remaining energy
+     * @return The ship's available energy
      */
     public int getAvailableEnergy() {
         return this.batteryList.stream()
@@ -138,21 +139,18 @@ public class Ship {
     }
 
     /**
-     * @return The ship's total Lifeforms onboard
+     * @return The ship's total onboard <code>Lifeform</code>s
+     *         (both humans and aliens)
      */
     public List<Lifeform> getAllLifeforms() {
-        List<Lifeform> lifeforms = new ArrayList<Lifeform>();
-
-        for (Cabin cabin : this.cabinList) {
-            lifeforms.addAll(cabin.getInhabitants());
-        }
-
-        return lifeforms;
+        return this.cabinList.stream()
+                .flatMap(cabin -> cabin.getInhabitants().stream())
+                .collect(Collectors.toList());
     }
 
     /**
-     * @return The ship's firepower, including the
-     *         double cannons that are chosen to activate
+     * @return The ship's total firepower, including the
+     *         double cannons that the user chooses to activate
      */
     public float getFirePower() {
         return (float) this.cannonList.stream()
@@ -161,7 +159,8 @@ public class Ship {
     }
 
     /**
-     * @return The ship's engine power
+     * @return The ship's total engine power, including the
+     *         double engines that the user chooses to activate
      */
     public float getEnginePower() {
         return (float) this.engineList.stream()
@@ -170,30 +169,27 @@ public class Ship {
     }
 
     /**
-     * @return The ship's stored items
+     * @return All the ship's stored <code>Item</code>s
      */
     public List<Item> getAllItems() {
-        List<Item> items = new ArrayList<Item>();
-
-        for (Storage storage : this.storageList) {
-            items.addAll(storage.getStoredItems());
-        }
-
-        return items;
+        return this.storageList.stream()
+                .flatMap(storage -> storage.getStoredItems().stream())
+                .collect(Collectors.toList());
     }
 
     /**
-     * @return The total value of all the Item onboard the ship
+     * @return The total value of all the <code>Item</code> onboard the ship
      */
     public int getAllItemValue() {
-        return this.getAllItems().stream()
+        return this.storageList.stream()
+                .flatMap(storage -> storage.getStoredItems().stream())
                 .mapToInt(Item::getValue)
                 .sum();
     }
 
-    // Implemented by Andrea
+    // TODO: Implemented by Andrea, ask what is its purpose
     /**
-     * @return All components that fail the check() method
+     * @return All components that fail the <code>check()</code> method
      */
     public List<Component> getWrongComponents(){
         List<Component> wrongs = new ArrayList<>();
@@ -231,12 +227,10 @@ public class Ship {
     }
 
     /**
-     * Regenerates the ship's grid by using the traverse() method.
+     * Regenerates the ship's grid by using the <code>traverse()</code> method.<br>
      * This method is used only when deleting a component divides the ship into two
      * separate branches and, since the core must be kept, the branch that does not
      * contain the component will be the one to be deleted.
-     *
-     * @return The regenerated ship's grid
      */
     private void recreateShipGrid() {
         // Initializing all components of the grid to null
@@ -258,7 +252,7 @@ public class Ship {
     }
 
     /**
-     * @return A grid of the given dimensions with all values initialized to null
+     * @return A grid of <code>Component</code> of the given dimensions with all values initialized to <code>null</code>
      */
     private Component[][] initGrid(int grid_rows, int grid_cols) {
         Component[][] grid = new Component[grid_rows][grid_cols];
@@ -277,7 +271,7 @@ public class Ship {
      * ship's grid and also applies the given lambda function to each component that it encounters
      *
      * @param lambda The lambda function to apply to each component encountered.
-     *               It must be of type <code>Consumer</code> of <code>Component</code> in order to return void
+     *               It must be of type <code>Consumer</code> of <code>Component</code> in order to return <code>void</code>
      */
     public void traverse(Consumer<Component> lambda) {
         List<Component> currLayer = new ArrayList<Component>();
@@ -324,13 +318,14 @@ public class Ship {
     /**
      * Returns the direct neighbours of the given component in the following order:
      * <ul>
-     *     <li>Top --> Index 0</li>
-     *     <li>Right --> Index 1</li>
-     *     <li>Bottom --> Index 2</li>
-     *     <li>Left --> Index 3</li>
+     *     <li>Index 0 - Top</li>
+     *     <li>Index 1 - Right</li>
+     *     <li>Index 2 - Bottom</li>
+     *     <li>Index 3 - Left</li>
      * </ul>
      * <br>
-     * NOTE: The direct neighbours are NOT diagonal, only top, right, bottom and left.
+     * NOTE: The direct neighbours are NOT diagonal, thus only the top, right, bottom and left adjacent
+     * components are considered as neighbours of the given component.
      *
      * @param component The component of which we want to get its direct neighbours
      * @return A <code>Component[]</code> array of size 4 with the given component's neighbours
@@ -419,7 +414,10 @@ public class Ship {
     }
 
     /**
-     * Removes the component at coordinates (i, j) from the ship's grid
+     * Removes the component at coordinates (i, j) from the ship's grid.<br>
+     * If that component, when removed, divides the ship into 2 or more branches, then the
+     * method keeps the branch that also has the core component and discards others
+     * (as if they were left hanging without support).
      *
      * @param i The index of row that contains the component to delete
      * @param j The index of column that contains the component to delete
