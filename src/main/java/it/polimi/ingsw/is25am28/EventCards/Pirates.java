@@ -12,7 +12,7 @@ public class Pirates extends EventCard {
     private final int movementSteps;
     List<PlasmaShot> shootingSequence = new ArrayList<>();
 
-    public Pirates(String name, int cardLevel, int requireFirepower, int givenCredits, int movementSteps) {
+    public Pirates(String name, int cardLevel, int requireFirepower, int givenCredits, int movementSteps, int smallShoots, int bigShoots ) {
         this.name = name;
         this.cardLevel = cardLevel;
         this.requiredFirepower = requireFirepower;
