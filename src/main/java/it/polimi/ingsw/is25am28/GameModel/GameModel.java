@@ -5,15 +5,21 @@ import it.polimi.ingsw.is25am28.Ship.Ship;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 
+import it.polimi.ingsw.is25am28.Components.Battery;
+import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Components.Cannon;
 import it.polimi.ingsw.is25am28.Components.Shield;
-
+import it.polimi.ingsw.is25am28.Components.Storage;
+import it.polimi.ingsw.is25am28.Components.Structural;
+import it.polimi.ingsw.is25am28.Components.Vital;
 import it.polimi.ingsw.is25am28.Components.Component;
+import it.polimi.ingsw.is25am28.Components.Engine;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
@@ -57,8 +63,7 @@ public class GameModel {
             int size = NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + DECK_SIZE;
 
             for( int i = 0; i < size; i++ ){
-                  // TODO implement
-                  //deck.add(new EventCard());
+                  
             }
 
             // random sort
@@ -123,9 +128,8 @@ public class GameModel {
 
             sorted.sort((p1,p2) -> p1.hasLost() ? -1: p1.getCursor() - p2.getCursor() );
 
-
             // add credits based on position
-            for( int i = 0; i < sorted.size(); i++ ){
+            for( int i = 0; i < sorted.size() || sorted.get(i).hasLost(); i++ ){
                   sorted.get(i).addCredits( 4 - i );
             }
 
@@ -148,19 +152,19 @@ public class GameModel {
                         Component[] nearest = ship.getNearestComponents(component);
 
                         if( nearest[0] == null ){
-                              connectors.add( component.getTopSide() );
+                              connectors.add( component.getTopSideConnectors() );
                         }
 
                         if( nearest[1] == null ){
-                              connectors.add( component.getRightSide() );
+                              connectors.add( component.getRightSideConnectors() );
                         }
 
                         if( nearest[2] == null ){
-                              connectors.add( component.getBottomSide() );
+                              connectors.add( component.getBottomSideConnectors() );
                         }
 
                         if( nearest[3] == null ){
-                              connectors.add( component.getLeftSide() );
+                              connectors.add( component.getLeftSideConnectors() );
                         }
                   });
 
@@ -235,65 +239,14 @@ public class GameModel {
       public Board getBoard(){
             return board;
       }
+      /**
+       * return all components that can be used to build the ships
+       */
       public List<Component> getAllComponents(){
             if( components.size() > 0 )
                   return components;
 
-            try {
-                  FileReader file = new FileReader("../json/tiles.json");
-                  JSONParser parser = new JSONParser();
-                  JSONObject desc = parser.parse(file);
-
-                  JSONArray cannons = desc.get("cannon" );
-
-                  for( JSONObject o: cannons ){
-                        int[] connectors = new int[4];
-
-                        for( int i = 0; i < 4; i++ ){
-                              connectors[i] = (Integer)o.get("connectors").get(i);
-                        }
-
-                        components.add(new Cannon( connectors, o.get("force") ));
-                  }
-
-                  JSONArray shield = desc.get("shield" );
-
-                  for( JSONObject o: cannons ){
-                        int[] connectors = new int[4];
-
-                        for( int i = 0; i < 4; i++ ){
-                              connectors[i] = (Integer)o.get("connectors").get(i);
-                        }
-
-                        components.add(new Shield( connectors ));
-                  }
-
-                  JSONArray shield = desc.get("shield" );
-
-                  for( JSONObject o: cannons ){
-                        int[] connectors = new int[4];
-
-                        for( int i = 0; i < 4; i++ ){
-                              connectors[i] = (Integer)o.get("connectors").get(i);
-                        }
-
-                        components.add(new Shield( connectors ));
-                  }
-
-                  JSONArray shield = desc.get("shield" );
-
-                  for( JSONObject o: cannons ){
-                        int[] connectors = new int[4];
-
-                        for( int i = 0; i < 4; i++ ){
-                              connectors[i] = (Integer)o.get("connectors").get(i);
-                        }
-
-                        components.add(new Shield( connectors ));
-                  }
-
-            }catch(FileNotFoundException e){}
-
+            components.addAll(new FileLoader("../json/tiles.json").getAllComponents());
             return components;
       }
 }

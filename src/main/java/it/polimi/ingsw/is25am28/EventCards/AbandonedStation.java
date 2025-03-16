@@ -8,14 +8,15 @@ import java.util.ArrayList;
 public class AbandonedStation extends EventCard {
     private final int requiredCrew;
     private final int movementStep;
-    private ArrayList<Item> planetItem = new ArrayList<Item>();
+    //private ArrayList<Item> planetItem = new ArrayList<Item>();
 
-    public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> planetItem) {
+    public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, int red, int green, int blue, int yellow ) {
         this.name = name;
         this.cardLevel = cardLevel;
         this.requiredCrew = requiredCrew;
         this.movementStep = movementStep;
-        this.planetItem = planetItem;
+
+
     }
 
     public void useCard(Player[] players) {
