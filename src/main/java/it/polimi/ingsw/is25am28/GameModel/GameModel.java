@@ -1,15 +1,28 @@
 package it.polimi.ingsw.is25am28.GameModel;
 
+
 import it.polimi.ingsw.is25am28.Ship.Ship;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+
+import it.polimi.ingsw.is25am28.Components.Cannon;
+import it.polimi.ingsw.is25am28.Components.Shield;
+
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
+
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 public class GameModel {
 
@@ -25,6 +38,7 @@ public class GameModel {
       private final Board board;
       // indicate the round number and the card to draw from the deck
       private int round = 0;
+      private final List<Component> components = new ArrayList<>();
 
       public GameModel( int level ){
             players = new HashSet<>();
@@ -220,5 +234,66 @@ public class GameModel {
 
       public Board getBoard(){
             return board;
+      }
+      public List<Component> getAllComponents(){
+            if( components.size() > 0 )
+                  return components;
+
+            try {
+                  FileReader file = new FileReader("../json/tiles.json");
+                  JSONParser parser = new JSONParser();
+                  JSONObject desc = parser.parse(file);
+
+                  JSONArray cannons = desc.get("cannon" );
+
+                  for( JSONObject o: cannons ){
+                        int[] connectors = new int[4];
+
+                        for( int i = 0; i < 4; i++ ){
+                              connectors[i] = (Integer)o.get("connectors").get(i);
+                        }
+
+                        components.add(new Cannon( connectors, o.get("force") ));
+                  }
+
+                  JSONArray shield = desc.get("shield" );
+
+                  for( JSONObject o: cannons ){
+                        int[] connectors = new int[4];
+
+                        for( int i = 0; i < 4; i++ ){
+                              connectors[i] = (Integer)o.get("connectors").get(i);
+                        }
+
+                        components.add(new Shield( connectors ));
+                  }
+
+                  JSONArray shield = desc.get("shield" );
+
+                  for( JSONObject o: cannons ){
+                        int[] connectors = new int[4];
+
+                        for( int i = 0; i < 4; i++ ){
+                              connectors[i] = (Integer)o.get("connectors").get(i);
+                        }
+
+                        components.add(new Shield( connectors ));
+                  }
+
+                  JSONArray shield = desc.get("shield" );
+
+                  for( JSONObject o: cannons ){
+                        int[] connectors = new int[4];
+
+                        for( int i = 0; i < 4; i++ ){
+                              connectors[i] = (Integer)o.get("connectors").get(i);
+                        }
+
+                        components.add(new Shield( connectors ));
+                  }
+
+            }catch(FileNotFoundException e){}
+
+            return components;
       }
 }

@@ -1,0 +1,534 @@
+{
+      "abandonedShip":[
+            {
+                  "level": 1,
+                  "credits": 3,
+                  "days": 1,
+                  "people": 2,
+                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_I_IT_0117.jpg"
+            },
+            {
+                  "level": 1,
+                  "credits": 4,
+                  "days": 1,
+                  "people": 3,
+                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_I_IT_0118.jpg"
+            },
+            {
+                  "level": 2,
+                  "credits": 6,
+                  "days": 1,
+                  "people": 4,
+                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_II_IT_0117.jpg"
+            },
+            {
+                  "level": 2,
+                  "credits": 8,
+                  "days": 2,
+                  "people": 5,
+                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_II_IT_0118.jpg"
+            }
+      ],
+      "abandonedStation" : [
+            {
+                  "level": 1,
+                  "blu": 0,
+                  "green": 1,
+                  "yellow": 1,
+                  "red": 0,
+                  "days": 1,
+                  "people": 5,
+                  "path": "galaxy_trucker_imgs/cards/abandonedStation/GT-cards_I_IT_0119.jpg"
+            },
+            {
+                  "level": 1,
+                  "blu": 0,
+                  "green": 0,
+                  "yellow": 0,
+                  "red": 2,
+                  "days": 1,
+                  "people": 6,
+                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_II_IT_0118.jpg"
+            },
+            {
+                  "level": 2,
+                  "blu": 0,
+                  "green": 0,
+                  "yellow": 1,
+                  "red": 1,
+                  "days": 1,
+                  "people": 7,
+                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_II_IT_0118.jpg"
+            },
+            {
+                  "level": 2,
+                  "blu": 0,
+                  "green": 1,
+                  "yellow": 2,
+                  "red": 0,
+                  "days": 2,
+                  "people": 8,
+                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_II_IT_0118.jpg"
+            }
+      ],
+      "meteors" : [
+            {
+                  "level": 1,
+                  "top": [2],
+                  "right": [1],
+                  "bottom": [],
+                  "left": [1],
+                  "path": "galaxy_trucker_imgs/cards/meteors/GT-cards_I_IT_019.jpg"
+            },
+            {
+                  "level": 1,
+                  "top": [1,1],
+                  "right": [1],
+                  "bottom": [1],
+                  "left": [1],
+                  "path": "galaxy_trucker_imgs/cards/meteors/GT-cards_I_IT_0110.jpg"
+            },
+            {
+                  "level": 1,
+                  "top": [2,1,2],
+                  "right": [],
+                  "bottom": [],
+                  "left": [],
+                  "path": "galaxy_trucker_imgs/cards/meteors/GT-cards_I_IT_0111.jpg"
+            },
+            {
+                  "level": 2,
+                  "top": [1,1],
+                  "right": [],
+                  "bottom": [],
+                  "left": [2,1,1],
+                  "path": "galaxy_trucker_imgs/cards/meteors/GT-cards_II_IT_019.jpg"
+            },
+            {
+                  "level": 2,
+                  "top": [2,2],
+                  "right": [],
+                  "bottom": [],
+                  "left": [1,1],
+                  "path": "galaxy_trucker_imgs/cards/meteors/GT-cards_II_IT_110.jpg"
+            },
+            {
+                  "level": 2,
+                  "top": [1,1],
+                  "right": [2,1,1],
+                  "bottom": [],
+                  "left": [],
+                  "path": "galaxy_trucker_imgs/cards/meteors/GT-cards_II_IT_0111.jpg"
+            }
+      ],
+      "pirates": [
+            {
+                  "level": 1,
+                  "firepower": 5,
+                  "bigShoots": 1,
+                  "smallShoots": 2,
+                  "days": 1,
+                  "credits": 4,
+                  "path": "galaxy_trucker_imgs/cards/pirates/GT-cards_I_IT_013.jpg"
+            },
+            {
+                  "level": 2,
+                  "firepower": 6,
+                  "bigShoots": 2,
+                  "smallShoots": 1,
+                  "days": 2,
+                  "credits": 7,
+                  "path": "galaxy_trucker_imgs/cards/pirates/GT-cards_II_IT_013.jpg"
+            }
+      ],
+      "planets": [
+            {
+                  "level": 1,
+                  "days": 3,
+                  "planets": [
+                        {
+                              "blu": 3,
+                              "green": 1,
+                              "yellow": 0,
+                              "red": 1
+                        },
+                        {
+                              "blu": 1,
+                              "green": 0,
+                              "yellow": 1,
+                              "red": 1
+                        },
+                        {
+                              "blu": 0,
+                              "green": 1,
+                              "yellow": 0,
+                              "red": 1
+                        }
+                  ],
+                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_I_IT_0112.jpg"     
+            },
+            {
+                  "level": 1,
+                  "days": 2,
+                  "planets": [
+                        {
+                              "blu": 2,
+                              "green": 0,
+                              "yellow": 0,
+                              "red": 1
+                        },
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 1,
+                              "red": 0
+                        },
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 0,
+                              "red": 2
+                        }
+                  ],
+                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_I_IT_0113.jpg"     
+            },
+            {
+                  "level": 1,
+                  "days": 3,
+                  "planets": [
+                        {
+                              "yellow": 2
+                        },
+                        {
+                              "blu": 0,
+                              "green": 1,
+                              "yellow": 1,
+                              "red": 1
+                        }
+                  ],
+                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_I_IT_0114.jpg"     
+            },
+            {
+                  "level": 1,
+                  "days": 1,
+                  "planets": [
+                        {
+                              "blu": 3,
+                              "green": 0,
+                              "yellow": 0,
+                              "red": 0
+                        },
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 1,
+                              "red": 0
+                        },
+                        {
+                              "blu": 0,
+                              "green": 2,
+                              "yellow": 0,
+                              "red": 0
+                        }
+                  ],
+                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_I_IT_0115.jpg"     
+            },
+            {
+                  "level": 2,
+                  "days": 4,
+                  "planets": [
+                        {
+                              "blu": 4,
+                              "green": 0,
+                              "yellow": 0,
+                              "red": 1
+                        },
+                        {
+                              "blu": 0,
+                              "green": 2,
+                              "yellow": 0,
+                              "red": 2
+                        },
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 1,
+                              "red": 3
+                        }
+                  ],
+                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_I_IT_0115.jpg"     
+            },
+            {
+                  "level": 2,
+                  "days": 4,
+                  "planets": [
+                        {
+                              "blu": 4,
+                              "green": 0,
+                              "yellow": 0,
+                              "red": 1
+                        },
+                        {
+                              "blu": 0,
+                              "green": 2,
+                              "yellow": 0,
+                              "red": 2
+                        },
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 1,
+                              "red": 3
+                        }
+                  ],
+                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_II_IT_0112.jpg"     
+            },
+            {
+                  "level": 2,
+                  "days": 3,
+                  "planets": [
+                        {
+                              "blu": 0,
+                              "green": 4,
+                              "yellow": 0,
+                              "red": 0
+                        },
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 0,
+                              "red": 2
+                        }
+                  ],
+                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_II_IT_0113.jpg"     
+            },
+            {
+                  "level": 2,
+                  "days": 2,
+                  "planets": [
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 1,
+                              "red": 1
+                        },
+                        {
+                              "blu": 1,
+                              "green": 1,
+                              "yellow": 1,
+                              "red": 0
+                        },
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 1,
+                              "red": 1
+                        },
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 1,
+                              "red": 0
+                        }
+                  ],
+                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_II_IT_0114.jpg"     
+            },
+            {
+                  "level": 2,
+                  "days": 3,
+                  "planets": [
+                        {
+                              "blu": 4,
+                              "green": 0,
+                              "yellow": 0,
+                              "red": 0
+                        },
+                        {
+                              "blu": 0,
+                              "green": 4,
+                              "yellow": 0,
+                              "red": 0
+                        },
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 2,
+                              "red": 0
+                        }
+                  ],
+                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_II_IT_0115.jpg"     
+            }
+      ],
+      "space": [
+            {
+                  "level": 1,
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+            },
+            {
+                  "level": 1,
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+            },
+            {
+                  "level": 1,
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+            },
+            {
+                  "level": 1,
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+            },
+            {
+                  "level": 2,
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+            },
+            {
+                  "level": 2,
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+            },
+            {
+                  "level": 2,
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+            }
+      ],
+      "epidemic": [
+            {
+                  "level": 2,
+                  "path": "galaxy_trucker_imgs/cards/epidemic/GT-cards_II_IT_015.jpg"
+            }
+      ],
+      "smugglers": [
+            {
+                  "level": 1,
+                  "days": 1,
+                  "storage": 
+                        {
+                              "blu": 1,
+                              "green": 1,
+                              "yellow": 1,
+                              "red": 0
+                        },
+                  "cannons": 4,
+                  "penalty": 2,
+                  "path": "galaxy_trucker_imgs/cards/smugglers/GT-cards_I_IT_012.jpg"     
+            },
+            {
+                  "level": 2,
+                  "days": 1,
+                  "storage": 
+                        {
+                              "blu": 0,
+                              "green": 0,
+                              "yellow": 2,
+                              "red": 1
+                        },
+                  "cannons": 8,
+                  "penalty": 3,
+                  "path": "galaxy_trucker_imgs/cards/smugglers/GT-cards_II_IT_012.jpg"     
+            }
+      ],
+      "slavers": [
+            {
+                  "level": 1,
+                  "days": 1,
+                  "cannons": 6,
+                  "penalty": 3,
+                  "credits": 5,
+                  "path": "galaxy_trucker_imgs/cards/slavers/GT-cards_I_IT_01.jpg"     
+            },
+            {
+                  "level": 2,
+                  "days": 2,
+                  "cannons": 7,
+                  "penalty": 4,
+                  "credits": 8,
+                  "path": "galaxy_trucker_imgs/cards/slavers/GT-cards_II_IT_01.jpg"     
+            }
+      ],
+      "stardust": [
+            {
+                  "level": 1,
+                  "path": "galaxy_trucker_imgs/cards/stardust/GT-cards_I_IT_014.jpg"
+            },
+            {
+                  "level": 2,
+                  "path": "galaxy_trucker_imgs/cards/stardust/GT-cards_I_IT_014.jpg"
+            }
+      ],
+      "warzone": [
+            {
+
+                  "engines": {
+                        "humans": 2,
+                        "storage": 0,
+                        "shoot": {
+                              "left": [],
+                              "right" : [],
+                              "top": [],
+                              "bottom": []
+                        },
+                        "days": 0
+                  },
+                  "cannons": {
+                        "humans": 0,
+                        "storage": 0,
+                        "shoot": {
+                              "left": [],
+                              "right" : [],
+                              "top": [],
+                              "bottom": [1,2]
+                        },
+                        "days": 0
+                  },
+                  "humans": {
+                        "humans": 0,
+                        "storage": 0,
+                        "shoot": {
+                              "left": [],
+                              "right" : [],
+                              "top": [],
+                              "bottom": []
+                        },
+                        "days": 3
+                  },
+                  "level": 1,
+                  "path": "galaxy_trucker_imgs/cards/warzone/GT-cards_I_IT_0116.jpg"
+            },
+            {
+
+                  "engines": {
+                        "humans": 0,
+                        "storage": 3,
+                        "shoot": {
+                              "left": [],
+                              "right" : [],
+                              "top": [],
+                              "bottom": []
+                        },
+                        "days": 0
+                  },
+                  "cannons": {
+                        "humans": 0,
+                        "storage": 0,
+                        "shoot": {
+                              "left": [],
+                              "right" : [],
+                              "top": [],
+                              "bottom": []
+                        },
+                        "days": 4
+                  },
+                  "humans": {
+                        "humans": 0,
+                        "storage": 0,
+                        "shoot": {
+                              "left": [1],
+                              "right" : [1],
+                              "top": [1],
+                              "bottom": [2]
+                        },
+                        "days": 0
+                  },
+                  "level": 2,
+                  "path": "galaxy_trucker_imgs/cards/warzone/GT-cards_II_IT_0116.jpg"
+            }
+      ]
+}
