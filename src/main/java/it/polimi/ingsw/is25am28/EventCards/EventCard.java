@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
 import java.util.List;
 import java.util.Optional;
@@ -9,7 +10,7 @@ import org.json.simple.JSONObject;
 public abstract class EventCard {
     protected String name;
     protected int cardLevel;
-    protected List<Player> players;
+    protected Board board;
     protected Optional<Player> currentPlayer;
 
     /**
@@ -20,16 +21,30 @@ public abstract class EventCard {
         this.cardLevel = cardLevel;
     }
 
+    /* SUPERSEDED BY ADDING THE BOARD ATTRIBUTE
     /**
      * This method is immediately invoked when the card a new card is extracted.
      * Can be overridden to specify different initialization modes (like reverse player order)
-     */
+     *
     public void initCardPlayers( List<Player> players ) throws IllegalArgumentException {
         if ( players == null || players.isEmpty() || players.size() < 2 ) {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
         } else {
-            this.players = players;
+            this.boardplayers = players;
             currentPlayer = Optional.of(players.getFirst());
+        }
+    }
+    */
+
+    /**
+     * Initializes the board pointer inside the card
+     */
+    public void initBoard(Board board) throws IllegalArgumentException {
+        if (board == null || board.getSize() == 0) {
+            throw new IllegalArgumentException("ERROR: Board must be initialized first before assigning it to an event card");
+        }
+        else {
+            this.board = board;
         }
     }
 

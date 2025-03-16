@@ -42,16 +42,17 @@ public class WarZone extends EventCard {
         super(cardName, cardLevel);
         // this.imagePath = imagePath;
 
-        // Variables
-        JSONObject shootingSequenceJSON;
-        JSONArray directionSequence;
-
         // Initializing the direction name to value map
         this.directionNameToValue = new HashMap<Integer, String>();
         this.directionNameToValue.put(0, "top");
         this.directionNameToValue.put(1, "right");
         this.directionNameToValue.put(2, "bottom");
         this.directionNameToValue.put(3, "left");
+
+        // Variables
+        JSONObject shootingSequenceJSON;
+        JSONArray directionSequence;
+        int totalDirections = directionNameToValue.size();
 
         // (1) - Initializing the conditions for the player with the lowest crew
         this.takenCrewForLowestCrew = (int) humans.get("humans");
@@ -61,7 +62,7 @@ public class WarZone extends EventCard {
 
         shootingSequenceJSON = (JSONObject) humans.get("shoot");
 
-        for (int i = 0; i < directionNameToValue.size(); i++) {
+        for (int i = 0; i < totalDirections; i++) {
             directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
             for (Object sizeIndicator : directionSequence) {
                 shootingSequenceForLowestCrew.add(new PlasmaShot((Integer) sizeIndicator, i));
@@ -76,7 +77,7 @@ public class WarZone extends EventCard {
 
         shootingSequenceJSON = (JSONObject) humans.get("shoot");
 
-        for (int i = 0; i < directionNameToValue.size(); i++) {
+        for (int i = 0; i < totalDirections; i++) {
             directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
             for (Object sizeIndicator : directionSequence) {
                 shootingSequenceForLowestEnginePower.add(new PlasmaShot((Integer) sizeIndicator, i));
@@ -91,7 +92,7 @@ public class WarZone extends EventCard {
 
         shootingSequenceJSON = (JSONObject) humans.get("shoot");
 
-        for (int i = 0; i < directionNameToValue.size(); i++) {
+        for (int i = 0; i < totalDirections; i++) {
             directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
             for (Object sizeIndicator : directionSequence) {
                 shootingSequenceForLowestFirepower.add(new PlasmaShot((Integer) sizeIndicator, i));

@@ -139,6 +139,26 @@ public class Ship {
     }
 
     /**
+     * Consumes the given amount of energy from the ship's total energy
+     */
+    public void consumeEnergy(int energyToConsume) {
+        int availableEnergy;
+
+        for (Battery battery : this.batteryList) {
+            availableEnergy = battery.getAvailability();
+
+            if (availableEnergy < energyToConsume) {
+                energyToConsume -= availableEnergy;
+                battery.setAvailability(0);
+            }
+            else {
+                battery.setAvailability(availableEnergy - energyToConsume);
+                break;
+            }
+        }
+    }
+
+    /**
      * @return The ship's total onboard <code>Lifeform</code>s
      *         (both humans and aliens)
      */
@@ -162,8 +182,8 @@ public class Ship {
      * @return The ship's total engine power, including the
      *         double engines that the user chooses to activate
      */
-    public float getEnginePower() {
-        return (float) this.engineList.stream()
+    public int getEnginePower() {
+        return (int) this.engineList.stream()
                 .mapToDouble(Engine::getSpeed)
                 .sum();
     }
