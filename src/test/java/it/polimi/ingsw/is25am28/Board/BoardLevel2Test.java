@@ -106,6 +106,10 @@ class BoardLevel2Test {
                 board.getEliminatedPlayers().containsAll(List.of(tmpPlayers.get(2), tmpPlayers.get(3))),
                 "The eliminated players are not the expected ones"
         );
+
+        board.getEliminatedPlayers().forEach(player ->
+                assertTrue(player.isEliminated(), "The player eliminated flag has not been correctly updated")
+        );
     }
 
     @Test
@@ -127,7 +131,5 @@ class BoardLevel2Test {
                 board.getPlayers(),
                 "The remaining players are not in the correct order"
         );
-
-        board.printBoard();
     }
 }

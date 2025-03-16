@@ -74,10 +74,10 @@ public class Smugglers extends EventCard {
         for (Battery battery : batteries) {
             // Funzioni di Battery necessarie
         }*/
-        player.getShip().setEnergy(player.getShip().getEnergy() - i);
-        if (player.getShip().getEnergy() < 0) {
-            player.getShip().setEnergy(0);
-        }
+//        player.getShip().setEnergy(player.getShip().getEnergy() - i);
+//        if (player.getShip().getEnergy() < 0) {
+//            player.getShip().setEnergy(0);
+//        }
 
 
     }

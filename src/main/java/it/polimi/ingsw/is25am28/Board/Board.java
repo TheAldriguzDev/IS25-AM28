@@ -113,9 +113,14 @@ public abstract class Board {
 
                 player.setCurrentCell(cell);
                 player.setCursor(cell.getIdx());
+
                 return;
             }
         }
+
+        // Re-order the current player position since the order of being added to the board can be different
+        // of the order of the client registration to the game
+        this.validatePlayersPosition();
     }
 
     /**
@@ -169,7 +174,7 @@ public abstract class Board {
      * Method that check the players cursor to identify eventual doubled players and eliminate them.
      * It also reset the player list to maintain a correct order
      * */
-    public void validatePlayersPosition() {
+    public synchronized void validatePlayersPosition() {
         int maxCursor = players.stream()
                         .mapToInt(Player::getCursor)
                         .max()
