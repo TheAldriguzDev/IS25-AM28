@@ -7,7 +7,7 @@ import java.util.List;
 
 public final class SlaversResponse extends Response{
     private final boolean takeCredits;
-    private final List<Cabin> crewToRemove = new ArrayList<>();
+    private final ArrayList<Cabin> crewToRemove = new ArrayList<>();
 
     public SlaversResponse(boolean takeCredits) {
         this.takeCredits = takeCredits;

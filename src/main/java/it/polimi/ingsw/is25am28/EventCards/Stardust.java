@@ -4,10 +4,9 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.json.simple.JSONObject;
-
-import java.util.ArrayList;
 
 public class Stardust extends EventCard {
 
@@ -15,38 +14,42 @@ public class Stardust extends EventCard {
         super(name, cardLevel);
     }
 
-    public EventCard useCard(Object response) throws ClassCastException {
-        Player player = getCurrent();
-        AtomicInteger movementSteps = new AtomicInteger();
-        Ship ship = player.getShip();
-        ship.traverse(
-                (Component c) -> {
-                    // For each exposed side movementsSteps++;
-                    Component[] otherC = ship.getNearestComponents(c);
-                    if (otherC[0] == null) {
-                        if (c.getTopSide() != 0) {
-                            movementSteps.getAndIncrement();
-                        }
-                    }
-                    if (otherC[1] == null) {
-                        if (c.getRightSide() != 0) {
-                            movementSteps.getAndIncrement();
-                        }
-                    }
-                    if (otherC[2] == null) {
-                        if (c.getBottomSide() != 0) {
-                            movementSteps.getAndIncrement();
-                        }
-                    }
-                    if (otherC[3] == null) {
-                        if (c.getLeftSide() != 0) {
-                            movementSteps.getAndIncrement();
-                        }
-                    }
+    public EventCard useCard(JSONObject data) throws ClassCastException {
+        Optional<Player> playerOptional = getCurrentPlayer();
+        playerOptional.ifPresent(
+                (Player player) -> {
+                    AtomicInteger movementSteps = new AtomicInteger();
+                    Ship ship = player.getShip();
+                    ship.traverse(
+                            (Component c) -> {
+                                // For each exposed side movementsSteps++;
+                                Component[] otherC = ship.getNearestComponents(c);
+                                if (otherC[0] == null) {
+                                    if (c.getTopSide() != 0) {
+                                        movementSteps.getAndIncrement();
+                                    }
+                                }
+                                if (otherC[1] == null) {
+                                    if (c.getRightSide() != 0) {
+                                        movementSteps.getAndIncrement();
+                                    }
+                                }
+                                if (otherC[2] == null) {
+                                    if (c.getBottomSide() != 0) {
+                                        movementSteps.getAndIncrement();
+                                    }
+                                }
+                                if (otherC[3] == null) {
+                                    if (c.getLeftSide() != 0) {
+                                        movementSteps.getAndIncrement();
+                                    }
+                                }
+                            }
+                    );
+                    player.setCursor(player.getCursor() - movementSteps.get());
                 }
         );
-        player.setCursor(player.getCursor() - movementSteps.get());
-        getNext();
+        getNextPlayer();
         return this;
     }
 

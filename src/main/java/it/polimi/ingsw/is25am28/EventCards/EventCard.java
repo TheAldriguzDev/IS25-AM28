@@ -33,11 +33,6 @@ public abstract class EventCard {
         }
     }
 
-    public EventCard(String name, int cardLevel) {
-        this.name = name;
-        this.cardLevel = cardLevel;
-    }
-
     protected abstract void bonusEffect();
 
     protected abstract void malusEffect();

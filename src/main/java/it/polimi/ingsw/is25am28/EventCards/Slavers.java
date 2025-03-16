@@ -1,9 +1,11 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.SlaversJSON;
 import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Response.SlaversResponse;
 import org.json.simple.JSONObject;
+
+import java.util.Optional;
 
 public class Slavers extends EventCard {
     private final int requiredFirepower;
@@ -13,32 +15,40 @@ public class Slavers extends EventCard {
 
 
     public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew) {
-        this.name = name;
-        this.cardLevel = cardLevel;
+        super(name, cardLevel);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.givenCredits = givenCredits;
         this.takenCrew = takenCrew;
     }
 
-    public EventCard useCard(Object response) throws ClassCastException {
-        SlaversResponse slaversResponse = (SlaversResponse) response;
-        Player player = getCurrent();
-        if (player.getShip().getFirePower() >= requiredFirepower) {
-            if (slaversResponse.getTakeCredits()) {
-                bonusEffect();
-                player.setCursor(player.getCursor() - this.movementSteps);
-            }
-        } else {
-            malusEffect(slaversResponse);
-        }
-        getNext();
+    public EventCard useCard(JSONObject data) throws ClassCastException {
+        //SlaversResponse slaversResponse = (SlaversResponse) response;
+        SlaversJSON slaversData = (SlaversJSON) data.get("slavers");
+        Optional<Player> playerOptimal = getCurrentPlayer();
+        playerOptimal.ifPresent(
+                (Player player) -> {
+                    if (player.getShip().getFirePower() >= requiredFirepower) {
+                        if (slaversData.getTakeCredits()) {
+                            bonusEffect();
+                            player.setCursor(player.getCursor() - this.movementSteps);
+                        }
+                    } else {
+                        malusEffect(data);
+                    }
+                }
+        );
+        getNextPlayer();
         return this;
     }
 
     protected void bonusEffect() {
-        Player player = getCurrent();
-        player.setCredits(player.getCredits() + this.givenCredits);
+        Optional<Player> playerOptional = getCurrentPlayer();
+        playerOptional.ifPresent(
+                (Player player) -> {
+                    player.setCredits(player.getCredits() + this.givenCredits);
+                }
+        );
     }
 
     /*
@@ -52,11 +62,16 @@ public class Slavers extends EventCard {
      * configurazioni non valide (vuota, equipaggio rimosso non sufficiente, 3 volte la stessa cabina...)
      * */
 
-    protected void malusEffect(SlaversResponse slaversResponse) {
-        Player player = getCurrent();
-        for (Cabin cabin : slaversResponse.getCrewToRemove()) {
-            cabin.removeInhabitant(cabin.getInhabitants().getFirst());
-        }
+    protected void malusEffect(JSONObject data) {
+        Optional<Player> playerOptional = getCurrentPlayer();
+        SlaversJSON slaversData = (SlaversJSON) data.get("slavers");
+        playerOptional.ifPresent(
+                (Player player) -> {
+                    for (Cabin cabin : slaversData.getCrewToRemove()) {
+                        cabin.removeInhabitant(cabin.getInhabitants().getFirst());
+                    }
+                }
+        );
     }
 
     protected void malusEffect() {}
