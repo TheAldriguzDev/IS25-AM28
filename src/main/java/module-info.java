@@ -19,6 +19,7 @@ module it.polimi.ingsw.is25am28 {
     exports it.polimi.ingsw.is25am28.Items;
     exports it.polimi.ingsw.is25am28.Response;
     exports it.polimi.ingsw.is25am28.TimeObserver;
+    exports it.polimi.ingsw.is25am28.ActionJSON;
     opens it.polimi.ingsw.is25am28.Exceptions to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Ship to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Player to javafx.fxml;

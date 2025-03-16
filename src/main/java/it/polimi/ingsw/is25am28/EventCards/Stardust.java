@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Component;
 import org.json.simple.JSONObject;
@@ -8,8 +10,8 @@ import java.util.ArrayList;
 
 public class Stardust extends EventCard {
 
-    public Stardust(String name, int cardLevel) {
-        super(name, cardLevel);
+    public Stardust(String name, int cardLevel, Board board) {
+        super(name, cardLevel, board);
     }
 
     @Override
@@ -23,7 +25,7 @@ public class Stardust extends EventCard {
     }
 
     @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
         return null;
     }
 

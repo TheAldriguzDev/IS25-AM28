@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Component;
 import org.json.simple.JSONObject;
@@ -12,8 +14,8 @@ public class Epidemy extends EventCard {
      * @param name
      * @param cardLevel
      */
-    protected Epidemy(String name, int cardLevel) {
-        super(name, cardLevel);
+    protected Epidemy(String name, int cardLevel, Board board) {
+        super(name, cardLevel, board);
     }
 
     protected void useCard(Player[] players) {
@@ -41,7 +43,7 @@ public class Epidemy extends EventCard {
     }
 
     @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
         return null;
     }
 

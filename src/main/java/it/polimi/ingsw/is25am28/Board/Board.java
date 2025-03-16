@@ -68,6 +68,7 @@ public abstract class Board {
      * */
     public Board eliminatePlayer(Player player) throws IllegalArgumentException {
         if (players.remove(player)) {
+            player.eliminate();
             eliminatedPlayer.add(player);
         } else {
             throw new IllegalArgumentException("The given player is not in the players list");
