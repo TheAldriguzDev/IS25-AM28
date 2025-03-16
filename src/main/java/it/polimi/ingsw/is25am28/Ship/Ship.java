@@ -37,6 +37,7 @@ public class Ship {
 
         coreConnectors[0] = coreConnectors[1] = coreConnectors[2] = coreConnectors[3] = THREE_PIPES.ordinal();
 
+        // Creating the ship's core cabin
         Cabin core = new Cabin(
                 this.grid_rows / 2,
                 this.grid_cols / 2,
@@ -69,19 +70,21 @@ public class Ship {
         traverse(
             (Component c) -> {
                 switch (c) {
-                    case Battery battery:   batteryList.add(battery);
+                    case Battery battery:   this.batteryList.add(battery);
                                             break;
-                    case Cabin cabin:       cabinList.add(cabin);
+                    case Cabin cabin:       this.cabinList.add(cabin);
                                             break;
-                    case Cannon cannon:     cannonList.add(cannon);
+                    case Cannon cannon:     this.cannonList.add(cannon);
                                             break;
-                    case Engine engine:     engineList.add(engine);
+                    case Engine engine:     this.engineList.add(engine);
                                             break;
-                    case Shield shield:     shieldList.add(shield);
+                    case Shield shield:     this.shieldList.add(shield);
                                             break;
-                    case Storage storage:   storageList.add(storage);
+                    case Storage storage:   this.storageList.add(storage);
                                             break;
-                    case Vital vital:       vitalList.add(vital);
+                    case Vital vital:       this.vitalList.add(vital);
+                                            break;
+                    case Structural struct: // Structural components are not sorted
                                             break;
                     default:
                         throw new IllegalStateException("Unexpected class type " + c.toString());
@@ -301,7 +304,7 @@ public class Ship {
                 // by populating it with the neighbours of each component in
                 // found in the currLayer list, except the ones that are already there
                 // (avoids overlapping) or were already checked (avoids backtracking)
-                for (int i = 0; i < 3; i++) {
+                for (int i = 0; i < 4; i++) {
                     //      !nextLayer.contains(neighbours[i]) ==> Avoids overlapping
                     // !alreadyChecked.contains(neighbours[i]) ==> Avoids backtracking
                     if (neighbours[i] != null) {
@@ -460,17 +463,11 @@ public class Ship {
      * @throws OutOfGridException If the given coordinates (i, j) fall outside the ship's grid
      * @throws NullComponentException If the selected component is <code>null</code>
      */
-    public Component getComponent(int i, int j) throws OutOfGridException, NullComponentException {
+    public Component getComponent(int i, int j) throws OutOfGridException {
         Component selectedComponent;
 
         if (i < 0 || j < 0 || i >= grid_rows || j >= grid_cols) {
             throw new OutOfGridException("Requested component is not in the ship component grid");
-        }
-
-        selectedComponent = this.components[i][j];
-
-        if (selectedComponent == null) {
-            throw new NullComponentException("Requested component is null");
         }
 
         return this.components[i][j];
