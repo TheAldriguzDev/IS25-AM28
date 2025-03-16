@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.GameModel;
 
+import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,17 +19,12 @@ public class GameModel {
       static private final int NUM_OF_DECOY_DECKS = 3;
       static private final int DECK_SIZE = 8;
 
-
-      private final HashSet<Player> players;
-
       private final List<EventCard> deck;
       private final Board board;
       // indicate the round number and the card to draw from the deck
       private int round = 0;
 
       public GameModel( int level ){
-            players = new HashSet<>();
-
             deck = generateDeck( level );
             // if( level > 1 )
             board = new BoardLevel2();
@@ -53,14 +49,12 @@ public class GameModel {
             return deck;
       }
 
-      public GameModel newPlayer( Player player ) {
+      /**
+       * Add the new player in the board list --> It can generate an exception that can be propagated to the controller
+       * */
+      public GameModel newPlayer(String nickname, PlayerColor color) {
+            board.newPlayer(nickname, color);
 
-            players.add(player);
-            return this;
-      }
-
-      public GameModel removePlayer( Player player ){
-            players.remove(player);
             return this;
       }
 
@@ -87,7 +81,7 @@ public class GameModel {
 
             HashMap<Player, List<Component>> toFix = new HashMap<>();
 
-            for( Player player : players ) {
+            for( Player player : board.getPlayers() ) {
 
                   List<Component> wrongs = player.getShip().getWrongComponents();
 
@@ -102,91 +96,90 @@ public class GameModel {
        * add credits to each player, based on the
        * number of rewards obtained at the end of the game
        */
-      public GameModel endGameRewards(){
-
-            List<Player> sorted = new ArrayList<Player>(players);
-
-
-            sorted.sort((p1,p2) -> p1.hasLost() ? -1: p1.getCursor() - p2.getCursor() );
-
-
-            // add credits based on position
-            for( int i = 0; i < sorted.size(); i++ ){
-                  sorted.get(i).addCredits( 4 - i );
-            }
-
-            int min = Integer.MAX_VALUE;
-
-            sorted.clear();
-
-            for (Player player : players){
-
-                  if( player.hasLost() )
-                        continue;
-
-                  Ship ship = player.getShip();
-                  List<Integer> connectors = new ArrayList<Integer>();
-                  int curr;
-
-                  connectors.add(0);
-
-                  ship.traverse( component -> {
-                        Component[] nearest = ship.getNearestComponents(component);
-
-                        if( nearest[0] == null ){
-                              connectors.add( component.getTopSide() );
-                        }
-
-                        if( nearest[1] == null ){
-                              connectors.add( component.getRightSide() );
-                        }
-
-                        if( nearest[2] == null ){
-                              connectors.add( component.getBottomSide() );
-                        }
-
-                        if( nearest[3] == null ){
-                              connectors.add( component.getLeftSide() );
-                        }
-                  });
-
-                  curr = connectors.stream().reduce( 0, (p,c) -> p + c );
-
-                  if( curr < min ){
-                        sorted.clear();
-                        sorted.add(player);
-                        curr = min;
-                  }else if( curr == min ){
-                        sorted.add(player);
-                  }
-
-            }
-
-            players.forEach( player -> {
-                  int value = player.getShip().getAllItemValue();
-                  player.addCredits( player.hasLost() ? (int)(value + 1)/2 : value );
-            });
-
-            return this;
-      }
+//      public GameModel endGameRewards(){
+//
+//            List<Player> sorted = new ArrayList<Player>(board.getPlayers());
+//
+//            sorted.sort((p1,p2) -> p1.hasLost() ? -1 : p1.getCursor() - p2.getCursor() );
+//
+//
+//            // add credits based on position
+//            for( int i = 0; i < sorted.size(); i++ ){
+//                  sorted.get(i).addCredits( 4 - i );
+//            }
+//
+//            int min = Integer.MAX_VALUE;
+//
+//            sorted.clear();
+//
+//            for (Player player : players){
+//
+//                  if( player.hasLost() )
+//                        continue;
+//
+//                  Ship ship = player.getShip();
+//                  List<Integer> connectors = new ArrayList<Integer>();
+//                  int curr;
+//
+//                  connectors.add(0);
+//
+//                  ship.traverse( component -> {
+//                        Component[] nearest = ship.getNearestComponents(component);
+//
+//                        if( nearest[0] == null ){
+//                              connectors.add( component.getTopSide() );
+//                        }
+//
+//                        if( nearest[1] == null ){
+//                              connectors.add( component.getRightSide() );
+//                        }
+//
+//                        if( nearest[2] == null ){
+//                              connectors.add( component.getBottomSide() );
+//                        }
+//
+//                        if( nearest[3] == null ){
+//                              connectors.add( component.getLeftSide() );
+//                        }
+//                  });
+//
+//                  curr = connectors.stream().reduce( 0, (p,c) -> p + c );
+//
+//                  if( curr < min ){
+//                        sorted.clear();
+//                        sorted.add(player);
+//                        curr = min;
+//                  }else if( curr == min ){
+//                        sorted.add(player);
+//                  }
+//
+//            }
+//
+//            players.forEach( player -> {
+//                  int value = player.getShip().getAllItemValue();
+//                  player.addCredits( player.hasLost() ? (int)(value + 1)/2 : value );
+//            });
+//
+//            return this;
+//      }
 
       /**
        *
        * @return next event card. If the cards ended, null is returned instead
        */
-      public EventCard nextRound(){
-
-            round++;
-
-            if( round == DECK_SIZE )
-                  return null;
-
-            EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
-
-            card.startUsingCard( new ArrayList<Player>(players) );
-
-            return card;
-      }
+//      public EventCard nextRound(){
+//
+//            round++;
+//
+//            if( round == DECK_SIZE )
+//                  return null;
+//
+//            EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
+//
+//            card.initCardPlayers( new ArrayList<Player>(players) );
+//
+//            return card;
+//      }
 
       public GameModel updateState( Object response ){
             EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
@@ -195,7 +188,7 @@ public class GameModel {
                   throw new Error("state updated when the card has finished to apply its effects to all players");
             }
 
-            card.useCard( response );
+            // card.useCard( response );
 
             return this;
       }

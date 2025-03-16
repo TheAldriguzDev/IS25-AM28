@@ -3,7 +3,8 @@ package it.polimi.ingsw.is25am28.Components;
 public final class Vital extends Component {
       private final VitalType vitalType;
 
-      public Vital(VitalType vitalType) {
+      public Vital(VitalType vitalType,  int row, int col, int top, int[] sides) {
+            super(row, col, top, sides);
             this.vitalType = vitalType;
       }
 
