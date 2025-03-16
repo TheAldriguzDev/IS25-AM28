@@ -2,13 +2,34 @@ package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Component;
+import org.json.simple.JSONObject;
+
 import java.util.ArrayList;
 
 public class Stardust extends EventCard {
 
     public Stardust(String name, int cardLevel) {
-        this.name = name;
-        this.cardLevel = cardLevel;
+        super(name, cardLevel);
+    }
+
+    @Override
+    protected void bonusEffect() {
+
+    }
+
+    @Override
+    protected void malusEffect() {
+
+    }
+
+    @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public JSONObject generateState() {
+        return null;
     }
 
     public void useCard(Player[] players) {

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.Player.Player;
+import org.json.simple.JSONObject;
 
 public class Slavers extends EventCard {
     private final int requiredFirepower;
@@ -36,5 +37,25 @@ public class Slavers extends EventCard {
     protected void malusEffect(Player player) {
         // TODO: Needs to be rewritten
         // player.getShip().setLifeforms(player.getShip().getLifeforms() - this.takenCrew);
+    }
+
+    @Override
+    protected void bonusEffect() {
+
+    }
+
+    @Override
+    protected void malusEffect() {
+
+    }
+
+    @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public JSONObject generateState() {
+        return null;
     }
 }
