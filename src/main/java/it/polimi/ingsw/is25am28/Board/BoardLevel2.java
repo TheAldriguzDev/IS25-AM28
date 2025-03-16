@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class BoardLevel2 extends Board {
 
     public BoardLevel2() {
+        super();
         this.setSize(24);
     }
 

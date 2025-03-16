@@ -1,75 +1,122 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
-import it.polimi.ingsw.is25am28.Player.Player;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
+import java.util.*;
 
 public class WarZone extends EventCard {
+    // Precalculated table that associates each direction name to its value
+    private final Map<Integer, String> directionNameToValue;
+
+    // Lowest crew conditions
+    private final int takenCrewForLowestCrew;
+    private final int takenStorageForLowestCrew;
     private final int movementStepsForLowestCrew;
+    private final List<PlasmaShot> shootingSequenceForLowestCrew;
+
+    // Lowest engine power conditions
     private final int takenCrewForLowestEnginePower;
-    private List<PlasmaShot> shootingSequenceForLowestFirePower = new ArrayList<>();
+    private final int takenStorageForLowestEnginePower;
+    private final int movementStepsForLowestEnginePower;
+    private final List<PlasmaShot> shootingSequenceForLowestEnginePower;
 
-    public WarZone(String name, int cardLevel, int movementStepsForLowestCrew, int takenCrewForLowestEnginePower) {
-        this.name = name;
-        this.cardLevel = cardLevel;
-        this.movementStepsForLowestCrew = movementStepsForLowestCrew;
-        this.takenCrewForLowestEnginePower = takenCrewForLowestEnginePower;
-    }
+    // Lowest firepower conditions
+    private final int takenCrewForLowestFirepower;
+    private final int takenStorageForLowestFirepower;
+    private final int movementStepsForLowestFirepower;
+    private final List<PlasmaShot> shootingSequenceForLowestFirepower;
 
-    public int getMovementSteps() {
-        return movementStepsForLowestCrew;
-    }
+    // private final String imagePath;
 
-    public int getTakenCrewAmount() {
-        return takenCrewForLowestEnginePower;
-    }
+    public WarZone(
+            String cardName,
+            int cardLevel,
+            JSONObject humans,
+            JSONObject engines,
+            JSONObject cannons
+            // String imagePath
+    ) {
+        super(cardName, cardLevel);
+        // this.imagePath = imagePath;
 
-    public List<PlasmaShot> getShootingSequence() {
-        return shootingSequenceForLowestFirePower;
-    }
+        // Initializing the direction name to value map
+        this.directionNameToValue = new HashMap<Integer, String>();
+        this.directionNameToValue.put(0, "top");
+        this.directionNameToValue.put(1, "right");
+        this.directionNameToValue.put(2, "bottom");
+        this.directionNameToValue.put(3, "left");
 
-    public void useCard(Player[] players) {
-        Player LowestCrewPlayer = players[0];
-        Player LowestFirePowerPlayer =  players[0];
-        Player LowestEnginePowerPlayer = players[0];
-        for (Player player : players) {
-            if ((long) player.getShip().getAllLifeforms().size() < (long) LowestCrewPlayer.getShip().getAllLifeforms().size()) {
-                LowestCrewPlayer = player;
-            }
-            if (player.getShip().getFirePower() < LowestFirePowerPlayer.getShip().getFirePower()) {
-                LowestFirePowerPlayer = player;
-            }
-            if (player.getShip().getEnginePower() < LowestEnginePowerPlayer.getShip().getEnginePower()) {
-                LowestEnginePowerPlayer = player;
+        // Variables
+        JSONObject shootingSequenceJSON;
+        JSONArray directionSequence;
+        int totalDirections = directionNameToValue.size();
+
+        // (1) - Initializing the conditions for the player with the lowest crew
+        this.takenCrewForLowestCrew = (int) humans.get("humans");
+        this.takenStorageForLowestCrew = (int) humans.get("storage");
+        this.movementStepsForLowestCrew = (int) humans.get("days");
+        this.shootingSequenceForLowestCrew = new ArrayList<PlasmaShot>();
+
+        shootingSequenceJSON = (JSONObject) humans.get("shoot");
+
+        for (int i = 0; i < totalDirections; i++) {
+            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
+            for (Object sizeIndicator : directionSequence) {
+                shootingSequenceForLowestCrew.add(new PlasmaShot((Integer) sizeIndicator, i));
             }
         }
-        for (Player player : players) {
-            malusEffect(player, LowestCrewPlayer, LowestFirePowerPlayer, LowestEnginePowerPlayer);
+
+        // (2) - Initializing the conditions for the player with the lowest engine power
+        this.takenCrewForLowestEnginePower = (int) engines.get("humans");
+        this.takenStorageForLowestEnginePower = (int) engines.get("storage");
+        this.movementStepsForLowestEnginePower = (int) engines.get("days");
+        this.shootingSequenceForLowestEnginePower = new ArrayList<PlasmaShot>();
+
+        shootingSequenceJSON = (JSONObject) humans.get("shoot");
+
+        for (int i = 0; i < totalDirections; i++) {
+            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
+            for (Object sizeIndicator : directionSequence) {
+                shootingSequenceForLowestEnginePower.add(new PlasmaShot((Integer) sizeIndicator, i));
+            }
+        }
+
+        // (3) - Initializing the conditions for the player with the lowest firepower
+        this.takenCrewForLowestFirepower = (int) cannons.get("humans");
+        this.takenStorageForLowestFirepower = (int) cannons.get("storage");
+        this.movementStepsForLowestFirepower = (int) cannons.get("days");
+        this.shootingSequenceForLowestFirepower = new ArrayList<PlasmaShot>();
+
+        shootingSequenceJSON = (JSONObject) humans.get("shoot");
+
+        for (int i = 0; i < totalDirections; i++) {
+            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
+            for (Object sizeIndicator : directionSequence) {
+                shootingSequenceForLowestFirepower.add(new PlasmaShot((Integer) sizeIndicator, i));
+            }
         }
     }
 
     @Override
-    void bonusEffect(Player player) {
+    protected void bonusEffect() {
 
     }
 
     @Override
-    void malusEffect(Player player) {
+    protected void malusEffect() {
 
     }
 
-    protected void malusEffect(Player player, Player LowestCrewPlayer, Player LowestFirePowerPlayer, Player LowestEnginePowerPlayer) {
-        if (player == LowestCrewPlayer) {
-            player.setCursor(player.getCursor() - movementStepsForLowestCrew);
-        }
-        if (player == LowestFirePowerPlayer) {
-            // Exposed to shooting sequence
-        }
-        if (player == LowestEnginePowerPlayer) {
-            // TODO: Needs to be rewritten
-            // player.getShip().setLifeForms(player.getShip().getLifeForms() - takenCrewForLowestEnginePower);
-        }
+    @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public JSONObject generateState() {
+        return null;
     }
 }

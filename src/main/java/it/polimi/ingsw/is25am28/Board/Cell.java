@@ -5,7 +5,7 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import java.util.Optional;
 
 public class Cell {
-    private int idx;
+    private final int idx;
     private Optional<Player> player;
     private Cell prev;
     private Cell next;
@@ -63,7 +63,7 @@ public class Cell {
     }
 
     public boolean isEmpty() {
-        return player.isPresent();
+        return player.isEmpty();
     }
 
     @Override
