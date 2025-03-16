@@ -1,5 +1,5 @@
 package it.polimi.ingsw.is25am28.EventCards;
-
+    
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Player.Player;
