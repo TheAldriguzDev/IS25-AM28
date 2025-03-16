@@ -7,7 +7,8 @@ public final class Cabin extends Component {
       private final boolean isCore;
       private final ArrayList<Lifeform> inhabitants;
 
-      public Cabin(boolean isCore) {
+      public Cabin(int row, int col, int top, int[] sides, boolean isCore) {
+            super(row, col, top, sides);
             this.isCore = isCore;
             this.inhabitants = new ArrayList<>();
       }
@@ -22,9 +23,9 @@ public final class Cabin extends Component {
 
       private int getAvailableSpace() {
             return 2 - inhabitants
-                        .stream()
-                        .mapToInt(Lifeform::getRequiredSpace)
-                        .sum();
+                    .stream()
+                    .mapToInt(Lifeform::getRequiredSpace)
+                    .sum();
       }
 
       public void addInhabitant(Lifeform lifeform) throws IllegalArgumentException {

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.Player.Player;
+import org.json.simple.JSONObject;
 
 public class AbandonedShip extends EventCard {
     private final int requiredCrew;
@@ -8,8 +9,7 @@ public class AbandonedShip extends EventCard {
     private final int givenCredits;
 
     public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits) {
-        this.name = name;
-        this.cardLevel = cardLevel;
+        super(name, cardLevel);
         this.requiredCrew = requireCrew;
         this.movementStep = movementStep;
         this.givenCredits = givenCredits;
@@ -19,12 +19,12 @@ public class AbandonedShip extends EventCard {
         for (Player player : players) {
             if (player.getShip().getAllLifeforms().stream().count() > requiredCrew) {
                 //method getChoice: ask player to make a choice
-                if (getChoice()) {
-                    bonusEffect(player);
-                    malusEffect(player);
-                    player.setCursor(player.getCursor() - this.movementStep);
-                    break;
-                }
+//                if (getChoice()) {
+//                    bonusEffect(player);
+//                    malusEffect(player);
+//                    player.setCursor(player.getCursor() - this.movementStep);
+//                    break;
+//                }
             }
         }
     }
@@ -36,5 +36,25 @@ public class AbandonedShip extends EventCard {
     protected void malusEffect(Player player) {
         // Redo implementation with updated Ship methods
         // player.getShip().setLifeForms(player.getShip().getLifeForms() - this.requiredCrew);
+    }
+
+    @Override
+    protected void bonusEffect() {
+
+    }
+
+    @Override
+    protected void malusEffect() {
+
+    }
+
+    @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public JSONObject generateState() {
+        return null;
     }
 }

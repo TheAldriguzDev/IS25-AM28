@@ -12,8 +12,11 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       protected int direction;
 
 
-      public Component() {
-
+      public Component(int row, int col, int direction, int[] sides) {
+            this.row = row;
+            this.col = col;
+            this.direction = direction;
+            this.sides = sides;
       }
 
       /**
@@ -22,6 +25,9 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
        * @return if the component is placed correctly
        */
       public boolean check( Component[] nearest ) {
+
+
+
             if(
                     nearest[0] != null && (
                             ( getTopSide() == 0 && nearest[0].getBottomSide() != 0 ) || // they are not both 0
@@ -68,13 +74,13 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
       /**
        * coordinates into the ship
-       * @return [column,row]
+       * @return [row, col]
        */
       public int[] getPosition() {
             int[] position = new int[2];
 
-            position[0] = col;
-            position[1] = row;
+            position[0] = row;
+            position[1] = col;
 
             return position;
       }

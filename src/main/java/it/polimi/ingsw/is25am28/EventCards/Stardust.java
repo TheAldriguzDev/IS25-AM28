@@ -5,6 +5,9 @@ import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
 import java.util.concurrent.atomic.AtomicInteger;
+import org.json.simple.JSONObject;
+
+import java.util.ArrayList;
 
 public class Stardust extends EventCard {
 
@@ -52,7 +55,7 @@ public class Stardust extends EventCard {
     protected void malusEffect() {}
 
     @Override
-    public Object generateState() {
+    public JSONObject generateState() {
         return null;
     }
 }

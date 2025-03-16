@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Components.Battery;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Components.Storage;
 import it.polimi.ingsw.is25am28.Response.SmugglersResponse;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +19,7 @@ public class Smugglers extends EventCard {
     private final int takenItems;
 
     public Smugglers(String name, int cardLevel, int requiredFirepower, int movementStep, int takenItems) {
-        this.name = name;
-        this.cardLevel = cardLevel;
+        super(name, cardLevel);
         this.requiredFirepower = requiredFirepower;
         this.movementStep = movementStep;
         this.takenItems = takenItems;
@@ -92,7 +92,7 @@ public class Smugglers extends EventCard {
     }
 
     @Override
-    public Object generateState() {
+    public JSONObject generateState() {
         return null;
     }
 }

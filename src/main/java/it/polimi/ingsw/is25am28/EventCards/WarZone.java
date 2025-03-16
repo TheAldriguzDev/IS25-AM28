@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
 import it.polimi.ingsw.is25am28.Player.Player;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +13,7 @@ public class WarZone extends EventCard {
     private List<PlasmaShot> shootingSequenceForLowestFirePower = new ArrayList<>();
 
     public WarZone(String name, int cardLevel, int movementStepsForLowestCrew, int takenCrewForLowestEnginePower) {
-        this.name = name;
-        this.cardLevel = cardLevel;
+        super(name, cardLevel);
         this.movementStepsForLowestCrew = movementStepsForLowestCrew;
         this.takenCrewForLowestEnginePower = takenCrewForLowestEnginePower;
     }
@@ -50,16 +50,6 @@ public class WarZone extends EventCard {
         }
     }
 
-    @Override
-    void bonusEffect(Player player) {
-
-    }
-
-    @Override
-    void malusEffect(Player player) {
-
-    }
-
     protected void malusEffect(Player player, Player LowestCrewPlayer, Player LowestFirePowerPlayer, Player LowestEnginePowerPlayer) {
         if (player == LowestCrewPlayer) {
             player.setCursor(player.getCursor() - movementStepsForLowestCrew);
@@ -71,5 +61,25 @@ public class WarZone extends EventCard {
             // TODO: Needs to be rewritten
             // player.getShip().setLifeForms(player.getShip().getLifeForms() - takenCrewForLowestEnginePower);
         }
+    }
+
+    @Override
+    protected void bonusEffect() {
+
+    }
+
+    @Override
+    protected void malusEffect() {
+
+    }
+
+    @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public JSONObject generateState() {
+        return null;
     }
 }

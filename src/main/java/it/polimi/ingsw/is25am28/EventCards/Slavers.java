@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.EventCards;
 import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Response.SlaversResponse;
+import org.json.simple.JSONObject;
 
 public class Slavers extends EventCard {
     private final int requiredFirepower;
@@ -62,7 +63,7 @@ public class Slavers extends EventCard {
 
     //
     @Override
-    public Object generateState() {
+    public JSONObject generateState() {
         return null;
     }
 }

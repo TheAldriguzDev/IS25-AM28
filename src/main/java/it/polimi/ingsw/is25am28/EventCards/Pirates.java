@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Response.PiratesResponse;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 
@@ -123,7 +124,7 @@ public class Pirates extends EventCard {
     protected void malusEffect() {}
 
     @Override
-    public Object generateState() {
+    public JSONObject generateState() {
         return null;
     }
 }
