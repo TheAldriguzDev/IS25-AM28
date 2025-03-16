@@ -10,6 +10,10 @@ import java.util.Random;
 public class MeteorShower {
     private final List<Meteor> meteorSequence = new ArrayList<>();
 
+    public MeteorShower( String name, int level, List<Integer> top, List<Integer> bottom, List<Integer> left, List<Integer> right ){
+        
+    }
+
     public void useCard(Player[] players) {
         Random dice = new Random();
         int strikePath; // Colonna o riga che il meteorite percorrerà

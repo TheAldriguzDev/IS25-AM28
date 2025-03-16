@@ -32,7 +32,7 @@
       "abandonedStation" : [
             {
                   "level": 1,
-                  "blu": 0,
+                  "blue": 0,
                   "green": 1,
                   "yellow": 1,
                   "red": 0,
@@ -42,7 +42,7 @@
             },
             {
                   "level": 1,
-                  "blu": 0,
+                  "blue": 0,
                   "green": 0,
                   "yellow": 0,
                   "red": 2,
@@ -52,7 +52,7 @@
             },
             {
                   "level": 2,
-                  "blu": 0,
+                  "blue": 0,
                   "green": 0,
                   "yellow": 1,
                   "red": 1,
@@ -62,7 +62,7 @@
             },
             {
                   "level": 2,
-                  "blu": 0,
+                  "blue": 0,
                   "green": 1,
                   "yellow": 2,
                   "red": 0,
@@ -147,19 +147,19 @@
                   "days": 3,
                   "planets": [
                         {
-                              "blu": 3,
+                              "blue": 3,
                               "green": 1,
                               "yellow": 0,
                               "red": 1
                         },
                         {
-                              "blu": 1,
+                              "blue": 1,
                               "green": 0,
                               "yellow": 1,
                               "red": 1
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 1,
                               "yellow": 0,
                               "red": 1
@@ -172,19 +172,19 @@
                   "days": 2,
                   "planets": [
                         {
-                              "blu": 2,
+                              "blue": 2,
                               "green": 0,
                               "yellow": 0,
                               "red": 1
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 1,
                               "red": 0
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 0,
                               "red": 2
@@ -200,7 +200,7 @@
                               "yellow": 2
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 1,
                               "yellow": 1,
                               "red": 1
@@ -213,19 +213,19 @@
                   "days": 1,
                   "planets": [
                         {
-                              "blu": 3,
+                              "blue": 3,
                               "green": 0,
                               "yellow": 0,
                               "red": 0
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 1,
                               "red": 0
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 2,
                               "yellow": 0,
                               "red": 0
@@ -238,19 +238,19 @@
                   "days": 4,
                   "planets": [
                         {
-                              "blu": 4,
+                              "blue": 4,
                               "green": 0,
                               "yellow": 0,
                               "red": 1
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 2,
                               "yellow": 0,
                               "red": 2
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 1,
                               "red": 3
@@ -263,19 +263,19 @@
                   "days": 4,
                   "planets": [
                         {
-                              "blu": 4,
+                              "blue": 4,
                               "green": 0,
                               "yellow": 0,
                               "red": 1
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 2,
                               "yellow": 0,
                               "red": 2
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 1,
                               "red": 3
@@ -288,13 +288,13 @@
                   "days": 3,
                   "planets": [
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 4,
                               "yellow": 0,
                               "red": 0
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 0,
                               "red": 2
@@ -307,25 +307,25 @@
                   "days": 2,
                   "planets": [
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 1,
                               "red": 1
                         },
                         {
-                              "blu": 1,
+                              "blue": 1,
                               "green": 1,
                               "yellow": 1,
                               "red": 0
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 1,
                               "red": 1
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 1,
                               "red": 0
@@ -338,19 +338,19 @@
                   "days": 3,
                   "planets": [
                         {
-                              "blu": 4,
+                              "blue": 4,
                               "green": 0,
                               "yellow": 0,
                               "red": 0
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 4,
                               "yellow": 0,
                               "red": 0
                         },
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 2,
                               "red": 0
@@ -401,7 +401,7 @@
                   "days": 1,
                   "storage": 
                         {
-                              "blu": 1,
+                              "blue": 1,
                               "green": 1,
                               "yellow": 1,
                               "red": 0
@@ -415,7 +415,7 @@
                   "days": 1,
                   "storage": 
                         {
-                              "blu": 0,
+                              "blue": 0,
                               "green": 0,
                               "yellow": 2,
                               "red": 1
