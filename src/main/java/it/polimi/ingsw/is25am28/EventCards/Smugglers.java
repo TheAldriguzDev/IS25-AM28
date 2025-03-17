@@ -80,7 +80,7 @@ public class Smugglers extends EventCard {
                             }
                         }
                     }
-                    for(int i = 0; i < smugglersData.getYellowToTake()ToTake(); i++) {
+                    for(int i = 0; i < smugglersData.getYellowToTake(); i++) {
                         for(Storage storage : storages) {
                                 while (storage.getCapacity() > 0) {
                                     storage.storeItem(new Item(ItemColor.YELLOW));
