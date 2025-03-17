@@ -54,6 +54,7 @@ public abstract class EventCard {
 
     // We will override this method if we need a more specific usage
     protected Player getNextPlayer() {
+        List<Player> players = board.getPlayers();
 
         if( players == null || players.isEmpty() )
             throw new Error("Players are not set, you must call startUsingCard method before");
@@ -72,7 +73,7 @@ public abstract class EventCard {
     }
 
     public boolean hasFinished(){
-        return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false);
+        return currentPlayer.map(player -> player.equals(board.getPlayers().getLast())).orElse(false);
     }
 
     public String getCardName() {

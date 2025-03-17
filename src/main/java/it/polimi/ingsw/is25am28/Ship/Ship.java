@@ -5,8 +5,12 @@ import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
+import javafx.util.Pair;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -14,9 +18,18 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.is25am28.Connector.*;
 
 public class Ship {
-    private Component[][] components;
+    private final static Map<Integer, Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> dimensionsAndOffsets = new HashMap<>() {{
+        dimensionsAndOffsets.put(1, new Pair<>(new Pair<>(5, 7), new Pair<>(0, 0)));    // Level 1 ship dimensions + (row, col) offsets
+        dimensionsAndOffsets.put(2, new Pair<>(new Pair<>(5, 7), new Pair<>(0, 0)));    // Level 2 ship dimensions + (row, col) offsets
+        dimensionsAndOffsets.put(3, new Pair<>(new Pair<>(5, 7), new Pair<>(0, 0)));    // Level 3 ship dimensions + (row, col) offsets
+    }};
+
+    private final int difficultyLevel;
     private final int grid_rows;
     private final int grid_cols;
+    private final int rowOffset;
+    private final int colOffset;
+    private Component[][] components;
 
     // All components are sorted into their matching category,
     // represented by one of the following lists
@@ -28,14 +41,53 @@ public class Ship {
     private final List<Storage> storageList;
     private final List<Vital> vitalList;
 
-    // Constructor
-    public Ship(int grid_rows, int grid_cols) {
+    // Constructor #1 - Generates one of the three possible grids, each for its level
+    public Ship(int difficultyLevel) {
+        this.difficultyLevel = difficultyLevel;
+        this.grid_rows = dimensionsAndOffsets.get(difficultyLevel).getKey().getKey();
+        this.grid_cols = dimensionsAndOffsets.get(difficultyLevel).getKey().getValue();
+        this.rowOffset = dimensionsAndOffsets.get(difficultyLevel).getValue().getKey();
+        this.colOffset = dimensionsAndOffsets.get(difficultyLevel).getValue().getValue();
+        this.components = initGrid(this.grid_rows, this.grid_cols);
+
+        // Initializing the connectors of the core cabin
+        int[] coreConnectors = new int[4];
+        coreConnectors[0] = coreConnectors[1] = coreConnectors[2] = coreConnectors[3] = THREE_PIPES.ordinal();
+
+        // Creating the ship's core cabin
+        Cabin core = new Cabin(
+                this.grid_rows / 2,
+                this.grid_cols / 2,
+                0,
+                coreConnectors,
+                true
+        );
+
+        // Adding the core component as the first component in the ship's grid
+        this.addComponent(core, core.getPosition()[0], core.getPosition()[1]);
+
+        // Instantiating each component list as an empty list
+        batteryList = new ArrayList<Battery>();
+        cabinList = new ArrayList<Cabin>();
+        cannonList = new ArrayList<Cannon>();
+        engineList = new ArrayList<Engine>();
+        shieldList = new ArrayList<Shield>();
+        storageList = new ArrayList<Storage>();
+        vitalList = new ArrayList<Vital>();
+    }
+
+    // Constructor #2 - Generates the ship's grid based on the given dimensions
+    // Mostly used in testing, since the real game only uses the constructor above
+    public Ship(int difficultyLevel, int grid_rows, int grid_cols, int rowOffset, int colOffset) {
+        this.difficultyLevel = difficultyLevel;
         this.grid_rows = grid_rows;
         this.grid_cols = grid_cols;
-        this.components = initGrid(grid_rows, grid_cols);
+        this.rowOffset = rowOffset;
+        this.colOffset = colOffset;
+        this.components = initGrid(this.grid_rows, this.grid_cols);
 
+        // Initializing the connectors of the core cabin
         int[] coreConnectors = new int[4];
-
         coreConnectors[0] = coreConnectors[1] = coreConnectors[2] = coreConnectors[3] = THREE_PIPES.ordinal();
 
         // Creating the ship's core cabin
@@ -92,6 +144,29 @@ public class Ship {
                 }
             }
         );
+    }
+
+    /**
+     * @return A pair of integers that represent the amount of rows and the amount
+     *         of columns of the ship's grid. Result is (rows, cols)
+     */
+    public Pair<Integer, Integer> getGridDimensions() {
+        return new Pair<Integer, Integer>(this.grid_rows, this.grid_cols);
+    }
+
+    /**
+     * @return The ship's difficulty level
+     */
+    public int getDifficultyLevel() {
+        return this.difficultyLevel;
+    }
+
+    /**
+     * @return A pair of integers that represent the offsets (rowOffset, colOffset) between
+     *         the physical board indexing and the internal Component matrix indexing
+     */
+    public Pair<Integer, Integer> getOffsets() {
+        return new Pair<Integer, Integer>(this.rowOffset, this.colOffset);
     }
 
     /**
