@@ -17,6 +17,9 @@ public class SmugglersJSON extends ActionJSON {
         super(ActionJSON.Parse(dataString));
     }
 
+    // {color}ToTake: numero di item di qual colore che il player prende dalla carta
+    // {color}ToDrop: numero di item di quel colore che il player rimuove dalla nave
+
     // Getters
     public boolean getTakeLoot() throws IllegalStateException {
         if (!data.containsKey("takeCredits")) {
@@ -25,32 +28,60 @@ public class SmugglersJSON extends ActionJSON {
         return (boolean)data.get("takeLoot");
     }
 
-    public int getRedToTake() throws IllegalStateException {
-        if (!data.containsKey("redToTake")) {
-            throw new IllegalStateException("Key 'redToTake' is missing in JSON data");
+    public int getRedToLoad() throws IllegalStateException {
+        if (!data.containsKey("redToLoad")) {
+            throw new IllegalStateException("Key 'redToLoad' is missing in JSON data");
         }
-        return (int)data.get("redToTake");
+        return (int)data.get("redToLoad");
     }
 
-    public int getYellowToTake() throws IllegalStateException {
-        if (!data.containsKey("yellowToTake")) {
-            throw new IllegalStateException("Key 'yellowToTake' is missing in JSON data");
+    public int getYellowToLoad() throws IllegalStateException {
+        if (!data.containsKey("yellowToLoad")) {
+            throw new IllegalStateException("Key 'yellowToLoad' is missing in JSON data");
         }
-        return (int)data.get("yellowToTake");
+        return (int)data.get("yellowToLoad");
     }
 
-    public int getBlueToTake() throws IllegalStateException {
-        if (!data.containsKey("blueToTake")) {
-            throw new IllegalStateException("Key 'blueToTake' is missing in JSON data");
+    public int getBlueToLoad() throws IllegalStateException {
+        if (!data.containsKey("blueToLoad")) {
+            throw new IllegalStateException("Key 'blueToLoad' is missing in JSON data");
         }
-        return (int)data.get("blueToTake");
+        return (int)data.get("blueToLoad");
     }
 
-    public int getGreenToTake() throws IllegalStateException {
-        if (!data.containsKey("greenToTake")) {
-            throw new IllegalStateException("Key 'greenToTake' is missing in JSON data");
+    public int getGreenToLoad() throws IllegalStateException {
+        if (!data.containsKey("greenToLoad")) {
+            throw new IllegalStateException("Key 'greenToLoad' is missing in JSON data");
         }
-        return (int)data.get("greenToTake");
+        return (int)data.get("greenToLoad");
+    }
+
+    public int getRedToDrop() throws IllegalStateException {
+        if (!data.containsKey("redToDrop")) {
+            throw new IllegalStateException("Key 'redToDrop' is missing in JSON data");
+        }
+        return (int)data.get("redToDrop");
+    }
+
+    public int getYellowToDrop() throws IllegalStateException {
+        if (!data.containsKey("yellowToDrop")) {
+            throw new IllegalStateException("Key 'yellowToDrop' is missing in JSON data");
+        }
+        return (int)data.get("yellowToDrop");
+    }
+
+    public int getBlueToDrop() throws IllegalStateException {
+        if (!data.containsKey("blueToDrop")) {
+            throw new IllegalStateException("Key 'blueToDrop' is missing in JSON data");
+        }
+        return (int)data.get("blueToDrop");
+    }
+
+    public int getGreenToDrop() throws IllegalStateException {
+        if (!data.containsKey("greenToDrop")) {
+            throw new IllegalStateException("Key 'greenToDrop' is missing in JSON data");
+        }
+        return (int)data.get("greenToDrop");
     }
 
 
@@ -60,19 +91,35 @@ public class SmugglersJSON extends ActionJSON {
         data.put("takeLoot", takeLoot);
     }
     @SuppressWarnings("unchecked")
-    public void setRedToTake (int redToTake) throws IllegalArgumentException {
-        data.put("redToTake", redToTake);
+    public void setRedToLoad (int redToLoad) throws IllegalArgumentException {
+        data.put("redToLoad", redToLoad);
     }
     @SuppressWarnings("unchecked")
-    public void setYellowToTake (int redToTake) throws IllegalArgumentException {
-        data.put("redToTake", redToTake);
+    public void setYellowToLoad (int redToLoad) throws IllegalArgumentException {
+        data.put("redToLoad", redToLoad);
     }
     @SuppressWarnings("unchecked")
-    public void setBlueToTake (int redToTake) throws IllegalArgumentException {
-        data.put("redToTake", redToTake);
+    public void setBlueToLoad (int redToLoad) throws IllegalArgumentException {
+        data.put("redToLoad", redToLoad);
     }
     @SuppressWarnings("unchecked")
-    public void setGreenToTake (int redToTake) throws IllegalArgumentException {
-        data.put("redToTake", redToTake);
+    public void setGreenToLoad (int redToLoad) throws IllegalArgumentException {
+        data.put("redToLoad", redToLoad);
+    }
+    @SuppressWarnings("unchecked")
+    public void setRedToDrop (int redToDrop) throws IllegalArgumentException {
+        data.put("redToDrop", redToDrop);
+    }
+    @SuppressWarnings("unchecked")
+    public void setYellowToDrop (int yellowToDrop) throws IllegalArgumentException {
+        data.put("yellowToDrop", yellowToDrop);
+    }
+    @SuppressWarnings("unchecked")
+    public void setBlueToDrop (int blueToDrop) throws IllegalArgumentException {
+        data.put("blueToDrop", blueToDrop);
+    }
+    @SuppressWarnings("unchecked")
+    public void setGreenToDrop (int greenToDrop) throws IllegalArgumentException {
+        data.put("greenToDrop", greenToDrop);
     }
 }

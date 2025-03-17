@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
 import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Board.Board;
@@ -15,6 +16,7 @@ public class Pirates extends EventCard {
     private final int givenCredits;
     private final int movementSteps;
     private final int numberOfShots;
+    private boolean hasBeenDefeated;
     /*
     * Liste che i PlasmaShot che arrivano dalle 4 direzioni:
     * 0 -> piccolo,
@@ -31,15 +33,27 @@ public class Pirates extends EventCard {
         this.givenCredits = givenCredits;
         this.movementSteps = movementSteps;
         this.numberOfShots = numberOfShots;
+        this.hasBeenDefeated = false;
     }
 
-    public EventCard useCard(ActionJSON data) throws ClassCastException {
-        PiratesJSON piratesData = (PiratesJSON) data;
-        //PiratesResponse piratesResponse = (PiratesResponse) response;
+    public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
+        PiratesJSON piratesData;
+        try {
+            piratesData = (PiratesJSON) data;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Card data type in invalid");
+        }
         Optional<Player> playerOptional = getCurrentPlayer();
-        playerOptional.ifPresent(
+        playerOptional.ifPresentOrElse(
                 (Player player) -> {
+
+                    String playerNickname = piratesData.getPlayerNickname();
+                    if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
+                        throw new IllegalArgumentException("The given player does not match with the current one");
+                    }
+
                     if (player.getShip().getFirePower() >= requiredFirepower) {
+                        this.hasBeenDefeated = true;
                         if (piratesData.getTakeCredits()) {
                             bonusEffect();
                             player.setCursor(player.getCursor() - this.movementSteps);
@@ -47,6 +61,9 @@ public class Pirates extends EventCard {
                     } else {
                         malusEffect();
                     }
+                },
+                () -> {
+                    throw new IllegalArgumentException("There is no player playing in this moment");
                 }
         );
         getNextPlayer();
@@ -141,7 +158,20 @@ public class Pirates extends EventCard {
     protected void malusEffect() {}
 
     @Override
+    public boolean hasFinished() {
+        return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || this.hasBeenDefeated;
+    }
+
+    @Override
     public JSONObject generateState() {
-        return null;
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardLevel(getCardLevel());
+        cardState.setCardName(getCardName());
+
+        if (this.getCurrentPlayer().isPresent()) {
+            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+        }
+
+        return cardState.getData();
     }
 }

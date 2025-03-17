@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.EventCards;
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
+
 import java.util.List;
 import java.util.Optional;
 
