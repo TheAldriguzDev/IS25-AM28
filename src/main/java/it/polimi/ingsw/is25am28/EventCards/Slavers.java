@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.ActionJSON.SlaversJSON;
 import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -14,17 +16,17 @@ public class Slavers extends EventCard {
     private final int takenCrew;
 
 
-    public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew) {
-        super(name, cardLevel);
+    public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board) {
+        super(name, cardLevel, board);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.givenCredits = givenCredits;
         this.takenCrew = takenCrew;
     }
 
-    public EventCard useCard(JSONObject data) throws ClassCastException {
+    public EventCard useCard(ActionJSON data) throws ClassCastException {
         //SlaversResponse slaversResponse = (SlaversResponse) response;
-        SlaversJSON slaversData = (SlaversJSON) data.get("slavers");
+        SlaversJSON slaversData = (SlaversJSON) data;
         Optional<Player> playerOptimal = getCurrentPlayer();
         playerOptimal.ifPresent(
                 (Player player) -> {
@@ -62,9 +64,9 @@ public class Slavers extends EventCard {
      * configurazioni non valide (vuota, equipaggio rimosso non sufficiente, 3 volte la stessa cabina...)
      * */
 
-    protected void malusEffect(JSONObject data) {
+    protected void malusEffect(ActionJSON data) {
         Optional<Player> playerOptional = getCurrentPlayer();
-        SlaversJSON slaversData = (SlaversJSON) data.get("slavers");
+        SlaversJSON slaversData = (SlaversJSON) data;
         playerOptional.ifPresent(
                 (Player player) -> {
                     for (Cabin cabin : slaversData.getCrewToRemove()) {

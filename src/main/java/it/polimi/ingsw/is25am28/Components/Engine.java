@@ -8,7 +8,7 @@ public final class Engine extends Component {
             this.speed = speed;
       }
 
-      public float getSpeed(){
+      public int getSpeed(){
             return speed;
       }
 

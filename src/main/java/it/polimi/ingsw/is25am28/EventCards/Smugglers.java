@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.ActionJSON.SmugglersJSON;
 import it.polimi.ingsw.is25am28.Items.*;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -22,8 +24,8 @@ public class Smugglers extends EventCard {
 
     private ArrayList<Item> givenItems = new ArrayList<>();
 
-    public Smugglers(String name, int cardLevel, int requiredFirepower, int movementSteps, int redItems, int yellowItems, int blueItems, int greenItems, int takenItems) {
-        super(name, cardLevel);
+    public Smugglers(String name, int cardLevel, int requiredFirepower, int movementSteps, int redItems, int yellowItems, int blueItems, int greenItems, int takenItems, Board board) {
+        super(name, cardLevel, board);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.redItems = redItems;
@@ -38,9 +40,9 @@ public class Smugglers extends EventCard {
     * lancia un'eccezione di tipo ClassCastException
     * */
 
-    public EventCard useCard(JSONObject data) throws ClassCastException {
+    public EventCard useCard(ActionJSON data) throws ClassCastException {
         //SmugglersResponse smugglersResponse = (SmugglersResponse) response;
-        SmugglersJSON smugglersData = (SmugglersJSON) data.get("smugglers");
+        SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
                 (Player player) -> {
@@ -59,8 +61,8 @@ public class Smugglers extends EventCard {
         return this;
     }
 
-    protected void bonusEffect(JSONObject data) throws ClassCastException {
-        SmugglersJSON smugglersData = (SmugglersJSON) data.get("smugglers");
+    protected void bonusEffect(ActionJSON data) throws ClassCastException {
+        SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
                 (Player player) -> {

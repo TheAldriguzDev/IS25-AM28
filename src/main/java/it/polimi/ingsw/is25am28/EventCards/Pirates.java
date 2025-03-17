@@ -1,8 +1,9 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
-import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
 import org.json.simple.JSONObject;
 
@@ -24,16 +25,16 @@ public class Pirates extends EventCard {
     ArrayList<Integer> shootingSequenceFromRight = new ArrayList<>();
     ArrayList<Integer> shootingSequenceFromLeft = new ArrayList<>();
 
-    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, int numberOfShots) {
-        super(name, cardLevel);
+    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, int numberOfShots, Board board) {
+        super(name, cardLevel, board);
         this.requiredFirepower = requiredFirepower;
         this.givenCredits = givenCredits;
         this.movementSteps = movementSteps;
         this.numberOfShots = numberOfShots;
     }
 
-    public EventCard useCard(JSONObject data) throws ClassCastException {
-        PiratesJSON piratesData = (PiratesJSON) data.get("pirates");
+    public EventCard useCard(ActionJSON data) throws ClassCastException {
+        PiratesJSON piratesData = (PiratesJSON) data;
         //PiratesResponse piratesResponse = (PiratesResponse) response;
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
@@ -61,9 +62,9 @@ public class Pirates extends EventCard {
         );
     }
 
-    protected void malusEffect(JSONObject data) throws ClassCastException {
+    protected void malusEffect(ActionJSON data) throws ClassCastException {
         Optional<Player> playerOptional = getCurrentPlayer();
-        PiratesJSON piratesData = (PiratesJSON) data.get("pirates");
+        PiratesJSON piratesData = (PiratesJSON) data;
         playerOptional.ifPresent(
                 (Player player) -> {
                     int dicesResult = 0;
