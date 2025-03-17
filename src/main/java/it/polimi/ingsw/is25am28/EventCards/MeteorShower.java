@@ -33,48 +33,51 @@ public class MeteorShower extends EventCard {
 
     @Override
     public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        List<Player> players = board.getPlayers();
+        int diceResult, randomlySelectedRow, randomlySelectedCol;
         Pair<Integer, Integer> gridDimensions;
+        List<Player> players;
+        Random random;
         Ship shipPtr;
-        Random random = new Random();
-        int doubleDiceThrowResult;
+
+        // Initializing variables
+        players = board.getPlayers();
+        random = new Random();
 
         for (Meteor currMeteor : this.meteorSequence) {
             // TODO: How do I verify that it's the leader that throws the dices?
-            // Two dice are thrown, each yield a result between 1 and 6, then since the
-            // ship's grid is centered at (7,7) in the physical game, the dice throws need to be
-            // offset by a value of 4 up and to the left, thus re-centering the ship with the
-            // positioning of the grid, which is indexed as an array
-            doubleDiceThrowResult = (random.nextInt(6) + 1) + (random.nextInt(6) + 1) - 4;
+            diceResult = (random.nextInt(6) + 1) + (random.nextInt(6) + 1);
 
             for (Player player : players) {
                 shipPtr = player.getShip();
+                randomlySelectedRow = diceResult - shipPtr.getOffsets().getKey();
+                randomlySelectedCol = diceResult - shipPtr.getOffsets().getValue();
                 gridDimensions = shipPtr.getGridDimensions();
 
-                if (doubleDiceThrowResult >= gridDimensions.getKey() && doubleDiceThrowResult <= gridDimensions.getValue()) {
-                    // Case 1 - Both row and column pass through the ship's grid
-                    // => The meteor can come from any direction
-                }
-                else if (true) {
-                    // Case 2 - Only the row passes through the ship's grid
-                    // => The meteor can come from only the RIGHT and LEFT directions
-                }
-                else if (true) {
-                    // Case 3 - Only the column passes through the ship's grid
-                    // => The meteor can come from only the TOP and BOTTOM directions
-                }
-                else {
-                    // Case 4 - Neither the row nor the column pass through the ship's grid
-                    // => The meteor misses the ship
-                }
+                if (randomlySelectedRow < gridDimensions.getKey() && randomlySelectedRow >= 0) {
+                    if (randomlySelectedCol < gridDimensions.getValue() && randomlySelectedCol >= 0) {
+                        // Case 1 - Both row and column pass through the ship's grid
+                        // => The meteor can come from any direction
 
-                if (doubleDiceThrowResult >= gridDimensions.getKey()) {
-                    if (true) {
+                        // All 4 directions
+                    }
+                    else {
+                        // Case 2 - Only the row passes through the ship's grid
+                        // => The meteor can come from only the RIGHT and LEFT directions
 
+                        // Only 2 directions - Right, Left
                     }
                 }
                 else {
+                    if (randomlySelectedCol < gridDimensions.getValue() && randomlySelectedCol >= 0) {
+                        // Case 3 - Only the column passes through the ship's grid
+                        // => The meteor can come from only the TOP and BOTTOM directions
 
+                        // Only 2 directions - Right, Left
+                    }
+                    else {
+                        // Case 4 - Neither the row nor the column pass through the ship's grid
+                        // => The meteor misses the ship
+                    }
                 }
             }
         }
