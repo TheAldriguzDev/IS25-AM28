@@ -3,12 +3,12 @@ package it.polimi.ingsw.is25am28.Components;
 public final class Engine extends Component {
       private final int speed;
 
-      public Engine( int speed,  int row, int col, int top, int[] sides) {
-            super(row, col, top, sides);
+      public Engine( int[] connectors, int speed ){
+            super( connectors );
             this.speed = speed;
       }
 
-      public int getSpeed(){
+      public float getSpeed(){
             return speed;
       }
 

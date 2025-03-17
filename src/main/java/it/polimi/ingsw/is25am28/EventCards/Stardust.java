@@ -1,9 +1,9 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.StardustJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
+import it.polimi.ingsw.is25am28.Connector;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Ship.Ship;
@@ -42,22 +42,22 @@ public class Stardust extends EventCard {
                                 // For each exposed side movementsSteps++;
                                 Component[] otherC = ship.getNearestComponents(c);
                                 if (otherC[0] == null) {
-                                    if (c.getTopSide() != 0) {
+                                    if (c.getTopSide() != Connector.ZERO_PIPES) {
                                         movementSteps.getAndIncrement();
                                     }
                                 }
                                 if (otherC[1] == null) {
-                                    if (c.getRightSide() != 0) {
+                                    if (c.getRightSide() != Connector.ZERO_PIPES) {
                                         movementSteps.getAndIncrement();
                                     }
                                 }
                                 if (otherC[2] == null) {
-                                    if (c.getBottomSide() != 0) {
+                                    if (c.getBottomSide() != Connector.ZERO_PIPES) {
                                         movementSteps.getAndIncrement();
                                     }
                                 }
                                 if (otherC[3] == null) {
-                                    if (c.getLeftSide() != 0) {
+                                    if (c.getLeftSide() != Connector.ZERO_PIPES) {
                                         movementSteps.getAndIncrement();
                                     }
                                 }

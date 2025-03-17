@@ -1,96 +1,46 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Player.Player;
-import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class AbandonedStation extends EventCard {
     private final int requiredCrew;
     private final int movementStep;
-    private ArrayList<Item> item;
-    private boolean hasBeenUsed;
+    //private ArrayList<Item> planetItem = new ArrayList<Item>();
 
-    public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> item, Board board) {
-        super(name, cardLevel, board);
+    public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, int red, int green, int blue, int yellow ) {
+        this.name = name;
+        this.cardLevel = cardLevel;
         this.requiredCrew = requiredCrew;
         this.movementStep = movementStep;
-        this.item = item;
-        this.hasBeenUsed = false;
+
+
     }
 
-    /**
-     * Override the method to set only the players that can effectively use the card
-     * */
-    @Override
-    public void initCardPlayers() throws IllegalArgumentException {
-        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
-            throw new IllegalArgumentException("The player list is null or contains less than two player");
-        } else {
-            this.players = this.getBoard().getPlayers().stream()
-                    .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
-                    .toList();
-
-            // if there are no players we do not have to continue, since no one can use the card
-            if (this.players.isEmpty()) {
-                this.hasBeenUsed = true;
-                this.currentPlayer = Optional.empty();
-            } else {
-                this.currentPlayer = Optional.of(players.getFirst());
+    public void useCard(Player[] players) {
+        for (Player player : players) {
+            if (player.getShip().getAllLifeforms().stream().count() > requiredCrew) {
+                //method getChoice: ask player to make a choice
+                if (getChoice()) {
+                    bonusEffect(player);
+                    player.setCursor(player.getCursor() - this.movementStep);
+                    break;
+                }
             }
         }
     }
 
-    /**
-     * Override needed to end the usage of the card if a previous player already used the card
-     * */
-    @Override
-    public boolean hasFinished() {
-        return hasBeenUsed || currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || (players.isEmpty() && currentPlayer.isEmpty());
-    }
-
-    @Override
-    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        if (this.getCurrentPlayer().isPresent()) {
-
-
-
-
-
-        } else {
-            throw new IllegalArgumentException("There is no player playing in this moment");
-        }
-
-        return this;
-    }
-
-    @Override
-    protected void bonusEffect() {
+    protected void bonusEffect(Player player) {
+        // List<Item> = player.getShip().getItem();
+        // if()
+        // Need Item class info to continue
 
     }
 
-    @Override
-    protected void malusEffect() {
+    protected void malusEffect(Player player) {}
 
-    }
 
-    @Override
-    public JSONObject generateState() {
-        CardStateJSON cardState = new CardStateJSON();
-
-        cardState.setCardName(this.getCardName());
-        cardState.setCardLevel(this.getCardLevel());
-
-        if (this.getCurrentPlayer().isPresent()) {
-            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
-        }
-
-        return cardState.getData();
-    }
 }
 

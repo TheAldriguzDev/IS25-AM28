@@ -70,28 +70,28 @@ public class Ship {
 
     public void generateComponentSubLists() throws IllegalStateException {
         traverse(
-                (Component c) -> {
-                    switch (c) {
-                        case Battery battery:   this.batteryList.add(battery);
-                            break;
-                        case Cabin cabin:       this.cabinList.add(cabin);
-                            break;
-                        case Cannon cannon:     this.cannonList.add(cannon);
-                            break;
-                        case Engine engine:     this.engineList.add(engine);
-                            break;
-                        case Shield shield:     this.shieldList.add(shield);
-                            break;
-                        case Storage storage:   this.storageList.add(storage);
-                            break;
-                        case Vital vital:       this.vitalList.add(vital);
-                            break;
-                        case Structural struct: // Structural components are not sorted
-                            break;
-                        default:
-                            throw new IllegalStateException("Unexpected class type " + c.toString());
-                    }
+            (Component c) -> {
+                switch (c) {
+                    case Battery battery:   this.batteryList.add(battery);
+                                            break;
+                    case Cabin cabin:       this.cabinList.add(cabin);
+                                            break;
+                    case Cannon cannon:     this.cannonList.add(cannon);
+                                            break;
+                    case Engine engine:     this.engineList.add(engine);
+                                            break;
+                    case Shield shield:     this.shieldList.add(shield);
+                                            break;
+                    case Storage storage:   this.storageList.add(storage);
+                                            break;
+                    case Vital vital:       this.vitalList.add(vital);
+                                            break;
+                    case Structural struct: // Structural components are not sorted
+                                            break;
+                    default:
+                        throw new IllegalStateException("Unexpected class type " + c.toString());
                 }
+            }
         );
     }
 
@@ -140,6 +140,26 @@ public class Ship {
     }
 
     /**
+     * Consumes the given amount of energy from the ship's total energy
+     */
+    public void consumeEnergy(int energyToConsume) {
+        int availableEnergy;
+
+        for (Battery battery : this.batteryList) {
+            availableEnergy = battery.getAvailability();
+
+            if (availableEnergy < energyToConsume) {
+                energyToConsume -= availableEnergy;
+                battery.setAvailability(0);
+            }
+            else {
+                battery.setAvailability(availableEnergy - energyToConsume);
+                break;
+            }
+        }
+    }
+
+    /**
      * @return The ship's total onboard <code>Lifeform</code>s
      *         (both humans and aliens)
      */
@@ -163,8 +183,8 @@ public class Ship {
      * @return The ship's total engine power, including the
      *         double engines that the user chooses to activate
      */
-    public float getEnginePower() {
-        return (float) this.engineList.stream()
+    public int getEnginePower() {
+        return (int) this.engineList.stream()
                 .mapToDouble(Engine::getSpeed)
                 .sum();
     }
@@ -196,11 +216,11 @@ public class Ship {
         List<Component> wrongs = new ArrayList<>();
 
         traverse(
-                (Component c) -> {
-                    if(!c.check(getNearestComponents(c))){
-                        wrongs.add(c);
-                    }
+            (Component c) -> {
+                if(!c.check(getNearestComponents(c))){
+                    wrongs.add(c);
                 }
+            }
         );
 
         return wrongs;
@@ -217,11 +237,11 @@ public class Ship {
         AtomicBoolean isShipValid = new AtomicBoolean(true);
 
         traverse(
-                (Component c) -> {
-                    if (isShipValid.get() && !c.check(getNearestComponents(c))) {
-                        isShipValid.set(false);
-                    }
+            (Component c) -> {
+                if (isShipValid.get() && !c.check(getNearestComponents(c))) {
+                    isShipValid.set(false);
                 }
+            }
         );
 
         return isShipValid.get();
@@ -242,10 +262,10 @@ public class Ship {
         // that would otherwise be left hanging
         // (i.e.: no path exists from the core to those components)
         traverse(
-                (Component c) -> {
-                    int[] position = c.getPosition();
-                    grid[position[0]][position[1]] = c;
-                }
+            (Component c) -> {
+                int[] position = c.getPosition();
+                grid[position[0]][position[1]] = c;
+            }
         );
 
         // Finally, substitute the old grid with the new one

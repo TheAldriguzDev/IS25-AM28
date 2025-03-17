@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.ActionJSON.SmugglersJSON;
 import it.polimi.ingsw.is25am28.Items.*;
@@ -10,7 +9,6 @@ import it.polimi.ingsw.is25am28.Components.Battery;
 import it.polimi.ingsw.is25am28.Components.Storage;
 import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,9 +21,6 @@ public class Smugglers extends EventCard {
     private final int greenItems;
     private final int takenItems;
     private boolean hasBeenDefeated;
-
-
-    private ArrayList<Item> givenItems = new ArrayList<>();
 
     public Smugglers(String name, int cardLevel, int requiredFirepower, int movementSteps, int redItems, int yellowItems, int blueItems, int greenItems, int takenItems, Board board) {
         super(name, cardLevel, board);
@@ -158,7 +153,6 @@ public class Smugglers extends EventCard {
                     for(Storage storage : storages) {
                         if (itemsToLoad == 0) { break; }
                         if(storage.isSpecialStorage()) {
-                            List<Item> storedItems = storage.getStoredItems();
                             while (storage.getCapacity() > 0 && itemsToLoad > 0) {
                                 storage.storeItem(new Item(ItemColor.RED));
                                 itemsToLoad--;
@@ -169,7 +163,6 @@ public class Smugglers extends EventCard {
                     itemsToLoad = smugglersData.getYellowToLoad();
                     for(Storage storage : storages) {
                         if (itemsToLoad == 0) { break; }
-                        List<Item> storedItems = storage.getStoredItems();
                         while (storage.getCapacity() > 0 && itemsToLoad > 0) {
                             storage.storeItem(new Item(ItemColor.YELLOW));
                             itemsToLoad--;
@@ -179,7 +172,6 @@ public class Smugglers extends EventCard {
                     itemsToLoad = smugglersData.getBlueToLoad();
                     for(Storage storage : storages) {
                         if (itemsToLoad == 0) { break; }
-                        List<Item> storedItems = storage.getStoredItems();
                         while (storage.getCapacity() > 0 && itemsToLoad > 0) {
                             storage.storeItem(new Item(ItemColor.BLUE));
                             itemsToLoad--;
@@ -189,7 +181,6 @@ public class Smugglers extends EventCard {
                     itemsToLoad = smugglersData.getGreenToLoad();
                     for(Storage storage : storages) {
                         if (itemsToLoad == 0) { break; }
-                        List<Item> storedItems = storage.getStoredItems();
                         while (storage.getCapacity() > 0 && itemsToLoad > 0) {
                             storage.storeItem(new Item(ItemColor.GREEN));
                             itemsToLoad--;
