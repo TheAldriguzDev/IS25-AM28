@@ -30,6 +30,10 @@ public final class Storage extends Component {
             return storedItems;
       }
 
+      public int availableSpace() {
+            return capacity - storedItems.size();
+      }
+
       /**
        * This method needs to handle eventual items drops, since the user can decide to drop some items
        * */

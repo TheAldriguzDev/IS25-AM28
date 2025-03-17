@@ -92,6 +92,8 @@ public class OpenSpace extends EventCard {
                         this.getBoard().eliminatePlayer(this.getCurrentPlayer().get());
                     } else {
                         this.getBoard().movePlayerForward(this.getCurrentPlayer().get(), totalPower);
+
+                        // TODO: Remove the player used battery
                     }
 
                     // If all the players have played, then we need to revalidate their positions
