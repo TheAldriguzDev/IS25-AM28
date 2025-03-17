@@ -121,5 +121,6 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
 
       public int[] getCoveredSide() {
+            return null;
       }
 }

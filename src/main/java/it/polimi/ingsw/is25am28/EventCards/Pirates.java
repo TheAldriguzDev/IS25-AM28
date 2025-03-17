@@ -22,7 +22,7 @@ public class Pirates extends EventCard {
 
     public void useCard(Player[] players) {
         for (Player player : players) {
-            if (player.getShip().getFirePower() >= requiredFirepower) {
+            if (player.getShip().getFirePower(0) >= requiredFirepower) {
 //                if(getChoice()) {
 //                    bonusEffect(player);
 //                    player.setCursor(player.getCursor() - this.movementSteps);

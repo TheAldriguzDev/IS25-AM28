@@ -18,17 +18,18 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.is25am28.Connector.*;
 
 public class Ship {
-    private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>() {{
+    private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
+    private final static Map<Integer, Pair<Integer, Integer>> rowColOffsets = new HashMap<>();
+
+    static {
         shipDimensions.put(1, new Pair<>(5, 5));
         shipDimensions.put(2, new Pair<>(5, 7));
         shipDimensions.put(3, new Pair<>(6, 9));
-    }};
 
-    private final static Map<Integer, Pair<Integer, Integer>> rowColOffsets = new HashMap<>() {{
         rowColOffsets.put(1, new Pair<>(5, 4));
         rowColOffsets.put(2, new Pair<>(5, 4));
         rowColOffsets.put(3, new Pair<>(4, 3));
-    }};
+    }
 
     private final int difficultyLevel;
     private final int grid_rows = 12;

@@ -12,6 +12,6 @@ public final class Shield extends Component {
       }
 
       public int[] getCoveredSide() {
-
+            return null;
       }
 }

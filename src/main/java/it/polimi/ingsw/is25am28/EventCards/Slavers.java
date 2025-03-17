@@ -19,7 +19,7 @@ public class Slavers extends EventCard {
 
     public void useCard(Player[] players) {
         for (Player player : players) {
-            if (player.getShip().getFirePower() >= requiredFirepower) {
+            if (player.getShip().getFirePower(0) >= requiredFirepower) {
                 if(/* getChoice()*/ false) {
                     bonusEffect(player);
                     player.setCursor(player.getCursor() - this.movementSteps);
