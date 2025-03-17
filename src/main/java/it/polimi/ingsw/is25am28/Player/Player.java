@@ -3,25 +3,21 @@ package it.polimi.ingsw.is25am28.Player;
 import it.polimi.ingsw.is25am28.Board.Cell;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
-/*
-* Noi crediamo che sia meglio inizializzare tutte le cose nel costruttore, non nella parte dichiarativa degli attributi
-* */
-
 public class Player {
       private final PlayerColor color;
       private final String nickname;
-      private final Ship ship = new Ship(5, 7);
+      private final Ship ship = new Ship();
       private int cursor = 0;
       private int credits = 0;
       private int lostPieces = 0;
       private Cell cell;
-      private boolean isEliminated;
+
+      private boolean lost = false;
 
       public Player( String nickname, PlayerColor color, int cursor ){
             this.color = color;
-            this.nickname = nickname;
             this.cursor = cursor;
-            this.isEliminated = false;
+            this.nickname = nickname;
       }
 
       public Player( String nickname, PlayerColor color ){
@@ -37,9 +33,9 @@ public class Player {
             return cursor;
       }
 
-      public void setCursor( int cursor ){
+      public Player setCursor( int cursor ){
             this.cursor = cursor;
-            // return this;
+            return this;
       }
 
       public PlayerColor getPlayerColor(){
@@ -53,12 +49,14 @@ public class Player {
             return credits - lostPieces;
       }
 
-      public void setCredits( int credits ){
+      public Player setCredits( int credits ){
             this.credits = credits;
+            return this;
       }
 
-      public void addCredits( int credits ){
+      public Player addCredits( int credits ){
             this.credits += credits;
+            return this;
       }
 
       public Ship getShip(){
@@ -66,16 +64,12 @@ public class Player {
       }
 
       public Cell getCurrentCell(){
-            return this.cell;
+            return cell;
       }
 
-      public void setCurrentCell( Cell cell ) {
+      public Player setCurrentCell( Cell cell ){
             this.cell = cell;
-            // return this;
-      }
-
-      public boolean hasLost(){
-            return cell == null;
+            return this;
       }
 
       public int getLostPieces(){
@@ -92,13 +86,17 @@ public class Player {
             return this;
       }
 
-      // AGGIUNTI METODI PER PLAYER ELIMINATI
-
-      public boolean isEliminated(){
-            return isEliminated;
+      public Player eliminate(){
+            lost = true;
+            return this;
       }
 
-      public void eliminate(){
-            this.isEliminated = true;
+      public Player resetElimination(){
+            lost = false;
+            return this;
+      }
+
+      public boolean isEliminated(){
+            return lost;
       }
 }
