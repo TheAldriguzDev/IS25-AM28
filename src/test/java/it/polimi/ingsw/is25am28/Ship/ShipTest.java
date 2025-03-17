@@ -18,7 +18,7 @@ class ShipTest {
     void generateComponentSubLists() {
         int grid_rows = 5;
         int grid_cols = 5;
-        Ship ship = new Ship(grid_rows, grid_cols);
+        Ship ship = new Ship(2);
 
         /*
                 0   1   2   3   4   5
@@ -30,18 +30,18 @@ class ShipTest {
             5
          */
 
-        Cannon cannon1 = new Cannon(1, 2, 0, null, 1);
-        Cannon cannon2 = new Cannon(0, 3, 0, null, 1);
+        Cannon cannon1 = new Cannon(1, 1, 2, 0, null);
+        Cannon cannon2 = new Cannon(1, 0, 3, 0, null);
         Structural structural1 = new Structural(2, 3, 0, null);
-        Vital vital1 = new Vital(3, 2, 0, null, null);
-        Vital vital2 = new Vital(0, 0, 0, null, null);
-        Battery battery1 = new Battery(2, 1, 0, null, 3);
-        Battery battery2 = new Battery(4, 1, 0, null, 3);
+        Vital vital1 = new Vital(null, 3, 2, 0, null);
+        Vital vital2 = new Vital(null, 0, 0, 0, null);
+        Battery battery1 = new Battery(3, 2, 1, 0, null);
+        Battery battery2 = new Battery(3, 4, 1, 0, null);
         Cabin cabin1 = new Cabin(0, 2, 0, null, true);
-        Storage storage1 = new Storage(1, 3, 0, null, 5, false);
+        Storage storage1 = new Storage(5, false, 1, 3, 0,null);
         Shield shield1 = new Shield(2, 4, 0, null);
         Shield shield2 = new Shield(4, 4, 0, null);
-        Engine engine1 = new Engine(3, 3, 0, null, 1);
+        Engine engine1 = new Engine(1, 3, 3, 0, null);
         Structural structural2 = new Structural(4, 2, 0, null);
         Structural structural3 = new Structural(3, 1, 0, null);
         Structural structural4 = new Structural(2, 0, 0, null);
@@ -153,7 +153,7 @@ class ShipTest {
     void traverse() {
         int grid_rows = 5;
         int grid_cols = 5;
-        Ship ship = new Ship(grid_rows, grid_cols);
+        Ship ship = new Ship(2);
 
         // Layer 0 - Core
         // Already added by Ship constructor
@@ -169,16 +169,16 @@ class ShipTest {
          */
 
         // Layer 1
-        Cannon cannon1 = new Cannon(1, 2, 0, null, 1);
+        Cannon cannon1 = new Cannon(1, 2, 0, 0, null);
         Structural structural1 = new Structural(2, 3, 0, null);
-        Vital vital1 = new Vital(3, 2, 0, null, null);
-        Battery battery1 = new Battery(2, 1, 0, null, 3);
+        Vital vital1 = new Vital(null, 3, 2, 0, null);
+        Battery battery1 = new Battery(3, 2, 1, 0, null);
 
         // Layer 2
         Cabin cabin1 = new Cabin(0, 2, 0, null, true);
-        Storage storage1 = new Storage(1, 3, 0, null, 5, false);
+        Storage storage1 = new Storage(5, false, 1, 3, 0, null);
         Shield shield1 = new Shield(2, 4, 0, null);
-        Engine engine1 = new Engine(3, 3, 0, null, 1);
+        Engine engine1 = new Engine(3, 3, 0, 1, null);
         Structural structural2 = new Structural(4, 2, 0, null);
         Structural structural3 = new Structural(3, 1, 0, null);
         Structural structural4 = new Structural(2, 0, 0, null);
@@ -257,11 +257,11 @@ class ShipTest {
     void getNearestComponents() {
         int grid_rows = 5;
         int grid_cols = 5;
-        Ship ship = new Ship(grid_rows, grid_cols);
+        Ship ship = new Ship(2);
 
-        Battery battery = new Battery(2, 1, 0, null, 3);
-        Cannon cannon = new Cannon(1, 2, 0, null, 1);
-        Vital vital = new Vital(3, 2, 0, null, null);
+        Battery battery = new Battery(2, 1, 0, 0, null);
+        Cannon cannon = new Cannon(1, 2, 0, 0, null);
+        Vital vital = new Vital(null, 2, 0, 0,null);
         Structural structural = new Structural(2, 3, 0, null);
         Cabin cabin = new Cabin(4, 4, 0, null, true);
 
@@ -299,11 +299,11 @@ class ShipTest {
 
     @Test
     void addComponent_and_getComponent() {
-        Ship ship = new Ship(5, 5);
+        Ship ship = new Ship(2);
 
-        Battery battery = new Battery(0, 0, 0, null, 3);
-        Cannon cannon = new Cannon(0, 1, 0, null, 1);
-        Vital vital = new Vital(0, 2, 0, null, null);
+        Battery battery = new Battery(0, 0, 0, 0, null);
+        Cannon cannon = new Cannon(0, 1, 0, 1, null);
+        Vital vital = new Vital(null,0, 2, 0, null);
         Cabin core = new Cabin(0, 3, 0, null, true);
         Structural structural = new Structural(0, 4, 0, null);
 

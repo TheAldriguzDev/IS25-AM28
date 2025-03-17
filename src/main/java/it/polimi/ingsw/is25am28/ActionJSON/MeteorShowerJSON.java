@@ -8,7 +8,20 @@ public class MeteorShowerJSON extends ActionJSON {
      * Constructor used when we need to BUILD a new JSON
      * */
     public MeteorShowerJSON() {
-        super();
+        // Fields that it needs to contain:
+        // "diceThrow" - to specify row and column that are potentially targeted
+        // "shield" - The coordinates (row, col) of the shield to activate to defend from a small meteor
+        // "shoot" - The coordinates (row, col) of the cannon to activate to defend from a big meteor
+
+        // Constructing the JSONObject fields
+        // -1 is a placeholder that will be overwritten with real data
+        JSONObject container = new JSONObject();
+
+        container.put("diceResult", -1);
+        container.put("shield", -1);
+        container.put("shoot", -1);
+
+        this.setData(container);
     }
 
     /**

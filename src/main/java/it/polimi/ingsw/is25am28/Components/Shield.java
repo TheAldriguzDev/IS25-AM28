@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Components;
 
+import java.util.stream.Stream;
+
 public final class Shield extends Component {
       public Shield( int[] connectors ){
             super(connectors);
@@ -20,5 +22,9 @@ public final class Shield extends Component {
             }
 
             return covered;
+      }
+
+      public int[] getCoveredSide() {
+            return null;
       }
 }
