@@ -169,7 +169,7 @@ public class FileLoader {
 
                   deck.add(new MeteorShower(
                         "meteore", 
-                        ((Long)o.get("level")),
+                        ((Long)o.get("level")).intValue(),
                         (JSONArray)o.get("Meteors")
                   ));
             }
@@ -211,7 +211,8 @@ public class FileLoader {
                   
                   deck.add(new OpenSpace(
                         "Spazio aperto", 
-                        ((Long)o.get("level")).intValue()
+                        ((Long)o.get("level")).intValue(),
+                          null
                   ));
             }
 
@@ -222,7 +223,8 @@ public class FileLoader {
                   
                   deck.add(new Epidemy(
                         "Epidemia", 
-                        ((Long)o.get("level")).intValue()
+                        ((Long)o.get("level")).intValue(),
+                          null
                   ));
             }
            
@@ -240,7 +242,8 @@ public class FileLoader {
                         ((Long)((JSONObject)o.get("storage")).get("red")).intValue(),
                         ((Long)((JSONObject)o.get("storage")).get("yellow")).intValue(),
                         ((Long)((JSONObject)o.get("storage")).get("green")).intValue(),
-                        ((Long)((JSONObject)o.get("storage")).get("blue")).intValue()
+                        ((Long)((JSONObject)o.get("storage")).get("blue")).intValue(),
+                          null
                   ));
             }
 
@@ -255,8 +258,8 @@ public class FileLoader {
                         ((Long)o.get("cannons")).intValue(),
                         ((Long)o.get("days")).intValue(), 
                         ((Long)o.get("credits")).intValue(), 
-                        ((Long)o.get("penalty")).intValue() 
-
+                        ((Long)o.get("penalty")).intValue(),
+                        null
                   ));
             }
 
@@ -267,7 +270,8 @@ public class FileLoader {
                   
                   deck.add(new Stardust( 
                         "Polvere Stellare", 
-                        ((Long)o.get("level")).intValue()
+                        ((Long)o.get("level")).intValue(),
+                          null
                   ));
             }
             

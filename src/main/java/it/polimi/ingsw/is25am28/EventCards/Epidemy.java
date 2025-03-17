@@ -14,7 +14,7 @@ public class Epidemy extends EventCard {
      * @param name
      * @param cardLevel
      */
-    protected Epidemy(String name, int cardLevel, Board board) {
+    public Epidemy(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
     }
 
