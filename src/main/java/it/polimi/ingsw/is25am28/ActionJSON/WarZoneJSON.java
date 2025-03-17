@@ -20,7 +20,7 @@ public class WarZoneJSON extends ActionJSON {
         this.data.put("playerNickname", null);
         this.data.put("engines", null);
         this.data.put("cannons", null);
-        this.data.put("shieldsToActivate", new JSONArray());
+        this.data.put("shields", new JSONArray());
     }
 
     /**

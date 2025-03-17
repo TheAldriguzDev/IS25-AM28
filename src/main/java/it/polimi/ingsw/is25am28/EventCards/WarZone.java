@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
 
 import it.polimi.ingsw.is25am28.Player.Player;
+import it.polimi.ingsw.is25am28.Ship.Ship;
 import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,9 +14,6 @@ import org.json.simple.JSONObject;
 import java.util.*;
 
 public class WarZone extends EventCard {
-    // Precalculated table that associates each direction name to its value
-    private final Map<Integer, String> directionNameToValue;
-
     // Lowest crew conditions
     private final int takenCrewForLowestCrew;
     private final int takenStorageForLowestCrew;
@@ -47,16 +45,8 @@ public class WarZone extends EventCard {
         super(cardName, cardLevel);
         // this.imagePath = imagePath;
 
-        // Initializing the direction name to value map
-        this.directionNameToValue = new HashMap<Integer, String>();
-        this.directionNameToValue.put(0, "top");
-        this.directionNameToValue.put(1, "right");
-        this.directionNameToValue.put(2, "bottom");
-        this.directionNameToValue.put(3, "left");
-
         // Variables
         JSONArray plasmaShotSequenceJSON;
-        int totalDirections = directionNameToValue.size();
 
         // (1) - Initializing the conditions for the player with the lowest crew
         this.takenCrewForLowestCrew = (int) humans.get("humans");
@@ -118,12 +108,12 @@ public class WarZone extends EventCard {
 
     @Override
     protected void bonusEffect() {
-
+        // Nothing
     }
 
     @Override
     protected void malusEffect() {
-
+        // Nothing
     }
 
     @Override
@@ -139,34 +129,37 @@ public class WarZone extends EventCard {
         List<Float> currPlayerShipStats;
         int batteriesForEngines;
         int batteriesForCannons;
-        int batteriesForShields, totalShieldsToActivate;
+        int totalShieldsToActivate;
+        int[] coveredSides;
+        Ship shipPtr;
         JSONArray shieldsToActivate;
 
         // Elaborating each player's chosen config to handle the WarZone card
         for (Player player : players) {
+            shipPtr = player.getShip();
             JSONObject currPlayerChoices = (JSONObject) data.getData().get(player.getNickname());
-            batteriesForEngines = (int) currPlayerChoices.get("engines");
-            batteriesForCannons = (int) currPlayerChoices.get("cannons");
-            shieldsToActivate = (JSONArray) currPlayerChoices.get("shieldsToActivate");
+            batteriesForEngines = ((JSONArray) currPlayerChoices.get("engines")).size();
+            batteriesForCannons = ((JSONArray) currPlayerChoices.get("cannons")).size();
+            shieldsToActivate = (JSONArray) currPlayerChoices.get("shields");
 
             // (1) - Increasing the ship's stats and setting the shielding patter for the duration of the card
 
             // (1.1) - Creating the list describing the current player's ship stats, which are
-            //      1 - totalFirepower (including the activated double cannons)
+            //      1 - totalCrew
             //      2 - totalEnginePower (including the activated double engines)
-            //      3 - totalCrew
+            //      3 - totalFirepower (including the activated double cannons)
             currPlayerShipStats = new ArrayList<Float>(3);
 
-            // (1.2) - Adding the totalFirepower
-            //       + Consuming the batteries required to activate the requested double cannons
-            currPlayerShipStats.add(0, player.getShip().getFirePower(batteriesForCannons));
+            // (1.2) - Adding the totalCrew
+            currPlayerShipStats.add(0, (float) shipPtr.getAllLifeforms().size());
 
             // (1.3) - Adding the totalEnginePower
             //       + Consuming the batteries required to activate the requested double engines
-            currPlayerShipStats.add(1, (float) player.getShip().getEnginePower(batteriesForEngines));
+            currPlayerShipStats.add(1, (float) shipPtr.getEnginePower(batteriesForEngines));
 
-            // (1.4) - Adding the totalCrew
-            currPlayerShipStats.add(2, (float) player.getShip().getAllLifeforms().size());
+            // (1.4) - Adding the totalFirepower
+            //       + Consuming the batteries required to activate the requested double cannons
+            currPlayerShipStats.add(2, shipPtr.getFirePower(batteriesForCannons));
 
             // (1.5) - Adding that list to the map of all configs
             shipStatsPerPlayer.put(player, currPlayerShipStats);
@@ -174,19 +167,24 @@ public class WarZone extends EventCard {
             // (2) - Activating the requested shields
 
             // (2.1) - Getting the amount of batteries needed to protect the desired side
-            batteriesForShields = shieldsToActivate.size();
             totalShieldsToActivate = shieldsToActivate.size();
             currPlayerShieldedSides = new ArrayList<Integer>(4);
 
             // Getting the activated shielding pattern as requested by the current player
             for (int i = 0; i < totalShieldsToActivate; i++) {
-                JSONArray coordinates = (JSONArray) shieldsToActivate.get(i);
-                currPlayerShieldedSides.set((int) coordinates.get(0), 1);
-                currPlayerShieldedSides.set((int) coordinates.get(1), 1);
+                JSONArray shieldCoordinates = (JSONArray) shieldsToActivate.get(i);
+                coveredSides = shipPtr.getComponent(
+                    (int) shieldCoordinates.get(0),
+                    (int) shieldCoordinates.get(1)
+                ).getCoveredSide();
+
+                for (int j = 0; j < coveredSides.length; j++) {
+                    currPlayerShieldedSides.set(j, coveredSides[j]);
+                }
             }
 
             // (2.2) - Consuming the energy required to activate the selected shields
-            player.getShip().consumeEnergy(batteriesForShields);
+            player.getShip().consumeEnergy(totalShieldsToActivate);
 
             // (2.3) - Adding the activated shielding pattern to the map
             shieldedSidesPerPlayer.put(player, currPlayerShieldedSides);
@@ -195,19 +193,19 @@ public class WarZone extends EventCard {
         // (3) - Once all the players have tailored their ships, next is to
         //       determine to which category does each player belong.
         //     - Finding the players that have:
-        //          1 - lowestFirepower
+        //          1 - lowestCrew
         //          2 - lowestEnginePower
-        //          3 - lowestCrew
+        //          3 - lowestFirepower
         // NOTE: There's the possibility that, for example, two players have the lowest crew
         //       count, thus the relative condition will be applied to both
-        List<Player> lowestFirepowerPlayers = new ArrayList<>();
-        List<Player> lowestEnginePowerPlayers = new ArrayList<>();
         List<Player> lowestCrewPlayers = new ArrayList<>();
+        List<Player> lowestEnginePowerPlayers = new ArrayList<>();
+        List<Player> lowestFirepowerPlayers = new ArrayList<>();
         int playerCount = players.size();
         int i, j;
         float tmp1, tmp2;
 
-        // (3.1) - Adding the players with the lowest firepower to the lowestFirePower list
+        // (3.1) - Adding the players with the lowest crew to the lowestCrewPlayer list
         for (i = 0; i < playerCount; i++) {
             for (j = 0; j < playerCount; j++) {
                 if (i != j) {
@@ -217,8 +215,8 @@ public class WarZone extends EventCard {
                     if (tmp1 < tmp2) {
                         lowestCrewPlayers.add(players.get(i));
                     } else if (tmp1 == tmp2) {
-                        lowestFirepowerPlayers.add(players.get(i));
-                        lowestFirepowerPlayers.add(players.get(j));
+                        lowestCrewPlayers.add(players.get(i));
+                        lowestCrewPlayers.add(players.get(j));
                     }
                 }
             }
@@ -241,7 +239,7 @@ public class WarZone extends EventCard {
             }
         }
 
-        // (3.3) - Adding the players with the lowest crew to the lowestCrewPlayer list
+        // (3.3) - Adding the players with the lowest firepower to the lowestFirePower list
         for (i = 0; i < playerCount; i++) {
             for (j = 0; j < playerCount; j++) {
                 if (i != j) {
@@ -249,10 +247,10 @@ public class WarZone extends EventCard {
                     tmp2 = shipStatsPerPlayer.get(players.get(j)).get(2);
 
                     if (tmp1 < tmp2) {
-                        lowestCrewPlayers.add(players.get(i));
+                        lowestFirepowerPlayers.add(players.get(i));
                     } else if (tmp1 == tmp2) {
-                        lowestCrewPlayers.add(players.get(i));
-                        lowestCrewPlayers.add(players.get(j));
+                        lowestFirepowerPlayers.add(players.get(i));
+                        lowestFirepowerPlayers.add(players.get(j));
                     }
                 }
             }
@@ -261,12 +259,21 @@ public class WarZone extends EventCard {
         // (4) - Once the player categories are established, the only thing remaining
         //       is to apply the conditions to each player for each category
 
-        // (4.1) - Applying lowestFirepower war zone conditions to the respective players
-
-
+        // (4.1) - Applying lowestCrew war zone conditions to the respective players
+        for (Player player : lowestCrewPlayers) {
+            shipPtr = player.getShip();
+            shipPtr.
+        }
 
         // (4.2) - Applying lowestEnginePower war zone conditions to the respective players
-        // (4.3) - Applying lowestCrew war zone conditions to the respective players
+        for (Player player : lowestEnginePowerPlayers) {
+
+        }
+
+        // (4.3) - Applying lowestFirepower war zone conditions to the respective players
+        for (Player player : lowestFirepowerPlayers) {
+
+        }
     }
 
     @Override

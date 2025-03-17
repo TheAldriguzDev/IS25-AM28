@@ -218,21 +218,32 @@ public class Ship {
 
     /**
      * Consumes the given amount of energy from the ship's total energy
+     *
+     * @param energyToConsume The amount of energy to consume from the total available energy on the ship
+     *
+     * @throws InsufficientEnergyException If <code>energyToConsume</code> is greater than the energy currently available on the ship
      */
-    public void consumeEnergy(int energyToConsume) {
+    public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
         int availableEnergy;
 
-        for (Battery battery : this.batteryList) {
-            availableEnergy = battery.getAvailability();
+        if (energyToConsume <= this.getAvailableEnergy()) {
+            // If there's enough energy, then consume the given amount
+            for (Battery battery : this.batteryList) {
+                availableEnergy = battery.getAvailability();
 
-            if (availableEnergy < energyToConsume) {
-                energyToConsume -= availableEnergy;
-                battery.setAvailability(0);
+                if (availableEnergy < energyToConsume) {
+                    energyToConsume -= availableEnergy;
+                    battery.setAvailability(0);
+                }
+                else {
+                    battery.setAvailability(availableEnergy - energyToConsume);
+                    break;
+                }
             }
-            else {
-                battery.setAvailability(availableEnergy - energyToConsume);
-                break;
-            }
+        }
+        else {
+            // Otherwise, throw an InsufficientEnergyException
+            throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
         }
     }
 

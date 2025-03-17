@@ -8,11 +8,8 @@ import it.polimi.ingsw.is25am28.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
-import javafx.util.Pair;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.w3c.dom.events.Event;
 
 import java.util.*;
 
@@ -95,7 +92,7 @@ public class MeteorShower extends EventCard {
                 JSONObject playerChoice = (JSONObject) playerChoices.get(player.getNickname());
 
                 switch (inboundDirection) {
-                    // Case 1.1 - Meteor arrives from the TOP
+                    // Case 1 - Meteor arrives from the TOP
                     case 0 -> {
                         gridColumn = shipPtr.getGridColumn(diceResult - 1);
                         int row = 0;
@@ -112,7 +109,7 @@ public class MeteorShower extends EventCard {
                         sideToHit = toHit.getTopSide();
                     }
 
-                    // Case 1.2 - Meteor arrives from the RIGHT
+                    // Case 2 - Meteor arrives from the RIGHT
                     case 1 -> {
                         gridRow = shipPtr.getGridRow(diceResult - 1);
                         int column = 0;
@@ -129,7 +126,7 @@ public class MeteorShower extends EventCard {
                         sideToHit = toHit.getRightSide();
                     }
 
-                    // Case 1.3 - Meteor arrives from the BOTTOM
+                    // Case 3 - Meteor arrives from the BOTTOM
                     case 2 -> {
                         gridColumn = shipPtr.getGridColumn(diceResult - 1);
                         int row = gridColumn.length - 1;
@@ -146,7 +143,7 @@ public class MeteorShower extends EventCard {
                         sideToHit = toHit.getBottomSide();
                     }
 
-                    // Case 1.4 - Meteor arrives from the LEFT
+                    // Case 4 - Meteor arrives from the LEFT
                     case 3 -> {
                         gridRow = shipPtr.getGridRow(diceResult - 1);
                         int column = gridRow.length - 1;
@@ -210,11 +207,11 @@ public class MeteorShower extends EventCard {
                         switch (component) {
                             case Cannon cannon -> {
                                 if (cannon.getDirection() == inboundDirection) {
-                                    threatDestroyed = true;
                                     if (cannon.getFirePower() == 2) {
                                         // Consume energy only if the selected cannon is a double cannon
                                         shipPtr.consumeEnergy(1);
                                     }
+                                    threatDestroyed = true;
                                 }
                             }
                             case null, default -> {}
@@ -223,8 +220,8 @@ public class MeteorShower extends EventCard {
                 }
                 // else METEOR MISSES THE SHIP
 
-                // If the meteor wasn't destroyed, then remove the component that was hit
-                // from the current player's ship
+                // If the meteor wasn't destroyed, then remove the component
+                // that was hit from the current player's ship
                 if (toHit != null && !threatDestroyed) {
                     shipPtr.removeComponent(
                             toHit.getPosition()[0],
