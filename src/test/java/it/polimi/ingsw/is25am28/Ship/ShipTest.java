@@ -18,7 +18,7 @@ class ShipTest {
     void generateComponentSubLists() {
         int grid_rows = 5;
         int grid_cols = 5;
-        Ship ship = new Ship(0, 5, 5, 0, 0);
+        Ship ship = new Ship(2);
 
         /*
                 0   1   2   3   4   5
@@ -153,7 +153,7 @@ class ShipTest {
     void traverse() {
         int grid_rows = 5;
         int grid_cols = 5;
-        Ship ship = new Ship(0, grid_rows, grid_cols, 0, 0);
+        Ship ship = new Ship(2);
 
         // Layer 0 - Core
         // Already added by Ship constructor
@@ -257,7 +257,7 @@ class ShipTest {
     void getNearestComponents() {
         int grid_rows = 5;
         int grid_cols = 5;
-        Ship ship = new Ship(0, grid_rows, grid_cols, 0, 0);
+        Ship ship = new Ship(2);
 
         Battery battery = new Battery(2, 1, 0, 0, null);
         Cannon cannon = new Cannon(1, 2, 0, 0, null);
@@ -299,7 +299,7 @@ class ShipTest {
 
     @Test
     void addComponent_and_getComponent() {
-        Ship ship = new Ship(0, 5, 5, 0, 0);
+        Ship ship = new Ship(2);
 
         Battery battery = new Battery(0, 0, 0, 0, null);
         Cannon cannon = new Cannon(0, 1, 0, 1, null);

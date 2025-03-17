@@ -48,6 +48,13 @@ public abstract class EventCard {
         }
     }
 
+    /**
+     * @return The pointer to the game board
+     */
+    public Board getBoard() {
+        return this.board;
+    }
+
     protected abstract void bonusEffect();
 
     protected abstract void malusEffect();
