@@ -12,6 +12,8 @@ public class Player {
       private int lostPieces = 0;
       private Cell cell;
 
+      private boolean lost = false;
+
       public Player( String nickname, PlayerColor color, int cursor ){
             this.color = color;
             this.cursor = cursor;
@@ -70,10 +72,6 @@ public class Player {
             return this;
       }
 
-      public boolean hasLost(){
-            return cell == null;
-      }
-
       public int getLostPieces(){
             return lostPieces;
       }
@@ -86,5 +84,19 @@ public class Player {
       public Player addLostPieces( int lost ){
             this.lostPieces += lost;
             return this;
+      }
+
+      public Player eliminate(){
+            lost = true;
+            return this;
+      }
+
+      public Player resetElimination(){
+            lost = false;
+            return this;
+      }
+
+      public boolean isEliminated(){
+            return lost;
       }
 }

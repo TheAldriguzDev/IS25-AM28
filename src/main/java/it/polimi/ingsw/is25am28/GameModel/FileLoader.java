@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.GameModel;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -43,23 +44,28 @@ public class FileLoader {
                   int[] connectors = new int[4];
 
                   for( int i = 0; i < 4; i++ ){
-                        connectors[i] = (Integer)((JSONArray)o.get("connectors")).get(i);
+                        connectors[i] = ((Long)((JSONArray)o.get("connectors")).get(i)).intValue();
                   }
                   lambda.accept(o, connectors);
             }
       }
 
+      /**
+       *  file path must be relative to "~/IS25-AM28"
+       * @param fileName
+       */
       public FileLoader( String fileName ){
             try {
+                  System.out.println(System.getProperty("user.dir"));
                   FileReader file = new FileReader(fileName);
                   JSONParser parser = new JSONParser();
                   json = (JSONObject)parser.parse(file);
             }
             catch(FileNotFoundException e){
-                  throw new Error("file not found");
+                  throw new Error("file not found with error: " + e.getMessage());
             }
             catch(IOException e){
-                  throw new Error("file not found");
+                  throw new Error("file not found with error: " + e.getMessage());
             }
             catch(ParseException e){
                   throw new Error("json not correctly initialized");
@@ -72,7 +78,7 @@ public class FileLoader {
             JSONArray comp = (JSONArray)json.get("cannon" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Cannon( connectors, (Integer)o.get("force") ))
+                  (o,connectors) -> components.add(new Cannon( connectors, ((Long)o.get("force")).intValue() ))
             , comp);
             
 
@@ -97,25 +103,25 @@ public class FileLoader {
             comp = (JSONArray)json.get("engine" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Engine( connectors, (Integer)o.get("speed") ))
+                  (o,connectors) -> components.add(new Engine( connectors, ((Long)o.get("speed")).intValue() ))
             , comp);
 
             comp = (JSONArray)json.get("battery" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Battery( connectors, (Integer)o.get("capacity") ))
+                  (o,connectors) -> components.add(new Battery( connectors, ((Long)o.get("capacity")).intValue() ))
             , comp);
 
-            comp = (JSONArray)json.get("vitals" );
+            comp = (JSONArray)json.get("vital" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Vital( connectors, (Integer)o.get("type") ))
+                  (o,connectors) -> components.add(new Vital( connectors, ((Long)o.get("type")).intValue() ))
             , comp);
 
             comp = (JSONArray)json.get("storage" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Storage( connectors, (Integer)o.get("capacity"), (Boolean)o.get("special")  ))
+                  (o,connectors) -> components.add(new Storage( connectors, ((Long)o.get("capacity")).intValue(), (Boolean)o.get("special")  ))
             , comp);
 
 
@@ -132,10 +138,10 @@ public class FileLoader {
 
                   deck.add(new AbandonedShip(
                         "nave abbandonata", 
-                        (Integer)o.get("level"), 
-                        (Integer)o.get("people"), 
-                        (Integer)o.get("days"), 
-                        (Integer)o.get("credits")
+                        ((Long)o.get("level")).intValue(), 
+                        ((Long)o.get("people")).intValue(), 
+                        ((Long)o.get("days")).intValue(), 
+                        ((Long)o.get("credits")).intValue()
                   ));
             }
 
@@ -146,13 +152,13 @@ public class FileLoader {
 
                   deck.add(new AbandonedStation(
                         "stazione abbandonata", 
-                        (Integer)o.get("level"), 
-                        (Integer)o.get("people"), 
-                        (Integer)o.get("days"), 
-                        (Integer)o.get("red"),
-                        (Integer)o.get("yellow"),
-                        (Integer)o.get("green"),
-                        (Integer)o.get("blue")
+                        ((Long)o.get("level")).intValue(), 
+                        ((Long)o.get("people")).intValue(), 
+                        ((Long)o.get("days")).intValue(), 
+                        ((Long)o.get("red")).intValue(),
+                        ((Long)o.get("yellow")).intValue(),
+                        ((Long)o.get("green")).intValue(),
+                        ((Long)o.get("blue")).intValue()
                         ));
             }
 
@@ -160,34 +166,11 @@ public class FileLoader {
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
-                  List<Integer> top = new ArrayList<>();
-                  List<Integer> bottom = new ArrayList<>();
-                  List<Integer> left = new ArrayList<>();
-                  List<Integer> right = new ArrayList<>();
-
-                  for(Object meteor: (JSONArray)o.get("top") ){
-                        top.add((Integer)meteor);
-                  }
-
-                  for(Object meteor: (JSONArray)o.get("bottom") ){
-                        bottom.add((Integer)meteor);
-                  }
-
-                  for(Object meteor: (JSONArray)o.get("left") ){
-                        left.add((Integer)meteor);
-                  }
-
-                  for(Object meteor: (JSONArray)o.get("right") ){
-                        right.add((Integer)meteor);
-                  }
 
                   deck.add(new MeteorShower(
                         "meteore", 
-                        (Integer)o.get("level"), 
-                        top,
-                        bottom,
-                        left,
-                        right
+                        ((Long)o.get("level"), 
+                        (JSONArray)o.get("Meteors")
                   ));
             }
 
@@ -199,12 +182,12 @@ public class FileLoader {
                   
                   deck.add(new Pirates(
                         "pirati", 
-                        (Integer)o.get("level"), 
-                        (Integer)o.get("firepower"), 
-                        (Integer)o.get("credits"), 
-                        (Integer)o.get("days"), 
-                        (Integer)o.get("smallShoots"), 
-                        (Integer)o.get("bigShoots")
+                        ((Long)o.get("level")).intValue(), 
+                        ((Long)o.get("firepower")).intValue(), 
+                        ((Long)o.get("credits")).intValue(), 
+                        ((Long)o.get("days")).intValue(), 
+                        ((Long)o.get("smallShoots")).intValue(), 
+                        ((Long)o.get("bigShoots")).intValue()
                   ));
             }
             
@@ -215,8 +198,8 @@ public class FileLoader {
                   
                   deck.add(new VisitPlanets(
                         "Pianeti", 
-                        (Integer)o.get("level"), 
-                        (Integer)o.get("days"), 
+                        ((Long)o.get("level")).intValue(), 
+                        ((Long)o.get("days")).intValue(), 
                         (JSONArray)o.get("planets")
                   ));
             }
@@ -228,7 +211,7 @@ public class FileLoader {
                   
                   deck.add(new OpenSpace(
                         "Spazio aperto", 
-                        (Integer)o.get("level")
+                        ((Long)o.get("level")).intValue()
                   ));
             }
 
@@ -239,7 +222,7 @@ public class FileLoader {
                   
                   deck.add(new Epidemy(
                         "Epidemia", 
-                        (Integer)o.get("level")
+                        ((Long)o.get("level")).intValue()
                   ));
             }
            
@@ -250,14 +233,14 @@ public class FileLoader {
                   
                   deck.add(new Smugglers( 
                         "Contrabbandieri", 
-                        (Integer)o.get("level"), 
-                        (Integer)o.get("days"),
-                        (Integer)o.get("cannons"), 
-                        (Integer)o.get("penalty"), 
-                        (Integer)((JSONObject)o.get("storage")).get("red"),
-                        (Integer)((JSONObject)o.get("storage")).get("yellow"),
-                        (Integer)((JSONObject)o.get("storage")).get("green"),
-                        (Integer)((JSONObject)o.get("storage")).get("blue")
+                        ((Long)o.get("level")).intValue(), 
+                        ((Long)o.get("days")).intValue(),
+                        ((Long)o.get("cannons")).intValue(), 
+                        ((Long)o.get("penalty")).intValue(), 
+                        ((Long)((JSONObject)o.get("storage")).get("red")).intValue(),
+                        ((Long)((JSONObject)o.get("storage")).get("yellow")).intValue(),
+                        ((Long)((JSONObject)o.get("storage")).get("green")).intValue(),
+                        ((Long)((JSONObject)o.get("storage")).get("blue")).intValue()
                   ));
             }
 
@@ -268,11 +251,11 @@ public class FileLoader {
                   
                   deck.add(new Slavers( 
                         "Schiavisti", 
-                        (Integer)o.get("level"), 
-                        (Integer)o.get("cannons"),
-                        (Integer)o.get("days"), 
-                        (Integer)o.get("credits"), 
-                        (Integer)o.get("penalty") 
+                        ((Long)o.get("level")).intValue(), 
+                        ((Long)o.get("cannons")).intValue(),
+                        ((Long)o.get("days")).intValue(), 
+                        ((Long)o.get("credits")).intValue(), 
+                        ((Long)o.get("penalty")).intValue() 
 
                   ));
             }
@@ -284,7 +267,7 @@ public class FileLoader {
                   
                   deck.add(new Stardust( 
                         "Polvere Stellare", 
-                        (Integer)o.get("level")
+                        ((Long)o.get("level")).intValue()
                   ));
             }
             
@@ -295,7 +278,7 @@ public class FileLoader {
                   
                   deck.add(new WarZone( 
                         "Zona di Guerra", 
-                        (Integer)o.get("level"),
+                        ((Long)o.get("level")).intValue(),
                         (JSONObject)o.get("engines"),
                         (JSONObject)o.get("cannons"),
                         (JSONObject)o.get("humans")

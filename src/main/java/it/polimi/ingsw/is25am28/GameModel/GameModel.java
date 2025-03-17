@@ -3,32 +3,20 @@ package it.polimi.ingsw.is25am28.GameModel;
 
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 
-import it.polimi.ingsw.is25am28.Components.Battery;
-import it.polimi.ingsw.is25am28.Components.Cabin;
-import it.polimi.ingsw.is25am28.Components.Cannon;
-import it.polimi.ingsw.is25am28.Components.Shield;
-import it.polimi.ingsw.is25am28.Components.Storage;
-import it.polimi.ingsw.is25am28.Components.Structural;
-import it.polimi.ingsw.is25am28.Components.Vital;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import it.polimi.ingsw.is25am28.Components.Component;
-import it.polimi.ingsw.is25am28.Components.Engine;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import it.polimi.ingsw.is25am28.GameModel.ShipConstructionSession;
 
 public class GameModel {
 
@@ -38,20 +26,21 @@ public class GameModel {
       static private final int DECK_SIZE = 8;
 
 
-      private final HashSet<Player> players;
+      //private final HashSet<Player> players;
 
       private final List<EventCard> deck;
       private final Board board;
       // indicate the round number and the card to draw from the deck
       private int round = 0;
       private final List<Component> components = new ArrayList<>();
+      private ShipConstructionSession session;
 
       public GameModel( int level ){
-            players = new HashSet<>();
 
             deck = generateDeck( level );
             // if( level > 1 )
             board = new BoardLevel2();
+            session = new ShipConstructionSession( board.getPlayers(), level );
       }
 
       /**
@@ -59,21 +48,20 @@ public class GameModel {
        * for level 2 game, the length of the list is 8;
        */
       private List<EventCard> generateDeck( int level ) {
-            List<EventCard> deck = new FileLoader("../json/cards.json").getAllCards();
+            List<EventCard> deck = new FileLoader("./json/cards.json").getAllCards();
             // random sort
-            deck.sort((_,_) -> (int)( (Math.random() - Math.random())*1000 ) );
+            deck.sort((a,b) -> (int)( (Math.random() - Math.random())*1000 ) );
 
             return deck;
       }
 
       public GameModel newPlayer( Player player ) {
-
-            players.add(player);
+            board.addPlayerToBoard(player);
             return this;
       }
 
       public GameModel removePlayer( Player player ){
-            players.remove(player);
+            board.eliminatePlayer(player);
             return this;
       }
 
@@ -99,6 +87,7 @@ public class GameModel {
       public HashMap<Player, List<Component>> checkAllShips(){
 
             HashMap<Player, List<Component>> toFix = new HashMap<>();
+            List<Player> players = board.getPlayers();
 
             for( Player player : players ) {
 
@@ -117,24 +106,26 @@ public class GameModel {
        */
       public GameModel endGameRewards(){
 
-            List<Player> sorted = new ArrayList<Player>(players);
-
-
-            sorted.sort((p1,p2) -> p1.hasLost() ? -1: p1.getCursor() - p2.getCursor() );
+            List<Player> players = board
+            .getPlayers()
+            .stream()
+            .sorted((p1,p2) -> p1.getCursor() - p2.getCursor() )
+            .toList();
 
             // add credits based on position
-            for( int i = 0; i < sorted.size() || sorted.get(i).hasLost(); i++ ){
-                  sorted.get(i).addCredits( 4 - i );
+            for( int i = 0; i < players.size(); i++ ){
+                  players.get(i).addCredits( 4 - i );
             }
 
+            
+
+            List<Player> withTheBestShip = new ArrayList<>();
             int min = Integer.MAX_VALUE;
 
-            sorted.clear();
+            players.clear();
+            players.addAll(board.getPlayers());
 
             for (Player player : players){
-
-                  if( player.hasLost() )
-                        continue;
 
                   Ship ship = player.getShip();
                   List<Integer> connectors = new ArrayList<Integer>();
@@ -142,6 +133,7 @@ public class GameModel {
 
                   connectors.add(0);
 
+                  // get exposed connectors
                   ship.traverse( component -> {
                         Component[] nearest = ship.getNearestComponents(component);
 
@@ -165,18 +157,24 @@ public class GameModel {
                   curr = connectors.stream().reduce( 0, (p,c) -> p + c );
 
                   if( curr < min ){
-                        sorted.clear();
-                        sorted.add(player);
+                        withTheBestShip.clear();
+                        withTheBestShip.add(player);
                         curr = min;
                   }else if( curr == min ){
-                        sorted.add(player);
+                        withTheBestShip.add(player);
                   }
 
             }
 
+            // add 2 credits to all the players with the best ship
+            withTheBestShip.forEach(player -> player.addCredits(2));
+
+            players.addAll(board.getEliminatedPlayers());
+
+            // add credits for storage 
             players.forEach( player -> {
                   int value = player.getShip().getAllItemValue();
-                  player.addCredits( player.hasLost() ? (int)(value + 1)/2 : value );
+                  player.addCredits( player.isEliminated() ? (int)(value + 1)/2 : value );
             });
 
             return this;
@@ -195,7 +193,7 @@ public class GameModel {
 
             EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
 
-            card.startUsingCard( new ArrayList<Player>(players) );
+            card.startUsingCard( new ArrayList<Player>(board.getPlayers()) );
 
             return card;
       }
@@ -240,7 +238,29 @@ public class GameModel {
             if( components.size() > 0 )
                   return components;
 
-            components.addAll(new FileLoader("../json/tiles.json").getAllComponents());
+            components.addAll(new FileLoader("./json/tiles.json").getAllComponents());
             return components;
+      }
+
+      public JSONArray startBuildSession(){
+
+            session.flip();
+
+            return session.generateInitialBoardState();
+      }
+
+      public GameModel selectComponent( int id ){
+            session.select(id);
+            return this;
+      }
+
+      public GameModel deselectComponent( int id ){
+            session.deselect(id);
+            return this;
+      }
+
+      public GameModel flip(){
+            session.flip();
+            return this;
       }
 }
