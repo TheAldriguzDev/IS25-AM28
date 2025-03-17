@@ -90,14 +90,16 @@ public class Stardust extends EventCard {
         }
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public JSONObject generateState() {
-        CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardLevel(getCardLevel());
-        cardState.setCardName(getCardName());
+        JSONObject stardustState = new JSONObject();
 
+        if(getCurrentPlayer().isPresent()) {
+            stardustState.put("playerNickname", getCurrentPlayer().get().getNickname());
+        }
+        stardustState.put("cardName", this.name);
+        stardustState.put("cardLevel", cardLevel);
 
-
-        return null;
+        return stardustState;
     }
 }

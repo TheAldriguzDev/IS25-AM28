@@ -103,16 +103,21 @@ public class Slavers extends EventCard {
     }
 
     //
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public JSONObject generateState() {
-        CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardLevel(getCardLevel());
-        cardState.setCardName(getCardName());
+        JSONObject slaversState = new JSONObject();
 
-        if (this.getCurrentPlayer().isPresent()) {
-            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+        if(getCurrentPlayer().isPresent()) {
+            slaversState.put("playerNickname", getCurrentPlayer().get().getNickname());
         }
+        slaversState.put("cardName", this.name);
+        slaversState.put("cardLevel", cardLevel);
+        slaversState.put("requiredFirepower", requiredFirepower);
+        slaversState.put("movementSteps", movementSteps);
+        slaversState.put("givenCredits", givenCredits);
+        slaversState.put("takenCrew", takenCrew);
+        slaversState.put("hasBeenDefeated", hasBeenDefeated);
 
-        return cardState.getData();
+        return slaversState;
     }
 }

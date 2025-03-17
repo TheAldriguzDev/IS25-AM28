@@ -162,16 +162,21 @@ public class Pirates extends EventCard {
         return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || this.hasBeenDefeated;
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public JSONObject generateState() {
-        CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardLevel(getCardLevel());
-        cardState.setCardName(getCardName());
+        JSONObject piratesState = new JSONObject();
 
         if (this.getCurrentPlayer().isPresent()) {
-            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+            piratesState.put("playerNickname", getCurrentPlayer().get().getNickname());
         }
+        piratesState.put("cardName", this.name);
+        piratesState.put("cardLevel", cardLevel);
+        piratesState.put("requiredFirepower", requiredFirepower);
+        piratesState.put("givenCredits", givenCredits);
+        piratesState.put("movementSteps", movementSteps);
+        piratesState.put("numberOfShots", numberOfShots);
+        piratesState.put("hasBeenDefeated", hasBeenDefeated);
 
-        return cardState.getData();
+        return piratesState;
     }
 }

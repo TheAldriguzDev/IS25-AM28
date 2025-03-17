@@ -169,7 +169,7 @@ public class FileLoader {
 
                   deck.add(new MeteorShower(
                         "meteore", 
-                        ((Long)o.get("level"), 
+                        ((Long)o.get("level")),
                         (JSONArray)o.get("Meteors")
                   ));
             }

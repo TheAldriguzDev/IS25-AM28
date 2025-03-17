@@ -67,6 +67,7 @@ public class Ship {
      *  This method should <b style="color: rgb(8, 219, 205)">only</b> be used when the ship actually changes,
      *  otherwise it will iterate again over the ship's grid and generate the same lists.
      */
+
     public void generateComponentSubLists() throws IllegalStateException {
         traverse(
                 (Component c) -> {

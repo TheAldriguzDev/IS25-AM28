@@ -46,7 +46,7 @@ public class GameModel {
             }
 
             // random sort
-            deck.sort((_,_) -> (int)( (Math.random() - Math.random())*1000 ) );
+            //deck.sort((_,_) -> (int)( (Math.random() - Math.random())*1000 ) );
 
             return deck;
       }

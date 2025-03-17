@@ -245,28 +245,16 @@ public class Smugglers extends EventCard {
         return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || this.hasBeenDefeated;
     }
 
-    @Override
-    public JSONObject generateState() {
-        /*
-        CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardLevel(getCardLevel());
-        cardState.setCardName(getCardName());
 
-        if (this.getCurrentPlayer().isPresent()) {
-            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
-        }*/
-        @SuppressWarnings("unchecked")
+    @Override @SuppressWarnings("unchecked")
+    public JSONObject generateState() {
         JSONObject smugglersState = new JSONObject();
-        smugglersState.put("cardName", this.name);
-        smugglersState.put("cardLevel", cardLevel);
 
         if(getCurrentPlayer().isPresent()) {
             smugglersState.put("playerNickname", getCurrentPlayer().get().getNickname());
         }
-
-
-
-        /*
+        smugglersState.put("cardName", this.name);
+        smugglersState.put("cardLevel", cardLevel);
         smugglersState.put("requiredFirepower", requiredFirepower);
         smugglersState.put("movementSteps", movementSteps);
         smugglersState.put("redItems", redItems);
@@ -275,8 +263,6 @@ public class Smugglers extends EventCard {
         smugglersState.put("greenItems", greenItems);
         smugglersState.put("takenItems", takenItems);
         smugglersState.put("hasBeenDefeated", hasBeenDefeated);
-        */
-
 
         return smugglersState;
     }
