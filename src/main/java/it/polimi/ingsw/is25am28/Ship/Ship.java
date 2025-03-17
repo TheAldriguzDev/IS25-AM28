@@ -671,7 +671,8 @@ public class Ship {
         if (i < 0 || j < 0 || i >= this.grid_rows || j >= this.grid_cols) {
             throw new OutOfGridException("Requested component is not in the ship component grid");
         }
-
+        // TODO: Modify method such that it keeps track of the deleted components, since
+        // TODO: they're needed to count the credits to subtract to the player as a deficit
         /*
          *  Now the component removal consists of 3 steps:
          *

@@ -1,13 +1,10 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.WarZoneJSON;
-import it.polimi.ingsw.is25am28.Components.Shield;
-import it.polimi.ingsw.is25am28.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
 
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
-import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -262,7 +259,7 @@ public class WarZone extends EventCard {
         // (4.1) - Applying lowestCrew war zone conditions to the respective players
         for (Player player : lowestCrewPlayers) {
             shipPtr = player.getShip();
-            shipPtr.
+
         }
 
         // (4.2) - Applying lowestEnginePower war zone conditions to the respective players
