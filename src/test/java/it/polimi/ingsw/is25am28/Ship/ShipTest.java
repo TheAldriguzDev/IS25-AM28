@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -64,6 +65,11 @@ class ShipTest {
         else {
             System.out.println("ERROR: Given ship is null");
         }
+    }
+
+    @BeforeEach
+    Ship initCustomShip() {
+
     }
 
     @Test

@@ -241,7 +241,8 @@ public class Ship {
     /**
      * Consumes the given amount of energy from the ship's total energy
      *
-     * @param energyToConsume The amount of energy to consume from the total available energy on the ship
+     * @param energyToConsume The amount of energy to consume from the total available energy on the ship.<br>
+     *                        The method doesn't do anything if <code>energyToConsume <= 0</code>.
      *
      * @throws InsufficientEnergyException If <code>energyToConsume</code> is greater than the energy currently available on the ship
      */
