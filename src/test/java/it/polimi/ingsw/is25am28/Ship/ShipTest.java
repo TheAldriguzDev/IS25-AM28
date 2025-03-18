@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
+import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -241,7 +242,7 @@ class ShipTest {
         ship.addComponent(leftStorage, 6, 5);
         ship.addComponent(rightStorage, 6, 7);
         ship.addComponent(topStorage, 5, 6);
-        ship.addComponent(disconnectedStorage, 7, 7);
+        ship.addComponent(disconnectedStorage, 7, 8);
 
         System.out.println("==== CURRENT SHIP CONFIGURATION ====");
         printShipGrid(ship);
@@ -267,6 +268,7 @@ class ShipTest {
 
     @Test
     void getWrongComponents() {
+
     }
 
     @Test
