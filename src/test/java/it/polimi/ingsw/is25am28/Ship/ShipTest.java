@@ -638,7 +638,7 @@ class ShipTest {
         assertNull(ship.getComponent(8, 4));
     }
     */
-    
+
     @Test
     void test() {
 
