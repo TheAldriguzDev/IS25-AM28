@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShipTest {
 
-    /*
     void printShipGrid(Ship ship) {
         if (ship != null) {
             List<Component> components = new ArrayList<>();
@@ -53,7 +53,7 @@ class ShipTest {
             System.out.println("\nFound these components:");
 
             for (i = 0; i < size; i++) {
-                System.out.println(i + " - " + components.get(i) + " at coords (" + components.get(i).getPosition()[0] + ", " + components.get(i).getPosition()[1] + ")");
+                System.out.println(i + " - " + components.get(i));
             }
         }
         else {
@@ -65,15 +65,22 @@ class ShipTest {
     void generateComponentSubLists() {
         Ship ship = new Ship(2);
 
-        Battery battery = new Battery(3, 6, 7, 0, null);
-        Cabin cabin = new Cabin(5, 6, 0, null, false);
-        Cannon cannon = new Cannon(1, 8, 4, 0, null);
-        Engine engine = new Engine(1, 7, 6, 0, null);
-        Engine engine2 = new Engine(1, 7, 7, 0, null);
-        Shield shield = new Shield(6, 5, 0, null);
-        Storage storage = new Storage(3, false, 4, 5, 0, null);
-        Structural structural = new Structural(3, 2, 0, null);
-        Vital vital = new Vital(null, 2, 2, 0, null);
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine(connectors, 2);
+        Shield shield = new Shield(connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
 
         System.out.println("==== BEFORE ====");
         printShipGrid(ship);
@@ -201,10 +208,16 @@ class ShipTest {
     void getAllItemValue() {
         Ship ship = new Ship(1);
 
-        Storage leftStorage = new Storage(3, false, 6, 5, 0, null);
-        Storage rightStorage = new Storage(3, false, 6, 7, 0, null);
-        Storage topStorage = new Storage(2, true, 5, 6, 0, null);
-        Storage disconnectedStorage = new Storage(3, false, 7, 7, 0, null);
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Storage leftStorage = new Storage(connectors, 3, false);
+        Storage rightStorage = new Storage(connectors, 3, false);
+        Storage topStorage = new Storage(connectors, 2, true);
+        Storage disconnectedStorage = new Storage(connectors, 3, false);
 
         Item red = new Item(ItemColor.RED);
         Item yellow = new Item(ItemColor.YELLOW);
@@ -260,16 +273,22 @@ class ShipTest {
     void getGridRow() {
         Ship ship = new Ship(2);
 
-        Battery battery = new Battery(3, 6, 7, 0, null);
-        Battery battery2 = new Battery(2, 5, 5, 0, null);
-        Cabin cabin = new Cabin(5, 6, 0, null, false);
-        Cannon cannon = new Cannon(1, 8, 4, 0, null);
-        Engine engine = new Engine(1, 7, 6, 0, null);
-        Engine engine2 = new Engine(1, 7, 7, 0, null);
-        Shield shield = new Shield(6, 5, 0, null);
-        Storage storage = new Storage(3, false, 4, 5, 0, null);
-        Structural structural = new Structural(3, 2, 0, null);
-        Vital vital = new Vital(null, 2, 2, 0, null);
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine(connectors, 2);
+        Shield shield = new Shield(connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -319,16 +338,22 @@ class ShipTest {
     void getGridColumn() {
         Ship ship = new Ship(2);
 
-        Battery battery = new Battery(3, 6, 7, 0, null);
-        Battery battery2 = new Battery(2, 5, 5, 0, null);
-        Cabin cabin = new Cabin(5, 6, 0, null, false);
-        Cannon cannon = new Cannon(1, 8, 4, 0, null);
-        Engine engine = new Engine(1, 7, 6, 0, null);
-        Engine engine2 = new Engine(1, 7, 7, 0, null);
-        Shield shield = new Shield(6, 5, 0, null);
-        Storage storage = new Storage(3, false, 4, 5, 0, null);
-        Structural structural = new Structural(3, 2, 0, null);
-        Vital vital = new Vital(null, 2, 2, 0, null);
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine(connectors, 2);
+        Shield shield = new Shield(connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -383,16 +408,23 @@ class ShipTest {
     void traverse() {
         Ship ship = new Ship(2);
 
-        Battery battery = new Battery(3, 6, 7, 0, null);
-        Battery battery2 = new Battery(2, 5, 5, 0, null);
-        Cabin cabin = new Cabin(5, 6, 0, null, false);
-        Cannon cannon = new Cannon(1, 8, 4, 0, null);
-        Engine engine = new Engine(1, 7, 6, 0, null);
-        Engine engine2 = new Engine(1, 7, 7, 0, null);
-        Shield shield = new Shield(6, 5, 0, null);
-        Storage storage = new Storage(3, false, 4, 5, 0, null);
-        Structural structural = new Structural(3, 2, 0, null);
-        Vital vital = new Vital(null, 2, 2, 0, null);
+        int[] connectors = new int[4];
+        int i;
+        
+        for (i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine(connectors, 2);
+        Shield shield = new Shield(connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -429,7 +461,7 @@ class ShipTest {
         ship.traverse(actualVisited::add);
 
         int size = expectedVisited.size();
-        int i;
+        System.out.println("\tsize: " + size + " | actualVisited.size(): " + actualVisited.size());
 
         for (i = 0; i < size; i++) {
             assertEquals(expectedVisited.get(i), actualVisited.get(i));
@@ -445,15 +477,22 @@ class ShipTest {
     void getNearestComponents() {
         Ship ship = new Ship(2);
 
-        Battery battery = new Battery(3, 6, 7, 0, null);
-        Cabin cabin = new Cabin(5, 6, 0, null, false);
-        Cannon cannon = new Cannon(1, 8, 4, 0, null);
-        Engine engine = new Engine(1, 7, 6, 0, null);
-        Engine engine2 = new Engine(1, 7, 7, 0, null);
-        Shield shield = new Shield(6, 5, 0, null);
-        Storage storage = new Storage(3, false, 4, 5, 0, null);
-        Structural structural = new Structural(3, 2, 0, null);
-        Vital vital = new Vital(null, 2, 2, 0, null);
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine(connectors, 2);
+        Shield shield = new Shield(connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -497,14 +536,22 @@ class ShipTest {
     void addComponentThenGetComponent() {
         Ship ship = new Ship(2);
 
-        Battery battery = new Battery(3, 6, 7, 0, null);
-        Cabin cabin = new Cabin(5, 6, 0, null, false);
-        Cannon cannon = new Cannon(1, 8, 4, 0, null);
-        Engine engine = new Engine(1, 7, 6, 0, null);
-        Shield shield = new Shield(6, 5, 0, null);
-        Storage storage = new Storage(3, false, 4, 5, 0, null);
-        Structural structural = new Structural(3, 2, 0, null);
-        Vital vital = new Vital(null, 2, 2, 0, null);
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine(connectors, 2);
+        Shield shield = new Shield(connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
 
         System.out.println("==== BEFORE ====");
         printShipGrid(ship);
@@ -582,15 +629,22 @@ class ShipTest {
     void removeComponent() {
         Ship ship = new Ship(3);
 
-        Battery battery = new Battery(3, 6, 7, 0, null);
-        Cabin cabin = new Cabin(5, 6, 0, null, false);
-        Cannon cannon = new Cannon(1, 8, 4, 0, null);
-        Engine engine = new Engine(1, 7, 6, 0, null);
-        Engine engine2 = new Engine(1, 7, 7, 0, null);
-        Shield shield = new Shield(6, 5, 0, null);
-        Storage storage = new Storage(3, false, 4, 5, 0, null);
-        Structural structural = new Structural(3, 2, 0, null);
-        Vital vital = new Vital(null, 2, 2, 0, null);
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine(connectors, 2);
+        Shield shield = new Shield(connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -637,7 +691,6 @@ class ShipTest {
         ship.removeComponent(8, 4);
         assertNull(ship.getComponent(8, 4));
     }
-    */
 
     @Test
     void test() {

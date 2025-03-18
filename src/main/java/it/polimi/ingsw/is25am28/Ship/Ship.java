@@ -101,7 +101,7 @@ public class Ship {
         this.core = new Cabin(coreConnectors,true);
 
         // Adding the core component as the first component in the ship's grid
-        this.addComponent(this.core, this.core.getPosition()[0], this.core.getPosition()[1]);
+        this.addComponent(this.core, this.grid_rows/2, this.grid_cols/2);
 
         // Instantiating each component list as an empty list
         batteryList = new ArrayList<Battery>();
@@ -120,7 +120,6 @@ public class Ship {
      *  This method should <b style="color: rgb(8, 219, 205)">only</b> be used when the ship actually changes,
      *  otherwise it will iterate again over the ship's grid and generate the same lists.
      */
-
     public void generateComponentSubLists() throws IllegalStateException {
         traverse(
             (Component c) -> {
@@ -774,8 +773,6 @@ public class Ship {
      * @throws NullComponentException If the selected component is <code>null</code>
      */
     public Component getComponent(int i, int j) throws OutOfGridException {
-        Component selectedComponent;
-
         if (i < 0 || j < 0 || i >= grid_rows || j >= grid_cols) {
             throw new OutOfGridException("Requested component is not in the ship component grid");
         }

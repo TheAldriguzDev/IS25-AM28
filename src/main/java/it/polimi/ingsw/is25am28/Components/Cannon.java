@@ -3,8 +3,8 @@ package it.polimi.ingsw.is25am28.Components;
 public final class Cannon extends Component {
       private final int force;
 
-      public Cannon( int[] connectors, int force ){
-            super(connectors);
+      public Cannon( int row, int col, int[] connectors, int force ){
+            super(row, col, connectors);
             this.force = force;
       }
 

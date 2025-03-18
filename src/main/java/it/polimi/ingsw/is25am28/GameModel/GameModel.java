@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.GameModel;
 
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import it.polimi.ingsw.is25am28.TimeObserver.TimeSubscriber;
 
@@ -183,7 +184,7 @@ public class GameModel {
                   throw new Error("state updated when the card has finished to apply its effects to all players");
             }
 
-            card.useCard( (JSONObject) response );
+            card.useCard( (ActionJSON) response );
 
             return this;
       }

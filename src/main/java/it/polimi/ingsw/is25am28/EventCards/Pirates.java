@@ -71,11 +71,6 @@ public class Pirates extends EventCard {
         return this;
     }
 
-    @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
-    }
-
     protected void bonusEffect() {
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(

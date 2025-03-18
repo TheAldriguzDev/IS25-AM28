@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
     
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.VisitPlanetsJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
@@ -101,19 +102,15 @@ public class VisitPlanets extends EventCard {
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
         String playerName;
+        JSONObject response = data.getData();
         int selectedPlanetID;
         boolean playerWantsToLand;
 
         try {
-            playerName = (String) data.get("playerName");
-            selectedPlanetID = (int) data.get("selectedPlanetID");
-            playerWantsToLand = (boolean) data.get("playerWantsToLand");
+            playerName = (String) response.get("playerName");
+            selectedPlanetID = (int) response.get("selectedPlanetID");
+            playerWantsToLand = (boolean) response.get("playerWantsToLand");
         }
         catch (Exception e) {
             throw new IllegalArgumentException("Error while parsing the user requested action: " + e.getMessage());

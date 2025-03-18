@@ -101,8 +101,6 @@ public abstract class EventCard {
 
     public abstract EventCard useCard( ActionJSON data ) throws IllegalArgumentException;
 
-    public abstract EventCard useCard(JSONObject data) throws IllegalArgumentException;
-
     /**
      * generateState return a JSONObject that return the current state of the card. It MUST contains all the specific information like:
      * - currentPlayer
