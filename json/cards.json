@@ -138,7 +138,11 @@
             {
                   "level": 1,
                   "firepower": 5,
-                  "bigShoots": 1,
+                  "shoots": [
+                        [1,0],
+                        [2,0],
+                        [1,0]
+                  ],
                   "smallShoots": 2,
                   "days": 1,
                   "credits": 4,
@@ -147,8 +151,11 @@
             {
                   "level": 2,
                   "firepower": 6,
-                  "bigShoots": 2,
-                  "smallShoots": 1,
+                  "shoots": [
+                        [2,0],
+                        [1,0],
+                        [2,0]
+                  ],
                   "days": 2,
                   "credits": 7,
                   "path": "galaxy_trucker_imgs/cards/pirates/GT-cards_II_IT_013.jpg"

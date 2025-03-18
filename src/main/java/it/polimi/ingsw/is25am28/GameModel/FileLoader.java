@@ -190,8 +190,7 @@ public class FileLoader {
                         ((Long)o.get("firepower")).intValue(), 
                         ((Long)o.get("credits")).intValue(), 
                         ((Long)o.get("days")).intValue(), 
-                        ((Long)o.get("smallShoots")).intValue(), 
-                        ((Long)o.get("bigShoots")).intValue(),
+                        ((JSONArray)o.get("shoots")),
                         board
                   ));
             }

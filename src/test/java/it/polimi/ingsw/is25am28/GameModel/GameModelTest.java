@@ -23,7 +23,7 @@ public class GameModelTest {
       }
 
       @Test
-      void deck_is_random(){
+      void deck_is_random_and_no_dup(){
             EventCard card = gm.nextRound();
             List<EventCard> deck = new ArrayList<>();
             int ml = 0;
@@ -47,5 +47,10 @@ public class GameModelTest {
             if( ml > 1 ){
                   throw new Error("too much duplicates");
             }
+      }
+      @Test
+      void create_session_test(){
+            gm.startBuildSession(class)
+
       }
 }
