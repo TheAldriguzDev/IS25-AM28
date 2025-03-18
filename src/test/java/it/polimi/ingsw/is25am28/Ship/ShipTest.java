@@ -312,6 +312,53 @@ class ShipTest {
     }
 
     @Test
+    void getExposedComponents() {
+        Ship ship = new Ship(2);
+
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine( connectors, 2);
+        Shield shield = new Shield( connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
+
+        Cabin core = (Cabin) ship.getComponent(6, 6);
+
+        System.out.println("==== BEFORE ====");
+        printShipGrid(ship);
+
+        // Adding the components created above
+        ship.addComponent(battery, 6, 7);
+        ship.addComponent(battery2, 5, 5);
+        ship.addComponent(cabin, 5, 6);
+        ship.addComponent(cannon, 8, 4);
+        ship.addComponent(engine, 7, 6);
+        ship.addComponent(engine2, 7, 7);
+        ship.addComponent(shield, 6, 5);
+        ship.addComponent(storage, 4, 5);
+        ship.addComponent(structural, 3, 2);
+        ship.addComponent(vital, 2, 2);
+
+        System.out.println("==== AFTER ====");
+        printShipGrid(ship);
+
+        // Expected from the ship created above
+        int expectedAmountOfExposedComponents = 14;
+
+        assertEquals(expectedAmountOfExposedComponents, ship.getExposedConnectors());
+    }
+
+    @Test
     void getAllItemsAndTheirValue() {
         Ship ship = new Ship(1);
 
@@ -374,7 +421,6 @@ class ShipTest {
 
     @Test
     void getWrongComponents() {
-
     }
 
     @Test

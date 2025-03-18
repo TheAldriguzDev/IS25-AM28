@@ -7,11 +7,9 @@ import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -419,32 +417,21 @@ public class Ship {
      * @return The number of exposed connectors on the entire ship
      */
     public int getExposedConnectors(){
-        List<Integer> connectors = new ArrayList<Integer>();
+        List<Component> border = new ArrayList<Component>();
+        AtomicInteger exposedConnectors = new AtomicInteger();
 
         traverse(
-             (Component component) -> {
-                Component[] nearest = getNearestComponents(component);
-
-                if( nearest[0] == null ){
-                    connectors.add( component.getTopSide().ordinal() );
-                }
-
-                if( nearest[1] == null ){
-                    connectors.add(component.getRightSide().ordinal());
-                }
-
-                if( nearest[2] == null ){
-                    connectors.add( component.getBottomSide().ordinal() );
-                }
-
-                if( nearest[3] == null ){
-                    connectors.add( component.getLeftSide().ordinal() );
+            (Component component) -> {
+                Component[] neighbours = this.getNearestComponents(component);
+                for (Component neighbour : neighbours) {
+                    if (neighbour == null) {
+                        exposedConnectors.getAndIncrement();
+                    }
                 }
             }
         );
 
-        // Add all the exposed connectors found
-        return connectors.stream().reduce(0, Integer::sum);
+        return exposedConnectors.get();
     }
 
     /**
