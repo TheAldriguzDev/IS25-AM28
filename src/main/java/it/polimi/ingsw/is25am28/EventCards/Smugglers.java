@@ -75,6 +75,11 @@ public class Smugglers extends EventCard {
         return this;
     }
 
+    @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
     protected void bonusEffect(ActionJSON data) throws ClassCastException {
         SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();

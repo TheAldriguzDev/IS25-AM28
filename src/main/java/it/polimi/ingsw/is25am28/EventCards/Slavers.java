@@ -63,6 +63,11 @@ public class Slavers extends EventCard {
     }
 
     @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
     protected void bonusEffect() {
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Cannon;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Components.Shield;
@@ -21,9 +23,10 @@ public class MeteorShower extends EventCard {
     public MeteorShower(
             String cardName,
             int cardLevel,
-            JSONArray meteorsConfigs
+            JSONArray meteorsConfigs,
+            Board board
     ) {
-        super(cardName, cardLevel);
+        super(cardName, cardLevel, board);
         meteorSequence = new ArrayList<Meteor>();
 
         for (Object meteor : meteorsConfigs) {
@@ -49,6 +52,11 @@ public class MeteorShower extends EventCard {
     }
 
     @Override
+    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
     public EventCard useCard(JSONObject data) throws IllegalArgumentException {
         return null;
     }
@@ -64,7 +72,7 @@ public class MeteorShower extends EventCard {
         JSONObject playerChoices;
 
         // Initializing variables
-        players = this.board.getPlayers();
+        players = this.getBoard().getPlayers();
         random = new Random();
         playerChoices = data.getData();
 
@@ -106,7 +114,7 @@ public class MeteorShower extends EventCard {
                         }
 
                         if (toHit == null) break;
-                        sideToHit = toHit.getTopSide();
+                        sideToHit = toHit.getTopSide().ordinal();
                     }
 
                     // Case 2 - Meteor arrives from the RIGHT
@@ -123,7 +131,7 @@ public class MeteorShower extends EventCard {
                         }
 
                         if (toHit == null) break;
-                        sideToHit = toHit.getRightSide();
+                        sideToHit = toHit.getRightSide().ordinal();
                     }
 
                     // Case 3 - Meteor arrives from the BOTTOM
@@ -140,7 +148,7 @@ public class MeteorShower extends EventCard {
                         }
 
                         if (toHit == null) break;
-                        sideToHit = toHit.getBottomSide();
+                        sideToHit = toHit.getBottomSide().ordinal();
                     }
 
                     // Case 4 - Meteor arrives from the LEFT
@@ -157,7 +165,7 @@ public class MeteorShower extends EventCard {
                         }
 
                         if (toHit == null) break;
-                        sideToHit = toHit.getLeftSide();
+                        sideToHit = toHit.getLeftSide().ordinal();
                     }
 
                     default -> throw new IllegalStateException("ERROR: Only 4 directions allowed");

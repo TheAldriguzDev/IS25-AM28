@@ -157,10 +157,11 @@ public class FileLoader {
                         ((Long)o.get("level")).intValue(), 
                         ((Long)o.get("people")).intValue(), 
                         ((Long)o.get("days")).intValue(), 
-                        ((Long)o.get("red")).intValue(),
-                        ((Long)o.get("yellow")).intValue(),
-                        ((Long)o.get("green")).intValue(),
-                        ((Long)o.get("blue")).intValue(),
+                        //((Long)o.get("red")).intValue(),
+                        //((Long)o.get("yellow")).intValue(),
+                        //((Long)o.get("green")).intValue(),
+                        //((Long)o.get("blue")).intValue()
+                        null,      // REQUIRES AN ARRAY LIST OF ITEMS
                         board
                         ));
             }
@@ -171,10 +172,10 @@ public class FileLoader {
                   JSONObject o = (JSONObject)proxy;
 
                   deck.add(new MeteorShower(
-                        "meteore", 
-                        ((Long)o.get("level"), 
-                        (JSONArray)o.get("Meteors"),
-                        board
+                        "meteore",
+                          ((Long)o.get("level")).intValue(),
+                          ((JSONArray) o.get("Meteors")),
+                          board
                   ));
             }
 

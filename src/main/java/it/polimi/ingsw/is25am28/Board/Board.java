@@ -59,7 +59,8 @@ public abstract class Board {
             throw new IllegalArgumentException("The selected nickname or color has been already used");
         }
 
-        players.add(new Player(nickname, color));
+        // TODO: Fix
+        //players.add(new Player(nickname, color));
         return this;
     }
 

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -11,8 +13,8 @@ import java.util.*;
 public class Epidemy extends EventCard {
 
     // Constructor
-    protected Epidemy(String name, int cardLevel) {
-        super(name, cardLevel);
+    public Epidemy(String name, int cardLevel, Board board) {
+        super(name, cardLevel, board);
     }
 
     @Override
@@ -26,12 +28,17 @@ public class Epidemy extends EventCard {
     }
 
     @Override
+    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
     public EventCard useCard(JSONObject data) throws IllegalArgumentException {
         return null;
     }
 
     public void useCard() {
-        List<Player> players = this.board.getPlayers();
+        List<Player> players = this.getBoard().getPlayers();
         Set<Cabin> alreadyQuarantined;
         List<Cabin> cabinList;
         Component[] neighbours;

@@ -58,4 +58,8 @@ public final class Storage extends Component {
       public boolean check( Component[] nearest ){
             return false;
       }
+
+      public int availableSpace() {
+            return capacity - storedItems.size();
+      }
 }

@@ -14,13 +14,6 @@ public class Player {
 
       private boolean lost = false;
 
-      public Player( String nickname, PlayerColor color, int cursor, int level ){
-            this.color = color;
-            this.cursor = cursor;
-            this.nickname = nickname;
-            ship = new Ship(level);
-      }
-
       public Player( String nickname, PlayerColor color, int level ){
             this.color = color;
             this.nickname = nickname;

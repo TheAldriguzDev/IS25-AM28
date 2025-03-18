@@ -14,7 +14,9 @@ public class PlayerTest {
 
       @BeforeEach
       void init() {
-            this.player = new Player( "test", PlayerColor.BLUE );
+            throw new Error("FIX REQUIRED (see code)");
+            // TODO: Fix
+            //this.player = new Player( "test", PlayerColor.BLUE );
       }
 
       @Test

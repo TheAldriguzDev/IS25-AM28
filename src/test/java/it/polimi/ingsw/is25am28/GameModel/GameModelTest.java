@@ -48,9 +48,4 @@ public class GameModelTest {
                   throw new Error("too much duplicates");
             }
       }
-      @Test
-      void create_session_test(){
-            gm.startBuildSession(class)
-
-      }
 }

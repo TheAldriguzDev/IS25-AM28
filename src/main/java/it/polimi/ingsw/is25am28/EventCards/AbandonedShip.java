@@ -116,6 +116,11 @@ public class AbandonedShip extends EventCard {
         return this;
     }
 
+    @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
     // Give the credits to the player that used the card
     @Override
     protected void bonusEffect() {

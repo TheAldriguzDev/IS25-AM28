@@ -98,13 +98,7 @@ public class Ship {
         coreConnectors[3] = THREE_PIPES.ordinal();
 
         // Creating the ship's core cabin
-        this.core = new Cabin(
-                6,
-                6,
-                0,
-                coreConnectors,
-                true
-        );
+        this.core = new Cabin(coreConnectors,true);
 
         // Adding the core component as the first component in the ship's grid
         this.addComponent(this.core, this.core.getPosition()[0], this.core.getPosition()[1]);
@@ -787,31 +781,5 @@ public class Ship {
         }
 
         return this.components[i][j];
-    }
-
-    public int getExposedConnectors(){
-        List<Integer> connectors = new ArrayList<Integer>();
-
-        traverse( component -> {
-            Component[] nearest = getNearestComponents(component);
-
-            if( nearest[0] == null ){
-                    connectors.add( component.getTopSide().ordinal() );
-            }
-
-            if( nearest[1] == null ){
-                    connectors.add( component.getRightSide().ordinal() );
-            }
-
-            if( nearest[2] == null ){
-                    connectors.add( component.getBottomSide().ordinal() );
-            }
-
-            if( nearest[3] == null ){
-                    connectors.add( component.getLeftSide().ordinal() );
-            }
-        });
-
-        return connectors.stream().reduce( 0, (p,c) -> p + c );
     }
 }

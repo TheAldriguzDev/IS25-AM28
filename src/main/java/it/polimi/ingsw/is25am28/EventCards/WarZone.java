@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
 
 import org.json.simple.JSONArray;
@@ -36,10 +38,11 @@ public class WarZone extends EventCard {
             int cardLevel,
             JSONObject humans,
             JSONObject engines,
-            JSONObject cannons
+            JSONObject cannons,
+            Board board
             // String imagePath
     ) {
-        super(cardName, cardLevel);
+        super(cardName, cardLevel, board);
         // this.imagePath = imagePath;
 
         // Initializing the direction name to value map
@@ -108,6 +111,11 @@ public class WarZone extends EventCard {
     @Override
     protected void malusEffect() {
 
+    }
+
+    @Override
+    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
+        return null;
     }
 
     @Override

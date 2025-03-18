@@ -173,8 +173,6 @@ public class GameModel {
 
             EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
 
-            card.startUsingCard( new ArrayList<Player>(board.getPlayers()) );
-
             return card;
       }
 
@@ -185,7 +183,7 @@ public class GameModel {
                   throw new Error("state updated when the card has finished to apply its effects to all players");
             }
 
-            card.useCard( response );
+            card.useCard( (JSONObject) response );
 
             return this;
       }

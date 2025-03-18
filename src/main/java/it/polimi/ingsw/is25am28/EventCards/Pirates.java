@@ -1,11 +1,11 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
 import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class Pirates extends EventCard {
     private final int requiredFirepower;
     private final int givenCredits;
     private final int movementSteps;
-    private final int numberOfShots;
+    private final JSONArray shootingSequence;
     private boolean hasBeenDefeated;
     /*
     * Liste che i PlasmaShot che arrivano dalle 4 direzioni:
@@ -27,12 +27,12 @@ public class Pirates extends EventCard {
     ArrayList<Integer> shootingSequenceFromRight = new ArrayList<>();
     ArrayList<Integer> shootingSequenceFromLeft = new ArrayList<>();
 
-    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, int numberOfShots, Board board) {
+    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, JSONArray shootingSequence, Board board) {
         super(name, cardLevel, board);
         this.requiredFirepower = requiredFirepower;
         this.givenCredits = givenCredits;
         this.movementSteps = movementSteps;
-        this.numberOfShots = numberOfShots;
+        this.shootingSequence = shootingSequence;
         this.hasBeenDefeated = false;
     }
 
@@ -69,6 +69,11 @@ public class Pirates extends EventCard {
         );
         getNextPlayer();
         return this;
+    }
+
+    @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
     }
 
     protected void bonusEffect() {
@@ -175,7 +180,7 @@ public class Pirates extends EventCard {
         piratesState.put("requiredFirepower", requiredFirepower);
         piratesState.put("givenCredits", givenCredits);
         piratesState.put("movementSteps", movementSteps);
-        piratesState.put("numberOfShots", numberOfShots);
+        //piratesState.put("numberOfShots", numberOfShots);
         piratesState.put("hasBeenDefeated", hasBeenDefeated);
 
         return piratesState;
