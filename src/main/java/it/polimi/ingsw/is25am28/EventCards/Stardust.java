@@ -1,12 +1,17 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.StardustJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
+import it.polimi.ingsw.is25am28.Connector;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Component;
-import org.json.simple.JSONObject;
+import it.polimi.ingsw.is25am28.Ship.Ship;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import org.json.simple.JSONObject;
 
 public class Stardust extends EventCard {
 
@@ -14,44 +19,88 @@ public class Stardust extends EventCard {
         super(name, cardLevel, board);
     }
 
-    @Override
-    protected void bonusEffect() {
+    public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
+        StardustJSON stardustData;
+        try {
+            stardustData = (StardustJSON) data;
+        } catch (ClassCastException e) {
+            throw new ClassCastException("Card data type in invalid");
+        }
+        Optional<Player> playerOptional = getCurrentPlayer();
+        playerOptional.ifPresentOrElse(
+                (Player player) -> {
 
+                    String playerNickname = stardustData.getPlayerNickname();
+                    if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
+                        throw new IllegalArgumentException("The given player does not match with the current one");
+                    }
+
+                    AtomicInteger movementSteps = new AtomicInteger();
+                    Ship ship = player.getShip();
+                    ship.traverse(
+                            (Component c) -> {
+                                // For each exposed side movementsSteps++;
+                                Component[] otherC = ship.getNearestComponents(c);
+                                if (otherC[0] == null) {
+                                    if (c.getTopSide() != Connector.ZERO_PIPES) {
+                                        movementSteps.getAndIncrement();
+                                    }
+                                }
+                                if (otherC[1] == null) {
+                                    if (c.getRightSide() != Connector.ZERO_PIPES) {
+                                        movementSteps.getAndIncrement();
+                                    }
+                                }
+                                if (otherC[2] == null) {
+                                    if (c.getBottomSide() != Connector.ZERO_PIPES) {
+                                        movementSteps.getAndIncrement();
+                                    }
+                                }
+                                if (otherC[3] == null) {
+                                    if (c.getLeftSide() != Connector.ZERO_PIPES) {
+                                        movementSteps.getAndIncrement();
+                                    }
+                                }
+                            }
+                    );
+                    getBoard().movePlayerBackwards(player, movementSteps.get());
+                    //player.setCursor(player.getCursor() - movementSteps.get());
+                },
+                () -> {
+                    throw new IllegalArgumentException("here is no player playing in this moment");
+                }
+        );
+        getNextPlayer();
+        return this;
     }
 
     @Override
-    protected void malusEffect() {
-
-    }
+    protected void bonusEffect() {}
 
     @Override
-    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        return null;
-    }
+    protected void malusEffect() {}
 
     @Override
+    public void initCardPlayers() throws IllegalArgumentException {
+        if ( getBoard().getPlayers() == null || getBoard().getPlayers().isEmpty() || getBoard().getPlayers().size() < 2 ) {
+            throw new IllegalArgumentException("The player list is null or contains less than two player");
+        } else {
+            this.players = getBoard().getPlayers();
+            Collections.reverse(this.players);
+            currentPlayer = Optional.of(players.getFirst());
+        }
+    }
+
+    @Override @SuppressWarnings("unchecked")
     public JSONObject generateState() {
-        return null;
-    }
+        JSONObject stardustState = new JSONObject();
 
-    public void useCard(Player[] players) {
-        ArrayList<Integer> offsetsList = new ArrayList<>();
-        for (Player player : players) {
-//            offsetsList.add(player.getShip().traverse(
-//                    (Component c) -> {
-//                        // Checks for each component the number of exposed sides
-//                        // Return
-//                    }
-//            ));
+        if(getCurrentPlayer().isPresent()) {
+            stardustState.put("playerNickname", getCurrentPlayer().get().getNickname());
         }
-        // Inverse iteration necessary for the positions update
-        for (int i = players.length - 1; i >= 0; i--) {
-            players[i].setCursor(players[i].getCursor() - offsetsList.get(i));
-        }
+        stardustState.put("cardName", this.name);
+        stardustState.put("cardLevel", cardLevel);
+
+        return stardustState;
     }
-
-    protected void bonusEffect(Player player) {}
-
-    protected void malusEffect(Player player) {}
-
 }
