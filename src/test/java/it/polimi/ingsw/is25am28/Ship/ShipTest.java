@@ -2,11 +2,11 @@ package it.polimi.ingsw.is25am28.Ship;
 
 import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.Exceptions.ExistingComponentException;
+import it.polimi.ingsw.is25am28.Exceptions.InsufficientEnergyException;
 import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
-import org.json.simple.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -18,6 +18,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ShipTest {
 
+    /**
+     * Outputs the given ship to terminal
+     * @param ship The ship to print to terminal
+     */
     void printShipGrid(Ship ship) {
         if (ship != null) {
             List<Component> components = new ArrayList<>();
@@ -130,63 +134,129 @@ class ShipTest {
     }
 
     @Test
-    void getGridDimensions() {
+    void getAllDoubleComponents() {
+        Ship ship = new Ship(2);
+
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Cannon doubleCannon = new Cannon(connectors, 2);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine( connectors, 1);
+        Engine doubleEngine = new Engine( connectors, 2);
+        Shield shield = new Shield( connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
+
+        Cabin core = (Cabin) ship.getComponent(6, 6);
+
+        System.out.println("==== BEFORE ====");
+        printShipGrid(ship);
+
+        // Adding the components created above
+        ship.addComponent(battery, 6, 7);
+        ship.addComponent(cabin, 5, 6);
+        ship.addComponent(cannon, 8, 4);
+        ship.addComponent(doubleCannon, 8, 6);
+        ship.addComponent(doubleCannon, 8, 7);
+        ship.addComponent(doubleCannon, 11, 11);
+        ship.addComponent(engine, 7, 6);
+        ship.addComponent(engine2, 7, 7);
+        ship.addComponent(doubleEngine, 5, 7);
+        ship.addComponent(doubleEngine, 10, 10);
+        ship.addComponent(shield, 6, 5);
+        ship.addComponent(storage, 4, 5);
+        ship.addComponent(structural, 3, 2);
+        ship.addComponent(vital, 2, 2);
+
+        System.out.println("==== AFTER ====");
+        printShipGrid(ship);
+
+        ship.generateComponentSubLists();
+
+        List<Cannon> expectedDoubleCannons = new ArrayList<>();
+        List<Engine> expectedDoubleEngines = new ArrayList<>();
+
+        expectedDoubleCannons.add(doubleCannon);
+        expectedDoubleCannons.add(doubleCannon);
+
+        expectedDoubleEngines.add(doubleEngine);
+
+        assertTrue(ship.getDoubleCannons().containsAll(expectedDoubleCannons));
+        assertTrue(ship.getDoubleEngines().containsAll(expectedDoubleEngines));
     }
 
     @Test
-    void getShipDimensionsByDifficulty() {
-    }
+    void getAvailableEnergyBeforeAndAfterConsumption() {
+        Ship ship = new Ship(2);
 
-    @Test
-    void getOffsetsByDifficulty() {
-    }
+        int[] connectors = new int[4];
 
-    @Test
-    void getDifficultyLevel() {
-    }
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
 
-    @Test
-    void getBatteryList() {
-    }
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine( connectors, 2);
+        Shield shield = new Shield( connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
 
-    @Test
-    void getCabinList() {
-    }
+        Cabin core = (Cabin) ship.getComponent(6, 6);
 
-    @Test
-    void getCannonList() {
-    }
+        System.out.println("==== BEFORE ====");
+        printShipGrid(ship);
 
-    @Test
-    void getEngineList() {
-    }
+        // Adding the components created above
+        ship.addComponent(battery, 6, 7);
+        ship.addComponent(battery2, 5, 5);
+        ship.addComponent(cabin, 5, 6);
+        ship.addComponent(cannon, 8, 4);
+        ship.addComponent(engine, 7, 6);
+        ship.addComponent(engine2, 7, 7);
+        ship.addComponent(shield, 6, 5);
+        ship.addComponent(storage, 4, 5);
+        ship.addComponent(structural, 3, 2);
+        ship.addComponent(vital, 2, 2);
 
-    @Test
-    void getShieldList() {
-    }
+        System.out.println("==== AFTER ====");
+        printShipGrid(ship);
 
-    @Test
-    void getStorageList() {
-    }
+        ship.generateComponentSubLists();
 
-    @Test
-    void getVitalList() {
-    }
+        // Before consumption
+        assertEquals(6, ship.getAvailableEnergy());
 
-    @Test
-    void getDoubleEngines() {
-    }
+        // After consumption
+        ship.consumeEnergy(2);
+        assertEquals(4, ship.getAvailableEnergy());
 
-    @Test
-    void getDoubleCannons() {
-    }
+        // Overconsumption
+        try {
+            ship.consumeEnergy(20);
+        }
+        catch (InsufficientEnergyException e) {
+            System.out.println("InsufficientEnergyException CAUGHT");
+        }
 
-    @Test
-    void getAvailableEnergy() {
-    }
+        int prevEnergy = ship.getAvailableEnergy();
 
-    @Test
-    void consumeEnergy() {
+        // Illegal value, ship's total energy remains the same
+        ship.consumeEnergy(-20);
+        assertEquals(prevEnergy, ship.getAvailableEnergy());
     }
 
     @Test
@@ -198,15 +268,51 @@ class ShipTest {
     }
 
     @Test
-    void getEnginePower() {
+    void getEnginePowerAndFirePowerInDifferentScenarios() {
+        Ship ship = new Ship(2);
+
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine( connectors, 2);
+        Shield shield = new Shield( connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
+
+        Cabin core = (Cabin) ship.getComponent(6, 6);
+
+        System.out.println("==== BEFORE ====");
+        printShipGrid(ship);
+
+        // Adding the components created above
+        ship.addComponent(battery, 6, 7);
+        ship.addComponent(battery2, 5, 5);
+        ship.addComponent(cabin, 5, 6);
+        ship.addComponent(cannon, 8, 4);
+        ship.addComponent(engine, 7, 6);
+        ship.addComponent(engine2, 7, 7);
+        ship.addComponent(shield, 6, 5);
+        ship.addComponent(storage, 4, 5);
+        ship.addComponent(structural, 3, 2);
+        ship.addComponent(vital, 2, 2);
+
+        System.out.println("==== AFTER ====");
+        printShipGrid(ship);
+
+        ship.generateComponentSubLists();
     }
 
     @Test
-    void getAllItems() {
-    }
-
-    @Test
-    void getAllItemValue() {
+    void getAllItemsAndTheirValue() {
         Ship ship = new Ship(1);
 
         int[] connectors = new int[4];
@@ -257,8 +363,8 @@ class ShipTest {
 
         int expectedTotalValue = storageList.stream()
                 .flatMap(s -> s.getStoredItems().stream())
-                        .mapToInt(Item::getValue)
-                        .sum();
+                .mapToInt(Item::getValue)
+                .sum();
 
         assertEquals(storageList, ship.getStorageList());
         assertTrue(ship.getAllItems().containsAll((List<Item>) storageList.stream().flatMap(s -> s.getStoredItems().stream()).toList()));

@@ -250,24 +250,26 @@ public class Ship {
     public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
         int availableEnergy;
 
-        if (energyToConsume <= this.getAvailableEnergy()) {
-            // If there's enough energy, then consume the given amount
-            for (Battery battery : this.batteryList) {
-                availableEnergy = battery.getAvailability();
+        if (energyToConsume > 0) {
+            if (energyToConsume <= this.getAvailableEnergy()) {
+                // If there's enough energy, then consume the given amount
+                for (Battery battery : this.batteryList) {
+                    availableEnergy = battery.getAvailability();
 
-                if (availableEnergy < energyToConsume) {
-                    energyToConsume -= availableEnergy;
-                    battery.setAvailability(0);
-                }
-                else {
-                    battery.setAvailability(availableEnergy - energyToConsume);
-                    break;
+                    if (availableEnergy < energyToConsume) {
+                        energyToConsume -= availableEnergy;
+                        battery.setAvailability(0);
+                    }
+                    else {
+                        battery.setAvailability(availableEnergy - energyToConsume);
+                        break;
+                    }
                 }
             }
-        }
-        else {
-            // Otherwise, throw an InsufficientEnergyException
-            throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
+            else {
+                // Otherwise, throw an InsufficientEnergyException
+                throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
+            }
         }
     }
 
@@ -324,13 +326,18 @@ public class Ship {
                     .mapToDouble(Cannon::getFirePower)
                     .sum();
 
-        if (doubleCannonAmount >= doubleCannonsToActivate) {
-            totalFirePower = singleCannonsFirePower
-                    + (doubleCannonsToActivate * doubleCannonList.getFirst().getFirePower());
+        if (doubleCannonAmount > 0) {
+            if (doubleCannonAmount >= doubleCannonsToActivate) {
+                totalFirePower = singleCannonsFirePower
+                        + (doubleCannonsToActivate * doubleCannonList.getFirst().getFirePower());
+            }
+            else {
+                totalFirePower = singleCannonsFirePower
+                        + (doubleCannonAmount * doubleCannonList.getFirst().getFirePower());
+            }
         }
         else {
-            totalFirePower = singleCannonsFirePower
-                    + (doubleCannonAmount * doubleCannonList.getFirst().getFirePower());
+            totalFirePower = singleCannonsFirePower;
         }
 
         // Consuming the amount of batteries required to activate
@@ -378,13 +385,18 @@ public class Ship {
                     .mapToDouble(Cannon::getFirePower)
                     .sum();
 
-        if (doubleEngineAmount >= doubleEnginesToActivate) {
-            totalEnginePower = singleEnginesEnginePower
-                    + (doubleEnginesToActivate * (int) doubleEngineList.getFirst().getSpeed());
+        if (doubleEngineAmount > 0) {
+            if (doubleEngineAmount >= doubleEnginesToActivate) {
+                totalEnginePower = singleEnginesEnginePower
+                        + (doubleEnginesToActivate * (int) doubleEngineList.getFirst().getSpeed());
+            }
+            else {
+                totalEnginePower = singleEnginesEnginePower
+                        + (doubleEngineAmount * (int) doubleEngineList.getFirst().getSpeed());
+            }
         }
         else {
-            totalEnginePower = singleEnginesEnginePower
-                    + (doubleEngineAmount * (int) doubleEngineList.getFirst().getSpeed());
+            totalEnginePower = singleEnginesEnginePower;
         }
 
         // Consuming the amount of batteries required to activate
