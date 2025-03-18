@@ -17,15 +17,6 @@ public class Pirates extends EventCard {
     private final int movementSteps;
     private final JSONArray shootingSequence;
     private boolean hasBeenDefeated;
-    /*
-    * Liste che i PlasmaShot che arrivano dalle 4 direzioni:
-    * 0 -> piccolo,
-    * 1 -> grande
-    * */
-    ArrayList<Integer> shootingSequenceFromAbove = new ArrayList<>();
-    ArrayList<Integer> shootingSequenceFromBelow = new ArrayList<>();
-    ArrayList<Integer> shootingSequenceFromRight = new ArrayList<>();
-    ArrayList<Integer> shootingSequenceFromLeft = new ArrayList<>();
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, JSONArray shootingSequence, Board board) {
         super(name, cardLevel, board);
@@ -71,11 +62,6 @@ public class Pirates extends EventCard {
         return this;
     }
 
-    @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
-    }
-
     protected void bonusEffect() {
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
@@ -91,19 +77,71 @@ public class Pirates extends EventCard {
         playerOptional.ifPresent(
                 (Player player) -> {
                     int dicesResult = 0;
-                    //Component component;
                     ArrayList<Integer> dicesResults = piratesData.getDicesResults(); // La parte client si assicura di fare tiri pari al numero di PlasmaShots
-                    // side // 0->Above, 1->Below, 2->Right, 3->Left
-                    // Coordinates
-                    for (int plasmaShot : shootingSequenceFromAbove) {
-                        if ((plasmaShot == 0 && !piratesData.getShieldAbove()) || plasmaShot == 1) {
-                            int column = dicesResults.get(dicesResult);
-                            for (int row = 4; row < 9; row++) {
-                                try {
-                                    player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
-                                    player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
-                                } catch (NullComponentException e) {
-                                    // Nella casella non c'è un componente, non va fatto nulla
+                    //Conversione da JSONArray di JSONArray a Lista di Liste
+                    ArrayList<ArrayList<Integer>> shoots = new ArrayList<>();
+
+                    Boolean[] shieldedSides = {
+                            piratesData.getShieldAbove(),
+                            piratesData.getShieldRight(),
+                            piratesData.getShieldBelow(),
+                            piratesData.getShieldLeft()
+                    };
+
+                    for (Object pairObject : shootingSequence) {
+                        JSONArray pair = (JSONArray) pairObject;
+                        int shootSize = (int) pair.getFirst(); // 1 -> small, 2 -> big
+                        int shootDirection = (int) pair.getLast(); // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
+
+                        if ((shootSize == 1 && !shieldedSides[shootDirection]) || shootSize == 2) {
+                            switch (shootDirection) {
+                                case 0: {
+                                    int column = dicesResults.get(dicesResult);
+                                    for (int row = 4; row < 9; row++) {
+                                        try {
+                                            player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
+                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                        } catch (NullComponentException e) {
+                                            // Nella casella non c'è un componente, non va fatto nulla
+                                        }
+                                    }
+                                }
+                                break;
+                                case 1: {
+                                    int row = dicesResults.get(dicesResult);
+                                    for (int column = 3; column < 10; column++) {
+                                        try {
+                                            player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
+                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                        } catch (NullComponentException e) {
+                                            // Nella casella non c'è un componente, non va fatto nulla
+                                        }
+                                    }
+                                    break;
+                                }
+                                case 2: {
+                                    int column = dicesResults.get(dicesResult);
+                                    for (int row = 8; row > 3; row--) {
+                                        try {
+                                            player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
+                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                        } catch (NullComponentException e) {
+                                            // Nella casella non c'è un componente, non va fatto nulla
+                                        }
+                                    }
+                                    break;
+                                }
+                                case 3: {
+                                    int row = dicesResults.get(dicesResult);
+                                    for (int column = 9; column > 2; column--) {
+                                        try {
+                                            player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
+                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                        } catch (NullComponentException e) {
+                                            // Nella casella non c'è un componente, non va fatto nulla
+                                        }
+                                    }
+                                    break;
                                 }
                             }
                         }
@@ -111,9 +149,6 @@ public class Pirates extends EventCard {
                     }
                 }
         );
-
-
-
     }
 
     protected void malusEffect() {}
@@ -134,10 +169,112 @@ public class Pirates extends EventCard {
         piratesState.put("cardLevel", cardLevel);
         piratesState.put("requiredFirepower", requiredFirepower);
         piratesState.put("givenCredits", givenCredits);
-        piratesState.put("movementSteps", movementSteps);
-        //piratesState.put("numberOfShots", numberOfShots);
+        piratesState.put("movementSteps", movementSteps); // Il client calcola la size per il lancio dei dadi, ne ha anche bisigno per vedere da dove arrivano/dimensione
+        piratesState.put("shootingSequence", shootingSequence);
         piratesState.put("hasBeenDefeated", hasBeenDefeated);
 
         return piratesState;
     }
 }
+
+
+
+                    /*
+                        switch (shootDirection) {
+                            case 0:
+                                if ((shootSize == 1 && piratesData.getShieldAbove()) || shootSize == 2) {
+                                    int column = dicesResults.get(dicesResult);
+                                    for (int row = 4; row < 9; row++) {
+                                        try {
+                                            player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
+                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                        } catch (NullComponentException e) {
+                                            // Nella casella non c'è un componente, non va fatto nulla
+                                        }
+                                    }
+                                }
+                                break;
+                            case 1:
+                                    if ((plasmaShot == 0 && !piratesData.getShieldRight()) || plasmaShot == 1) {
+
+                                    }
+
+
+                                break;
+                            case 2:
+                                if ((shootSize == 1 && piratesData.getShieldBelow()) || shootSize == 2) {
+
+                                }
+
+
+                                break;
+                            case 3:
+                                if ((shootSize == 1 && piratesData.getShieldBelow()) || shootSize == 2) {
+
+                                }
+                                break;
+                        }
+                    }*/
+                    /*
+
+                    for (int plasmaShot : shootingSequenceFromAbove) {
+                        if ((plasmaShot == 0 && !piratesData.getShieldAbove()) || plasmaShot == 1) {
+                            int column = dicesResults.get(dicesResult);
+                            for (int row = 4; row < 9; row++) {
+                                try {
+                                    player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
+                                    player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                } catch (NullComponentException e) {
+                                    // Nella casella non c'è un componente, non va fatto nulla
+                                }
+                            }
+                        }
+                        dicesResult++;
+                    }
+
+                    for (int plasmaShot : shootingSequenceFromBelow) {
+                        if ((plasmaShot == 0 && !piratesData.getShieldBelow()) || plasmaShot == 1) {
+                            int column = dicesResults.get(dicesResult);
+                            for (int row = 8; row > 3; row--) {
+                                try {
+                                    player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
+                                    player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                } catch (NullComponentException e) {
+                                    // Nella casella non c'è un componente, non va fatto nulla
+                                }
+                            }
+                        }
+                        dicesResult++;
+                    }
+
+                    for (int plasmaShot : shootingSequenceFromRight) {
+                        if ((plasmaShot == 0 && !piratesData.getShieldRight()) || plasmaShot == 1) {
+                            int row = dicesResults.get(dicesResult);
+                            for (int column = 3; column < 10; column++) {
+                                try {
+                                    player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
+                                    player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                } catch (NullComponentException e) {
+                                    // Nella casella non c'è un componente, non va fatto nulla
+                                }
+                            }
+                        }
+                        dicesResult++;
+                    }
+
+                    for (int plasmaShot : shootingSequenceFromLeft) {
+                        if ((plasmaShot == 0 && !piratesData.getShieldLeft()) || plasmaShot == 1) {
+                            int row = dicesResults.get(dicesResult);
+                            for (int column = 9; column > 2; column--) {
+                                try {
+                                    player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
+                                    player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                } catch (NullComponentException e) {
+                                    // Nella casella non c'è un componente, non va fatto nulla
+                                }
+                            }
+                        }
+                        dicesResult++;
+                    }
+
+                     */

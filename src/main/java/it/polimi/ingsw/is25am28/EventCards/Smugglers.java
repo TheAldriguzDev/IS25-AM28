@@ -35,9 +35,9 @@ public class Smugglers extends EventCard {
     }
 
     /*
-    * Se il tipo di response non è corretto la classe
-    * lancia un'eccezione di tipo ClassCastException
-    * */
+     * Se il tipo di response non è corretto la classe
+     * lancia un'eccezione di tipo ClassCastException
+     * */
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         //SmugglersResponse smugglersResponse = (SmugglersResponse) response;
@@ -73,11 +73,6 @@ public class Smugglers extends EventCard {
         );
         getNextPlayer();
         return this;
-    }
-
-    @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
     }
 
     protected void bonusEffect(ActionJSON data) throws ClassCastException {

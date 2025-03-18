@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.ActionJSON.SlaversJSON;
 import it.polimi.ingsw.is25am28.Components.Cabin;
@@ -60,11 +59,6 @@ public class Slavers extends EventCard {
         );
         getNextPlayer();
         return this;
-    }
-
-    @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
     }
 
     @Override
