@@ -4,7 +4,7 @@ public final class Cannon extends Component {
       private final int force;
 
       public Cannon( int[] connectors, int force ){
-            super(connectors);
+            super( connectors);
             this.force = force;
       }
 

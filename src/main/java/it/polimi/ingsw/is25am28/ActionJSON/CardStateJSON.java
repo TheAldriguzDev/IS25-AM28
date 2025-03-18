@@ -70,4 +70,24 @@ public class CardStateJSON extends ActionJSON {
 
         data.put("cardLevel", cardLevel);
     }
+
+
+    /**
+     * Returns the cardLevel that should be set in the JSON, otherwise it throws an Exception
+     * */
+    public boolean getIsCardUsable() throws IllegalStateException{
+        if (!data.containsKey("isCardUsable")) {
+            throw new IllegalStateException("Key 'isCardUsable' is missing in JSON data");
+        }
+
+        return (boolean) data.get("isCardUsable");
+    }
+
+    /**
+     * Set the cardName to the given value
+     * */
+    @SuppressWarnings("unchecked")
+    public void setIsCardUsable(boolean isCardUsable) throws IllegalArgumentException {
+        data.put("cardLevel", isCardUsable);
+    }
 }

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -129,10 +130,10 @@ public class FileLoader {
             return components;
       }
 
-      public List<EventCard> getAllCards( Board board ){
+      public List<EventCard> getAllCards(Board board, ResourceBank resourceBank){
             final List<EventCard> deck = new ArrayList<>();
 
-            JSONArray array = (JSONArray)json.get("abandonedShip" );
+            JSONArray array = (JSONArray)json.get("abandonedShip");
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
@@ -162,11 +163,12 @@ public class FileLoader {
                         //((Long)o.get("green")).intValue(),
                         //((Long)o.get("blue")).intValue()
                         null,      // REQUIRES AN ARRAY LIST OF ITEMS
-                        board
+                        board,
+                          resourceBank
                         ));
             }
 
-            array = (JSONArray)json.get("meteors" );
+            array = (JSONArray)json.get("meteors");
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;

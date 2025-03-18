@@ -15,6 +15,7 @@ public abstract class Board {
     final ArrayList<Cell> initialCells = new ArrayList<>();
     private final List<Player> players;
     private final List<Player> eliminatedPlayer;
+    private int level;
 
     public Board() {
         this.players = new ArrayList<>();
@@ -51,6 +52,10 @@ public abstract class Board {
         return eliminatedPlayer;
     }
 
+    protected int getLevel() { return level; }
+
+    protected void setLevel(int level) { this.level = level; }
+
     /**
      * Add a new player in the game if the nickname and the color is unique in the session
      * */
@@ -59,8 +64,7 @@ public abstract class Board {
             throw new IllegalArgumentException("The selected nickname or color has been already used");
         }
 
-        // TODO: Fix
-        //players.add(new Player(nickname, color));
+        players.add(new Player(nickname, color, this.getLevel()));
         return this;
     }
 
