@@ -1,7 +1,8 @@
 package it.polimi.ingsw.is25am28.GameModel;
 
 
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import it.polimi.ingsw.is25am28.TimeObserver.TimeSubscriber;
 
@@ -32,6 +33,7 @@ public class GameModel {
 
       private final List<EventCard> deck;
       private final Board board;
+      private final ResourceBank resourceBank;
 
       private final List<Component> components = new ArrayList<>();
       private final int level;
@@ -45,6 +47,7 @@ public class GameModel {
             deck = generateDeck( level );
             // if( level > 1 )
             board = new BoardLevel2();
+            this.resourceBank = new ResourceBank();
       }
 
       /**
@@ -56,20 +59,20 @@ public class GameModel {
             if( deck != null && round != DECK_SIZE  )
                   return deck;
 
-            List<EventCard> deck = new FileLoader("./json/cards.json").getAllCards( board );
+            List<EventCard> deck = new FileLoader("./json/cards.json").getAllCards( board, this.resourceBank );
+
             // random sort
-            deck.sort((a,b) -> (int)( (Math.random() - Math.random())*1000 ) );
-            
+            deck.sort((a,b) -> (int)( (Math.random() - Math.random()) * 1000 ) );
+
             return deck;
       }
 
-      public GameModel newPlayer( Player player ) {
-            board.addPlayerToBoard(player);
-            return this;
-      }
+      /**
+       * Add the new player in the board list --> It can generate an exception that can be propagated to the controller
+       * */
+      public GameModel newPlayer(String nickname, PlayerColor color) {
+            this.board.newPlayer(nickname, color);
 
-      public GameModel removePlayer( Player player ){
-            board.eliminatePlayer(player);
             return this;
       }
 
@@ -112,20 +115,18 @@ public class GameModel {
        * add credits to each player, based on the
        * number of rewards obtained at the end of the game
        */
+
+      // TODO: Chiedi a cosa serve avere una lista temporanea per i player quando si potrebbe usare direttamente quella della board
       public GameModel endGameRewards(){
+            // To be sure we revalidate the player position to have all the players in the correct order (1st, 2nd, 3rd)
+            this.getBoard().validatePlayersPosition();
 
-            List<Player> players = board
-            .getPlayers()
-            .stream()
-            .sorted((p1,p2) -> p1.getCursor() - p2.getCursor() )
-            .toList();
+            List<Player> players = this.board.getPlayers();
 
-            // add credits based on position
+            // Add to the players the credits based on their arrival position
             for( int i = 0; i < players.size(); i++ ){
                   players.get(i).addCredits( 4 - i );
             }
-
-            
 
             List<Player> withTheBestShip = new ArrayList<>();
             int min = Integer.MAX_VALUE;
@@ -135,7 +136,7 @@ public class GameModel {
 
             for (Player player : players){
 
-                  int curr = player.getShip().getExposedConnectorAmount();
+                  int curr = player.getShip().getExposedConnectors();
 
                   if( curr < min ){
                         withTheBestShip.clear();
@@ -144,7 +145,6 @@ public class GameModel {
                   }else if( curr == min ){
                         withTheBestShip.add(player);
                   }
-
             }
 
             // add 2 credits to all the players with the best ship
@@ -152,7 +152,7 @@ public class GameModel {
 
             players.addAll(board.getEliminatedPlayers());
 
-            // add credits for storage 
+            // add credits for storage
             players.forEach( player -> {
                   int value = player.getShip().getAllItemValue();
                   player.addCredits( player.isEliminated() ? (int)(value + 1)/2 : value );
@@ -177,26 +177,32 @@ public class GameModel {
             return card;
       }
 
-      public GameModel updateState( Object response ){
+      // TODO: Chiedi che cosa fa questo updateState, poichè dovrebbe andare a
+      //  grabbare lo state di tutte le cose necessarie (come player etc) per poterlo inviare al client
+
+      public GameModel useCurrentCard( Object response ){
             EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
 
             if( card.hasFinished() ){
                   throw new Error("state updated when the card has finished to apply its effects to all players");
             }
 
-            card.useCard( (ActionJSON) response );
+            card.useCard( (JSONObject) response );
 
             return this;
       }
 
+      // A cosa serve ?? --> è già ritornato di default dalla card...
       public boolean hasCurrentCardFinished(){
             EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
 
             return card.hasFinished();
       }
 
-
-      public Object useCurrentCard(){
+      /**
+       * Generates the state after a card or a turn as been used. Then it needs to be propagated to the clients
+       * */
+      public Object generateModelState(){
 
             EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
 
@@ -208,7 +214,7 @@ public class GameModel {
       }
 
       public Board getBoard(){
-            return board;
+            return this.board;
       }
 
       public JSONArray startBuildSession( SessionSubscriber controller ){

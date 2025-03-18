@@ -93,7 +93,10 @@ public class OpenSpace extends EventCard {
                     } else {
                         this.getBoard().movePlayerForward(this.getCurrentPlayer().get(), totalPower);
 
-                        // TODO: Remove the player used battery
+                        // Consume the player energy
+                        if (usedEnergy > 0) {
+                            this.getCurrentPlayer().get().getShip().consumeEnergy(usedEnergy);
+                        }
                     }
 
                     // If all the players have played, then we need to revalidate their positions

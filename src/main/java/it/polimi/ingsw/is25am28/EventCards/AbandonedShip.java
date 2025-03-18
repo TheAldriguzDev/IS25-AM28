@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
+import it.polimi.ingsw.is25am28.Player.Player;
 import org.json.simple.JSONObject;
 
 import java.util.List;
@@ -23,25 +24,6 @@ public class AbandonedShip extends EventCard {
         this.movementStep = movementStep;
         this.givenCredits = givenCredits;
         this.hasBeenUsed = false;
-    }
-
-    /**
-     * Override the method to set only the players that can effectively use the card
-     * */
-    @Override
-    public void initCardPlayers() throws IllegalArgumentException {
-        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
-            throw new IllegalArgumentException("The player list is null or contains less than two player");
-        } else {
-            this.players = this.getBoard().getPlayers().stream()
-                    .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
-                    .toList();
-
-            currentPlayer = Optional.of(players.getFirst());
-
-            // if there are no players we do not have to continue, since no one can use the card
-            if (this.players.isEmpty()) this.hasBeenUsed = true;
-        }
     }
 
     /**
@@ -68,15 +50,16 @@ public class AbandonedShip extends EventCard {
 
                 // Check if:
                 // 1: The player match X
-                // 2: The player wants to visit the ship
+                // 2: The player wants to visit the ship X
                 if ( playerNickname != null
                         && !playerNickname.isEmpty()
                         && !playerNickname.equals( this.getCurrentPlayer().get().getNickname()) ) {
 
                     if (wantsToVisitTheShip) {
-                        if (lifeformsToBeRemoved.size() != requiredCrew) {
+                        if (lifeformsToBeRemoved.size() != this.requiredCrew) {
                             throw new IllegalArgumentException("The lifeformsToBeRemoved size does not match with the card requirements!");
                         } else {
+                            // apply the bonus effect
                             this.bonusEffect();
 
                             // Malus effect
@@ -101,7 +84,7 @@ public class AbandonedShip extends EventCard {
                             }
                         }
                     } else {
-                        getNextPlayer();
+                        this.getNextPlayer();
                     }
                 } else {
                     throw new IllegalArgumentException("The given player does not match with the current one");
@@ -140,6 +123,13 @@ public class AbandonedShip extends EventCard {
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
+
+        List<Player> playersThatCanUseTheCard = this.getBoard().getPlayers().stream()
+                .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
+                .toList();
+
+        // Set if the currentPlayer can use the card
+        cardState.setIsCardUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get()));
 
         return cardState.getData();
     }

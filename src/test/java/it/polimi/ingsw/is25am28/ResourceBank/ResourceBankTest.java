@@ -30,10 +30,10 @@ class ResourceBankTest {
         }
 
         // Add the players to the game
-        players.add( new Player("Player 1", PlayerColor.RED) );
-        players.add( new Player("Player 2", PlayerColor.YELLOW) );
-        players.add( new Player("Player 3", PlayerColor.BLUE) );
-        players.add( new Player("Player 4", PlayerColor.GREEN) );
+        players.add( new Player("Player 1", PlayerColor.RED, 2) );
+        players.add( new Player("Player 2", PlayerColor.YELLOW, 2) );
+        players.add( new Player("Player 3", PlayerColor.BLUE, 2 ));
+        players.add( new Player("Player 4", PlayerColor.GREEN, 2));
     }
 
     @Test
