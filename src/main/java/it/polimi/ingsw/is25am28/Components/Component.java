@@ -11,7 +11,7 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
        * index between 0 and 3,
        * that indicates which is the direction side of the component
        */
-      protected int direction;
+      protected int direction = 0;
 
 
       public Component( int[] connectors ) {
