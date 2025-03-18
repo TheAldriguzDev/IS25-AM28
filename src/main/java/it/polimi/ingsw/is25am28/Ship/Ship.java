@@ -7,11 +7,9 @@ import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -250,24 +248,26 @@ public class Ship {
     public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
         int availableEnergy;
 
-        if (energyToConsume <= this.getAvailableEnergy()) {
-            // If there's enough energy, then consume the given amount
-            for (Battery battery : this.batteryList) {
-                availableEnergy = battery.getAvailability();
+        if (energyToConsume > 0) {
+            if (energyToConsume <= this.getAvailableEnergy()) {
+                // If there's enough energy, then consume the given amount
+                for (Battery battery : this.batteryList) {
+                    availableEnergy = battery.getAvailability();
 
-                if (availableEnergy < energyToConsume) {
-                    energyToConsume -= availableEnergy;
-                    battery.setAvailability(0);
-                }
-                else {
-                    battery.setAvailability(availableEnergy - energyToConsume);
-                    break;
+                    if (availableEnergy < energyToConsume) {
+                        energyToConsume -= availableEnergy;
+                        battery.setAvailability(0);
+                    }
+                    else {
+                        battery.setAvailability(availableEnergy - energyToConsume);
+                        break;
+                    }
                 }
             }
-        }
-        else {
-            // Otherwise, throw an InsufficientEnergyException
-            throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
+            else {
+                // Otherwise, throw an InsufficientEnergyException
+                throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
+            }
         }
     }
 
@@ -324,13 +324,18 @@ public class Ship {
                 .mapToDouble(Cannon::getFirePower)
                 .sum();
 
-        if (doubleCannonAmount >= doubleCannonsToActivate) {
-            totalFirePower = singleCannonsFirePower
-                    + (doubleCannonsToActivate * doubleCannonList.getFirst().getFirePower());
+        if (doubleCannonAmount > 0) {
+            if (doubleCannonAmount >= doubleCannonsToActivate) {
+                totalFirePower = singleCannonsFirePower
+                        + (doubleCannonsToActivate * doubleCannonList.getFirst().getFirePower());
+            }
+            else {
+                totalFirePower = singleCannonsFirePower
+                        + (doubleCannonAmount * doubleCannonList.getFirst().getFirePower());
+            }
         }
         else {
-            totalFirePower = singleCannonsFirePower
-                    + (doubleCannonAmount * doubleCannonList.getFirst().getFirePower());
+            totalFirePower = singleCannonsFirePower;
         }
 
         // Consuming the amount of batteries required to activate
@@ -378,13 +383,18 @@ public class Ship {
                 .mapToDouble(Cannon::getFirePower)
                 .sum();
 
-        if (doubleEngineAmount >= doubleEnginesToActivate) {
-            totalEnginePower = singleEnginesEnginePower
-                    + (doubleEnginesToActivate * (int) doubleEngineList.getFirst().getSpeed());
+        if (doubleEngineAmount > 0) {
+            if (doubleEngineAmount >= doubleEnginesToActivate) {
+                totalEnginePower = singleEnginesEnginePower
+                        + (doubleEnginesToActivate * (int) doubleEngineList.getFirst().getSpeed());
+            }
+            else {
+                totalEnginePower = singleEnginesEnginePower
+                        + (doubleEngineAmount * (int) doubleEngineList.getFirst().getSpeed());
+            }
         }
         else {
-            totalEnginePower = singleEnginesEnginePower
-                    + (doubleEngineAmount * (int) doubleEngineList.getFirst().getSpeed());
+            totalEnginePower = singleEnginesEnginePower;
         }
 
         // Consuming the amount of batteries required to activate
@@ -406,33 +416,22 @@ public class Ship {
     /**
      * @return The number of exposed connectors on the entire ship
      */
-    public int getExposedConnectors(){
-        List<Integer> connectors = new ArrayList<Integer>();
+    public int getExposedConnectorAmount(){
+        List<Component> border = new ArrayList<Component>();
+        AtomicInteger exposedConnectors = new AtomicInteger();
 
         traverse(
                 (Component component) -> {
-                    Component[] nearest = getNearestComponents(component);
-
-                    if( nearest[0] == null ){
-                        connectors.add( component.getTopSide().ordinal() );
-                    }
-
-                    if( nearest[1] == null ){
-                        connectors.add(component.getRightSide().ordinal());
-                    }
-
-                    if( nearest[2] == null ){
-                        connectors.add( component.getBottomSide().ordinal() );
-                    }
-
-                    if( nearest[3] == null ){
-                        connectors.add( component.getLeftSide().ordinal() );
+                    Component[] neighbours = this.getNearestComponents(component);
+                    for (Component neighbour : neighbours) {
+                        if (neighbour == null) {
+                            exposedConnectors.getAndIncrement();
+                        }
                     }
                 }
         );
 
-        // Add all the exposed connectors found
-        return connectors.stream().reduce(0, Integer::sum);
+        return exposedConnectors.get();
     }
 
     /**

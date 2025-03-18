@@ -25,4 +25,6 @@ module it.polimi.ingsw.is25am28 {
     opens it.polimi.ingsw.is25am28.Player to javafx.fxml;
     opens it.polimi.ingsw.is25am28.TimeObserver to javafx.fxml;
     opens it.polimi.ingsw.is25am28.GameModel to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.GameModel.Session;
+    opens it.polimi.ingsw.is25am28.GameModel.Session to javafx.fxml;
 }

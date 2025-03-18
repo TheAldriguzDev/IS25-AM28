@@ -1,32 +1,27 @@
 package it.polimi.ingsw.is25am28.GameModel;
 
 
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
-import it.polimi.ingsw.is25am28.Ship.Ship;
-import it.polimi.ingsw.is25am28.TimeObserver.TimeSubscriber;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
-
-import it.polimi.ingsw.is25am28.GameModel.ShipConstructionSession;
+import it.polimi.ingsw.is25am28.GameModel.Session.RoundSession;
+import it.polimi.ingsw.is25am28.GameModel.Session.SessionSubscriber;
+import it.polimi.ingsw.is25am28.GameModel.Session.ShipConstructionSession;
 
 public class GameModel {
 
       // CONSTANTS
       static private final int DECOY_DECK_SIZE = 2;
       static private final int NUM_OF_DECOY_DECKS = 3;
-      static private final int DECK_SIZE = 8;
 
 
       //private final HashSet<Player> players;
@@ -35,12 +30,12 @@ public class GameModel {
       private final Board board;
       private final ResourceBank resourceBank;
 
-      private final List<Component> components = new ArrayList<>();
       private final int level;
 
       // indicate the round number and the card to draw from the deck
-      private int round = 0;
-      private ShipConstructionSession session;
+      //private int round = 0;
+      private ShipConstructionSession builder;
+      private RoundSession round;
 
       public GameModel( int level ){
             this.level = level;
@@ -56,26 +51,21 @@ public class GameModel {
        */
       private List<EventCard> generateDeck( int level ) {
 
-            if( deck != null && round != DECK_SIZE  )
+            if( deck != null )
                   return deck;
 
             List<EventCard> deck = new FileLoader("./json/cards.json").getAllCards( board, this.resourceBank );
 
             // random sort
-            deck.sort((a,b) -> (int)( (Math.random() - Math.random()) * 1000 ) );
+            deck.sort((_,_) -> (int)( (Math.random() - Math.random())*1000 ) );
 
             return deck;
       }
 
-      /**
-       * Add the new player in the board list --> It can generate an exception that can be propagated to the controller
-       * */
-      public GameModel newPlayer(String nickname, PlayerColor color) {
-            this.board.newPlayer(nickname, color);
-
+      public GameModel newPlayer( Player player ) {
+            board.addPlayerToBoard(player);
             return this;
       }
-
       /**
        * show the "decoy" deck used in ship-building phase.
        * the int parameter could be 0,1 or 2. if none of these values is passed,
@@ -115,18 +105,20 @@ public class GameModel {
        * add credits to each player, based on the
        * number of rewards obtained at the end of the game
        */
-
-      // TODO: Chiedi a cosa serve avere una lista temporanea per i player quando si potrebbe usare direttamente quella della board
       public GameModel endGameRewards(){
-            // To be sure we revalidate the player position to have all the players in the correct order (1st, 2nd, 3rd)
-            this.getBoard().validatePlayersPosition();
 
-            List<Player> players = this.board.getPlayers();
+            List<Player> players = board
+                    .getPlayers()
+                    .stream()
+                    .sorted((p1,p2) -> p1.getCursor() - p2.getCursor() )
+                    .toList();
 
-            // Add to the players the credits based on their arrival position
+            // add credits based on position
             for( int i = 0; i < players.size(); i++ ){
                   players.get(i).addCredits( 4 - i );
             }
+
+
 
             List<Player> withTheBestShip = new ArrayList<>();
             int min = Integer.MAX_VALUE;
@@ -136,7 +128,7 @@ public class GameModel {
 
             for (Player player : players){
 
-                  int curr = player.getShip().getExposedConnectors();
+                  int curr = player.getShip().getExposedConnectorAmount();
 
                   if( curr < min ){
                         withTheBestShip.clear();
@@ -145,6 +137,7 @@ public class GameModel {
                   }else if( curr == min ){
                         withTheBestShip.add(player);
                   }
+
             }
 
             // add 2 credits to all the players with the best ship
@@ -161,82 +154,43 @@ public class GameModel {
             return this;
       }
 
-      /**
-       *
-       * @return next event card. If the cards ended, null is returned instead
-       */
-      public EventCard nextRound(){
-
-            round++;
-
-            if( round == DECK_SIZE )
-                  return null;
-
-            EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
-
-            return card;
-      }
-
-      // TODO: Chiedi che cosa fa questo updateState, poichè dovrebbe andare a
-      //  grabbare lo state di tutte le cose necessarie (come player etc) per poterlo inviare al client
-
-      public GameModel useCurrentCard( Object response ){
-            EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
-
-            if( card.hasFinished() ){
-                  throw new Error("state updated when the card has finished to apply its effects to all players");
-            }
-
-            card.useCard( (JSONObject) response );
-
+      public GameModel startRoundSession(){
+            round = new RoundSession( level, deck.subList( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE, deck.size() ) );
             return this;
       }
 
-      // A cosa serve ?? --> è già ritornato di default dalla card...
-      public boolean hasCurrentCardFinished(){
-            EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
+      public Object useCurrentCard( Object response ){
+            Object cardState = round.play( response );
 
-            return card.hasFinished();
-      }
+            //TODO wrap card state into global state
 
-      /**
-       * Generates the state after a card or a turn as been used. Then it needs to be propagated to the clients
-       * */
-      public Object generateModelState(){
-
-            EventCard card = deck.get( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE + round );
-
-            if( card.hasFinished() ){
-                  throw new Error("usage of card when the card has finished to apply its effects to all players");
-            }
-
-            return card.generateState();
+            return cardState;
       }
 
       public Board getBoard(){
-            return this.board;
+            return board;
       }
 
       public JSONArray startBuildSession( SessionSubscriber controller ){
 
-            session = new ShipConstructionSession( board.getPlayers(), level, controller );
-            session.flip();
+            builder = new ShipConstructionSession( board.getPlayers(), level, controller );
+            builder.flip();
 
-            return session.generateInitialBoardState();
+            return builder.generateInitialBoardState();
       }
 
       public GameModel selectComponent( int id ){
-            session.select(id);
+            builder.select(id);
             return this;
       }
 
       public GameModel deselectComponent( int id ){
-            session.deselect(id);
+            builder.deselect(id);
             return this;
       }
 
       public GameModel flip(){
-            session.flip();
+            builder.flip();
             return this;
       }
 }

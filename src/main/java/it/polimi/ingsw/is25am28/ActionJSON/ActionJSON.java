@@ -40,7 +40,7 @@ public abstract class ActionJSON {
     /**
      * Returns the player nickname that should be set in the JSON, otherwise it throws an Exception
      * */
-    public String getPlayerNickname() throws IllegalStateException{
+    public String getPlayerNickname() throws IllegalStateException {
         if (!data.containsKey("playerNickname")) {
             throw new IllegalStateException("Key 'playerNickname' is missing in JSON data");
         }

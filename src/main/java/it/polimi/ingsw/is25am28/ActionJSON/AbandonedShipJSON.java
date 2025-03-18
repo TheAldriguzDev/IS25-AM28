@@ -56,8 +56,8 @@ public class AbandonedShipJSON extends ActionJSON {
             throw new IllegalStateException("Key 'lifeFormToBeRemoved' is missing in JSON data");
         }
 
-        // Cast the value to JSONArray and convert it to a List<String>
-        return (JSONArray) data.get("lifeFormToBeRemoved");
+        // TODO Cast the value to JSONArray and convert it to a List<String>
+        return  (JSONArray) data.get("lifeFormToBeRemoved");
     }
 
     /**
