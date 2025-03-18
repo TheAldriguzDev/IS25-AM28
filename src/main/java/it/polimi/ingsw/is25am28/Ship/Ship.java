@@ -416,7 +416,7 @@ public class Ship {
     /**
      * @return The number of exposed connectors on the entire ship
      */
-    public int getExposedConnectors(){
+    public int getExposedConnectorAmount(){
         List<Component> border = new ArrayList<Component>();
         AtomicInteger exposedConnectors = new AtomicInteger();
 

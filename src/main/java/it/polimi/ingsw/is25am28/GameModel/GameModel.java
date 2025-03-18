@@ -135,7 +135,7 @@ public class GameModel {
 
             for (Player player : players){
 
-                  int curr = player.getShip().getExposedConnectors();
+                  int curr = player.getShip().getExposedConnectorAmount();
 
                   if( curr < min ){
                         withTheBestShip.clear();

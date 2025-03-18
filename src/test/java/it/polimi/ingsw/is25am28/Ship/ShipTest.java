@@ -261,10 +261,12 @@ class ShipTest {
 
     @Test
     void getAllLifeforms() {
+
     }
 
     @Test
     void getFirePower() {
+
     }
 
     @Test
@@ -312,7 +314,7 @@ class ShipTest {
     }
 
     @Test
-    void getExposedComponents() {
+    void getExposedConnectorAmount() {
         Ship ship = new Ship(2);
 
         int[] connectors = new int[4];
@@ -331,6 +333,7 @@ class ShipTest {
         Storage storage = new Storage(connectors, 3, false);
         Structural structural = new Structural(connectors);
         Vital vital = new Vital(connectors, 0);
+        Vital vital2 = new Vital(connectors, 0);
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -348,14 +351,16 @@ class ShipTest {
         ship.addComponent(storage, 4, 5);
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
+        ship.addComponent(vital, 3, 5);
 
         System.out.println("==== AFTER ====");
         printShipGrid(ship);
 
         // Expected from the ship created above
-        int expectedAmountOfExposedComponents = 14;
+        // (counted by looking at the ship printed to terminal)
+        int expectedAmountOfExposedComponents = 16;
 
-        assertEquals(expectedAmountOfExposedComponents, ship.getExposedConnectors());
+        assertEquals(expectedAmountOfExposedComponents, ship.getExposedConnectorAmount());
     }
 
     @Test
@@ -421,6 +426,7 @@ class ShipTest {
 
     @Test
     void getWrongComponents() {
+
     }
 
     @Test
@@ -556,6 +562,7 @@ class ShipTest {
 
     @Test
     void validateShip() {
+
     }
 
     @Test
