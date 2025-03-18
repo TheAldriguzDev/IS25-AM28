@@ -20,6 +20,7 @@ import static it.polimi.ingsw.is25am28.Connector.*;
 public class Ship {
     private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
     private final static Map<Integer, Pair<Integer, Integer>> rowColOffsets = new HashMap<>();
+    private final static Map<Integer, List<List<Integer>>> shipProfiles = new HashMap<>();
 
     static {
         shipDimensions.put(1, new Pair<>(5, 5));
@@ -29,6 +30,33 @@ public class Ship {
         rowColOffsets.put(1, new Pair<>(5, 4));
         rowColOffsets.put(2, new Pair<>(5, 4));
         rowColOffsets.put(3, new Pair<>(4, 3));
+
+        // TODO: See the 3 ship levels and add the bitmaps for all (see below)
+
+        List<List<Integer>> matrix;
+        List<Integer> row;
+
+        // (0) - Adding the ship profile pattern common among all levels
+        matrix = new ArrayList<>(12);
+
+        // (1) - Creating level 1 ship profile by adding the difference from the previous
+        matrix = new ArrayList<>(12);
+
+
+        shipProfiles.put(1, matrix);
+
+        // (2) - Creating level 2 ship profile by adding the difference from the previous
+        matrix = new ArrayList<>(12);
+
+
+        shipProfiles.put(2, matrix);
+
+        // (3) - Creating level 3 ship profile by adding the difference from the previous
+        matrix = new ArrayList<>(12);
+
+
+        shipProfiles.put(2, matrix);
+
     }
 
     private final int difficultyLevel;
@@ -38,7 +66,7 @@ public class Ship {
     private final Cabin core;
 
     // All components are sorted into their matching category,
-    // represented by one of the following lists
+    // represented by one of the following sub-lists
     private final List<Battery> batteryList;
     private final List<Cabin> cabinList;
     private final List<Cannon> cannonList;
@@ -634,6 +662,7 @@ public class Ship {
 
     // TODO: Find a way to throw an exception if the component is placed outside of the ship
     // TODO: (NOTE: not the ship's grid (12x12) but the actual ship's profile)
+    // TODO: !!FOUND A SOLUTION!! -> Store for each level a 12x12 matrix of 1s and 0s to specify where components can be (1) or not (0)
     /**
      * Adds the given component at the given coordinates (i, j) in the ship's component grid.
      *
@@ -645,7 +674,8 @@ public class Ship {
      * @throws ExistingComponentException If the component at coordinates (i, j) is already occupied
      */
     public void addComponent(Component component, int i, int j)
-            throws NullComponentException, OutOfGridException, ExistingComponentException
+            throws NullComponentException, OutOfGridException,
+                   ExistingComponentException/*, OutOfShipException*/   // TODO
     {
         if (component == null) {
             throw new NullComponentException("Given component to add is null");
@@ -656,6 +686,12 @@ public class Ship {
         if (this.components[i][j] != null) {
             throw new ExistingComponentException("Cannot insert given component on top of an already existing one");
         }
+        // TODO: Add when ship profiles are added in the Ship class's static block
+        /*
+        if (shipProfiles.get(this.difficultyLevel).get(i).get(j) == 0) {
+            throw new OutOfShipException("ERROR: Cannot insert given component outside the ship");
+        }
+        */
 
         this.components[i][j] = component;
     }

@@ -4,9 +4,12 @@ import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.Exceptions.ExistingComponentException;
 import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Exceptions.OutOfGridException;
+import it.polimi.ingsw.is25am28.Items.Item;
+import it.polimi.ingsw.is25am28.Items.ItemColor;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -195,6 +198,57 @@ class ShipTest {
 
     @Test
     void getAllItemValue() {
+        Ship ship = new Ship(1);
+
+        Storage leftStorage = new Storage(3, false, 6, 5, 0, null);
+        Storage rightStorage = new Storage(3, false, 6, 7, 0, null);
+        Storage topStorage = new Storage(2, true, 5, 6, 0, null);
+        Storage disconnectedStorage = new Storage(3, false, 7, 7, 0, null);
+
+        Item red = new Item(ItemColor.RED);
+        Item yellow = new Item(ItemColor.YELLOW);
+        Item green = new Item(ItemColor.GREEN);
+        Item blue = new Item(ItemColor.BLUE);
+
+        leftStorage.storeItem(green);
+        leftStorage.storeItem(yellow);
+        leftStorage.storeItem(yellow);
+
+        rightStorage.storeItem(green);
+        rightStorage.storeItem(green);
+        rightStorage.storeItem(blue);
+
+        topStorage.storeItem(red);
+        topStorage.storeItem(yellow);
+
+        disconnectedStorage.storeItem(blue);
+        disconnectedStorage.storeItem(yellow);
+
+        ship.addComponent(leftStorage, 6, 5);
+        ship.addComponent(rightStorage, 6, 7);
+        ship.addComponent(topStorage, 5, 6);
+        ship.addComponent(disconnectedStorage, 7, 7);
+
+        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
+        printShipGrid(ship);
+
+        ship.generateComponentSubLists();
+
+        List<Storage> storageList = new ArrayList<>();
+
+        storageList.add(topStorage);
+        storageList.add(rightStorage);
+        storageList.add(leftStorage);
+
+        int expectedTotalValue = storageList.stream()
+                .flatMap(s -> s.getStoredItems().stream())
+                        .mapToInt(Item::getValue)
+                        .sum();
+
+        assertEquals(storageList, ship.getStorageList());
+        assertTrue(ship.getAllItems().containsAll((List<Item>) storageList.stream().flatMap(s -> s.getStoredItems().stream()).toList()));
+        assertEquals(expectedTotalValue, ship.getAllItemValue());
+
     }
 
     @Test
@@ -203,10 +257,121 @@ class ShipTest {
 
     @Test
     void getGridRow() {
+        Ship ship = new Ship(2);
+
+        Battery battery = new Battery(3, 6, 7, 0, null);
+        Battery battery2 = new Battery(2, 5, 5, 0, null);
+        Cabin cabin = new Cabin(5, 6, 0, null, false);
+        Cannon cannon = new Cannon(1, 8, 4, 0, null);
+        Engine engine = new Engine(1, 7, 6, 0, null);
+        Engine engine2 = new Engine(1, 7, 7, 0, null);
+        Shield shield = new Shield(6, 5, 0, null);
+        Storage storage = new Storage(3, false, 4, 5, 0, null);
+        Structural structural = new Structural(3, 2, 0, null);
+        Vital vital = new Vital(null, 2, 2, 0, null);
+
+        Cabin core = (Cabin) ship.getComponent(6, 6);
+
+        // Adding the components created above
+        ship.addComponent(battery, 6, 7);
+        ship.addComponent(battery2, 5, 5);
+        ship.addComponent(cabin, 5, 6);
+        ship.addComponent(cannon, 8, 4);
+        ship.addComponent(engine, 7, 6);
+        ship.addComponent(engine2, 7, 7);
+        ship.addComponent(shield, 6, 5);
+        ship.addComponent(storage, 4, 5);
+        ship.addComponent(structural, 3, 2);
+        ship.addComponent(vital, 2, 2);
+
+        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
+        printShipGrid(ship);
+
+        int i;
+        int indexRow1 = 6;
+        int indexRow2 = 4;
+        int indexRow3 = 3;
+        Component[] row1 = new Component[12];
+        Component[] row2 = new Component[12];
+        Component[] row3 = new Component[12];
+
+        for (i = 0; i < 12; i++) {
+            row1[i] = null;
+            row2[i] = null;
+            row3[i] = null;
+        }
+
+        row1[5] = shield;
+        row1[6] = core;
+        row1[7] = battery;
+
+        row2[5] = storage;
+
+        row3[2] = structural;
+
+        assertTrue(Arrays.stream(row1).toList().containsAll(Arrays.stream(ship.getGridRow(indexRow1)).toList()));
+        assertTrue(Arrays.stream(row2).toList().containsAll(Arrays.stream(ship.getGridRow(indexRow2)).toList()));
+        assertTrue(Arrays.stream(row3).toList().containsAll(Arrays.stream(ship.getGridRow(indexRow3)).toList()));
     }
 
     @Test
     void getGridColumn() {
+        Ship ship = new Ship(2);
+
+        Battery battery = new Battery(3, 6, 7, 0, null);
+        Battery battery2 = new Battery(2, 5, 5, 0, null);
+        Cabin cabin = new Cabin(5, 6, 0, null, false);
+        Cannon cannon = new Cannon(1, 8, 4, 0, null);
+        Engine engine = new Engine(1, 7, 6, 0, null);
+        Engine engine2 = new Engine(1, 7, 7, 0, null);
+        Shield shield = new Shield(6, 5, 0, null);
+        Storage storage = new Storage(3, false, 4, 5, 0, null);
+        Structural structural = new Structural(3, 2, 0, null);
+        Vital vital = new Vital(null, 2, 2, 0, null);
+
+        Cabin core = (Cabin) ship.getComponent(6, 6);
+
+        // Adding the components created above
+        ship.addComponent(battery, 6, 7);
+        ship.addComponent(battery2, 5, 5);
+        ship.addComponent(cabin, 5, 6);
+        ship.addComponent(cannon, 8, 4);
+        ship.addComponent(engine, 7, 6);
+        ship.addComponent(engine2, 7, 7);
+        ship.addComponent(shield, 6, 5);
+        ship.addComponent(storage, 4, 5);
+        ship.addComponent(structural, 3, 2);
+        ship.addComponent(vital, 2, 2);
+
+        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
+        printShipGrid(ship);
+
+        int i;
+        int indexCol1 = 5;
+        int indexCol2 = 4;
+        int indexCol3 = 2;
+        Component[] column1 = new Component[12];
+        Component[] column2 = new Component[12];
+        Component[] column3 = new Component[12];
+
+        for (i = 0; i < 12; i++) {
+            column1[i] = null;
+            column2[i] = null;
+            column3[i] = null;
+        }
+
+        column1[4] = storage;
+        column1[5] = battery2;
+        column1[6] = shield;
+
+        column2[8] = cannon;
+
+        column3[2] = vital;
+        column3[3] = structural;
+
+        assertTrue(Arrays.stream(column1).toList().containsAll(Arrays.stream(ship.getGridColumn(indexCol1)).toList()));
+        assertTrue(Arrays.stream(column2).toList().containsAll(Arrays.stream(ship.getGridColumn(indexCol2)).toList()));
+        assertTrue(Arrays.stream(column3).toList().containsAll(Arrays.stream(ship.getGridColumn(indexCol3)).toList()));
     }
 
     @Test
@@ -416,22 +581,6 @@ class ShipTest {
     void removeComponent() {
         Ship ship = new Ship(3);
 
-        /*
-            x   0       1       2       3      4       5       6       7       8       9       10     11
-            0
-            1
-            2                   vit
-            3                   stru
-            4                                          stor
-            5                                                   cab
-            6                                          shld     core    bat
-            7                                                   eng     eng2
-            8                                   cann
-            9
-            10
-            11
-         */
-
         Battery battery = new Battery(3, 6, 7, 0, null);
         Cabin cabin = new Cabin(5, 6, 0, null, false);
         Cannon cannon = new Cannon(1, 8, 4, 0, null);
@@ -452,6 +601,9 @@ class ShipTest {
         ship.addComponent(storage, 4, 5);
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
+
+        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
+        printShipGrid(ship);
 
         // Removing components
         try {
