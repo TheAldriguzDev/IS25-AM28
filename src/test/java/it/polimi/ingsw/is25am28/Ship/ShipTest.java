@@ -415,16 +415,16 @@ class ShipTest {
             connectors[i] = THREE_PIPES.ordinal();
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine(connectors, 2);
-        Shield shield = new Shield(connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(6, 7, connectors, 3);
+        Battery battery2 = new Battery(5, 5, connectors, 3);
+        Cabin cabin = new Cabin(5, 6, connectors, false);
+        Cannon cannon = new Cannon(8, 4, connectors, 1);
+        Engine engine = new Engine(7, 6, connectors, 1);
+        Engine engine2 = new Engine(7, 7, connectors, 2);
+        Shield shield = new Shield(6, 5, connectors);
+        Storage storage = new Storage(4, 5, connectors, 3, false);
+        Structural structural = new Structural(3, 2, connectors);
+        Vital vital = new Vital(2, 2, connectors, 0);
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
