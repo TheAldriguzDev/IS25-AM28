@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Components;
 
+import it.polimi.ingsw.is25am28.Connector;
+
 public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield, Structural {
       private int col;
       private int row;
@@ -103,19 +105,19 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
             return this;
       }
 
-      public int getLeftSide(){
+      public Connector getLeftSide(){
             return sides[sides[ (direction + 3)%4 ]];
       }
 
-      public int getRightSide(){
+      public Connector getRightSide(){
             return sides[ (direction + 1)%4 ];
       }
 
-      public int getTopSide(){
+      public Connector getTopSide(){
             return sides[direction];
       }
 
-      public int getBottomSide(){
+      public Connector getBottomSide(){
             return sides[ (direction + 2)%4 ];
       }
 

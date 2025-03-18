@@ -410,6 +410,38 @@ public class Ship {
     }
 
     /**
+     * @return The number of exposed connectors on the entire ship
+     */
+    public int getExposedConnectors(){
+        List<Integer> connectors = new ArrayList<Integer>();
+
+        traverse(
+             (Component component) -> {
+                Component[] nearest = getNearestComponents(component);
+
+                if( nearest[0] == null ){
+                    connectors.add( component.getTopSide().ordinal() );
+                }
+
+                if( nearest[1] == null ){
+                    connectors.add(component.getRightSide().ordinal());
+                }
+
+                if( nearest[2] == null ){
+                    connectors.add( component.getBottomSide().ordinal() );
+                }
+
+                if( nearest[3] == null ){
+                    connectors.add( component.getLeftSide().ordinal() );
+                }
+            }
+        );
+
+        // Add all the exposed connectors found
+        return connectors.stream().reduce(0, Integer::sum);
+    }
+
+    /**
      * @return The total value of all the <code>Item</code> onboard the ship
      */
     public int getAllItemValue() {
