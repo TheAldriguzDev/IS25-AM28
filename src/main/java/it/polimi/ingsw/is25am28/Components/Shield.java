@@ -1,8 +1,8 @@
 package it.polimi.ingsw.is25am28.Components;
 
 public final class Shield extends Component {
-      public Shield( int row, int col, int[] connectors ){
-            super(row, col, connectors);
+      public Shield( int[] connectors ){
+            super(connectors);
       }
       /**
        * return the two sides that are covered by the 

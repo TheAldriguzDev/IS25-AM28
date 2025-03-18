@@ -81,7 +81,6 @@ public class FileLoader {
             FileLoader.forEachTile(
                   (o,connectors) -> components.add(new Cannon( connectors, ((Long)o.get("force")).intValue() ))
             , comp);
-            
 
             comp = (JSONArray)json.get("shield" );
 

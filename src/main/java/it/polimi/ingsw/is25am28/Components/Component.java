@@ -14,9 +14,7 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       protected int direction;
 
 
-      public Component( int row, int col, int[] connectors ) {
-            this.row = row;
-            this.col = col;
+      public Component( int[] connectors ) {
             sides = new Connector[4];
             
             for( int i = 0; i < 4; i++ ){
@@ -97,6 +95,11 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
             return position;
       }
 
+      public void setPosition(int row, int col) {
+            this.row = row;
+            this.col = col;
+      }
+
       public Component rotateLeft(){
             direction--;
 
@@ -129,5 +132,4 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       public Connector getBottomSide(){
             return sides[ (direction + 2)%4 ];
       }
-
 }
