@@ -15,10 +15,10 @@ class SlaversTest {
 
         int[] connectors = {0,0,0,0};
 
-        Cabin cabin_1 = new Cabin(5,5, connectors, false);
-        Cabin cabin_2 = new Cabin(6,5, connectors, false);
-        Cabin cabin_3 = new Cabin(4,5, connectors, false);
-        Cabin cabin_4 = new Cabin(3,5, connectors, true);
+        Cabin cabin_1 = new Cabin(connectors, false);
+        Cabin cabin_2 = new Cabin(connectors, false);
+        Cabin cabin_3 = new Cabin( connectors, false);
+        Cabin cabin_4 = new Cabin( connectors, true);
 
         System.out.println("Halo");
     }

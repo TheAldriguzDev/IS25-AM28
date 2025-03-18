@@ -3,8 +3,8 @@ package it.polimi.ingsw.is25am28.Components;
 public final class Engine extends Component {
       private final int speed;
 
-      public Engine( int row, int col, int[] connectors, int speed ){
-            super( row, col, connectors );
+      public Engine( int[] connectors, int speed ){
+            super( connectors );
             this.speed = speed;
       }
 

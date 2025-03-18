@@ -98,7 +98,12 @@ public class Ship {
         coreConnectors[3] = THREE_PIPES.ordinal();
 
         // Creating the ship's core cabin
-        this.core = new Cabin(coreConnectors,true);
+        this.core = new Cabin(
+                this.grid_rows/2,
+                this.grid_cols/2,
+                coreConnectors,
+                true
+        );
 
         // Adding the core component as the first component in the ship's grid
         this.addComponent(this.core, this.grid_rows/2, this.grid_cols/2);
@@ -719,6 +724,10 @@ public class Ship {
         }
         */
 
+        // Setting the current component's position
+        component.setPosition(i, j);
+
+        // Finally, adding the component
         this.components[i][j] = component;
     }
 
