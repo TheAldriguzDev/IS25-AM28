@@ -7,8 +7,8 @@ public final class Cabin extends Component {
       private final boolean isCore;
       private final ArrayList<Lifeform> inhabitants;
 
-      public Cabin( int[] connectors, boolean isCore ) {
-            super(connectors);
+      public Cabin( int row, int col, int[] connectors, boolean isCore ) {
+            super(row, col, connectors);
             this.isCore = isCore;
             this.inhabitants = new ArrayList<>();
       }

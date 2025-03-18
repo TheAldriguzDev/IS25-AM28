@@ -32,11 +32,6 @@ public class Epidemy extends EventCard {
         return null;
     }
 
-    @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
-    }
-
     public void useCard() {
         List<Player> players = this.getBoard().getPlayers();
         Set<Cabin> alreadyQuarantined;

@@ -4,8 +4,8 @@ public final class Battery extends Component {
       private final int maxAvailability;
       private int available;
 
-      public Battery( int[] connectors, int maxAvailability ){
-            super(connectors);
+      public Battery(int row, int col, int[] connectors, int maxAvailability ){
+            super(row, col, connectors);
             this.maxAvailability = maxAvailability;
             available = maxAvailability;
       }

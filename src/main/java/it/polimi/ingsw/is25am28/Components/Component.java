@@ -14,7 +14,9 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       protected int direction;
 
 
-      public Component( int[] connectors ) {
+      public Component( int row, int col, int[] connectors ) {
+            this.row = row;
+            this.col = col;
             sides = new Connector[4];
             
             for( int i = 0; i < 4; i++ ){

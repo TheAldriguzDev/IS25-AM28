@@ -122,11 +122,6 @@ public class OpenSpace extends EventCard {
     }
 
     @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
     public JSONObject generateState() {
         CardStateJSON cardState = new CardStateJSON();
 

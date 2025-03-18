@@ -56,11 +56,6 @@ public class MeteorShower extends EventCard {
         return null;
     }
 
-    @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
-    }
-
     public void useCard(MeteorShowerJSON data) throws IllegalArgumentException, IllegalStateException {
         int diceResult, inboundDirection, sideToHit;
         boolean threatDestroyed;

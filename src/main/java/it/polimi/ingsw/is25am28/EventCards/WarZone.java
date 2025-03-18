@@ -119,11 +119,6 @@ public class WarZone extends EventCard {
     }
 
     @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
     public JSONObject generateState() {
         return null;
     }
