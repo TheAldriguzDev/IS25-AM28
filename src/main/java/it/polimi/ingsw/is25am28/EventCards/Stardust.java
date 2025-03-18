@@ -63,7 +63,8 @@ public class Stardust extends EventCard {
                                 }
                             }
                     );
-                    player.setCursor(player.getCursor() - movementSteps.get());
+                    getBoard().movePlayerBackwards(player, movementSteps.get());
+                    //player.setCursor(player.getCursor() - movementSteps.get());
                 },
                 () -> {
                     throw new IllegalArgumentException("here is no player playing in this moment");

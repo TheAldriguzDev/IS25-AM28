@@ -33,6 +33,12 @@ public class SlaversJSON extends ActionJSON {
         }
         return (ArrayList<Cabin>) data.get("crewToRemove");
     }
+    public int getNumberOfDoubleCannonsActivated() throws IllegalStateException {
+        if (!data.containsKey("numberOfDoubleCannonsActivated")) {
+            throw new IllegalStateException("Key 'numberOfDoubleCannonsActivated' is missing in JSON data");
+        }
+        return (int)data.get("numberOfDoubleCannonsActivated");
+    }
 
 
     // Setters
@@ -44,5 +50,8 @@ public class SlaversJSON extends ActionJSON {
     public void setCrewToRemove (ArrayList<String> crewToRemove) {
         data.put("crewToRemove", crewToRemove);
     }
-
+    @SuppressWarnings("unchecked")
+    public void setNumOfDoubleCannonsActivated (int numOfDoubleCannonsActivated) throws IllegalArgumentException {
+        data.put("numOfDoubleCannonsActivated", numOfDoubleCannonsActivated);
+    }
 }

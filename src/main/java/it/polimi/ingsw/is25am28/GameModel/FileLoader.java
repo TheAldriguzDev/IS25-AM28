@@ -223,8 +223,8 @@ public class FileLoader {
                   
                   deck.add(new Epidemy(
                         "Epidemia", 
-                        ((Long)o.get("level")).intValue(),
-                          null
+                        ((Long)o.get("level")).intValue()
+
                   ));
             }
            
@@ -270,8 +270,7 @@ public class FileLoader {
                   
                   deck.add(new Stardust( 
                         "Polvere Stellare", 
-                        ((Long)o.get("level")).intValue(),
-                          null
+                        ((Long)o.get("level")).intValue()
                   ));
             }
             

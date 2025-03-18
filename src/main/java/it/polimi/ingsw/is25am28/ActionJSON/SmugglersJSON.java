@@ -84,6 +84,13 @@ public class SmugglersJSON extends ActionJSON {
         return (int)data.get("greenToDrop");
     }
 
+    public int getNumberOfDoubleCannonsActivated() throws IllegalStateException {
+        if (!data.containsKey("numberOfDoubleCannonsActivated")) {
+            throw new IllegalStateException("Key 'numberOfDoubleCannonsActivated' is missing in JSON data");
+        }
+        return (int)data.get("numberOfDoubleCannonsActivated");
+    }
+
 
     // Setters
     @SuppressWarnings("unchecked")
@@ -121,5 +128,9 @@ public class SmugglersJSON extends ActionJSON {
     @SuppressWarnings("unchecked")
     public void setGreenToDrop (int greenToDrop) throws IllegalArgumentException {
         data.put("greenToDrop", greenToDrop);
+    }
+    @SuppressWarnings("unchecked")
+    public void setNumOfDoubleCannonsActivated (int numOfDoubleCannonsActivated) throws IllegalArgumentException {
+        data.put("numOfDoubleCannonsActivated", numOfDoubleCannonsActivated);
     }
 }

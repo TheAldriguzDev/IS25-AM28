@@ -52,11 +52,12 @@ public class Pirates extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
 
-                    if (player.getShip().getFirePower() >= requiredFirepower) {
+                    if (player.getShip().getFirePower(piratesData.getNumberOfDoubleCannonsActivated()) >= requiredFirepower) {
                         this.hasBeenDefeated = true;
                         if (piratesData.getTakeCredits()) {
                             bonusEffect();
-                            player.setCursor(player.getCursor() - this.movementSteps);
+                            getBoard().movePlayerBackwards(player, movementSteps);
+                            //player.setCursor(player.getCursor() - this.movementSteps);
                         }
                     } else {
                         malusEffect();

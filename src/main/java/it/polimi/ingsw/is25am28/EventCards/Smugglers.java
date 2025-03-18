@@ -56,11 +56,12 @@ public class Smugglers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
 
-                    if(player.getShip().getFirePower() >= requiredFirepower) {
+                    if(player.getShip().getFirePower(smugglersData.getNumberOfDoubleCannonsActivated()) >= requiredFirepower) {
                         this.hasBeenDefeated = true;
                         if (smugglersData.getTakeLoot()) {
                             bonusEffect();
-                            player.setCursor(player.getCursor() - this.movementSteps);
+                            getBoard().movePlayerBackwards(player, movementSteps);
+                            //player.setCursor(player.getCursor() - this.movementSteps);
                         }
                     } else {
                         malusEffect();
@@ -95,7 +96,7 @@ public class Smugglers extends EventCard {
                         if (storage.isSpecialStorage()) {
                             List<Item> storedItems = storage.getStoredItems();
                             for (Item item : storedItems) {
-                                if (item.getColor() == ItemColor.RED) {
+                                if (item.getColor().equals(ItemColor.RED)) {
                                     storedItems.remove(item);
                                     itemsToDrop--;
                                     if (itemsToDrop == 0) {
@@ -111,7 +112,7 @@ public class Smugglers extends EventCard {
                         if (itemsToDrop == 0) { break; }
                         List<Item> storedItems = storage.getStoredItems();
                         for(Item item : storedItems) {
-                            if (item.getColor() == ItemColor.YELLOW) {
+                            if (item.getColor().equals(ItemColor.YELLOW)) {
                                 storedItems.remove(item);
                                 itemsToDrop--;
                                 if (itemsToDrop == 0) { break; }
@@ -124,7 +125,7 @@ public class Smugglers extends EventCard {
                         if (itemsToDrop == 0) { break; }
                         List<Item> storedItems = storage.getStoredItems();
                         for(Item item : storedItems) {
-                            if (item.getColor() == ItemColor.BLUE) {
+                            if (item.getColor().equals(ItemColor.BLUE)) {
                                 storedItems.remove(item);
                                 itemsToDrop--;
                                 if (itemsToDrop == 0) { break; }
@@ -137,7 +138,7 @@ public class Smugglers extends EventCard {
                         if (itemsToDrop == 0) { break; }
                         List<Item> storedItems = storage.getStoredItems();
                         for(Item item : storedItems) {
-                            if (item.getColor() == ItemColor.GREEN) {
+                            if (item.getColor().equals(ItemColor.GREEN)) {
                                 storedItems.remove(item);
                                 itemsToDrop--;
                                 if (itemsToDrop == 0) { break; }
@@ -206,7 +207,7 @@ public class Smugglers extends EventCard {
                         for (Storage storage : storages) {
                             List<Item> storedItems = storage.getStoredItems();
                             for (Item item : storedItems) {
-                                if (item.getColor() == color) {
+                                if (item.getColor().equals(color)) {
                                     storage.removeItem(item);
                                     i++;
                                     if (i == takenItems) { return; }

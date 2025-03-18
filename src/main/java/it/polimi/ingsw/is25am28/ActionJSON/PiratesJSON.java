@@ -59,6 +59,12 @@ public class PiratesJSON extends ActionJSON {
         }
         return (ArrayList<Integer>)data.get("dicesResult");
     }
+    public int getNumberOfDoubleCannonsActivated() throws IllegalStateException {
+        if (!data.containsKey("numberOfDoubleCannonsActivated")) {
+            throw new IllegalStateException("Key 'numberOfDoubleCannonsActivated' is missing in JSON data");
+        }
+        return (int)data.get("numberOfDoubleCannonsActivated");
+    }
 
     // Setters
     @SuppressWarnings("unchecked")
@@ -85,7 +91,8 @@ public class PiratesJSON extends ActionJSON {
     public void setDicesResults (ArrayList<Integer> dicesResults) throws IllegalArgumentException {
         data.put("dices", dicesResults);
     }
-
-
-
+    @SuppressWarnings("unchecked")
+    public void setNumOfDoubleCannonsActivated (int numOfDoubleCannonsActivated) throws IllegalArgumentException {
+        data.put("numOfDoubleCannonsActivated", numOfDoubleCannonsActivated);
+    }
 }
