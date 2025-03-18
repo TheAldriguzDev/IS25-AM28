@@ -51,7 +51,11 @@ public class GameModel {
        * for level 2 game, the length of the list is 8;
        */
       private List<EventCard> generateDeck( int level ) {
-            List<EventCard> deck = new FileLoader("./json/cards.json").getAllCards();
+
+            if( deck != null && round != DECK_SIZE  )
+                  return deck;
+
+            List<EventCard> deck = new FileLoader("./json/cards.json").getAllCards( board );
             // random sort
             deck.sort((a,b) -> (int)( (Math.random() - Math.random())*1000 ) );
             

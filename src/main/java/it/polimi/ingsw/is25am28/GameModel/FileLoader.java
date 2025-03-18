@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Battery;
 import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Components.Cannon;
@@ -128,7 +129,7 @@ public class FileLoader {
             return components;
       }
 
-      public List<EventCard> getAllCards(){
+      public List<EventCard> getAllCards( Board board ){
             final List<EventCard> deck = new ArrayList<>();
 
             JSONArray array = (JSONArray)json.get("abandonedShip" );
@@ -141,7 +142,8 @@ public class FileLoader {
                         ((Long)o.get("level")).intValue(), 
                         ((Long)o.get("people")).intValue(), 
                         ((Long)o.get("days")).intValue(), 
-                        ((Long)o.get("credits")).intValue()
+                        ((Long)o.get("credits")).intValue(),
+                        board
                   ));
             }
 
@@ -158,7 +160,8 @@ public class FileLoader {
                         ((Long)o.get("red")).intValue(),
                         ((Long)o.get("yellow")).intValue(),
                         ((Long)o.get("green")).intValue(),
-                        ((Long)o.get("blue")).intValue()
+                        ((Long)o.get("blue")).intValue(),
+                        board
                         ));
             }
 
@@ -170,7 +173,8 @@ public class FileLoader {
                   deck.add(new MeteorShower(
                         "meteore", 
                         ((Long)o.get("level"), 
-                        (JSONArray)o.get("Meteors")
+                        (JSONArray)o.get("Meteors"),
+                        board
                   ));
             }
 
@@ -187,7 +191,8 @@ public class FileLoader {
                         ((Long)o.get("credits")).intValue(), 
                         ((Long)o.get("days")).intValue(), 
                         ((Long)o.get("smallShoots")).intValue(), 
-                        ((Long)o.get("bigShoots")).intValue()
+                        ((Long)o.get("bigShoots")).intValue(),
+                        board
                   ));
             }
             
@@ -200,7 +205,8 @@ public class FileLoader {
                         "Pianeti", 
                         ((Long)o.get("level")).intValue(), 
                         ((Long)o.get("days")).intValue(), 
-                        (JSONArray)o.get("planets")
+                        (JSONArray)o.get("planets"),
+                        board
                   ));
             }
             
@@ -211,7 +217,8 @@ public class FileLoader {
                   
                   deck.add(new OpenSpace(
                         "Spazio aperto", 
-                        ((Long)o.get("level")).intValue()
+                        ((Long)o.get("level")).intValue(),
+                        board
                   ));
             }
 
@@ -222,7 +229,8 @@ public class FileLoader {
                   
                   deck.add(new Epidemy(
                         "Epidemia", 
-                        ((Long)o.get("level")).intValue()
+                        ((Long)o.get("level")).intValue(),
+                        board
                   ));
             }
            
@@ -240,7 +248,8 @@ public class FileLoader {
                         ((Long)((JSONObject)o.get("storage")).get("red")).intValue(),
                         ((Long)((JSONObject)o.get("storage")).get("yellow")).intValue(),
                         ((Long)((JSONObject)o.get("storage")).get("green")).intValue(),
-                        ((Long)((JSONObject)o.get("storage")).get("blue")).intValue()
+                        ((Long)((JSONObject)o.get("storage")).get("blue")).intValue(),
+                        board
                   ));
             }
 
@@ -255,8 +264,8 @@ public class FileLoader {
                         ((Long)o.get("cannons")).intValue(),
                         ((Long)o.get("days")).intValue(), 
                         ((Long)o.get("credits")).intValue(), 
-                        ((Long)o.get("penalty")).intValue() 
-
+                        ((Long)o.get("penalty")).intValue(),
+                        board
                   ));
             }
 
@@ -267,7 +276,8 @@ public class FileLoader {
                   
                   deck.add(new Stardust( 
                         "Polvere Stellare", 
-                        ((Long)o.get("level")).intValue()
+                        ((Long)o.get("level")).intValue(),
+                        board
                   ));
             }
             
@@ -281,7 +291,8 @@ public class FileLoader {
                         ((Long)o.get("level")).intValue(),
                         (JSONObject)o.get("engines"),
                         (JSONObject)o.get("cannons"),
-                        (JSONObject)o.get("humans")
+                        (JSONObject)o.get("humans"),
+                        board
                   ));
             }
 
