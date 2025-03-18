@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -17,8 +19,8 @@ public class Smugglers extends EventCard {
     private List<Item> givenItems = new ArrayList<>();
     private final int takenItems;
 
-    public Smugglers(String name, int cardLevel, int requiredFirepower, int movementStep, int takenItems) {
-        super(name, cardLevel);
+    public Smugglers(String name, int cardLevel, int requiredFirepower, int movementStep, int takenItems, Board board) {
+        super(name, cardLevel, board);
         this.requiredFirepower = requiredFirepower;
         this.movementStep = movementStep;
         this.takenItems = takenItems;
@@ -94,7 +96,7 @@ public class Smugglers extends EventCard {
     }
 
     @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
         return null;
     }
 

@@ -132,4 +132,22 @@ class BoardLevel2Test {
                 "The remaining players are not in the correct order"
         );
     }
+
+    @Test
+    void test_eliminate_player_from_the_board() {
+        Player p = board.getPlayers().getFirst();
+
+        for (Player player : board.getPlayers()) {
+            board.addPlayerToBoard(player);
+        }
+
+        board.validatePlayersPosition();
+
+        board.eliminatePlayer(board.getPlayers().getFirst());
+
+        // Check if the player gets eliminated
+        assertTrue(p.isEliminated(), "The player has not been eliminated in his attribute");
+        assertTrue(board.getEliminatedPlayers().contains(p), "The player is not in the eliminated player list");
+
+    }
 }

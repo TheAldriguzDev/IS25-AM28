@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
 import java.util.List;
@@ -10,41 +11,31 @@ import org.json.simple.JSONObject;
 public abstract class EventCard {
     protected String name;
     protected int cardLevel;
-    protected Board board;
+    protected List<Player> players;
     protected Optional<Player> currentPlayer;
+    private Board board;
 
     /**
      * General constructor shared between the classes
      * */
-    protected EventCard(String name, int cardLevel) {
+    protected EventCard(String name, int cardLevel, Board board) {
         this.name = name;
         this.cardLevel = cardLevel;
+        this.board = board;
     }
 
-    /* SUPERSEDED BY ADDING THE BOARD ATTRIBUTE
     /**
      * This method is immediately invoked when the card a new card is extracted.
      * Can be overridden to specify different initialization modes (like reverse player order)
      *
-    public void initCardPlayers( List<Player> players ) throws IllegalArgumentException {
-        if ( players == null || players.isEmpty() || players.size() < 2 ) {
+     * We do not use the board players list since in some cards the players order could be different
+     */
+    public void initCardPlayers() throws IllegalArgumentException {
+        if ( this.board.getPlayers() == null || this.board.getPlayers().isEmpty() || this.board.getPlayers().size() < 2 ) {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
         } else {
-            this.boardplayers = players;
+            this.players = this.board.getPlayers();
             currentPlayer = Optional.of(players.getFirst());
-        }
-    }
-    */
-
-    /**
-     * Initializes the board pointer inside the card
-     */
-    public void initBoard(Board board) throws IllegalArgumentException {
-        if (board == null || board.getSize() == 0) {
-            throw new IllegalArgumentException("ERROR: Board must be initialized first before assigning it to an event card");
-        }
-        else {
-            this.board = board;
         }
     }
 
@@ -52,18 +43,25 @@ public abstract class EventCard {
 
     protected abstract void malusEffect();
 
-    // We will override this method if we need a more specific usage
-    protected Player getNextPlayer() {
+    /**
+     * Set the currentPlayer to the next player in the game's turn order. If there are no more players left, set the attribute to an empty optional.
+     * */
+    protected Optional<Player> getNextPlayer() {
 
-        if( players == null || players.isEmpty() )
+        if( players == null || players.isEmpty() ) {
             throw new Error("Players are not set, you must call startUsingCard method before");
+        }
 
         if ( currentPlayer.isPresent() ) {
-            currentPlayer = Optional.of(players.get( players.indexOf(currentPlayer.get()) + 1 ));
-            return players.get( players.indexOf(currentPlayer.get()) + 1 );
+            if (currentPlayer.get().equals(players.getLast())) {
+                return Optional.empty();
+            } else {
+                currentPlayer = Optional.of(players.get( players.indexOf(currentPlayer.get()) + 1 ));
+                return Optional.of(players.get( players.indexOf(currentPlayer.get()) + 1 ));
+            }
         } else {
             currentPlayer = Optional.of(players.getFirst());
-            return players.getFirst();
+            return Optional.of(players.getFirst());
         }
     }
 
@@ -71,7 +69,16 @@ public abstract class EventCard {
         return currentPlayer;
     }
 
-    public boolean hasFinished(){
+    protected Board getBoard() {
+        return board;
+    }
+
+    /**
+     * This method will be used in the specific class, but also from outside (game model).
+     *
+     * It returns true if the current player is the last one of the card players or if there are no active players in the card
+     * */
+    public boolean hasFinished() {
         return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false);
     }
 
@@ -91,7 +98,7 @@ public abstract class EventCard {
      * The communication of the new, valid or invalid, state will be sent (broadcast) to all the clients.
      * */
 
-    public abstract EventCard useCard( JSONObject data ) throws IllegalArgumentException;
+    public abstract EventCard useCard( ActionJSON data ) throws IllegalArgumentException;
 
     /**
      * generateState return a JSONObject that return the current state of the card. It MUST contains all the specific information like:

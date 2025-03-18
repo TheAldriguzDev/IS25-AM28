@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.GameModel;
 
+import it.polimi.ingsw.is25am28.Items.Item;
+import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import java.util.ArrayList;
@@ -25,9 +27,9 @@ public class GameModel {
       private int round = 0;
 
       public GameModel( int level ){
-            deck = generateDeck( level );
+            this.deck = generateDeck( level );
             // if( level > 1 )
-            board = new BoardLevel2();
+            this.board = new BoardLevel2();
       }
 
       /**
@@ -53,7 +55,7 @@ public class GameModel {
        * Add the new player in the board list --> It can generate an exception that can be propagated to the controller
        * */
       public GameModel newPlayer(String nickname, PlayerColor color) {
-            board.newPlayer(nickname, color);
+            this.board.newPlayer(nickname, color);
 
             return this;
       }

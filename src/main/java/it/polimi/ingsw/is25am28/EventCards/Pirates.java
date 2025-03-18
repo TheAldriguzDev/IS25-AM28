@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
 import it.polimi.ingsw.is25am28.Player.Player;
 import org.json.simple.JSONObject;
@@ -13,8 +15,8 @@ public class Pirates extends EventCard {
     private final int movementSteps;
     List<PlasmaShot> shootingSequence = new ArrayList<>();
 
-    public Pirates(String name, int cardLevel, int requireFirepower, int givenCredits, int movementSteps) {
-        super(name, cardLevel);
+    public Pirates(String name, int cardLevel, int requireFirepower, int givenCredits, int movementSteps, Board board) {
+        super(name, cardLevel, board);
         this.requiredFirepower = requireFirepower;
         this.givenCredits = givenCredits;
         this.movementSteps = movementSteps;
@@ -53,7 +55,7 @@ public class Pirates extends EventCard {
     }
 
     @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
         return null;
     }
 
