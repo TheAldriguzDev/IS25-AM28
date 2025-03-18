@@ -25,9 +25,6 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
        * @return if the component is placed correctly
        */
       public boolean check( Component[] nearest ) {
-
-
-
             if(
                     nearest[0] != null && (
                             ( getTopSide() == 0 && nearest[0].getBottomSide() != 0 ) || // they are not both 0

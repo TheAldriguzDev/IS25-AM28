@@ -1,9 +1,11 @@
 package it.polimi.ingsw.is25am28.Items;
 
+import org.json.simple.JSONObject;
+
 public class Item {
     private final ItemColor color;
 
-    Item(ItemColor color) {
+    public Item(ItemColor color) {
         this.color = color;
     }
 
@@ -13,5 +15,10 @@ public class Item {
 
     public int getValue() {
         return color.getValue();
+    }
+
+    @Override
+    public String toString() {
+        return color.toString();
     }
 }
