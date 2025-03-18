@@ -35,6 +35,7 @@ public class Ship {
     private final int grid_rows = 12;
     private final int grid_cols = 12;
     private Component[][] components;
+    private final Cabin core;
 
     // All components are sorted into their matching category,
     // represented by one of the following lists
@@ -69,7 +70,7 @@ public class Ship {
         coreConnectors[3] = THREE_PIPES.ordinal();
 
         // Creating the ship's core cabin
-        Cabin core = new Cabin(
+        this.core = new Cabin(
                 6,
                 6,
                 0,
@@ -78,7 +79,7 @@ public class Ship {
         );
 
         // Adding the core component as the first component in the ship's grid
-        this.addComponent(core, core.getPosition()[0], core.getPosition()[1]);
+        this.addComponent(this.core, this.core.getPosition()[0], this.core.getPosition()[1]);
 
         // Instantiating each component list as an empty list
         batteryList = new ArrayList<Battery>();
@@ -526,7 +527,7 @@ public class Ship {
 
         // Starting the expansion from the core of the ship, which is
         // always placed at coordinates (grid_rows/2, grid_cols/2)
-        currLayer.add(this.components[this.grid_rows / 2][this.grid_cols / 2]);
+        currLayer.add(this.core);
         borderReached = false;
 
         while (!borderReached) {
@@ -631,6 +632,8 @@ public class Ship {
         return neighbours;
     }
 
+    // TODO: Find a way to throw an exception if the component is placed outside of the ship
+    // TODO: (NOTE: not the ship's grid (12x12) but the actual ship's profile)
     /**
      * Adds the given component at the given coordinates (i, j) in the ship's component grid.
      *
