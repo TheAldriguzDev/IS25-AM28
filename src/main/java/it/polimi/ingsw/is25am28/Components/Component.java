@@ -35,7 +35,7 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       /**
        *
        * @param nearest order is direction[0], right[1], bottom[2], left[3]
-       * @return if the component is placed correctly
+       * @retu    rn if the component is placed correctly
        */
       public boolean check( Component[] nearest ) {
             if(
