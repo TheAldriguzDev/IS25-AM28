@@ -5,8 +5,12 @@ import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
+import javafx.util.Pair;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -14,12 +18,55 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.is25am28.Connector.*;
 
 public class Ship {
+    private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
+    private final static Map<Integer, Pair<Integer, Integer>> rowColOffsets = new HashMap<>();
+    private final static Map<Integer, List<List<Integer>>> shipProfiles = new HashMap<>();
+
+    static {
+        shipDimensions.put(1, new Pair<>(5, 5));
+        shipDimensions.put(2, new Pair<>(5, 7));
+        shipDimensions.put(3, new Pair<>(6, 9));
+
+        rowColOffsets.put(1, new Pair<>(5, 4));
+        rowColOffsets.put(2, new Pair<>(5, 4));
+        rowColOffsets.put(3, new Pair<>(4, 3));
+
+        // TODO: See the 3 ship levels and add the bitmaps for all (see below)
+
+        List<List<Integer>> matrix;
+        List<Integer> row;
+
+        // (0) - Adding the ship profile pattern common among all levels
+        matrix = new ArrayList<>(12);
+
+        // (1) - Creating level 1 ship profile by adding the difference from the previous
+        matrix = new ArrayList<>(12);
+
+
+        shipProfiles.put(1, matrix);
+
+        // (2) - Creating level 2 ship profile by adding the difference from the previous
+        matrix = new ArrayList<>(12);
+
+
+        shipProfiles.put(2, matrix);
+
+        // (3) - Creating level 3 ship profile by adding the difference from the previous
+        matrix = new ArrayList<>(12);
+
+
+        shipProfiles.put(2, matrix);
+
+    }
+
+    private final int difficultyLevel;
+    private final int grid_rows = 12;
+    private final int grid_cols = 12;
     private Component[][] components;
-    private final int grid_rows;
-    private final int grid_cols;
+    private final Cabin core;
 
     // All components are sorted into their matching category,
-    // represented by one of the following lists
+    // represented by one of the following sub-lists
     private final List<Battery> batteryList;
     private final List<Cabin> cabinList;
     private final List<Cannon> cannonList;
@@ -28,27 +75,33 @@ public class Ship {
     private final List<Storage> storageList;
     private final List<Vital> vitalList;
 
-    // Constructor
-    public Ship(int grid_rows, int grid_cols) {
-        this.grid_rows = grid_rows;
-        this.grid_cols = grid_cols;
-        this.components = initGrid(grid_rows, grid_cols);
+    // Constructor #1 - Generates one of the three possible grids, each for its level
+    public Ship(int difficultyLevel) throws IllegalArgumentException {
+        int maxDifficulty = 3;
+        int minDifficulty = 1;
 
+        if (minDifficulty > difficultyLevel || difficultyLevel > maxDifficulty) {
+            throw new IllegalArgumentException(
+                    "ERROR: Difficulty " + difficultyLevel + " does not exist\n"
+                  + "(minDifficulty=" + minDifficulty + ", maxDifficulty=" + maxDifficulty + ")."
+            );
+        }
+
+        this.difficultyLevel = difficultyLevel;
+        this.components = initGrid(this.grid_rows, this.grid_cols);
+
+        // Initializing the connectors of the core cabin
         int[] coreConnectors = new int[4];
-
-        coreConnectors[0] = coreConnectors[1] = coreConnectors[2] = coreConnectors[3] = THREE_PIPES.ordinal();
+        coreConnectors[0] = THREE_PIPES.ordinal();
+        coreConnectors[1] = THREE_PIPES.ordinal();
+        coreConnectors[2] = THREE_PIPES.ordinal();
+        coreConnectors[3] = THREE_PIPES.ordinal();
 
         // Creating the ship's core cabin
-        Cabin core = new Cabin(
-                this.grid_rows / 2,
-                this.grid_cols / 2,
-                0,
-                coreConnectors,
-                true
-        );
+        this.core = new Cabin(coreConnectors,true);
 
         // Adding the core component as the first component in the ship's grid
-        this.addComponent(core, core.getPosition()[0], core.getPosition()[1]);
+        this.addComponent(this.core, this.core.getPosition()[0], this.core.getPosition()[1]);
 
         // Instantiating each component list as an empty list
         batteryList = new ArrayList<Battery>();
@@ -67,31 +120,63 @@ public class Ship {
      *  This method should <b style="color: rgb(8, 219, 205)">only</b> be used when the ship actually changes,
      *  otherwise it will iterate again over the ship's grid and generate the same lists.
      */
+
     public void generateComponentSubLists() throws IllegalStateException {
         traverse(
-                (Component c) -> {
-                    switch (c) {
-                        case Battery battery:   this.batteryList.add(battery);
-                            break;
-                        case Cabin cabin:       this.cabinList.add(cabin);
-                            break;
-                        case Cannon cannon:     this.cannonList.add(cannon);
-                            break;
-                        case Engine engine:     this.engineList.add(engine);
-                            break;
-                        case Shield shield:     this.shieldList.add(shield);
-                            break;
-                        case Storage storage:   this.storageList.add(storage);
-                            break;
-                        case Vital vital:       this.vitalList.add(vital);
-                            break;
-                        case Structural struct: // Structural components are not sorted
-                            break;
-                        default:
-                            throw new IllegalStateException("Unexpected class type " + c.toString());
-                    }
+            (Component c) -> {
+                switch (c) {
+                    case Battery battery:       this.batteryList.add(battery);
+                                                break;
+                    case Cabin cabin:           this.cabinList.add(cabin);
+                                                break;
+                    case Cannon cannon:         this.cannonList.add(cannon);
+                                                break;
+                    case Engine engine:         this.engineList.add(engine);
+                                                break;
+                    case Shield shield:         this.shieldList.add(shield);
+                                                break;
+                    case Storage storage:       this.storageList.add(storage);
+                                                break;
+                    case Vital vital:           this.vitalList.add(vital);
+                                                break;
+                    case Structural structural: // Structural components are not sorted
+                                                break;
+                    default:
+                        throw new IllegalStateException("Unexpected class type " + c.toString());
                 }
+            }
         );
+    }
+
+    /**
+     * @return A pair of integers that represent the amount of rows and the amount
+     *         of columns of the ship's grid. Result is (rows, cols)
+     */
+    public Pair<Integer, Integer> getGridDimensions() {
+        return new Pair<Integer, Integer>(this.grid_rows, this.grid_cols);
+    }
+
+    /**
+     * @return A pair of integers that represent the dimensions (row, col) of the ship based on the given difficulty
+     *         (NOTE: It's not the same as the grid's dimensions)
+     */
+    public Pair<Integer, Integer> getShipDimensionsByDifficulty(int difficultyLevel) {
+        return Ship.shipDimensions.get(difficultyLevel);
+    }
+
+    /**
+     * @return A pair of integers that represent the offsets (row, col) of the ship's placement
+     *         with respect to the ship's grid, based on the given difficulty
+     */
+    public Pair<Integer, Integer> getOffsetsByDifficulty(int difficultyLevel) {
+        return Ship.rowColOffsets.get(difficultyLevel);
+    }
+
+    /**
+     * @return The ship's difficulty level
+     */
+    public int getDifficultyLevel() {
+        return this.difficultyLevel;
     }
 
     /**
@@ -120,14 +205,32 @@ public class Ship {
     public List<Shield> getShieldList() { return this.shieldList; }
 
     /**
-     * @return The list of Storages present on the ship
+     * @return The list of Storage units present on the ship
      */
     public List<Storage> getStorageList() { return this.storageList; }
 
     /**
-     * @return The list of Engines present on the ship
+     * @return The list of Vital units present on the ship
      */
     public List<Vital> getVitalList() { return this.vitalList; }
+
+    /**
+     * @return The list of DoubleEngines present on the ship
+     */
+    public List<Engine> getDoubleEngines() {
+        return this.engineList.stream()
+                .filter(e -> e.getSpeed() == 2)
+                .toList();
+    }
+
+    /**
+     * @return The list of DoubleCannons present on the ship
+     */
+    public List<Cannon> getDoubleCannons() {
+        return this.cannonList.stream()
+                .filter(c -> c.getFirePower() == 2)
+                .toList();
+    }
 
     /**
      * @return The ship's available energy
@@ -139,33 +242,157 @@ public class Ship {
     }
 
     /**
+     * Consumes the given amount of energy from the ship's total energy
+     *
+     * @param energyToConsume The amount of energy to consume from the total available energy on the ship
+     *
+     * @throws InsufficientEnergyException If <code>energyToConsume</code> is greater than the energy currently available on the ship
+     */
+    public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
+        int availableEnergy;
+
+        if (energyToConsume <= this.getAvailableEnergy()) {
+            // If there's enough energy, then consume the given amount
+            for (Battery battery : this.batteryList) {
+                availableEnergy = battery.getAvailability();
+
+                if (availableEnergy < energyToConsume) {
+                    energyToConsume -= availableEnergy;
+                    battery.setAvailability(0);
+                }
+                else {
+                    battery.setAvailability(availableEnergy - energyToConsume);
+                    break;
+                }
+            }
+        }
+        else {
+            // Otherwise, throw an InsufficientEnergyException
+            throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
+        }
+    }
+
+    /**
      * @return The ship's total onboard <code>Lifeform</code>s
      *         (both humans and aliens)
      */
     public List<Lifeform> getAllLifeforms() {
         return this.cabinList.stream()
                 .flatMap(cabin -> cabin.getInhabitants().stream())
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
-     * @return The ship's total firepower, including the
-     *         double cannons that the user chooses to activate
+     * Returns the real firepower by considering the baseline firepower (given by single cannons) and
+     * the additional firepower (given by activating the given amount of double cannons)<br>
+     *
+     * Also, <code>doubleCannonsToActivate</code> corresponds to the amount of batteries to consume, but if that value
+     * exceeds the actual amount of double cannons present on the ship, then the amount of batteries consumed will be
+     * equal to the amount of all the double cannons present on the ship, thus preserving the difference.
+     *
+     * @param doubleCannonsToActivate The amount of double cannons to activate.<br>
+     *          In particular, we have two distinct cases:
+     *          <ul>
+     *              <li>
+     *                  If its value is set to <code>0</code>, then no double cannons are activated and thus the
+     *                  resulting firepower is the baseline firepower given only by the single cannons
+     *              </li>
+     *              <li>
+     *                  If its value is <code>> 0</code>, then it returns the baseline firepower plus <code>2 * doubleCannonsToActivate</code>
+     *                  and, in case <code>doubleCannonsToActivate</code> is greater than the actual amount of double cannons, then
+     *                  the resulting firepower is the baseline firepower plus all the available double cannons activated.
+     *              </li>
+     *          </ul>
+     *
+     * @return The ship's total firepower of both single and double cannons
      */
-    public float getFirePower() {
-        return (float) this.cannonList.stream()
-                .mapToDouble(Cannon::getFirePower)
-                .sum();
+    public float getFirePower(int doubleCannonsToActivate) {
+        List<Cannon> doubleCannonList;
+        int doubleCannonAmount;
+        float totalFirePower;
+
+        doubleCannonList = this.getDoubleCannons();
+        doubleCannonAmount = doubleCannonList.size();
+
+        // Verifying that the current ship has enough energy
+        // to activate the required amount of double cannons
+        // If not, all the remaining batteries are used to activate
+        // some of the requested double cannons
+
+        // Calculating the totalFirePower
+        float singleCannonsFirePower = (float) this.cannonList.stream()
+                    .filter((Cannon c) -> (c.getFirePower() < 2))
+                    .mapToDouble(Cannon::getFirePower)
+                    .sum();
+
+        if (doubleCannonAmount >= doubleCannonsToActivate) {
+            totalFirePower = singleCannonsFirePower
+                    + (doubleCannonsToActivate * doubleCannonList.getFirst().getFirePower());
+        }
+        else {
+            totalFirePower = singleCannonsFirePower
+                    + (doubleCannonAmount * doubleCannonList.getFirst().getFirePower());
+        }
+
+        // Consuming the amount of batteries required to activate
+        // the given amount of double cannons
+        this.consumeEnergy(doubleCannonsToActivate);
+
+        return totalFirePower;
     }
 
     /**
-     * @return The ship's total engine power, including the
-     *         double engines that the user chooses to activate
+     * Returns the real firepower by considering the baseline firepower (given by single cannons) and
+     * the additional firepower (given by activating the given amount of double cannons)<br>
+     *
+     * Also, <code>doubleEnginesToActivate</code> corresponds to the amount of batteries to consume, but if that value
+     * exceeds the actual amount of double engines present on the ship, then the amount of batteries consumed will be
+     * equal to the amount of all the double engines present on the ship, thus preserving the difference.
+     *
+     * @param doubleEnginesToActivate The amount of double engines to activate.<br>
+     *          In particular, we have two distinct cases:
+     *          <ul>
+     *              <li>
+     *                  If its value is set to <code>0</code>, then no double engines are activated and thus the
+     *                  resulting engine power is the baseline engine power given only by the single engines
+     *              </li>
+     *              <li>
+     *                  If its value is <code>> 0</code>, then it returns the baseline engine power plus <code>2 * doubleEnginesToActivate</code>
+     *                  and, in case <code>doubleEnginesToActivate</code> is greater than the actual amount of double engines, then
+     *                  the resulting engine power is the baseline engine power plus all the available double engines activated.
+     *              </li>
+     *          </ul>
+     *
+     * @return The ship's total engine power of both single and double engines
      */
-    public float getEnginePower() {
-        return (float) this.engineList.stream()
-                .mapToDouble(Engine::getSpeed)
-                .sum();
+    public int getEnginePower(int doubleEnginesToActivate) {
+        List<Engine> doubleEngineList;
+        int doubleEngineAmount;
+        int totalEnginePower;
+
+        doubleEngineList = this.getDoubleEngines();
+        doubleEngineAmount = doubleEngineList.size();
+
+        // Calculating the totalEnginePower
+        int singleEnginesEnginePower = (int) this.cannonList.stream()
+                    .filter((Cannon c) -> (c.getFirePower() < 2))
+                    .mapToDouble(Cannon::getFirePower)
+                    .sum();
+
+        if (doubleEngineAmount >= doubleEnginesToActivate) {
+            totalEnginePower = singleEnginesEnginePower
+                    + (doubleEnginesToActivate * (int) doubleEngineList.getFirst().getSpeed());
+        }
+        else {
+            totalEnginePower = singleEnginesEnginePower
+                    + (doubleEngineAmount * (int) doubleEngineList.getFirst().getSpeed());
+        }
+
+        // Consuming the amount of batteries required to activate
+        // the given amount of double engines
+        this.consumeEnergy(doubleEnginesToActivate);
+
+        return totalEnginePower;
     }
 
     /**
@@ -178,6 +405,38 @@ public class Ship {
     }
 
     /**
+     * @return The number of exposed connectors on the entire ship
+     */
+    public int getExposedConnectors(){
+        List<Integer> connectors = new ArrayList<Integer>();
+
+        traverse(
+             (Component component) -> {
+                Component[] nearest = getNearestComponents(component);
+
+                if( nearest[0] == null ){
+                    connectors.add( component.getTopSide().ordinal() );
+                }
+
+                if( nearest[1] == null ){
+                    connectors.add(component.getRightSide().ordinal());
+                }
+
+                if( nearest[2] == null ){
+                    connectors.add( component.getBottomSide().ordinal() );
+                }
+
+                if( nearest[3] == null ){
+                    connectors.add( component.getLeftSide().ordinal() );
+                }
+            }
+        );
+
+        // Add all the exposed connectors found
+        return connectors.stream().reduce(0, Integer::sum);
+    }
+
+    /**
      * @return The total value of all the <code>Item</code> onboard the ship
      */
     public int getAllItemValue() {
@@ -187,7 +446,6 @@ public class Ship {
                 .sum();
     }
 
-    // TODO: Implemented by Andrea, ask what is its purpose
     /**
      * @return All components that fail the <code>check()</code> method
      */
@@ -195,14 +453,56 @@ public class Ship {
         List<Component> wrongs = new ArrayList<>();
 
         traverse(
-                (Component c) -> {
-                    if(!c.check(getNearestComponents(c))){
-                        wrongs.add(c);
-                    }
+            (Component c) -> {
+                if(!c.check(getNearestComponents(c))){
+                    wrongs.add(c);
                 }
+            }
         );
 
         return wrongs;
+    }
+
+    /**
+     * @param index The index of the row to extract
+     *
+     * @return The grid's row with the given index
+     */
+    public Component[] getGridRow(int index) throws OutOfGridException {
+        Component[] row;
+
+        if (index < 0 || index >= this.grid_rows) {
+            throw new OutOfGridException("ERROR: Given index is out of grid");
+        }
+
+        row = new Component[this.grid_cols];
+
+        for (int i = 0; i < this.grid_cols; i++) {
+            row[i] = this.components[index][i];
+        }
+
+        return row;
+    }
+
+    /**
+     * @param index The index of the column to extract
+     *
+     * @return The grid's column with the given index
+     */
+    public Component[] getGridColumn(int index) throws OutOfGridException {
+        Component[] column;
+
+        if (index < 0 || index >= this.grid_cols) {
+            throw new OutOfGridException("ERROR: Given index is out of grid");
+        }
+
+        column = new Component[this.grid_rows];
+
+        for (int i = 0; i < this.grid_rows; i++) {
+            column[i] = this.components[i][index];
+        }
+
+        return column;
     }
 
     /**
@@ -216,11 +516,11 @@ public class Ship {
         AtomicBoolean isShipValid = new AtomicBoolean(true);
 
         traverse(
-                (Component c) -> {
-                    if (isShipValid.get() && !c.check(getNearestComponents(c))) {
-                        isShipValid.set(false);
-                    }
+            (Component c) -> {
+                if (isShipValid.get() && !c.check(getNearestComponents(c))) {
+                    isShipValid.set(false);
                 }
+            }
         );
 
         return isShipValid.get();
@@ -241,10 +541,10 @@ public class Ship {
         // that would otherwise be left hanging
         // (i.e.: no path exists from the core to those components)
         traverse(
-                (Component c) -> {
-                    int[] position = c.getPosition();
-                    grid[position[0]][position[1]] = c;
-                }
+            (Component c) -> {
+                int[] position = c.getPosition();
+                grid[position[0]][position[1]] = c;
+            }
         );
 
         // Finally, substitute the old grid with the new one
@@ -282,7 +582,7 @@ public class Ship {
 
         // Starting the expansion from the core of the ship, which is
         // always placed at coordinates (grid_rows/2, grid_cols/2)
-        currLayer.add(this.components[this.grid_rows / 2][this.grid_cols / 2]);
+        currLayer.add(this.core);
         borderReached = false;
 
         while (!borderReached) {
@@ -387,6 +687,9 @@ public class Ship {
         return neighbours;
     }
 
+    // TODO: Find a way to throw an exception if the component is placed outside of the ship
+    // TODO: (NOTE: not the ship's grid (12x12) but the actual ship's profile)
+    // TODO: !!FOUND A SOLUTION!! -> Store for each level a 12x12 matrix of 1s and 0s to specify where components can be (1) or not (0)
     /**
      * Adds the given component at the given coordinates (i, j) in the ship's component grid.
      *
@@ -398,7 +701,8 @@ public class Ship {
      * @throws ExistingComponentException If the component at coordinates (i, j) is already occupied
      */
     public void addComponent(Component component, int i, int j)
-            throws NullComponentException, OutOfGridException, ExistingComponentException
+            throws NullComponentException, OutOfGridException,
+                   ExistingComponentException/*, OutOfShipException*/   // TODO
     {
         if (component == null) {
             throw new NullComponentException("Given component to add is null");
@@ -409,10 +713,17 @@ public class Ship {
         if (this.components[i][j] != null) {
             throw new ExistingComponentException("Cannot insert given component on top of an already existing one");
         }
+        // TODO: Add when ship profiles are added in the Ship class's static block
+        /*
+        if (shipProfiles.get(this.difficultyLevel).get(i).get(j) == 0) {
+            throw new OutOfShipException("ERROR: Cannot insert given component outside the ship");
+        }
+        */
 
         this.components[i][j] = component;
     }
 
+    // TODO: Modify to take into account the fact that the disconnected pieces need to be tracked (for currency)
     /**
      * Removes the component at coordinates (i, j) from the ship's grid.<br>
      * If that component, when removed, divides the ship into 2 or more branches, then the
@@ -427,7 +738,8 @@ public class Ship {
         if (i < 0 || j < 0 || i >= this.grid_rows || j >= this.grid_cols) {
             throw new OutOfGridException("Requested component is not in the ship component grid");
         }
-
+        // TODO: Modify method such that it keeps track of the deleted components, since
+        // TODO: they're needed to count the credits to subtract to the player as a deficit
         /*
          *  Now the component removal consists of 3 steps:
          *

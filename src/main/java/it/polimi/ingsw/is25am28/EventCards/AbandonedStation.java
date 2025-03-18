@@ -117,6 +117,11 @@ public class AbandonedStation extends EventCard {
     }
 
     @Override
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
     protected void bonusEffect() {
         if (this.getCurrentPlayer().isPresent()) {
             this.hasBeenUsed = true;

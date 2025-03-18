@@ -1,10 +1,12 @@
 package it.polimi.ingsw.is25am28.Components;
 
+import it.polimi.ingsw.is25am28.Connector;
+
 public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield, Structural {
       private int col;
       private int row;
 
-      protected int[] sides;
+      protected Connector[] sides;
       /**
        * index between 0 and 3,
        * that indicates which is the direction side of the component
@@ -12,11 +14,22 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       protected int direction;
 
 
-      public Component(int row, int col, int direction, int[] sides) {
-            this.row = row;
-            this.col = col;
-            this.direction = direction;
-            this.sides = sides;
+      public Component( int[] connectors ) {
+            sides = new Connector[4];
+            
+            for( int i = 0; i < 4; i++ ){
+                  switch(connectors[i]){
+                        case 0: sides[i] = Connector.ZERO_PIPES;
+                              break;
+                        case 1: sides[i] = Connector.ONE_PIPE;
+                              break;
+                        case 2: sides[i] = Connector.TWO_PIPES;
+                              break;
+                        case 3: sides[i] = Connector.THREE_PIPES;
+                              break;
+                        default: throw new Error("invalid connections " + sides[i] );
+                  }
+            }
       }
 
       /**
@@ -27,8 +40,8 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       public boolean check( Component[] nearest ) {
             if(
                     nearest[0] != null && (
-                            ( getTopSide() == 0 && nearest[0].getBottomSide() != 0 ) || // they are not both 0
-                                    ( getTopSide() != 3 && nearest[0].getBottomSide() != 3 && getTopSide() != nearest[0].getBottomSide() ) // they are not equals (even with 3 piped conjunction)
+                            ( getTopSide() == Connector.ZERO_PIPES && nearest[0].getBottomSide() != Connector.ZERO_PIPES ) || // they are not both 0
+                                    ( getTopSide() != Connector.THREE_PIPES && nearest[0].getBottomSide() != Connector.THREE_PIPES && getTopSide() != nearest[0].getBottomSide() ) // they are not equals (even with 3 piped conjunction)
                     )
             ){
                   return false;
@@ -36,8 +49,8 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
             if(
                     nearest[1] != null && (
-                            ( getRightSide() == 0 && nearest[1].getLeftSide() != 0 ) || // they are not both 0
-                                    ( getRightSide() != 3 && nearest[1].getLeftSide() != 3 && getRightSide() != nearest[1].getLeftSide() ) // they are not equals (even with 3 piped conjunction)
+                            ( getRightSide() == Connector.ZERO_PIPES && nearest[1].getLeftSide() != Connector.ZERO_PIPES ) || // they are not both 0
+                                    ( getRightSide() != Connector.THREE_PIPES && nearest[1].getLeftSide() != Connector.THREE_PIPES && getRightSide() != nearest[1].getLeftSide() ) // they are not equals (even with 3 piped conjunction)
                     )
             ){
                   return false;
@@ -45,8 +58,8 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
             if(
                     nearest[2] != null && (
-                            ( getBottomSide() == 0 && nearest[2].getTopSide() != 0 ) || // they are not both 0
-                                    ( getBottomSide() != 3 && nearest[2].getTopSide() != 3 && getBottomSide() != nearest[2].getTopSide() ) // they are not equals (even with 3 piped conjunction)
+                            ( getBottomSide() == Connector.ZERO_PIPES && nearest[2].getTopSide() != Connector.ZERO_PIPES ) || // they are not both 0
+                                    ( getBottomSide() != Connector.THREE_PIPES && nearest[2].getTopSide() != Connector.THREE_PIPES && getBottomSide() != nearest[2].getTopSide() ) // they are not equals (even with 3 piped conjunction)
                     )
             ){
                   return false;
@@ -54,8 +67,8 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
             if(
                     nearest[3] != null && (
-                            ( getLeftSide() == 0 && nearest[3].getRightSide() != 0 ) || // they are not both 0
-                                    ( getLeftSide() != 3 && nearest[3].getRightSide() != 3 && getLeftSide() != nearest[3].getRightSide() ) // they are not equals (even with 3 piped conjunction)
+                            ( getLeftSide() == Connector.ZERO_PIPES && nearest[3].getRightSide() != Connector.ZERO_PIPES ) || // they are not both 0
+                                    ( getLeftSide() != Connector.THREE_PIPES && nearest[3].getRightSide() != Connector.THREE_PIPES && getLeftSide() != nearest[3].getRightSide() ) // they are not equals (even with 3 piped conjunction)
                     )
             ){
                   return false;
@@ -71,13 +84,13 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
       /**
        * coordinates into the ship
-       * @return [row, col]
+       * @return [column,row]
        */
       public int[] getPosition() {
             int[] position = new int[2];
 
-            position[0] = row;
-            position[1] = col;
+            position[0] = col;
+            position[1] = row;
 
             return position;
       }
@@ -100,21 +113,19 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
             return this;
       }
 
-      public int getLeftSide(){
-            return sides[sides[ (direction + 3)%4 ]];
+      public Connector getLeftSide(){
+            return sides[ (direction + 3)%4 ];
       }
 
-      public int getRightSide(){
+      public Connector getRightSide(){
             return sides[ (direction + 1)%4 ];
       }
 
-      public int getTopSide(){
+      public Connector getTopSide(){
             return sides[direction];
       }
-
-      public int getBottomSide(){
+      public Connector getBottomSide(){
             return sides[ (direction + 2)%4 ];
       }
-
 
 }

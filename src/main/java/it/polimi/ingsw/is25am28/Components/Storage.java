@@ -11,8 +11,8 @@ public final class Storage extends Component {
       final boolean isSpecialStorage;
       final List<Item> storedItems;
 
-      public Storage(int capacity, boolean isSpecialStorage,  int row, int col, int top, int[] sides) {
-            super(row, col, top, sides);
+      public Storage(int[] connectors, int capacity, boolean isSpecialStorage) {
+            super(connectors);
             this.capacity = capacity;
             this.isSpecialStorage = isSpecialStorage;
             storedItems = new ArrayList<>();
@@ -28,10 +28,6 @@ public final class Storage extends Component {
 
       public List<Item> getStoredItems() {
             return storedItems;
-      }
-
-      public int availableSpace() {
-            return capacity - storedItems.size();
       }
 
       /**
@@ -61,5 +57,9 @@ public final class Storage extends Component {
 
       public boolean check( Component[] nearest ){
             return false;
+      }
+
+      public int availableSpace() {
+            return capacity - storedItems.size();
       }
 }

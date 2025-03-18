@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.EventCards;
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -99,6 +100,8 @@ public abstract class EventCard {
      * */
 
     public abstract EventCard useCard( ActionJSON data ) throws IllegalArgumentException;
+
+    public abstract EventCard useCard(JSONObject data) throws IllegalArgumentException;
 
     /**
      * generateState return a JSONObject that return the current state of the card. It MUST contains all the specific information like:
