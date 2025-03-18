@@ -490,4 +490,30 @@ public class Ship {
 
         return this.components[i][j];
     }
+
+    public int getExposedConnectors(){
+        List<Integer> connectors = new ArrayList<Integer>();
+
+        traverse( component -> {
+            Component[] nearest = getNearestComponents(component);
+
+            if( nearest[0] == null ){
+                    connectors.add( component.getTopSide().ordinal() );
+            }
+
+            if( nearest[1] == null ){
+                    connectors.add( component.getRightSide().ordinal() );
+            }
+
+            if( nearest[2] == null ){
+                    connectors.add( component.getBottomSide().ordinal() );
+            }
+
+            if( nearest[3] == null ){
+                    connectors.add( component.getLeftSide().ordinal() );
+            }
+        });
+
+        return connectors.stream().reduce( 0, (p,c) -> p + c );
+    }
 }
