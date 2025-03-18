@@ -3,8 +3,8 @@ package it.polimi.ingsw.is25am28.Components;
 public final class Vital extends Component {
       private final VitalType vitalType;
 
-      public Vital(int[] connectors, int type ) {
-            super(int row, int col, connectors);
+      public Vital(int row, int col, int[] connectors, int type ) {
+            super(row, col, connectors);
             if( type == 0 )
                   this.vitalType = VitalType.BROWN_VITAL;
             else if( type == 1 )
