@@ -18,6 +18,10 @@ import it.polimi.ingsw.is25am28.Components.Component;
  */
 public class ShipConstructionSession implements TimeSubscriber {
       private final static int FLIP_TIMES_LV2 = 1;
+
+      private final Optional<TimerObserver> clock;
+      private final SessionSubscriber controller;
+
       // cards that are currently available
       private List<Component> available;
       // cards that are not available
@@ -25,11 +29,13 @@ public class ShipConstructionSession implements TimeSubscriber {
       // cards that are already flipped
       private HashSet<Integer> flipped;
 
-      private final Optional<TimerObserver> clock;
       private int flippedTimes = 0;
 
 
-      public ShipConstructionSession( List<Player> players, int gameLevel ){
+      public ShipConstructionSession( List<Player> players, int gameLevel, SessionSubscriber controller ){
+
+            this.controller = controller;
+
             available = new FileLoader("./json/tiles.json").getAllComponents();
             available.sort((a,b) -> (int)( (Math.random() - Math.random())*1000 ) );
             selected = new ArrayList<>();
@@ -94,6 +100,7 @@ public class ShipConstructionSession implements TimeSubscriber {
             
                   if( flippedTimes == FLIP_TIMES_LV2 ){
                         // start the game
+                        controller.onSessionEnd();
                         return;
                   }
 

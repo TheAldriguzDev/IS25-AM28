@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.GameModel;
 
 
 import it.polimi.ingsw.is25am28.Ship.Ship;
+import it.polimi.ingsw.is25am28.TimeObserver.TimeSubscriber;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,17 +31,19 @@ public class GameModel {
 
       private final List<EventCard> deck;
       private final Board board;
+
+      private final List<Component> components = new ArrayList<>();
+      private final int level;
+
       // indicate the round number and the card to draw from the deck
       private int round = 0;
-      private final List<Component> components = new ArrayList<>();
       private ShipConstructionSession session;
 
       public GameModel( int level ){
-
+            this.level = level;
             deck = generateDeck( level );
             // if( level > 1 )
             board = new BoardLevel2();
-            session = new ShipConstructionSession( board.getPlayers(), level );
       }
 
       /**
@@ -51,7 +54,7 @@ public class GameModel {
             List<EventCard> deck = new FileLoader("./json/cards.json").getAllCards();
             // random sort
             deck.sort((a,b) -> (int)( (Math.random() - Math.random())*1000 ) );
-
+            
             return deck;
       }
 
@@ -127,34 +130,7 @@ public class GameModel {
 
             for (Player player : players){
 
-                  Ship ship = player.getShip();
-                  List<Integer> connectors = new ArrayList<Integer>();
-                  int curr;
-
-                  connectors.add(0);
-
-                  // get exposed connectors
-                  ship.traverse( component -> {
-                        Component[] nearest = ship.getNearestComponents(component);
-
-                        if( nearest[0] == null ){
-                              connectors.add( component.getTopSideConnectors() );
-                        }
-
-                        if( nearest[1] == null ){
-                              connectors.add( component.getRightSideConnectors() );
-                        }
-
-                        if( nearest[2] == null ){
-                              connectors.add( component.getBottomSideConnectors() );
-                        }
-
-                        if( nearest[3] == null ){
-                              connectors.add( component.getLeftSideConnectors() );
-                        }
-                  });
-
-                  curr = connectors.stream().reduce( 0, (p,c) -> p + c );
+                  int curr = player.getShip().getExposedConnectors();
 
                   if( curr < min ){
                         withTheBestShip.clear();
@@ -231,19 +207,10 @@ public class GameModel {
       public Board getBoard(){
             return board;
       }
-      /**
-       * return all components that can be used to build the ships
-       */
-      public List<Component> getAllComponents(){
-            if( components.size() > 0 )
-                  return components;
 
-            components.addAll(new FileLoader("./json/tiles.json").getAllComponents());
-            return components;
-      }
+      public JSONArray startBuildSession( SessionSubscriber controller ){
 
-      public JSONArray startBuildSession(){
-
+            session = new ShipConstructionSession( board.getPlayers(), level, controller );
             session.flip();
 
             return session.generateInitialBoardState();
