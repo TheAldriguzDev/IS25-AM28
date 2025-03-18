@@ -20,6 +20,7 @@ import static it.polimi.ingsw.is25am28.Connector.*;
 public class Ship {
     private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
     private final static Map<Integer, Pair<Integer, Integer>> rowColOffsets = new HashMap<>();
+    private final static Map<Integer, List<List<Integer>>> shipProfiles = new HashMap<>();
 
     static {
         shipDimensions.put(1, new Pair<>(5, 5));
@@ -29,15 +30,43 @@ public class Ship {
         rowColOffsets.put(1, new Pair<>(5, 4));
         rowColOffsets.put(2, new Pair<>(5, 4));
         rowColOffsets.put(3, new Pair<>(4, 3));
+
+        // TODO: See the 3 ship levels and add the bitmaps for all (see below)
+
+        List<List<Integer>> matrix;
+        List<Integer> row;
+
+        // (0) - Adding the ship profile pattern common among all levels
+        matrix = new ArrayList<>(12);
+
+        // (1) - Creating level 1 ship profile by adding the difference from the previous
+        matrix = new ArrayList<>(12);
+
+
+        shipProfiles.put(1, matrix);
+
+        // (2) - Creating level 2 ship profile by adding the difference from the previous
+        matrix = new ArrayList<>(12);
+
+
+        shipProfiles.put(2, matrix);
+
+        // (3) - Creating level 3 ship profile by adding the difference from the previous
+        matrix = new ArrayList<>(12);
+
+
+        shipProfiles.put(2, matrix);
+
     }
 
     private final int difficultyLevel;
     private final int grid_rows = 12;
     private final int grid_cols = 12;
     private Component[][] components;
+    private final Cabin core;
 
     // All components are sorted into their matching category,
-    // represented by one of the following lists
+    // represented by one of the following sub-lists
     private final List<Battery> batteryList;
     private final List<Cabin> cabinList;
     private final List<Cannon> cannonList;
@@ -69,7 +98,7 @@ public class Ship {
         coreConnectors[3] = THREE_PIPES.ordinal();
 
         // Creating the ship's core cabin
-        Cabin core = new Cabin(
+        this.core = new Cabin(
                 6,
                 6,
                 0,
@@ -78,7 +107,7 @@ public class Ship {
         );
 
         // Adding the core component as the first component in the ship's grid
-        this.addComponent(core, core.getPosition()[0], core.getPosition()[1]);
+        this.addComponent(this.core, this.core.getPosition()[0], this.core.getPosition()[1]);
 
         // Instantiating each component list as an empty list
         batteryList = new ArrayList<Battery>();
@@ -382,6 +411,38 @@ public class Ship {
     }
 
     /**
+     * @return The number of exposed connectors on the entire ship
+     */
+    public int getExposedConnectors(){
+        List<Integer> connectors = new ArrayList<Integer>();
+
+        traverse(
+             (Component component) -> {
+                Component[] nearest = getNearestComponents(component);
+
+                if( nearest[0] == null ){
+                    connectors.add( component.getTopSide().ordinal() );
+                }
+
+                if( nearest[1] == null ){
+                    connectors.add(component.getRightSide().ordinal());
+                }
+
+                if( nearest[2] == null ){
+                    connectors.add( component.getBottomSide().ordinal() );
+                }
+
+                if( nearest[3] == null ){
+                    connectors.add( component.getLeftSide().ordinal() );
+                }
+            }
+        );
+
+        // Add all the exposed connectors found
+        return connectors.stream().reduce(0, Integer::sum);
+    }
+
+    /**
      * @return The total value of all the <code>Item</code> onboard the ship
      */
     public int getAllItemValue() {
@@ -527,7 +588,7 @@ public class Ship {
 
         // Starting the expansion from the core of the ship, which is
         // always placed at coordinates (grid_rows/2, grid_cols/2)
-        currLayer.add(this.components[this.grid_rows / 2][this.grid_cols / 2]);
+        currLayer.add(this.core);
         borderReached = false;
 
         while (!borderReached) {
@@ -632,6 +693,9 @@ public class Ship {
         return neighbours;
     }
 
+    // TODO: Find a way to throw an exception if the component is placed outside of the ship
+    // TODO: (NOTE: not the ship's grid (12x12) but the actual ship's profile)
+    // TODO: !!FOUND A SOLUTION!! -> Store for each level a 12x12 matrix of 1s and 0s to specify where components can be (1) or not (0)
     /**
      * Adds the given component at the given coordinates (i, j) in the ship's component grid.
      *
@@ -643,7 +707,8 @@ public class Ship {
      * @throws ExistingComponentException If the component at coordinates (i, j) is already occupied
      */
     public void addComponent(Component component, int i, int j)
-            throws NullComponentException, OutOfGridException, ExistingComponentException
+            throws NullComponentException, OutOfGridException,
+                   ExistingComponentException/*, OutOfShipException*/   // TODO
     {
         if (component == null) {
             throw new NullComponentException("Given component to add is null");
@@ -654,6 +719,12 @@ public class Ship {
         if (this.components[i][j] != null) {
             throw new ExistingComponentException("Cannot insert given component on top of an already existing one");
         }
+        // TODO: Add when ship profiles are added in the Ship class's static block
+        /*
+        if (shipProfiles.get(this.difficultyLevel).get(i).get(j) == 0) {
+            throw new OutOfShipException("ERROR: Cannot insert given component outside the ship");
+        }
+        */
 
         this.components[i][j] = component;
     }
