@@ -43,8 +43,4 @@ public final class Cabin extends Component {
       public void removeInhabitant(Lifeform lifeform) {
             inhabitants.remove(lifeform);
       }
-
-      public boolean check( Component[] nearest ){
-            return false;
-      }
 }
