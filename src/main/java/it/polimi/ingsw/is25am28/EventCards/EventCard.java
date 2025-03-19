@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
 
@@ -109,5 +110,5 @@ public abstract class EventCard {
      * - cardName
      * - cardData (e.g. planets list with all the related resources)
      * */
-    public abstract JSONObject generateState();
+    public abstract CardStateJSON generateState();
 }

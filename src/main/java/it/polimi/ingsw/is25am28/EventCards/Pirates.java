@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
 import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -37,37 +36,37 @@ public class Pirates extends EventCard {
     }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
-        PiratesJSON piratesData;
-        try {
-            piratesData = (PiratesJSON) data;
-        } catch (ClassCastException e) {
-            throw new ClassCastException("Card data type in invalid");
-        }
-        Optional<Player> playerOptional = getCurrentPlayer();
-        playerOptional.ifPresentOrElse(
-                (Player player) -> {
-
-                    String playerNickname = piratesData.getPlayerNickname();
-                    if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
-                        throw new IllegalArgumentException("The given player does not match with the current one");
-                    }
-
-                    if (player.getShip().getFirePower(piratesData.getNumberOfDoubleCannonsActivated()) >= requiredFirepower) {
-                        this.hasBeenDefeated = true;
-                        if (piratesData.getTakeCredits()) {
-                            bonusEffect();
-                            getBoard().movePlayerBackwards(player, movementSteps);
-                            //player.setCursor(player.getCursor() - this.movementSteps);
-                        }
-                    } else {
-                        malusEffect();
-                    }
-                },
-                () -> {
-                    throw new IllegalArgumentException("There is no player playing in this moment");
-                }
-        );
-        getNextPlayer();
+//        PiratesJSON piratesData;
+//        try {
+//            piratesData = (PiratesJSON) data;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException("Card data type in invalid");
+//        }
+//        Optional<Player> playerOptional = getCurrentPlayer();
+//        playerOptional.ifPresentOrElse(
+//                (Player player) -> {
+//
+//                    String playerNickname = piratesData.getPlayerNickname();
+//                    if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
+//                        throw new IllegalArgumentException("The given player does not match with the current one");
+//                    }
+//
+//                    if (player.getShip().getFirePower(piratesData.getNumberOfDoubleCannonsActivated()) >= requiredFirepower) {
+//                        this.hasBeenDefeated = true;
+//                        if (piratesData.getTakeCredits()) {
+//                            bonusEffect();
+//                            getBoard().movePlayerBackwards(player, movementSteps);
+//                            //player.setCursor(player.getCursor() - this.movementSteps);
+//                        }
+//                    } else {
+//                        malusEffect();
+//                    }
+//                },
+//                () -> {
+//                    throw new IllegalArgumentException("There is no player playing in this moment");
+//                }
+//        );
+//        getNextPlayer();
         return this;
     }
 
@@ -86,31 +85,31 @@ public class Pirates extends EventCard {
     }
 
     protected void malusEffect(ActionJSON data) throws ClassCastException {
-        Optional<Player> playerOptional = getCurrentPlayer();
-        PiratesJSON piratesData = (PiratesJSON) data;
-        playerOptional.ifPresent(
-                (Player player) -> {
-                    int dicesResult = 0;
-                    //Component component;
-                    ArrayList<Integer> dicesResults = piratesData.getDicesResults(); // La parte client si assicura di fare tiri pari al numero di PlasmaShots
-                    // side // 0->Above, 1->Below, 2->Right, 3->Left
-                    // Coordinates
-                    for (int plasmaShot : shootingSequenceFromAbove) {
-                        if ((plasmaShot == 0 && !piratesData.getShieldAbove()) || plasmaShot == 1) {
-                            int column = dicesResults.get(dicesResult);
-                            for (int row = 4; row < 9; row++) {
-                                try {
-                                    player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
-                                    player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
-                                } catch (NullComponentException e) {
-                                    // Nella casella non c'è un componente, non va fatto nulla
-                                }
-                            }
-                        }
-                        dicesResult++;
-                    }
-                }
-        );
+//        Optional<Player> playerOptional = getCurrentPlayer();
+//        PiratesJSON piratesData = (PiratesJSON) data;
+//        playerOptional.ifPresent(
+//                (Player player) -> {
+//                    int dicesResult = 0;
+//                    //Component component;
+//                    ArrayList<Integer> dicesResults = piratesData.getDicesResults(); // La parte client si assicura di fare tiri pari al numero di PlasmaShots
+//                    // side // 0->Above, 1->Below, 2->Right, 3->Left
+//                    // Coordinates
+//                    for (int plasmaShot : shootingSequenceFromAbove) {
+//                        if ((plasmaShot == 0 && !piratesData.getShieldAbove()) || plasmaShot == 1) {
+//                            int column = dicesResults.get(dicesResult);
+//                            for (int row = 4; row < 9; row++) {
+//                                try {
+//                                    player.getShip().getComponent(row, column); // Innesca la exception se non c'è niente
+//                                    player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+//                                } catch (NullComponentException e) {
+//                                    // Nella casella non c'è un componente, non va fatto nulla
+//                                }
+//                            }
+//                        }
+//                        dicesResult++;
+//                    }
+//                }
+//        );
 
 
 

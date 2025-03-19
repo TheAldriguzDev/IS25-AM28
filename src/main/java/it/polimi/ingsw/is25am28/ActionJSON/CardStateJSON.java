@@ -1,93 +1,93 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * This class needs to contain all the attribute that can be used by the clients to interact with the cards
+ *
+ * We can just use this single class to cover all the desired data
+ * */
 public class CardStateJSON extends ActionJSON {
+    private String cardName;
+    private int cardLevel;
+    private boolean isCardUsable;
+
     /**
-     * Constructor used when we need to BUILD a new JSON
+     * Default constructor
      * */
     public CardStateJSON() {
-        super();
+        this.cardLevel = 0;
+        this.isCardUsable = true;
+    }
+
+    public CardStateJSON(@JsonProperty("playerNickname") String playerNickname,
+                             @JsonProperty("cardName") String cardName,
+                             @JsonProperty("cardLevel") int cardLevel,
+                             @JsonProperty("isCardUsable") boolean isCardUsable) {
+        super(playerNickname);
+        this.cardName = cardName;
+        this.cardLevel = cardLevel;
+        this.isCardUsable = isCardUsable;
     }
 
     /**
-     * Constructor used when we need to PARSE a JSONObject
+     * Returns the cardName
      * */
-    public CardStateJSON(JSONObject data) {
-        super(data);
-    }
-
-    /**
-     * Constructor used when we need to PARSE a JSONObject, but we only have a String that represent the JSONObject
-     * */
-    public CardStateJSON(String dataString) throws ParseException {
-        super(ActionJSON.Parse(dataString));
-    }
-
-    /**
-     * Returns the cardName that should be set in the JSON, otherwise it throws an Exception
-     * */
-    public String getCardName() throws IllegalStateException{
-        if (!data.containsKey("cardName")) {
+    public String getCardName() throws IllegalStateException {
+        if (this.cardName == null || this.cardName.isEmpty()) {
             throw new IllegalStateException("Key 'cardName' is missing in JSON data");
         }
 
-        return (String) data.get("cardName");
+        return this.cardName;
     }
 
     /**
-     * Set the cardName to the given value
+     * Set the cardName to the given data
      * */
-    @SuppressWarnings("unchecked")
-    public void setCardName(String cardName) throws IllegalArgumentException {
+    public void setCardName(String cardName) throws IllegalStateException {
         if (cardName == null || cardName.isEmpty()) {
-            throw new IllegalArgumentException("cardName cannot be null");
+            throw new IllegalStateException("cardName cannot be null or empty");
         }
 
-        data.put("cardName", cardName);
+        this.cardName = cardName;
     }
 
     /**
-     * Returns the cardLevel that should be set in the JSON, otherwise it throws an Exception
+     * Returns the cardLevel
      * */
-    public int getCardLevel() throws IllegalStateException{
-        if (!data.containsKey("cardLevel")) {
-            throw new IllegalStateException("Key 'cardLevel' is missing in JSON data");
-        }
-
-        return (int) data.get("cardLevel");
+    public int getCardLevel() throws IllegalStateException {
+        return this.cardLevel;
     }
 
     /**
-     * Set the cardName to the given value
+     * Set the cardLevel to the given data
      * */
-    @SuppressWarnings("unchecked")
-    public void setCardLevel(int cardLevel) throws IllegalArgumentException {
-        if (cardLevel < 0) {
-            throw new IllegalArgumentException("cardLevel cannot be null");
+    public void setCardLevel(int cardLevel) throws IllegalStateException {
+        if (cardLevel <= 0) {
+            throw new IllegalStateException("cardLevel cannot be zero or negative");
         }
 
-        data.put("cardLevel", cardLevel);
-    }
-
-
-    /**
-     * Returns the cardLevel that should be set in the JSON, otherwise it throws an Exception
-     * */
-    public boolean getIsCardUsable() throws IllegalStateException{
-        if (!data.containsKey("isCardUsable")) {
-            throw new IllegalStateException("Key 'isCardUsable' is missing in JSON data");
-        }
-
-        return (boolean) data.get("isCardUsable");
+        this.cardLevel = cardLevel;
     }
 
     /**
-     * Set the cardName to the given value
+     * Returns the isCardUsable
      * */
-    @SuppressWarnings("unchecked")
-    public void setIsCardUsable(boolean isCardUsable) throws IllegalArgumentException {
-        data.put("cardLevel", isCardUsable);
+    public boolean getIsCardUsable() throws IllegalStateException {
+        return this.isCardUsable;
     }
+
+    /**
+     * Set the isCardUsable to the given data
+     * */
+    public void setCardIsUsable(boolean isCardUsable) throws IllegalStateException {
+        this.isCardUsable = isCardUsable;
+    }
+    // Other data can be added to provide the context to the clients
 }
