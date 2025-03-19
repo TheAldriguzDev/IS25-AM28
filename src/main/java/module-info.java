@@ -3,8 +3,8 @@ module it.polimi.ingsw.is25am28 {
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
-    requires java.desktop;
     requires json.simple;
+    requires com.fasterxml.jackson.databind;
 
     opens it.polimi.ingsw.is25am28 to javafx.fxml;
     exports it.polimi.ingsw.is25am28;
