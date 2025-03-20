@@ -42,7 +42,7 @@ public class Slavers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
 
-                    if (player.getShip().getFirePower(slaversData.getNumOfDoubleCannonsActivated()) >= requiredFirepower) {
+                    if (player.getShip().getFirePower(slaversData.getNumberOfDoubleCannonsActivated()) >= requiredFirepower) {
                         this.hasBeenDefeated = true;
                         if (slaversData.getTakeCredits()) {
                             bonusEffect();

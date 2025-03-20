@@ -9,6 +9,10 @@ public class SmugglersJSON extends ActionJSON {
         super();
     }
 
+
+
+    //Sevono variabili diverse per le cose da droppare
+    /*
     public SmugglersJSON (JSONObject data) {
         super(data);
     }
@@ -132,5 +136,5 @@ public class SmugglersJSON extends ActionJSON {
     @SuppressWarnings("unchecked")
     public void setNumOfDoubleCannonsActivated (int numOfDoubleCannonsActivated) throws IllegalArgumentException {
         data.put("numOfDoubleCannonsActivated", numOfDoubleCannonsActivated);
-    }
+    }*/
 }
