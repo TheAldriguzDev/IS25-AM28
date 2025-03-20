@@ -82,12 +82,7 @@ public class Player {
       }
 
       public Player eliminate(){
-            lost = true;
-            return this;
-      }
-
-      public Player resetElimination(){
-            lost = false;
+            this.lost = true;
             return this;
       }
 

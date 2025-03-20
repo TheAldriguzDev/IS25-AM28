@@ -9,7 +9,7 @@ public final class Vital extends Component {
                   this.vitalType = VitalType.BROWN_VITAL;
             else if( type == 1 )
                   this.vitalType = VitalType.PURPLE_VITAL;
-            else 
+            else
                   throw new Error("vital type not recognized");
       }
 

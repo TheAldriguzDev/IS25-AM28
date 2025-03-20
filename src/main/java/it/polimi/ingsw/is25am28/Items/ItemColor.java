@@ -12,4 +12,14 @@ public enum ItemColor {
     public int getValue() {
         return value;
     }
+
+    @Override
+    public String toString() {
+        return switch (this) {
+            case RED -> "RED";
+            case YELLOW -> "YELLOW";
+            case GREEN -> "GREEN";
+            case BLUE -> "BLUE";
+        };
+    }
 }

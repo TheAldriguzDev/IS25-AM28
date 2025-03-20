@@ -16,7 +16,7 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
       public Component( int[] connectors ) {
             sides = new Connector[4];
-            
+
             for( int i = 0; i < 4; i++ ){
                   switch(connectors[i]){
                         case 0: sides[i] = Connector.ZERO_PIPES;
@@ -84,13 +84,13 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
       /**
        * coordinates into the ship
-       * @return [column,row]
+       * @return [row, col]
        */
       public int[] getPosition() {
             int[] position = new int[2];
 
-            position[0] = col;
-            position[1] = row;
+            position[0] = row;
+            position[1] = col;
 
             return position;
       }

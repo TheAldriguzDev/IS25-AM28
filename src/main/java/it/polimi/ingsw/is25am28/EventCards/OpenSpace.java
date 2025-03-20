@@ -42,96 +42,104 @@ public class OpenSpace extends EventCard {
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        if (this.getCurrentPlayer().isPresent()) {
+        // Check if there is a player playing the card
+        if (this.currentPlayer.isEmpty()) {
+            throw new IllegalArgumentException("There is no player playing in this moment");
+        }
 
-            long availableDoubleEngines = this.getCurrentPlayer().get().getShip().getEngineList().stream().filter(Engine::requireEnergy).count();
+        OpenSpaceJSON openSpace;
 
-            try {
-                OpenSpaceJSON openSpace = (OpenSpaceJSON) data;
+        try {
+            openSpace = (OpenSpaceJSON) data;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("The given JSON data is not a valid OpenSpace JSON");
+        }
 
-                // Retrieve the data from the JSON --> if an error occurs we throw the exception to the caller
-                String playerNickname = openSpace.getPlayerNickname();
-                int usedEnergy = openSpace.getPlayerUsedEnergy();
+        // Retrieve the data from the JSON
+        String playerNickname = openSpace.getPlayerNickname();
+        int usedEnergy = openSpace.getUsedEnergy();
 
-                // Check if:
-                // 1: The player match
-                // 2: The player has enough energy to use
-                // 3: The player has enough engine to use the required energy
-                if ( playerNickname != null
-                        && !playerNickname.isEmpty()
-                        && !playerNickname.equals( this.getCurrentPlayer().get().getNickname())
-                        && usedEnergy > this.getCurrentPlayer().get().getShip().getAvailableEnergy()
-                        && usedEnergy > availableDoubleEngines ) {
+        // Count the double engines of the used
+        long availableDoubleEngines = this.getCurrentPlayer().get().getShip().getEngineList().stream().filter(Engine::requireEnergy).count();
 
-                    // Compute the ship engine power with:
-                    // +1 for every normal motor X
-                    // +2 for every double motor activated
-                    // +2 for every alient that give the boost engine power X
+        // Check if:
+        // 1: The player match
+        // 2: The player has enough energy to use
+        if ( playerNickname != null &&
+                !playerNickname.isEmpty() &&
+                !playerNickname.equals( this.getCurrentPlayer().get().getNickname()) &&
+                usedEnergy > this.getCurrentPlayer().get().getShip().getAvailableEnergy() ) {
 
-                    Ship ship = this.getCurrentPlayer().get().getShip();
+            // Calculate the ship engines power with:
+            // +1 for every normal motor
+            // +2 for every double motor activated
+            // +2 for every alien that boost the engine power
 
-                    int totalPower = 0;
+            Ship ship = this.getCurrentPlayer().get().getShip();
+            int totalPower = 0;
 
-                    totalPower += ship.getCabinList()
+            totalPower += ship.getCabinList()
                             .stream()
                             .flatMap( c -> c.getInhabitants().stream() )
                             .mapToInt( Lifeform::getPowerBoost )
                             .sum();
 
-                    totalPower += ship.getEngineList().stream()
+            totalPower += ship.getEngineList().stream()
                             .filter( e -> !e.requireEnergy())
                             .mapToInt(Engine::getSpeed)
                             .sum();
 
-                    totalPower +=  usedEnergy * 2;
+            // While we have energy and doubleMotors then we can update the totalPower
+            while ( usedEnergy > 0 && availableDoubleEngines > 0 ) {
+                totalPower += 2;
 
-                    // Apply the effect to the player
-                    // If no power has been declared --> eliminate the player
-                    // Otherwise move the player forward of the declared power
-                    if (totalPower == 0) {
-                        this.getBoard().eliminatePlayer(this.getCurrentPlayer().get());
-                    } else {
-                        this.getBoard().movePlayerForward(this.getCurrentPlayer().get(), totalPower);
+                usedEnergy--;
+                availableDoubleEngines--;
+            }
 
-                        // TODO: Remove the player used battery
-                    }
+            // Apply the effect to the player
+            // if no power has been declared eliminate the player
+            // otherwise move the player forward of the declared power
+            if (totalPower == 0) {
+                this.getBoard().eliminatePlayer(this.getCurrentPlayer().get());
+            } else {
+                this.getBoard().movePlayerForward(this.getCurrentPlayer().get(), totalPower);
+            }
 
-                    // If all the players have played, then we need to revalidate their positions
-                    if (this.hasFinished()) {
-                        this.getBoard().validatePlayersPosition();
-                    } else {
-                        getNextPlayer();
-                    }
-                } else {
-                    if ( usedEnergy > this.getCurrentPlayer().get().getShip().getAvailableEnergy() ) {
-                        throw new IllegalArgumentException("The player does not have enough energy to use");
-                    } else if (usedEnergy > availableDoubleEngines) {
-                        throw new IllegalArgumentException("The given player does not have the required engines");
-                    } else {
-                        throw new IllegalArgumentException("The given player does not match with the current one");
-                    }
-                }
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Error while parsing the user requested action: " + e.getMessage());
+            // When we have moved the last player we need to re-validate the positions
+            if (this.getCurrentPlayer().equals(this.players.getLast())) {
+                this.getBoard().validatePlayersPosition();
+            }
+
+            if (usedEnergy > 0) {
+                ship.consumeEnergy(usedEnergy);
             }
         } else {
-            throw new IllegalArgumentException("There is no player playing in this moment");
+            if ( usedEnergy > this.getCurrentPlayer().get().getShip().getAvailableEnergy() ) {
+                throw new IllegalArgumentException("There player does not have enough energy to perform the action!");
+            } else {
+                throw new IllegalArgumentException("The given player does not match with the current one!");
+            }
         }
 
         return this;
     }
 
     @Override
-    public JSONObject generateState() {
+    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
+        return null;
+    }
+
+    @Override
+    public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
 
         cardState.setCardName(this.getCardName());
-        cardState.setCardLevel(this.getCardLevel());
-
+        cardState.setCardLevel(this.cardLevel);
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
 
-        return cardState.getData();
+        return cardState;
     }
 }

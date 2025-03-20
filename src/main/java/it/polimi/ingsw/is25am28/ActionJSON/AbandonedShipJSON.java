@@ -1,76 +1,52 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AbandonedShipJSON extends ActionJSON {
+    private boolean wantToVisitShip;
+    private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
+
     /**
-     * Constructor used when we need to BUILD a new JSON
+     * Default constructor
      * */
     public AbandonedShipJSON() {
-        super();
+        this.wantToVisitShip = false;
+        this.lifeformsToBeRemoved = new ArrayList<>();
     }
 
-    /**
-     * Constructor used when we need to PARSE a JSONObject
-     * */
-    public AbandonedShipJSON(JSONObject data) {
-        super(data);
+    public AbandonedShipJSON(@JsonProperty("playerNickname") String playerNickname,
+                             @JsonProperty("wantToVisitShip") boolean wantToVisitShip,
+                             @JsonProperty("lifeformsToBeRemoved") List<ComponentHelper<LifeformType>> lifeformsToBeRemoved) {
+        super(playerNickname);
+        this.wantToVisitShip = wantToVisitShip;
+        this.lifeformsToBeRemoved = lifeformsToBeRemoved;
     }
 
-    /**
-     * Constructor used when we need to PARSE a JSONObject, but we only have a String that represent the JSONObject
-     * */
-    public AbandonedShipJSON(String dataString) throws ParseException {
-        super(ActionJSON.Parse(dataString));
+    public boolean getWantToVisitShip() {
+        return this.wantToVisitShip;
     }
 
-    /**
-     * Returns the visitShip that should be set in the JSON, otherwise it throws an Exception
-     * */
-    public boolean getVisitShip() throws IllegalStateException{
-        if (!data.containsKey("visitShip")) {
-            throw new IllegalStateException("Key 'visitShip' is missing in JSON data");
-        }
-
-        return (boolean) data.get("visitShip");
+    public void setWantToVisitShip(boolean wantToVisitShip) {
+        this.wantToVisitShip = wantToVisitShip;
     }
 
-    /**
-     * Set the visitShip to the given value
-     * */
-    @SuppressWarnings("unchecked")
-    public void setVisitShip(boolean visitShip) throws IllegalArgumentException {
-        data.put("visitShip", visitShip);
+    public List<ComponentHelper<LifeformType>> getLifeformsToBeRemoved() {
+        return this.lifeformsToBeRemoved;
     }
 
-    /**
-     * Returns the remove from JSON, otherwise throws an exception.
-     */
-    public List<Lifeform> getLifeFormToBeRemoved() throws IllegalStateException {
-        if (!data.containsKey("lifeFormToBeRemoved")) {
-            throw new IllegalStateException("Key 'lifeFormToBeRemoved' is missing in JSON data");
-        }
-
-        // Cast the value to JSONArray and convert it to a List<String>
-        return (JSONArray) data.get("lifeFormToBeRemoved");
+    public void setLifeformsToBeRemoved(List<ComponentHelper<LifeformType>> lifeformsToBeRemoved) {
+        this.lifeformsToBeRemoved = lifeformsToBeRemoved;
     }
 
-    /**
-     * Sets the visitShipList to the given value in JSON.
-     */
-    public void setLifeFormToBeRemoved(List<Lifeform> lifeFormToBeRemoved) throws IllegalArgumentException {
-        if (lifeFormToBeRemoved == null) {
-            throw new IllegalArgumentException("lifeFormToBeRemoved cannot be null");
-        }
-
-        JSONArray lifeFormArray = new JSONArray();
-        lifeFormArray.addAll(lifeFormToBeRemoved);
-
-        data.put("lifeFormToBeRemoved", lifeFormArray);
+    public void addLifeformsToBeRemoved(ComponentHelper<LifeformType> lifeformsToBeRemoved) {
+        this.lifeformsToBeRemoved.add(lifeformsToBeRemoved);
     }
 }

@@ -1,14 +1,17 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-import it.polimi.ingsw.is25am28.ActionJSON.AbandonedShipJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Player.Player;
+import it.polimi.ingsw.is25am28.Ship.Ship;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 public class AbandonedShip extends EventCard {
@@ -17,12 +20,15 @@ public class AbandonedShip extends EventCard {
     private final int givenCredits;
     private boolean hasBeenUsed;
 
+    private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
+
     public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits, Board board) {
         super(name, cardLevel, board);
         this.requiredCrew = requireCrew;
         this.movementStep = movementStep;
         this.givenCredits = givenCredits;
         this.hasBeenUsed = false;
+        this.lifeformsToBeRemoved = new ArrayList<>();
     }
 
     /**
@@ -37,10 +43,13 @@ public class AbandonedShip extends EventCard {
                     .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
                     .toList();
 
-            currentPlayer = Optional.of(players.getFirst());
-
             // if there are no players we do not have to continue, since no one can use the card
-            if (this.players.isEmpty()) this.hasBeenUsed = true;
+            if (this.players.isEmpty()) {
+                this.hasBeenUsed = true;
+                this.currentPlayer = Optional.empty();
+            } else {
+                this.currentPlayer = Optional.of(players.getFirst());
+            }
         }
     }
 
@@ -49,7 +58,9 @@ public class AbandonedShip extends EventCard {
      * */
     @Override
     public boolean hasFinished() {
-        return hasBeenUsed || currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || (players.isEmpty() && currentPlayer.isEmpty());
+        return hasBeenUsed ||
+                currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) ||
+                (players.isEmpty() && currentPlayer.isEmpty());
     }
 
     /**
@@ -57,60 +68,52 @@ public class AbandonedShip extends EventCard {
      * */
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        if (this.getCurrentPlayer().isPresent()) {
-            try {
-                AbandonedShipJSON abandonedShip = (AbandonedShipJSON) data;
-
-                // Grab the data that we need to compute the action
-                String playerNickname = abandonedShip.getPlayerNickname();
-                boolean wantsToVisitTheShip = abandonedShip.getVisitShip();
-                List<Lifeform> lifeformsToBeRemoved = abandonedShip.getLifeFormToBeRemoved();
-
-                // Check if:
-                // 1: The player match X
-                // 2: The player wants to visit the ship
-                if ( playerNickname != null
-                        && !playerNickname.isEmpty()
-                        && !playerNickname.equals( this.getCurrentPlayer().get().getNickname()) ) {
-
-                    if (wantsToVisitTheShip) {
-                        if (lifeformsToBeRemoved.size() != requiredCrew) {
-                            throw new IllegalArgumentException("The lifeformsToBeRemoved size does not match with the card requirements!");
-                        } else {
-                            this.bonusEffect();
-
-                            // Malus effect
-                            // 1. Move the player backwards of the given steps
-                            // 2. Remove the lifeform from the players cabin
-                            this.getBoard().movePlayerBackwards(this.getCurrentPlayer().get(), this.movementStep);
-                            this.getBoard().validatePlayersPosition();
-
-                            for (Lifeform lifeform : lifeformsToBeRemoved) {
-                                for (Cabin cabin : this.getCurrentPlayer().get().getShip().getCabinList()) {
-
-                                    // Removes the inhabitant the match the type
-                                    boolean removed = cabin.getInhabitants().removeIf(
-                                            cabinLifeForm -> lifeform.getLifeformType().equals(cabinLifeForm.getLifeformType())
-                                    );
-
-                                    // If the lifeform has been removed we need to proceed to the next one
-                                    if (removed) {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        getNextPlayer();
-                    }
-                } else {
-                    throw new IllegalArgumentException("The given player does not match with the current one");
-                }
-            } catch (Exception e) {
-                throw new IllegalArgumentException("Error while parsing the user requested action: " + e.getMessage());
-            }
-        } else {
+        // Check if there is a player playing the card
+        if (this.currentPlayer.isEmpty()) {
             throw new IllegalArgumentException("There is no player playing in this moment");
+        }
+
+        AbandonedShipJSON abandonedShip;
+
+        try {
+            abandonedShip = (AbandonedShipJSON) data;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("The given JSON data is not a valid abandonedShip JSON");
+        }
+
+        // Retrieve the data from the JSON
+        String playerNickname = abandonedShip.getPlayerNickname();
+        boolean wantsToVisitTheShip = abandonedShip.getWantToVisitShip();
+
+        // Check if:
+        // 1. The player match with the current one
+        if ( playerNickname != null &&
+                !playerNickname.isEmpty() &&
+                !playerNickname.equals( this.getCurrentPlayer().get().getNickname()) ) {
+
+            // If the player wants to use the card --> perform the action
+            // otherwise get the next player
+            if (wantsToVisitTheShip) {
+                this.lifeformsToBeRemoved = abandonedShip.getLifeformsToBeRemoved();
+
+                // Check if the given input is valid
+                if (lifeformsToBeRemoved.size() == this.requiredCrew) {
+                    throw new IllegalArgumentException("The lifeformsToBeRemoved size does not match with the card requirements!");
+                } else {
+
+                    // Apply the bonus effects --> give the credits
+                    this.bonusEffect();
+
+                    // Apply the malus effects --> move the player and remove the required crew members
+                    this.malusEffect();
+                }
+
+            } else {
+                this.getNextPlayer();
+            }
+
+        } else {
+            throw new IllegalArgumentException("The given player does not match with the current one!");
         }
 
         return this;
@@ -125,22 +128,63 @@ public class AbandonedShip extends EventCard {
         }
     }
 
-    // Remove the LifeForm from the
+    /**
+     * Move the player of the set step
+     * Remove the crew members from the given cabins
+     * */
     @Override
-    protected void malusEffect() {
+    protected void malusEffect() throws IllegalStateException {
+        if (this.getCurrentPlayer().isPresent()) {
+            this.hasBeenUsed = true;
+
+            // Move the player and re-validate the positions
+            this.getBoard().movePlayerBackwards(this.getCurrentPlayer().get(), this.movementStep);
+            this.getBoard().validatePlayersPosition();
+
+            Ship ship = this.getCurrentPlayer().get().getShip();
+
+            // Remove the crew members from the given cabins
+            for (ComponentHelper<LifeformType> lifeform : this.lifeformsToBeRemoved) {
+
+                Cabin tmpCabin;
+                try {
+                    tmpCabin = (Cabin) ship.getComponent(lifeform.getI(), lifeform.getJ());
+                } catch (Exception e) {
+                    throw new IllegalStateException("The given component is not a valid cabin");
+                }
+
+                lifeform.getItem().ifPresent( l -> {
+
+                    Lifeform tmpLifeFormToBeRemoved = tmpCabin.getInhabitants().stream()
+                            .filter( i -> i.getLifeformType().equals(l))
+                            .findFirst()
+                            .orElseThrow( () -> new NoSuchElementException("The requested lifeform has not been found in the given cabin"));
+
+                    tmpCabin.removeInhabitant(tmpLifeFormToBeRemoved);
+                });
+            }
+        }
     }
 
     @Override
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
 
         cardState.setCardName(this.getCardName());
-        cardState.setCardLevel(this.getCardLevel());
-
+        cardState.setCardLevel(this.cardLevel);
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
 
-        return cardState.getData();
+
+        List<Player> playersThatCanUseTheCard = this.getBoard().getPlayers().stream()
+                .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
+                .toList();
+
+        // Set the card isUsable to true when the player has at least the required crew members
+        // --> since we filter them in advance should be always set to true
+        cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get()));
+
+        return cardState;
     }
 }

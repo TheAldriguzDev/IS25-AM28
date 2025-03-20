@@ -7,11 +7,9 @@ import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -83,7 +81,7 @@ public class Ship {
         if (minDifficulty > difficultyLevel || difficultyLevel > maxDifficulty) {
             throw new IllegalArgumentException(
                     "ERROR: Difficulty " + difficultyLevel + " does not exist\n"
-                  + "(minDifficulty=" + minDifficulty + ", maxDifficulty=" + maxDifficulty + ")."
+                            + "(minDifficulty=" + minDifficulty + ", maxDifficulty=" + maxDifficulty + ")."
             );
         }
 
@@ -122,28 +120,28 @@ public class Ship {
      */
     public void generateComponentSubLists() throws IllegalStateException {
         traverse(
-            (Component c) -> {
-                switch (c) {
-                    case Battery battery:       this.batteryList.add(battery);
-                                                break;
-                    case Cabin cabin:           this.cabinList.add(cabin);
-                                                break;
-                    case Cannon cannon:         this.cannonList.add(cannon);
-                                                break;
-                    case Engine engine:         this.engineList.add(engine);
-                                                break;
-                    case Shield shield:         this.shieldList.add(shield);
-                                                break;
-                    case Storage storage:       this.storageList.add(storage);
-                                                break;
-                    case Vital vital:           this.vitalList.add(vital);
-                                                break;
-                    case Structural structural: // Structural components are not sorted
-                                                break;
-                    default:
-                        throw new IllegalStateException("Unexpected class type " + c.toString());
+                (Component c) -> {
+                    switch (c) {
+                        case Battery battery:       this.batteryList.add(battery);
+                            break;
+                        case Cabin cabin:           this.cabinList.add(cabin);
+                            break;
+                        case Cannon cannon:         this.cannonList.add(cannon);
+                            break;
+                        case Engine engine:         this.engineList.add(engine);
+                            break;
+                        case Shield shield:         this.shieldList.add(shield);
+                            break;
+                        case Storage storage:       this.storageList.add(storage);
+                            break;
+                        case Vital vital:           this.vitalList.add(vital);
+                            break;
+                        case Structural structural: // Structural components are not sorted
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected class type " + c.toString());
+                    }
                 }
-            }
         );
     }
 
@@ -250,24 +248,26 @@ public class Ship {
     public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
         int availableEnergy;
 
-        if (energyToConsume <= this.getAvailableEnergy()) {
-            // If there's enough energy, then consume the given amount
-            for (Battery battery : this.batteryList) {
-                availableEnergy = battery.getAvailability();
+        if (energyToConsume > 0) {
+            if (energyToConsume <= this.getAvailableEnergy()) {
+                // If there's enough energy, then consume the given amount
+                for (Battery battery : this.batteryList) {
+                    availableEnergy = battery.getAvailability();
 
-                if (availableEnergy < energyToConsume) {
-                    energyToConsume -= availableEnergy;
-                    battery.setAvailability(0);
-                }
-                else {
-                    battery.setAvailability(availableEnergy - energyToConsume);
-                    break;
+                    if (availableEnergy < energyToConsume) {
+                        energyToConsume -= availableEnergy;
+                        battery.setAvailability(0);
+                    }
+                    else {
+                        battery.setAvailability(availableEnergy - energyToConsume);
+                        break;
+                    }
                 }
             }
-        }
-        else {
-            // Otherwise, throw an InsufficientEnergyException
-            throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
+            else {
+                // Otherwise, throw an InsufficientEnergyException
+                throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
+            }
         }
     }
 
@@ -379,17 +379,22 @@ public class Ship {
 
         // Calculating the totalEnginePower
         int singleEnginesEnginePower = (int) this.cannonList.stream()
-                    .filter((Cannon c) -> (c.getFirePower() < 2))
-                    .mapToDouble(Cannon::getFirePower)
-                    .sum();
+                .filter((Cannon c) -> (c.getFirePower() < 2))
+                .mapToDouble(Cannon::getFirePower)
+                .sum();
 
-        if (doubleEngineAmount >= doubleEnginesToActivate) {
-            totalEnginePower = singleEnginesEnginePower
-                    + (doubleEnginesToActivate * (int) doubleEngineList.getFirst().getSpeed());
+        if (doubleEngineAmount > 0) {
+            if (doubleEngineAmount >= doubleEnginesToActivate) {
+                totalEnginePower = singleEnginesEnginePower
+                        + (doubleEnginesToActivate * (int) doubleEngineList.getFirst().getSpeed());
+            }
+            else {
+                totalEnginePower = singleEnginesEnginePower
+                        + (doubleEngineAmount * (int) doubleEngineList.getFirst().getSpeed());
+            }
         }
         else {
-            totalEnginePower = singleEnginesEnginePower
-                    + (doubleEngineAmount * (int) doubleEngineList.getFirst().getSpeed());
+            totalEnginePower = singleEnginesEnginePower;
         }
 
         // Consuming the amount of batteries required to activate
@@ -411,33 +416,22 @@ public class Ship {
     /**
      * @return The number of exposed connectors on the entire ship
      */
-    public int getExposedConnectors(){
-        List<Integer> connectors = new ArrayList<Integer>();
+    public int getExposedConnectorAmount(){
+        List<Component> border = new ArrayList<Component>();
+        AtomicInteger exposedConnectors = new AtomicInteger();
 
         traverse(
-             (Component component) -> {
-                Component[] nearest = getNearestComponents(component);
-
-                if( nearest[0] == null ){
-                    connectors.add( component.getTopSide().ordinal() );
+                (Component component) -> {
+                    Component[] neighbours = this.getNearestComponents(component);
+                    for (Component neighbour : neighbours) {
+                        if (neighbour == null) {
+                            exposedConnectors.getAndIncrement();
+                        }
+                    }
                 }
-
-                if( nearest[1] == null ){
-                    connectors.add(component.getRightSide().ordinal());
-                }
-
-                if( nearest[2] == null ){
-                    connectors.add( component.getBottomSide().ordinal() );
-                }
-
-                if( nearest[3] == null ){
-                    connectors.add( component.getLeftSide().ordinal() );
-                }
-            }
         );
 
-        // Add all the exposed connectors found
-        return connectors.stream().reduce(0, Integer::sum);
+        return exposedConnectors.get();
     }
 
     /**
@@ -457,11 +451,11 @@ public class Ship {
         List<Component> wrongs = new ArrayList<>();
 
         traverse(
-            (Component c) -> {
-                if(!c.check(getNearestComponents(c))){
-                    wrongs.add(c);
+                (Component c) -> {
+                    if(!c.check(getNearestComponents(c))){
+                        wrongs.add(c);
+                    }
                 }
-            }
         );
 
         return wrongs;
@@ -520,11 +514,11 @@ public class Ship {
         AtomicBoolean isShipValid = new AtomicBoolean(true);
 
         traverse(
-            (Component c) -> {
-                if (isShipValid.get() && !c.check(getNearestComponents(c))) {
-                    isShipValid.set(false);
+                (Component c) -> {
+                    if (isShipValid.get() && !c.check(getNearestComponents(c))) {
+                        isShipValid.set(false);
+                    }
                 }
-            }
         );
 
         return isShipValid.get();
@@ -545,10 +539,10 @@ public class Ship {
         // that would otherwise be left hanging
         // (i.e.: no path exists from the core to those components)
         traverse(
-            (Component c) -> {
-                int[] position = c.getPosition();
-                grid[position[0]][position[1]] = c;
-            }
+                (Component c) -> {
+                    int[] position = c.getPosition();
+                    grid[position[0]][position[1]] = c;
+                }
         );
 
         // Finally, substitute the old grid with the new one
@@ -706,7 +700,7 @@ public class Ship {
      */
     public void addComponent(Component component, int i, int j)
             throws NullComponentException, OutOfGridException,
-                   ExistingComponentException/*, OutOfShipException*/   // TODO
+            ExistingComponentException/*, OutOfShipException*/   // TODO
     {
         if (component == null) {
             throw new NullComponentException("Given component to add is null");
