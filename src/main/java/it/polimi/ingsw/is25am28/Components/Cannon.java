@@ -9,7 +9,7 @@ public final class Cannon extends Component {
       }
 
       public float getFirePower(){
-            return getDirection() != 0 ? force/2: force;
+            return getDirection() != 0 ? ((float) force)/2: force;
       }
 
       public boolean requireEnergy(){

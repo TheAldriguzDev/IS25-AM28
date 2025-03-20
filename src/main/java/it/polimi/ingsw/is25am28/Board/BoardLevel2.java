@@ -7,6 +7,7 @@ public class BoardLevel2 extends Board {
     public BoardLevel2() {
         super();
         this.setSize(24);
+        this.setLevel(2);
     }
 
     /**
