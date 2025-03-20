@@ -319,7 +319,7 @@ public class Ship {
 
         // Calculating the totalFirePower
         float singleCannonsFirePower = (float) this.cannonList.stream()
-                    .filter((Cannon c) -> (c.getFirePower() < 2))
+                    .filter((Cannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
                     .mapToDouble(Cannon::getFirePower)
                     .sum();
 
@@ -377,9 +377,9 @@ public class Ship {
         doubleEngineAmount = doubleEngineList.size();
 
         // Calculating the totalEnginePower
-        int singleEnginesEnginePower = (int) this.cannonList.stream()
-                    .filter((Cannon c) -> (c.getFirePower() < 2))
-                    .mapToDouble(Cannon::getFirePower)
+        int singleEnginesEnginePower = (int) this.engineList.stream()
+                    .filter((Engine c) -> ((c.getSpeed() < 1 && c.getDirection() != 0) || (c.getSpeed() == 1 && c.getDirection() == 0)))
+                    .mapToDouble(Engine::getSpeed)
                     .sum();
 
         if (doubleEngineAmount > 0) {
