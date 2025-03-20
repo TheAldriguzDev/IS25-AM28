@@ -172,9 +172,7 @@ public class Ship {
     /**
      * @return The ship's difficulty level
      */
-    public int getDifficultyLevel() {
-        return this.difficultyLevel;
-    }
+    public int getDifficultyLevel() { return this.difficultyLevel; }
 
     /**
      * @return The list of Batteries present on the ship
@@ -241,7 +239,8 @@ public class Ship {
     /**
      * Consumes the given amount of energy from the ship's total energy
      *
-     * @param energyToConsume The amount of energy to consume from the total available energy on the ship
+     * @param energyToConsume The amount of energy to consume from the total available energy on the ship.<br>
+     *                        The method doesn't do anything if <code>energyToConsume <= 0</code>.
      *
      * @throws InsufficientEnergyException If <code>energyToConsume</code> is greater than the energy currently available on the ship
      */
@@ -725,7 +724,6 @@ public class Ship {
         this.components[i][j] = component;
     }
 
-    // TODO: Modify to take into account the fact that the disconnected pieces need to be tracked (for currency)
     /**
      * Removes the component at coordinates (i, j) from the ship's grid.<br>
      * If that component, when removed, divides the ship into 2 or more branches, then the
@@ -740,6 +738,7 @@ public class Ship {
         if (i < 0 || j < 0 || i >= this.grid_rows || j >= this.grid_cols) {
             throw new OutOfGridException("Requested component is not in the ship component grid");
         }
+        // TODO: Modify to take into account the fact that the disconnected pieces need to be tracked (for currency)
         // TODO: Modify method such that it keeps track of the deleted components, since
         // TODO: they're needed to count the credits to subtract to the player as a deficit
         /*

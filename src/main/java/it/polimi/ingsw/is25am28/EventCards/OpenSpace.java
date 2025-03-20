@@ -43,7 +43,7 @@ public class OpenSpace extends EventCard {
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
         // Check if there is a player playing the card
-        if (this.currentPlayer.isEmpty()) {
+        if (getCurrentPlayer().isEmpty()) {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
 
@@ -125,7 +125,7 @@ public class OpenSpace extends EventCard {
         return this;
     }
 
-    @Override
+
     public EventCard useCard(JSONObject data) throws IllegalArgumentException {
         return null;
     }

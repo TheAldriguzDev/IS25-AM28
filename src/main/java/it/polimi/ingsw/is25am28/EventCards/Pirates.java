@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
 import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Board.Board;
@@ -153,13 +154,13 @@ public class Pirates extends EventCard {
 
     protected void malusEffect() {}
 
-    @Override
-    public boolean hasFinished() {
-        return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || this.hasBeenDefeated;
-    }
+//    @Override
+//    public boolean hasFinished() {
+//        return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || this.hasBeenDefeated;
+//    }
 
     @Override @SuppressWarnings("unchecked")
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         JSONObject piratesState = new JSONObject();
 
         if (this.getCurrentPlayer().isPresent()) {
@@ -173,6 +174,7 @@ public class Pirates extends EventCard {
         piratesState.put("shootingSequence", shootingSequence);
         piratesState.put("hasBeenDefeated", hasBeenDefeated);
 
-        return piratesState;
+        //return piratesState;
+        return null;
     }
 }

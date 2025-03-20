@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.ActionJSON.SlaversJSON;
 import it.polimi.ingsw.is25am28.Components.Cabin;
@@ -36,7 +37,7 @@ public class Slavers extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
-
+                    System.out.println("Turn of:" + player.getNickname() + " -> is enemy Defeated?: " + hasFinished());
                     String playerNickname = slaversData.getPlayerNickname();
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
@@ -57,6 +58,8 @@ public class Slavers extends EventCard {
                     throw new IllegalArgumentException("There is no player playing in this moment");
                 }
         );
+        //System.out.println("Player using card: " + getCurrentPlayer().get().getNickname() + "Player ID: " + getCurrentPlayer().get());
+        //System.out.println(players);
         getNextPlayer();
         return this;
     }
@@ -99,12 +102,12 @@ public class Slavers extends EventCard {
 
     @Override
     public boolean hasFinished() {
-        return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || this.hasBeenDefeated;
+        return super.hasFinished() || this.hasBeenDefeated;
     }
 
     //
     @Override @SuppressWarnings("unchecked")
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         JSONObject slaversState = new JSONObject();
 
         if(getCurrentPlayer().isPresent()) {
@@ -118,6 +121,7 @@ public class Slavers extends EventCard {
         slaversState.put("takenCrew", takenCrew);
         slaversState.put("hasBeenDefeated", hasBeenDefeated);
 
-        return slaversState;
+        //return slaversState;
+        return null;
     }
 }

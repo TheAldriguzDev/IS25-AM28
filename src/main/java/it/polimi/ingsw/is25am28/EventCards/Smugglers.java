@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.ActionJSON.SmugglersJSON;
 import it.polimi.ingsw.is25am28.Items.*;
@@ -41,6 +42,7 @@ public class Smugglers extends EventCard {
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         //SmugglersResponse smugglersResponse = (SmugglersResponse) response;
+        /*
         SmugglersJSON smugglersData;
         try {
             smugglersData = (SmugglersJSON) data;
@@ -71,10 +73,10 @@ public class Smugglers extends EventCard {
                     throw new IllegalArgumentException("There is no player playing in this moment");
                 }
         );
-        getNextPlayer();
+        getNextPlayer();*/
         return this;
     }
-
+    /*
     protected void bonusEffect(ActionJSON data) throws ClassCastException {
         SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
@@ -189,7 +191,7 @@ public class Smugglers extends EventCard {
                     }
                 }
         );
-    }
+    }*/
 
     @Override
     protected void bonusEffect() {}
@@ -231,15 +233,15 @@ public class Smugglers extends EventCard {
 
 
     }
-
+    /*
     @Override
     public boolean hasFinished() {
-        return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || this.hasBeenDefeated;
-    }
+        return //currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || this.hasBeenDefeated;
+    }*/
 
 
     @Override @SuppressWarnings("unchecked")
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         JSONObject smugglersState = new JSONObject();
 
         if(getCurrentPlayer().isPresent()) {
@@ -256,7 +258,8 @@ public class Smugglers extends EventCard {
         smugglersState.put("takenItems", takenItems);
         smugglersState.put("hasBeenDefeated", hasBeenDefeated);
 
-        return smugglersState;
+        //return smugglersState;
+        return null;
     }
 
 

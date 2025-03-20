@@ -14,7 +14,8 @@ public abstract class EventCard {
     protected String name;
     protected int cardLevel;
     protected List<Player> players;
-    protected Optional<Player> currentPlayer;
+    //protected Optional<Player> currentPlayer;
+    protected int currentPlayer = 0;
     private Board board;
 
     /**
@@ -37,7 +38,7 @@ public abstract class EventCard {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
         } else {
             this.players = this.board.getPlayers();
-            currentPlayer = Optional.of(players.getFirst());
+            //currentPlayer = Optional.of(players.getFirst());
         }
     }
 
@@ -54,7 +55,7 @@ public abstract class EventCard {
             throw new Error("Players are not set, you must call startUsingCard method before");
         }
 
-        if ( currentPlayer.isPresent() ) {
+        /*if ( currentPlayer.isPresent() ) {
             if (currentPlayer.get().equals(players.getLast())) {
                 return Optional.empty();
             } else {
@@ -64,11 +65,18 @@ public abstract class EventCard {
         } else {
             currentPlayer = Optional.of(players.getFirst());
             return Optional.of(players.getFirst());
-        }
+        }*/
+
+        currentPlayer++;
+
+        if( currentPlayer >= players.size() )
+            return Optional.empty();
+
+        return Optional.ofNullable(players.get(currentPlayer));
     }
 
     protected Optional<Player> getCurrentPlayer() {
-        return currentPlayer;
+        return Optional.ofNullable(players.get(currentPlayer));
     }
 
     protected Board getBoard() {
@@ -81,7 +89,7 @@ public abstract class EventCard {
      * It returns true if the current player is the last one of the card players or if there are no active players in the card
      * */
     public boolean hasFinished() {
-        return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false);
+        return players.size() == currentPlayer;//currentPlayer.map(player -> player.equals(players.getLast())).orElse(false);
     }
 
     public String getCardName() {

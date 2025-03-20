@@ -42,14 +42,7 @@ public class AbandonedShip extends EventCard {
             this.players = this.getBoard().getPlayers().stream()
                     .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
                     .toList();
-
-            // if there are no players we do not have to continue, since no one can use the card
-            if (this.players.isEmpty()) {
-                this.hasBeenUsed = true;
-                this.currentPlayer = Optional.empty();
-            } else {
-                this.currentPlayer = Optional.of(players.getFirst());
-            }
+            super.initCardPlayers();
         }
     }
 
@@ -58,9 +51,7 @@ public class AbandonedShip extends EventCard {
      * */
     @Override
     public boolean hasFinished() {
-        return hasBeenUsed ||
-                currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) ||
-                (players.isEmpty() && currentPlayer.isEmpty());
+        return hasBeenUsed || super.hasFinished();
     }
 
     /**
@@ -69,7 +60,7 @@ public class AbandonedShip extends EventCard {
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
         // Check if there is a player playing the card
-        if (this.currentPlayer.isEmpty()) {
+        if (this.getCurrentPlayer().isEmpty()) {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
 

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
     
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.VisitPlanetsJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
@@ -93,15 +93,16 @@ public class VisitPlanets extends EventCard {
 
     @Override
     protected void malusEffect() {
-        this.currentPlayer.ifPresent(
+        this.getCurrentPlayer().ifPresent(
             (Player player) -> {
-                this.getBoard().movePlayerBackwards(this.currentPlayer.get(), this.movementSteps);
+                this.getBoard().movePlayerBackwards(getCurrentPlayer().get(), this.movementSteps);
             }
         );
     }
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
+        /*
         String playerName;
         JSONObject response = data.getData();
         int selectedPlanetID;
@@ -131,7 +132,7 @@ public class VisitPlanets extends EventCard {
             // If player tries to select an already selected planet, the method
             // waits again for a correct answer
 
-            //return this.useCard(null /*NEW RESPONSE NEEDED*/);
+            //return this.useCard(null /*NEW RESPONSE NEEDED*//*);
             return null;
         }
 
@@ -146,12 +147,12 @@ public class VisitPlanets extends EventCard {
         if (playerWantsToLand) {
             // bonusEffect();
         }
-
+*/
         return null;
     }
 
     @Override
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         return null;
     }
 }

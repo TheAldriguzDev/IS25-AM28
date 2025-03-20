@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.Meteor;
 
@@ -48,7 +49,7 @@ public class MeteorShower extends EventCard {
         return null;
     }
 
-    @Override
+
     public EventCard useCard(JSONObject data) throws IllegalArgumentException {
         return null;
     }
@@ -233,7 +234,7 @@ public class MeteorShower extends EventCard {
 //    }
 
     @Override
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         return null;
     }
 }

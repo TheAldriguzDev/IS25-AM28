@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.StardustJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Connector;
@@ -80,19 +81,30 @@ public class Stardust extends EventCard {
     @Override
     protected void malusEffect() {}
 
+    /**
+     * This method will be used in the specific class, but also from outside (game model).
+     *
+     * It returns true if the current player is the last one of the card players or if there are no active players in the card
+     * */
     @Override
-    public void initCardPlayers() throws IllegalArgumentException {
-        if ( getBoard().getPlayers() == null || getBoard().getPlayers().isEmpty() || getBoard().getPlayers().size() < 2 ) {
-            throw new IllegalArgumentException("The player list is null or contains less than two player");
-        } else {
-            this.players = getBoard().getPlayers();
-            Collections.reverse(this.players);
-            currentPlayer = Optional.of(players.getFirst());
-        }
+    public boolean hasFinished() {
+        return currentPlayer < 0;//currentPlayer.map(player -> player.equals(players.getLast())).orElse(false);
     }
 
+    @Override
+    protected Optional<Player> getNextPlayer() {
+        if( players == null || players.isEmpty() ) {
+            throw new Error("Players are not set, you must call startUsingCard method before");
+        }
+
+        currentPlayer--;
+        return Optional.ofNullable(players.get(currentPlayer));
+    }
+
+
+
     @Override @SuppressWarnings("unchecked")
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         JSONObject stardustState = new JSONObject();
 
         if(getCurrentPlayer().isPresent()) {
@@ -101,6 +113,7 @@ public class Stardust extends EventCard {
         stardustState.put("cardName", this.name);
         stardustState.put("cardLevel", cardLevel);
 
-        return stardustState;
+        //return stardustState;
+        return null;
     }
 }
