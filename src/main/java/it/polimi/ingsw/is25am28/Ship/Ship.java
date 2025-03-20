@@ -332,14 +332,14 @@ public class Ship {
                 totalFirePower = singleCannonsFirePower
                         + (doubleCannonAmount * doubleCannonList.getFirst().getFirePower());
             }
+
+            // Consuming the amount of batteries required to activate
+            // the given amount of double cannons
+            this.consumeEnergy(doubleCannonsToActivate);
         }
         else {
             totalFirePower = singleCannonsFirePower;
         }
-
-        // Consuming the amount of batteries required to activate
-        // the given amount of double cannons
-        this.consumeEnergy(doubleCannonsToActivate);
 
         return totalFirePower;
     }
@@ -391,14 +391,14 @@ public class Ship {
                 totalEnginePower = singleEnginesEnginePower
                         + (doubleEngineAmount * (int) doubleEngineList.getFirst().getSpeed());
             }
+
+            // Consuming the amount of batteries required to activate
+            // the given amount of double engines
+            this.consumeEnergy(doubleEnginesToActivate);
         }
         else {
             totalEnginePower = singleEnginesEnginePower;
         }
-
-        // Consuming the amount of batteries required to activate
-        // the given amount of double engines
-        this.consumeEnergy(doubleEnginesToActivate);
 
         return totalEnginePower;
     }
