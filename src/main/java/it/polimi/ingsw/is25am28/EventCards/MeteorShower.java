@@ -1,12 +1,14 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.Meteor;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.smartcardio.Card;
 import java.util.*;
 
 public class MeteorShower extends EventCard {
@@ -45,11 +47,6 @@ public class MeteorShower extends EventCard {
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        return null;
-    }
-
-    @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
         return null;
     }
 
@@ -233,7 +230,7 @@ public class MeteorShower extends EventCard {
 //    }
 
     @Override
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         return null;
     }
 }

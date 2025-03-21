@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is25am28.GameModel.Session;
 
 import java.util.List;
+
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import org.json.simple.JSONObject;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
 
@@ -44,7 +46,7 @@ public class RoundSession {
             throw new Error("state updated when the card has finished to apply its effects to all players");
         }
 
-        card.useCard( (JSONObject) response );
+        card.useCard( (ActionJSON) response );
 
         return this;
     }

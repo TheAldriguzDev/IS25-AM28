@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
 import org.json.simple.JSONObject;
@@ -59,10 +60,6 @@ public class Slavers extends EventCard {
         return this;
     }
 
-    @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
-    }
 
     @Override
     protected void bonusEffect() {
@@ -107,7 +104,7 @@ public class Slavers extends EventCard {
 
     //
     @Override @SuppressWarnings("unchecked")
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         JSONObject slaversState = new JSONObject();
 
         if(getCurrentPlayer().isPresent()) {
@@ -121,6 +118,6 @@ public class Slavers extends EventCard {
         slaversState.put("takenCrew", takenCrew);
         slaversState.put("hasBeenDefeated", hasBeenDefeated);
 
-        return slaversState;
+        return null;
     }
 }

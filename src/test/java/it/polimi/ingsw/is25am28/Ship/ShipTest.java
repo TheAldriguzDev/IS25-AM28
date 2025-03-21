@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
+import static it.polimi.ingsw.is25am28.Connector.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ShipTest {
@@ -64,6 +64,117 @@ class ShipTest {
         else {
             System.out.println("ERROR: Given ship is null");
         }
+    }
+
+    // Initializing a normal level 2 ship to be used with all test cases
+    Ship initCustomShip() {
+        Ship ship = new Ship(2);
+
+        int[] connectors = new int[4];
+
+        // Default connector is THREE_PIPES
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        /*
+                  ==== Ship Configuration ====
+            \       4       5       6       7       8
+            4                       a
+            5               b       c       d
+            6       e       f       g       h       i
+            7       j       k       l       m       n
+            8       o       p       q       r       s
+            9       t       u               v       w
+
+            Total components = 23 (22 + 1 core)
+
+            a = doubleCannon1 at (4, 6)
+            b = singleCannon1 at (5, 5)
+            c = specialDoubleStorage1 at (5, 6)
+            d = singleCannon2 at (5, 7)
+            e = shield1 at (6, 4)
+            f = normalTripleStorage1 at (6, 5)
+            g = CORE (6, 6)
+            h = specialSingleStorage1 at (6, 7)
+            i = doubleCannon2 at (6, 8)
+            j = structural1 at (7, 4)
+            k = normalDoubleStorage1 at (7, 5)
+            l = purpleVital1 at (7, 6)
+            m = cabin1 at (7, 7)
+            n = brownVital1 at (7, 8)
+            o = shield2 at (8, 4)
+            p = normalTripleStorage2 at (8, 5)
+            q = tripleBattery1 at (8, 6)
+            r = cabin2 at (8, 7)
+            s = tripleBattery2 at (8, 8)
+            t = singleEngine1 at (9, 4)
+            u = singleEngine2 at (9, 5)
+            v = doubleEngine1 at (9, 7)
+            w = singleEngine3 at (9, 8)
+        */
+
+        Battery tripleBattery1 = new Battery(connectors, 3);
+        Battery tripleBattery2 = new Battery(connectors, 3);
+
+        Cannon singleCannon1 = new Cannon(connectors, 1);
+        Cannon singleCannon2 = new Cannon(connectors, 1);
+        Cannon doubleCannon1 = new Cannon(connectors, 2);
+        Cannon doubleCannon2 = new Cannon(connectors, 2);
+
+        Engine singleEngine1 = new Engine(connectors, 1);
+        Engine singleEngine2 = new Engine(connectors, 1);
+        Engine singleEngine3 = new Engine(connectors, 1);
+        Engine doubleEngine1 = new Engine(connectors, 2);
+
+        Cabin cabin1 = new Cabin(connectors, false);
+        Cabin cabin2 = new Cabin(connectors, false);
+
+        Shield shield1 = new Shield(connectors);
+        Shield shield2 = new Shield(connectors);
+
+        Storage normalDoubleStorage1 = new Storage(connectors, 2, false);
+        Storage normalTripleStorage1 = new Storage(connectors, 3, false);
+        Storage normalTripleStorage2 = new Storage(connectors, 3, false);
+        Storage specialSingleStorage1 = new Storage(connectors, 1, true);
+        Storage specialDoubleStorage1 = new Storage(connectors, 2, true);
+
+        Structural structural1 = new Structural(connectors);
+
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+
+        // Adding the components created above
+        ship.addComponent(doubleCannon1, 4, 6);
+        ship.addComponent(singleCannon1, 5, 5);
+        ship.addComponent(specialDoubleStorage1, 5, 6);
+        ship.addComponent(singleCannon2, 5, 7);
+        ship.addComponent(shield1, 6, 4);
+        ship.addComponent(normalTripleStorage1, 6, 5);
+        ship.addComponent(specialSingleStorage1, 6, 7);
+        ship.addComponent(doubleCannon2, 6, 8);
+        ship.addComponent(structural1, 7, 4);
+        ship.addComponent(normalDoubleStorage1, 7, 5);
+        ship.addComponent(purpleVital1, 7, 6);
+        ship.addComponent(cabin1, 7, 7);
+        ship.addComponent(brownVital1, 7, 8);
+        ship.addComponent(shield2, 8, 4);
+        ship.addComponent(normalTripleStorage2, 8, 5);
+        ship.addComponent(tripleBattery1, 8, 6);
+        ship.addComponent(cabin2, 8, 7);
+        ship.addComponent(tripleBattery2, 8, 8);
+        ship.addComponent(singleEngine1, 9, 4);
+        ship.addComponent(singleEngine2, 9, 5);
+        ship.addComponent(doubleEngine1, 9, 7);
+        ship.addComponent(singleEngine3, 9, 8);
+
+        System.out.println("==== SHIP CONFIGURATION ====");
+        printShipGrid(ship);
+
+        // Generating the component sub-lists right after the ship is created
+        ship.generateComponentSubLists();
+
+        return ship;
     }
 
     @Test
@@ -261,12 +372,41 @@ class ShipTest {
 
     @Test
     void getAllLifeforms() {
+        Ship ship = initCustomShip();
+
 
     }
 
     @Test
     void getFirePower() {
+        Ship ship = initCustomShip();
+        int batteries, expectedFirepower;
 
+        // 0 batteries => outputs baseline firepower
+        batteries = 0;
+        expectedFirepower = 2;
+        assertEquals(expectedFirepower, ship.getFirePower(batteries));
+
+        // 1 battery => outputs baseline firepower + 2
+        batteries++;
+        expectedFirepower += 2;
+        assertEquals(expectedFirepower, ship.getFirePower(batteries));
+
+        // 2 batteries => outputs baseline firepower + 4 (max)
+        ship = initCustomShip();
+        batteries++;
+        expectedFirepower += 2;
+        assertEquals(expectedFirepower, ship.getFirePower(batteries));
+
+        // 3 batteries => outputs baseline firepower + 4 (saturated)
+        ship = initCustomShip();
+        batteries++;
+        assertEquals(expectedFirepower, ship.getFirePower(batteries));
+
+        // 4 batteries => outputs baseline firepower + 4 (saturated)
+        ship = initCustomShip();
+        batteries++;
+        assertEquals(expectedFirepower, ship.getFirePower(batteries));
     }
 
     @Test
@@ -426,7 +566,117 @@ class ShipTest {
 
     @Test
     void getWrongComponents() {
+        Ship ship = new Ship(2);
 
+        // [3, 3, 3, 3]
+        int[] connectors = new int[4];
+        connectors[0] = THREE_PIPES.ordinal();
+        connectors[1] = THREE_PIPES.ordinal();
+        connectors[2] = THREE_PIPES.ordinal();
+        connectors[3] = THREE_PIPES.ordinal();
+
+        // [0, 3, 2, 2]
+        int[] connector1 = new int[4];
+        connector1[0] = ZERO_PIPES.ordinal();
+        connector1[1] = THREE_PIPES.ordinal();
+        connector1[2] = TWO_PIPES.ordinal();
+        connector1[3] = TWO_PIPES.ordinal();
+
+        // [1, 2, 1, 3]
+        int[] connector2 = new int[4];
+        connector2[0] = ONE_PIPE.ordinal();
+        connector2[1] = TWO_PIPES.ordinal();
+        connector2[2] = ONE_PIPE.ordinal();
+        connector2[3] = THREE_PIPES.ordinal();
+
+        // [3, 0, 2, 0]
+        int[] connector3 = new int[4];
+        connector3[0] = THREE_PIPES.ordinal();
+        connector3[1] = ZERO_PIPES.ordinal();
+        connector3[2] = TWO_PIPES.ordinal();
+        connector3[3] = ZERO_PIPES.ordinal();
+
+        // [2, 3, 2, 3]
+        int[] connector4 = new int[4];
+        connector4[0] = TWO_PIPES.ordinal();
+        connector4[1] = THREE_PIPES.ordinal();
+        connector4[2] = TWO_PIPES.ordinal();
+        connector4[3] = THREE_PIPES.ordinal();
+
+        // [1, 0, 0, 3]
+        int[] connector5 = new int[4];
+        connector5[0] = ONE_PIPE.ordinal();
+        connector5[1] = ZERO_PIPES.ordinal();
+        connector5[2] = ZERO_PIPES.ordinal();
+        connector5[3] = THREE_PIPES.ordinal();
+
+        Battery battery = new Battery(connector3, 3);
+        Cabin cabin = new Cabin(connector4, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connector4, 1);
+        Engine engine2 = new Engine(connector5, 2);
+        Shield shield = new Shield(connector2);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connector2);
+        Vital vital = new Vital(connectors, 0);
+
+        Cabin core = (Cabin) ship.getComponent(6, 6);
+
+        // Adding the components created above
+        ship.addComponent(battery, 6, 7); // On the ship
+        ship.addComponent(cabin, 5, 6); // On the ship
+        ship.addComponent(cannon, 8, 4);
+        ship.addComponent(engine, 7, 6); // On the ship
+        ship.addComponent(engine2, 7, 7); // On the ship
+        ship.addComponent(shield, 6, 5); // On the ship
+        ship.addComponent(storage, 4, 5);
+        ship.addComponent(structural, 3, 2);
+        ship.addComponent(vital, 2, 2);
+
+        System.out.println("==== SHIP CONFIGURATION ====");
+        printShipGrid(ship);
+
+        List<Component> wrongs = ship.getWrongComponents();
+
+        if (!wrongs.isEmpty()) {
+            System.out.println("\nWRONG COMPONENTS FOUND:");
+            for (Component c : wrongs) {
+                System.out.println(" - " + c.toString() + " at coordinates (" + c.getPosition()[0] + ", " + c.getPosition()[1] + ")");
+            }
+        }
+
+        List<Component> expectedWrongs = new ArrayList<>();
+        expectedWrongs.add(battery);
+        expectedWrongs.add(engine2);
+
+        assertTrue(wrongs.containsAll(expectedWrongs));
+        assertFalse(ship.validateShip());
+
+        // Fixing the ship and performing the validity check again
+        // Battery moved from (6, 7) to (4, 6)
+        // engine2 moved in (7, 7) to (8, 5)
+        // Adding structural at (7, 5) with connector layout of connector
+
+        ship.removeComponent(6, 7);
+        ship.removeComponent(7, 7);
+        ship.addComponent(battery, 4, 6);
+        ship.addComponent(engine2, 8, 5);
+        ship.addComponent(structural, 7, 5);
+
+        System.out.println("\n==== SHIP CONFIGURATION (after moving some components (see the test code)) ====");
+        printShipGrid(ship);
+
+        wrongs = ship.getWrongComponents();
+
+        if (!wrongs.isEmpty()) {
+            System.out.println("\nWRONG COMPONENTS FOUND:");
+            for (Component c : wrongs) {
+                System.out.println(" - " + c.toString() + " at coordinates (" + c.getPosition()[0] + ", " + c.getPosition()[1] + ")");
+            }
+        }
+
+        assertTrue(wrongs.isEmpty());
+        assertTrue(ship.validateShip());
     }
 
     @Test
@@ -562,7 +812,13 @@ class ShipTest {
 
     @Test
     void validateShip() {
+        Ship ship = new Ship(2);
 
+        assertTrue(ship.validateShip());
+
+        ship = initCustomShip();
+
+        assertTrue(ship.validateShip());
     }
 
     @Test

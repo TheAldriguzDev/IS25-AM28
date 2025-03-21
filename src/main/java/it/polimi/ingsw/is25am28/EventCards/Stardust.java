@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Connector;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -73,10 +74,6 @@ public class Stardust extends EventCard {
         return this;
     }
 
-    @Override
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
-    }
 
     @Override
     protected void bonusEffect() {}
@@ -96,7 +93,7 @@ public class Stardust extends EventCard {
     }
 
     @Override @SuppressWarnings("unchecked")
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         JSONObject stardustState = new JSONObject();
 
         if(getCurrentPlayer().isPresent()) {
@@ -105,6 +102,6 @@ public class Stardust extends EventCard {
         stardustState.put("cardName", this.name);
         stardustState.put("cardLevel", cardLevel);
 
-        return stardustState;
+        return null;
     }
 }

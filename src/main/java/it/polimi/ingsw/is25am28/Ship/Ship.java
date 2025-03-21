@@ -17,44 +17,135 @@ import static it.polimi.ingsw.is25am28.Connector.*;
 
 public class Ship {
     private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
-    private final static Map<Integer, Pair<Integer, Integer>> rowColOffsets = new HashMap<>();
-    private final static Map<Integer, List<List<Integer>>> shipProfiles = new HashMap<>();
+    private final static Map<Integer, int[][]> shipProfiles = new HashMap<>();
 
     static {
         shipDimensions.put(1, new Pair<>(5, 5));
         shipDimensions.put(2, new Pair<>(5, 7));
         shipDimensions.put(3, new Pair<>(6, 9));
 
-        rowColOffsets.put(1, new Pair<>(5, 4));
-        rowColOffsets.put(2, new Pair<>(5, 4));
-        rowColOffsets.put(3, new Pair<>(4, 3));
+        int[][] matrix;
+        int[][] levelOneMatrix;
+        int row, col;
 
-        // TODO: See the 3 ship levels and add the bitmaps for all (see below)
+        // (1) - Difficulty level 1 ship layout
+        // Starting from scratch
+        matrix = new int[12][12];
 
-        List<List<Integer>> matrix;
-        List<Integer> row;
+        // Zeroing the matrix
+        for (row = 0; row < 12; row++) {
+            for (col = 0; col < 12; col++) {
+                matrix[row][col] = 0;
+            }
+        }
 
-        // (0) - Adding the ship profile pattern common among all levels
-        matrix = new ArrayList<>(12);
+        // Filling the level 1 ship profile by hand
+        // Starting from the top
+        matrix[4][6] = 1;   // Row #5
 
-        // (1) - Creating level 1 ship profile by adding the difference from the previous
-        matrix = new ArrayList<>(12);
+        matrix[5][5] = 1;   // Row #6
+        matrix[5][6] = 1;   // Row #6
+        matrix[5][7] = 1;   // Row #6
 
+        matrix[6][4] = 1;   // Row #7
+        matrix[6][5] = 1;   // Row #7
+        matrix[6][6] = 1;   // Row #7
+        matrix[6][7] = 1;   // Row #7
+        matrix[6][8] = 1;   // Row #7
+
+        matrix[7][4] = 1;   // Row #8
+        matrix[7][5] = 1;   // Row #8
+        matrix[7][6] = 1;   // Row #8
+        matrix[7][7] = 1;   // Row #8
+        matrix[7][8] = 1;   // Row #8
+
+        matrix[8][4] = 1;   // Row #9
+        matrix[8][5] = 1;   // Row #9
+        matrix[8][7] = 1;   // Row #9
+        matrix[8][8] = 1;   // Row #9
 
         shipProfiles.put(1, matrix);
 
-        // (2) - Creating level 2 ship profile by adding the difference from the previous
-        matrix = new ArrayList<>(12);
+        // Saving the level 1 matrix as a baseline for
+        // building the other 2 ship profiles
+        levelOneMatrix = shipProfiles.get(1);
 
+        // (2) - Difficulty level 2 ship layout
+        // Creating the level 2 layout by starting from the level 1 layout
+        matrix = new int[12][12];
+
+        // Initializing the level 2 ship profile with the level 1
+        // ship profile as a starting point
+        for (row = 0; row < 12; row++) {
+            for (col = 0; col < 12; col++) {
+                matrix[row][col] = levelOneMatrix[row][col];
+            }
+        }
+
+        // Shaping the level 2 ship profile starting from the
+        // level 1 ship profile as the baseline
+        // Starting from the top
+        matrix[4][5] = 1;   // Row #5
+        matrix[4][6] = 0;   // Row #5
+        matrix[4][7] = 1;   // Row #5
+
+        matrix[5][4] = 1;   // Row #6
+        matrix[5][8] = 1;   // Row #6
+
+        matrix[6][3] = 1;   // Row #7
+        matrix[6][9] = 1;   // Row #7
+
+        matrix[7][3] = 1;   // Row #8
+        matrix[7][9] = 1;   // Row #8
+
+        matrix[8][3] = 1;   // Row #9
+        matrix[8][9] = 1;   // Row #9
 
         shipProfiles.put(2, matrix);
 
-        // (3) - Creating level 3 ship profile by adding the difference from the previous
-        matrix = new ArrayList<>(12);
+        // (3) - Difficulty level 3 ship layout
+        // Creating the level 3 layout by starting from the level 1 layout
+        matrix = new int[12][12];
 
+        // Initializing the level 3 ship profile with the level 1
+        // ship profile as a starting point
+        for (row = 0; row < 12; row++) {
+            for (col = 0; col < 12; col++) {
+                matrix[row][col] = levelOneMatrix[row][col];
+            }
+        }
 
-        shipProfiles.put(2, matrix);
+        // Shaping the level 3 ship profile starting from the
+        // level 1 ship profile as the baseline
+        // Starting from the top
+        matrix[3][6] = 1;   // Row #4
 
+        matrix[4][5] = 1;   // Row #5
+        matrix[4][7] = 1;   // Row #5
+
+        matrix[5][2] = 1;   // Row #6
+        matrix[5][4] = 1;   // Row #6
+        matrix[5][8] = 1;   // Row #6
+        matrix[5][10] = 1;  // Row #6
+
+        matrix[6][2] = 1;   // Row #7
+        matrix[6][3] = 1;   // Row #7
+        matrix[6][9] = 1;   // Row #7
+        matrix[6][10] = 1;  // Row #7
+
+        matrix[7][2] = 1;   // Row #8
+        matrix[7][3] = 1;   // Row #8
+        matrix[7][9] = 1;   // Row #8
+        matrix[7][10] = 1;  // Row #8
+
+        matrix[8][2] = 1;   // Row #9
+        matrix[8][3] = 1;   // Row #9
+        matrix[8][4] = 0;   // Row #9
+        matrix[8][8] = 0;   // Row #9
+        matrix[8][9] = 1;   // Row #9
+        matrix[8][10] = 1;  // Row #9
+
+        shipProfiles.put(3, matrix);
     }
 
     private final int difficultyLevel;
@@ -75,16 +166,6 @@ public class Ship {
 
     // Constructor #1 - Generates one of the three possible grids, each for its level
     public Ship(int difficultyLevel) throws IllegalArgumentException {
-        int maxDifficulty = 3;
-        int minDifficulty = 1;
-
-        if (minDifficulty > difficultyLevel || difficultyLevel > maxDifficulty) {
-            throw new IllegalArgumentException(
-                    "ERROR: Difficulty " + difficultyLevel + " does not exist\n"
-                            + "(minDifficulty=" + minDifficulty + ", maxDifficulty=" + maxDifficulty + ")."
-            );
-        }
-
         this.difficultyLevel = difficultyLevel;
         this.components = initGrid(this.grid_rows, this.grid_cols);
 
@@ -162,19 +243,9 @@ public class Ship {
     }
 
     /**
-     * @return A pair of integers that represent the offsets (row, col) of the ship's placement
-     *         with respect to the ship's grid, based on the given difficulty
-     */
-    public Pair<Integer, Integer> getOffsetsByDifficulty(int difficultyLevel) {
-        return Ship.rowColOffsets.get(difficultyLevel);
-    }
-
-    /**
      * @return The ship's difficulty level
      */
-    public int getDifficultyLevel() {
-        return this.difficultyLevel;
-    }
+    public int getDifficultyLevel() { return this.difficultyLevel; }
 
     /**
      * @return The list of Batteries present on the ship
@@ -241,7 +312,8 @@ public class Ship {
     /**
      * Consumes the given amount of energy from the ship's total energy
      *
-     * @param energyToConsume The amount of energy to consume from the total available energy on the ship
+     * @param energyToConsume The amount of energy to consume from the total available energy on the ship.<br>
+     *                        The method doesn't do anything if <code>energyToConsume <= 0</code>.
      *
      * @throws InsufficientEnergyException If <code>energyToConsume</code> is greater than the energy currently available on the ship
      */
@@ -313,34 +385,33 @@ public class Ship {
         doubleCannonList = this.getDoubleCannons();
         doubleCannonAmount = doubleCannonList.size();
 
-        // Verifying that the current ship has enough energy
-        // to activate the required amount of double cannons
-        // If not, all the remaining batteries are used to activate
-        // some of the requested double cannons
-
-        // Calculating the totalFirePower
+        // Calculating the firepower of only the single cannons
         float singleCannonsFirePower = (float) this.cannonList.stream()
-                .filter((Cannon c) -> (c.getFirePower() < 2))
+                .filter((Cannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
                 .mapToDouble(Cannon::getFirePower)
                 .sum();
 
         if (doubleCannonAmount > 0) {
-            if (doubleCannonAmount >= doubleCannonsToActivate) {
-                totalFirePower = singleCannonsFirePower
-                        + (doubleCannonsToActivate * doubleCannonList.getFirst().getFirePower());
+            if (doubleCannonsToActivate > doubleCannonAmount) {
+                // If the requested double cannons to activate surpass the
+                // actual amount of double cannons available, then activate
+                // all those double cannons and avoid consuming the excess energy
+                doubleCannonsToActivate = doubleCannonAmount;
             }
-            else {
-                totalFirePower = singleCannonsFirePower
-                        + (doubleCannonAmount * doubleCannonList.getFirst().getFirePower());
-            }
+
+            // Calculating the totalFirePower
+            totalFirePower = singleCannonsFirePower
+                    + (doubleCannonsToActivate * (int) doubleCannonList.getFirst().getFirePower());
+
+            // Consuming the amount of batteries required to activate
+            // the given amount of double cannons
+            this.consumeEnergy(doubleCannonsToActivate);
         }
         else {
+            // No double engines to activate means that the total firepower
+            // is the result of all and only the single cannons onboard the ship
             totalFirePower = singleCannonsFirePower;
         }
-
-        // Consuming the amount of batteries required to activate
-        // the given amount of double cannons
-        this.consumeEnergy(doubleCannonsToActivate);
 
         return totalFirePower;
     }
@@ -377,29 +448,33 @@ public class Ship {
         doubleEngineList = this.getDoubleEngines();
         doubleEngineAmount = doubleEngineList.size();
 
-        // Calculating the totalEnginePower
-        int singleEnginesEnginePower = (int) this.cannonList.stream()
-                .filter((Cannon c) -> (c.getFirePower() < 2))
-                .mapToDouble(Cannon::getFirePower)
+        // Calculating the engine power of only the single engines
+        int singleEnginesEnginePower = (int) this.engineList.stream()
+                .filter((Engine c) -> (c.getSpeed() == 1))
+                .mapToDouble(Engine::getSpeed)
                 .sum();
 
         if (doubleEngineAmount > 0) {
-            if (doubleEngineAmount >= doubleEnginesToActivate) {
-                totalEnginePower = singleEnginesEnginePower
-                        + (doubleEnginesToActivate * (int) doubleEngineList.getFirst().getSpeed());
+            if (doubleEnginesToActivate > doubleEngineAmount) {
+                // If the requested double engines to activate surpass the
+                // actual amount of double engines available, then activate
+                // all those double engine and avoid consuming the excess energy
+                doubleEnginesToActivate = doubleEngineAmount;
             }
-            else {
-                totalEnginePower = singleEnginesEnginePower
-                        + (doubleEngineAmount * (int) doubleEngineList.getFirst().getSpeed());
-            }
+
+            // Calculating the totalEnginePower
+            totalEnginePower = singleEnginesEnginePower
+                    + (doubleEnginesToActivate * (int) doubleEngineList.getFirst().getSpeed());
+
+            // Consuming the amount of batteries required to activate
+            // the given amount of double engines
+            this.consumeEnergy(doubleEnginesToActivate);
         }
         else {
+            // No double engines to activate means that the total engine power
+            // is the result of all and only the single engines onboard the ship
             totalEnginePower = singleEnginesEnginePower;
         }
-
-        // Consuming the amount of batteries required to activate
-        // the given amount of double engines
-        this.consumeEnergy(doubleEnginesToActivate);
 
         return totalEnginePower;
     }
@@ -526,11 +601,11 @@ public class Ship {
 
     /**
      * Regenerates the ship's grid by using the <code>traverse()</code> method.<br>
-     * This method is used only when deleting a component divides the ship into two
+     * This method is useful only when deleting a component divides the ship into two
      * separate branches and, since the core must be kept, the branch that does not
      * contain the component will be the one to be deleted.
      */
-    private void recreateShipGrid() {
+    public void recreateShipGrid() {
         // Initializing all components of the grid to null
         Component[][] grid = initGrid(this.grid_rows, this.grid_cols);
 
@@ -685,9 +760,6 @@ public class Ship {
         return neighbours;
     }
 
-    // TODO: Find a way to throw an exception if the component is placed outside of the ship
-    // TODO: (NOTE: not the ship's grid (12x12) but the actual ship's profile)
-    // TODO: !!FOUND A SOLUTION!! -> Store for each level a 12x12 matrix of 1s and 0s to specify where components can be (1) or not (0)
     /**
      * Adds the given component at the given coordinates (i, j) in the ship's component grid.
      *
@@ -700,7 +772,7 @@ public class Ship {
      */
     public void addComponent(Component component, int i, int j)
             throws NullComponentException, OutOfGridException,
-            ExistingComponentException/*, OutOfShipException*/   // TODO
+            ExistingComponentException, OutOfShipException
     {
         if (component == null) {
             throw new NullComponentException("Given component to add is null");
@@ -711,12 +783,11 @@ public class Ship {
         if (this.components[i][j] != null) {
             throw new ExistingComponentException("Cannot insert given component on top of an already existing one");
         }
-        // TODO: Add when ship profiles are added in the Ship class's static block
-        /*
-        if (shipProfiles.get(this.difficultyLevel).get(i).get(j) == 0) {
-            throw new OutOfShipException("ERROR: Cannot insert given component outside the ship");
+        if (shipProfiles.containsKey(this.difficultyLevel)) {
+            if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
+                throw new OutOfShipException("ERROR: Cannot insert given component outside the ship");
+            }
         }
-        */
 
         // Setting the current component's position
         component.setPosition(i, j);
@@ -725,7 +796,6 @@ public class Ship {
         this.components[i][j] = component;
     }
 
-    // TODO: Modify to take into account the fact that the disconnected pieces need to be tracked (for currency)
     /**
      * Removes the component at coordinates (i, j) from the ship's grid.<br>
      * If that component, when removed, divides the ship into 2 or more branches, then the
@@ -735,34 +805,48 @@ public class Ship {
      * @param i The index of row that contains the component to delete
      * @param j The index of column that contains the component to delete
      * @throws OutOfGridException If the given coordinates (i, j) fall outside the grid
+     *
+     * @return The components removed from the ship, which are the selected one at coordinates (i, j) and any components
+     *         that were left hanging from the ship as a consequence of the removal of the selected component.
      */
-    public void removeComponent(int i, int j) throws OutOfGridException {
+    public List<Component> removeComponent(int i, int j) throws OutOfGridException, CoreDeletionAttemptException {
+        Component[][] previousShip;
+        List<Component> removedComponents;
+
         if (i < 0 || j < 0 || i >= this.grid_rows || j >= this.grid_cols) {
             throw new OutOfGridException("Requested component is not in the ship component grid");
         }
-        // TODO: Modify method such that it keeps track of the deleted components, since
-        // TODO: they're needed to count the credits to subtract to the player as a deficit
-        /*
-         *  Now the component removal consists of 3 steps:
-         *
-         *  (1) - Remove the selected component from the ship's grid
-         *  (2) - recreateShipGrid, which removes any component that was left hanging:
-         *         - This step takes care of any hanging branches that might have been generated
-         *           from the removal of the component.
-         *         - Basically, the method returns a grid that contains only the components that
-         *           can be reached with at least one path starting from the core of the ship.
-         *         - If there are any components that cannot be reached by starting from the core,
-         *           then these are part of "hanging branches" and thus must be eliminated.
-         *  (3) - Recreate all the sub-lists:
-         *         - Since the ship's grid was modified in the previous steps, all its sub-lists
-         *           must be recalculated to ensure that all the removed components do not appear
-         *           in those lists.
-         *         - Finally, by doing so, any reference to those removed components is deleted and thus
-         *           the garbage collector can deallocate them, effectively erasing them from memory.
-         */
+        if (i == this.core.getPosition()[0] && j == this.core.getPosition()[1]) {
+            throw new CoreDeletionAttemptException("ERROR: Cannot delete core cabin from the ship");
+        }
+
+        previousShip = new Component[this.grid_rows][this.grid_cols];
+        removedComponents = new ArrayList<Component>();
+
+        // Copying the current ship
+        for (int row = 0; row < this.grid_rows; row++) {
+            for (int col = 0; col < this.grid_cols; col++) {
+                previousShip[row][col] = this.components[row][col];
+            }
+        }
+
+        // Removing the component and regenerating the new ship
         this.components[i][j] = null;
         recreateShipGrid();
         this.generateComponentSubLists();
+
+        // If the component at coordinates (row, col) in the previousShip
+        // was not null, then it means that it got removed and thus needs to
+        // be added to the removed components list
+        for (int row = 0; row < this.grid_rows; row++) {
+            for (int col = 0; col < this.grid_cols; col++) {
+                if (previousShip[row][col] != null && this.components[row][col] == null) {
+                    removedComponents.add(previousShip[row][col]);
+                }
+            }
+        }
+
+        return removedComponents;
     }
 
     /**
