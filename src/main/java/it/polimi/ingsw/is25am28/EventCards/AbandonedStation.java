@@ -21,7 +21,6 @@ public class AbandonedStation extends EventCard {
     private final int movementStep;
     private ArrayList<Item> givenItems;
     private ResourceBank resourceBank;
-    private boolean hasBeenUsed;
 
     private List<ComponentHelper<ItemColor>> resourceToDropOff;
     private List<ComponentHelper<ItemColor>> resourceToTake;
@@ -33,7 +32,6 @@ public class AbandonedStation extends EventCard {
         this.movementStep = movementStep;
         this.givenItems = givenItems;
         this.resourceBank = resourceBank;
-        this.hasBeenUsed = false;
     }
 
     /**
@@ -50,20 +48,12 @@ public class AbandonedStation extends EventCard {
 
             // if there are no players we do not have to continue, since no one can use the card
             if (this.players.isEmpty()) {
-                this.hasBeenUsed = true;
+                this.cardUsed();
                 this.currentPlayer = Optional.empty();
             } else {
                 this.currentPlayer = Optional.of(players.getFirst());
             }
         }
-    }
-
-    /**
-     * Override needed to end the usage of the card if a previous player already used the card
-     * */
-    @Override
-    public boolean hasFinished() {
-        return hasBeenUsed || currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || (players.isEmpty() && currentPlayer.isEmpty());
     }
 
     @Override
@@ -117,7 +107,7 @@ public class AbandonedStation extends EventCard {
     @Override
     protected void bonusEffect() {
         if (this.getCurrentPlayer().isPresent()) {
-            this.hasBeenUsed = true;
+            this.cardUsed();
 
             // Add the resources from the player to the bank
             for ( ComponentHelper<ItemColor> resourceDrop : this.resourceToDropOff ) {

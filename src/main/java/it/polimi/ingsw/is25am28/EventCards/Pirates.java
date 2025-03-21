@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -118,7 +119,7 @@ public class Pirates extends EventCard {
     }
 
     @Override @SuppressWarnings("unchecked")
-    public JSONObject generateState() {
+    public CardStateJSON generateState() {
         JSONObject piratesState = new JSONObject();
 
         if (this.getCurrentPlayer().isPresent()) {
@@ -132,6 +133,6 @@ public class Pirates extends EventCard {
         //piratesState.put("numberOfShots", numberOfShots);
         piratesState.put("hasBeenDefeated", hasBeenDefeated);
 
-        return piratesState;
+        return null;
     }
 }

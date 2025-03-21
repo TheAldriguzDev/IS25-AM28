@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Items.*;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -238,24 +239,9 @@ public class Smugglers extends EventCard {
 
 
     @Override @SuppressWarnings("unchecked")
-    public JSONObject generateState() {
-        JSONObject smugglersState = new JSONObject();
+    public CardStateJSON generateState() {
 
-        if(getCurrentPlayer().isPresent()) {
-            smugglersState.put("playerNickname", getCurrentPlayer().get().getNickname());
-        }
-        smugglersState.put("cardName", this.name);
-        smugglersState.put("cardLevel", cardLevel);
-        smugglersState.put("requiredFirepower", requiredFirepower);
-        smugglersState.put("movementSteps", movementSteps);
-        smugglersState.put("redItems", redItems);
-        smugglersState.put("yellowItems", yellowItems);
-        smugglersState.put("blueItems", blueItems);
-        smugglersState.put("greenItems", greenItems);
-        smugglersState.put("takenItems", takenItems);
-        smugglersState.put("hasBeenDefeated", hasBeenDefeated);
-
-        return smugglersState;
+        return new CardStateJSON();
     }
 
 

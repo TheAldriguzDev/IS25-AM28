@@ -5,6 +5,7 @@ module it.polimi.ingsw.is25am28 {
     requires org.controlsfx.controls;
     requires json.simple;
     requires com.fasterxml.jackson.databind;
+    requires java.smartcardio;
 
     opens it.polimi.ingsw.is25am28 to javafx.fxml;
     exports it.polimi.ingsw.is25am28;

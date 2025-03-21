@@ -201,28 +201,28 @@ public class Ship {
      */
     public void generateComponentSubLists() throws IllegalStateException {
         traverse(
-            (Component c) -> {
-                switch (c) {
-                    case Battery battery:       this.batteryList.add(battery);
-                                                break;
-                    case Cabin cabin:           this.cabinList.add(cabin);
-                                                break;
-                    case Cannon cannon:         this.cannonList.add(cannon);
-                                                break;
-                    case Engine engine:         this.engineList.add(engine);
-                                                break;
-                    case Shield shield:         this.shieldList.add(shield);
-                                                break;
-                    case Storage storage:       this.storageList.add(storage);
-                                                break;
-                    case Vital vital:           this.vitalList.add(vital);
-                                                break;
-                    case Structural structural: // Structural components are not sorted
-                                                break;
-                    default:
-                        throw new IllegalStateException("Unexpected class type " + c.toString());
+                (Component c) -> {
+                    switch (c) {
+                        case Battery battery:       this.batteryList.add(battery);
+                            break;
+                        case Cabin cabin:           this.cabinList.add(cabin);
+                            break;
+                        case Cannon cannon:         this.cannonList.add(cannon);
+                            break;
+                        case Engine engine:         this.engineList.add(engine);
+                            break;
+                        case Shield shield:         this.shieldList.add(shield);
+                            break;
+                        case Storage storage:       this.storageList.add(storage);
+                            break;
+                        case Vital vital:           this.vitalList.add(vital);
+                            break;
+                        case Structural structural: // Structural components are not sorted
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected class type " + c.toString());
+                    }
                 }
-            }
         );
     }
 
@@ -387,9 +387,9 @@ public class Ship {
 
         // Calculating the firepower of only the single cannons
         float singleCannonsFirePower = (float) this.cannonList.stream()
-                    .filter((Cannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
-                    .mapToDouble(Cannon::getFirePower)
-                    .sum();
+                .filter((Cannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
+                .mapToDouble(Cannon::getFirePower)
+                .sum();
 
         if (doubleCannonAmount > 0) {
             if (doubleCannonsToActivate > doubleCannonAmount) {
@@ -450,9 +450,9 @@ public class Ship {
 
         // Calculating the engine power of only the single engines
         int singleEnginesEnginePower = (int) this.engineList.stream()
-                    .filter((Engine c) -> (c.getSpeed() == 1))
-                    .mapToDouble(Engine::getSpeed)
-                    .sum();
+                .filter((Engine c) -> (c.getSpeed() == 1))
+                .mapToDouble(Engine::getSpeed)
+                .sum();
 
         if (doubleEngineAmount > 0) {
             if (doubleEnginesToActivate > doubleEngineAmount) {
@@ -496,14 +496,14 @@ public class Ship {
         AtomicInteger exposedConnectors = new AtomicInteger();
 
         traverse(
-            (Component component) -> {
-                Component[] neighbours = this.getNearestComponents(component);
-                for (Component neighbour : neighbours) {
-                    if (neighbour == null) {
-                        exposedConnectors.getAndIncrement();
+                (Component component) -> {
+                    Component[] neighbours = this.getNearestComponents(component);
+                    for (Component neighbour : neighbours) {
+                        if (neighbour == null) {
+                            exposedConnectors.getAndIncrement();
+                        }
                     }
                 }
-            }
         );
 
         return exposedConnectors.get();
@@ -526,11 +526,11 @@ public class Ship {
         List<Component> wrongs = new ArrayList<>();
 
         traverse(
-            (Component c) -> {
-                if(!c.check(getNearestComponents(c))){
-                    wrongs.add(c);
+                (Component c) -> {
+                    if(!c.check(getNearestComponents(c))){
+                        wrongs.add(c);
+                    }
                 }
-            }
         );
 
         return wrongs;
@@ -589,11 +589,11 @@ public class Ship {
         AtomicBoolean isShipValid = new AtomicBoolean(true);
 
         traverse(
-            (Component c) -> {
-                if (isShipValid.get() && !c.check(getNearestComponents(c))) {
-                    isShipValid.set(false);
+                (Component c) -> {
+                    if (isShipValid.get() && !c.check(getNearestComponents(c))) {
+                        isShipValid.set(false);
+                    }
                 }
-            }
         );
 
         return isShipValid.get();
@@ -614,10 +614,10 @@ public class Ship {
         // that would otherwise be left hanging
         // (i.e.: no path exists from the core to those components)
         traverse(
-            (Component c) -> {
-                int[] position = c.getPosition();
-                grid[position[0]][position[1]] = c;
-            }
+                (Component c) -> {
+                    int[] position = c.getPosition();
+                    grid[position[0]][position[1]] = c;
+                }
         );
 
         // Finally, substitute the old grid with the new one
@@ -772,7 +772,7 @@ public class Ship {
      */
     public void addComponent(Component component, int i, int j)
             throws NullComponentException, OutOfGridException,
-                   ExistingComponentException, OutOfShipException
+            ExistingComponentException, OutOfShipException
     {
         if (component == null) {
             throw new NullComponentException("Given component to add is null");

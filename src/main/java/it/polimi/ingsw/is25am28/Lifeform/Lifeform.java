@@ -3,7 +3,7 @@ package it.polimi.ingsw.is25am28.Lifeform;
 public class Lifeform {
     private final LifeformType lifeformType;
 
-    Lifeform(LifeformType lifeformType) {
+    public Lifeform(LifeformType lifeformType) {
         this.lifeformType = lifeformType;
     }
 
