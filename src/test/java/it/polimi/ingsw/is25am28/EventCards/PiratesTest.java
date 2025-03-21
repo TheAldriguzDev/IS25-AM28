@@ -1,7 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.SlaversJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.*;
@@ -9,16 +9,19 @@ import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Player.Player;
+import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Ship.Ship;
+import org.json.simple.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-class SlaversTest {
+import static org.junit.jupiter.api.Assertions.*;
+
+class PiratesTest {
     Board board;
     Player p1;
     Player p2;
@@ -33,20 +36,24 @@ class SlaversTest {
     ActionJSON actionJSON3;
     ActionJSON actionJSON4;
 
-    Slavers slavers;
+    Pirates pirates;
 
-    ArrayList<Cabin> crewToRemove1;
-    ArrayList<Cabin> crewToRemove2;
-    ArrayList<Cabin> crewToRemove3;
-    ArrayList<Cabin> crewToRemove4;
+    ArrayList<int[]> shieldsToActivate1;
+    ArrayList<int[]> shieldsToActivate2;
+    ArrayList<int[]> shieldsToActivate3;
+    ArrayList<int[]> shieldsToActivate4;
 
-    List<Cabin> cabinList1;
-    List<Cabin> cabinList2;
-    List<Cabin> cabinList3;
-    List<Cabin> cabinList4;
+    ArrayList<Integer> dicesResults;
+
+    JSONArray shootingSequence;
+
+    JSONArray plasmaShot1;
+    JSONArray plasmaShot2;
+    JSONArray plasmaShot3;
 
     @BeforeEach
-    void init() {
+    @SuppressWarnings("unchecked")
+    public void init() {
 
         board = new BoardLevel2();
         board.buildBoard();
@@ -62,16 +69,10 @@ class SlaversTest {
         p3 = players.get(2);
         p4 = players.get(3);
 
-        crewToRemove1 = new ArrayList<>();
-        crewToRemove2 = new ArrayList<>();
-        crewToRemove3 = new ArrayList<>();
-        crewToRemove4 = new ArrayList<>();
-
-        cabinList1 = new ArrayList<>();
-        cabinList2 = new ArrayList<>();
-        cabinList3 = new ArrayList<>();
-        cabinList4 = new ArrayList<>();
-
+        shieldsToActivate1 = new ArrayList<>();
+        shieldsToActivate2 = new ArrayList<>();
+        shieldsToActivate3 = new ArrayList<>();
+        shieldsToActivate4 = new ArrayList<>();
 
         ship_1 = p1.getShip();
         ship_init1(ship_1);
@@ -87,42 +88,29 @@ class SlaversTest {
         board.addPlayerToBoard(p3);
         board.addPlayerToBoard(p4);
 
+        dicesResults = new ArrayList<>();
+        dicesResults.add(7); // dall'alto, grosso
+        dicesResults.add(5); // da sinistra, piccolo
+        dicesResults.add(6); // dall'alto, piccolo
+
+        shootingSequence = new JSONArray();
+
+        plasmaShot1 = new JSONArray();
+        plasmaShot1.add(2); // grande
+        plasmaShot1.add(0); // dall'alto
+        plasmaShot2 = new JSONArray();
+        plasmaShot2.add(1); // piccolo
+        plasmaShot2.add(3); // da sinistra
+        plasmaShot3 = new JSONArray();
+        plasmaShot3.add(1); // piccolo
+        plasmaShot3.add(0); // dall'alto
+
+        shootingSequence.add(plasmaShot1);
+        shootingSequence.add(plasmaShot2);
+        shootingSequence.add(plasmaShot3);
+
+
     }
-
-
-    //@Test
- //   public void generalTest() {
-
-        // Se dopo averli sconfitti vengono guadagnati crediti anche nelle altre esecuzioni è perchè in realà
-        // non dovrebbero partire proprio, quindi i lcontroll all'interno non viene fatto, se ne occupa la session
-
-//        System.out.println(this.p1.getNickname());
-//        System.out.println("(1)Ship's FirePower is: " + ship_1.getFirePower(0));
-//        System.out.println("(1)Ship's Battery is: " + ship_1.getAvailableEnergy());
-//        System.out.println("(1)Player's credits: " + p1.getCredits());
-//        System.out.println("(1)Player's position " + p1.getCursor());
-//
-//
-//
-//
-//        System.out.println(p2.getNickname());
-//        System.out.println("(2)Ship's FirePower is: " + ship_2.getFirePower(0));
-//        System.out.println("(2)Ship's Battery is: " + ship_2.getAvailableEnergy());
-//        System.out.println("(2)Player's credits: " + p1.getCredits());
-//        System.out.println("(2)Player's position " + p2.getCursor());
-//
-//        System.out.println(p3.getNickname());
-//        System.out.println("(3)Ship's FirePower is: " + ship_3.getFirePower(0));
-//        System.out.println("(3)Ship's Battery is: " + ship_3.getAvailableEnergy());
-//        System.out.println("(3)Player's credits: " + p3.getCredits());
-//        System.out.println("(3)Player's position " + p3.getCursor());
-//
-//        System.out.println(p4.getNickname());
-//        System.out.println("(4)Ship's FirePower is: " + ship_4.getFirePower(0));
-//        System.out.println("(4)Ship's Battery is: " + ship_4.getAvailableEnergy());
-//        System.out.println("(4)Player's credits: " + p4.getCredits());
-//        System.out.println("(4)Player's position " + p4.getCursor());
-//    }
 
     @Test
     public void takeCreditsTest() {
@@ -131,19 +119,19 @@ class SlaversTest {
         p3.setCredits(5);
         p4.setCredits(0);
 
-        actionJSON1 = new SlaversJSON("Player 1", true, crewToRemove1, 1); // Total FirePower: 4
-        actionJSON2 = new SlaversJSON("Player 2", true, crewToRemove2, 0); // Total FirePower: 2
-        actionJSON3 = new SlaversJSON("Player 3", true, crewToRemove3, 0); // Total FirePower: 3
-        actionJSON4 = new SlaversJSON("Player 4", true, crewToRemove4, 0); // Total FirePower: 3
+        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
+        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
+        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
+        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
 
-        slavers = new Slavers("Slavers", 2, 3, 2, 4, 3, board);
+        pirates = new Pirates("Pirates", 2, 3, 4, 4, shootingSequence, board);
 
-        slavers.initCardPlayers();
+        pirates.initCardPlayers();
 
-        slavers.useCard(actionJSON1);
-        slavers.useCard(actionJSON2);
-        slavers.useCard(actionJSON3);
-        slavers.useCard(actionJSON4);
+        pirates.useCard(actionJSON1);
+        pirates.useCard(actionJSON2);
+        pirates.useCard(actionJSON3);
+        pirates.useCard(actionJSON4);
 
 
         assert p1.getCredits() == 7 : "p1 credits should be 7 (slavers defeated), not " + p1.getCredits();
@@ -155,19 +143,20 @@ class SlaversTest {
 
     @Test
     public void movementTest() {
-        actionJSON1 = new SlaversJSON("Player 1", true, crewToRemove1, 1); // Total FirePower: 4
-        actionJSON2 = new SlaversJSON("Player 2", true, crewToRemove2, 0); // Total FirePower: 2
-        actionJSON3 = new SlaversJSON("Player 3", true, crewToRemove3, 0); // Total FirePower: 3
-        actionJSON4 = new SlaversJSON("Player 4", true, crewToRemove4, 0); // Total FirePower: 3
 
-        slavers = new Slavers("Slavers", 2, 3, 2, 4, 3, board);
+        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
+        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
+        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
+        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
 
-        slavers.initCardPlayers();
+        pirates = new Pirates("Pirates", 2, 3, 4, 2, shootingSequence, board);
 
-        slavers.useCard(actionJSON1);
-        slavers.useCard(actionJSON2);
-        slavers.useCard(actionJSON3);
-        slavers.useCard(actionJSON4);
+        pirates.initCardPlayers();
+
+        pirates.useCard(actionJSON1);
+        pirates.useCard(actionJSON2);
+        pirates.useCard(actionJSON3);
+        pirates.useCard(actionJSON4);
 
         assert p1.getCursor() == 4 : "p1 cursor should be 4 (moved 2 backwards), not " + p1.getCursor();
         assert p2.getCursor() == 3 : "p2 cursor should be 3 (did not move), not " + p2.getCursor();
@@ -175,41 +164,78 @@ class SlaversTest {
         assert p4.getCursor() == -3 : "p4 cursor should be -3 (moved 1 backwards, jumped over p3, moved 1 backwards), not " + p4.getCursor();
     }
 
-    @Test
-    public void removeCrewTest() {
-        actionJSON1 = new SlaversJSON("Player 1", true, crewToRemove1, 1); // Total FirePower: 4
-        actionJSON2 = new SlaversJSON("Player 2", true, crewToRemove2, 0); // Total FirePower: 2
-        actionJSON3 = new SlaversJSON("Player 3", true, crewToRemove3, 0); // Total FirePower: 3
-        actionJSON4 = new SlaversJSON("Player 4", true, crewToRemove4, 0); // Total FirePower: 3
+    @Test void destructionAndDefenseTest() {
 
-        slavers = new Slavers("Slavers", 2, 4, 2, 4, 3, board);
+        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
+        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
+        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
+        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
 
-        slavers.initCardPlayers();
+        pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board);
 
-        slavers.useCard(actionJSON1);
-        slavers.useCard(actionJSON2);
-        slavers.useCard(actionJSON3);
-        slavers.useCard(actionJSON4);
+        pirates.initCardPlayers();
 
-        assert cabinList1.get(0).getInhabitants().size() == 2 : "p1 core inhabitants list size should be 2, not " + cabinList1.get(0).getInhabitants().size();
-        assert cabinList1.get(1).getInhabitants().size() == 2 : "p1 cabin_1 inhabitants list size should be 2, not " + cabinList1.get(1).getInhabitants().size();
-        assert cabinList1.get(2).getInhabitants().size() == 2 : "p1 cabin_2 inhabitants list size should be 2, not " + cabinList1.get(2).getInhabitants().size();
-        assert cabinList1.get(3).getInhabitants().size() == 1 : "p1 cabin_3 inhabitants list size should be 2, not " + cabinList1.get(3).getInhabitants().size();
 
-        assert cabinList2.get(0).getInhabitants().size() == 2 : "p2 core inhabitants list size should be 2, not " + cabinList2.get(0).getInhabitants().size();
-        assert cabinList2.get(1).getInhabitants().size() == 1 : "p2 cabin_1 inhabitants list size should be 1, not " + cabinList2.get(1).getInhabitants().size();
-        assert cabinList2.get(2).getInhabitants().size() == 1 : "p2 cabin_2 inhabitants list size should be 1, not " + cabinList2.get(2).getInhabitants().size();
-        assert cabinList2.get(3).getInhabitants().isEmpty() : "p2 cabin_3 inhabitants list size should be 0, not " + cabinList2.get(3).getInhabitants().size();
 
-        assert cabinList3.get(0).getInhabitants().isEmpty() : "p3 core inhabitants list size should be 0, not " + cabinList3.get(0).getInhabitants().size();
-        assert cabinList3.get(1).getInhabitants().size() == 1 : "p3 cabin_1 inhabitants list size should be 1, not " + cabinList3.get(1).getInhabitants().size();
-        assert cabinList3.get(2).getInhabitants().size() == 2 : "p3 cabin_2 inhabitants list size should be 2, not " + cabinList3.get(2).getInhabitants().size();
-        assert cabinList3.get(3).getInhabitants().size() == 1 : "p3 cabin_3 inhabitants list size should be 2, not " + cabinList3.get(3).getInhabitants().size();
+        System.out.println("ship_1 before destruction");
+        printGrid(ship_1);
+        pirates.useCard(actionJSON1);
+        System.out.println("ship_1 after destruction");
+        printGrid(ship_1);
+        System.out.println("////////////////////////////////////");
+        System.out.println("ship_2 before destruction");
+        printGrid(ship_2);
+        pirates.useCard(actionJSON2);
+        System.out.println("ship_2 after destruction");
+        printGrid(ship_2);
+        System.out.println("////////////////////////////////////");
+        System.out.println("ship_3 before destruction");
+        printGrid(ship_3);
+        pirates.useCard(actionJSON3);
+        System.out.println("ship_3 after destruction");
+        printGrid(ship_3);
+        System.out.println("////////////////////////////////////");
+        System.out.println("ship_4 before destruction");
+        printGrid(ship_4);
+        pirates.useCard(actionJSON4);
+        System.out.println("ship_4 after destruction");
+        printGrid(ship_4);
 
-        assert cabinList4.get(0).getInhabitants().size() == 1 : "p4 core inhabitants size should be 1, not " + cabinList4.get(0).getInhabitants().size();
-        assert cabinList4.get(1).getInhabitants().size() == 2 : "p4 cabin_1 inhabitants list size should be 2, not " + cabinList4.get(1).getInhabitants().size();
-        assert cabinList4.get(2).getInhabitants().size() == 1 : "p4 cabin_2 inhabitants list size should be 1, not " + cabinList4.get(2).getInhabitants().size();
-        assert cabinList4.get(3).getInhabitants().isEmpty() : "p4 cabin_3 inhabitants list size should be 0, not " + cabinList4.get(3).getInhabitants().size();
+        assert ship_2.getComponent(6, 7) == null : "Component in (6, 7) not destroyed";
+        assert ship_2.getComponent(5, 6) == null : "Component in (5, 6) not destroyed";
+        assert ship_2.getComponent(6, 6) != null : "Component in (6, 6) destroyed";
+
+        assert ship_3.getComponent(6, 7) == null : "Component in (6, 7) not destroyed";
+        assert ship_3.getComponent(5, 6) != null : "Component in (5, 6) destroyed";
+        assert ship_3.getComponent(6, 6) != null : "Component in (6, 6) destroyed";
+
+        assert ship_4.getComponent(5, 7) == null : "Component in (5, 7) not destroyed";
+        assert ship_4.getComponent(5, 6) == null : "Component in (5, 7) not destroyed";
+
+
+    }
+
+    public void printGrid(Ship ship) {
+        char[][] grid = new char[12][12];
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                grid[i][j] = '-';
+            }
+        }
+        for (int i = 0; i < grid.length; i++) {
+            for (int j = 0; j < grid[i].length; j++) {
+                if (ship.getComponent(i, j) != null) {
+                    grid[i][j] = 'X';
+                }
+            }
+        }
+        for (int i = 0; i < grid.length; i++) {
+            System.out.println();
+            for (int j = 0; j < grid[i].length; j++) {
+                System.out.print(grid[i][j] + " ");
+            }
+        }
+        System.out.println();
     }
 
     public void ship_init1(Ship ship) {
@@ -225,7 +251,7 @@ class SlaversTest {
         Cabin cabin_3 = new Cabin(new int[] {1, 1, 0, 1}, false);
         Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 2);
         Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 0}, 1);
-        Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
+        Cannon cannon_3 = new Cannon(new int[] {0, 0, 0, 1}, 1);
         Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
         Battery battery_1 = new Battery(new int[] {0, 0, 0, 1}, 3);
         //cannon_1.rotateLeft();
@@ -239,29 +265,21 @@ class SlaversTest {
 
         cabin_3.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
 
-          ship.addComponent(cabin_1, 6, 5);
-          ship.addComponent(cabin_2, 6, 7);
-          ship.addComponent(cabin_3, 7, 6);
-          ship.addComponent(cannon_1, 5, 6);
-          ship.addComponent(cannon_2, 6, 4);
-          ship.addComponent(cannon_3, 6, 8);
-          ship.addComponent(vital_1, 7, 5);
-          ship.addComponent(battery_1, 7, 7);
+        ship.addComponent(cabin_1, 6, 5);
+        ship.addComponent(cabin_2, 6, 7);
+        ship.addComponent(cabin_3, 7, 6);
+        ship.addComponent(cannon_1, 5, 6);
+        ship.addComponent(cannon_2, 6, 4);
+        ship.addComponent(cannon_3, 6, 8);
+        ship.addComponent(vital_1, 7, 5);
+        ship.addComponent(battery_1, 7, 7);
 
         ship.generateComponentSubLists();
 
         ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        crewToRemove1.add(cabin_1);
-        crewToRemove1.add(cabin_2);
-        crewToRemove1.add(cabin_3);
 
-
-        cabinList1.add(ship.getCabinList().getFirst());
-        cabinList1.add(cabin_1);
-        cabinList1.add(cabin_2);
-        cabinList1.add(cabin_3);
 
     }
 
@@ -277,11 +295,12 @@ class SlaversTest {
         Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
         Cabin cabin_3 = new Cabin(new int[] {1, 1, 1, 1}, false);
         Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 2);
-        Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 0}, 1);
-        Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
-        Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
+        Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 1}, 1);
+        Cannon cannon_3 = new Cannon(new int[] {0, 0, 0, 1}, 1);
+        Vital vital_1 = new Vital(new int[] {0, 1, 1, 0}, 0);
         Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
         Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
+        Shield shield_1 = new Shield(new int[] {1, 0, 0, 0});
         //cannon_1.rotateLeft();
 
 
@@ -306,21 +325,15 @@ class SlaversTest {
         ship.addComponent(vital_1, 7, 5);
         ship.addComponent(battery_1, 7, 7);
         ship.addComponent(storage_1, 7, 8);
+        ship.addComponent(shield_1, 8, 5);
 
         ship.generateComponentSubLists();
 
         ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        crewToRemove2.add(cabin_1);
-        crewToRemove2.add(cabin_2);
-        crewToRemove2.add(cabin_3);
 
-
-        cabinList2.add(ship.getCabinList().getFirst());
-        cabinList2.add(cabin_1);
-        cabinList2.add(cabin_2);
-        cabinList2.add(cabin_3);
+        shieldsToActivate2.add(new int[] {8, 5});
 
     }
 
@@ -338,11 +351,12 @@ class SlaversTest {
         Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 1);
         Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 1}, 1);
         Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
-        Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
+        Vital vital_1 = new Vital(new int[] {0, 1, 1, 0}, 0);
         Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
         Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
         Storage storage_2 = new Storage(new int[] {0, 0, 0, 1}, 2, true);
-        //cannon_1.rotateLeft();
+        Shield shield_1 = new Shield(new int[] {1, 0, 0, 0});
+        shield_1.rotateLeft();
 
 
         cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
@@ -370,20 +384,14 @@ class SlaversTest {
         ship.addComponent(battery_1, 7, 7);
         ship.addComponent(storage_1, 7, 8);
         ship.addComponent(storage_2, 6, 9);
+        ship.addComponent(shield_1, 8, 5);
 
         ship.generateComponentSubLists();
 
         ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        crewToRemove3.add(ship.getCabinList().getFirst());
-        crewToRemove3.add(cabin_1);
-        crewToRemove3.add(ship.getCabinList().getFirst());
-
-        cabinList3.add(ship.getCabinList().getFirst());
-        cabinList3.add(cabin_1);
-        cabinList3.add(cabin_2);
-        cabinList3.add(cabin_3);
+        shieldsToActivate3.add(new int[] {8, 5});
 
     }
 
@@ -395,15 +403,19 @@ class SlaversTest {
 
         //Cabin core = new Cabin(connectors, true);
         Cabin cabin_1 = new Cabin(new int[] {1, 1, 0, 1}, false);
-        Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
+        Cabin cabin_2 = new Cabin(new int[] {1, 1, 0, 1}, false);
         Cabin cabin_3 = new Cabin(new int[] {1, 1, 1, 1}, false);
         Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 1);
         Cannon cannon_2 = new Cannon(new int[] {1, 1, 0, 1}, 1);
         Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
-        Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
+        Vital vital_1 = new Vital(new int[] {0, 1, 1, 0}, 0);
         Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
         Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
         Storage storage_2 = new Storage(new int[] {0, 0, 0, 1}, 2, true);
+        Shield shield_1 = new Shield(new int[] {1, 0, 0, 0});
+        Shield shield_2 = new Shield(new int[] {0, 0, 1, 0});
+        shield_1.rotateLeft();
+        shield_1.rotateLeft();
         //cannon_1.rotateLeft();
 
 
@@ -431,21 +443,16 @@ class SlaversTest {
         ship.addComponent(battery_1, 7, 7);
         ship.addComponent(storage_1, 7, 8);
         ship.addComponent(storage_2, 6, 9);
+        ship.addComponent(shield_1, 8, 5);
+        ship.addComponent(shield_2, 5, 7);
 
         ship.generateComponentSubLists();
 
         ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        crewToRemove4.add(ship.getCabinList().getFirst());
-        crewToRemove4.add(cabin_3);
-        crewToRemove4.add(cabin_2);
-
-        cabinList4.add(ship.getCabinList().getFirst());
-        cabinList4.add(cabin_1);
-        cabinList4.add(cabin_2);
-        cabinList4.add(cabin_3);
+        shieldsToActivate4.add(new int[] {8, 5});
+        shieldsToActivate4.add(new int[] {5, 7});
 
     }
-
 }

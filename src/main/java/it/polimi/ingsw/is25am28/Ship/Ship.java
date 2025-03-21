@@ -223,9 +223,10 @@ public class Ship {
      */
     public List<Cannon> getDoubleCannons() {
         return this.cannonList.stream()
-                .filter(c -> c.getFirePower() == 2)
+                .filter(c -> (c.getFirePower() == 2 && c.getDirection() == 0) || (c.getFirePower() == 1 && c.getDirection() != 0) )
                 .toList();
     }
+
 
     /**
      * @return The ship's available energy
@@ -319,7 +320,7 @@ public class Ship {
 
         // Calculating the totalFirePower
         float singleCannonsFirePower = (float) this.cannonList.stream()
-                .filter((Cannon c) -> (c.getFirePower() < 2))
+                .filter((Cannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
                 .mapToDouble(Cannon::getFirePower)
                 .sum();
 
@@ -332,14 +333,14 @@ public class Ship {
                 totalFirePower = singleCannonsFirePower
                         + (doubleCannonAmount * doubleCannonList.getFirst().getFirePower());
             }
+
+            // Consuming the amount of batteries required to activate
+            // the given amount of double cannons
+            this.consumeEnergy(doubleCannonsToActivate);
         }
         else {
             totalFirePower = singleCannonsFirePower;
         }
-
-        // Consuming the amount of batteries required to activate
-        // the given amount of double cannons
-        this.consumeEnergy(doubleCannonsToActivate);
 
         return totalFirePower;
     }
@@ -377,9 +378,9 @@ public class Ship {
         doubleEngineAmount = doubleEngineList.size();
 
         // Calculating the totalEnginePower
-        int singleEnginesEnginePower = (int) this.cannonList.stream()
-                .filter((Cannon c) -> (c.getFirePower() < 2))
-                .mapToDouble(Cannon::getFirePower)
+        int singleEnginesEnginePower = (int) this.engineList.stream()
+                .filter((Engine c) -> ((c.getSpeed() < 1 && c.getDirection() != 0) || (c.getSpeed() < 2 && c.getDirection() == 0)))
+                .mapToDouble(Engine::getSpeed)
                 .sum();
 
         if (doubleEngineAmount > 0) {
@@ -391,14 +392,14 @@ public class Ship {
                 totalEnginePower = singleEnginesEnginePower
                         + (doubleEngineAmount * (int) doubleEngineList.getFirst().getSpeed());
             }
+
+            // Consuming the amount of batteries required to activate
+            // the given amount of double engines
+            this.consumeEnergy(doubleEnginesToActivate);
         }
         else {
             totalEnginePower = singleEnginesEnginePower;
         }
-
-        // Consuming the amount of batteries required to activate
-        // the given amount of double engines
-        this.consumeEnergy(doubleEnginesToActivate);
 
         return totalEnginePower;
     }

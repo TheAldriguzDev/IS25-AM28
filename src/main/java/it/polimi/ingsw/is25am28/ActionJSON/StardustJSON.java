@@ -6,7 +6,7 @@ import org.json.simple.parser.ParseException;
 
 public class StardustJSON extends ActionJSON {
 
-    public StardustJSON (@JsonProperty("playerickname") String playerNickname) {
+    public StardustJSON (@JsonProperty("playerNickname") String playerNickname) {
         super(playerNickname);
     }
 

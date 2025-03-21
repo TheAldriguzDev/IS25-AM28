@@ -6,27 +6,30 @@ import java.util.ArrayList;
 
 public class PiratesJSON extends ActionJSON {
     private final boolean takeCredits;
-    private final boolean shieldAbove;
-    private final boolean shieldRight;
-    private final boolean shieldBelow;
-    private final boolean shieldLeft;
+    private final ArrayList<int []> shieldsActivatedCoordinates;
+//    private final boolean shieldAbove;
+//    private final boolean shieldRight;
+//    private final boolean shieldBelow;
+//    private final boolean shieldLeft;
     private final int numberOfDoubleCannonsActivated;
     private final ArrayList<Integer> dicesResults;
 
     public PiratesJSON(@JsonProperty("PlayerNickname") String playerNickname,
                        @JsonProperty("takeCredits") boolean takeCredits,
-                       @JsonProperty("shieldAbove") boolean shieldAbove,
-                       @JsonProperty("shieldRight") boolean shieldRight,
-                       @JsonProperty("shieldBelow") boolean shieldBelow,
-                       @JsonProperty("shieldLeft") boolean shieldLeft,
+//                       @JsonProperty("shieldAbove") boolean shieldAbove,
+//                       @JsonProperty("shieldRight") boolean shieldRight,
+//                       @JsonProperty("shieldBelow") boolean shieldBelow,
+//                       @JsonProperty("shieldLeft") boolean shieldLeft,
+                       @JsonProperty("shieldsActivatedCoordinates") ArrayList<int[]> shieldsActivatedCoordinates,
                        @JsonProperty("numberOfDoubleCannonsActivated") int numberOfDoubleCannonsActivated,
                        @JsonProperty("dicesResults") ArrayList<Integer> dicesResults) {
         super(playerNickname);
         this.takeCredits = takeCredits;
-        this.shieldAbove = shieldAbove;
-        this.shieldRight = shieldRight;
-        this.shieldBelow = shieldBelow;
-        this.shieldLeft = shieldLeft;
+        this.shieldsActivatedCoordinates = shieldsActivatedCoordinates;
+//        this.shieldAbove = shieldAbove;
+//        this.shieldRight = shieldRight;
+//        this.shieldBelow = shieldBelow;
+//        this.shieldLeft = shieldLeft;
         this.numberOfDoubleCannonsActivated = numberOfDoubleCannonsActivated;
         this.dicesResults = dicesResults;
     }
@@ -35,20 +38,24 @@ public class PiratesJSON extends ActionJSON {
         return takeCredits;
     }
 
-    public boolean getShieldAbove() {
-        return shieldAbove;
-    }
+//    public boolean getShieldAbove() {
+//        return shieldAbove;
+//    }
+//
+//    public boolean getShieldRight() {
+//        return shieldRight;
+//    }
+//
+//    public boolean getShieldBelow() {
+//        return shieldBelow;
+//    }
+//
+//    public boolean getShieldLeft() {
+//        return shieldLeft;
+//    }
 
-    public boolean getShieldRight() {
-        return shieldRight;
-    }
-
-    public boolean getShieldBelow() {
-        return shieldBelow;
-    }
-
-    public boolean getShieldLeft() {
-        return shieldLeft;
+    public ArrayList<int[]> getShieldsActivatedCoordinates() {
+        return shieldsActivatedCoordinates;
     }
 
     public int getNumberOfDoubleCannonsActivated() {

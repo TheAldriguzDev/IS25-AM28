@@ -37,7 +37,7 @@ public class Slavers extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
-                    System.out.println("Turn of:" + player.getNickname() + " -> is enemy Defeated?: " + hasFinished());
+                    //System.out.println("Turn of:" + player.getNickname() + " -> is enemy Defeated?: " + hasFinished());
                     String playerNickname = slaversData.getPlayerNickname();
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
@@ -47,6 +47,7 @@ public class Slavers extends EventCard {
                         this.hasBeenDefeated = true;
                         if (slaversData.getTakeCredits()) {
                             bonusEffect();
+                            //System.out.println(player.getNickname() + " spostato indietro di: " + this.movementSteps);
                             getBoard().movePlayerBackwards(player, movementSteps);
                             //player.setCursor(player.getCursor() - this.movementSteps);
                         }
