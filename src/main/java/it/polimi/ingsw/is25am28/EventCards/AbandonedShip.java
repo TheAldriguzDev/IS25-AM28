@@ -38,7 +38,7 @@ public class AbandonedShip extends EventCard {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
         } else {
             this.players = this.getBoard().getPlayers().stream()
-                    .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
+                    .filter( p -> p.getShip().getAllLifeforms().size() >= this.requiredCrew )
                     .toList();
 
             // if there are no players we do not have to continue, since no one can use the card
@@ -77,7 +77,7 @@ public class AbandonedShip extends EventCard {
         // 1. The player match with the current one
         if ( playerNickname != null &&
                 !playerNickname.isEmpty() &&
-                !playerNickname.equals( this.getCurrentPlayer().get().getNickname()) ) {
+                playerNickname.equals( this.getCurrentPlayer().get().getNickname()) ) {
 
             // If the player wants to use the card --> perform the action
             // otherwise get the next player
@@ -85,7 +85,7 @@ public class AbandonedShip extends EventCard {
                 this.lifeformsToBeRemoved = abandonedShip.getLifeformsToBeRemoved();
 
                 // Check if the given input is valid
-                if (lifeformsToBeRemoved.size() == this.requiredCrew) {
+                if (lifeformsToBeRemoved.size() != this.requiredCrew) {
                     throw new IllegalArgumentException("The lifeformsToBeRemoved size does not match with the card requirements!");
                 } else {
 
@@ -150,6 +150,11 @@ public class AbandonedShip extends EventCard {
 
                     tmpCabin.removeInhabitant(tmpLifeFormToBeRemoved);
                 });
+            }
+
+            // Check if the player has finished all of its astronauts --> if yes it needs to be eliminated from the game
+            if (ship.getCabinList().stream().flatMap(c -> c.getInhabitants().stream()).noneMatch(i -> i.getLifeformType().equals(LifeformType.ASTRONAUT))) {
+                this.getBoard().eliminatePlayer(this.getCurrentPlayer().get());
             }
         }
     }
