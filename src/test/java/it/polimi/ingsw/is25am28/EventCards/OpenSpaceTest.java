@@ -60,8 +60,8 @@ class OpenSpaceTest {
                 Storage specialStorage1 = new Storage(connectors, 1, true);
                 Storage specialStorage2 = new Storage(connectors, 2, true);
 
-                Storage storage1 = new Storage(connectors, 2, false);
-                Storage storage2 = new Storage(connectors, 3, false);
+                Storage storage1 = new Storage(connectors, 3, false);
+                Storage storage2 = new Storage(connectors, 2, false);
 
                 Battery battery1 = new Battery(connectors, 2);
                 Battery battery2 = new Battery(connectors, 2);
@@ -121,8 +121,8 @@ class OpenSpaceTest {
                 Storage specialStorage1 = new Storage(connectors, 1, true);
                 Storage specialStorage2 = new Storage(connectors, 2, true);
 
-                Storage storage1 = new Storage(connectors, 2, false);
-                Storage storage2 = new Storage(connectors, 3, false);
+                Storage storage1 = new Storage(connectors, 3, false);
+                Storage storage2 = new Storage(connectors, 2, false);
 
                 Battery battery1 = new Battery(connectors, 2);
                 Battery battery2 = new Battery(connectors, 2);
