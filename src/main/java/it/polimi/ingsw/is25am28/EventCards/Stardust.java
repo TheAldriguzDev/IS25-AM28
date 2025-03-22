@@ -29,6 +29,9 @@ public class Stardust extends EventCard {
             throw new ClassCastException("Card data type in invalid");
         }
         Optional<Player> playerOptional = getCurrentPlayer();
+        for (Player p : getBoard().getPlayers()) {
+            System.out.println("nick: " + p.getNickname());
+        }
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
 
@@ -94,6 +97,8 @@ public class Stardust extends EventCard {
     public void initCardPlayers() throws IllegalArgumentException {
         super.initCardPlayers();
         Collections.reverse(getBoard().getPlayers());
+
+        // Non funziona più dato che è cambiato da reference a copia, bisogna fare override su init e mettere getLast, poi fare override su getNextPlayer
     }
 
 //    @Override

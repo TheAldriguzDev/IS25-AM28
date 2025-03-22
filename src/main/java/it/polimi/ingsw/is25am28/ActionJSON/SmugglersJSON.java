@@ -1,15 +1,51 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.is25am28.Items.ItemColor;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
-public class SmugglersJSON extends ActionJSON {
+import java.util.ArrayList;
+import java.util.List;
 
-    public SmugglersJSON () {
-        super();
+public class SmugglersJSON extends ActionJSON {
+    private final boolean takeLoot;
+    private ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken;
+    private ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved;
+    private final int numberOfDoubleCannonsActivated;
+    private final int takenBatteries;
+
+
+    public SmugglersJSON(@JsonProperty("takeLoot") boolean takeLoot,
+                         @JsonProperty("itemsToBeTaken") ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken,
+                         @JsonProperty("itemsToBeRemoved") ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved,
+                         @JsonProperty("numberOfDoubleCannonsActivated") int numberOfDoubleCannonsActivated,
+                         @JsonProperty("takenBatteries") int takenBatteries) {
+        this.takeLoot = takeLoot;
+        this.itemsToBeTaken = itemsToBeTaken;
+        this.itemsToBeRemoved = itemsToBeRemoved;
+        this.numberOfDoubleCannonsActivated = numberOfDoubleCannonsActivated;
     }
 
+    public boolean getTakeLoot() {
+        return takeLoot;
+    }
 
+    public ArrayList<ComponentHelper<ItemColor>> getItemsToBeTaken() {
+        return itemsToBeTaken;
+    }
+
+    public ArrayList<ComponentHelper<ItemColor>> getItemsToBeRemoved() {
+        return itemsToBeRemoved;
+    }
+
+    public int getNumberOfDoubleCannonsActivated() {
+        return numberOfDoubleCannonsActivated;
+    }
+
+    public int getTakenBatteries() {
+        return takenBatteries;
+    }
 
     //Sevono variabili diverse per le cose da droppare
     /*

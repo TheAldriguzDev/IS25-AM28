@@ -251,7 +251,8 @@ public class FileLoader {
                           ((Long)((JSONObject)o.get("storage")).get("yellow")).intValue(),
                           ((Long)((JSONObject)o.get("storage")).get("green")).intValue(),
                           ((Long)((JSONObject)o.get("storage")).get("blue")).intValue(),
-                          board
+                          board,
+                          resourceBank
                   ));
             }
 

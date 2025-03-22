@@ -2,14 +2,17 @@ package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.ActionJSON.SmugglersJSON;
 import it.polimi.ingsw.is25am28.Items.*;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Battery;
 import it.polimi.ingsw.is25am28.Components.Storage;
+import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,10 +23,10 @@ public class Smugglers extends EventCard {
     private final int yellowItems;
     private final int blueItems;
     private final int greenItems;
-    private final int takenItems;
     private boolean hasBeenDefeated;
+    private final ResourceBank resourceBank;
 
-    public Smugglers(String name, int cardLevel, int requiredFirepower, int movementSteps, int redItems, int yellowItems, int blueItems, int greenItems, int takenItems, Board board) {
+    public Smugglers(String name, int cardLevel, int requiredFirepower, int movementSteps, int redItems, int yellowItems, int blueItems, int greenItems, int takenItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
@@ -31,8 +34,8 @@ public class Smugglers extends EventCard {
         this.yellowItems = yellowItems;
         this.blueItems = blueItems;
         this.greenItems = greenItems;
-        this.takenItems = takenItems;
         this.hasBeenDefeated = false;
+        this.resourceBank = resourceBank;
     }
 
     /*
@@ -42,7 +45,6 @@ public class Smugglers extends EventCard {
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         //SmugglersResponse smugglersResponse = (SmugglersResponse) response;
-        /*
         SmugglersJSON smugglersData;
         try {
             smugglersData = (SmugglersJSON) data;
@@ -73,166 +75,70 @@ public class Smugglers extends EventCard {
                     throw new IllegalArgumentException("There is no player playing in this moment");
                 }
         );
-        getNextPlayer();*/
+        getNextPlayer();
         return this;
     }
-    /*
+
     protected void bonusEffect(ActionJSON data) throws ClassCastException {
         SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
                 (Player player) -> {
-                    // Dubbio su come operare la ridistribuzione delle risorse nel caso lo storage della nave sia pieno
-                    // Togliere le risorse che si desiderano scaricare
-                    // Caricare le scorte possibili scelte
-                    List<Storage> storages = player.getShip().getStorageList();
+                    ArrayList<ComponentHelper<ItemColor>> resourcesToLoad = smugglersData.getItemsToBeTaken();
+                    ArrayList<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
 
-                    // Gestione rimozione riassegnamento da fare
-
-                    // Rimozione di items
-                    int itemsToDrop;
-                    // Rimozione dei rossi
-                    itemsToDrop = smugglersData.getRedToDrop();
-                    for(Storage storage : storages) {
-                        if (itemsToDrop == 0) { break; }
-                        if (storage.isSpecialStorage()) {
-                            List<Item> storedItems = storage.getStoredItems();
-                            for (Item item : storedItems) {
-                                if (item.getColor().equals(ItemColor.RED)) {
-                                    storedItems.remove(item);
-                                    itemsToDrop--;
-                                    if (itemsToDrop == 0) {
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    // Rimozione dei gialli
-                    itemsToDrop = smugglersData.getYellowToDrop();
-                    for(Storage storage : storages) {
-                        if (itemsToDrop == 0) { break; }
-                        List<Item> storedItems = storage.getStoredItems();
-                        for(Item item : storedItems) {
-                            if (item.getColor().equals(ItemColor.YELLOW)) {
-                                storedItems.remove(item);
-                                itemsToDrop--;
-                                if (itemsToDrop == 0) { break; }
-                            }
-                        }
-                    }
-                    // Rimozione dei blu
-                    itemsToDrop = smugglersData.getBlueToDrop();
-                    for(Storage storage : storages) {
-                        if (itemsToDrop == 0) { break; }
-                        List<Item> storedItems = storage.getStoredItems();
-                        for(Item item : storedItems) {
-                            if (item.getColor().equals(ItemColor.BLUE)) {
-                                storedItems.remove(item);
-                                itemsToDrop--;
-                                if (itemsToDrop == 0) { break; }
-                            }
-                        }
-                    }
-                    // Rimozione dei verdi
-                    itemsToDrop = smugglersData.getGreenToDrop();
-                    for(Storage storage : storages) {
-                        if (itemsToDrop == 0) { break; }
-                        List<Item> storedItems = storage.getStoredItems();
-                        for(Item item : storedItems) {
-                            if (item.getColor().equals(ItemColor.GREEN)) {
-                                storedItems.remove(item);
-                                itemsToDrop--;
-                                if (itemsToDrop == 0) { break; }
-                            }
-                        }
+                    // Item da lasciare per fare spazio
+                    for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
+                        resourceDrop.getItem().ifPresent( i ->
+                                this.resourceBank.addResourceToBankFromPlayer(
+                                        player,
+                                        i,
+                                        resourceDrop.getI(),
+                                        resourceDrop.getJ()));
                     }
 
-
-                    // Aggiunta di items
-                    int itemsToLoad;
-                    // Aggiunta dei rossi
-                    itemsToLoad = smugglersData.getRedToLoad();
-                    for(Storage storage : storages) {
-                        if (itemsToLoad == 0) { break; }
-                        if(storage.isSpecialStorage()) {
-                            while (storage.getCapacity() > 0 && itemsToLoad > 0) {
-                                storage.storeItem(new Item(ItemColor.RED));
-                                itemsToLoad--;
-                            }
-                        }
-                    }
-                    // Aggiunta dei gialli
-                    itemsToLoad = smugglersData.getYellowToLoad();
-                    for(Storage storage : storages) {
-                        if (itemsToLoad == 0) { break; }
-                        while (storage.getCapacity() > 0 && itemsToLoad > 0) {
-                            storage.storeItem(new Item(ItemColor.YELLOW));
-                            itemsToLoad--;
-                        }
-                    }
-                    // Aggiunta dei blu
-                    itemsToLoad = smugglersData.getBlueToLoad();
-                    for(Storage storage : storages) {
-                        if (itemsToLoad == 0) { break; }
-                        while (storage.getCapacity() > 0 && itemsToLoad > 0) {
-                            storage.storeItem(new Item(ItemColor.BLUE));
-                            itemsToLoad--;
-                        }
-                    }
-                    // Aggiunta dei verdi
-                    itemsToLoad = smugglersData.getGreenToLoad();
-                    for(Storage storage : storages) {
-                        if (itemsToLoad == 0) { break; }
-                        while (storage.getCapacity() > 0 && itemsToLoad > 0) {
-                            storage.storeItem(new Item(ItemColor.GREEN));
-                            itemsToLoad--;
-                        }
+                    // Item da caricare sulla nave
+                    for ( ComponentHelper<ItemColor> resourceTake : resourcesToLoad) {
+                        resourceTake.getItem().ifPresent( i ->
+                                this.resourceBank.addResourceToPlayerFromBank(
+                                        player,
+                                        i,
+                                        resourceTake.getI(),
+                                        resourceTake.getJ()));
                     }
                 }
         );
-    }*/
+    }
 
     @Override
     protected void bonusEffect() {}
 
-    @Override
-    protected void malusEffect() {
-        //TakeItem
+    protected void malusEffect(ActionJSON data) throws ClassCastException {
+        SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
                 (Player player) -> {
-                    // Rimuove le merci
-                    List<Storage> storages = player.getShip().getStorageList();
-                    int i = 0;
-                    for (ItemColor color : ItemColor.values()) {
-                        for (Storage storage : storages) {
-                            List<Item> storedItems = storage.getStoredItems();
-                            for (Item item : storedItems) {
-                                if (item.getColor().equals(color)) {
-                                    storage.removeItem(item);
-                                    i++;
-                                    if (i == takenItems) { return; }
-                                }
-                            }
-                        }
+                    ArrayList<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
+
+                    // Item da lasciare
+                    for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
+                        resourceDrop.getItem().ifPresent( i ->
+                                this.resourceBank.addResourceToBankFromPlayer(
+                                        player,
+                                        i,
+                                        resourceDrop.getI(),
+                                        resourceDrop.getJ()));
                     }
-                    // Rimuove le batterie
-                    List<Battery> Batteries = player.getShip().getBatteryList();
-                    for (Battery battery : Batteries) {
-                        while (battery.getAvailability() > 0) {
-                            battery.useBattery(1);
-                            i++;
-                            if (i == takenItems) { return; }
-                        }
-                    }
+
+                    // Nel caso gli item da lasciare non siano abbastanza (check lato client), batterie da rimuovere
+                    player.getShip().consumeEnergy(smugglersData.getTakenBatteries());
                 }
         );
 
-
-
-
     }
+
+    @Override
+    protected void malusEffect() {}
     /*
     @Override
     public boolean hasFinished() {
@@ -255,7 +161,7 @@ public class Smugglers extends EventCard {
         smugglersState.put("yellowItems", yellowItems);
         smugglersState.put("blueItems", blueItems);
         smugglersState.put("greenItems", greenItems);
-        smugglersState.put("takenItems", takenItems);
+        //smugglersState.put("takenItems", takenItems);
         smugglersState.put("hasBeenDefeated", hasBeenDefeated);
 
         //return smugglersState;
@@ -265,3 +171,139 @@ public class Smugglers extends EventCard {
 
 
 }
+
+// Dubbio su come operare la ridistribuzione delle risorse nel caso lo storage della nave sia pieno
+//                    // Togliere le risorse che si desiderano scaricare
+//                    // Caricare le scorte possibili scelte
+//                    List<Storage> storages = player.getShip().getStorageList();
+//
+//                    // Gestione rimozione riassegnamento da fare
+//
+//                    // Rimozione di items
+//                    int itemsToDrop;
+//                    // Rimozione dei rossi
+//                    itemsToDrop = smugglersData.getRedToDrop();
+//                    for(Storage storage : storages) {
+//                        if (itemsToDrop == 0) { break; }
+//                        if (storage.isSpecialStorage()) {
+//                            List<Item> storedItems = storage.getStoredItems();
+//                            for (Item item : storedItems) {
+//                                if (item.getColor().equals(ItemColor.RED)) {
+//                                    storedItems.remove(item);
+//                                    itemsToDrop--;
+//                                    if (itemsToDrop == 0) {
+//                                        break;
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                    // Rimozione dei gialli
+//                    itemsToDrop = smugglersData.getYellowToDrop();
+//                    for(Storage storage : storages) {
+//                        if (itemsToDrop == 0) { break; }
+//                        List<Item> storedItems = storage.getStoredItems();
+//                        for(Item item : storedItems) {
+//                            if (item.getColor().equals(ItemColor.YELLOW)) {
+//                                storedItems.remove(item);
+//                                itemsToDrop--;
+//                                if (itemsToDrop == 0) { break; }
+//                            }
+//                        }
+//                    }
+//                    // Rimozione dei blu
+//                    itemsToDrop = smugglersData.getBlueToDrop();
+//                    for(Storage storage : storages) {
+//                        if (itemsToDrop == 0) { break; }
+//                        List<Item> storedItems = storage.getStoredItems();
+//                        for(Item item : storedItems) {
+//                            if (item.getColor().equals(ItemColor.BLUE)) {
+//                                storedItems.remove(item);
+//                                itemsToDrop--;
+//                                if (itemsToDrop == 0) { break; }
+//                            }
+//                        }
+//                    }
+//                    // Rimozione dei verdi
+//                    itemsToDrop = smugglersData.getGreenToDrop();
+//                    for(Storage storage : storages) {
+//                        if (itemsToDrop == 0) { break; }
+//                        List<Item> storedItems = storage.getStoredItems();
+//                        for(Item item : storedItems) {
+//                            if (item.getColor().equals(ItemColor.GREEN)) {
+//                                storedItems.remove(item);
+//                                itemsToDrop--;
+//                                if (itemsToDrop == 0) { break; }
+//                            }
+//                        }
+//                    }
+//
+//
+//                    // Aggiunta di items
+//                    int itemsToLoad;
+//                    // Aggiunta dei rossi
+//                    itemsToLoad = smugglersData.getRedToLoad();
+//                    for(Storage storage : storages) {
+//                        if (itemsToLoad == 0) { break; }
+//                        if(storage.isSpecialStorage()) {
+//                            while (storage.getCapacity() > 0 && itemsToLoad > 0) {
+//                                storage.storeItem(new Item(ItemColor.RED));
+//                                itemsToLoad--;
+//                            }
+//                        }
+//                    }
+//                    // Aggiunta dei gialli
+//                    itemsToLoad = smugglersData.getYellowToLoad();
+//                    for(Storage storage : storages) {
+//                        if (itemsToLoad == 0) { break; }
+//                        while (storage.getCapacity() > 0 && itemsToLoad > 0) {
+//                            storage.storeItem(new Item(ItemColor.YELLOW));
+//                            itemsToLoad--;
+//                        }
+//                    }
+//                    // Aggiunta dei blu
+//                    itemsToLoad = smugglersData.getBlueToLoad();
+//                    for(Storage storage : storages) {
+//                        if (itemsToLoad == 0) { break; }
+//                        while (storage.getCapacity() > 0 && itemsToLoad > 0) {
+//                            storage.storeItem(new Item(ItemColor.BLUE));
+//                            itemsToLoad--;
+//                        }
+//                    }
+//                    // Aggiunta dei verdi
+//                    itemsToLoad = smugglersData.getGreenToLoad();
+//                    for(Storage storage : storages) {
+//                        if (itemsToLoad == 0) { break; }
+//                        while (storage.getCapacity() > 0 && itemsToLoad > 0) {
+//                            storage.storeItem(new Item(ItemColor.GREEN));
+//                            itemsToLoad--;
+//                        }
+//                    }
+
+
+
+
+// Rimuove le merci
+//                    List<Storage> storages = player.getShip().getStorageList();
+//                    int i = 0;
+//                    for (ItemColor color : ItemColor.values()) {
+//                        for (Storage storage : storages) {
+//                            List<Item> storedItems = storage.getStoredItems();
+//                            for (Item item : storedItems) {
+//                                if (item.getColor().equals(color)) {
+//                                    storage.removeItem(item);
+//                                    i++;
+//                                    if (i == takenItems) { return; }
+//                                }
+//                            }
+//                        }
+//                    }
+//                    // Rimuove le batterie
+//                    List<Battery> Batteries = player.getShip().getBatteryList();
+//                    for (Battery battery : Batteries) {
+//                        while (battery.getAvailability() > 0) {
+//                            battery.useBattery(1);
+//                            i++;
+//                            if (i == takenItems) { return; }
+//                        }
+//                    }
