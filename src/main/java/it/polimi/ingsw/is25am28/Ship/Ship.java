@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -16,14 +17,9 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.is25am28.Connector.*;
 
 public class Ship {
-    private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
     private final static Map<Integer, int[][]> shipProfiles = new HashMap<>();
 
     static {
-        shipDimensions.put(1, new Pair<>(5, 5));
-        shipDimensions.put(2, new Pair<>(5, 7));
-        shipDimensions.put(3, new Pair<>(6, 9));
-
         int[][] matrix;
         int[][] levelOneMatrix;
         int row, col;
@@ -232,14 +228,6 @@ public class Ship {
      */
     public Pair<Integer, Integer> getGridDimensions() {
         return new Pair<Integer, Integer>(this.grid_rows, this.grid_cols);
-    }
-
-    /**
-     * @return A pair of integers that represent the dimensions (row, col) of the ship based on the given difficulty
-     *         (NOTE: It's not the same as the grid's dimensions)
-     */
-    public Pair<Integer, Integer> getShipDimensionsByDifficulty(int difficultyLevel) {
-        return Ship.shipDimensions.get(difficultyLevel);
     }
 
     /**
@@ -480,15 +468,6 @@ public class Ship {
     }
 
     /**
-     * @return All the ship's stored <code>Item</code>s
-     */
-    public List<Item> getAllItems() {
-        return this.storageList.stream()
-                .flatMap(storage -> storage.getStoredItems().stream())
-                .collect(Collectors.toList());
-    }
-
-    /**
      * @return The number of exposed connectors on the entire ship
      */
     public int getExposedConnectorAmount(){
@@ -507,6 +486,24 @@ public class Ship {
         );
 
         return exposedConnectors.get();
+    }
+
+    /**
+     * @return The total (normal + special) storage space that is available (i.e.: not occupied)
+     */
+    public int getAvailableStorageSpace() {
+        return this.getStorageList().stream()
+                .mapToInt(Storage::availableSpace)
+                .sum();
+    }
+
+    /**
+     * @return All the ship's stored <code>Item</code>s
+     */
+    public List<Item> getAllItems() {
+        return this.storageList.stream()
+                .flatMap(storage -> storage.getStoredItems().stream())
+                .collect(Collectors.toList());
     }
 
     /**

@@ -7,7 +7,7 @@ import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
-import org.json.simple.JSONObject;
+import org.controlsfx.control.action.Action;
 
 import java.util.*;
 
@@ -30,10 +30,6 @@ public class Epidemy extends EventCard {
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        return null;
-    }
-
-    public void useCard() {
         List<Player> players = this.getBoard().getPlayers();
         Set<Cabin> alreadyQuarantined;
         List<Cabin> cabinList;
@@ -68,10 +64,26 @@ public class Epidemy extends EventCard {
                 cabin.removeInhabitant(cabin.getInhabitants().getFirst());
             }
         }
+
+        // Set this card as used
+        this.cardUsed();
+
+        return this;
     }
+
+
 
     @Override
     public CardStateJSON generateState() {
-        return null;
+        CardStateJSON cardState = new CardStateJSON();
+
+        cardState.setCardName(this.getCardName());
+        cardState.setCardLevel(this.cardLevel);
+
+        if (this.getCurrentPlayer().isPresent()) {
+            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+        }
+
+        return cardState;
     }
 }

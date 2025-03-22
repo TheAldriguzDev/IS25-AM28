@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
@@ -122,7 +124,6 @@ public class CardStateJSON extends ActionJSON {
         this.greenItems = greenItems;
     }
 
-    // Constructor for Stardust
     public CardStateJSON(@JsonProperty("playerNickname") String playerNickname,
                          @JsonProperty("cardName") String cardName,
                          @JsonProperty("cardLevel") int cardLevel,
@@ -183,9 +184,6 @@ public class CardStateJSON extends ActionJSON {
         return this.isCardUsable;
     }
 
-    /**
-     * Set the isCardUsable to the given data
-     * */
     public void setCardIsUsable(boolean isCardUsable) throws IllegalStateException {
         this.isCardUsable = isCardUsable;
     }
@@ -225,11 +223,6 @@ public class CardStateJSON extends ActionJSON {
     @JsonGetter("stationResources")
     public List<ItemColor> getStationResources() {
         return this.stationResources;
-    }
-
-    @JsonSetter("stationResources")
-    public void setStationResources(List<ItemColor> stationResources) {
-        this.stationResources = stationResources;
     }
 
     // Other data can be added to provide the context to the clients
