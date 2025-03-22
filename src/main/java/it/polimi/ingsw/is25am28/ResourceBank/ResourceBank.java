@@ -66,17 +66,17 @@ public class ResourceBank {
         try {
             storage = (Storage) player.getShip().getComponent(i, j);
         } catch (Exception e) {
-            throw new IllegalStateException("The given component [i, j] is not a valid Storage component");
+            throw new IllegalStateException("The given component i: " + i + " j: " + j + " is not a valid Storage component");
         }
 
         // Check if the given storage component has enough space
         if (storage.availableSpace() <= 0) {
-            throw new IllegalStateException("The given storage component has no more space");
+            throw new IllegalStateException("The given storage component i: " + i + " j: " + j + " has no more space");
         }
 
         // Check if the given storage component can store the given resource
         if (color.equals(ItemColor.RED) && !storage.isSpecialStorage()) {
-            throw new IllegalStateException("The given storage component cannot store RED resources");
+            throw new IllegalStateException("The given storage component i: " + i + " j: " + j + " cannot store RED resources");
         }
 
         // Apply the action if the player is not eliminated and the bank has at least one resource of the required type

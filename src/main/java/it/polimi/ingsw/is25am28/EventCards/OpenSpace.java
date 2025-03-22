@@ -62,9 +62,6 @@ public class OpenSpace extends EventCard {
         // Count the double engines of the used
         long availableDoubleEngines = this.getCurrentPlayer().get().getShip().getEngineList().stream().filter(Engine::requireEnergy).count();
 
-        System.out.println(this.getCurrentPlayer().get().getNickname());
-        System.out.println(usedEnergy);
-        System.out.println(this.getCurrentPlayer().get().getShip().getAvailableEnergy());
         // Check if:
         // 1: The player match
         // 2: The player has used an amount of available energy

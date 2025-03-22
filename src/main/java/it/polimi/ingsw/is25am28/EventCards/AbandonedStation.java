@@ -43,7 +43,7 @@ public class AbandonedStation extends EventCard {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
         } else {
             this.players = this.getBoard().getPlayers().stream()
-                    .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
+                    .filter( p -> p.getShip().getAllLifeforms().size() >= this.requiredCrew )
                     .toList();
 
             // if there are no players we do not have to continue, since no one can use the card
@@ -79,7 +79,7 @@ public class AbandonedStation extends EventCard {
         // 1. The player match with the current one
         if ( playerNickname != null &&
                 !playerNickname.isEmpty() &&
-                !playerNickname.equals( this.getCurrentPlayer().get().getNickname()) ) {
+                playerNickname.equals( this.getCurrentPlayer().get().getNickname()) ) {
 
             // When a player decide to visit the ship we need to mark the card as used. Then
             // 1. get the list of the resource he wants to drop off --> and drop them

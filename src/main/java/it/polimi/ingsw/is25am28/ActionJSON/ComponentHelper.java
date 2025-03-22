@@ -33,11 +33,13 @@ public class ComponentHelper<T> {
         return this.helper;
     }
 
-    public void addItem(T item) {
+    public ComponentHelper<T> addItem(T item) {
         if (item != null) {
             this.helper = Optional.of(item);
         } else {
             this.helper = Optional.empty();
         }
+
+        return this;
     }
 }

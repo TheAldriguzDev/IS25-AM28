@@ -63,12 +63,11 @@ public abstract class EventCard {
             } else {
                 Player nextPlayer = players.get(currentIndex + 1);
                 currentPlayer = Optional.of(nextPlayer);
-                return Optional.of(nextPlayer);
+                return currentPlayer;
             }
         } else {
-            System.out.println("Player list is empty");
             currentPlayer = Optional.of(players.getFirst());
-            return Optional.of(players.getFirst());
+            return currentPlayer;
         }
     }
 
