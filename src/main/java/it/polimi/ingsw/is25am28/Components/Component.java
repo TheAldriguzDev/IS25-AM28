@@ -2,6 +2,8 @@ package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.Connector;
 
+import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
+
 public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield, Structural {
       private int col;
       private int row;
@@ -11,7 +13,7 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
        * index between 0 and 3,
        * that indicates which is the direction side of the component
        */
-      protected int direction;
+      protected int direction = 0;
 
 
       public Component( int[] connectors ) {

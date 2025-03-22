@@ -18,7 +18,7 @@ public class Stardust extends EventCard {
 
     public Stardust(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
-        currentPlayer = 0;
+
     }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
@@ -88,10 +88,7 @@ public class Stardust extends EventCard {
      * This method will be used in the specific class, but also from outside (game model).
      * It returns true if the current player is the last one of the card players or if there are no active players in the card
      * */
-    @Override
-    public boolean hasFinished() {
-        return currentPlayer < 0;//currentPlayer.map(player -> player.equals(players.getLast())).orElse(false);
-    }
+
 
     @Override
     public void initCardPlayers() throws IllegalArgumentException {

@@ -130,6 +130,7 @@ class StardustTest {
 
         ship.generateComponentSubLists();
 
+
         ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 

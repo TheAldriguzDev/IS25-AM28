@@ -5,19 +5,15 @@ public final class Vital extends Component {
 
       public Vital(int[] connectors, int type ) {
             super(connectors);
-            if( type == 0 )
-                  this.vitalType = VitalType.BROWN_VITAL;
-            else if( type == 1 )
-                  this.vitalType = VitalType.PURPLE_VITAL;
-            else
-                  throw new Error("vital type not recognized");
+
+            switch (type) {
+                  case 0 -> this.vitalType = VitalType.PURPLE_VITAL;
+                  case 1 -> this.vitalType = VitalType.BROWN_VITAL;
+                  default -> throw new Error("ERROR: Given vital type not recognised");
+            }
       }
 
       public VitalType getVitalType() {
             return vitalType;
-      }
-
-      public boolean check(Component[] nearest ){
-            return false;
       }
 }
