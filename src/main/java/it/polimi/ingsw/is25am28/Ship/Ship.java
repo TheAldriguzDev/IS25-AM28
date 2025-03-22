@@ -5,7 +5,6 @@ import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
-import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -179,13 +178,13 @@ public class Ship {
         this.addComponent(this.core, this.grid_rows/2, this.grid_cols/2);
 
         // Instantiating each component list as an empty list
-        batteryList = new ArrayList<Battery>();
-        cabinList = new ArrayList<Cabin>();
-        cannonList = new ArrayList<Cannon>();
-        engineList = new ArrayList<Engine>();
-        shieldList = new ArrayList<Shield>();
-        storageList = new ArrayList<Storage>();
-        vitalList = new ArrayList<Vital>();
+        this.batteryList = new ArrayList<Battery>();
+        this.cabinList = new ArrayList<Cabin>();
+        this.cannonList = new ArrayList<Cannon>();
+        this.engineList = new ArrayList<Engine>();
+        this.shieldList = new ArrayList<Shield>();
+        this.storageList = new ArrayList<Storage>();
+        this.vitalList = new ArrayList<Vital>();
     }
 
     /**
@@ -196,27 +195,41 @@ public class Ship {
      *  otherwise it will iterate again over the ship's grid and generate the same lists.
      */
     public void generateComponentSubLists() throws IllegalStateException {
+        Set<Component> alreadySeen = new HashSet<Component>();
+
+        // Clearing all the sub-lists
+        this.batteryList.clear();
+        this.cabinList.clear();
+        this.cannonList.clear();
+        this.engineList.clear();
+        this.shieldList.clear();
+        this.storageList.clear();
+        this.vitalList.clear();
+
         traverse(
             (Component c) -> {
-                switch (c) {
-                    case Battery battery:       this.batteryList.add(battery);
-                                                break;
-                    case Cabin cabin:           this.cabinList.add(cabin);
-                                                break;
-                    case Cannon cannon:         this.cannonList.add(cannon);
-                                                break;
-                    case Engine engine:         this.engineList.add(engine);
-                                                break;
-                    case Shield shield:         this.shieldList.add(shield);
-                                                break;
-                    case Storage storage:       this.storageList.add(storage);
-                                                break;
-                    case Vital vital:           this.vitalList.add(vital);
-                                                break;
-                    case Structural structural: // Structural components are not sorted
-                                                break;
-                    default:
-                        throw new IllegalStateException("Unexpected class type " + c.toString());
+                if (!alreadySeen.contains(c)) {
+                    alreadySeen.add(c);
+                    switch (c) {
+                        case Battery battery:       this.batteryList.add(battery);
+                            break;
+                        case Cabin cabin:           this.cabinList.add(cabin);
+                            break;
+                        case Cannon cannon:         this.cannonList.add(cannon);
+                            break;
+                        case Engine engine:         this.engineList.add(engine);
+                            break;
+                        case Shield shield:         this.shieldList.add(shield);
+                            break;
+                        case Storage storage:       this.storageList.add(storage);
+                            break;
+                        case Vital vital:           this.vitalList.add(vital);
+                            break;
+                        case Structural structural: // Structural components are not sorted
+                            break;
+                        default:
+                            throw new IllegalStateException("Unexpected class type " + c.toString());
+                    }
                 }
             }
         );
@@ -379,6 +392,13 @@ public class Ship {
                     .mapToDouble(Cannon::getFirePower)
                     .sum();
 
+        // Calculating the contribution of purple aliens onboard the ship
+        // to the overall firepower
+        int purpleAlienFirepowerAddon = this.cabinList.stream()
+                .flatMap((Cabin c) -> (c.getInhabitants().stream()))
+                .mapToInt(Lifeform::getAttackBoost)
+                .sum();
+
         if (doubleCannonAmount > 0) {
             if (doubleCannonsToActivate > doubleCannonAmount) {
                 // If the requested double cannons to activate surpass the
@@ -401,7 +421,7 @@ public class Ship {
             totalFirePower = singleCannonsFirePower;
         }
 
-        return totalFirePower;
+        return totalFirePower + purpleAlienFirepowerAddon;
     }
 
     /**
@@ -442,6 +462,13 @@ public class Ship {
                     .mapToDouble(Engine::getSpeed)
                     .sum();
 
+        // Calculating the contribution of brown aliens onboard the ship
+        // to the overall engine power
+        int brownAlienEnginePowerAddon = this.cabinList.stream()
+                .flatMap((Cabin c) -> (c.getInhabitants().stream()))
+                .mapToInt(Lifeform::getPowerBoost)
+                .sum();
+
         if (doubleEngineAmount > 0) {
             if (doubleEnginesToActivate > doubleEngineAmount) {
                 // If the requested double engines to activate surpass the
@@ -464,7 +491,7 @@ public class Ship {
             totalEnginePower = singleEnginesEnginePower;
         }
 
-        return totalEnginePower;
+        return totalEnginePower + brownAlienEnginePowerAddon;
     }
 
     /**
@@ -579,7 +606,7 @@ public class Ship {
      * Uses an adapted version of the BFS algorithm to validate that each component
      * is connected correctly with its neighbours, thus validating the ship
      *
-     * @return <b style="color: green">TRUE</b> if all the ship's components are connected correctly, <br>
+     * @return <b style="color: green">TRUE</b> if all the ship's components are connected correctly,
      * <b style="color: red">FALSE</b> otherwise
      */
     public boolean validateShip() {
@@ -829,7 +856,7 @@ public class Ship {
 
         // Removing the component and regenerating the new ship
         this.components[i][j] = null;
-        recreateShipGrid();
+        this.recreateShipGrid();
         this.generateComponentSubLists();
 
         // If the component at coordinates (row, col) in the previousShip

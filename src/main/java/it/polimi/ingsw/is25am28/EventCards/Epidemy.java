@@ -7,13 +7,11 @@ import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
-import org.controlsfx.control.action.Action;
 
 import java.util.*;
 
 public class Epidemy extends EventCard {
 
-    // Constructor
     public Epidemy(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
     }
@@ -30,14 +28,13 @@ public class Epidemy extends EventCard {
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        List<Player> players = this.getBoard().getPlayers();
+        List<Player> players = this.players;
         Set<Cabin> alreadyQuarantined;
         List<Cabin> cabinList;
         Component[] neighbours;
         Ship shipPtr;
 
         // Finding all neighbouring cabins and putting them into quarantine
-        // ready to delete
         for (Player player : players) {
             alreadyQuarantined = new HashSet<>();
             shipPtr = player.getShip();
@@ -49,11 +46,15 @@ public class Epidemy extends EventCard {
                     for (Component neighbour : neighbours) {
                         switch (neighbour) {
                             case Cabin neighbourCabin -> {
-                                alreadyQuarantined.add(cabin);
-                                alreadyQuarantined.add(neighbourCabin);
+                                // TODO: Assuming, like in the card's picture, that Epidemy strikes only
+                                // TODO: when the cabin is FULLY occupied (i.e.: there's no available space)
+                                // TODO: This means that cabins with 1 astronaut are safe from the Epidemy
+                                if (cabin.getAvailableSpace() == 0 && neighbourCabin.getAvailableSpace() == 0) {
+                                    alreadyQuarantined.add(cabin);
+                                    alreadyQuarantined.add(neighbourCabin);
+                                }
                             }
-                            case null, default -> {
-                            }
+                            case null, default -> {}
                         }
                     }
                 }
@@ -70,8 +71,6 @@ public class Epidemy extends EventCard {
 
         return this;
     }
-
-
 
     @Override
     public CardStateJSON generateState() {

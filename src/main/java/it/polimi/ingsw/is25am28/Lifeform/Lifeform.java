@@ -15,7 +15,7 @@ public class Lifeform {
         return lifeformType.getRequiredSpace();
     }
 
-    public int getAttackBoos() {
+    public int getAttackBoost() {
         return lifeformType.getAttackBoost();
     }
 

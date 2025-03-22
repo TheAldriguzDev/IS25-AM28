@@ -86,7 +86,7 @@ class ShipTest {
             7       j       k       l       m       n
             8       o       p               q       r
 
-            Total components = 23 (22 + 1 core)
+            Total components = 18 (17 + 1 core)
 
             a = doubleCannon1 at (4, 6)
             b = singleCannon1 at (5, 5)
@@ -546,7 +546,6 @@ class ShipTest {
         assertEquals(storageList, ship.getStorageList());
         assertTrue(ship.getAllItems().containsAll((List<Item>) storageList.stream().flatMap(s -> s.getStoredItems().stream()).toList()));
         assertEquals(expectedTotalValue, ship.getAllItemValue());
-
     }
 
     @Test
