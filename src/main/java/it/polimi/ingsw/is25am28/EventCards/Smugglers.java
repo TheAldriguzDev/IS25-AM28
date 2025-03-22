@@ -7,13 +7,10 @@ import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.ActionJSON.SmugglersJSON;
 import it.polimi.ingsw.is25am28.Items.*;
 import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Components.Battery;
-import it.polimi.ingsw.is25am28.Components.Storage;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class Smugglers extends EventCard {
@@ -25,8 +22,9 @@ public class Smugglers extends EventCard {
     private final int greenItems;
     private boolean hasBeenDefeated;
     private final ResourceBank resourceBank;
+    private final int takenItems;
 
-    public Smugglers(String name, int cardLevel, int requiredFirepower, int movementSteps, int redItems, int yellowItems, int blueItems, int greenItems, int takenItems, Board board, ResourceBank resourceBank) {
+    public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
@@ -36,6 +34,7 @@ public class Smugglers extends EventCard {
         this.greenItems = greenItems;
         this.hasBeenDefeated = false;
         this.resourceBank = resourceBank;
+        this.takenItems = takenItems;
     }
 
     /*

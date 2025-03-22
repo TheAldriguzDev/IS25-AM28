@@ -25,6 +25,7 @@ public class SmugglersJSON extends ActionJSON {
         this.itemsToBeTaken = itemsToBeTaken;
         this.itemsToBeRemoved = itemsToBeRemoved;
         this.numberOfDoubleCannonsActivated = numberOfDoubleCannonsActivated;
+        this.takenBatteries = takenBatteries;
     }
 
     public boolean getTakeLoot() {
