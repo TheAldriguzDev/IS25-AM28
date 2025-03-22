@@ -20,7 +20,6 @@ public class Smugglers extends EventCard {
     private final int yellowItems;
     private final int blueItems;
     private final int greenItems;
-    private boolean hasBeenDefeated;
     private final ResourceBank resourceBank;
     private final int takenItems;
 
@@ -32,7 +31,6 @@ public class Smugglers extends EventCard {
         this.yellowItems = yellowItems;
         this.blueItems = blueItems;
         this.greenItems = greenItems;
-        this.hasBeenDefeated = false;
         this.resourceBank = resourceBank;
         this.takenItems = takenItems;
     }
@@ -43,7 +41,6 @@ public class Smugglers extends EventCard {
      * */
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
-        //SmugglersResponse smugglersResponse = (SmugglersResponse) response;
         SmugglersJSON smugglersData;
         try {
             smugglersData = (SmugglersJSON) data;
@@ -60,10 +57,12 @@ public class Smugglers extends EventCard {
                     }
 
                     if(player.getShip().getFirePower(smugglersData.getNumberOfDoubleCannonsActivated()) >= requiredFirepower) {
-                        this.hasBeenDefeated = true;
+                        // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
+                        cardUsed();
                         if (smugglersData.getTakeLoot()) {
                             bonusEffect();
                             getBoard().movePlayerBackwards(player, movementSteps);
+                            getBoard().validatePlayersPosition();
                             //player.setCursor(player.getCursor() - this.movementSteps);
                         }
                     } else {
@@ -89,21 +88,13 @@ public class Smugglers extends EventCard {
                     // Item da lasciare per fare spazio
                     for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
                         resourceDrop.getItem().ifPresent( i ->
-                                this.resourceBank.addResourceToBankFromPlayer(
-                                        player,
-                                        i,
-                                        resourceDrop.getI(),
-                                        resourceDrop.getJ()));
+                                this.resourceBank.addResourceToBankFromPlayer(player, i, resourceDrop.getI(), resourceDrop.getJ()));
                     }
 
                     // Item da caricare sulla nave
                     for ( ComponentHelper<ItemColor> resourceTake : resourcesToLoad) {
                         resourceTake.getItem().ifPresent( i ->
-                                this.resourceBank.addResourceToPlayerFromBank(
-                                        player,
-                                        i,
-                                        resourceTake.getI(),
-                                        resourceTake.getJ()));
+                                this.resourceBank.addResourceToPlayerFromBank(player, i, resourceTake.getI(), resourceTake.getJ()));
                     }
                 }
         );
@@ -138,12 +129,6 @@ public class Smugglers extends EventCard {
 
     @Override
     protected void malusEffect() {}
-    /*
-    @Override
-    public boolean hasFinished() {
-        return //currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || this.hasBeenDefeated;
-    }*/
-
 
     @Override @SuppressWarnings("unchecked")
     public CardStateJSON generateState() {
@@ -161,8 +146,6 @@ public class Smugglers extends EventCard {
         smugglersState.put("blueItems", blueItems);
         smugglersState.put("greenItems", greenItems);
         //smugglersState.put("takenItems", takenItems);
-        smugglersState.put("hasBeenDefeated", hasBeenDefeated);
-
         //return smugglersState;
         return null;
     }

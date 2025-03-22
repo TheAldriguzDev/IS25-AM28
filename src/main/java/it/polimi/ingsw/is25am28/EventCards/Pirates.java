@@ -10,7 +10,6 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class Pirates extends EventCard {
@@ -18,7 +17,6 @@ public class Pirates extends EventCard {
     private final int givenCredits;
     private final int movementSteps;
     private final JSONArray shootingSequence;
-    private boolean hasBeenDefeated;
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, JSONArray shootingSequence, Board board) {
         super(name, cardLevel, board);
@@ -26,7 +24,6 @@ public class Pirates extends EventCard {
         this.givenCredits = givenCredits;
         this.movementSteps = movementSteps;
         this.shootingSequence = shootingSequence;
-        this.hasBeenDefeated = false;
     }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
@@ -46,11 +43,12 @@ public class Pirates extends EventCard {
                     }
 
                     if (player.getShip().getFirePower(piratesData.getNumberOfDoubleCannonsActivated()) >= requiredFirepower) {
-                        this.hasBeenDefeated = true;
+                        // Pirates defeated, even if the player who defeated them does not take the credits, the card won't be used by other players
+                        cardUsed();
                         if (piratesData.getTakeCredits()) {
                             bonusEffect();
                             getBoard().movePlayerBackwards(player, movementSteps);
-                            //player.setCursor(player.getCursor() - this.movementSteps);
+                            getBoard().validatePlayersPosition();
                         }
                     } else {
                         malusEffect(piratesData);
@@ -81,34 +79,16 @@ public class Pirates extends EventCard {
                     int dicesResult = 0;
                     ArrayList<Integer> dicesResults = piratesData.getDicesResults(); // La parte client si assicura di fare tiri pari al numero di PlasmaShots
                     //Conversione da JSONArray di JSONArray a Lista di Liste
-                    ArrayList<ArrayList<Integer>> shots = new ArrayList<>();
-
-
-
 
                     Boolean[] shieldedSides = new Boolean[] {false, false, false, false};
 
-                    List<Shield> shields;
-
                     player.getShip().consumeEnergy(piratesData.getShieldsActivatedCoordinates().size()); // Il controllo sulle batterie disponibili è fatto dal client
-
-
-                    // Funzione che consuma le batterie un'unica volta all'inizio
-//                    for (Shield shield : piratesData.getShieldsActivated()) {
-//                        try {
-//                            player.getShip().consumeEnergy(1);
-//                        } catch (InsufficientEnergyException e) {
-//                            // Non viene attivato
-//                        }
-//                    }
-
 
                     for (Object pairObject : shootingSequence) {
                         JSONArray pair = (JSONArray) pairObject;
                         int shotSize = (int) pair.getFirst(); // 1 -> small, 2 -> big
                         int shotDirection = (int) pair.getLast(); // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
 
-                        shields = player.getShip().getShieldList();
                         // Prima di ogni colpo resetta shieldedSides per poi ricalcolarli
                         for (int i = 0; i < 2; i++) {
                             shieldedSides[i] = false;
@@ -194,11 +174,6 @@ public class Pirates extends EventCard {
 
     protected void malusEffect() {}
 
-//    @Override
-//    public boolean hasFinished() {
-//        return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || this.hasBeenDefeated;
-//    }
-
     @Override @SuppressWarnings("unchecked")
     public CardStateJSON generateState() {
         JSONObject piratesState = new JSONObject();
@@ -212,7 +187,6 @@ public class Pirates extends EventCard {
         piratesState.put("givenCredits", givenCredits);
         piratesState.put("movementSteps", movementSteps); // Il client calcola la size per il lancio dei dadi, ne ha anche bisigno per vedere da dove arrivano/dimensione
         piratesState.put("shootingSequence", shootingSequence);
-        piratesState.put("hasBeenDefeated", hasBeenDefeated);
 
         //return piratesState;
         return null;

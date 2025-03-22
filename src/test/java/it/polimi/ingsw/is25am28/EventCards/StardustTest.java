@@ -74,12 +74,19 @@ class StardustTest {
     @Test
     public void movementTest() {
 
+
+
         ActionJSON actionJSON1 = new StardustJSON("Player 1");
         ActionJSON actionJSON2 = new StardustJSON("Player 2"); // 3 connettori esposti
         ActionJSON actionJSON3 = new StardustJSON("Player 3"); // 2 connettori esposti
         ActionJSON actionJSON4 = new StardustJSON("Player 4"); // 4 connettori esposti
 
         stardust.initCardPlayers();
+
+        for(Player p : board.getPlayers()) {
+            ActionJSON actionJSON = new ActionJSON(p.getNickname());
+            stardust.useCard(actionJSON);
+        }
 
         stardust.useCard(actionJSON4);
         stardust.useCard(actionJSON3);

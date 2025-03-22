@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -29,13 +30,8 @@ public class Stardust extends EventCard {
             throw new ClassCastException("Card data type in invalid");
         }
         Optional<Player> playerOptional = getCurrentPlayer();
-        for (Player p : getBoard().getPlayers()) {
-            System.out.println("nick: " + p.getNickname());
-        }
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
-
-                    //System.out.println(player.getNickname());
 
                     String playerNickname = stardustData.getPlayerNickname();
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
@@ -71,7 +67,7 @@ public class Stardust extends EventCard {
                             }
                     );
                     getBoard().movePlayerBackwards(player, movementSteps.get());
-                    //player.setCursor(player.getCursor() - movementSteps.get());
+                    getBoard().validatePlayersPosition();
                 },
                 () -> {
                     throw new IllegalArgumentException("here is no player playing in this moment");
@@ -92,13 +88,15 @@ public class Stardust extends EventCard {
      * It returns true if the current player is the last one of the card players or if there are no active players in the card
      * */
 
-
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
-        super.initCardPlayers();
-        Collections.reverse(getBoard().getPlayers());
-
-        // Non funziona più dato che è cambiato da reference a copia, bisogna fare override su init e mettere getLast, poi fare override su getNextPlayer
+        if ( getBoard().getPlayers() == null || getBoard().getPlayers().isEmpty() || getBoard().getPlayers().size() < 2 ) {
+            throw new IllegalArgumentException("The player list is null or contains less than two player");
+        } else {
+            this.players = new ArrayList<>(getBoard().getPlayers());
+            Collections.reverse(players);
+            currentPlayer = Optional.of(players.getFirst());
+        }
     }
 
 //    @Override
