@@ -43,7 +43,7 @@ public class OpenSpace extends EventCard {
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
         // Check if there is a player playing the card
-        if (getCurrentPlayer().isEmpty()) {
+        if (this.currentPlayer.isEmpty()) {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
 
@@ -62,13 +62,16 @@ public class OpenSpace extends EventCard {
         // Count the double engines of the used
         long availableDoubleEngines = this.getCurrentPlayer().get().getShip().getEngineList().stream().filter(Engine::requireEnergy).count();
 
+        System.out.println(this.getCurrentPlayer().get().getNickname());
+        System.out.println(usedEnergy);
+        System.out.println(this.getCurrentPlayer().get().getShip().getAvailableEnergy());
         // Check if:
         // 1: The player match
-        // 2: The player has enough energy to use
+        // 2: The player has used an amount of available energy
         if ( playerNickname != null &&
                 !playerNickname.isEmpty() &&
-                !playerNickname.equals( this.getCurrentPlayer().get().getNickname()) &&
-                usedEnergy > this.getCurrentPlayer().get().getShip().getAvailableEnergy() ) {
+                playerNickname.equals( this.getCurrentPlayer().get().getNickname() ) &&
+                usedEnergy <= this.getCurrentPlayer().get().getShip().getAvailableEnergy() ) {
 
             // Calculate the ship engines power with:
             // +1 for every normal motor
@@ -78,23 +81,27 @@ public class OpenSpace extends EventCard {
             Ship ship = this.getCurrentPlayer().get().getShip();
             int totalPower = 0;
 
+            // Power given by the aliens
             totalPower += ship.getCabinList()
                             .stream()
                             .flatMap( c -> c.getInhabitants().stream() )
                             .mapToInt( Lifeform::getPowerBoost )
                             .sum();
 
+            // Power given by the engine
             totalPower += ship.getEngineList().stream()
                             .filter( e -> !e.requireEnergy())
                             .mapToInt(Engine::getSpeed)
                             .sum();
 
+            // Power given by the double engines
             // While we have energy and doubleMotors then we can update the totalPower
             while ( usedEnergy > 0 && availableDoubleEngines > 0 ) {
                 totalPower += 2;
 
                 usedEnergy--;
                 availableDoubleEngines--;
+                ship.consumeEnergy(1);
             }
 
             // Apply the effect to the player
@@ -108,11 +115,10 @@ public class OpenSpace extends EventCard {
 
             // When we have moved the last player we need to re-validate the positions
             if (this.getCurrentPlayer().equals(this.players.getLast())) {
+                this.cardUsed(); // Mark the card as used
                 this.getBoard().validatePlayersPosition();
-            }
-
-            if (usedEnergy > 0) {
-                ship.consumeEnergy(usedEnergy);
+            } else {
+                this.getNextPlayer();
             }
         } else {
             if ( usedEnergy > this.getCurrentPlayer().get().getShip().getAvailableEnergy() ) {
@@ -123,11 +129,6 @@ public class OpenSpace extends EventCard {
         }
 
         return this;
-    }
-
-
-    public EventCard useCard(JSONObject data) throws IllegalArgumentException {
-        return null;
     }
 
     @Override

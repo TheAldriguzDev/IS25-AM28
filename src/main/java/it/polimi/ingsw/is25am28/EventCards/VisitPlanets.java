@@ -10,6 +10,7 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.smartcardio.Card;
 import java.util.*;
 
 public class VisitPlanets extends EventCard {
@@ -93,61 +94,59 @@ public class VisitPlanets extends EventCard {
 
     @Override
     protected void malusEffect() {
-        this.getCurrentPlayer().ifPresent(
+        this.currentPlayer.ifPresent(
             (Player player) -> {
-                this.getBoard().movePlayerBackwards(getCurrentPlayer().get(), this.movementSteps);
+                this.getBoard().movePlayerBackwards(this.currentPlayer.get(), this.movementSteps);
             }
         );
     }
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        /*
-        String playerName;
-        JSONObject response = data.getData();
-        int selectedPlanetID;
-        boolean playerWantsToLand;
+//        String playerName;
+//        int selectedPlanetID;
+//        boolean playerWantsToLand;
+//
+//        try {
+//            playerName = (String) data.get("playerName");
+//            selectedPlanetID = (int) data.get("selectedPlanetID");
+//            playerWantsToLand = (boolean) data.get("playerWantsToLand");
+//        }
+//        catch (Exception e) {
+//            throw new IllegalArgumentException("Error while parsing the user requested action: " + e.getMessage());
+//        }
+//
+//        // Throwing an exception if the previous data was parsed correctly
+//        // but contains wrong arguments
+//        if (playerName == null) {
+//            throw new IllegalArgumentException("ERROR: playerName is null");
+//        }
+//        if (playerName.isEmpty()) {
+//            throw new IllegalArgumentException("ERROR: playerName is empty");
+//        }
+//        if (selectedPlanetID < 0 || selectedPlanetID > this.planetCount) {
+//            throw new IllegalArgumentException("ERROR: selectedPlanetID is an illegal value");
+//        }
+//        if (this.planetSelectedByPlayer.containsValue(selectedPlanetID)) {
+//            // If player tries to select an already selected planet, the method
+//            // waits again for a correct answer
+//
+//            //return this.useCard(null /*NEW RESPONSE NEEDED*/);
+//            return null;
+//        }
+//
+//        // Storing the current player's chosen planet
+//        this.currentPlayer.ifPresent(
+//                (Player player) -> {
+//                    this.planetSelectedByPlayer.put(player, selectedPlanetID);
+//                }
+//        );
+//
+//        // Apply card effects if the player lands
+//        if (playerWantsToLand) {
+//            // bonusEffect();
+//        }
 
-        try {
-            playerName = (String) response.get("playerName");
-            selectedPlanetID = (int) response.get("selectedPlanetID");
-            playerWantsToLand = (boolean) response.get("playerWantsToLand");
-        }
-        catch (Exception e) {
-            throw new IllegalArgumentException("Error while parsing the user requested action: " + e.getMessage());
-        }
-
-        // Throwing an exception if the previous data was parsed correctly
-        // but contains wrong arguments
-        if (playerName == null) {
-            throw new IllegalArgumentException("ERROR: playerName is null");
-        }
-        if (playerName.isEmpty()) {
-            throw new IllegalArgumentException("ERROR: playerName is empty");
-        }
-        if (selectedPlanetID < 0 || selectedPlanetID > this.planetCount) {
-            throw new IllegalArgumentException("ERROR: selectedPlanetID is an illegal value");
-        }
-        if (this.planetSelectedByPlayer.containsValue(selectedPlanetID)) {
-            // If player tries to select an already selected planet, the method
-            // waits again for a correct answer
-
-            //return this.useCard(null /*NEW RESPONSE NEEDED*//*);
-            return null;
-        }
-
-        // Storing the current player's chosen planet
-        this.currentPlayer.ifPresent(
-                (Player player) -> {
-                    this.planetSelectedByPlayer.put(player, selectedPlanetID);
-                }
-        );
-
-        // Apply card effects if the player lands
-        if (playerWantsToLand) {
-            // bonusEffect();
-        }
-*/
         return null;
     }
 

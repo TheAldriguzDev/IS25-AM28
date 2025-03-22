@@ -39,17 +39,17 @@ public abstract class Board {
     }
 
     /**
-     * Returns the current playing players
+     * Returns the current playing players without exposing the ref
      * */
     public List<Player> getPlayers() {
-        return players;
+        return new ArrayList<>(players);
     }
 
     /**
-     * Returns the eliminated players
+     * Returns the eliminated players without exposing the ref
      * */
     public List<Player> getEliminatedPlayers() {
-        return eliminatedPlayer;
+        return new ArrayList<>(eliminatedPlayer);
     }
 
     protected int getLevel() { return level; }

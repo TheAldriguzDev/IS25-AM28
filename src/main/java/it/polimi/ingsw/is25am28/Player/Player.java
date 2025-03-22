@@ -83,6 +83,9 @@ public class Player {
 
       public Player eliminate(){
             this.lost = true;
+            this.getCurrentCell().setPlayer(null);
+            this.setCurrentCell(null);
+
             return this;
       }
 

@@ -39,7 +39,11 @@ public class Cell {
     }
 
     public void setPlayer(Player player) {
-        this.player = Optional.of(player);
+        if (player == null) {
+            this.player = Optional.empty();
+        } else {
+            this.player = Optional.of(player);
+        }
     }
 
     public void removePlayer() {

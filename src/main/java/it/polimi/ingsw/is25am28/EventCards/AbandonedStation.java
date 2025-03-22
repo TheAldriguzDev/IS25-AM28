@@ -21,7 +21,6 @@ public class AbandonedStation extends EventCard {
     private final int movementStep;
     private ArrayList<Item> givenItems;
     private ResourceBank resourceBank;
-    private boolean hasBeenUsed;
 
     private List<ComponentHelper<ItemColor>> resourceToDropOff;
     private List<ComponentHelper<ItemColor>> resourceToTake;
@@ -33,7 +32,6 @@ public class AbandonedStation extends EventCard {
         this.movementStep = movementStep;
         this.givenItems = givenItems;
         this.resourceBank = resourceBank;
-        this.hasBeenUsed = false;
     }
 
     /**
@@ -47,22 +45,21 @@ public class AbandonedStation extends EventCard {
             this.players = this.getBoard().getPlayers().stream()
                     .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
                     .toList();
-            super.initCardPlayers();
-        }
-    }
 
-    /**
-     * Override needed to end the usage of the card if a previous player already used the card
-     * */
-    @Override
-    public boolean hasFinished() {
-        return hasBeenUsed || super.hasFinished();//currentPlayer.map(player -> player.equals(players.getLast())).orElse(false) || (players.isEmpty() && currentPlayer.isEmpty());
+            // if there are no players we do not have to continue, since no one can use the card
+            if (this.players.isEmpty()) {
+                this.cardUsed();
+                this.currentPlayer = Optional.empty();
+            } else {
+                this.currentPlayer = Optional.of(players.getFirst());
+            }
+        }
     }
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException, IllegalStateException {
         // Check if there is a player playing the card
-        if (this.getCurrentPlayer().isPresent()) {
+        if (this.currentPlayer.isEmpty()) {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
 
@@ -110,7 +107,7 @@ public class AbandonedStation extends EventCard {
     @Override
     protected void bonusEffect() {
         if (this.getCurrentPlayer().isPresent()) {
-            this.hasBeenUsed = true;
+            this.cardUsed();
 
             // Add the resources from the player to the bank
             for ( ComponentHelper<ItemColor> resourceDrop : this.resourceToDropOff ) {
