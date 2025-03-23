@@ -32,7 +32,6 @@ public class Stardust extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
-
                     String playerNickname = stardustData.getPlayerNickname();
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
@@ -67,13 +66,17 @@ public class Stardust extends EventCard {
                             }
                     );
                     getBoard().movePlayerBackwards(player, movementSteps.get());
-                    getBoard().validatePlayersPosition();
+                    if (player.equals(this.players.getLast())) {
+                        this.cardUsed(); // Mark the card as used
+                        this.getBoard().validatePlayersPosition();
+                    } else {
+                        this.getNextPlayer();
+                    }
                 },
                 () -> {
                     throw new IllegalArgumentException("here is no player playing in this moment");
                 }
         );
-        getNextPlayer();
         return this;
     }
 
@@ -98,17 +101,6 @@ public class Stardust extends EventCard {
             currentPlayer = Optional.of(players.getFirst());
         }
     }
-
-//    @Override
-//    protected Optional<Player> getNextPlayer() {
-//        if( players == null || players.isEmpty() ) {
-//            throw new Error("Players are not set, you must call startUsingCard method before");
-//        }
-//        currentPlayer--;
-//        return Optional.ofNullable(players.get(currentPlayer));
-//    }
-
-
 
     @Override @SuppressWarnings("unchecked")
     public CardStateJSON generateState() {

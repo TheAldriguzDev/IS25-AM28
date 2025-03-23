@@ -66,14 +66,19 @@ public class Smugglers extends EventCard {
                             //player.setCursor(player.getCursor() - this.movementSteps);
                         }
                     } else {
-                        malusEffect();
+                        malusEffect(smugglersData);
+                    }
+                    if (player.equals(this.players.getLast())) {
+                        this.cardUsed(); // Mark the card as used
+                        this.getBoard().validatePlayersPosition();
+                    } else {
+                        this.getNextPlayer();
                     }
                 },
                 () -> {
                     throw new IllegalArgumentException("There is no player playing in this moment");
                 }
         );
-        getNextPlayer();
         return this;
     }
 
@@ -108,6 +113,7 @@ public class Smugglers extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
                 (Player player) -> {
+
                     ArrayList<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
 
                     // Item da lasciare
@@ -121,7 +127,14 @@ public class Smugglers extends EventCard {
                     }
 
                     // Nel caso gli item da lasciare non siano abbastanza (check lato client), batterie da rimuovere
-                    player.getShip().consumeEnergy(smugglersData.getTakenBatteries());
+                    //player.getShip().consumeEnergy(smugglersData.getTakenBatteries());
+                    // Le batterie da rimuovere solo nel caso la lista di elementi da rimuovere non isa abbastanza grande, il client farà il controllo di fare la lista di elementi da togliore il piu grande possibile se non è possibile raggiungere una grandezza pari a takenItems
+                    if (player.getShip().getAvailableEnergy() >= (takenItems - resourcesToDrop.size())) {
+                        player.getShip().consumeEnergy(takenItems - resourcesToDrop.size());
+                    } else {
+                        player.getShip().consumeEnergy(player.getShip().getAvailableEnergy());
+                    } // Se viene presa più energia di quanta ne è disponibile semplicemente va a 0
+
                 }
         );
 

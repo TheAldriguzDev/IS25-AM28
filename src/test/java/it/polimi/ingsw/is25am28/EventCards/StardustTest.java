@@ -15,6 +15,7 @@ import it.polimi.ingsw.is25am28.Ship.Ship;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -83,20 +84,31 @@ class StardustTest {
 
         stardust.initCardPlayers();
 
-        for(Player p : board.getPlayers()) {
-            ActionJSON actionJSON = new ActionJSON(p.getNickname());
-            stardust.useCard(actionJSON);
-        }
+//        for(Player p : board.getPlayers()) {
+//            ActionJSON actionJSON = new StardustJSON(p.getNickname());
+//            stardust.useCard(actionJSON);
+//        }
 
         stardust.useCard(actionJSON4);
+        assertFalse(stardust.hasFinished());
         stardust.useCard(actionJSON3);
+        assertFalse(stardust.hasFinished());
         stardust.useCard(actionJSON2);
+        assertFalse(stardust.hasFinished());
         stardust.useCard(actionJSON1);
+        assertTrue(stardust.hasFinished());
 
-        assert p1.getCursor() == 6 : "p1 cursor should be 6, not " + p1.getCursor();
-        assert p2.getCursor() == 0 : "p2 cursor should be 0, not " + p2.getCursor();
-        assert p3.getCursor() == -1 : "p3 cursor should be -1, not " + p3.getCursor();
-        assert p4.getCursor() == -4 : "p4 cursor should be -4, not " + p4.getCursor();
+
+
+//        assert p1.getCursor() == 6 : "p1 cursor should be 6, not " + p1.getCursor();
+//        assert p2.getCursor() == 0 : "p2 cursor should be 0, not " + p2.getCursor();
+//        assert p3.getCursor() == -1 : "p3 cursor should be -1, not " + p3.getCursor();
+//        assert p4.getCursor() == -4 : "p4 cursor should be -4, not " + p4.getCursor();
+
+        assertEquals(6, p1.getCursor());
+        assertEquals(0, p2.getCursor());
+        assertEquals(-1, p3.getCursor());
+        assertEquals(-4, p4.getCursor());
     }
 
     public void ship_init1(Ship ship) {

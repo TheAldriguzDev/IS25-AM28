@@ -53,12 +53,17 @@ public class Slavers extends EventCard {
                     } else {
                         malusEffect(data);
                     }
+                    if (player.equals(this.players.getLast())) {
+                        this.cardUsed(); // Mark the card as used
+                        this.getBoard().validatePlayersPosition();
+                    } else {
+                        this.getNextPlayer();
+                    }
                 },
                 () -> {
                     throw new IllegalArgumentException("There is no player playing in this moment");
                 }
         );
-        getNextPlayer();
         return this;
     }
 

@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
 import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.Board.Board;
+import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Player.Player;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -16,9 +17,9 @@ public class Pirates extends EventCard {
     private final int requiredFirepower;
     private final int givenCredits;
     private final int movementSteps;
-    private final JSONArray shootingSequence;
+    private final ArrayList<ArrayList<Integer>> shootingSequence;
 
-    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, JSONArray shootingSequence, Board board) {
+    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, ArrayList<ArrayList<Integer>> shootingSequence, Board board) {
         super(name, cardLevel, board);
         this.requiredFirepower = requiredFirepower;
         this.givenCredits = givenCredits;
@@ -53,12 +54,17 @@ public class Pirates extends EventCard {
                     } else {
                         malusEffect(piratesData);
                     }
+                    if (player.equals(this.players.getLast())) {
+                        this.cardUsed(); // Mark the card as used
+                        this.getBoard().validatePlayersPosition();
+                    } else {
+                        this.getNextPlayer();
+                    }
                 },
                 () -> {
                     throw new IllegalArgumentException("There is no player playing in this moment");
                 }
         );
-        getNextPlayer();
         return this;
     }
 
@@ -84,8 +90,7 @@ public class Pirates extends EventCard {
 
                     player.getShip().consumeEnergy(piratesData.getShieldsActivatedCoordinates().size()); // Il controllo sulle batterie disponibili è fatto dal client
 
-                    for (Object pairObject : shootingSequence) {
-                        JSONArray pair = (JSONArray) pairObject;
+                    for (ArrayList<Integer> pair : shootingSequence) {
                         int shotSize = (int) pair.getFirst(); // 1 -> small, 2 -> big
                         int shotDirection = (int) pair.getLast(); // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
 
@@ -124,19 +129,28 @@ public class Pirates extends EventCard {
                                     int column = dicesResults.get(dicesResult);
                                     for (int row = 4; row < 9; row++) {
                                         if (player.getShip().getComponent(row, column) != null) {
+                                            try {
+                                                player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            } catch (CoreDeletionAttemptException e) {
+                                                getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
+                                                System.out.println("Eliminated " + player.getNickname());
+                                            }
                                             //System.out.println("(U)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
-                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                             break;
                                         }
                                     }
+                                    break;
                                 }
-                                break;
                                 case 1: {
                                     int row = dicesResults.get(dicesResult);
                                     for (int column = 3; column < 10; column++) {
-                                        if (player.getShip().getComponent(row, column) != null) { // Innesca la exception se non c'è niente
+                                        if (player.getShip().getComponent(row, column) != null) {
+                                            try {
+                                                player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            } catch (CoreDeletionAttemptException e) {
+                                                getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
+                                            }
                                             //System.out.println("(R)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
-                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                             break;
                                         }
                                     }
@@ -146,7 +160,11 @@ public class Pirates extends EventCard {
                                     int column = dicesResults.get(dicesResult);
                                     for (int row = 8; row > 3; row--) {
                                         if (player.getShip().getComponent(row, column) != null) {
-                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            try {
+                                                player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            } catch (CoreDeletionAttemptException e) {
+                                                getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
+                                            }
                                             //System.out.println("(D)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
                                             break;
                                         }
@@ -157,8 +175,12 @@ public class Pirates extends EventCard {
                                     int row = dicesResults.get(dicesResult);
                                     for (int column = 9; column > 2; column--) {
                                         if (player.getShip().getComponent(row, column) != null) {
+                                            try {
+                                                player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            } catch (CoreDeletionAttemptException e) {
+                                                getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
+                                            }
                                             //System.out.println("(L)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
-                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                             break;
                                         }
                                     }

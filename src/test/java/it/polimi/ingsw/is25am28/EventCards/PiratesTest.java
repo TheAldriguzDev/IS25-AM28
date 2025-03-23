@@ -45,14 +45,13 @@ class PiratesTest {
 
     ArrayList<Integer> dicesResults;
 
-    JSONArray shootingSequence;
+    ArrayList<ArrayList<Integer>> shootingSequence;
 
-    JSONArray plasmaShot1;
-    JSONArray plasmaShot2;
-    JSONArray plasmaShot3;
+    ArrayList<Integer> plasmaShot1;
+    ArrayList<Integer> plasmaShot2;
+    ArrayList<Integer> plasmaShot3;
 
     @BeforeEach
-    @SuppressWarnings("unchecked")
     public void init() {
 
         board = new BoardLevel2();
@@ -95,13 +94,13 @@ class PiratesTest {
 
         shootingSequence = new JSONArray();
 
-        plasmaShot1 = new JSONArray();
+        plasmaShot1 = new ArrayList<Integer>();
         plasmaShot1.add(2); // grande
         plasmaShot1.add(0); // dall'alto
-        plasmaShot2 = new JSONArray();
+        plasmaShot2 = new ArrayList<Integer>();
         plasmaShot2.add(1); // piccolo
         plasmaShot2.add(3); // da sinistra
-        plasmaShot3 = new JSONArray();
+        plasmaShot3 = new ArrayList<Integer>();
         plasmaShot3.add(1); // piccolo
         plasmaShot3.add(0); // dall'alto
 
@@ -164,8 +163,73 @@ class PiratesTest {
         assert p4.getCursor() == -3 : "p4 cursor should be -3 (moved 1 backwards, jumped over p3, moved 1 backwards), not " + p4.getCursor();
     }
 
-    @Test void destructionAndDefenseTest() {
+    @Test void test_first_eliminated_second_third_fourth_hit() {
 
+        actionJSON1 = new PiratesJSON("Player 1", false, shieldsToActivate1, 0, dicesResults); // Total FirePower: 4
+        actionJSON2 = new PiratesJSON("Player 2", false, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
+        actionJSON3 = new PiratesJSON("Player 3", false, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
+        actionJSON4 = new PiratesJSON("Player 4", false, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
+
+        pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board);
+
+        pirates.initCardPlayers();
+
+
+        Player eliminatedPlayer = p1;
+
+
+        System.out.println("ship_1 before destruction");
+        printGrid(ship_1);
+        pirates.useCard(actionJSON1);
+        assertFalse(pirates.hasFinished());
+        System.out.println("ship_1 after destruction");
+        printGrid(ship_1);
+
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+
+        System.out.println("ship_2 before destruction");
+        printGrid(ship_2);
+        assertFalse(pirates.hasFinished());
+        pirates.useCard(actionJSON2);
+        System.out.println("ship_2 after destruction");
+        printGrid(ship_2);
+
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+
+        System.out.println("ship_3 before destruction");
+        printGrid(ship_3);
+        assertFalse(pirates.hasFinished());
+        pirates.useCard(actionJSON3);
+        System.out.println("ship_3 after destruction");
+        printGrid(ship_3);
+
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+
+        System.out.println("ship_4 before destruction");
+        printGrid(ship_4);
+        assertFalse(pirates.hasFinished());
+        pirates.useCard(actionJSON4);
+        System.out.println("ship_4 after destruction");
+        printGrid(ship_4);
+
+        assertTrue(pirates.hasFinished());
+
+        assertNull(ship_2.getComponent(6, 7));
+        assertNull(ship_2.getComponent(5, 6));
+
+        assertNull(ship_3.getComponent(6, 7));
+        assertNotNull(ship_3.getComponent(5, 6));
+
+        assertNull(ship_4.getComponent(5, 7));
+        assertNull(ship_4.getComponent(5, 6));
+
+        assertEquals(board.getEliminatedPlayers().size(), 1);
+        assertEquals(eliminatedPlayer, board.getEliminatedPlayers().getFirst());
+        // In visual representation the core is still present since trying to remove it triggers an exception
+    }
+
+    @Test
+    public void test_first_defeats_and_takes_credits() {
         actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
         actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
         actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
@@ -175,43 +239,34 @@ class PiratesTest {
 
         pirates.initCardPlayers();
 
+        ArrayList<Integer> playerPositionsBefore = new ArrayList<>();
+        for (Player player : board.getPlayers()) {
+            playerPositionsBefore.add(player.getCursor());
+        }
 
-
-        System.out.println("ship_1 before destruction");
-        printGrid(ship_1);
         pirates.useCard(actionJSON1);
-        System.out.println("ship_1 after destruction");
-        printGrid(ship_1);
-        System.out.println("////////////////////////////////////");
-        System.out.println("ship_2 before destruction");
-        printGrid(ship_2);
+        assertTrue(pirates.hasFinished());
+
+        assertTrue(pirates.hasFinished());
         pirates.useCard(actionJSON2);
-        System.out.println("ship_2 after destruction");
-        printGrid(ship_2);
-        System.out.println("////////////////////////////////////");
-        System.out.println("ship_3 before destruction");
-        printGrid(ship_3);
+
+        assertTrue(pirates.hasFinished());
         pirates.useCard(actionJSON3);
-        System.out.println("ship_3 after destruction");
-        printGrid(ship_3);
-        System.out.println("////////////////////////////////////");
-        System.out.println("ship_4 before destruction");
-        printGrid(ship_4);
+
+        assertTrue(pirates.hasFinished());
         pirates.useCard(actionJSON4);
-        System.out.println("ship_4 after destruction");
-        printGrid(ship_4);
 
-        assert ship_2.getComponent(6, 7) == null : "Component in (6, 7) not destroyed";
-        assert ship_2.getComponent(5, 6) == null : "Component in (5, 6) not destroyed";
-        assert ship_2.getComponent(6, 6) != null : "Component in (6, 6) destroyed";
+        assertTrue(pirates.hasFinished());
 
-        assert ship_3.getComponent(6, 7) == null : "Component in (6, 7) not destroyed";
-        assert ship_3.getComponent(5, 6) != null : "Component in (5, 6) destroyed";
-        assert ship_3.getComponent(6, 6) != null : "Component in (6, 6) destroyed";
+        assertEquals(playerPositionsBefore.get(0) - 7, p1.getCursor()); // 4 steps + 3 jumps over players (2, 3, 4)
+        assertEquals(playerPositionsBefore.get(1), p2.getCursor());
+        assertEquals(playerPositionsBefore.get(2), p3.getCursor());
+        assertEquals(playerPositionsBefore.get(3), p4.getCursor());
 
-        assert ship_4.getComponent(5, 7) == null : "Component in (5, 7) not destroyed";
-        assert ship_4.getComponent(5, 6) == null : "Component in (5, 7) not destroyed";
-
+        assertEquals(4, p1.getCredits());
+        assertEquals(0, p2.getCredits());
+        assertEquals(0, p3.getCredits());
+        assertEquals(0, p4.getCredits());
 
     }
 
@@ -225,7 +280,12 @@ class PiratesTest {
         for (int i = 0; i < grid.length; i++) {
             for (int j = 0; j < grid[i].length; j++) {
                 if (ship.getComponent(i, j) != null) {
-                    grid[i][j] = 'X';
+                    if(i == 6 && j == 6) {
+                        grid[i][j] = 'C';
+                    } else {
+                        grid[i][j] = 'X';
+                    }
+
                 }
             }
         }

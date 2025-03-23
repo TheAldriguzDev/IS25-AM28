@@ -278,6 +278,7 @@ class SlaversTest {
         assertEquals(occupiedSpace1Before.get(2) - 2, cabinList1.get(2).getInhabitants().size());
         assertEquals(occupiedSpace1Before.get(3) - 1, cabinList1.get(3).getInhabitants().size());
 
+        assertEquals(board.getEliminatedPlayers().size(), 1);
         assertEquals(eliminatedPlayer, board.getEliminatedPlayers().getFirst());
 
         assertEquals(playerPositionsBefore.get(0), p1.getCursor());

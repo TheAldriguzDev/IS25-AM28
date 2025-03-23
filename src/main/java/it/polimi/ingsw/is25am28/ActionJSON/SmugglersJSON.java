@@ -13,19 +13,18 @@ public class SmugglersJSON extends ActionJSON {
     private ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken;
     private ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved;
     private final int numberOfDoubleCannonsActivated;
-    private final int takenBatteries;
 
 
-    public SmugglersJSON(@JsonProperty("takeLoot") boolean takeLoot,
+    public SmugglersJSON(@JsonProperty("playerNickname") String playerNickname,
+                         @JsonProperty("takeLoot") boolean takeLoot,
                          @JsonProperty("itemsToBeTaken") ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken,
                          @JsonProperty("itemsToBeRemoved") ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved,
-                         @JsonProperty("numberOfDoubleCannonsActivated") int numberOfDoubleCannonsActivated,
-                         @JsonProperty("takenBatteries") int takenBatteries) {
+                         @JsonProperty("numberOfDoubleCannonsActivated") int numberOfDoubleCannonsActivated) {
+        super(playerNickname);
         this.takeLoot = takeLoot;
         this.itemsToBeTaken = itemsToBeTaken;
         this.itemsToBeRemoved = itemsToBeRemoved;
         this.numberOfDoubleCannonsActivated = numberOfDoubleCannonsActivated;
-        this.takenBatteries = takenBatteries;
     }
 
     public boolean getTakeLoot() {
@@ -42,10 +41,6 @@ public class SmugglersJSON extends ActionJSON {
 
     public int getNumberOfDoubleCannonsActivated() {
         return numberOfDoubleCannonsActivated;
-    }
-
-    public int getTakenBatteries() {
-        return takenBatteries;
     }
 
     //Sevono variabili diverse per le cose da droppare
