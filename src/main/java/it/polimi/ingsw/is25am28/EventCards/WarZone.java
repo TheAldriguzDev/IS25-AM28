@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.*;
@@ -14,6 +15,9 @@ import org.json.simple.JSONObject;
 import java.util.*;
 
 public class WarZone extends EventCard {
+    private final Map<String, Object> humans;
+    private final Map<String, Object> engines;
+    private final Map<String, Object> cannons;
 
     // Lowest crew conditions
     private final int takenCrewForLowestCrew;
@@ -33,6 +37,7 @@ public class WarZone extends EventCard {
     private final int movementStepsForLowestFirepower;
     private final List<PlasmaShot> shootingSequenceForLowestFirepower;
 
+    /*
     public WarZone(
             String cardName,
             int cardLevel,
@@ -42,6 +47,81 @@ public class WarZone extends EventCard {
             Board board
     ) {
         super(cardName, cardLevel, board);
+
+        // Initializing the direction name to value map
+        // Precalculated table that associates each direction name to its value
+        Map<Integer, String> directionNameToValue = new HashMap<Integer, String>();
+
+        directionNameToValue.put(0, "top");
+        directionNameToValue.put(1, "right");
+        directionNameToValue.put(2, "bottom");
+        directionNameToValue.put(3, "left");
+
+        // Variables
+        JSONObject shootingSequenceJSON;
+        JSONArray directionSequence;
+        int totalDirections = directionNameToValue.size();
+
+        // (1) - Initializing the conditions for the player with the lowest crew
+        this.takenCrewForLowestCrew = (int) humans.get("humans");
+        this.takenStorageForLowestCrew = (int) humans.get("storage");
+        this.movementStepsForLowestCrew = (int) humans.get("days");
+        this.shootingSequenceForLowestCrew = new ArrayList<PlasmaShot>();
+
+        shootingSequenceJSON = (JSONObject) humans.get("shoot");
+
+        for (int i = 0; i < totalDirections; i++) {
+            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
+            for (Object sizeIndicator : directionSequence) {
+                shootingSequenceForLowestCrew.add(new PlasmaShot((Integer) sizeIndicator, i));
+            }
+        }
+
+        // (2) - Initializing the conditions for the player with the lowest engine power
+        this.takenCrewForLowestEnginePower = (int) engines.get("humans");
+        this.takenStorageForLowestEnginePower = (int) engines.get("storage");
+        this.movementStepsForLowestEnginePower = (int) engines.get("days");
+        this.shootingSequenceForLowestEnginePower = new ArrayList<PlasmaShot>();
+
+        shootingSequenceJSON = (JSONObject) humans.get("shoot");
+
+        for (int i = 0; i < totalDirections; i++) {
+            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
+            for (Object sizeIndicator : directionSequence) {
+                shootingSequenceForLowestEnginePower.add(new PlasmaShot((Integer) sizeIndicator, i));
+            }
+        }
+
+        // (3) - Initializing the conditions for the player with the lowest firepower
+        this.takenCrewForLowestFirepower = (int) cannons.get("humans");
+        this.takenStorageForLowestFirepower = (int) cannons.get("storage");
+        this.movementStepsForLowestFirepower = (int) cannons.get("days");
+        this.shootingSequenceForLowestFirepower = new ArrayList<PlasmaShot>();
+
+        shootingSequenceJSON = (JSONObject) humans.get("shoot");
+
+        for (int i = 0; i < totalDirections; i++) {
+            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
+            for (Object sizeIndicator : directionSequence) {
+                shootingSequenceForLowestFirepower.add(new PlasmaShot((Integer) sizeIndicator, i));
+            }
+        }
+    }
+     */
+
+    public WarZone(
+            @JsonProperty("cardName") String cardName,
+            @JsonProperty("cardLevel") int cardLevel,
+            @JsonProperty("humans") Map<String, Object> humans,
+            @JsonProperty("engines") Map<String, Object> engines,
+            @JsonProperty("cannons") Map<String, Object> cannons,
+            Board board
+    ) {
+        super(cardName, cardLevel, board);
+
+        this.humans = humans;
+        this.engines = engines;
+        this.cannons = cannons;
 
         // Initializing the direction name to value map
         // Precalculated table that associates each direction name to its value

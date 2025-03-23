@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
@@ -21,6 +23,7 @@ import static it.polimi.ingsw.is25am28.Connector.ZERO_PIPES;
 public class MeteorShower extends EventCard {
     private final List<Meteor> meteorSequence;
 
+    /*
     public MeteorShower(
             String cardName,
             int cardLevel,
@@ -40,6 +43,18 @@ public class MeteorShower extends EventCard {
                 )
             );
         }
+    }
+     */
+
+    @JsonCreator
+    public MeteorShower(
+            @JsonProperty("cardName") String cardName,
+            @JsonProperty("cardLevel") int cardLevel,
+            @JsonProperty("meteorSequence") List<Meteor> meteorSequence,
+            Board board
+    ) {
+        super(cardName, cardLevel, board);
+        this.meteorSequence = meteorSequence;
     }
 
     @Override

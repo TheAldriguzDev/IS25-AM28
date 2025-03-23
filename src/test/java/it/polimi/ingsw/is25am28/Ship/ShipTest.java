@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Ship;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ShipJSON;
 import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.Exceptions.ExistingComponentException;
 import it.polimi.ingsw.is25am28.Exceptions.InsufficientEnergyException;
@@ -7,11 +8,11 @@ import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import javafx.util.Pair;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Connector.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -356,10 +357,19 @@ class ShipTest {
     }
 
     @Test
-    void getAllLifeforms() {
+    void setChosenAliensForEligibleCabins_settingPurpleAlien() {
         Ship ship = initCustomShip();
 
+        Map<Integer, Pair<Integer, Integer>> chosenAliens = new HashMap<>();
 
+        chosenAliens.put(1, new Pair<Integer, Integer>(7, 7));
+
+        ShipJSON shipJson = new ShipJSON("p1", chosenAliens);
+
+        ship.setChosenAliensForEligibleCabins(shipJson);
+
+        assertEquals(LifeformType.PURPLE_ALIEN.ordinal(), ((Cabin) ship.getComponent(7, 7)).getInhabitants().getFirst().getLifeformType().ordinal());
+        assertEquals(0, ((Cabin) ship.getComponent(7, 7)).getAvailableSpace());
     }
 
     @Test

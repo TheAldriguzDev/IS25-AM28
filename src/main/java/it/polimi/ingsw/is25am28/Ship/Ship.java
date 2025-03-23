@@ -1,10 +1,14 @@
 package it.polimi.ingsw.is25am28.Ship;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.ShipJSON;
 import it.polimi.ingsw.is25am28.Components.*;
+import it.polimi.ingsw.is25am28.Connector;
 import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -354,6 +358,58 @@ public class Ship {
                 .toList();
     }
 
+    // TODO: Test this feature
+    /**
+     * Sets the cabins at their respective coordinates (row, col) to the
+     * chosen alien type that they are matched with in the map inside data
+     *
+     * @param data The ShipJSON containing the mapping between an alien type and which cabin the user wants to put it in. <br>
+     *             Each cabin is distinguished by a set of coordinates (row, col) found inside this parameter
+     *
+     * @throws IllegalArgumentException If the given data is badly formatted when compared to the expected ShipJSON formatting
+     */
+    public void setChosenAliensForEligibleCabins(ActionJSON data) throws IllegalArgumentException {
+        ShipJSON shipJSON;
+        Map<Integer, Pair<Integer, Integer>> chosenAliens;
+
+        try {
+            shipJSON = (ShipJSON) data;
+            chosenAliens = shipJSON.getChosenAliens();
+
+            for (Map.Entry<Integer, Pair<Integer, Integer>> entry : chosenAliens.entrySet()) {
+                int alienType = entry.getKey();
+
+                Component component = this.getComponent(
+                    entry.getValue().getKey(),
+                    entry.getValue().getValue()
+                );
+
+                switch (component) {
+                    case Cabin cabin -> {
+                        switch (alienType) {
+                            case 1 -> {
+                                // LifeformType.PURPLE_ALIEN.ordinal() == 1
+                                cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
+                            }
+                            case 2 -> {
+                                // LifeformType.BROWN_ALIEN.ordinal() == 2
+                                cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+                            }
+                            default -> throw new IllegalStateException();
+                        }
+                    }
+                    case null, default -> throw new IllegalArgumentException();
+                }
+            }
+        }
+        catch (OutOfGridException e) {
+            System.out.printf("[Ship::setChosenAliensForEligibleCabins] " + e.getMessage());
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("ERROR: JSON parsing error in Ship::setChosenAliensForEligibleCabins");
+        }
+    }
+
     /**
      * Returns the real firepower by considering the baseline firepower (given by single cannons) and
      * the additional firepower (given by activating the given amount of double cannons)<br>
@@ -498,14 +554,24 @@ public class Ship {
      * @return The number of exposed connectors on the entire ship
      */
     public int getExposedConnectorAmount(){
-        List<Component> border = new ArrayList<Component>();
         AtomicInteger exposedConnectors = new AtomicInteger();
 
         traverse(
             (Component component) -> {
                 Component[] neighbours = this.getNearestComponents(component);
-                for (Component neighbour : neighbours) {
-                    if (neighbour == null) {
+                boolean sideIsZeroPipes = false;
+
+                for (int i = 0; i < neighbours.length; i++) {
+                    switch (i) {
+                        case 0 -> { sideIsZeroPipes = (component.getTopSide() == ZERO_PIPES); }     // Top
+                        case 1 -> { sideIsZeroPipes = (component.getRightSide() == ZERO_PIPES); }   // Right
+                        case 2 -> { sideIsZeroPipes = (component.getBottomSide() == ZERO_PIPES); }  // Bottom
+                        case 3 -> { sideIsZeroPipes = (component.getLeftSide() == ZERO_PIPES); }    // Left
+                    }
+
+                    // The component's currently checked side is exposed iff the
+                    // neighbour on that side is null and the connector is NOT a ZERO_PIPE
+                    if (!sideIsZeroPipes && neighbours[i] == null) {
                         exposedConnectors.getAndIncrement();
                     }
                 }
