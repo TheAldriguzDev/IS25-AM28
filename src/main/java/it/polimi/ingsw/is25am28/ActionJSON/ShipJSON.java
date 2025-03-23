@@ -15,11 +15,6 @@ public class ShipJSON extends ActionJSON {
     private Map<Integer, Pair<Integer, Integer>> chosenAliens;
 
     @JsonCreator
-    public ShipJSON() {
-        // Creates an empty ShipJSON, to fill afterwards
-    }
-
-    @JsonCreator
     public ShipJSON(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("chosenAliens") Map<Integer, Pair<Integer, Integer>> chosenAliens
@@ -28,13 +23,13 @@ public class ShipJSON extends ActionJSON {
         this.chosenAliens = chosenAliens;
     }
 
-    @JsonGetter("chosenAliens")
-    public Map<Integer, Pair<Integer, Integer>> getChosenAliens() {
-        return this.chosenAliens;
-    }
-
     @JsonSetter("chosenAliens")
     public void setChosenAliens(Map<Integer, Pair<Integer, Integer>> chosenAliens) {
         this.chosenAliens = chosenAliens;
+    }
+
+    @JsonGetter("chosenAliens")
+    public Map<Integer, Pair<Integer, Integer>> getChosenAliens() {
+        return this.chosenAliens;
     }
 }

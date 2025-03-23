@@ -28,6 +28,10 @@ public class Epidemy extends EventCard {
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
+        return this;
+    }
+
+    public EventCard useCard() throws IllegalArgumentException {
         List<Player> players = this.players;
         Set<Cabin> alreadyQuarantined;
         List<Cabin> cabinList;

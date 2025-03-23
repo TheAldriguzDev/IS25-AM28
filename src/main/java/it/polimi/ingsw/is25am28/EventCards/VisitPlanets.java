@@ -146,22 +146,23 @@ public class VisitPlanets extends EventCard {
         VisitPlanetsJSON visitPlanets;
 
         try {
-             visitPlanets = (VisitPlanetsJSON) data;
-        } catch (Exception e) {
-            throw new IllegalArgumentException("The given JSON data is not a valid visitPlanet JSON");
-        }
+            visitPlanets = (VisitPlanetsJSON) data;
 
-        List<ComponentHelper<ItemColor>> itemsToBeRemoved;
-        List<ComponentHelper<ItemColor>> itemsToBeTaken;
+            List<ComponentHelper<ItemColor>> itemsToBeRemoved;
+            List<ComponentHelper<ItemColor>> itemsToBeTaken;
 
-        for (Player player : players) {
-            if (visitPlanets.getPlayerLandingDecision(player)) {
-                itemsToBeRemoved = visitPlanets.getItemsToBeRemovedFromPlayer(player);
-                itemsToBeTaken = visitPlanets.getItemsToBeTakenFromPlayer(player);
+            for (Player player : players) {
+                if (visitPlanets.getPlayerLandingDecision(player)) {
+                    itemsToBeRemoved = visitPlanets.getItemsToBeRemovedFromPlayer(player);
+                    itemsToBeTaken = visitPlanets.getItemsToBeTakenFromPlayer(player);
 
-                this.bonusEffect();
-                this.malusEffect();
+                    this.bonusEffect();
+                    this.malusEffect();
+                }
             }
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("The given JSON data is not a valid visitPlanet JSON");
         }
 
         // Set this card as used

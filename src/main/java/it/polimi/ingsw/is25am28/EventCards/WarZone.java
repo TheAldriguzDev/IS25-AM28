@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
 
+import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import javafx.util.Pair;
@@ -401,32 +402,35 @@ public class WarZone extends EventCard {
                         if (currPlasmaShot.getSize() == 1) {
                             // Case 1 - Small PlasmaShot
                             // => Check if the given shields
-
                             shieldCoordsList = warZone.getShieldCoordinatesPerPlayer(currPlayer);
 
-                            for (Pair<Integer, Integer> shieldCoords: shieldCoordsList) {
-                                Component component = shipPtr.getComponent(
-                                        shieldCoords.getKey(),
-                                        shieldCoords.getValue()
-                                );
+                            if (shieldCoordsList != null) {
+                                for (Pair<Integer, Integer> shieldCoords: shieldCoordsList) {
+                                    if (shieldCoords != null) {
+                                        Component component = shipPtr.getComponent(
+                                                shieldCoords.getKey(),
+                                                shieldCoords.getValue()
+                                        );
 
-                                // Safe cast of Component to Shield
-                                switch (component) {
-                                    case Shield shield -> {
-                                        // Checking if the shield selected for activation
-                                        // can actually defend the ship from the small PlasmaShot
-                                        // by checking if it's correctly oriented towards the threat
-                                        int[] shieldCoverage = shield.getCoveredSide();
+                                        // Safe cast of Component to Shield
+                                        switch (component) {
+                                            case Shield shield -> {
+                                                // Checking if the shield selected for activation
+                                                // can actually defend the ship from the small PlasmaShot
+                                                // by checking if it's correctly oriented towards the threat
+                                                int[] shieldCoverage = shield.getCoveredSide();
 
-                                        for (int j : shieldCoverage) {
-                                            if (j == inboundDirection) {
-                                                threatDestroyed = true;
-                                                shipPtr.consumeEnergy(1);
-                                                break;
+                                                for (int j : shieldCoverage) {
+                                                    if (j == inboundDirection) {
+                                                        threatDestroyed = true;
+                                                        shipPtr.consumeEnergy(1);
+                                                        break;
+                                                    }
+                                                }
                                             }
+                                            case null, default -> {}
                                         }
                                     }
-                                    case null, default -> {}
                                 }
                             }
                         }
@@ -439,10 +443,16 @@ public class WarZone extends EventCard {
                     // If the PlasmaShot wasn't deflected, then remove the component
                     // that was hit from the current player's ship
                     if (toHit != null && !threatDestroyed) {
-                        shipPtr.removeComponent(
-                                toHit.getPosition()[0],
-                                toHit.getPosition()[1]
-                        );
+                        try {
+                            shipPtr.removeComponent(
+                                    toHit.getPosition()[0],
+                                    toHit.getPosition()[1]
+                            );
+                        } catch (CoreDeletionAttemptException e) {
+                            this.currentPlayer.ifPresent(
+                                    (Player p) -> this.getBoard().eliminatePlayer(p)
+                            );
+                        }
                     }
                 }
             }
@@ -454,7 +464,7 @@ public class WarZone extends EventCard {
             this.getBoard().movePlayerBackwards(lowestFirePowerPlayers.getFirst(), movementStepsForLowestFirepower);
         }
         catch (Exception e) {
-            throw new IllegalArgumentException("ERROR: JSON parsing error in WarZone::useCard");
+            throw new IllegalArgumentException("[WarZone] " + e.getMessage());
         }
 
         // Set the hasBeenUsed flag to true

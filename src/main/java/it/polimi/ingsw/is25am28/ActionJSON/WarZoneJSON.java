@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Player.Player;
 import javafx.util.Pair;
 
@@ -26,14 +27,29 @@ public class WarZoneJSON extends ActionJSON {
         this.shieldsPerPlayer = shieldsPerPlayer;
     }
 
+    @JsonSetter("enginesPerPlayer")
+    public void setEnginesPerPlayer(Map<Player, Integer> enginesPerPlayer) {
+        this.enginesPerPlayer = enginesPerPlayer;
+    }
+
     @JsonGetter("enginesPerPlayer")
     public int getEngineAmountPerPlayer(Player player) {
         return this.enginesPerPlayer.get(player);
     }
 
+    @JsonSetter("cannonsPerPlayer")
+    public void setCannonsPerPlayer(Map<Player, Integer> cannonsPerPlayer) {
+        this.cannonsPerPlayer = cannonsPerPlayer;
+    }
+
     @JsonGetter("cannonsPerPlayer")
     public int getCannonAmountPerPlayer(Player player) {
         return this.cannonsPerPlayer.get(player);
+    }
+
+    @JsonSetter("shieldsPerPlayer")
+    public void setShieldsPerPlayer(Map<Player, List<Pair<Integer, Integer>>> shieldsPerPlayer) {
+        this.shieldsPerPlayer = shieldsPerPlayer;
     }
 
     @JsonGetter("shieldsPerPlayer")

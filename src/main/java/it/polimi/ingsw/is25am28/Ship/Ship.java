@@ -192,6 +192,20 @@ public class Ship {
     }
 
     /**
+     * @return The ship's grid amount of rows
+     */
+    public int getGridRows() {
+        return this.grid_rows;
+    }
+
+    /**
+     * @return The ship's grid amount of columns
+     */
+    public int getGridCols() {
+        return this.grid_cols;
+    }
+
+    /**
      *  Uses an adapted version of the BFS algorithm to generate the sub-lists of
      *  each component type, which will be stored in this class for ease of use <br>
      *  <br>

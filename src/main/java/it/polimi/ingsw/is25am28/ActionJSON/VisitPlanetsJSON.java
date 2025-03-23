@@ -30,19 +30,14 @@ public class VisitPlanetsJSON extends ActionJSON {
         this.itemsToBeTaken = itemsToBeTaken;
     }
 
-    @JsonGetter("playerToPlanet")
-    public int getPlayerChosenPlanet(Player player) {
-        return this.playerToPlanet.get(player);
-    }
-
     @JsonSetter("playerToPlanet")
     public void setAllPlayersChosenPlanets(Map<Player, Integer> playerToPlanet) {
         this.playerToPlanet = playerToPlanet;
     }
 
-    @JsonGetter("landingDecisions")
-    public boolean getPlayerLandingDecision(Player player) {
-        return this.landingDecisions.get(player);
+    @JsonGetter("playerToPlanet")
+    public int getPlayerChosenPlanet(Player player) {
+        return this.playerToPlanet.get(player);
     }
 
     @JsonSetter("landingDecisions")
@@ -50,9 +45,9 @@ public class VisitPlanetsJSON extends ActionJSON {
         this.landingDecisions = landingDecisions;
     }
 
-    @JsonGetter("itemsToBeRemoved")
-    public List<ComponentHelper<ItemColor>> getItemsToBeRemovedFromPlayer(Player player) {
-        return this.itemsToBeRemoved.get(player);
+    @JsonGetter("landingDecisions")
+    public boolean getPlayerLandingDecision(Player player) {
+        return this.landingDecisions.get(player);
     }
 
     @JsonSetter("itemsToBeRemoved")
@@ -60,13 +55,18 @@ public class VisitPlanetsJSON extends ActionJSON {
         this.itemsToBeRemoved = itemsToBeRemoved;
     }
 
-    @JsonGetter("itemsToBeTaken")
-    public List<ComponentHelper<ItemColor>> getItemsToBeTakenFromPlayer(Player player) {
-        return this.itemsToBeTaken.get(player);
+    @JsonGetter("itemsToBeRemoved")
+    public List<ComponentHelper<ItemColor>> getItemsToBeRemovedFromPlayer(Player player) {
+        return this.itemsToBeRemoved.get(player);
     }
 
     @JsonSetter("itemsToBeTaken")
     public void setItemsToBeTaken(Map<Player, List<ComponentHelper<ItemColor>>> itemsToBeTaken) {
         this.itemsToBeTaken = itemsToBeTaken;
+    }
+
+    @JsonGetter("itemsToBeTaken")
+    public List<ComponentHelper<ItemColor>> getItemsToBeTakenFromPlayer(Player player) {
+        return this.itemsToBeTaken.get(player);
     }
 }

@@ -67,7 +67,6 @@ class ShipTest {
         }
     }
 
-    // Initializing a normal level 2 ship to be used with all test cases
     Ship initCustomShip() {
         Ship ship = new Ship(1);
 

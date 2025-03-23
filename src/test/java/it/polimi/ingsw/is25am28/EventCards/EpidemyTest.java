@@ -66,7 +66,6 @@ class EpidemyTest {
         }
     }
 
-    // Initializing a normal level 2 ship to be used with all test cases
     Ship initCustomShip() {
         Ship ship = new Ship(1);
 
@@ -292,7 +291,7 @@ class EpidemyTest {
         assertEquals(5, shipPlayer3.getAllLifeforms().size());
 
         epidemy.initCardPlayers();
-        epidemy.useCard(null);
+        epidemy.useCard();
 
         List<Lifeform> expectedPlayer1Lifeforms = new ArrayList<>();
         List<Lifeform> expectedPlayer2Lifeforms = new ArrayList<>();
@@ -384,7 +383,7 @@ class EpidemyTest {
         assertEquals(3, shipPlayer2.getAllLifeforms().size());
 
         epidemy.initCardPlayers();
-        epidemy.useCard(null);
+        epidemy.useCard();
 
         List<Lifeform> expectedPlayer1Lifeforms = new ArrayList<>();
         List<Lifeform> expectedPlayer2Lifeforms = new ArrayList<>();
