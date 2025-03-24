@@ -20,11 +20,6 @@ public class Player {
             ship = new Ship(level);
       }
 
-      // Added for testing
-      public void setShip(Ship ship) {
-            this.ship = ship;
-      }
-
       public String getNickname(){
             return nickname;
       }

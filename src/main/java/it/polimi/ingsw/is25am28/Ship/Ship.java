@@ -213,8 +213,6 @@ public class Ship {
      *  otherwise it will iterate again over the ship's grid and generate the same lists.
      */
     public void generateComponentSubLists() throws IllegalStateException {
-        Set<Component> alreadySeen = new HashSet<Component>();
-
         // Clearing all the sub-lists
         this.batteryList.clear();
         this.cabinList.clear();
@@ -226,28 +224,25 @@ public class Ship {
 
         traverse(
             (Component c) -> {
-                if (!alreadySeen.contains(c)) {
-                    alreadySeen.add(c);
-                    switch (c) {
-                        case Battery battery:       this.batteryList.add(battery);
-                            break;
-                        case Cabin cabin:           this.cabinList.add(cabin);
-                            break;
-                        case Cannon cannon:         this.cannonList.add(cannon);
-                            break;
-                        case Engine engine:         this.engineList.add(engine);
-                            break;
-                        case Shield shield:         this.shieldList.add(shield);
-                            break;
-                        case Storage storage:       this.storageList.add(storage);
-                            break;
-                        case Vital vital:           this.vitalList.add(vital);
-                            break;
-                        case Structural structural: // Structural components are not sorted
-                            break;
-                        default:
-                            throw new IllegalStateException("Unexpected class type " + c.toString());
-                    }
+                switch (c) {
+                    case Battery battery:       this.batteryList.add(battery);
+                        break;
+                    case Cabin cabin:           this.cabinList.add(cabin);
+                        break;
+                    case Cannon cannon:         this.cannonList.add(cannon);
+                        break;
+                    case Engine engine:         this.engineList.add(engine);
+                        break;
+                    case Shield shield:         this.shieldList.add(shield);
+                        break;
+                    case Storage storage:       this.storageList.add(storage);
+                        break;
+                    case Vital vital:           this.vitalList.add(vital);
+                        break;
+                    case Structural structural: // Structural components are not sorted
+                        break;
+                    default:
+                        throw new IllegalStateException("Unexpected class type " + c.toString());
                 }
             }
         );
@@ -269,54 +264,59 @@ public class Ship {
     /**
      * @return The list of Batteries present on the ship
      */
-    public List<Battery> getBatteryList() { return this.batteryList; }
-
-    /**
-     * @return The list of Cabins present on the ship
-     */
-    public List<Cabin> getCabinList() { return this.cabinList; }
+    public List<Battery> getBatteryList() { return new ArrayList<Battery>(this.batteryList); }
 
     /**
      * @return The list of Cannons present on the ship
      */
-    public List<Cannon> getCannonList() { return this.cannonList; }
+    public List<Cannon> getCannonList() { return new ArrayList<Cannon>(this.cannonList); }
 
     /**
      * @return The list of Engines present on the ship
      */
-    public List<Engine> getEngineList() { return this.engineList; }
+    public List<Engine> getEngineList() { return new ArrayList<Engine>(this.engineList); }
+
+    /**
+     * @return The list of Cabins present on the ship
+     */
+    public List<Cabin> getCabinList() { return new ArrayList<Cabin>(this.cabinList); }
+
 
     /**
      * @return The list of Shields present on the ship
      */
-    public List<Shield> getShieldList() { return this.shieldList; }
+    public List<Shield> getShieldList() { return new ArrayList<Shield>(this.shieldList); }
 
     /**
      * @return The list of Storage units present on the ship
      */
-    public List<Storage> getStorageList() { return this.storageList; }
+    public List<Storage> getStorageList() { return new ArrayList<Storage>(this.storageList); }
 
     /**
      * @return The list of Vital units present on the ship
      */
-    public List<Vital> getVitalList() { return this.vitalList; }
+    public List<Vital> getVitalList() { return new ArrayList<Vital>(this.vitalList); }
 
     /**
      * @return The list of DoubleEngines present on the ship
      */
     public List<Engine> getDoubleEngines() {
-        return this.engineList.stream()
+        return new ArrayList<Engine>(
+            this.engineList.stream()
                 .filter(e -> e.getSpeed() == 2)
-                .toList();
+                .toList()
+        );
     }
 
     /**
      * @return The list of DoubleCannons present on the ship
      */
     public List<Cannon> getDoubleCannons() {
-        return this.cannonList.stream()
+        return new ArrayList<Cannon>(
+            this.cannonList.stream()
                 .filter(c -> c.getFirePower() == 2)
-                .toList();
+                .toList()
+        );
     }
 
     /**
@@ -409,10 +409,10 @@ public class Ship {
                                 // LifeformType.BROWN_ALIEN.ordinal() == 2
                                 cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
                             }
-                            default -> throw new IllegalStateException();
+                            default -> throw new IllegalStateException("ERROR: Given alien type is not valid");
                         }
                     }
-                    case null, default -> throw new IllegalArgumentException();
+                    case null, default -> throw new IllegalArgumentException("ERROR: Component is not a cabin");
                 }
             }
         }
@@ -420,7 +420,7 @@ public class Ship {
             System.out.printf("[Ship::setChosenAliensForEligibleCabins] " + e.getMessage());
         }
         catch (Exception e) {
-            throw new IllegalArgumentException("ERROR: JSON parsing error in Ship::setChosenAliensForEligibleCabins");
+            throw new IllegalArgumentException("[Ship::setChosenAliensForEligibleCabins] " + e.getMessage());
         }
     }
 
@@ -696,6 +696,7 @@ public class Ship {
             (Component c) -> {
                 if (isShipValid.get() && !c.check(getNearestComponents(c))) {
                     isShipValid.set(false);
+                    System.out.println("ERROR: " + c.toString());
                 }
             }
         );

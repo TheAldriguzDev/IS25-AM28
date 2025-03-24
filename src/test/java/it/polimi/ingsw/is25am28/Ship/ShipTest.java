@@ -230,6 +230,151 @@ class ShipTest {
     }
 
     @Test
+    void generateComponentSubLists_testingInitShipForDuplicateComponents() {
+        Ship ship = new Ship(1);
+
+        int[] connectors = new int[4];
+
+        // Default connector is THREE_PIPES
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        /*
+               ==== Ship Configuration (LEVEL 1) ====
+            \       4       5       6       7       8
+            4                       a
+            5               b       c       d
+            6       e       f       g       h       i
+            7       j       k       l       m       n
+            8       o       p               q       r
+
+            Total components = 18 (17 + 1 core)
+
+            a = doubleCannon1 at (4, 6)
+            b = singleCannon1 at (5, 5)
+            c = specialDoubleStorage1 at (5, 6)
+            d = singleCannon2 at (5, 7)
+            e = shield1 at (6, 4)
+            f = normalTripleStorage1 at (6, 5)
+            g = CORE (6, 6)
+            h = specialSingleStorage1 at (6, 7)
+            i = doubleCannon2 at (6, 8)
+            j = tripleBattery1 at (7, 4)
+            k = normalDoubleStorage1 at (7, 5)
+            l = purpleVital1 at (7, 6)
+            m = cabin1 at (7, 7)
+            n = brownVital1 at (7, 8)
+            o = singleEngine1 at (9, 4)
+            p = singleEngine2 at (9, 5)
+            q = doubleEngine1 at (9, 7)
+            r = singleEngine3 at (9, 8)
+        */
+
+        Battery tripleBattery1 = new Battery(connectors, 3);
+
+        Cannon singleCannon1 = new Cannon(connectors, 1);
+        Cannon singleCannon2 = new Cannon(connectors, 1);
+        Cannon doubleCannon1 = new Cannon(connectors, 2);
+        Cannon doubleCannon2 = new Cannon(connectors, 2);
+
+        Engine singleEngine1 = new Engine(connectors, 1);
+        Engine singleEngine2 = new Engine(connectors, 1);
+        Engine singleEngine3 = new Engine(connectors, 1);
+        Engine doubleEngine1 = new Engine(connectors, 2);
+
+        Cabin cabin1 = new Cabin(connectors, false);
+
+        Shield shield1 = new Shield(connectors);
+
+        Storage normalDoubleStorage1 = new Storage(connectors, 2, false);
+        Storage normalTripleStorage1 = new Storage(connectors, 3, false);
+        Storage specialSingleStorage1 = new Storage(connectors, 1, true);
+        Storage specialDoubleStorage1 = new Storage(connectors, 2, true);
+
+        Structural structural1 = new Structural(connectors);
+
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+
+        // Adding the components created above
+        ship.addComponent(doubleCannon1, 4, 6);
+        ship.addComponent(singleCannon1, 5, 5);
+        ship.addComponent(specialDoubleStorage1, 5, 6);
+        ship.addComponent(singleCannon2, 5, 7);
+        ship.addComponent(shield1, 6, 4);
+        ship.addComponent(normalTripleStorage1, 6, 5);
+        ship.addComponent(specialSingleStorage1, 6, 7);
+        ship.addComponent(doubleCannon2, 6, 8);
+        ship.addComponent(tripleBattery1, 7, 4);
+        ship.addComponent(normalDoubleStorage1, 7, 5);
+        ship.addComponent(purpleVital1, 7, 6);
+        ship.addComponent(cabin1, 7, 7);
+        ship.addComponent(brownVital1, 7, 8);
+        ship.addComponent(singleEngine1, 8, 4);
+        ship.addComponent(singleEngine2, 8, 5);
+        ship.addComponent(doubleEngine1, 8, 7);
+        ship.addComponent(singleEngine3, 8, 8);
+
+        System.out.println("==== SHIP CONFIGURATION ====");
+        printShipGrid(ship);
+
+        // Generating the component sub-lists right after the ship is created
+        ship.generateComponentSubLists();
+
+        List<Battery> expectedBatteryList = new ArrayList<>();
+        List<Cannon> expectedCannonList = new ArrayList<>();
+        List<Engine> expectedEngineList = new ArrayList<>();
+        List<Cabin> expectedCabinList = new ArrayList<>();
+        List<Shield> expectedShieldList = new ArrayList<>();
+        List<Storage> expectedStorageList = new ArrayList<>();
+        List<Vital> expectedVitalList = new ArrayList<>();
+
+        expectedBatteryList.add(tripleBattery1);
+
+        expectedCannonList.add(singleCannon1);
+        expectedCannonList.add(singleCannon2);
+        expectedCannonList.add(doubleCannon1);
+        expectedCannonList.add(doubleCannon2);
+
+        expectedEngineList.add(singleEngine1);
+        expectedEngineList.add(singleEngine2);
+        expectedEngineList.add(singleEngine3);
+        expectedEngineList.add(doubleEngine1);
+
+        expectedCabinList.add(cabin1);
+        expectedCabinList.add((Cabin) ship.getComponent(6, 6));   // Core
+
+        expectedShieldList.add(shield1);
+
+        expectedStorageList.add(normalDoubleStorage1);
+        expectedStorageList.add(normalTripleStorage1);
+        expectedStorageList.add(specialSingleStorage1);
+        expectedStorageList.add(specialDoubleStorage1);
+
+        expectedVitalList.add(purpleVital1);
+        expectedVitalList.add(brownVital1);
+
+        // Verifying each sub-list's size matches
+        assertEquals(expectedBatteryList.size(), ship.getBatteryList().size());
+        assertEquals(expectedCannonList.size(), ship.getCannonList().size());
+        assertEquals(expectedEngineList.size(), ship.getEngineList().size());
+        assertEquals(expectedCabinList.size(), ship.getCabinList().size());
+        assertEquals(expectedShieldList.size(), ship.getShieldList().size());
+        assertEquals(expectedStorageList.size(), ship.getStorageList().size());
+        assertEquals(expectedVitalList.size(), ship.getVitalList().size());
+
+        // Verifying the content of each sub-list is the same
+        assertTrue(ship.getBatteryList().containsAll(expectedBatteryList));
+        assertTrue(ship.getCannonList().containsAll(expectedCannonList));
+        assertTrue(ship.getEngineList().containsAll(expectedEngineList));
+        assertTrue(ship.getCabinList().containsAll(expectedCabinList));
+        assertTrue(ship.getShieldList().containsAll(expectedShieldList));
+        assertTrue(ship.getStorageList().containsAll(expectedStorageList));
+        assertTrue(ship.getVitalList().containsAll(expectedVitalList));
+    }
+
+    @Test
     void getAllDoubleComponents() {
         Ship ship = new Ship(0);
 

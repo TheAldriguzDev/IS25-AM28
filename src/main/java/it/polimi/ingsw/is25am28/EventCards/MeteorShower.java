@@ -1,9 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
@@ -12,11 +10,11 @@ import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
+import it.polimi.ingsw.is25am28.Exceptions.InsufficientEnergyException;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
 import javafx.util.Pair;
-import org.json.simple.JSONArray;
 
 import java.util.*;
 
@@ -25,52 +23,27 @@ import static it.polimi.ingsw.is25am28.Connector.ZERO_PIPES;
 public class MeteorShower extends EventCard {
     private final List<Meteor> meteorSequence;
     private int currMeteorIndex;
-
-    /*
-    public MeteorShower(
-            String cardName,
-            int cardLevel,
-            JSONArray meteorsConfigs,
-            Board board
-    ) {
-        super(cardName, cardLevel, board);
-        meteorSequence = new ArrayList<Meteor>();
-
-        for (Object meteor : meteorsConfigs) {
-            JSONArray meteorDescriptor = (JSONArray) meteor;
-
-            meteorSequence.add(
-                new Meteor(
-                    (int) meteorDescriptor.get(0),
-                    (int) meteorDescriptor.get(1)
-                )
-            );
-        }
-    }
-     */
-
-    @JsonCreator
+    private int playerUseCount;
+    private int diceThrowResult;
+    
     public MeteorShower(
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
-            @JsonProperty("meteorSequence") List<List<Integer>> meteorSequence,
+            @JsonProperty("meteorSequence") List<Pair<Integer, Integer>> meteorSequence,
             Board board
     ) {
         super(cardName, cardLevel, board);
 
         this.currMeteorIndex = 0;
+        this.playerUseCount = 0;
         this.meteorSequence = new ArrayList<Meteor>();
 
         try {
-            for (List<Integer> meteorDescriptor : meteorSequence) {
-                // Each meteorDescriptor should be a list of size 2, otherwise
-                // the meteor cannot be correctly instantiated
-                if (meteorDescriptor.size() != 2) { throw new Exception(); }
-
+            for (Pair<Integer, Integer> meteorDescriptor : meteorSequence) {
                 this.meteorSequence.add(
                     new Meteor(
-                        meteorDescriptor.get(0),    // Meteor size
-                        meteorDescriptor.get(1)     // Meteor orientation
+                        meteorDescriptor.getKey(),  // Meteor size
+                        meteorDescriptor.getValue() // Meteor orientation
                     )
                 );
             }
@@ -90,209 +63,256 @@ public class MeteorShower extends EventCard {
         // Nothing
     }
 
-    /**
-     * @return The amount of meteors
-     */
-    public int getMeteorAmount() {
-        return this.meteorSequence.size();
-    }
-
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException, IllegalStateException {
-        int diceResult, inboundDirection, sideToHit;
-        boolean threatDestroyed;
+        MeteorShowerJSON meteorShowerJSON;
+        int inboundDirection, sideToHit;
+        boolean threatDestroyed, energyConsumed;
         Component[] gridRow;
         Component[] gridColumn;
-        List<Player> eliminatedPlayers;
-        Pair<Integer, Integer> shieldCoords;
-        Pair<Integer, Integer> cannonCoords;
-        Random random;
+        List<Pair<Integer, Integer>> shieldCoordsList;
+        List<Pair<Integer, Integer>> cannonCoordsList;
+        Player player;
+        Component toHit;
         Ship shipPtr;
-        MeteorShowerJSON meteorShowerJSON;
+
+        // Initializing variables
+        toHit = null;
+        threatDestroyed = false;
+        sideToHit = -1;
 
         try {
             // ActionJSON unpacking
             meteorShowerJSON = ((MeteorShowerJSON) data);
 
-            // Initializing variables
-            random = new Random();
-            eliminatedPlayers = new ArrayList<Player>();
-            Meteor currMeteor = this.meteorSequence.get(this.currMeteorIndex);
-            this.currMeteorIndex++;
+            // Getting the next player from the board that matches the username
+            // passed with the MeteorShowerJSON
+            player = this.getBoard().getPlayers().stream()
+                    .filter((Player p) -> (p.getNickname().equals(meteorShowerJSON.getPlayerNickname())))
+                    .toList().getFirst();
 
-            // Two dice are thrown, result is between 2 and 12
-            diceResult = (random.nextInt(6) + 1) + (random.nextInt(6) + 1);
+            this.diceThrowResult = meteorShowerJSON.getDiceThrowResult();
+            shieldCoordsList = meteorShowerJSON.getShieldsCoordinates();
+            cannonCoordsList = meteorShowerJSON.getCannonsCoordinates();
 
-            // Adding +2 to the currMeteor's pointing direction gets the
-            // side from where the ship will see it arrive from
-            inboundDirection = (currMeteor.getOrientation() + 2) % 4;
+            if (player == null) {
+                throw new IllegalArgumentException("ERROR: Given player is not present in the current game");
+            }
+            if (this.diceThrowResult < 2 || this.diceThrowResult > 12) {
+                throw new IllegalArgumentException("ERROR: Dice throw result cannot be outside of the range [2, 12]");
+            }
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("[MeteorShower::useCard] " + e.getMessage());
+        }
 
-            for (Player player : this.players) {
-                if (!eliminatedPlayers.contains(player)) {
-                    // Initializations
-                    Component toHit = null;
-                    threatDestroyed = false;
-                    sideToHit = -1;
-                    shipPtr = player.getShip();
+        // Other initializations
+        shipPtr = player.getShip();
+        Meteor currMeteor = this.meteorSequence.get(this.currMeteorIndex);
 
-                    switch (inboundDirection) {
-                        // Case 1 - Meteor arrives from the TOP
-                        case 0 -> {
-                            gridColumn = shipPtr.getGridColumn(diceResult - 1);
-                            int row = 0;
+        // Adding +2 to the currMeteor's pointing direction gets the
+        // side from where the ship will see it arrive from
+        inboundDirection = (currMeteor.getOrientation() + 2) % 4;
 
-                            // Iterating the column in search of the side where the meteor hits
-                            // If found, then check for the next components in the column
-                            // to see if there are any cannons and/or shields
-                            while (toHit == null && row < gridColumn.length) {
-                                toHit = gridColumn[row];
-                                row++;
-                            }
+        switch (inboundDirection) {
+            // Case 1 - Meteor arrives from the TOP
+            case 0 -> {
+                gridColumn = shipPtr.getGridColumn(this.diceThrowResult - 1);
+                int row = 0;
 
-                            if (toHit == null) break;
-                            sideToHit = toHit.getTopSide().ordinal();
-                        }
+                // Iterating the column in search of the side where the meteor hits
+                // If found, then check for the next components in the column
+                // to see if there are any cannons and/or shields
+                while (toHit == null && row < gridColumn.length) {
+                    toHit = gridColumn[row];
+                    row++;
+                }
 
-                        // Case 2 - Meteor arrives from the RIGHT
-                        case 1 -> {
-                            gridRow = shipPtr.getGridRow(diceResult - 1);
-                            int column = gridRow.length - 1;
+                if (toHit == null) break;
+                sideToHit = toHit.getTopSide().ordinal();
+            }
 
-                            // Iterating the column in search of the side where the meteor hits
-                            // If found, then check for the next components in the column
-                            // to see if there are any cannons and/or shields
-                            while (toHit == null && column >= 0) {
-                                toHit = gridRow[column];
-                                column--;
-                            }
+            // Case 2 - Meteor arrives from the RIGHT
+            case 1 -> {
+                gridRow = shipPtr.getGridRow(this.diceThrowResult - 1);
+                int column = gridRow.length - 1;
 
-                            if (toHit == null) break;
-                            sideToHit = toHit.getLeftSide().ordinal();
-                        }
+                // Iterating the column in search of the side where the meteor hits
+                // If found, then check for the next components in the column
+                // to see if there are any cannons and/or shields
+                while (toHit == null && column >= 0) {
+                    toHit = gridRow[column];
+                    column--;
+                }
 
-                        // Case 3 - Meteor arrives from the BOTTOM
-                        case 2 -> {
-                            gridColumn = shipPtr.getGridColumn(diceResult - 1);
-                            int row = gridColumn.length - 1;
+                if (toHit == null) break;
+                sideToHit = toHit.getLeftSide().ordinal();
+            }
 
-                            // Iterating the column in search of the side where the meteor hits
-                            // If found, then check for the next components in the column
-                            // to see if there are any cannons and/or shields
-                            while (toHit == null && row >= 0) {
-                                toHit = gridColumn[row];
-                                row--;
-                            }
+            // Case 3 - Meteor arrives from the BOTTOM
+            case 2 -> {
+                gridColumn = shipPtr.getGridColumn(this.diceThrowResult - 1);
+                int row = gridColumn.length - 1;
 
-                            if (toHit == null) break;
-                            sideToHit = toHit.getBottomSide().ordinal();
-                        }
+                // Iterating the column in search of the side where the meteor hits
+                // If found, then check for the next components in the column
+                // to see if there are any cannons and/or shields
+                while (toHit == null && row >= 0) {
+                    toHit = gridColumn[row];
+                    row--;
+                }
 
-                        // Case 4 - Meteor arrives from the LEFT
-                        case 3 -> {
-                            gridRow = shipPtr.getGridRow(diceResult - 1);
-                            int column = 0;
+                if (toHit == null) break;
+                sideToHit = toHit.getBottomSide().ordinal();
+            }
 
-                            // Iterating the column in search of the side where the meteor hits
-                            // If found, then check for the next components in the column
-                            // to see if there are any cannons and/or shields
-                            while (toHit == null && column < gridRow.length) {
-                                toHit = gridRow[column];
-                                column++;
-                            }
+            // Case 4 - Meteor arrives from the LEFT
+            case 3 -> {
+                gridRow = shipPtr.getGridRow(this.diceThrowResult - 1);
+                int column = 0;
 
-                            if (toHit == null) break;
-                            sideToHit = toHit.getRightSide().ordinal();
-                        }
+                // Iterating the column in search of the side where the meteor hits
+                // If found, then check for the next components in the column
+                // to see if there are any cannons and/or shields
+                while (toHit == null && column < gridRow.length) {
+                    toHit = gridRow[column];
+                    column++;
+                }
 
-                        default -> throw new IllegalStateException("ERROR: Only 4 directions allowed");
-                    }
+                if (toHit == null) break;
+                sideToHit = toHit.getRightSide().ordinal();
+            }
 
-                    // If there's a component in the path of the meteor, then elaborate further
-                    if (toHit != null) {
-                        if (currMeteor.getSize() == 1) {
-                            // Case 1 - Small Meteor
-                            // => Check if it can bounce on toHit or a shield is required
-                            if (sideToHit != ZERO_PIPES.ordinal()) {
-                                shieldCoords = meteorShowerJSON.getShieldsCoordinatesPerPlayer(player);
+            default -> throw new IllegalStateException("ERROR: Only 4 directions allowed");
+        }
 
-                                if (shieldCoords != null) {
-                                    Component component = shipPtr.getComponent(
-                                            shieldCoords.getKey(),
-                                            shieldCoords.getValue()
-                                    );
+        // If there's a component in the path of the meteor, then elaborate further
+        if (toHit != null) {
+            // Case 1 - Small Meteor
+            // => Check if it can bounce on toHit or a shield is required
+            if (sideToHit != ZERO_PIPES.ordinal()) {
+                if (shieldCoordsList != null) {
+                    for (Pair<Integer, Integer> shieldCoords : shieldCoordsList) {
+                        if (shieldCoords != null) {
+                            Component component = shipPtr.getComponent(
+                                    shieldCoords.getKey(),
+                                    shieldCoords.getValue()
+                            );
 
-                                    // Safe cast of Component to Shield
-                                    switch (component) {
-                                        case Shield shield -> {
-                                            // Checking if the shield selected for activation
-                                            // can actually defend the ship from the small meteor
-                                            // by checking if it's correctly oriented towards the threat
-                                            int[] shieldCoverage = shield.getCoveredSide();
-                                            shipPtr.consumeEnergy(1);
-
-                                            for (int j : shieldCoverage) {
-                                                if (j == inboundDirection) {
-                                                    threatDestroyed = true;
-                                                    break;
-                                                }
+                            // Safe cast of Component to Shield
+                            switch (component) {
+                                case Shield shield -> {
+                                    int[] shieldCoverage = shield.getCoveredSide();
+                                    try {
+                                        // Consume energy only if there's enough energy available
+                                        shipPtr.consumeEnergy(1);
+                                        for (int j : shieldCoverage) {
+                                            if (currMeteor.getSize() == 1 && j == inboundDirection) {
+                                                // Checking if the shield selected for activation
+                                                // can actually defend the ship from the small meteor
+                                                // by checking if it's correctly oriented towards the threat
+                                                threatDestroyed = true;
+                                                break;
                                             }
                                         }
-                                        case null, default -> {
-                                        }
+                                    }
+                                    catch (InsufficientEnergyException e) {
+                                        // Otherwise the ship depleted its energy reserve and the selected shields
+                                        // cannot be activated, therefore the meteor will not be deflected
+                                        threatDestroyed = false;
                                     }
                                 }
-                                // else SHIELD NOT SELECTED
+                                case null, default -> {}
                             }
-                            // else SMALL METEOR BOUNCES OFF
-                        } else {
-                            // Case 2 - Big Meteor
-                            // => Check if there are cannons that can destroy it
-                            cannonCoords = meteorShowerJSON.getCannonsCoordinatesPerPlayer(player);
-
-                            if (cannonCoords != null) {
-                                Component component = shipPtr.getComponent(
-                                        cannonCoords.getKey(),
-                                        cannonCoords.getValue()
-                                );
-
-                                // Safe cast of Component to Cannon
-                                switch (component) {
-                                    case Cannon cannon -> {
-                                        if (cannon.getFirePower() == 2) {
-                                            // Consume energy only if the selected cannon is a double cannon
-                                            shipPtr.consumeEnergy(1);
-                                        }
-                                        if (cannon.getDirection() == inboundDirection) {
-                                            threatDestroyed = true;
-                                        }
-                                    }
-                                    case null, default -> {
-                                    }
-                                }
-                            }
-                            // else CANNON NOT SELECTED
                         }
                     }
-                    // else METEOR MISSES THE SHIP
+                }
+            }
 
-                    // If the meteor wasn't destroyed, then remove the component
-                    // that was hit from the current player's ship
-                    if (toHit != null && !threatDestroyed) {
-                        try {
-                            shipPtr.removeComponent(
-                                    toHit.getPosition()[0],
-                                    toHit.getPosition()[1]
-                            );
-                        } catch (CoreDeletionAttemptException e) {
-                            this.getBoard().eliminatePlayer(player);
-                            eliminatedPlayers.add(player);
+            // Case 2 - Big Meteor
+            // => Check if there are cannons that can destroy it
+            if (cannonCoordsList != null) {
+                for (Pair<Integer, Integer> cannonCoords : cannonCoordsList) {
+                    if (cannonCoords != null) {
+                        Component component = shipPtr.getComponent(
+                                cannonCoords.getKey(),
+                                cannonCoords.getValue()
+                        );
+
+                        // Safe cast of Component to Cannon
+                        switch (component) {
+                            case Cannon cannon -> {
+                                if ((cannon.getFirePower() == 2 && cannon.getDirection() == 0) || (cannon.getFirePower() == 1 && cannon.getDirection() != 0)) {
+                                    try {
+                                        // Consume energy only if the selected cannon is a double cannon
+                                        // and if there's energy available
+                                        shipPtr.consumeEnergy(1);
+                                        if (currMeteor.getSize() == 2 && cannon.getDirection() == inboundDirection) {
+                                            switch (inboundDirection) {
+                                                // Case 1 - Cannon must be aligned to the COLUMN from which the currMeteor is coming from
+                                                //          in order to be able to shoot it (if it was enabled)
+                                                case 0, 2 -> {
+                                                    threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
+                                                }
+                                                // Case 2 - Cannon must be aligned to the ROW from which the currMeteor is coming from
+                                                //          in order to be able to shoot it (if it was enabled)
+                                                case 1, 3 -> {
+                                                    threatDestroyed = (cannon.getPosition()[0] == this.diceThrowResult - 1);
+                                                }
+                                                default -> throw new IllegalStateException("ERROR: inboundDirection must be between 0 and 3 (extremes included)");
+                                            }
+                                        }
+                                    }
+                                    catch (InsufficientEnergyException e) {
+                                        // Otherwise the ship depleted its energy reserve and the selected cannons
+                                        // cannot be activated, therefore the meteor will not be destroyed
+                                        threatDestroyed = false;
+                                    }
+                                }
+                                else if (currMeteor.getSize() == 2 && cannon.getDirection() == inboundDirection) {
+                                    switch (inboundDirection) {
+                                        // Case 1 - Cannon must be aligned to the COLUMN from which the currMeteor is coming from
+                                        //          in order to be able to shoot it (if it was enabled)
+                                        case 0, 2 -> {
+                                            threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
+                                        }
+                                        // Case 2 - Cannon must be aligned to the ROW from which the currMeteor is coming from
+                                        //          in order to be able to shoot it (if it was enabled)
+                                        case 1, 3 -> {
+                                            threatDestroyed = (cannon.getPosition()[0] == this.diceThrowResult - 1);
+                                        }
+                                        default -> throw new IllegalStateException("ERROR: inboundDirection must be between 0 and 3 (extremes included)");
+                                    }
+                                }
+                            }
+                            case null, default -> {}
                         }
                     }
                 }
             }
         }
-        catch (Exception e) {
-            throw new IllegalStateException("[MeteorShower] " + e.getMessage());
+
+        // If the meteor wasn't destroyed, then remove the component
+        // that was hit from the current player's ship
+        if (toHit != null && !threatDestroyed) {
+            try {
+                shipPtr.removeComponent(
+                        toHit.getPosition()[0],
+                        toHit.getPosition()[1]
+                );
+            } catch (CoreDeletionAttemptException e) {
+                this.getBoard().eliminatePlayer(player);
+            }
+        }
+
+        // Counting how many times the card has been
+        // used among all active players
+        this.playerUseCount++;
+
+        // Increasing the current meteor index only after
+        // all the alive players encountered the current meteor
+        if (this.playerUseCount % this.getBoard().getPlayers().size() == 0) {
+            this.currMeteorIndex++;
         }
 
         // The card gets marked as completed only when all players
@@ -306,11 +326,20 @@ public class MeteorShower extends EventCard {
 
     @Override
     public MeteorShowerStateJSON generateState() {
-        MeteorShowerStateJSON meteorShowerStateJSON = new MeteorShowerStateJSON();
+        Random random = new Random();
 
-        meteorShowerStateJSON.setCardName(this.getCardName());
-        meteorShowerStateJSON.setCardLevel(this.getCardLevel());
-        meteorShowerStateJSON.setCurrMeteor(this.currMeteorIndex);
+        // Generating the diceThrow for the next meteor
+        this.diceThrowResult = (random.nextInt(6) + 1) + (random.nextInt(6) + 1);
+
+        // Creating the state for the next player that needs to provide a response to it
+        MeteorShowerStateJSON meteorShowerStateJSON = new MeteorShowerStateJSON(
+            this.currMeteorIndex,
+            this.diceThrowResult,
+            new Pair<Integer, Integer>(
+                this.meteorSequence.get(this.currMeteorIndex).getSize(),
+                this.meteorSequence.get(this.currMeteorIndex).getOrientation()
+            )
+        );
 
         if (this.getCurrentPlayer().isPresent()) {
             meteorShowerStateJSON.setPlayerNickname(this.getCurrentPlayer().get().getNickname());

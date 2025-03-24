@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,8 +67,8 @@ class EpidemyTest {
         }
     }
 
-    Ship initCustomShip() {
-        Ship ship = new Ship(1);
+    void initCustomShip(Player player) {
+        Ship ship = player.getShip();
 
         int[] connectors = new int[4];
 
@@ -77,9 +78,9 @@ class EpidemyTest {
         }
 
         /*
-               ==== Ship Configuration (LEVEL 1) ====
+               ==== Ship Configuration (LEVEL 2) ====
             \       4       5       6       7       8
-            4                       a
+            4               a
             5               b       c       d
             6       e       f       g       h       i
             7       j       k       l       m       n
@@ -87,7 +88,7 @@ class EpidemyTest {
 
             Total components = 18 (17 + 1 core)
 
-            a = doubleCannon1 at (4, 6)
+            a = doubleCannon1 at (4, 5)
             b = singleCannon1 at (5, 5)
             c = specialDoubleStorage1 at (5, 6)
             d = singleCannon2 at (5, 7)
@@ -134,7 +135,7 @@ class EpidemyTest {
         Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
 
         // Adding the components created above
-        ship.addComponent(doubleCannon1, 4, 6);
+        ship.addComponent(doubleCannon1, 4, 5);
         ship.addComponent(singleCannon1, 5, 5);
         ship.addComponent(specialDoubleStorage1, 5, 6);
         ship.addComponent(singleCannon2, 5, 7);
@@ -157,8 +158,6 @@ class EpidemyTest {
 
         // Generating the component sub-lists right after the ship is created
         ship.generateComponentSubLists();
-
-        return ship;
     }
 
     @Test
@@ -171,13 +170,18 @@ class EpidemyTest {
         //              The amount of lifeforms after applying the Epidemy card should go from 5 to 2
 
         Board board = new BoardLevel2();
-        Ship shipPlayer1 = initCustomShip();
-        Ship shipPlayer2 = initCustomShip();
-        Ship shipPlayer3 = initCustomShip();
 
         board.newPlayer("p1", PlayerColor.RED);
         board.newPlayer("p2", PlayerColor.BLUE);
         board.newPlayer("p3", PlayerColor.YELLOW);
+
+        for (Player player : board.getPlayers()) {
+            initCustomShip(player);
+        }
+
+        Ship shipPlayer1 = board.getPlayers().get(0).getShip();
+        Ship shipPlayer2 = board.getPlayers().get(1).getShip();
+        Ship shipPlayer3 = board.getPlayers().get(2).getShip();
 
         int[] connectors = new int[4];
 
@@ -197,12 +201,6 @@ class EpidemyTest {
         shipPlayer1.generateComponentSubLists();
         shipPlayer2.generateComponentSubLists();
         shipPlayer3.generateComponentSubLists();
-
-        // Assigning the current ship to the player
-        // NOTE: Added a setShip method in Player class to do so, just for testing purposes
-        board.getPlayers().get(0).setShip(shipPlayer1);
-        board.getPlayers().get(1).setShip(shipPlayer2);
-        board.getPlayers().get(2).setShip(shipPlayer3);
 
         Lifeform brownAlien = new Lifeform(LifeformType.BROWN_ALIEN);
         Lifeform purpleAlien = new Lifeform(LifeformType.PURPLE_ALIEN);
@@ -325,11 +323,16 @@ class EpidemyTest {
         //              Amount of human should again stay the same (3)
 
         Board board = new BoardLevel2();
-        Ship shipPlayer1 = initCustomShip();
-        Ship shipPlayer2 = initCustomShip();
 
         board.newPlayer("p1", PlayerColor.RED);
         board.newPlayer("p2", PlayerColor.BLUE);
+
+        for (Player player : board.getPlayers()) {
+            initCustomShip(player);
+        }
+
+        Ship shipPlayer1 = board.getPlayers().get(0).getShip();
+        Ship shipPlayer2 = board.getPlayers().get(1).getShip();
 
         int[] connectors = new int[4];
 
@@ -348,11 +351,6 @@ class EpidemyTest {
 
         shipPlayer1.generateComponentSubLists();
         shipPlayer2.generateComponentSubLists();
-
-        // Assigning the current ship to the player
-        // NOTE: Added a setShip method in Player class to do so, just for testing purposes
-        board.getPlayers().get(0).setShip(shipPlayer1);
-        board.getPlayers().get(1).setShip(shipPlayer2);
 
         Lifeform astronaut = new Lifeform(LifeformType.ASTRONAUT);
 

@@ -1,24 +1,52 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.*;
+import javafx.util.Pair;
 
 public class MeteorShowerStateJSON extends CardStateJSON{
-    private int currMeteor;
+    private int currMeteorIndex;
+    private int diceThrowResult;
+    private Pair<Integer, Integer> currMeteorDescriptor;
 
     @JsonCreator
-    public MeteorShowerStateJSON() {
+    public MeteorShowerStateJSON(
+            @JsonProperty("currMeteorIndex") int currMeteorIndex,
+            @JsonProperty("diceThrowResult") int diceThrowResult,
+            @JsonProperty("currMeteorDescriptor") Pair<Integer, Integer> currMeteorDescriptor
+    ) {
         super();
+        this.currMeteorIndex = currMeteorIndex;
+        this.diceThrowResult = diceThrowResult;
+        this.currMeteorDescriptor = currMeteorDescriptor;
     }
 
-    @JsonSetter("currMeteor")
-    public void setCurrMeteor(int currMeteor) {
-        this.currMeteor = currMeteor;
+    @JsonSetter("currMeteorIndex")
+    public void setCurrMeteorIndex(int currMeteorIndex) {
+        this.currMeteorIndex = currMeteorIndex;
     }
 
-    @JsonGetter("currMeteor")
-    public int getCurrMeteor() {
-        return this.currMeteor;
+    @JsonGetter("currMeteorIndex")
+    public int getCurrMeteorIndex() {
+        return this.currMeteorIndex;
+    }
+
+    @JsonSetter("diceThrowResult")
+    public void setDiceThrowResult(int diceThrowResult) {
+        this.diceThrowResult = diceThrowResult;
+    }
+
+    @JsonGetter("diceThrowResult")
+    public int getDiceThrowResult() {
+        return this.diceThrowResult;
+    }
+
+    @JsonSetter("currMeteorDescriptor")
+    public void setCurrMeteorDescriptor(Pair<Integer, Integer> currMeteorDescriptor) {
+        this.currMeteorDescriptor = currMeteorDescriptor;
+    }
+
+    @JsonGetter("currMeteorDescriptor")
+    public Pair<Integer, Integer> getCurrMeteorDescriptor() {
+        return this.currMeteorDescriptor;
     }
 }

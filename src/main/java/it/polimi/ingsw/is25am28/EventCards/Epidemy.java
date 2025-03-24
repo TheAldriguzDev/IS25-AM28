@@ -32,14 +32,13 @@ public class Epidemy extends EventCard {
     }
 
     public EventCard useCard() throws IllegalArgumentException {
-        List<Player> players = this.players;
         Set<Cabin> alreadyQuarantined;
         List<Cabin> cabinList;
         Component[] neighbours;
         Ship shipPtr;
 
         // Finding all neighbouring cabins and putting them into quarantine
-        for (Player player : players) {
+        for (Player player : this.getBoard().getPlayers()) {
             alreadyQuarantined = new HashSet<>();
             shipPtr = player.getShip();
             cabinList = shipPtr.getCabinList();
@@ -50,9 +49,9 @@ public class Epidemy extends EventCard {
                     for (Component neighbour : neighbours) {
                         switch (neighbour) {
                             case Cabin neighbourCabin -> {
-                                // TODO: Assuming, like in the card's picture, that Epidemy strikes only
-                                // TODO: when the cabin is FULLY occupied (i.e.: there's no available space)
-                                // TODO: This means that cabins with 1 astronaut are safe from the Epidemy
+                                // Assuming, like in the card's picture, that Epidemy strikes only
+                                // when the cabin is FULLY occupied (i.e.: there's no available space)
+                                // This means that cabins with 1 astronaut are SAFE from the Epidemy
                                 if (cabin.getAvailableSpace() == 0 && neighbourCabin.getAvailableSpace() == 0) {
                                     alreadyQuarantined.add(cabin);
                                     alreadyQuarantined.add(neighbourCabin);

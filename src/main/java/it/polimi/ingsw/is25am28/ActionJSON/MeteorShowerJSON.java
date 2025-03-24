@@ -4,41 +4,68 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import it.polimi.ingsw.is25am28.Player.Player;
 import javafx.util.Pair;
 
-import java.util.Map;
+import java.util.List;
 
 public class MeteorShowerJSON extends ActionJSON {
-    private Map<Player, Pair<Integer, Integer>>  shieldPerPlayer;
-    private Map<Player, Pair<Integer, Integer>> cannonPerPlayer;
+    private int currMeteorIndex;
+    private int diceThrowResult;
+    private List<Pair<Integer, Integer>>  shieldsCoordinates;
+    private List<Pair<Integer, Integer>> cannonsCoordinates;
 
     @JsonCreator
     public MeteorShowerJSON(
-            @JsonProperty("shieldsPerPlayer") Map<Player, Pair<Integer, Integer>> shieldPerPlayer,
-            @JsonProperty("cannonsPerPlayer") Map<Player, Pair<Integer, Integer>> cannonPerPlayer
+            @JsonProperty("playerNickname") String playerNickname,
+            @JsonProperty("currMeteorIndex") int currMeteorIndex,
+            @JsonProperty("diceThrowResult") int diceThrowResult,
+            @JsonProperty("shieldsCoordinates") List<Pair<Integer, Integer>> shieldsCoordinates,
+            @JsonProperty("cannonsCoordinates") List<Pair<Integer, Integer>> cannonsCoordinates
     ) {
-        this.shieldPerPlayer = shieldPerPlayer;
-        this.cannonPerPlayer = cannonPerPlayer;
+        super(playerNickname);
+        this.currMeteorIndex = currMeteorIndex;
+        this.diceThrowResult = diceThrowResult;
+        this.shieldsCoordinates = shieldsCoordinates;
+        this.cannonsCoordinates = cannonsCoordinates;
     }
 
-    @JsonSetter("shieldsPerPlayer")
-    public void setShieldsPerPlayer(Map<Player, Pair<Integer, Integer>> shieldPerPlayer) {
-        this.shieldPerPlayer = shieldPerPlayer;
+    @JsonGetter("currMeteorIndex")
+    public int getCurrMeteorIndex() {
+        return this.currMeteorIndex;
     }
 
-    @JsonGetter("shieldsPerPlayer")
-    public Pair<Integer, Integer> getShieldsCoordinatesPerPlayer(Player player) {
-        return this.shieldPerPlayer.get(player);
+    @JsonSetter("currMeteorIndex")
+    public void setCurrMeteorIndex(int currMeteorIndex) {
+        this.currMeteorIndex = currMeteorIndex;
     }
 
-    @JsonSetter("cannonPerPlayer")
-    public void setCannonsPerPlayer(Map<Player, Pair<Integer, Integer>> cannonPerPlayer) {
-        this.cannonPerPlayer = cannonPerPlayer;
+    @JsonGetter("diceThrowResult")
+    public int getDiceThrowResult() {
+        return this.diceThrowResult;
     }
 
-    @JsonGetter("cannonPerPlayer")
-    public Pair<Integer, Integer> getCannonsCoordinatesPerPlayer(Player player) {
-        return this.cannonPerPlayer.get(player);
+    @JsonSetter("diceThrowResult")
+    public void setDiceThrowResult(int diceThrowResult) {
+        this.diceThrowResult = diceThrowResult;
+    }
+
+    @JsonGetter("shieldsCoordinates")
+    public List<Pair<Integer, Integer>> getShieldsCoordinates() {
+        return this.shieldsCoordinates;
+    }
+
+    @JsonSetter("shieldsCoordinates")
+    public void setShieldsCoordinates(List<Pair<Integer, Integer>> shieldsCoordinates) {
+        this.shieldsCoordinates = shieldsCoordinates;
+    }
+
+    @JsonGetter("cannonsCoordinates")
+    public List<Pair<Integer, Integer>> getCannonsCoordinates() {
+        return this.cannonsCoordinates;
+    }
+
+    @JsonSetter("cannonsCoordinates")
+    public void setCannonsCoordinates(List<Pair<Integer, Integer>> cannonsCoordinates) {
+        this.cannonsCoordinates = cannonsCoordinates;
     }
 }
