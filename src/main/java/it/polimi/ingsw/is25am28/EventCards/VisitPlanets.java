@@ -1,178 +1,213 @@
 package it.polimi.ingsw.is25am28.EventCards;
     
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Board.Board;
-import it.polimi.ingsw.is25am28.Components.Component;
-import it.polimi.ingsw.is25am28.Components.Storage;
-import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Player.Player;
-
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
-import it.polimi.ingsw.is25am28.Ship.Ship;
+
 import javafx.util.Pair;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.util.*;
 
 public class VisitPlanets extends EventCard {
-    private final Map<Integer, Map<ItemColor, Integer>> itemsPerPlanet;
-    private final Map<String, Pair<Integer, Boolean>> selectedPlanetAndDecision;
     private final int movementSteps;
+    private final Map<Integer, Map<ItemColor, Integer>> itemsPerPlanet;
+    private final Map<Integer, Pair<Player, Boolean>> playersChosenPlanetAndLandingDecision;
     private final ResourceBank resourceBank;
-
-    private List<ComponentHelper<ItemColor>> resourceToDropOff;
-    private List<ComponentHelper<ItemColor>> resourceToTake;
-
-    /*
-    public VisitPlanets(
-            String cardName,
-            int cardLevel,
-            int movementSteps,
-            JSONArray data,
-            ResourceBank resourceBank,
-            Board board
-    ) throws RuntimeException
-    {
-        super(cardName, cardLevel, board);
-        this.movementSteps = movementSteps;
-        this.resourceBank = resourceBank;
-        this.itemsPerPlanet = new HashMap<Integer, Map<ItemColor, Integer>>();
-        this.selectedPlanetAndDecision = new HashMap<>();
-        int planetCount = 0;
-
-        Map<ItemColor, Integer> planetItemsMap;
-
-        try {
-            for (Object obj : data) {
-                JSONObject planet = (JSONObject) obj;
-                planetItemsMap = new HashMap<>();
-
-                // Putting the amount of blue items on the planet
-                planetItemsMap.put(ItemColor.BLUE, ((int) planet.get("blue")));
-
-                // Putting the amount of green items on the planet
-                planetItemsMap.put(ItemColor.GREEN, ((int) planet.get("green")));
-
-                // Putting the amount of yellow items on the planet
-                planetItemsMap.put(ItemColor.YELLOW, ((int) planet.get("yellow")));
-
-                // Putting the amount of red items on the planet
-                planetItemsMap.put(ItemColor.RED, ((int) planet.get("red")));
-
-                // Finally, adding the planet item list to the map
-                this.itemsPerPlanet.put(planetCount, planetItemsMap);
-                planetCount++;
-            }
-        }
-        catch (Exception e) {
-            throw new IllegalArgumentException("ERROR: JSON parsing error in VisitPlanet constructor");
-        }
-    }
-     */
+    private int playerUseCount;
+    private List<ComponentHelper<ItemColor>> itemsToDrop;
+    private List<ComponentHelper<ItemColor>> itemsToTake;
 
     public VisitPlanets(
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
             @JsonProperty("movementSteps") int movementSteps,
-            @JsonProperty("itemsPerPlanet") Map<Integer, Map<ItemColor, Integer>> itemsPerPlanet,
-            @JsonProperty("selectedPlanetAndDecisions") Map<String, Pair<Integer, Boolean>> selectedPlanetAndDecision,
+            @JsonProperty("itemsPerPlanet") Map<Integer, Map<Integer, Integer>> itemsPerPlanet,
             ResourceBank resourceBank,
             Board board
     ) {
         super(cardName, cardLevel, board);
 
         this.movementSteps = movementSteps;
-        this.itemsPerPlanet = itemsPerPlanet;
-        this.selectedPlanetAndDecision = selectedPlanetAndDecision;
+        this.itemsPerPlanet = new HashMap<>();
         this.resourceBank = resourceBank;
+
+        // Parsing the incoming data and transforming the integer value
+        // found in the map into the corresponding color
+        for (Integer planetIndex : itemsPerPlanet.keySet()) {
+            Map<ItemColor, Integer> planetResourceDescriptor = new HashMap<>();
+
+            for (Integer itemColor : itemsPerPlanet.get(planetIndex).keySet()) {
+                switch (itemColor) {
+                    // Blue Item
+                    case 1 -> {
+                        planetResourceDescriptor.put(ItemColor.BLUE, itemsPerPlanet.get(planetIndex).get(1));
+                    }
+                    // Green Item
+                    case 2 -> {
+                        planetResourceDescriptor.put(ItemColor.GREEN, itemsPerPlanet.get(planetIndex).get(2));
+                    }
+                    // Yellow Item
+                    case 3 -> {
+                        planetResourceDescriptor.put(ItemColor.YELLOW, itemsPerPlanet.get(planetIndex).get(3));
+                    }
+                    // Red Item
+                    case 4 -> {
+                        planetResourceDescriptor.put(ItemColor.RED, itemsPerPlanet.get(planetIndex).get(4));
+                    }
+                    default -> throw new IllegalStateException("[VisitPlanets] ERROR: There cannon be more than 4 item colors");
+                }
+            }
+
+            // Putting the transformed entry into the itemsPerPlanet map
+            this.itemsPerPlanet.put(planetIndex, planetResourceDescriptor);
+        }
+
+        // Map containing all the chosen planets and the corresponding player
+        // that chose it, as well as if that player decided to land or not
+        this.playersChosenPlanetAndLandingDecision = new HashMap<Integer, Pair<Player, Boolean>>();
+        this.playerUseCount = 0;
     }
 
     @Override
     protected void bonusEffect() {
         if (this.getCurrentPlayer().isPresent()) {
-            this.cardUsed();
-
-            // Add the resources from the player to the bank
-            for ( ComponentHelper<ItemColor> resourceDrop : this.resourceToDropOff ) {
-                resourceDrop.getItem().ifPresent( i ->
-                        this.resourceBank.addResourceToBankFromPlayer(
-                                this.getCurrentPlayer().get(),
-                                i,
-                                resourceDrop.getI(),
-                                resourceDrop.getJ()));
+            // (1) - Add the resources from the player to the bank
+            for (ComponentHelper<ItemColor> itemToDrop : this.itemsToDrop) {
+                itemToDrop.getItem().ifPresent(
+                        (ItemColor color) -> {
+                            this.resourceBank.addResourceToBankFromPlayer(
+                                    this.getCurrentPlayer().get(),
+                                    color,
+                                    itemToDrop.getI(),
+                                    itemToDrop.getJ()
+                            );
+                        }
+                );
             }
 
-            // Add the resources from the bank to the player
-            for ( ComponentHelper<ItemColor> resourceTake : this.resourceToTake ) {
-                resourceTake.getItem().ifPresent( i ->
-                        this.resourceBank.addResourceToPlayerFromBank(
-                                this.getCurrentPlayer().get(),
-                                i,
-                                resourceTake.getI(),
-                                resourceTake.getJ()));
-            }
-        }
-    }
-
-    @Override
-    protected void malusEffect() {
-        Board board = this.getBoard();
-        List<Player> players = board.getPlayers();
-        int len = players.size();
-
-        // Applying the backwards movement if the player's corresponding
-        // choice to land on the selected planet is set to true
-        for (int i = len - 1; i >= 0; i--) {
-            if (selectedPlanetAndDecision.get(players.get(i).getNickname()).getValue()) {
-                board.movePlayerBackwards(
-                    players.get(i),
-                    movementSteps
+            // (2) - Add the resources from the bank to the player
+            for (ComponentHelper<ItemColor> itemToTake : this.itemsToTake) {
+                itemToTake.getItem().ifPresent(
+                        (ItemColor color) -> {
+                            this.resourceBank.addResourceToBankFromPlayer(
+                                    this.getCurrentPlayer().get(),
+                                    color,
+                                    itemToTake.getI(),
+                                    itemToTake.getJ()
+                            );
+                        }
                 );
             }
         }
     }
 
     @Override
-    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        // Check if there is a player playing the card
-        if (this.currentPlayer.isEmpty()) {
-            throw new IllegalArgumentException("There is no player playing in this moment");
-        }
+    protected void malusEffect() {
+        List<Player> activePlayers = this.getBoard().getPlayers();
+        int i;
 
-        VisitPlanetsJSON visitPlanets;
-
-        try {
-            visitPlanets = (VisitPlanetsJSON) data;
-
-            List<ComponentHelper<ItemColor>> itemsToBeRemoved;
-            List<ComponentHelper<ItemColor>> itemsToBeTaken;
-
-            for (Player player : players) {
-                if (visitPlanets.getPlayerLandingDecision(player)) {
-                    itemsToBeRemoved = visitPlanets.getItemsToBeRemovedFromPlayer(player);
-                    itemsToBeTaken = visitPlanets.getItemsToBeTakenFromPlayer(player);
-
-                    this.bonusEffect();
-                    this.malusEffect();
+        // Moves each player that chose a planet and decided to land on it
+        // backwards by the amount specified by the attribute movementSteps
+        // NOTE: The players that landed are moved backwards starting from the
+        //       player in last place to the player in first place (it's a rule)
+        for (i = activePlayers.size() - 1; i >= 0; i--) {
+            for (Pair<Player, Boolean> playerChoice : this.playersChosenPlanetAndLandingDecision.values()) {
+                if (playerChoice.getKey().equals(activePlayers.get(i))) {
+                    if (playerChoice.getValue()) {
+                        this.getBoard().movePlayerBackwards(
+                                activePlayers.get(i),
+                                this.movementSteps
+                        );
+                    }
                 }
             }
         }
-        catch (Exception e) {
-            throw new IllegalArgumentException("The given JSON data is not a valid visitPlanet JSON");
+    }
+
+    @Override
+    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
+        VisitPlanetsJSON visitPlanetsJSON;
+        int chosenPlanetIndex;
+        boolean wantsToLand;
+
+        // Check if there is a player playing the card
+        if (this.currentPlayer.isEmpty()) {
+            throw new IllegalArgumentException("[VisitPlanet::useCard] ERROR: No player is currently playing (Optional contains null)");
         }
 
-        // Set this card as used
-        this.cardUsed();
+        // ActionJSON unpacking
+        try {
+            visitPlanetsJSON = (VisitPlanetsJSON) data;
+        } catch (Exception e) {
+            throw new IllegalArgumentException("[VisitPlanets::useCard] ERROR: JSON data parsing error");
+        }
+
+        // Extracting the player's chosen planet and his landing decision
+        chosenPlanetIndex = visitPlanetsJSON.getChosenPlanetIndex();
+        wantsToLand = visitPlanetsJSON.getLandingDecision();
+
+        // If the chosenPlanetIndex is already present as a key in the map, it
+        // means that the specified planet was already chosen, therefore the player
+        // must choose another planet among the remaining ones
+        if (!this.playersChosenPlanetAndLandingDecision.containsKey(chosenPlanetIndex)) {
+            // Removing the planet index from the list of available planets
+            this.playersChosenPlanetAndLandingDecision.put(
+                    chosenPlanetIndex,
+                    new Pair<Player, Boolean>(
+                            this.currentPlayer.get(),
+                            wantsToLand
+                    )
+            );
+
+            // Activating the resource handling routine only if
+            // the player decided to land on his selected planet
+            if (wantsToLand) {
+                this.itemsToDrop = visitPlanetsJSON.getItemsToDrop();
+                this.itemsToTake = visitPlanetsJSON.getItemsToTake();
+                this.bonusEffect();
+            }
+
+            // Incrementing the use counter for each player that used it
+            this.playerUseCount++;
+        }
+
+        // Set the "hasBeenUsed" flag to true iff all
+        // the available planets have been chosen
+        if (this.playerUseCount == this.itemsPerPlanet.size()) {
+            this.malusEffect();
+            this.cardUsed();
+        }
 
         return this;
     }
 
     @Override
-    public CardStateJSON generateState() {
-        return null;
+    public VisitPlanetsStateJSON generateState() {
+        VisitPlanetsStateJSON visitPlanetsStateJSON;
+        Map<Integer, Map<ItemColor, Integer>> availablePlanets;
+
+        // Generating the map of all the remaining planets to choose from
+        availablePlanets = new HashMap<>(this.itemsPerPlanet);
+
+        for (Integer chosenPlanetIndex : this.playersChosenPlanetAndLandingDecision.keySet()) {
+            availablePlanets.remove(chosenPlanetIndex);
+        }
+
+        if (this.getCurrentPlayer().isEmpty()) {
+            this.currentPlayer = this.getNextPlayer();
+        }
+
+        visitPlanetsStateJSON = new VisitPlanetsStateJSON(
+                this.getCurrentPlayer().get().getNickname(),
+                this.getCardName(),
+                this.getCardLevel(),
+                (!this.hasFinished()), // ! hasFinished => the card is still usable
+                availablePlanets
+        );
+
+        return visitPlanetsStateJSON;
     }
 }

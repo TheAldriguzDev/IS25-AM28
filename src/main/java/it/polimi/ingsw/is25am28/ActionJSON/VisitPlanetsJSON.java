@@ -3,70 +3,68 @@ package it.polimi.ingsw.is25am28.ActionJSON;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import com.fasterxml.jackson.annotation.JsonSetter;
+
 import it.polimi.ingsw.is25am28.Items.ItemColor;
-import it.polimi.ingsw.is25am28.Player.Player;
 
 import java.util.List;
-import java.util.Map;
 
 public class VisitPlanetsJSON extends ActionJSON {
-    private Map<Player, Integer> playerToPlanet;
-    private Map<Player, Boolean> landingDecisions;
-    private Map<Player, List<ComponentHelper<ItemColor>>> itemsToBeRemoved;
-    private Map<Player, List<ComponentHelper<ItemColor>>> itemsToBeTaken;
+    private int chosenPlanetIndex;
+    private boolean wantsToLand;
+    private List<ComponentHelper<ItemColor>> itemsToDrop;
+    private List<ComponentHelper<ItemColor>> itemsToTake;
 
     @JsonCreator
     public VisitPlanetsJSON(
-            @JsonProperty("playerToPlanet") Map<Player, Integer> playerToPlanet,
-            @JsonProperty("wantsToLand") Map<Player, Boolean> landingDecisions,
-            @JsonProperty("itemsToBeRemoved") Map<Player, List<ComponentHelper<ItemColor>>> itemsToBeRemoved,
-            @JsonProperty("itemsToBeTaken") Map<Player, List<ComponentHelper<ItemColor>>> itemsToBeTaken
+            @JsonProperty("chosenPlanetIndex") int chosenPlanetIndex,
+            @JsonProperty("wantsToLand") boolean wantsToLand,
+            @JsonProperty("itemsToDrop") List<ComponentHelper<ItemColor>> itemsToDrop,
+            @JsonProperty("itemsToTake") List<ComponentHelper<ItemColor>> itemsToTake
     ) {
-        this.playerToPlanet = playerToPlanet;
-        this.landingDecisions = landingDecisions;
-        this.itemsToBeRemoved = itemsToBeRemoved;
-        this.itemsToBeTaken = itemsToBeTaken;
+        this.chosenPlanetIndex = chosenPlanetIndex;
+        this.wantsToLand = wantsToLand;
+        this.itemsToDrop = itemsToDrop;
+        this.itemsToTake = itemsToTake;
     }
 
-    @JsonSetter("playerToPlanet")
-    public void setAllPlayersChosenPlanets(Map<Player, Integer> playerToPlanet) {
-        this.playerToPlanet = playerToPlanet;
+    @JsonGetter("chosenPlanetIndex")
+    public int getChosenPlanetIndex() {
+        return this.chosenPlanetIndex;
     }
 
-    @JsonGetter("playerToPlanet")
-    public int getPlayerChosenPlanet(Player player) {
-        return this.playerToPlanet.get(player);
+    @JsonSetter("chosenPlanetIndex")
+    public void setChosenPlanetIndex(int chosenPlanetIndex) {
+        this.chosenPlanetIndex = chosenPlanetIndex;
     }
 
-    @JsonSetter("landingDecisions")
-    public void setAllPlayersLandingDecisions(Map<Player, Boolean> landingDecisions) {
-        this.landingDecisions = landingDecisions;
+    @JsonGetter("wantsToLand")
+    public boolean getLandingDecision() {
+        return this.wantsToLand;
     }
 
-    @JsonGetter("landingDecisions")
-    public boolean getPlayerLandingDecision(Player player) {
-        return this.landingDecisions.get(player);
+    @JsonSetter("wantsToLand")
+    public void setLandingDecision(boolean wantsToLand) {
+        this.wantsToLand = wantsToLand;
     }
 
-    @JsonSetter("itemsToBeRemoved")
-    public void setItemsToBeRemoved(Map<Player, List<ComponentHelper<ItemColor>>> itemsToBeRemoved) {
-        this.itemsToBeRemoved = itemsToBeRemoved;
+    @JsonGetter("itemsToDrop")
+    public List<ComponentHelper<ItemColor>> getItemsToDrop() {
+        return this.itemsToDrop;
     }
 
-    @JsonGetter("itemsToBeRemoved")
-    public List<ComponentHelper<ItemColor>> getItemsToBeRemovedFromPlayer(Player player) {
-        return this.itemsToBeRemoved.get(player);
+    @JsonSetter("itemsToDrop")
+    public void setItemsToDrop(List<ComponentHelper<ItemColor>> itemsToDrop) {
+        this.itemsToDrop = itemsToDrop;
     }
 
-    @JsonSetter("itemsToBeTaken")
-    public void setItemsToBeTaken(Map<Player, List<ComponentHelper<ItemColor>>> itemsToBeTaken) {
-        this.itemsToBeTaken = itemsToBeTaken;
+    @JsonGetter("itemsToTake")
+    public List<ComponentHelper<ItemColor>> getItemsToTake() {
+        return this.itemsToTake;
     }
 
-    @JsonGetter("itemsToBeTaken")
-    public List<ComponentHelper<ItemColor>> getItemsToBeTakenFromPlayer(Player player) {
-        return this.itemsToBeTaken.get(player);
+    @JsonSetter("itemsToTake")
+    public void setItemsToTake(List<ComponentHelper<ItemColor>> itemsToTake) {
+        this.itemsToTake = itemsToTake;
     }
 }

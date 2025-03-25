@@ -330,9 +330,14 @@ public class MeteorShower extends EventCard {
 
         // Generating the diceThrow for the next meteor
         this.diceThrowResult = (random.nextInt(6) + 1) + (random.nextInt(6) + 1);
+        this.getNextPlayer();
 
         // Creating the state for the next player that needs to provide a response to it
         MeteorShowerStateJSON meteorShowerStateJSON = new MeteorShowerStateJSON(
+            this.getCurrentPlayer().get().getNickname(),
+            this.getCardName(),
+            this.getCardLevel(),
+            (! this.hasFinished()),   // ! hasFinished => the card is still usable
             this.currMeteorIndex,
             this.diceThrowResult,
             new Pair<Integer, Integer>(

@@ -10,11 +10,15 @@ public class MeteorShowerStateJSON extends CardStateJSON{
 
     @JsonCreator
     public MeteorShowerStateJSON(
+            @JsonProperty("playerNickname") String playerNickname,
+            @JsonProperty("cardName") String cardName,
+            @JsonProperty("cardLevel") int cardLevel,
+            @JsonProperty("isCardUsable") boolean isCardUsable,
             @JsonProperty("currMeteorIndex") int currMeteorIndex,
             @JsonProperty("diceThrowResult") int diceThrowResult,
             @JsonProperty("currMeteorDescriptor") Pair<Integer, Integer> currMeteorDescriptor
     ) {
-        super();
+        super(playerNickname, cardName, cardLevel, isCardUsable);
         this.currMeteorIndex = currMeteorIndex;
         this.diceThrowResult = diceThrowResult;
         this.currMeteorDescriptor = currMeteorDescriptor;
