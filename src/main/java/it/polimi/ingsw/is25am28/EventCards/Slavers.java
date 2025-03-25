@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
 import org.json.simple.JSONObject;
@@ -102,20 +103,9 @@ public class Slavers extends EventCard {
 
     //
     @Override @SuppressWarnings("unchecked")
-    public JSONObject generateState() {
-        JSONObject slaversState = new JSONObject();
+    public CardStateJSON generateState() {
 
-        if(getCurrentPlayer().isPresent()) {
-            slaversState.put("playerNickname", getCurrentPlayer().get().getNickname());
-        }
-        slaversState.put("cardName", this.name);
-        slaversState.put("cardLevel", cardLevel);
-        slaversState.put("requiredFirepower", requiredFirepower);
-        slaversState.put("movementSteps", movementSteps);
-        slaversState.put("givenCredits", givenCredits);
-        slaversState.put("takenCrew", takenCrew);
-        slaversState.put("hasBeenDefeated", hasBeenDefeated);
 
-        return slaversState;
+        return null;
     }
 }

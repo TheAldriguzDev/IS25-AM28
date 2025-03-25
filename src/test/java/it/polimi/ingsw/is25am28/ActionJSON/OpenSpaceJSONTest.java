@@ -28,8 +28,8 @@ public class OpenSpaceJSONTest {
     void test_set_playerNickname_throws_exception_when_null() {
         // Verify that a null playerNickname throws an exception
         OpenSpaceJSON openSpace = new OpenSpaceJSON();
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> openSpace.setPlayerNickname(null));
-        assertEquals("Player nickname cannot be null", exception.getMessage());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> openSpace.setPlayerNickname(null));
+        assertEquals("playerNickname cannot be null or empty", exception.getMessage());
     }
 
     @Test
