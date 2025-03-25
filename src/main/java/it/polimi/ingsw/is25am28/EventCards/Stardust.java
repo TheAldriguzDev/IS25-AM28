@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.json.simple.JSONObject;
 
 public class Stardust extends EventCard {
 
@@ -102,17 +101,20 @@ public class Stardust extends EventCard {
         }
     }
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
     public CardStateJSON generateState() {
-        JSONObject stardustState = new JSONObject();
-
-        if(getCurrentPlayer().isPresent()) {
-            stardustState.put("playerNickname", getCurrentPlayer().get().getNickname());
+        Optional<Player> playerOptional = getCurrentPlayer();
+        CardStateJSON stardustStateJSON;
+        if(playerOptional.isPresent()) {
+            stardustStateJSON = new CardStateJSON(
+                    playerOptional.get().getNickname(),
+                    getCardName(),
+                    getCardLevel(),
+                    !hasFinished()
+                    );
+        } else {
+            throw new IllegalArgumentException("There is no player playing in this moment");
         }
-        stardustState.put("cardName", this.name);
-        stardustState.put("cardLevel", cardLevel);
-
-        //return stardustState;
-        return null;
+        return stardustStateJSON;
     }
 }

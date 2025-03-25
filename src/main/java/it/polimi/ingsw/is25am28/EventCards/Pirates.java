@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
@@ -7,9 +8,9 @@ import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Player.Player;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
+import javax.smartcardio.Card;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -196,21 +197,23 @@ public class Pirates extends EventCard {
 
     protected void malusEffect() {}
 
-    @Override @SuppressWarnings("unchecked")
+    @Override
     public CardStateJSON generateState() {
-        JSONObject piratesState = new JSONObject();
-
-        if (this.getCurrentPlayer().isPresent()) {
-            piratesState.put("playerNickname", getCurrentPlayer().get().getNickname());
+        Optional<Player> playerOptional = getCurrentPlayer();
+        CardStateJSON piratesStateJSON;
+        if(playerOptional.isPresent()) {
+            piratesStateJSON = new CardStateJSON(
+                    playerOptional.get().getNickname(),
+                    getCardName(),
+                    getCardLevel(),
+                    !hasFinished(),
+                    this.requiredFirepower,
+                    this.givenCredits,
+                    this.movementSteps,
+                    this.shootingSequence);
+        } else {
+            throw new IllegalArgumentException("There is no player playing in this moment");
         }
-        piratesState.put("cardName", this.name);
-        piratesState.put("cardLevel", cardLevel);
-        piratesState.put("requiredFirepower", requiredFirepower);
-        piratesState.put("givenCredits", givenCredits);
-        piratesState.put("movementSteps", movementSteps); // Il client calcola la size per il lancio dei dadi, ne ha anche bisigno per vedere da dove arrivano/dimensione
-        piratesState.put("shootingSequence", shootingSequence);
-
-        //return piratesState;
-        return null;
+        return piratesStateJSON;
     }
 }
