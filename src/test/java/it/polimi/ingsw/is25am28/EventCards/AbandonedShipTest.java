@@ -383,5 +383,66 @@ class AbandonedShipTest {
     }
 
 
+    @Test
+    void test_no_players_want_use_the_card() {
+        // Create the card that will be used in the simulation
+        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 6, 1, 3, board);
+
+        // Init the card players
+        abandonedShipCard.initCardPlayers();
+
+        List<Player> playerList = new ArrayList<>(board.getPlayers());
+        List<Integer> initialCursors = new ArrayList<>();
+
+        // Only the 2, 3, 4 players will be able to use the card for the given required crew members
+        while (!abandonedShipCard.hasFinished()) {
+            Player currPlayer;
+
+            AbandonedShipJSON abandonedShipJSON = new AbandonedShipJSON();
+
+            AbandonedShip finalAbandonedShipCard = abandonedShipCard;
+            Optional<Player> optionalPlayer = playerList.stream()
+                    .filter(p -> p.getNickname().equals(finalAbandonedShipCard.generateState().getPlayerNickname()))
+                    .findFirst();
+
+            // If the player is present we can execute the action
+            if (optionalPlayer.isPresent()) {
+                currPlayer = optionalPlayer.get();
+                initialCursors.add(currPlayer.getCursor());
+
+                // HP: No one want's to use the card
+                abandonedShipJSON.setPlayerNickname(currPlayer.getNickname());
+                abandonedShipJSON.setWantToVisitShip(false);
+
+                // Use the card
+                abandonedShipCard = (AbandonedShip) abandonedShipCard.useCard(abandonedShipJSON);
+            }
+        }
+
+        // Check the players positions:
+        // Should be all equals to the starting ones since no one has played the card
+        // For the first player we cannot see the initial position in the array since he doesn't have the required crew members
+
+        // 1st
+        assertEquals(6, playerList.get(0).getCursor());
+        // 2nd
+        assertEquals(initialCursors.get(0), playerList.get(1).getCursor());
+        // 3rd
+        assertEquals(initialCursors.get(1), playerList.get(2).getCursor());
+        // 4th
+        assertEquals(initialCursors.get(2), playerList.get(3).getCursor());
+
+        // Check that no one has received the credits
+        // Check that the player that used the card has received the credits and has lost the crew members specified
+        assertEquals(0, playerList.get(0).getCredits());
+        assertEquals(0, playerList.get(1).getCredits());
+        assertEquals(0, playerList.get(2).getCredits());
+        assertEquals(0, playerList.get(3).getCredits());
+
+        // No one has been eliminated from the game
+        assertTrue(board.getPlayers().containsAll(playerList));
+    }
+
+
 
 }

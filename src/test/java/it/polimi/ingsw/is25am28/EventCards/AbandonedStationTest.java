@@ -393,4 +393,116 @@ class AbandonedStationTest {
 
         assertEquals(1, normalStorage2.getStoredItems().stream().filter(i -> i.getColor().equals(ItemColor.BLUE)).count());
     }
+
+    @Test
+    void test_abandoned_station_with_no_players_that_want_to_use_the_card() {
+        // Set the items that will be given by the card
+        ArrayList<Item> givenItems = new ArrayList<>();
+        givenItems.add( new Item(ItemColor.RED));
+        givenItems.add( new Item(ItemColor.YELLOW));
+
+        // Create the card with its specs
+        AbandonedStation abandonedStationCard = new AbandonedStation(
+                "abandonedStation",
+                2,
+                5,
+                1,
+                givenItems,
+                board,
+                resourceBank
+        );
+
+        abandonedStationCard.initCardPlayers();
+
+
+        List<Player> playerList = new ArrayList<>(board.getPlayers());
+
+        // Initialize the storage component of the players with some resources
+
+        // The special storage is full, instead the normal storage has one space left
+        for (Player player : playerList) {
+
+            // Special storage
+            resourceBank.addResourceToPlayerFromBank(player, ItemColor.BLUE, 6, 3); // Add a blue item in the special storage
+
+            // Normal storage
+            resourceBank.addResourceToPlayerFromBank(player, ItemColor.BLUE, 8, 7);
+            resourceBank.addResourceToPlayerFromBank(player, ItemColor.GREEN, 8, 7);
+        }
+
+
+        List<Integer> initialCursors = new ArrayList<>();
+
+        // Use the cards for the given player (the cards return the player that needs to play in the state)
+        while (!abandonedStationCard.hasFinished()) {
+            Player currPlayer;
+
+            AbandonedStationJSON abandonedStationJSON = new AbandonedStationJSON();
+
+            AbandonedStation finalAbandonedStationCard = abandonedStationCard;
+            Optional<Player> optionalPlayer = playerList.stream()
+                    .filter(p -> p.getNickname().equals(finalAbandonedStationCard.generateState().getPlayerNickname()))
+                    .findFirst();
+
+            // If the player is present, then we can execute the action
+            if (optionalPlayer.isPresent()) {
+                currPlayer = optionalPlayer.get();
+                initialCursors.add(currPlayer.getCursor());
+
+                // Hp: the second player doesn't want to use the card
+                if (currPlayer.getNickname().equals("Player 2")) {
+                    abandonedStationJSON.setPlayerNickname(currPlayer.getNickname());
+                    abandonedStationJSON.setWantToVisitStation(false);
+                } else {
+                    abandonedStationJSON.setPlayerNickname(currPlayer.getNickname());
+                    abandonedStationJSON.setWantToVisitStation(true);
+
+                    // Set the items that needs to be dropped
+                    List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>();
+                    itemsToBeRemoved.add( new ComponentHelper<ItemColor>(6, 3).addItem(ItemColor.BLUE) );
+
+                    abandonedStationJSON.setItemsToBeRemoved( itemsToBeRemoved );
+
+                    // Set the items that needs to be stored
+                    List<ComponentHelper<ItemColor>> itemsToBeTaken = new ArrayList<>();
+
+                    itemsToBeTaken.add( new ComponentHelper<ItemColor>(6, 3).addItem(ItemColor.RED) );
+                    itemsToBeTaken.add( new ComponentHelper<ItemColor>(8, 7).addItem(ItemColor.YELLOW) );
+                    itemsToBeTaken.add( new ComponentHelper<ItemColor>(8, 8).addItem(ItemColor.BLUE) ); // Re add the resource that we have took from the player to change its position
+
+                    abandonedStationJSON.setItemsToBeTaken( itemsToBeTaken );
+                }
+
+                // Use the card
+                abandonedStationCard = (AbandonedStation) abandonedStationCard.useCard(abandonedStationJSON);
+            }
+        }
+
+        // Check the result of the card
+
+        // Positions
+        // 1st --> cursor unchanged since he can't use the card (not enough crew members)
+        // 2nd --> Didn't use the card, so the cursor remains unchanged
+        // 3rd --> Use the card --> One step back, but since the previous cell is not empty this action will result in 2 steps backwards
+        // 4th --> Didn't use the card since the 3rd player already used it
+
+        assertEquals( 6, playerList.get(0).getCursor() );
+        assertEquals( initialCursors.get(0), playerList.get(1).getCursor() );
+        assertEquals( initialCursors.get(1) - 2, playerList.get(2).getCursor() );
+        assertEquals( 0, playerList.get(3).getCursor() );
+
+        // Check if the given components have stored the correct qty and type of elements
+        // Check if the given components have stored the correct qty and type of elements
+        Storage specialStorage = (Storage) playerList.get(2).getShip().getComponent(6, 3);
+        Storage normalStorage1 = (Storage) playerList.get(2).getShip().getComponent(8, 7);
+        Storage normalStorage2 = (Storage) playerList.get(2).getShip().getComponent(8, 7);
+
+        assertEquals(1, specialStorage.getStoredItems().stream().filter(i -> i.getColor().equals(ItemColor.RED)).count());
+
+        assertEquals(1, normalStorage1.getStoredItems().stream().filter(i -> i.getColor().equals(ItemColor.YELLOW)).count());
+        assertEquals(1, normalStorage1.getStoredItems().stream().filter(i -> i.getColor().equals(ItemColor.GREEN)).count());
+        assertEquals(1, normalStorage1.getStoredItems().stream().filter(i -> i.getColor().equals(ItemColor.BLUE)).count());
+
+        assertEquals(1, normalStorage2.getStoredItems().stream().filter(i -> i.getColor().equals(ItemColor.BLUE)).count());
+    }
 }
