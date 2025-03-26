@@ -27,6 +27,7 @@ public abstract class EventCard {
         this.name = name;
         this.cardLevel = cardLevel;
         this.board = board;
+        this.hasBeenUsed = false;
     }
 
     /**
@@ -53,12 +54,13 @@ public abstract class EventCard {
      * */
     protected Optional<Player> getNextPlayer() {
         if (players == null || players.isEmpty()) {
-            throw new Error("Players are not set, you must call startUsingCard method before");
+            throw new Error("Players are not set, you must call initCardPlayers method before");
         }
 
         if (currentPlayer.isPresent()) {
             int currentIndex = players.indexOf(currentPlayer.get());
             if (currentIndex == players.size() - 1) {
+                this.cardUsed();
                 return Optional.empty();
             } else {
                 Player nextPlayer = players.get(currentIndex + 1);
@@ -79,6 +81,9 @@ public abstract class EventCard {
         return board;
     }
 
+    /**
+     * Mark the card as used. In this way the game model can understand when to get the next card
+     * */
     protected void cardUsed() {
         this.hasBeenUsed = true;
     }
