@@ -209,8 +209,10 @@ class EpidemyTest {
         // Adding all humans to player1's ship
         shipPlayer1.getCabinList().forEach(
             (Cabin c) -> {
-                c.addInhabitant(astronaut);
-                c.addInhabitant(astronaut);
+                if (c != shipPlayer1.getComponent(6, 6)) {
+                    c.addInhabitant(astronaut);
+                    c.addInhabitant(astronaut);
+                }
             }
         );
 
@@ -237,11 +239,12 @@ class EpidemyTest {
                         }
                         if (alienPlaced) break;
                     }
-                }
 
-                if (!alienPlaced) {
-                    c.addInhabitant(astronaut);
-                    c.addInhabitant(astronaut);
+                    // NOTE: Core cabin is already filled with 2 humans
+                    if (!alienPlaced) {
+                        c.addInhabitant(astronaut);
+                        c.addInhabitant(astronaut);
+                    }
                 }
             }
         );
@@ -269,11 +272,12 @@ class EpidemyTest {
                         }
                         if (alienPlaced) break;
                     }
-                }
 
-                if (!alienPlaced) {
-                    c.addInhabitant(astronaut);
-                    c.addInhabitant(astronaut);
+                    // NOTE: Core cabin is already filled with 2 humans
+                    if (!alienPlaced) {
+                        c.addInhabitant(astronaut);
+                        c.addInhabitant(astronaut);
+                    }
                 }
             }
         );
@@ -291,27 +295,27 @@ class EpidemyTest {
         epidemy.initCardPlayers();
         epidemy.useCard();
 
-        List<Lifeform> expectedPlayer1Lifeforms = new ArrayList<>();
-        List<Lifeform> expectedPlayer2Lifeforms = new ArrayList<>();
-        List<Lifeform> expectedPlayer3Lifeforms = new ArrayList<>();
+        List<LifeformType> expectedPlayer1Lifeforms = new ArrayList<>();
+        List<LifeformType> expectedPlayer2Lifeforms = new ArrayList<>();
+        List<LifeformType> expectedPlayer3Lifeforms = new ArrayList<>();
 
-        expectedPlayer1Lifeforms.add(astronaut);
-        expectedPlayer1Lifeforms.add(astronaut);
-        expectedPlayer1Lifeforms.add(astronaut);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
 
-        expectedPlayer2Lifeforms.add(astronaut);
-        expectedPlayer2Lifeforms.add(astronaut);
-        expectedPlayer2Lifeforms.add(brownAlien);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.BROWN_ALIEN);
 
-        expectedPlayer3Lifeforms.add(astronaut);
-        expectedPlayer3Lifeforms.add(astronaut);
+        expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
 
         assertEquals(3, shipPlayer1.getAllLifeforms().size());
-        assertTrue(shipPlayer1.getAllLifeforms().containsAll(expectedPlayer1Lifeforms));
+        assertTrue(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer1Lifeforms));
         assertEquals(3, shipPlayer2.getAllLifeforms().size());
-        assertTrue(shipPlayer2.getAllLifeforms().containsAll(expectedPlayer2Lifeforms));
+        assertTrue(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer2Lifeforms));
         assertEquals(2, shipPlayer3.getAllLifeforms().size());
-        assertTrue(shipPlayer3.getAllLifeforms().containsAll(expectedPlayer3Lifeforms));
+        assertTrue(shipPlayer3.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer3Lifeforms));
     }
 
     @Test
@@ -383,27 +387,27 @@ class EpidemyTest {
         );
 
         assertEquals(4, shipPlayer1.getAllLifeforms().size());
-        assertEquals(3, shipPlayer2.getAllLifeforms().size());
+        assertEquals(4, shipPlayer2.getAllLifeforms().size());
 
         epidemy.initCardPlayers();
         epidemy.useCard();
 
-        List<Lifeform> expectedPlayer1Lifeforms = new ArrayList<>();
-        List<Lifeform> expectedPlayer2Lifeforms = new ArrayList<>();
+        List<LifeformType> expectedPlayer1Lifeforms = new ArrayList<>();
+        List<LifeformType> expectedPlayer2Lifeforms = new ArrayList<>();
 
-        expectedPlayer1Lifeforms.add(astronaut);
-        expectedPlayer1Lifeforms.add(astronaut);
-        expectedPlayer1Lifeforms.add(astronaut);
-        expectedPlayer1Lifeforms.add(astronaut);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
 
-        expectedPlayer2Lifeforms.add(astronaut);
-        expectedPlayer2Lifeforms.add(astronaut);
-        expectedPlayer2Lifeforms.add(astronaut);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
 
         assertEquals(4, shipPlayer1.getAllLifeforms().size());
-        assertTrue(shipPlayer1.getAllLifeforms().containsAll(expectedPlayer1Lifeforms));
-        assertEquals(3, shipPlayer2.getAllLifeforms().size());
-        assertTrue(shipPlayer2.getAllLifeforms().containsAll(expectedPlayer2Lifeforms));
+        assertTrue(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer1Lifeforms));
+        assertEquals(4, shipPlayer2.getAllLifeforms().size());
+        assertTrue(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer2Lifeforms));
     }
 
     @Test
