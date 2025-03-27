@@ -3,7 +3,6 @@ package it.polimi.ingsw.is25am28.Ship;
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.ShipJSON;
 import it.polimi.ingsw.is25am28.Components.*;
-import it.polimi.ingsw.is25am28.Connector;
 import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
@@ -168,6 +167,8 @@ public class Ship {
         this.difficultyLevel = difficultyLevel;
         this.components = initGrid(this.grid_rows, this.grid_cols);
 
+        // TODO: Change from int[] to List<Integer> since Andrea changed the type
+        //       of the Connector collection to give to the Component constructor
         // Initializing the connectors of the core cabin
         int[] coreConnectors = new int[4];
         coreConnectors[0] = THREE_PIPES.ordinal();
@@ -373,6 +374,7 @@ public class Ship {
     }
 
     // TODO: Test this feature
+    // TODO: Implement check that the ship can only have AT MOST 1 alien per color
     /**
      * Sets the cabins at their respective coordinates (row, col) to the
      * chosen alien type that they are matched with in the map inside data
@@ -874,6 +876,7 @@ public class Ship {
      * @throws NullComponentException If the given component is <code>null</code>
      * @throws OutOfGridException If the given coordinates (i, j) fall outside the ship's grid
      * @throws ExistingComponentException If the component at coordinates (i, j) is already occupied
+     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship profile, determined by the current difficulty level
      */
     public void addComponent(Component component, int i, int j)
             throws NullComponentException, OutOfGridException,
@@ -902,6 +905,39 @@ public class Ship {
     }
 
     /**
+     * Removes ONLY the component at coordinates (i, j) from the ship's grid<br>
+     * When compared with the other method <code>removeComponent()</code>, the former doesn't check for
+     * any hanging branches that resulted from the removal of that particular component, whereas the latter does so.
+     * Also, this method is intended to be used mainly by the player, since he can specify precisely the component
+     * to remove, in the context of fixing the ship when the method <code>validateShip()</code> returns FALSE.
+     *
+     * @param i The index of row that contains the component to delete
+     * @param j The index of column that contains the component to delete
+     * @throws OutOfGridException If the given coordinates (i, j) fall outside the grid
+     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship profile, determined by the current difficulty level
+     * @throws CoreDeletionAttemptException If the given coordinates (i, j) correspond to the ones of the core
+     *
+     */
+    public void removeSingleComponent(int i, int j) throws OutOfGridException, OutOfShipException, CoreDeletionAttemptException {
+        if (i < 0 || j < 0 || i >= this.grid_rows || j >= this.grid_cols) {
+            throw new OutOfGridException("ERROR: Requested component is not in the ship component grid");
+        }
+        if (i == this.core.getPosition()[0] && j == this.core.getPosition()[1]) {
+            throw new CoreDeletionAttemptException("ERROR: Cannot delete core cabin from the ship");
+        }
+        if (shipProfiles.containsKey(this.difficultyLevel)) {
+            if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
+                throw new OutOfShipException("ERROR: Requested component is not in the ship's profile");
+            }
+        }
+
+        // Removing ONLY the specified component, nothing else
+        this.components[i][j] = null;
+    }
+
+    // TODO: Implement the fact that if a cabin is destroyed, and has a vital unit as its neighbour,
+    //       then they also get destroyed
+    /**
      * Removes the component at coordinates (i, j) from the ship's grid.<br>
      * If that component, when removed, divides the ship into 2 or more branches, then the
      * method keeps the branch that also has the core component and discards others
@@ -910,11 +946,13 @@ public class Ship {
      * @param i The index of row that contains the component to delete
      * @param j The index of column that contains the component to delete
      * @throws OutOfGridException If the given coordinates (i, j) fall outside the grid
+     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship profile, determined by the current difficulty level
+     * @throws CoreDeletionAttemptException If the given coordinates (i, j) correspond to the ones of the core
      *
      * @return The components removed from the ship, which are the selected one at coordinates (i, j) and any components
      *         that were left hanging from the ship as a consequence of the removal of the selected component.
      */
-    public List<Component> removeComponent(int i, int j) throws OutOfGridException, CoreDeletionAttemptException {
+    public List<Component> removeComponent(int i, int j) throws OutOfGridException, CoreDeletionAttemptException, CoreDeletionAttemptException {
         Component[][] previousShip;
         List<Component> removedComponents;
 
@@ -923,6 +961,11 @@ public class Ship {
         }
         if (i == this.core.getPosition()[0] && j == this.core.getPosition()[1]) {
             throw new CoreDeletionAttemptException("ERROR: Cannot delete core cabin from the ship");
+        }
+        if (shipProfiles.containsKey(this.difficultyLevel)) {
+            if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
+                throw new OutOfShipException("ERROR: Requested component is not in the ship's profile");
+            }
         }
 
         previousShip = new Component[this.grid_rows][this.grid_cols];
@@ -962,7 +1005,8 @@ public class Ship {
      * @param j The index of the column where the component to retrieve is located
      * @return The component at coordinates (i, j)
      * @throws OutOfGridException If the given coordinates (i, j) fall outside the ship's grid
-     * @throws NullComponentException If the selected component is <code>null</code>
+     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship's profile,
+     *
      */
     public Component getComponent(int i, int j) throws OutOfGridException {
         if (i < 0 || j < 0 || i >= grid_rows || j >= grid_cols) {
@@ -971,4 +1015,7 @@ public class Ship {
 
         return this.components[i][j];
     }
+
+    // TODO: Implement generateState() method to show all the components onboard the ship formatted into JSON
+    //       (Each component has a toMap() method that converts the component into JSONObject (i.e.: a map))
 }

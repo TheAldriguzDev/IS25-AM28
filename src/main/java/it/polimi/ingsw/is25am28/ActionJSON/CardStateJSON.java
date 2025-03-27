@@ -1,17 +1,16 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
+import it.polimi.ingsw.is25am28.Items.ItemColor;
+import it.polimi.ingsw.is25am28.Player.Player;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import it.polimi.ingsw.is25am28.Items.ItemColor;
-import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
 
-import java.util.ArrayList;
+import javafx.util.Pair;
+
+import java.util.Map;
 import java.util.List;
+import java.util.ArrayList;
 
 /**
  * This class needs to contain all the attribute that can be used by the clients to interact with the cards
@@ -19,9 +18,11 @@ import java.util.List;
  * We can just use this single class to cover all the desired data
  * */
 public class CardStateJSON extends ActionJSON {
+
     private String cardName;
     private int cardLevel;
     private boolean isCardUsable;
+
     private int requiredFirepower;
     private int givenCredits;
     private int movementSteps;
@@ -34,6 +35,24 @@ public class CardStateJSON extends ActionJSON {
     private ArrayList<ArrayList<Integer>> shootingSequence;
     private int requiredCrewMembers;
     private List<ItemColor> stationResources;
+
+    // ======== WarZone Card State Attributes ======== //
+
+    private Player lowestCrewPlayer;
+    private Player lowestEnginePowerPlayer;
+    private Player lowestFirePowerPlayer;
+
+    // ======== VisitPlanets Card State Attributes ======== //
+
+    Map<Integer, Map<ItemColor, Integer>> availablePlanets;
+
+    // ======== MeteorShower Card State Attributes ======== //
+
+    private int currMeteorIndex;
+    private int diceThrowResult;
+    private Pair<Integer, Integer> currMeteorDescriptor;
+
+    // ======== //
 
     /**
      * Default constructor
@@ -226,4 +245,83 @@ public class CardStateJSON extends ActionJSON {
     }
 
     // Other data can be added to provide the context to the clients
+
+
+    // ======== WarZone Card State Getters/Setters ======== //
+
+    @JsonGetter("lowestCrewPlayer")
+    public Player getLowestCrewPlayer() {
+        return this.lowestCrewPlayer;
+    }
+
+    @JsonSetter("lowestCrewPlayer")
+    public void setLowestCrewPlayer(Player lowestCrewPlayer) {
+        this.lowestCrewPlayer = lowestCrewPlayer;
+    }
+
+    @JsonGetter("lowestEnginePowerPlayer")
+    public Player getLowestEnginePowerPlayer() {
+        return this.lowestEnginePowerPlayer;
+    }
+
+    @JsonSetter("lowestEnginePowerPlayer")
+    public void setLowestEnginePowerPlayer(Player lowestEnginePowerPlayer) {
+        this.lowestEnginePowerPlayer = lowestEnginePowerPlayer;
+    }
+
+    @JsonGetter("lowestFirePowerPlayer")
+    public Player getLowestFirePowerPlayer() {
+        return this.lowestFirePowerPlayer;
+    }
+
+    @JsonSetter("lowestFirePowerPlayer")
+    public void setLowestFirePowerPlayer(Player lowestFirePowerPlayer) {
+        this.lowestFirePowerPlayer = lowestFirePowerPlayer;
+    }
+
+    // ======== VisitPlanets Card State Getters/Setters ======== //
+
+    @JsonGetter("availablePlanets")
+    public Map<Integer, Map<ItemColor, Integer>> getAvailablePlanets() {
+        return this.availablePlanets;
+    }
+
+    @JsonSetter("availablePlanets")
+    public void setAvailablePlanets(Map<Integer, Map<ItemColor, Integer>> availablePlanets) {
+        this.availablePlanets = availablePlanets;
+    }
+
+    // ======== MeteorShower Card State Getters/Setters ======== //
+
+    @JsonGetter("currMeteorIndex")
+    public int getCurrMeteorIndex() {
+        return this.currMeteorIndex;
+    }
+
+    @JsonSetter("currMeteorIndex")
+    public void setCurrMeteorIndex(int currMeteorIndex) {
+        this.currMeteorIndex = currMeteorIndex;
+    }
+
+    @JsonGetter("diceThrowResult")
+    public int getDiceThrowResult() {
+        return this.diceThrowResult;
+    }
+
+    @JsonSetter("diceThrowResult")
+    public void setDiceThrowResult(int diceThrowResult) {
+        this.diceThrowResult = diceThrowResult;
+    }
+
+    @JsonGetter("currMeteorDescriptor")
+    public Pair<Integer, Integer> getCurrMeteorDescriptor() {
+        return this.currMeteorDescriptor;
+    }
+
+    @JsonSetter("currMeteorDescriptor")
+    public void setCurrMeteorDescriptor(Pair<Integer, Integer> currMeteorDescriptor) {
+        this.currMeteorDescriptor = currMeteorDescriptor;
+    }
+
+    // ======== //
 }

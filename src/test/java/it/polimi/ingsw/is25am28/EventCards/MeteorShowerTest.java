@@ -1,7 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.*;
@@ -201,7 +201,7 @@ class MeteorShowerTest {
     @Test
     void useCard_goingThroughAnEntireMeteorSequence() {
         MeteorShowerJSON meteorShowerJSON;
-        MeteorShowerStateJSON meteorShowerStateJSON;
+        CardStateJSON meteorShowerStateJSON;
         List<Player> playerList = this.board.getPlayers();
         List<Pair<Integer, Integer>> shieldsCoordinates;
         List<Pair<Integer, Integer>> cannonsCoordinates;
@@ -237,7 +237,7 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
-        // Meteor 1 state
+        // Meteor 1 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
 
         // Altering the seed result to try to shoot a big meteor
@@ -295,6 +295,9 @@ class MeteorShowerTest {
         );
         assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
 
+        // Meteor 1 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
@@ -349,7 +352,7 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
-        // Meteor 2 state
+        // Meteor 2 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
 
         // Altering the seed result to try to shoot a big meteor
@@ -405,6 +408,9 @@ class MeteorShowerTest {
         );
         assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
 
+        // Meteor 2 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
@@ -459,7 +465,7 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
-        // Meteor 3 state
+        // Meteor 3 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
 
         // Altering the seed result to try to shoot a big meteor
@@ -514,6 +520,9 @@ class MeteorShowerTest {
                 }
         );
         assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
+
+        // Meteor 3 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -571,7 +580,7 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
-        // Meteor 4 state
+        // Meteor 4 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
 
         // Altering the seed result to try to shoot a big meteor
@@ -626,6 +635,9 @@ class MeteorShowerTest {
                 }
         );
         assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
+
+        // Meteor 4 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -683,7 +695,7 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
-        // Meteor 5 state
+        // Meteor 5 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
 
         // Altering the seed result to try to shoot a big meteor
@@ -738,6 +750,9 @@ class MeteorShowerTest {
                 }
         );
         assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
+
+        // Meteor 5 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -797,7 +812,7 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
-        // Meteor 6 state
+        // Meteor 6 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
 
         // Altering the seed result to try to shoot a big meteor
@@ -853,6 +868,9 @@ class MeteorShowerTest {
         );
         assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
 
+        // Meteor 6 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
@@ -907,7 +925,7 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
-        // Meteor 7 state
+        // Meteor 7 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
 
         // Altering the seed result to try to shoot a big meteor
@@ -964,6 +982,9 @@ class MeteorShowerTest {
         );
         assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
 
+        // Meteor 7 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
@@ -1018,7 +1039,7 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
-        // Meteor 8 state
+        // Meteor 8 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
 
         // Altering the seed result to try to shoot a big meteor
@@ -1073,6 +1094,9 @@ class MeteorShowerTest {
                 }
         );
         assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
+
+        // Meteor 8 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -1133,7 +1157,7 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
-        // Meteor 9 state
+        // Meteor 9 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
 
         // Altering the seed result to try to shoot a big meteor
@@ -1188,6 +1212,9 @@ class MeteorShowerTest {
         );
         assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
 
+        // Meteor 9 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
@@ -1227,9 +1254,9 @@ class MeteorShowerTest {
         // Checking that Player2's ship has the same component amount
         actualShipP2ComponentCount.set(0);
         playerList.get(1).getShip().traverse(
-                (Component c) -> {
-                    actualShipP2ComponentCount.getAndIncrement();
-                }
+            (Component c) -> {
+                actualShipP2ComponentCount.getAndIncrement();
+            }
         );
         assertEquals(expectedShipP2ComponentCount.get(), actualShipP2ComponentCount.get());
     }

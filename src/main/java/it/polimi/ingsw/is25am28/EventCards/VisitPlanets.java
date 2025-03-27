@@ -3,6 +3,9 @@ package it.polimi.ingsw.is25am28.EventCards;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Board.Board;
+import it.polimi.ingsw.is25am28.Components.Component;
+import it.polimi.ingsw.is25am28.Components.Storage;
+import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
@@ -77,28 +80,28 @@ public class VisitPlanets extends EventCard {
             // (1) - Add the resources from the player to the bank
             for (ComponentHelper<ItemColor> itemToDrop : this.itemsToDrop) {
                 itemToDrop.getItem().ifPresent(
-                        (ItemColor color) -> {
-                            this.resourceBank.addResourceToBankFromPlayer(
-                                    this.getCurrentPlayer().get(),
-                                    color,
-                                    itemToDrop.getI(),
-                                    itemToDrop.getJ()
-                            );
-                        }
+                    (ItemColor color) -> {
+                        this.resourceBank.addResourceToBankFromPlayer(
+                            this.getCurrentPlayer().get(),
+                            color,
+                            itemToDrop.getI(),
+                            itemToDrop.getJ()
+                        );
+                    }
                 );
             }
 
             // (2) - Add the resources from the bank to the player
             for (ComponentHelper<ItemColor> itemToTake : this.itemsToTake) {
                 itemToTake.getItem().ifPresent(
-                        (ItemColor color) -> {
-                            this.resourceBank.addResourceToBankFromPlayer(
-                                    this.getCurrentPlayer().get(),
-                                    color,
-                                    itemToTake.getI(),
-                                    itemToTake.getJ()
-                            );
-                        }
+                    (ItemColor color) -> {
+                        this.resourceBank.addResourceToPlayerFromBank(
+                                this.getCurrentPlayer().get(),
+                                color,
+                                itemToTake.getI(),
+                                itemToTake.getJ()
+                        );
+                    }
                 );
             }
         }
@@ -118,8 +121,8 @@ public class VisitPlanets extends EventCard {
                 if (playerChoice.getKey().equals(activePlayers.get(i))) {
                     if (playerChoice.getValue()) {
                         this.getBoard().movePlayerBackwards(
-                                activePlayers.get(i),
-                                this.movementSteps
+                            activePlayers.get(i),
+                            this.movementSteps
                         );
                     }
                 }
@@ -130,6 +133,9 @@ public class VisitPlanets extends EventCard {
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
         VisitPlanetsJSON visitPlanetsJSON;
+        List<ComponentHelper<ItemColor>> itemsToVerify;
+        Map<ItemColor, Integer> planetConfig;
+        ItemColor itemToVerify;
         int chosenPlanetIndex;
         boolean wantsToLand;
 
@@ -141,7 +147,8 @@ public class VisitPlanets extends EventCard {
         // ActionJSON unpacking
         try {
             visitPlanetsJSON = (VisitPlanetsJSON) data;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new IllegalArgumentException("[VisitPlanets::useCard] ERROR: JSON data parsing error");
         }
 
@@ -152,41 +159,117 @@ public class VisitPlanets extends EventCard {
         // If the chosenPlanetIndex is already present as a key in the map, it
         // means that the specified planet was already chosen, therefore the player
         // must choose another planet among the remaining ones
-        if (!this.playersChosenPlanetAndLandingDecision.containsKey(chosenPlanetIndex)) {
-            // Removing the planet index from the list of available planets
-            this.playersChosenPlanetAndLandingDecision.put(
+        if (this.itemsPerPlanet.containsKey(chosenPlanetIndex)) {
+            if (!this.playersChosenPlanetAndLandingDecision.containsKey(chosenPlanetIndex)) {
+                // Activating the resource handling routine only if
+                // the player decided to land on his selected planet
+                if (wantsToLand) {
+                    // (1) - Before depositing the selected resources on the planet,
+                    //       verify that they are actually present on the ship, otherwise
+                    //       consider the selected item as unavailable
+                    itemsToVerify = visitPlanetsJSON.getItemsToDrop();
+                    this.itemsToDrop = new ArrayList<ComponentHelper<ItemColor>>();
+
+                    for (ComponentHelper<ItemColor> itemHelper : itemsToVerify) {
+                        // Assume the item is not provided
+                        itemToVerify = null;
+
+                        if (itemHelper.getItem().isPresent()) {
+                            itemToVerify = itemHelper.getItem().get();
+                        }
+
+                        // If an item is actually provided in the Optional container
+                        // then check if it's present in the selected storage component
+                        // before adding the itemHelper to the list of items to drop
+                        if (itemToVerify != null) {
+                            Component component = this.currentPlayer.get().getShip().getComponent(
+                                    itemHelper.getI(), itemHelper.getJ()
+                            );
+
+                            // Safe cast
+                            switch (component) {
+                                case Storage storage -> {
+                                    if (storage.getStoredItems().stream().map(Item::getColor).toList().contains(itemToVerify)) {
+                                        // If the given storage component contains the given item color
+                                        // to remove, then add its itemHelper to the itemsToDrop list
+                                        this.itemsToDrop.add(itemHelper);
+                                    }
+                                }
+                                case null, default -> {
+                                    throw new IllegalArgumentException("ERROR: visitPlanetJSON contained a coordinate pair of a non-storage component");
+                                }
+                            }
+                        }
+                    }
+
+                    // (2) - Before withdrawing the requested resources from the planet,
+                    //       verify that they are actually present, otherwise consider
+                    //       the requested item as unavailable
+                    itemsToVerify = visitPlanetsJSON.getItemsToTake();
+                    this.itemsToTake = new ArrayList<ComponentHelper<ItemColor>>();
+
+                    for (ComponentHelper<ItemColor> itemHelper : itemsToVerify) {
+                        // Assume the item is not provided
+                        itemToVerify = null;
+
+                        if (itemHelper.getItem().isPresent()) {
+                            itemToVerify = itemHelper.getItem().get();
+                        }
+
+                        // If an item is actually provided in the Optional container
+                        // then check if it's present on the selected planet before
+                        // adding the itemHelper to the list of items to take
+                        if (itemToVerify != null) {
+                            planetConfig = this.itemsPerPlanet.get(visitPlanetsJSON.getChosenPlanetIndex());
+
+                            // Establish whether the provided index is a valid planetID
+                            // before querying the planet resource map (i.e.: planetConfig)
+                            if (planetConfig != null && planetConfig.get(itemToVerify) > 0) {
+                                this.itemsToTake.add(itemHelper);
+                            }
+                        }
+                    }
+
+                    // Finally, apply all the deposits and withdrawals
+                    // that are now considered valid resource transfers
+                    this.bonusEffect();
+                }
+
+                // Storing the chosen planet and landing decision of the current player
+                this.playersChosenPlanetAndLandingDecision.put(
                     chosenPlanetIndex,
                     new Pair<Player, Boolean>(
-                            this.currentPlayer.get(),
-                            wantsToLand
+                        this.currentPlayer.get(),
+                        wantsToLand
                     )
-            );
+                );
 
-            // Activating the resource handling routine only if
-            // the player decided to land on his selected planet
-            if (wantsToLand) {
-                this.itemsToDrop = visitPlanetsJSON.getItemsToDrop();
-                this.itemsToTake = visitPlanetsJSON.getItemsToTake();
-                this.bonusEffect();
+                // Incrementing the use counter for each player that used it
+                // and get the next player (in order of leaderboard placement)
+                this.playerUseCount++;
+                this.currentPlayer = this.getNextPlayer();
+
+                // Set the "hasBeenUsed" flag to true iff all
+                // the available planets have been chosen
+                if (this.playerUseCount == this.itemsPerPlanet.size()) {
+                    this.malusEffect();
+                    this.cardUsed();
+                }
             }
-
-            // Incrementing the use counter for each player that used it
-            this.playerUseCount++;
+            else {
+                throw new IllegalArgumentException("ERROR: Chosen planet index was already chosen by someone else");
+            }
         }
-
-        // Set the "hasBeenUsed" flag to true iff all
-        // the available planets have been chosen
-        if (this.playerUseCount == this.itemsPerPlanet.size()) {
-            this.malusEffect();
-            this.cardUsed();
+        else {
+            throw new IllegalArgumentException("ERROR: Chosen planet index does not exist (no planet associated to such index)");
         }
 
         return this;
     }
 
     @Override
-    public VisitPlanetsStateJSON generateState() {
-        VisitPlanetsStateJSON visitPlanetsStateJSON;
+    public CardStateJSON generateState() {
+        CardStateJSON cardState = new CardStateJSON();
         Map<Integer, Map<ItemColor, Integer>> availablePlanets;
 
         // Generating the map of all the remaining planets to choose from
@@ -196,18 +279,14 @@ public class VisitPlanets extends EventCard {
             availablePlanets.remove(chosenPlanetIndex);
         }
 
-        if (this.getCurrentPlayer().isEmpty()) {
-            this.currentPlayer = this.getNextPlayer();
-        }
+        // If the current player is present, then add it to the card state
+        this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
 
-        visitPlanetsStateJSON = new VisitPlanetsStateJSON(
-                this.getCurrentPlayer().get().getNickname(),
-                this.getCardName(),
-                this.getCardLevel(),
-                (!this.hasFinished()), // ! hasFinished => the card is still usable
-                availablePlanets
-        );
+        cardState.setCardName(this.getCardName());
+        cardState.setCardLevel(this.getCardLevel());
+        cardState.setCardIsUsable( !this.hasFinished());
+        cardState.setAvailablePlanets(availablePlanets);
 
-        return visitPlanetsStateJSON;
+        return cardState;
     }
 }

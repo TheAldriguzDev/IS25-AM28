@@ -1,25 +1,20 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
-
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
+
 import javafx.util.Pair;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.util.*;
 
 public class WarZone extends EventCard {
-    private final Map<String, Object> humans;
-    private final Map<String, Object> engines;
-    private final Map<String, Object> cannons;
-
     // Lowest crew conditions
     private final int takenCrewForLowestCrew;
     private final int takenStorageForLowestCrew;
@@ -38,77 +33,13 @@ public class WarZone extends EventCard {
     private final int movementStepsForLowestFirepower;
     private final List<PlasmaShot> shootingSequenceForLowestFirepower;
 
-    /*
-    public WarZone(
-            String cardName,
-            int cardLevel,
-            JSONObject humans,
-            JSONObject engines,
-            JSONObject cannons,
-            Board board
-    ) {
-        super(cardName, cardLevel, board);
-
-        // Initializing the direction name to value map
-        // Precalculated table that associates each direction name to its value
-        Map<Integer, String> directionNameToValue = new HashMap<Integer, String>();
-
-        directionNameToValue.put(0, "top");
-        directionNameToValue.put(1, "right");
-        directionNameToValue.put(2, "bottom");
-        directionNameToValue.put(3, "left");
-
-        // Variables
-        JSONObject shootingSequenceJSON;
-        JSONArray directionSequence;
-        int totalDirections = directionNameToValue.size();
-
-        // (1) - Initializing the conditions for the player with the lowest crew
-        this.takenCrewForLowestCrew = (int) humans.get("humans");
-        this.takenStorageForLowestCrew = (int) humans.get("storage");
-        this.movementStepsForLowestCrew = (int) humans.get("days");
-        this.shootingSequenceForLowestCrew = new ArrayList<PlasmaShot>();
-
-        shootingSequenceJSON = (JSONObject) humans.get("shoot");
-
-        for (int i = 0; i < totalDirections; i++) {
-            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
-            for (Object sizeIndicator : directionSequence) {
-                shootingSequenceForLowestCrew.add(new PlasmaShot((Integer) sizeIndicator, i));
-            }
-        }
-
-        // (2) - Initializing the conditions for the player with the lowest engine power
-        this.takenCrewForLowestEnginePower = (int) engines.get("humans");
-        this.takenStorageForLowestEnginePower = (int) engines.get("storage");
-        this.movementStepsForLowestEnginePower = (int) engines.get("days");
-        this.shootingSequenceForLowestEnginePower = new ArrayList<PlasmaShot>();
-
-        shootingSequenceJSON = (JSONObject) humans.get("shoot");
-
-        for (int i = 0; i < totalDirections; i++) {
-            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
-            for (Object sizeIndicator : directionSequence) {
-                shootingSequenceForLowestEnginePower.add(new PlasmaShot((Integer) sizeIndicator, i));
-            }
-        }
-
-        // (3) - Initializing the conditions for the player with the lowest firepower
-        this.takenCrewForLowestFirepower = (int) cannons.get("humans");
-        this.takenStorageForLowestFirepower = (int) cannons.get("storage");
-        this.movementStepsForLowestFirepower = (int) cannons.get("days");
-        this.shootingSequenceForLowestFirepower = new ArrayList<PlasmaShot>();
-
-        shootingSequenceJSON = (JSONObject) humans.get("shoot");
-
-        for (int i = 0; i < totalDirections; i++) {
-            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
-            for (Object sizeIndicator : directionSequence) {
-                shootingSequenceForLowestFirepower.add(new PlasmaShot((Integer) sizeIndicator, i));
-            }
-        }
-    }
-     */
+    // Other attributes
+    private int currPlasmaShotIndex;
+    private int diceThrowResult;
+    private Map<Player, Pair<Integer, Float>> playerStats;
+    private Pair<Player, Integer> lowestCrewPlayer;
+    private Pair<Player, Integer> lowestEnginePowerPlayer;
+    private Pair<Player, Integer> lowestFirePowerPlayer;
 
     public WarZone(
             @JsonProperty("cardName") String cardName,
@@ -120,23 +51,11 @@ public class WarZone extends EventCard {
     ) {
         super(cardName, cardLevel, board);
 
-        this.humans = humans;
-        this.engines = engines;
-        this.cannons = cannons;
+        this.currPlasmaShotIndex = 0;
+        this.players = this.getBoard().getPlayers();
+        this.playerStats = new HashMap<>();
 
-        // Initializing the direction name to value map
-        // Precalculated table that associates each direction name to its value
-        Map<Integer, String> directionNameToValue = new HashMap<Integer, String>();
-
-        directionNameToValue.put(0, "top");
-        directionNameToValue.put(1, "right");
-        directionNameToValue.put(2, "bottom");
-        directionNameToValue.put(3, "left");
-
-        // Variables
-        JSONObject shootingSequenceJSON;
-        JSONArray directionSequence;
-        int totalDirections = directionNameToValue.size();
+        List<Pair<Integer, Integer>> shootingSequence;
 
         // (1) - Initializing the conditions for the player with the lowest crew
         this.takenCrewForLowestCrew = (int) humans.get("humans");
@@ -144,13 +63,22 @@ public class WarZone extends EventCard {
         this.movementStepsForLowestCrew = (int) humans.get("days");
         this.shootingSequenceForLowestCrew = new ArrayList<PlasmaShot>();
 
-        shootingSequenceJSON = (JSONObject) humans.get("shoot");
+        try {
+            // Cast is technically safe since the data provided with label "shoots" is actually
+            // a list of pairs of integers that describe the plasmaShots in the sequence
+            shootingSequence = (List<Pair<Integer, Integer>>) humans.get("shoots");
 
-        for (int i = 0; i < totalDirections; i++) {
-            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
-            for (Object sizeIndicator : directionSequence) {
-                shootingSequenceForLowestCrew.add(new PlasmaShot((Integer) sizeIndicator, i));
+            for (Pair<Integer, Integer> plasmaShotDescriptor : shootingSequence) {
+                this.shootingSequenceForLowestCrew.add(
+                    new PlasmaShot(
+                        plasmaShotDescriptor.getKey(),  // PlasmaShot size
+                        plasmaShotDescriptor.getValue() // PlasmaShot orientation
+                    )
+                );
             }
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("ERROR: JSON parsing error of \"shootingSequenceForLowestCrew\" in WarZone constructor");
         }
 
         // (2) - Initializing the conditions for the player with the lowest engine power
@@ -159,13 +87,22 @@ public class WarZone extends EventCard {
         this.movementStepsForLowestEnginePower = (int) engines.get("days");
         this.shootingSequenceForLowestEnginePower = new ArrayList<PlasmaShot>();
 
-        shootingSequenceJSON = (JSONObject) humans.get("shoot");
+        try {
+            // Cast is technically safe since the data provided with label "shoots" is actually
+            // a list of pairs of integers that describe the plasmaShots in the sequence
+            shootingSequence = (List<Pair<Integer, Integer>>) engines.get("shoots");
 
-        for (int i = 0; i < totalDirections; i++) {
-            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
-            for (Object sizeIndicator : directionSequence) {
-                shootingSequenceForLowestEnginePower.add(new PlasmaShot((Integer) sizeIndicator, i));
+            for (Pair<Integer, Integer> plasmaShotDescriptor : shootingSequence) {
+                this.shootingSequenceForLowestEnginePower.add(
+                    new PlasmaShot(
+                        plasmaShotDescriptor.getKey(),  // PlasmaShot size
+                        plasmaShotDescriptor.getValue() // PlasmaShot orientation
+                    )
+                );
             }
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("ERROR: JSON parsing error of \"shootingSequenceForLowestEnginePower\" in WarZone constructor");
         }
 
         // (3) - Initializing the conditions for the player with the lowest firepower
@@ -174,301 +111,219 @@ public class WarZone extends EventCard {
         this.movementStepsForLowestFirepower = (int) cannons.get("days");
         this.shootingSequenceForLowestFirepower = new ArrayList<PlasmaShot>();
 
-        shootingSequenceJSON = (JSONObject) humans.get("shoot");
+        try {
+            // Cast is technically safe since the data provided with label "shoots" is actually
+            // a list of pairs of integers that describe the plasmaShots in the sequence
+            shootingSequence = (List<Pair<Integer, Integer>>) cannons.get("shoots");
 
-        for (int i = 0; i < totalDirections; i++) {
-            directionSequence = (JSONArray) shootingSequenceJSON.get(directionNameToValue.get(i));
-            for (Object sizeIndicator : directionSequence) {
-                shootingSequenceForLowestFirepower.add(new PlasmaShot((Integer) sizeIndicator, i));
+            for (Pair<Integer, Integer> plasmaShotDescriptor : shootingSequence) {
+                this.shootingSequenceForLowestFirepower.add(
+                    new PlasmaShot(
+                        plasmaShotDescriptor.getKey(),  // PlasmaShot size
+                        plasmaShotDescriptor.getValue() // PlasmaShot orientation
+                    )
+                );
             }
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("ERROR: JSON parsing error of \"shootingSequenceForLowestFirepower\" in WarZone constructor");
         }
     }
 
     @Override
     protected void bonusEffect() {
-
+        // Nothing
     }
 
     @Override
     protected void malusEffect() {
+        List<Player> playerList = new ArrayList<>(this.getBoard().getPlayers());
+        Player[] reversedPlayerArr;
+        int len;
 
+        // Now, after having activated some engines and/or cannons, the players
+        // referenced in lowestEnginePowerPlayer and lowestFirePowerPlayer could
+        // have changed, therefore they must be reevaluated
+
+        // NOTE: lowestCrewPlayer can't change in the meantime
+        // (there are no actions that can reduce the crew amount during this period)
+
+        // (0) - Removing the lowestCrewPlayer from the player list
+        playerList.remove(this.lowestCrewPlayer);
+
+        // (1) - Recalculating the lowestEnginePowerPlayer
+        for (Player player : playerList) {
+            if (
+                this.playerStats.get(player).getKey()
+                    <
+                this.playerStats.get(this.lowestEnginePowerPlayer).getKey()
+            ) {
+                this.lowestEnginePowerPlayer = new Pair<>(
+                    player,
+                    this.lowestEnginePowerPlayer.getValue()
+                );
+            }
+        }
+        playerList.remove(this.lowestEnginePowerPlayer);
+
+        // (2) - Recalculating the lowestFirePowerPlayer
+        for (Player player : playerList) {
+            if (
+                this.playerStats.get(player).getValue()
+                    <
+                this.playerStats.get(this.lowestFirePowerPlayer).getValue()
+            ) {
+                this.lowestFirePowerPlayer = new Pair<>(
+                    player,
+                    this.lowestCrewPlayer.getValue()
+                );
+            }
+        }
+        playerList.remove(this.lowestFirePowerPlayer);
+
+        // After categorizing again the players, the next step is to apply the
+        // malus effects for each corresponding category
+
+        // TODO
+
+        // Finally, move the players that need to be moved backwards by
+        // the amount indicated in the card
+        // First, create the list in reverse order
+        len = this.playerStats.size();
+        reversedPlayerArr = new Player[len];
+        len--;
+
+        for (Player player : this.playerStats.keySet()) {
+            reversedPlayerArr[len] = player;
+            len--;
+        }
+
+        // Then iterate on the reversed list and move each player
+        // by the amount specified by its category
+        for (Player player : reversedPlayerArr) {
+            if (this.playerStats.containsKey(player)) {
+                if (player == this.lowestCrewPlayer.getKey()) {
+                    // Case 1 - lowestCrewPlayer must be moved by the amount movementStepsForLowestCrew
+                    this.getBoard().movePlayerBackwards(player, this.movementStepsForLowestCrew);
+                }
+                else if (player == this.lowestEnginePowerPlayer.getKey()) {
+                    // Case 2 - lowestEnginePowerPlayer must be moved by the amount movementStepsForLowestEnginePower
+                    this.getBoard().movePlayerBackwards(player, this.movementStepsForLowestEnginePower);
+                }
+                else {
+                    // Case 3 - lowestFirePowerPlayer must be moved by the amount movementStepsForLowestFirePower
+                    this.getBoard().movePlayerBackwards(player, this.movementStepsForLowestFirepower);
+                }
+            }
+        }
     }
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        List<Player> lowestCrewPlayers;
-        List<Player> lowestEnginePowerPlayers;
-        List<Player> lowestFirePowerPlayers;
-        List<Pair<Integer, Integer>> shieldCoordsList;
-        List<PlasmaShot> plasmaShotSequence;
-        List<Cabin> currPlayerCabinList;
-        List<Storage> currPlayerStorageList;
-        int diceResult, inboundDirection, i;
-        int takenCrew, takenStorage;
-        boolean threatDestroyed;
-        Component[] gridColumn, gridRow;
-        Player currPlayer, playerNotAffected;
-        Random random;
+        WarZoneJSON warZoneJSON;
+        List<Pair<Integer, Integer>> enginesToActivate;
+        List<Pair<Integer, Integer>> cannonsToActivate;
+        List<Pair<Integer, Integer>> shieldsToActivate;
+        Player currPlayer;
         Ship shipPtr;
-        WarZoneJSON warZone;
+        int energyForEngines;
+        int energyForCannons;
 
         try {
-            warZone = (WarZoneJSON) data;
-            List<Player> players = new ArrayList<Player>(this.getBoard().getPlayers());
+            warZoneJSON = (WarZoneJSON) data;
 
-            lowestCrewPlayers = new ArrayList<>();
+            this.diceThrowResult = warZoneJSON.getDiceThrowResult();
+            enginesToActivate = warZoneJSON.getEnginesToActivate();
+            cannonsToActivate = warZoneJSON.getCannonsToActivate();
+            shieldsToActivate = warZoneJSON.getShieldsToActivate();
 
-            for (Player player : players) {
-                for (Player other : players) {
-                    if (player != other) {
-                        if (player.getShip().getAllLifeforms().size() < other.getShip().getAllLifeforms().size()) {
-                            lowestCrewPlayers.add(player);
-                        }
-                    }
-                }
+            // Getting the next player from the board that matches the username
+            // passed with the MeteorShowerJSON
+            currPlayer = this.getBoard().getPlayers().stream()
+                    .filter((Player p) -> (p.getNickname().equals(warZoneJSON.getPlayerNickname())))
+                    .toList().getFirst();
+
+            if (currPlayer == null) {
+                throw new IllegalArgumentException("ERROR: Given player is not present in the current game");
             }
-
-            lowestEnginePowerPlayers = new ArrayList<>();
-
-            for (Player player : players) {
-                for (Player other : players) {
-                    if (player != other) {
-                        if (
-                            player.getShip().getEnginePower(warZone.getEngineAmountPerPlayer(player))
-                                <
-                            other.getShip().getEnginePower(warZone.getEngineAmountPerPlayer(other))
-                        ) {
-                            lowestEnginePowerPlayers.add(player);
-                        }
-                    }
-                }
+            if (this.diceThrowResult < 2 || this.diceThrowResult > 12) {
+                throw new IllegalArgumentException("ERROR: Dice throw result cannot be outside of the range [2, 12]");
             }
-
-            lowestFirePowerPlayers = new ArrayList<>();
-
-            for (Player player : players) {
-                for (Player other : players) {
-                    if (player != other) {
-                        if (
-                            player.getShip().getFirePower(warZone.getCannonAmountPerPlayer(player))
-                                <
-                            other.getShip().getFirePower(warZone.getCannonAmountPerPlayer(other))
-                        ) {
-                            lowestFirePowerPlayers.add(player);
-                        }
-                    }
-                }
-            }
-
-            // Initializing variables
-            random = new Random();
-
-            for (i = 0; i < 3; i++) {
-                switch (i) {
-                    // Case 0 - lowestCrewPlayer
-                    case 0 -> {
-                        plasmaShotSequence = shootingSequenceForLowestCrew;
-                        takenCrew = takenCrewForLowestCrew;
-                        // movementSteps = movementStepsForLowestCrew;
-                        takenStorage = takenStorageForLowestCrew;
-                        currPlayer = lowestCrewPlayers.getFirst();
-                    }
-
-                    // Case 1 - lowestEnginePowerPlayer
-                    case 1 -> {
-                        plasmaShotSequence = shootingSequenceForLowestEnginePower;
-                        takenCrew = takenCrewForLowestEnginePower;
-                        // movementSteps = movementStepsForLowestEnginePower;
-                        takenStorage = takenStorageForLowestEnginePower;
-                        currPlayer = lowestEnginePowerPlayers.getFirst();
-                    }
-
-                    // Case 2 - lowestFirePowerPlayer
-                    case 2 -> {
-                        plasmaShotSequence = shootingSequenceForLowestFirepower;
-                        takenCrew = takenCrewForLowestFirepower;
-                        // movementSteps = movementStepsForLowestFirepower;
-                        takenStorage = takenStorageForLowestFirepower;
-                        currPlayer = lowestFirePowerPlayers.getFirst();
-                    }
-
-                    default -> throw new IllegalStateException("ERROR: Card is applied to exactly 3 players");
-                }
-
-                // (CONDITION 1) - Take the given amount of crew from the currently selected player
-                currPlayerCabinList = currPlayer.getShip().getCabinList();
-
-                for (Cabin cabin : currPlayerCabinList) {
-                    while (takenCrew > 0 && !cabin.getInhabitants().isEmpty()) {
-                        cabin.removeInhabitant(cabin.getInhabitants().getFirst());
-                        takenCrew--;
-                    }
-
-                    if (takenCrew == 0) {
-                        break;
-                    }
-                }
-
-                // (CONDITION 2) - Take the given amount of items from the currently selected player
-                currPlayerStorageList = currPlayer.getShip().getStorageList();
-
-                for (Storage storage : currPlayerStorageList) {
-                    while (takenStorage > 0 && !storage.getStoredItems().isEmpty()) {
-                        storage.removeItem(storage.getStoredItems().getFirst());
-                        takenStorage--;
-                    }
-
-                    if (takenStorage == 0) {
-                        break;
-                    }
-                }
-
-                // (CONDITION 3) - Applying the PlasmaShot sequence to the currently selected player
-                for (PlasmaShot currPlasmaShot : plasmaShotSequence) {
-                    // Two dice are thrown, result is between 2 and 12
-                    diceResult = (random.nextInt(6) + 1) + (random.nextInt(6) + 1);
-
-                    // Adding +2 to the currPlasmaShot's pointing direction gets the
-                    // side from where the ship will see it arrive from
-                    inboundDirection = (currPlasmaShot.getOrientation() + 2) % 4;
-
-                    // Initializations
-                    Component toHit = null;
-                    threatDestroyed = false;
-                    shipPtr = currPlayer.getShip();
-
-                    switch (inboundDirection) {
-                        // Case 1 - PlasmaShot arrives from the TOP
-                        case 0 -> {
-                            gridColumn = shipPtr.getGridColumn(diceResult - 1);
-                            int row = 0;
-
-                            // Iterating the column in search of the side where the PlasmaShot hits
-                            // If found, then check for the next components in the column
-                            // to see if there are any cannons and/or shields
-                            while (toHit == null && row < gridColumn.length) {
-                                toHit = gridColumn[row];
-                                row++;
-                            }
-                        }
-
-                        // Case 2 - PlasmaShot arrives from the RIGHT
-                        case 1 -> {
-                            gridRow = shipPtr.getGridRow(diceResult - 1);
-                            int column = 0;
-
-                            // Iterating the column in search of the side where the PlasmaShot hits
-                            // If found, then check for the next components in the column
-                            // to see if there are any cannons and/or shields
-                            while (toHit == null && column < gridRow.length) {
-                                toHit = gridRow[column];
-                                column++;
-                            }
-                        }
-
-                        // Case 3 - PlasmaShot arrives from the BOTTOM
-                        case 2 -> {
-                            gridColumn = shipPtr.getGridColumn(diceResult - 1);
-                            int row = gridColumn.length - 1;
-
-                            // Iterating the column in search of the side where the PlasmaShot hits
-                            // If found, then check for the next components in the column
-                            // to see if there are any cannons and/or shields
-                            while (toHit == null && row >= 0) {
-                                toHit = gridColumn[row];
-                                row--;
-                            }
-                        }
-
-                        // Case 4 - PlasmaShot arrives from the LEFT
-                        case 3 -> {
-                            gridRow = shipPtr.getGridRow(diceResult - 1);
-                            int column = gridRow.length - 1;
-
-                            // Iterating the column in search of the side where the PlasmaShot hits
-                            // If found, then check for the next components in the column
-                            // to see if there are any cannons and/or shields
-                            while (toHit == null && column >= 0) {
-                                toHit = gridRow[column];
-                                column--;
-                            }
-                        }
-
-                        default -> throw new IllegalStateException("ERROR: Only 4 directions allowed");
-                    }
-
-                    // If there's a component in the path of the PlasmaShot, then elaborate further
-                    if (toHit != null) {
-                        if (currPlasmaShot.getSize() == 1) {
-                            // Case 1 - Small PlasmaShot
-                            // => Check if the given shields
-                            shieldCoordsList = warZone.getShieldCoordinatesPerPlayer(currPlayer);
-
-                            if (shieldCoordsList != null) {
-                                for (Pair<Integer, Integer> shieldCoords: shieldCoordsList) {
-                                    if (shieldCoords != null) {
-                                        Component component = shipPtr.getComponent(
-                                                shieldCoords.getKey(),
-                                                shieldCoords.getValue()
-                                        );
-
-                                        // Safe cast of Component to Shield
-                                        switch (component) {
-                                            case Shield shield -> {
-                                                // Checking if the shield selected for activation
-                                                // can actually defend the ship from the small PlasmaShot
-                                                // by checking if it's correctly oriented towards the threat
-                                                int[] shieldCoverage = shield.getCoveredSide();
-
-                                                for (int j : shieldCoverage) {
-                                                    if (j == inboundDirection) {
-                                                        threatDestroyed = true;
-                                                        shipPtr.consumeEnergy(1);
-                                                        break;
-                                                    }
-                                                }
-                                            }
-                                            case null, default -> {}
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        // else
-                        // Case 2 - Big PlasmaShot
-                        // => It's unavoidable
-                    }
-                    // else PLASMA SHOT MISSES THE SHIP
-
-                    // If the PlasmaShot wasn't deflected, then remove the component
-                    // that was hit from the current player's ship
-                    if (toHit != null && !threatDestroyed) {
-                        try {
-                            shipPtr.removeComponent(
-                                    toHit.getPosition()[0],
-                                    toHit.getPosition()[1]
-                            );
-                        } catch (CoreDeletionAttemptException e) {
-                            this.currentPlayer.ifPresent(
-                                    (Player p) -> this.getBoard().eliminatePlayer(p)
-                            );
-                        }
-                    }
-                }
-            }
-
-            // (CONDITION 4) - Move backwards each player, but by starting from the player in last place
-            // TODO: Verify if the order with which the players are moved matters
-            this.getBoard().movePlayerBackwards(lowestCrewPlayers.getFirst(), movementStepsForLowestCrew);
-            this.getBoard().movePlayerBackwards(lowestEnginePowerPlayers.getFirst(), movementStepsForLowestEnginePower);
-            this.getBoard().movePlayerBackwards(lowestFirePowerPlayers.getFirst(), movementStepsForLowestFirepower);
         }
         catch (Exception e) {
-            throw new IllegalArgumentException("[WarZone] " + e.getMessage());
+            throw new IllegalArgumentException("[WarZone::useCard] " + e.getMessage());
         }
 
-        // Set the hasBeenUsed flag to true
-        this.cardUsed();
+        shipPtr = currPlayer.getShip();
+
+        // The card is finished iff all players have answered and, because of
+        // this, the malus effects must be applied after all players responded
+        if (this.playerStats.size() < this.getBoard().getPlayers().size()) {
+            // (1) - Calculating the current player's engine power after
+            //       factoring in every double engine he chose to activate
+            energyForEngines = 0;
+
+            for (Pair<Integer, Integer> engineCoords : enginesToActivate) {
+                Component component = shipPtr.getComponent(
+                    engineCoords.getKey(),
+                    engineCoords.getValue()
+                );
+
+                // Safe cast to engine
+                switch (component) {
+                    case Engine engine -> {
+                        if (engine.getSpeed() == 2) {
+                            // The given engine coordinates correspond to a double
+                            // engine, thus it will be activated as requested by the user
+                            energyForEngines++;
+                        }
+                    }
+                    case null, default -> {}
+                }
+            }
+
+            // (2) - Calculating the current player's firepower after
+            //       factoring in every double cannon he chose to activate
+            energyForCannons = 0;
+
+            for (Pair<Integer, Integer> cannonCoords : cannonsToActivate) {
+                Component component = shipPtr.getComponent(
+                        cannonCoords.getKey(),
+                        cannonCoords.getValue()
+                );
+
+                // Safe cast to engine
+                switch (component) {
+                    case Cannon cannon -> {
+                        if (
+                            (cannon.getFirePower() == 2 && cannon.getDirection() == 0)
+                                    ||
+                            (cannon.getFirePower() == 1 && cannon.getDirection() != 0)
+                        ) {
+                            // The given cannon coordinates correspond to a double
+                            // cannon, thus it will be activated as requested by the user
+                            energyForCannons++;
+                        }
+                    }
+                    case null, default -> {}
+                }
+            }
+
+            // (3) - Storing the player's chosen stats for later when all players answered
+            this.playerStats.put(
+                currPlayer,
+                new Pair<Integer, Float>(
+                    shipPtr.getEnginePower(energyForEngines),
+                    shipPtr.getFirePower(energyForCannons)
+                )
+            );
+        }
+        else {
+            // Applying all malus effects on all selected players
+            // and finally mark this card as used
+            this.malusEffect();
+            this.cardUsed();
+        }
 
         return this;
     }
@@ -476,13 +331,96 @@ public class WarZone extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        List<Player> players;
 
-        cardState.setCardName(this.getCardName());
-        cardState.setCardLevel(this.cardLevel);
+        // Calculating the lowestCrewPlayer, lowestEnginePowerPlayer and lowestFirePowerPlayer
+        // so that these can be shown as the current state before each player will answer and, perhaps,
+        // activate some engines and/or cannons and thus change the player for each condition
+        players = new ArrayList<>(this.players);
 
+        // (1) - lowestCrewPlayers
+        this.lowestCrewPlayer = new Pair<>(
+            players.getFirst(),
+            0
+        );
+
+        for (Player player : players) {
+            if (player != this.lowestCrewPlayer.getKey()) {
+                if (
+                    player.getShip().getAllLifeforms().size()
+                        <
+                    this.lowestCrewPlayer.getKey().getShip().getAllLifeforms().size()
+                ) {
+                    this.lowestCrewPlayer = new Pair<>(
+                        players.getFirst(),
+                        this.lowestCrewPlayer.getValue()
+                    );
+                }
+            }
+        }
+        players.remove(this.lowestCrewPlayer.getKey());
+
+        // (2) - lowestEnginePowerPlayers
+        this.lowestEnginePowerPlayer = new Pair<>(
+            players.getFirst(),
+            1
+        );
+
+        for (Player player : players) {
+            if (player != this.lowestEnginePowerPlayer.getKey()) {
+                if (
+                    player.getShip().getEnginePower(0)
+                        <
+                    this.lowestEnginePowerPlayer.getKey().getShip().getEnginePower(0)
+                ) {
+                    this.lowestEnginePowerPlayer = new Pair<>(
+                        player,
+                        this.lowestEnginePowerPlayer.getValue()
+                    );
+                }
+            }
+        }
+        players.remove(this.lowestEnginePowerPlayer.getKey());
+
+        // (3) - lowestFirePowerPlayers
+        this.lowestFirePowerPlayer = new Pair<>(
+            players.getFirst(),
+            2
+        );
+
+        for (Player player : players) {
+            if (player != this.lowestFirePowerPlayer.getKey()) {
+                if (
+                    player.getShip().getFirePower(0)
+                        <
+                    this.lowestFirePowerPlayer.getKey().getShip().getFirePower(0)
+                ) {
+                    this.lowestFirePowerPlayer = new Pair<>(
+                        player,
+                        this.lowestCrewPlayer.getValue()
+                    );
+                }
+            }
+        }
+        players.remove(this.lowestFirePowerPlayer.getKey());
+
+        if (this.getCurrentPlayer().isEmpty()) {
+            this.currentPlayer = this.getNextPlayer();
+        }
+
+        // Setting the card state
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
+
+        cardState.setCardName(this.getCardName());
+        cardState.setCardLevel(this.cardLevel);
+        cardState.setCardIsUsable( !this.hasFinished());
+
+        // Specific fields relative to the WarZone card
+        cardState.setLowestCrewPlayer(this.lowestCrewPlayer.getKey());
+        cardState.setLowestEnginePowerPlayer(this.lowestEnginePowerPlayer.getKey());
+        cardState.setLowestFirePowerPlayer(this.lowestFirePowerPlayer.getKey());
 
         return cardState;
     }

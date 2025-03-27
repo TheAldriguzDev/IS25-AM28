@@ -2,8 +2,8 @@ package it.polimi.ingsw.is25am28.EventCards;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Cannon;
 import it.polimi.ingsw.is25am28.Components.Component;
@@ -11,7 +11,6 @@ import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Exceptions.InsufficientEnergyException;
-import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
 import javafx.util.Pair;
@@ -25,6 +24,7 @@ public class MeteorShower extends EventCard {
     private int currMeteorIndex;
     private int playerUseCount;
     private int diceThrowResult;
+    private Random random;
     
     public MeteorShower(
             @JsonProperty("cardName") String cardName,
@@ -36,7 +36,9 @@ public class MeteorShower extends EventCard {
 
         this.currMeteorIndex = 0;
         this.playerUseCount = 0;
+        this.diceThrowResult = -1;
         this.meteorSequence = new ArrayList<Meteor>();
+        this.random = new Random();
 
         try {
             for (Pair<Integer, Integer> meteorDescriptor : meteorSequence) {
@@ -67,12 +69,11 @@ public class MeteorShower extends EventCard {
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException, IllegalStateException {
         MeteorShowerJSON meteorShowerJSON;
         int inboundDirection, sideToHit;
-        boolean threatDestroyed, energyConsumed;
+        boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
         List<Pair<Integer, Integer>> shieldCoordsList;
         List<Pair<Integer, Integer>> cannonCoordsList;
-        Player player;
         Component toHit;
         Ship shipPtr;
 
@@ -87,15 +88,18 @@ public class MeteorShower extends EventCard {
 
             // Getting the next player from the board that matches the username
             // passed with the MeteorShowerJSON
+            /*
             player = this.getBoard().getPlayers().stream()
                     .filter((Player p) -> (p.getNickname().equals(meteorShowerJSON.getPlayerNickname())))
                     .toList().getFirst();
+
+             */
 
             this.diceThrowResult = meteorShowerJSON.getDiceThrowResult();
             shieldCoordsList = meteorShowerJSON.getShieldsCoordinates();
             cannonCoordsList = meteorShowerJSON.getCannonsCoordinates();
 
-            if (player == null) {
+            if (this.currentPlayer.isEmpty()) {
                 throw new IllegalArgumentException("ERROR: Given player is not present in the current game");
             }
             if (this.diceThrowResult < 2 || this.diceThrowResult > 12) {
@@ -107,7 +111,7 @@ public class MeteorShower extends EventCard {
         }
 
         // Other initializations
-        shipPtr = player.getShip();
+        shipPtr = this.currentPlayer.get().getShip();
         Meteor currMeteor = this.meteorSequence.get(this.currMeteorIndex);
 
         // Adding +2 to the currMeteor's pointing direction gets the
@@ -301,7 +305,7 @@ public class MeteorShower extends EventCard {
                         toHit.getPosition()[1]
                 );
             } catch (CoreDeletionAttemptException e) {
-                this.getBoard().eliminatePlayer(player);
+                this.getBoard().eliminatePlayer(this.currentPlayer.get());
             }
         }
 
@@ -309,10 +313,17 @@ public class MeteorShower extends EventCard {
         // used among all active players
         this.playerUseCount++;
 
-        // Increasing the current meteor index only after
-        // all the alive players encountered the current meteor
+        // Getting the next player (in order of leaderboard placements)
+        this.currentPlayer = this.getNextPlayer();
+
+        // After the current meteor was confronted with all players, do:
+        //  1) Increment currMeteorIndex to iterate on the next meteor
+        //  2) Re-initialize card players, since we need to loop over all players again for the next meteor
+        //  3) Calculate the next dice throw for the next meteor
         if (this.playerUseCount % this.getBoard().getPlayers().size() == 0) {
             this.currMeteorIndex++;
+            this.initCardPlayers();
+            this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
         }
 
         // The card gets marked as completed only when all players
@@ -325,31 +336,31 @@ public class MeteorShower extends EventCard {
     }
 
     @Override
-    public MeteorShowerStateJSON generateState() {
-        Random random = new Random();
+    public CardStateJSON generateState() {
+        CardStateJSON cardState = new CardStateJSON();
 
-        // Generating the diceThrow for the next meteor
-        this.diceThrowResult = (random.nextInt(6) + 1) + (random.nextInt(6) + 1);
-        this.getNextPlayer();
+        // If the current player is present, then add it to the card state
+        this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
 
-        // Creating the state for the next player that needs to provide a response to it
-        MeteorShowerStateJSON meteorShowerStateJSON = new MeteorShowerStateJSON(
-            this.getCurrentPlayer().get().getNickname(),
-            this.getCardName(),
-            this.getCardLevel(),
-            (! this.hasFinished()),   // ! hasFinished => the card is still usable
-            this.currMeteorIndex,
-            this.diceThrowResult,
+        // The dice throw is performed by generateState only at the beginning
+        // since the card hasn't been used yet
+        if (this.diceThrowResult == -1) {
+            this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
+        }
+
+        cardState.setCardName(this.getCardName());
+        cardState.setCardLevel(this.cardLevel);
+        cardState.setCardIsUsable(! this.hasFinished());
+        cardState.setCurrMeteorIndex(this.currMeteorIndex);
+        cardState.setDiceThrowResult(this.diceThrowResult);
+
+        cardState.setCurrMeteorDescriptor(
             new Pair<Integer, Integer>(
                 this.meteorSequence.get(this.currMeteorIndex).getSize(),
                 this.meteorSequence.get(this.currMeteorIndex).getOrientation()
             )
         );
 
-        if (this.getCurrentPlayer().isPresent()) {
-            meteorShowerStateJSON.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
-        }
-
-        return meteorShowerStateJSON;
+        return cardState;
     }
 }
