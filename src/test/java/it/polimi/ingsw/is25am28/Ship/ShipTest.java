@@ -812,7 +812,7 @@ class ShipTest {
 
         int[] connectors = new int[4];
         int i;
-
+        
         for (i = 0; i < 4; i++) {
             connectors[i] = THREE_PIPES.ordinal();
         }

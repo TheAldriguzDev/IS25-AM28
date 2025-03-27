@@ -20,9 +20,17 @@ public class CardStateJSON extends ActionJSON {
     private String cardName;
     private int cardLevel;
     private boolean isCardUsable;
+    private int requiredFirepower;
     private int givenCredits;
-    private int requiredCrewMembers;
     private int movementSteps;
+    private int takenCrew;
+    private int takenItems;
+    private int redItems;
+    private int yellowItems;
+    private int blueItems;
+    private int greenItems;
+    private ArrayList<ArrayList<Integer>> shootingSequence;
+    private int requiredCrewMembers;
     private List<ItemColor> stationResources;
 
     /**
@@ -50,6 +58,83 @@ public class CardStateJSON extends ActionJSON {
         this.movementSteps = movementSteps;
         this.stationResources = stationResources;
     }
+
+    // Constructor for Pirates cardState
+    public CardStateJSON(@JsonProperty("playerNickname") String playerNickname,
+                         @JsonProperty("cardName") String cardName,
+                         @JsonProperty("cardLevel") int cardLevel,
+                         @JsonProperty("isCardUsable") boolean isCardUsable,
+                         @JsonProperty("requiredFirepower") int requiredFirepower,
+                         @JsonProperty("givenCredits") int givenCredits,
+                         @JsonProperty("movementSteps") int movementSteps,
+                         @JsonProperty("shootingSequence") ArrayList<ArrayList<Integer>> shootingSequence) {
+        super(playerNickname);
+        this.cardName = cardName;
+        this.cardLevel = cardLevel;
+        this.isCardUsable = isCardUsable;
+        this.requiredFirepower = requiredFirepower;
+        this.givenCredits = givenCredits;
+        this.movementSteps = movementSteps;
+        this.shootingSequence = shootingSequence;
+    }
+
+    // Constructor for Slavers cardState
+    public CardStateJSON(@JsonProperty("playerNickname") String playerNickname,
+                         @JsonProperty("cardName") String cardName,
+                         @JsonProperty("cardLevel") int cardLevel,
+                         @JsonProperty("isCardUsable") boolean isCardUsable,
+                         @JsonProperty("requiredFirepower") int requiredFirepower,
+                         @JsonProperty("givenCredits") int givenCredits,
+                         @JsonProperty("movementSteps") int movementSteps,
+                         @JsonProperty("takenCrew") int takenCrew) {
+        super(playerNickname);
+        this.cardName = cardName;
+        this.cardLevel = cardLevel;
+        this.isCardUsable = isCardUsable;
+        this.requiredFirepower = requiredFirepower;
+        this.givenCredits = givenCredits;
+        this.movementSteps = movementSteps;
+        this.takenCrew = takenCrew;
+    }
+
+    // Constructor for Smugglers cardState
+    public CardStateJSON(@JsonProperty("playerNickname") String playerNickname,
+                         @JsonProperty("cardName") String cardName,
+                         @JsonProperty("cardLevel") int cardLevel,
+                         @JsonProperty("isCardUsable") boolean isCardUsable,
+                         @JsonProperty("requiredFirepower") int requiredFirepower,
+                         @JsonProperty("movementSteps") int movementSteps,
+                         @JsonProperty("takenItems") int takenItems,
+                         @JsonProperty("redItems") int redItems,
+                         @JsonProperty("yellowItems") int yellowItems,
+                         @JsonProperty("blueItems") int blueItems,
+                         @JsonProperty("greenItems") int greenItems) {
+        super(playerNickname);
+        this.cardName = cardName;
+        this.cardLevel = cardLevel;
+        this.isCardUsable = isCardUsable;
+        this.requiredFirepower = requiredFirepower;
+        this.movementSteps = movementSteps;
+        this.takenItems = takenItems;
+        this.redItems = redItems;
+        this.yellowItems = yellowItems;
+        this.blueItems = blueItems;
+        this.greenItems = greenItems;
+    }
+
+    // Constructor for Stardust
+    public CardStateJSON(@JsonProperty("playerNickname") String playerNickname,
+                         @JsonProperty("cardName") String cardName,
+                         @JsonProperty("cardLevel") int cardLevel,
+                         @JsonProperty("isCardUsable") boolean isCardUsable) {
+        super(playerNickname);
+        this.cardName = cardName;
+        this.cardLevel = cardLevel;
+        this.isCardUsable = isCardUsable;
+    }
+
+
+
 
     /**
      * Returns the cardName
@@ -148,6 +233,4 @@ public class CardStateJSON extends ActionJSON {
     }
 
     // Other data can be added to provide the context to the clients
-
-
 }

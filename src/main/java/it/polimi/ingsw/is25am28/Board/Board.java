@@ -182,14 +182,14 @@ public abstract class Board {
      * */
     public synchronized void validatePlayersPosition() {
         int maxCursor = players.stream()
-                        .mapToInt(Player::getCursor)
-                        .max()
-                        .orElse(0);
+                .mapToInt(Player::getCursor)
+                .max()
+                .orElse(0);
 
         List<Player> doubledPlayers = players
-                                        .stream()
-                                        .filter(player -> player.getCursor() + this.getSize() < maxCursor)
-                                        .toList();
+                .stream()
+                .filter(player -> player.getCursor() + this.getSize() < maxCursor)
+                .toList();
 
         // Remove the player from the current players and add it to the eliminated ones
         // Set the cell to null, since it has been removed from the board and mark the player as eliminated

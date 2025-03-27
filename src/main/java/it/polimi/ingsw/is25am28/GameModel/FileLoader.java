@@ -80,50 +80,51 @@ public class FileLoader {
             JSONArray comp = (JSONArray)json.get("cannon" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Cannon( connectors, ((Long)o.get("force")).intValue() ))
-            , comp);
+                    (o,connectors) -> components.add(new Cannon( connectors, ((Long)o.get("force")).intValue() ))
+                    , comp);
+
 
             comp = (JSONArray)json.get("shield" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Shield( connectors ))
-            , comp);
+                    (o,connectors) -> components.add(new Shield( connectors ))
+                    , comp);
 
             comp = (JSONArray)json.get("structural" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Structural( connectors ))
-            , comp);
+                    (o,connectors) -> components.add(new Structural( connectors ))
+                    , comp);
 
             comp = (JSONArray)json.get("cabin" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Cabin( connectors, false ))
-            , comp);
+                    (o,connectors) -> components.add(new Cabin( connectors, false ))
+                    , comp);
 
             comp = (JSONArray)json.get("engine" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Engine( connectors, ((Long)o.get("speed")).intValue() ))
-            , comp);
+                    (o,connectors) -> components.add(new Engine( connectors, ((Long)o.get("speed")).intValue() ))
+                    , comp);
 
             comp = (JSONArray)json.get("battery" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Battery( connectors, ((Long)o.get("capacity")).intValue() ))
-            , comp);
+                    (o,connectors) -> components.add(new Battery( connectors, ((Long)o.get("capacity")).intValue() ))
+                    , comp);
 
             comp = (JSONArray)json.get("vital" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Vital( connectors, ((Long)o.get("type")).intValue() ))
-            , comp);
+                    (o,connectors) -> components.add(new Vital( connectors, ((Long)o.get("type")).intValue() ))
+                    , comp);
 
             comp = (JSONArray)json.get("storage" );
 
             FileLoader.forEachTile(
-                  (o,connectors) -> components.add(new Storage( connectors, ((Long)o.get("capacity")).intValue(), (Boolean)o.get("special")  ))
-            , comp);
+                    (o,connectors) -> components.add(new Storage( connectors, ((Long)o.get("capacity")).intValue(), (Boolean)o.get("special")  ))
+                    , comp);
 
 
             return components;
@@ -132,18 +133,18 @@ public class FileLoader {
       public List<EventCard> getAllCards(Board board, ResourceBank resourceBank){
             final List<EventCard> deck = new ArrayList<>();
 
-            JSONArray array = (JSONArray)json.get("abandonedShip");
+            JSONArray array = (JSONArray)json.get("abandonedShip" );
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
 
                   deck.add(new AbandonedShip(
-                        "nave abbandonata", 
-                        ((Long)o.get("level")).intValue(), 
-                        ((Long)o.get("people")).intValue(), 
-                        ((Long)o.get("days")).intValue(), 
-                        ((Long)o.get("credits")).intValue(),
-                        board
+                          "nave abbandonata",
+                          ((Long)o.get("level")).intValue(),
+                          ((Long)o.get("people")).intValue(),
+                          ((Long)o.get("days")).intValue(),
+                          ((Long)o.get("credits")).intValue(),
+                          board
                   ));
             }
 
@@ -153,27 +154,27 @@ public class FileLoader {
                   JSONObject o = (JSONObject)proxy;
 
                   deck.add(new AbandonedStation(
-                        "stazione abbandonata", 
-                        ((Long)o.get("level")).intValue(), 
-                        ((Long)o.get("people")).intValue(), 
-                        ((Long)o.get("days")).intValue(), 
-                        //((Long)o.get("red")).intValue(),
-                        //((Long)o.get("yellow")).intValue(),
-                        //((Long)o.get("green")).intValue(),
-                        //((Long)o.get("blue")).intValue()
-                        null,      // REQUIRES AN ARRAY LIST OF ITEMS
-                        board,
+                          "stazione abbandonata",
+                          ((Long)o.get("level")).intValue(),
+                          ((Long)o.get("people")).intValue(),
+                          ((Long)o.get("days")).intValue(),
+                          //((Long)o.get("red")).intValue(),
+                          //((Long)o.get("yellow")).intValue(),
+                          //((Long)o.get("green")).intValue(),
+                          //((Long)o.get("blue")).intValue()
+                          null,      // REQUIRES AN ARRAY LIST OF ITEMS
+                          board,
                           resourceBank
-                        ));
+                  ));
             }
 
-            array = (JSONArray)json.get("meteors");
+            array = (JSONArray)json.get("meteors" );
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
 
                   deck.add(new MeteorShower(
-                        "meteore",
+                          "meteore",
                           ((Long)o.get("level")).intValue(),
                           ((JSONArray) o.get("Meteors")),
                           board
@@ -185,41 +186,41 @@ public class FileLoader {
             for( Object proxy: array ){
 
                   JSONObject o = (JSONObject)proxy;
-                  
+
                   deck.add(new Pirates(
-                        "pirati", 
-                        ((Long)o.get("level")).intValue(), 
-                        ((Long)o.get("firepower")).intValue(), 
-                        ((Long)o.get("credits")).intValue(), 
-                        ((Long)o.get("days")).intValue(), 
-                        ((JSONArray)o.get("shoots")),
-                        board
+                          "pirati",
+                          ((Long)o.get("level")).intValue(),
+                          ((Long)o.get("firepower")).intValue(),
+                          ((Long)o.get("credits")).intValue(),
+                          ((Long)o.get("days")).intValue(),
+                          ((JSONArray)o.get("shoots")),
+                          board
                   ));
             }
-            
+
             array = (JSONArray)json.get("planets" );
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
-                  
+
                   deck.add(new VisitPlanets(
-                        "Pianeti", 
-                        ((Long)o.get("level")).intValue(), 
-                        ((Long)o.get("days")).intValue(), 
-                        (JSONArray)o.get("planets"),
-                        board
+                          "Pianeti",
+                          ((Long)o.get("level")).intValue(),
+                          ((Long)o.get("days")).intValue(),
+                          (JSONArray)o.get("planets"),
+                          board
                   ));
             }
-            
+
             array = (JSONArray)json.get("space" );
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
-                  
+
                   deck.add(new OpenSpace(
-                        "Spazio aperto", 
-                        ((Long)o.get("level")).intValue(),
-                        board
+                          "Spazio aperto",
+                          ((Long)o.get("level")).intValue(),
+                          board
                   ));
             }
 
@@ -227,30 +228,31 @@ public class FileLoader {
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
-                  
+
                   deck.add(new Epidemy(
-                        "Epidemia", 
-                        ((Long)o.get("level")).intValue(),
-                        board
+                          "Epidemia",
+                          ((Long)o.get("level")).intValue(),
+                          board
                   ));
             }
-           
+
             array = (JSONArray)json.get("smugglers" );
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
-                  
-                  deck.add(new Smugglers( 
-                        "Contrabbandieri", 
-                        ((Long)o.get("level")).intValue(), 
-                        ((Long)o.get("days")).intValue(),
-                        ((Long)o.get("cannons")).intValue(), 
-                        ((Long)o.get("penalty")).intValue(), 
-                        ((Long)((JSONObject)o.get("storage")).get("red")).intValue(),
-                        ((Long)((JSONObject)o.get("storage")).get("yellow")).intValue(),
-                        ((Long)((JSONObject)o.get("storage")).get("green")).intValue(),
-                        ((Long)((JSONObject)o.get("storage")).get("blue")).intValue(),
-                        board
+
+                  deck.add(new Smugglers(
+                          "Contrabbandieri",
+                          ((Long)o.get("level")).intValue(),
+                          ((Long)o.get("days")).intValue(),
+                          ((Long)o.get("cannons")).intValue(),
+                          ((Long)o.get("penalty")).intValue(),
+                          ((Long)((JSONObject)o.get("storage")).get("red")).intValue(),
+                          ((Long)((JSONObject)o.get("storage")).get("yellow")).intValue(),
+                          ((Long)((JSONObject)o.get("storage")).get("green")).intValue(),
+                          ((Long)((JSONObject)o.get("storage")).get("blue")).intValue(),
+                          board,
+                          resourceBank
                   ));
             }
 
@@ -258,15 +260,15 @@ public class FileLoader {
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
-                  
-                  deck.add(new Slavers( 
-                        "Schiavisti", 
-                        ((Long)o.get("level")).intValue(), 
-                        ((Long)o.get("cannons")).intValue(),
-                        ((Long)o.get("days")).intValue(), 
-                        ((Long)o.get("credits")).intValue(), 
-                        ((Long)o.get("penalty")).intValue(),
-                        board
+
+                  deck.add(new Slavers(
+                          "Schiavisti",
+                          ((Long)o.get("level")).intValue(),
+                          ((Long)o.get("cannons")).intValue(),
+                          ((Long)o.get("days")).intValue(),
+                          ((Long)o.get("credits")).intValue(),
+                          ((Long)o.get("penalty")).intValue(),
+                          board
                   ));
             }
 
@@ -274,26 +276,26 @@ public class FileLoader {
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
-                  
-                  deck.add(new Stardust( 
-                        "Polvere Stellare", 
-                        ((Long)o.get("level")).intValue(),
-                        board
+
+                  deck.add(new Stardust(
+                          "Polvere Stellare",
+                          ((Long)o.get("level")).intValue(),
+                          board
                   ));
             }
-            
+
             array = (JSONArray)json.get("warzone" );
 
             for( Object proxy: array ){
                   JSONObject o = (JSONObject)proxy;
-                  
-                  deck.add(new WarZone( 
-                        "Zona di Guerra", 
-                        ((Long)o.get("level")).intValue(),
-                        (JSONObject)o.get("engines"),
-                        (JSONObject)o.get("cannons"),
-                        (JSONObject)o.get("humans"),
-                        board
+
+                  deck.add(new WarZone(
+                          "Zona di Guerra",
+                          ((Long)o.get("level")).intValue(),
+                          (JSONObject)o.get("engines"),
+                          (JSONObject)o.get("cannons"),
+                          (JSONObject)o.get("humans"),
+                          board
                   ));
             }
 

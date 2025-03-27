@@ -92,4 +92,6 @@ public class Player {
       public boolean isEliminated(){
             return lost;
       }
+
+
 }
