@@ -11,9 +11,7 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class AbandonedStation extends EventCard {
@@ -144,8 +142,12 @@ public class AbandonedStation extends EventCard {
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
 
+        // Set the card name
         cardState.setCardName(this.getCardName());
+        // Set the card level
         cardState.setCardLevel(this.cardLevel);
+
+        // If present set the current player (the one that needs to play the game)
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
@@ -157,6 +159,26 @@ public class AbandonedStation extends EventCard {
         // Set the card isUsable to true when the player has at least the required crew members
         // --> since we filter them in advance should be always set to true
         cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get()));
+
+        // Set the card information that are needed to play
+        cardState.setRequiredCrewMembers(this.requiredCrew);
+        cardState.setMovementSteps(this.movementStep);
+
+        // Filter the resources to the only available in the bank.
+        // The numbers of the resources will be set as the min between the given by the card and the available in the bank
+        Map<ItemColor, Integer> givenItemByTypeCount = givenItems.stream()
+                .collect(Collectors.groupingBy(
+                        Item::getColor,
+                        Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
+                ));
+
+        givenItemByTypeCount.replaceAll((c, _) -> Math.min(givenItemByTypeCount.get(c), this.resourceBank.getResourceAvailabilityFromColor(c)));
+
+        List<ItemColor> itemList = givenItemByTypeCount.entrySet().stream()
+                .flatMap(entry -> Collections.nCopies(entry.getValue(), entry.getKey()).stream())
+                .toList();
+
+        cardState.setStationResources(itemList);
 
         return cardState;
     }
