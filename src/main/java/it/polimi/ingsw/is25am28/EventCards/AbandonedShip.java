@@ -163,12 +163,14 @@ public class AbandonedShip extends EventCard {
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
 
+        // Set the card name
         cardState.setCardName(this.getCardName());
+        // Set the card level
         cardState.setCardLevel(this.cardLevel);
+        // If present set the current player (the one that needs to play the game)
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
-
 
         List<Player> playersThatCanUseTheCard = this.getBoard().getPlayers().stream()
                 .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
@@ -177,6 +179,11 @@ public class AbandonedShip extends EventCard {
         // Set the card isUsable to true when the player has at least the required crew members
         // --> since we filter them in advance should be always set to true
         cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get()));
+
+        // Set the card information that are needed to play
+        cardState.setRequiredCrewMembers(this.requiredCrew);
+        cardState.setGivenCredits(this.givenCredits);
+        cardState.setMovementSteps(this.movementStep);
 
         return cardState;
     }
