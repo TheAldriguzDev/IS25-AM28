@@ -52,7 +52,7 @@ public abstract class Board {
         return new ArrayList<>(eliminatedPlayer);
     }
 
-    protected int getLevel() { return level; }
+    public int getLevel() { return level; }
 
     protected void setLevel(int level) { this.level = level; }
 

@@ -356,19 +356,24 @@ class EpidemyTest {
 
         // Adding all humans to player1's ship
         shipPlayer1.getCabinList().forEach(
-                (Cabin c) -> {
+            (Cabin c) -> {
+                if (c != (Cabin) shipPlayer1.getComponent(6, 6)) {
                     c.addInhabitant(astronaut);
                 }
+            }
         );
 
         // Adding the other human to the core (thus total humans in core is now 2)
-        ((Cabin) shipPlayer1.getComponent(6, 6)).addInhabitant(astronaut);
+        // Already done by the constructor
+        // ((Cabin) shipPlayer1.getComponent(6, 6)).addInhabitant(astronaut);
 
         // Adding all humans to player2's ship
         shipPlayer2.getCabinList().forEach(
-                (Cabin c) -> {
+            (Cabin c) -> {
+                if (c != (Cabin) shipPlayer2.getComponent(6, 6)) {
                     c.addInhabitant(astronaut);
                 }
+            }
         );
 
         Epidemy epidemy = new Epidemy(

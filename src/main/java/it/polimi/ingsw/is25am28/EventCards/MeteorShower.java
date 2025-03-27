@@ -11,6 +11,7 @@ import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Exceptions.InsufficientEnergyException;
+import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
 import javafx.util.Pair;
@@ -24,7 +25,7 @@ public class MeteorShower extends EventCard {
     private int currMeteorIndex;
     private int playerUseCount;
     private int diceThrowResult;
-    private Random random;
+    private final Random random;
     
     public MeteorShower(
             @JsonProperty("cardName") String cardName,
@@ -66,6 +67,30 @@ public class MeteorShower extends EventCard {
     }
 
     @Override
+    public Optional<Player> getNextPlayer() {
+        if (this.players == null || this.players.isEmpty()) {
+            throw new Error("Players are not set, you must call startUsingCard method before");
+        }
+
+        if (this.currentPlayer.isPresent()) {
+            int currentIndex = this.players.indexOf(this.currentPlayer.get());
+
+            // If the current player is the last one return null,
+            // otherwise return the next player
+            if (currentIndex == this.players.size() - 1) {
+                return Optional.empty();
+            }
+            else {
+                return Optional.of(this.getBoard().getPlayers().get(currentIndex + 1));
+            }
+        }
+        else {
+            this.currentPlayer = Optional.of(this.getBoard().getPlayers().getFirst());
+            return this.currentPlayer;
+        }
+    }
+
+    @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException, IllegalStateException {
         MeteorShowerJSON meteorShowerJSON;
         int inboundDirection, sideToHit;
@@ -85,16 +110,6 @@ public class MeteorShower extends EventCard {
         try {
             // ActionJSON unpacking
             meteorShowerJSON = ((MeteorShowerJSON) data);
-
-            // Getting the next player from the board that matches the username
-            // passed with the MeteorShowerJSON
-            /*
-            player = this.getBoard().getPlayers().stream()
-                    .filter((Player p) -> (p.getNickname().equals(meteorShowerJSON.getPlayerNickname())))
-                    .toList().getFirst();
-
-             */
-
             this.diceThrowResult = meteorShowerJSON.getDiceThrowResult();
             shieldCoordsList = meteorShowerJSON.getShieldsCoordinates();
             cannonCoordsList = meteorShowerJSON.getCannonsCoordinates();

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import it.polimi.ingsw.is25am28.GameModel.FileLoader.TileLoader;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
@@ -12,7 +13,7 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.TimeObserver.TimeSubscriber;
 import it.polimi.ingsw.is25am28.TimeObserver.TimerObserver;
 import it.polimi.ingsw.is25am28.Components.Component;
-import it.polimi.ingsw.is25am28.GameModel.FileLoader;
+import it.polimi.ingsw.is25am28.GameModel.FileLoader.FileLoader;
 
 /**
  * class that implements the first part of the game, like construction of ships
@@ -37,7 +38,7 @@ public class ShipConstructionSession implements TimeSubscriber {
 
             this.controller = controller;
 
-            available = new FileLoader("./json/tiles.json").getAllComponents();
+            available = TileLoader.get().read();
             available.sort((a,b) -> (int)( (Math.random() - Math.random())*1000 ) );
             selected = new ArrayList<>();
 

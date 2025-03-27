@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import it.polimi.ingsw.is25am28.GameModel.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import org.json.simple.JSONArray;
 
@@ -54,7 +55,7 @@ public class GameModel {
             if( deck != null )
                   return deck;
 
-            List<EventCard> deck = new FileLoader("./json/cards.json").getAllCards( board, this.resourceBank );
+            List<EventCard> deck = CardLoader.get().read(this.board, this.resourceBank);
 
             // random sort
             deck.sort((_,_) -> (int)( (Math.random() - Math.random())*1000 ) );

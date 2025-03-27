@@ -244,6 +244,11 @@ public class CardStateJSON extends ActionJSON {
         return this.stationResources;
     }
 
+    @JsonSetter("stationResources")
+    public void setStationResources(List<ItemColor> stationResources) {
+        this.stationResources = stationResources;
+    }
+
     // Other data can be added to provide the context to the clients
 
 
