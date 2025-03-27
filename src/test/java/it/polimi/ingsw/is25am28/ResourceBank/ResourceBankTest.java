@@ -127,10 +127,19 @@ class ResourceBankTest {
         resourceBank.addResourceToPlayerFromBank(this.board.getPlayers().get(0), ItemColor.YELLOW, 8, 7);
         resourceBank.addResourceToPlayerFromBank(this.board.getPlayers().get(0), ItemColor.BLUE, 8, 7);
 
+        // Instead of throwing an exception, this action is simply ignored
+        resourceBank.addResourceToPlayerFromBank(this.board.getPlayers().get(0), ItemColor.BLUE, 8, 7);
+
+        /*
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> {
             resourceBank.addResourceToPlayerFromBank(this.board.getPlayers().get(0), ItemColor.BLUE, 8, 7);
         });
-        assertEquals("The given storage component i: 8 j: 7 has no more space", thrown.getMessage());
+        // We agreed on the fact that, like in the case where removing an item from a player in a
+        // storage component that doesn't have that item, the exception is simply ignored, and thus not thrown
+        // In this way if the player gives wrong instructions on how to manage his storage, the particular
+        // actions that would have caused some problems now are simply ignored.
+        // assertEquals("The given storage component has no more space", thrown.getMessage());
+         */
 
         // Check that only the correct invocations have decreased the amount available
         assertEquals(12, resourceBank.getResourceAvailabilityFromColor(ItemColor.BLUE));
@@ -146,7 +155,7 @@ class ResourceBankTest {
         IllegalStateException thrown = assertThrows(IllegalStateException.class, () -> {
             resourceBank.addResourceToPlayerFromBank(this.board.getPlayers().get(0), ItemColor.RED, 8, 7);
         });
-        assertEquals("The given storage component i: 8 j: 7 cannot store RED resources", thrown.getMessage());
+        assertEquals("The given storage component cannot store RED resources", thrown.getMessage());
 
         // Check that the resources are unchanged
         assertEquals(14, resourceBank.getResourceAvailabilityFromColor(ItemColor.BLUE));

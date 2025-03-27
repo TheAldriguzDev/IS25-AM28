@@ -6,7 +6,7 @@ import it.polimi.ingsw.is25am28.Ship.Ship;
 public class Player {
       private final PlayerColor color;
       private final String nickname;
-      private final Ship ship;
+      private Ship ship;
       private int cursor = 0;
       private int credits = 0;
       private int lostPieces = 0;
