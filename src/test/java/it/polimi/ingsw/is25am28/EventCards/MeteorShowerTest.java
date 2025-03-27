@@ -34,39 +34,39 @@ class MeteorShowerTest {
             int cols = ship.getGridDimensions().getValue();
             int i, j, k;
 
-            System.out.print("\n\\");
+            // System.out.print("\n\\");
             for (i = 0; i < cols; i++) {
-                System.out.print("\t" + i);
+                // System.out.print("\t" + i);
             }
-            System.out.print("\n");
+            // System.out.print("\n");
 
             k = 0;
 
             for (i = 0; i < rows; i++) {
-                System.out.print(i + "\t");
+                // System.out.print(i + "\t");
                 for (j = 0; j < cols; j++) {
                     c = ship.getComponent(i, j);
                     if (c == null) {
-                        System.out.print("." + "\t");
+                        // System.out.print("." + "\t");
                     }
                     else {
-                        System.out.print(k++ + "\t");
+                        // System.out.print(k++ + "\t");
                         components.add(c);
                     }
                 }
-                System.out.print("\n");
+                // System.out.print("\n");
             }
 
             int size = components.size();
 
-            System.out.println("\nFound these components:");
+            // System.out.println("\nFound these components:");
 
             for (i = 0; i < size; i++) {
-                System.out.println(i + " - " + components.get(i));
+                // System.out.println(i + " - " + components.get(i));
             }
         }
         else {
-            System.out.println("ERROR: Given ship is null");
+            // System.out.println("ERROR: Given ship is null");
         }
     }
 
@@ -146,8 +146,8 @@ class MeteorShowerTest {
 
         for (Player player : board.getPlayers()) {
             initCustomShip(player);
-            System.out.println("==== SHIP CONFIGURATION ====");
-            printShipGrid(player.getShip());
+            // // System.out.println("==== SHIP CONFIGURATION ====");
+            // printShipGrid(player.getShip());
         }
 
         List<Pair<Integer, Integer>> meteorSequence = new ArrayList<>();
@@ -244,10 +244,10 @@ class MeteorShowerTest {
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(6);
 
-        System.out.println("\n\t ======== STATE - Meteor 1 ========");
-        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
-        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
-        System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
+        // System.out.println("\n\t ======== STATE - Meteor 1 ========");
+        // System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
+        // System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
+        // System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -282,8 +282,8 @@ class MeteorShowerTest {
         }
 
         // Player1 - Meteor 1 aftermath --> Meteor hits and removes 1 component
-        System.out.println("\n\t ==== SHIP Player1 after Meteor 1 ====");
-        printShipGrid(playerList.get(0).getShip());
+        // System.out.println("\n\t ==== SHIP Player1 after Meteor 1 ====");
+        // printShipGrid(playerList.get(0).getShip());
 
         // Checking that Player1's ship has a component removed
         expectedShipP1ComponentCount.getAndDecrement();
@@ -331,8 +331,8 @@ class MeteorShowerTest {
         }
 
         // Player2 - Meteor 1 aftermath --> Meteor hits and removes 1 component
-        System.out.println("\n\t ==== SHIP Player2 after Meteor 1 ====");
-        printShipGrid(playerList.get(1).getShip());
+        // System.out.println("\n\t ==== SHIP Player2 after Meteor 1 ====");
+        // printShipGrid(playerList.get(1).getShip());
 
         // Checking that Player2's ship has a component removed
         expectedShipP2ComponentCount.getAndDecrement();
@@ -359,10 +359,10 @@ class MeteorShowerTest {
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(6);
 
-        System.out.println("\n\t ======== STATE - Meteor 2 ========");
-        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
-        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
-        System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
+        // System.out.println("\n\t ======== STATE - Meteor 2 ========");
+        // System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
+        // System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
+        // System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -395,8 +395,8 @@ class MeteorShowerTest {
         }
 
         // Player1 - Meteor 2 aftermath --> Meteor hits and removes 1 component
-        System.out.println("\n\t ==== SHIP Player1 after Meteor 2 ====");
-        printShipGrid(playerList.get(0).getShip());
+        // System.out.println("\n\t ==== SHIP Player1 after Meteor 2 ====");
+        // printShipGrid(playerList.get(0).getShip());
 
         // Checking that Player1's ship has a component removed
         expectedShipP1ComponentCount.getAndDecrement();
@@ -444,8 +444,8 @@ class MeteorShowerTest {
         }
 
         // Player2 - Meteor 2 aftermath --> Meteor hits and takes away 1 component
-        System.out.println("\n\t ==== SHIP Player2 after Meteor 2 ====");
-        printShipGrid(playerList.get(1).getShip());
+        // System.out.println("\n\t ==== SHIP Player2 after Meteor 2 ====");
+        // printShipGrid(playerList.get(1).getShip());
 
         // Checking that Player2's ship has a component removed
         expectedShipP2ComponentCount.getAndDecrement();
@@ -472,10 +472,10 @@ class MeteorShowerTest {
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(6);
 
-        System.out.println("\n\t ======== STATE - Meteor 3 ========");
-        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
-        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
-        System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
+        // System.out.println("\n\t ======== STATE - Meteor 3 ========");
+        // System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
+        // System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
+        // System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -509,8 +509,8 @@ class MeteorShowerTest {
         }
 
         // Player1 - Meteor 3 aftermath --> Meteor is blocked by shield, 1 energy removed
-        System.out.println("\n\t ==== SHIP Player1 after Meteor 3 ====");
-        printShipGrid(playerList.get(0).getShip());
+        // System.out.println("\n\t ==== SHIP Player1 after Meteor 3 ====");
+        // printShipGrid(playerList.get(0).getShip());
 
         // Checking that Player1's ship has a component removed
         actualShipP1ComponentCount.set(0);
@@ -559,8 +559,8 @@ class MeteorShowerTest {
         }
 
         // Player2 - Meteor 3 aftermath --> Meteor hits and takes away 2 components
-        System.out.println("\n\t ==== SHIP Player2 after Meteor 3 ====");
-        printShipGrid(playerList.get(1).getShip());
+        // System.out.println("\n\t ==== SHIP Player2 after Meteor 3 ====");
+        // printShipGrid(playerList.get(1).getShip());
 
         // Checking that Player2's ship has a component removed
         expectedShipP2ComponentCount.getAndDecrement();
@@ -587,10 +587,10 @@ class MeteorShowerTest {
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(6);
 
-        System.out.println("\n\t ======== STATE - Meteor 4 ========");
-        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
-        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
-        System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
+        // System.out.println("\n\t ======== STATE - Meteor 4 ========");
+        // System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
+        // System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
+        // System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -624,8 +624,8 @@ class MeteorShowerTest {
         }
 
         // Player1 - Meteor 4 aftermath --> Meteor is reflected by the shield
-        System.out.println("\n\t ==== SHIP Player1 after Meteor 4 ====");
-        printShipGrid(playerList.get(0).getShip());
+        // System.out.println("\n\t ==== SHIP Player1 after Meteor 4 ====");
+        // printShipGrid(playerList.get(0).getShip());
 
         // Checking that Player1's ship has a component removed
         actualShipP1ComponentCount.set(0);
@@ -675,8 +675,8 @@ class MeteorShowerTest {
         }
 
         // Player2 - Meteor 4 aftermath --> Meteor is reflected by the shield
-        System.out.println("\n\t ==== SHIP Player2 after Meteor 4 ====");
-        printShipGrid(playerList.get(1).getShip());
+        // System.out.println("\n\t ==== SHIP Player2 after Meteor 4 ====");
+        // printShipGrid(playerList.get(1).getShip());
 
         // Checking that Player2's ship has a component removed
         actualShipP2ComponentCount.set(0);
@@ -702,10 +702,10 @@ class MeteorShowerTest {
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(6);
 
-        System.out.println("\n\t ======== STATE - Meteor 5 ========");
-        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
-        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
-        System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
+        // System.out.println("\n\t ======== STATE - Meteor 5 ========");
+        // System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
+        // System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
+        // System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -738,8 +738,8 @@ class MeteorShowerTest {
         }
 
         // Player1 - Meteor 5 aftermath --> Meteor hits and removes 1 component
-        System.out.println("\n\t ==== SHIP Player1 after Meteor 5 ====");
-        printShipGrid(playerList.get(0).getShip());
+        // System.out.println("\n\t ==== SHIP Player1 after Meteor 5 ====");
+        // printShipGrid(playerList.get(0).getShip());
 
         // Checking that Player1's ship has a component removed
         expectedShipP1ComponentCount.getAndDecrement();
@@ -787,8 +787,8 @@ class MeteorShowerTest {
         }
 
         // Player2 - Meteor 5 aftermath --> Meteor hits and removes a branch of 5 component
-        System.out.println("\n\t ==== SHIP Player2 after Meteor 5 ====");
-        printShipGrid(playerList.get(1).getShip());
+        // System.out.println("\n\t ==== SHIP Player2 after Meteor 5 ====");
+        // printShipGrid(playerList.get(1).getShip());
 
         // Checking that Player2's ship has a component removed
         expectedShipP2ComponentCount.getAndDecrement();
@@ -819,10 +819,10 @@ class MeteorShowerTest {
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(6);
 
-        System.out.println("\n\t ======== STATE - Meteor 6 ========");
-        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
-        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
-        System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
+        // System.out.println("\n\t ======== STATE - Meteor 6 ========");
+        // System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
+        // System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
+        // System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -855,8 +855,8 @@ class MeteorShowerTest {
         }
 
         // Player1 - Meteor 6 aftermath --> Meteor hits and removes 1 component
-        System.out.println("\n\t ==== SHIP Player1 after Meteor 6 ====");
-        printShipGrid(playerList.get(0).getShip());
+        // System.out.println("\n\t ==== SHIP Player1 after Meteor 6 ====");
+        // printShipGrid(playerList.get(0).getShip());
 
         // Checking that Player1's ship has a component removed
         expectedShipP1ComponentCount.getAndDecrement();
@@ -904,8 +904,8 @@ class MeteorShowerTest {
         }
 
         // Player2 - Meteor 6 aftermath --> Meteor hits the ship and removes 1 component
-        System.out.println("\n\t ==== SHIP Player2 after Meteor 6 ====");
-        printShipGrid(playerList.get(1).getShip());
+        // System.out.println("\n\t ==== SHIP Player2 after Meteor 6 ====");
+        // printShipGrid(playerList.get(1).getShip());
 
         // Checking that Player2's ship has a component removed
         expectedShipP2ComponentCount.getAndDecrement();
@@ -932,10 +932,10 @@ class MeteorShowerTest {
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(8);
 
-        System.out.println("\n\t ======== STATE - Meteor 7 ========");
-        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
-        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
-        System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
+        // System.out.println("\n\t ======== STATE - Meteor 7 ========");
+        // System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
+        // System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
+        // System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -969,8 +969,8 @@ class MeteorShowerTest {
         }
 
         // Player1 - Meteor 7 aftermath --> Shield doesn't stop big meteor; a component is destroyed
-        System.out.println("\n\t ==== SHIP Player1 after Meteor 7 ====");
-        printShipGrid(playerList.get(0).getShip());
+        // System.out.println("\n\t ==== SHIP Player1 after Meteor 7 ====");
+        // printShipGrid(playerList.get(0).getShip());
 
         // Checking that Player1's ship has a component removed
         expectedShipP1ComponentCount.getAndDecrement();
@@ -1019,8 +1019,8 @@ class MeteorShowerTest {
         }
 
         // Player2 - Meteor 7 aftermath --> Shield doesn't stop big meteor; a component is destroyed
-        System.out.println("\n\t ==== SHIP Player2 after Meteor 7 ====");
-        printShipGrid(playerList.get(1).getShip());
+        // System.out.println("\n\t ==== SHIP Player2 after Meteor 7 ====");
+        // printShipGrid(playerList.get(1).getShip());
 
         // Checking that Player2's ship has a component removed
         expectedShipP2ComponentCount.getAndDecrement();
@@ -1046,10 +1046,10 @@ class MeteorShowerTest {
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(9);
 
-        System.out.println("\n\t ======== STATE - Meteor 8 ========");
-        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
-        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
-        System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
+        // System.out.println("\n\t ======== STATE - Meteor 8 ========");
+        // System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
+        // System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
+        // System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -1082,8 +1082,8 @@ class MeteorShowerTest {
         }
 
         // Player1 - Meteor 8 aftermath --> Single cannon shoots but is not on the same column as the meteor, therefore 1 component is destroyed
-        System.out.println("\n\t ==== SHIP Player1 after Meteor 8 ====");
-        printShipGrid(playerList.get(0).getShip());
+        // System.out.println("\n\t ==== SHIP Player1 after Meteor 8 ====");
+        // printShipGrid(playerList.get(0).getShip());
 
         // Checking that Player1's ship has the same components as before
         expectedShipP1ComponentCount.getAndDecrement();
@@ -1136,8 +1136,8 @@ class MeteorShowerTest {
         }
 
         // Player2 - Meteor 8 aftermath --> No energy (the battery was destroyed), the double cannon is destroyed
-        System.out.println("\n\t ==== SHIP Player2 after Meteor 8 ====");
-        printShipGrid(playerList.get(1).getShip());
+        // System.out.println("\n\t ==== SHIP Player2 after Meteor 8 ====");
+        // printShipGrid(playerList.get(1).getShip());
 
         // Checking that Player2's ship has a component removed
         expectedShipP2ComponentCount.getAndDecrement();
@@ -1164,10 +1164,10 @@ class MeteorShowerTest {
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(6);
 
-        System.out.println("\n\t ======== STATE - Meteor 9 ========");
-        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
-        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
-        System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
+        // System.out.println("\n\t ======== STATE - Meteor 9 ========");
+        // System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
+        // System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
+        // System.out.println("\t\t currMeteorDescriptor = [" + meteorShowerStateJSON.getCurrMeteorDescriptor().getKey() + ", " + meteorShowerStateJSON.getCurrMeteorDescriptor().getValue() + "]");
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -1200,8 +1200,8 @@ class MeteorShowerTest {
         }
 
         // Player1 - Meteor 9 aftermath --> Meteor misses
-        System.out.println("\n\t ==== SHIP Player1 after Meteor 9 ====");
-        printShipGrid(playerList.get(0).getShip());
+        // System.out.println("\n\t ==== SHIP Player1 after Meteor 9 ====");
+        // printShipGrid(playerList.get(0).getShip());
 
         // Checking that Player1's ship has the same component amount
         actualShipP1ComponentCount.set(0);
@@ -1248,8 +1248,8 @@ class MeteorShowerTest {
         }
 
         // Player2 - Meteor 9 aftermath --> Meteor misses
-        System.out.println("\n\t ==== SHIP Player2 after Meteor 9 ====");
-        printShipGrid(playerList.get(1).getShip());
+        // System.out.println("\n\t ==== SHIP Player2 after Meteor 9 ====");
+        // printShipGrid(playerList.get(1).getShip());
 
         // Checking that Player2's ship has the same component amount
         actualShipP2ComponentCount.set(0);

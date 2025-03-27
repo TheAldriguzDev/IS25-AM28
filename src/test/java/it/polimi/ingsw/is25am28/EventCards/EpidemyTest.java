@@ -31,39 +31,39 @@ class EpidemyTest {
             int cols = ship.getGridDimensions().getValue();
             int i, j, k;
 
-            System.out.print("\n\\");
+            // System.out.print("\n\\");
             for (i = 0; i < cols; i++) {
-                System.out.print("\t" + i);
+                // System.out.print("\t" + i);
             }
-            System.out.print("\n");
+            // System.out.print("\n");
 
             k = 0;
 
             for (i = 0; i < rows; i++) {
-                System.out.print(i + "\t");
+                // System.out.print(i + "\t");
                 for (j = 0; j < cols; j++) {
                     c = ship.getComponent(i, j);
                     if (c == null) {
-                        System.out.print("." + "\t");
+                        // System.out.print("." + "\t");
                     }
                     else {
-                        System.out.print(k++ + "\t");
+                        // System.out.print(k++ + "\t");
                         components.add(c);
                     }
                 }
-                System.out.print("\n");
+                // System.out.print("\n");
             }
 
             int size = components.size();
 
-            System.out.println("\nFound these components:");
+            // System.out.println("\nFound these components:");
 
             for (i = 0; i < size; i++) {
-                System.out.println(i + " - " + components.get(i));
+                // System.out.println(i + " - " + components.get(i));
             }
         }
         else {
-            System.out.println("ERROR: Given ship is null");
+            // System.out.println("ERROR: Given ship is null");
         }
     }
 
@@ -153,7 +153,7 @@ class EpidemyTest {
         ship.addComponent(doubleEngine1, 8, 7);
         ship.addComponent(singleEngine3, 8, 8);
 
-        System.out.println("==== SHIP CONFIGURATION ====");
+        // System.out.println("==== SHIP CONFIGURATION ====");
         printShipGrid(ship);
 
         // Generating the component sub-lists right after the ship is created

@@ -28,12 +28,12 @@ class VisitPlanetsTest {
     private int movementStep = 5;
 
     void printAvailableResources(ResourceBank resourceBank) {
-        System.out.println("\n ==== CURR RESOURCE BANK CONTENTS ====");
-        System.out.println(" - BLUE(1) = " + resourceBank.getResources().get(ItemColor.BLUE));
-        System.out.println(" - GREEN(2) = " + resourceBank.getResources().get(ItemColor.GREEN));
-        System.out.println(" - YELLOW(3) = " + resourceBank.getResources().get(ItemColor.YELLOW));
-        System.out.println(" - RED(4) = " + resourceBank.getResources().get(ItemColor.RED));
-        System.out.println(" ===================================== \n");
+        // System.out.println("\n ==== CURR RESOURCE BANK CONTENTS ====");
+        // System.out.println(" - BLUE(1) = " + resourceBank.getResources().get(ItemColor.BLUE));
+        // System.out.println(" - GREEN(2) = " + resourceBank.getResources().get(ItemColor.GREEN));
+        // System.out.println(" - YELLOW(3) = " + resourceBank.getResources().get(ItemColor.YELLOW));
+        // System.out.println(" - RED(4) = " + resourceBank.getResources().get(ItemColor.RED));
+        // System.out.println(" ===================================== \n");
     }
 
     void initCustomShip(Player player) {
@@ -108,7 +108,7 @@ class VisitPlanetsTest {
         // Random seed is instantiated by the number of the current player
         Random random = new Random(player.getNickname().charAt(1) - '0');
 
-        System.out.println("\n\n");
+        // System.out.println("\n\n");
 
         // Random storage assignment to each player
         int len = ship.getAvailableStorageSpace() - random.nextInt(0,ship.getAvailableStorageSpace() / 2);
@@ -153,26 +153,26 @@ class VisitPlanetsTest {
 
     void visualizeVisitPlanetsCardStateParameters(CardStateJSON cardStateJSON) {
         try {
-            System.out.println(cardStateJSON.getPlayerNickname());
+            // System.out.println(cardStateJSON.getPlayerNickname());
         }
         catch (Exception e) {
-            System.out.println("null");
+            // System.out.println("null");
         }
-        System.out.println(cardStateJSON.getCardName());
-        System.out.println(cardStateJSON.getCardLevel());
-        System.out.println(cardStateJSON.getIsCardUsable());
-        System.out.println(cardStateJSON.getAvailablePlanets());
+        // System.out.println(cardStateJSON.getCardName());
+        // System.out.println(cardStateJSON.getCardLevel());
+        // System.out.println(cardStateJSON.getIsCardUsable());
+        // System.out.println(cardStateJSON.getAvailablePlanets());
     }
 
     void visualizeAllStoragesCoordinatesAndContents(Player player) {
-        System.out.println("\n ==== \"" + player.getNickname() + "\" STORAGE CONTENTS ==== ");
+        // System.out.println("\n ==== \"" + player.getNickname() + "\" STORAGE CONTENTS ==== ");
         for (Storage storage : player.getShip().getStorageList()) {
-            System.out.println(" - (isSpecialStorage=" + storage.isSpecialStorage() + ")");
-            System.out.println(" - (" + storage.getPosition()[0] + ", " + storage.getPosition()[1] + ")");
-            System.out.println(" - (maxCapacity=" + storage.getCapacity() + ", occupied=" + storage.getStoredItems().size() + ")");
-            System.out.println(" - stored = " + storage.getStoredItems().stream().map(Item::getColor).toList() + "\n");
+            // System.out.println(" - (isSpecialStorage=" + storage.isSpecialStorage() + ")");
+            // System.out.println(" - (" + storage.getPosition()[0] + ", " + storage.getPosition()[1] + ")");
+            // System.out.println(" - (maxCapacity=" + storage.getCapacity() + ", occupied=" + storage.getStoredItems().size() + ")");
+            // System.out.println(" - stored = " + storage.getStoredItems().stream().map(Item::getColor).toList() + "\n");
         }
-        System.out.println(" ========================== \n");
+        // System.out.println(" ========================== \n");
     }
 
     @BeforeEach
@@ -245,14 +245,14 @@ class VisitPlanetsTest {
         initialPositions.add(this.board.getPlayers().get(2).getCursor());
         initialPositions.add(this.board.getPlayers().get(3).getCursor());
 
-        System.out.println(initialPositions);
+        // System.out.println(initialPositions);
 
         // Player 1 (P1) - P1 plays correctly (he's not greedy nor nihilist)
         // --> P1 will: drop (2 BLUE) and take (1 YELLOW, 1 GREEN, 2 BLUE) from planet with planetID=0
         //     (i.e.: The 2 BLUE items are moved into another storage)
         chosenPlanetIndex = 0;
         cardStateJSON = this.visitPlanets.generateState();
-        System.out.println("\n ======== P1 BEFORE ========");
+        // System.out.println("\n ======== P1 BEFORE ========");
         printAvailableResources(this.resourceBank);
         visualizeVisitPlanetsCardStateParameters(cardStateJSON);
         visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
@@ -299,7 +299,7 @@ class VisitPlanetsTest {
         assertTrue(cardStateJSON.getIsCardUsable());
 
         // Visualize changes
-        System.out.println("\n ======== P1 AFTER ========");
+        // System.out.println("\n ======== P1 AFTER ========");
         printAvailableResources(this.resourceBank);
         visualizeVisitPlanetsCardStateParameters(cardStateJSON);
         visualizeAllStoragesCoordinatesAndContents(currPlayer);
@@ -343,7 +343,7 @@ class VisitPlanetsTest {
         //              (NOTE: 2 BLUE are reorganized, they're not dropped and thus nor deposited to the resourceBank)
         chosenPlanetIndex = 2;
         cardStateJSON = this.visitPlanets.generateState();
-        System.out.println("\n ======== P2 BEFORE ========");
+        // System.out.println("\n ======== P2 BEFORE ========");
         printAvailableResources(this.resourceBank);
         visualizeVisitPlanetsCardStateParameters(cardStateJSON);
         visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
@@ -386,7 +386,7 @@ class VisitPlanetsTest {
         }
         catch (IllegalStateException e) {
             // Overflow causes this
-            System.out.println("Storage Overflow CAUGHT");
+            // System.out.println("Storage Overflow CAUGHT");
         }
         catch (Exception e) {
             throw new Error("ERROR: Storage overflow wasn't caught");
@@ -406,7 +406,7 @@ class VisitPlanetsTest {
         assertTrue(cardStateJSON.getIsCardUsable());
 
         // Visualize changes
-        System.out.println("\n ======== P2 AFTER ========");
+        // System.out.println("\n ======== P2 AFTER ========");
         printAvailableResources(this.resourceBank);
         visualizeVisitPlanetsCardStateParameters(cardStateJSON);
         visualizeAllStoragesCoordinatesAndContents(currPlayer);
@@ -451,7 +451,7 @@ class VisitPlanetsTest {
         //     (HOWEVER: Even if he wants to drop/take stuff, he doesn't want to land, therefore his storage stays the same)
         chosenPlanetIndex = 3;
         cardStateJSON = this.visitPlanets.generateState();
-        System.out.println("\n ======== P3 BEFORE ========");
+        // System.out.println("\n ======== P3 BEFORE ========");
         printAvailableResources(this.resourceBank);
         visualizeVisitPlanetsCardStateParameters(cardStateJSON);
         visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
@@ -501,7 +501,7 @@ class VisitPlanetsTest {
         assertTrue(cardStateJSON.getIsCardUsable());
 
         // Visualize changes
-        System.out.println("\n ======== P3 AFTER ========");
+        // System.out.println("\n ======== P3 AFTER ========");
         printAvailableResources(this.resourceBank);
         visualizeVisitPlanetsCardStateParameters(cardStateJSON);
         visualizeAllStoragesCoordinatesAndContents(currPlayer);
@@ -540,7 +540,7 @@ class VisitPlanetsTest {
         // Player 4 (P4) - Chooses the last planet and fills his storage
         chosenPlanetIndex = 1;
         cardStateJSON = this.visitPlanets.generateState();
-        System.out.println("\n ======== P4 BEFORE ========");
+        // System.out.println("\n ======== P4 BEFORE ========");
         printAvailableResources(this.resourceBank);
         visualizeVisitPlanetsCardStateParameters(cardStateJSON);
         visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
@@ -590,7 +590,7 @@ class VisitPlanetsTest {
         }
 
         // Visualize changes
-        System.out.println("\n ======== P4 AFTER ========");
+        // System.out.println("\n ======== P4 AFTER ========");
         printAvailableResources(this.resourceBank);
         visualizeVisitPlanetsCardStateParameters(cardStateJSON);
         visualizeAllStoragesCoordinatesAndContents(currPlayer);
@@ -628,10 +628,10 @@ class VisitPlanetsTest {
         assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
         assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
 
-        System.out.println(this.visitPlanets.getBoard().getPlayers().get(0).getCursor());
-        System.out.println(this.visitPlanets.getBoard().getPlayers().get(1).getCursor());
-        System.out.println(this.visitPlanets.getBoard().getPlayers().get(2).getCursor());
-        System.out.println(this.visitPlanets.getBoard().getPlayers().get(3).getCursor());
+        // System.out.println(this.visitPlanets.getBoard().getPlayers().get(0).getCursor());
+        // System.out.println(this.visitPlanets.getBoard().getPlayers().get(1).getCursor());
+        // System.out.println(this.visitPlanets.getBoard().getPlayers().get(2).getCursor());
+        // System.out.println(this.visitPlanets.getBoard().getPlayers().get(3).getCursor());
 
         // (FINAL) Check that each player that decided to land got moved backwards
         // A list of the previous positions is needed to confront them with the new positions

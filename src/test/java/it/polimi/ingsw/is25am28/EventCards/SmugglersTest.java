@@ -131,10 +131,10 @@ class SmugglersTest {
 
         assertEquals(0, ship_1.getAvailableEnergy()); // Non avendo items, subisce -4 alle batterie -> -3 in quanto ne ha solo 3
 
-        System.out.println("p2 storage: ");
+        // System.out.println("p2 storage: ");
         for (Storage storage : ship_2.getStorageList()) {
             for(Item item : storage.getStoredItems()) {
-                System.out.println(item.toString());
+                // System.out.println(item.toString());
             }
         }
 
@@ -161,15 +161,6 @@ class SmugglersTest {
         assertEquals(3, ship_4.getAvailableEnergy()); // Rimossi 4 items e 0 batterie
         assertEquals(0, ship_4.getStorageList().get(0).getStoredItems().size());
         assertEquals(0, ship_4.getStorageList().get(1).getStoredItems().size());
-
-
-
-
-
-
-
-
-
     }
 
 
@@ -238,7 +229,6 @@ class SmugglersTest {
         Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
         //cannon_1.rotateLeft();
 
-
         cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
@@ -271,15 +261,12 @@ class SmugglersTest {
         itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
         itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
         itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
-
-
     }
 
     public void ship_init3(Ship ship) {
 
         // core + 3 cabine, 3 cannoni singoli, un vital(BROWN), una batteria da 3
         // 2 + 2 + 2 = umani + 1 alieno marrone
-
 
 
         //Cabin core = new Cabin(connectors, true);
@@ -334,9 +321,6 @@ class SmugglersTest {
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
-
-
-
     }
 
     public void ship_init4(Ship ship) {

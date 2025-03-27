@@ -1,6 +1,8 @@
 module it.polimi.ingsw.is25am {
     requires com.fasterxml.jackson.databind;
     opens it.polimi.ingsw.is25am28.ActionJSON to com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.datatype.jdk8;
+    requires com.fasterxml.jackson.core;
 
     requires javafx.controls;
     requires javafx.fxml;

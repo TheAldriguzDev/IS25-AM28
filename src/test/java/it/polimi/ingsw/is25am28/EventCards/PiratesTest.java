@@ -178,38 +178,38 @@ class PiratesTest {
         Player eliminatedPlayer = p1;
 
 
-        System.out.println("ship_1 before destruction");
+        // System.out.println("ship_1 before destruction");
         printGrid(ship_1);
         pirates.useCard(actionJSON1);
         assertFalse(pirates.hasFinished());
-        System.out.println("ship_1 after destruction");
+        // System.out.println("ship_1 after destruction");
         printGrid(ship_1);
 
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
 
-        System.out.println("ship_2 before destruction");
+        // System.out.println("ship_2 before destruction");
         printGrid(ship_2);
         assertFalse(pirates.hasFinished());
         pirates.useCard(actionJSON2);
-        System.out.println("ship_2 after destruction");
+        // System.out.println("ship_2 after destruction");
         printGrid(ship_2);
 
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
 
-        System.out.println("ship_3 before destruction");
+        // System.out.println("ship_3 before destruction");
         printGrid(ship_3);
         assertFalse(pirates.hasFinished());
         pirates.useCard(actionJSON3);
-        System.out.println("ship_3 after destruction");
+        // System.out.println("ship_3 after destruction");
         printGrid(ship_3);
 
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
 
-        System.out.println("ship_4 before destruction");
+        // System.out.println("ship_4 before destruction");
         printGrid(ship_4);
         assertFalse(pirates.hasFinished());
         pirates.useCard(actionJSON4);
-        System.out.println("ship_4 after destruction");
+        // System.out.println("ship_4 after destruction");
         printGrid(ship_4);
 
         assertTrue(pirates.hasFinished());
@@ -290,12 +290,12 @@ class PiratesTest {
             }
         }
         for (int i = 0; i < grid.length; i++) {
-            System.out.println();
+            // System.out.println();
             for (int j = 0; j < grid[i].length; j++) {
-                System.out.print(grid[i][j] + " ");
+                // System.out.print(grid[i][j] + " ");
             }
         }
-        System.out.println();
+        // System.out.println();
     }
 
     public void ship_init1(Ship ship) {
