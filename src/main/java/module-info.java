@@ -1,10 +1,12 @@
 module it.polimi.ingsw.is25am28 {
+    requires com.fasterxml.jackson.databind;
+    opens it.polimi.ingsw.is25am28.ActionJSON to com.fasterxml.jackson.databind;
+
     requires javafx.controls;
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
     requires json.simple;
-    requires com.fasterxml.jackson.databind;
     requires java.smartcardio;
 
     opens it.polimi.ingsw.is25am28 to javafx.fxml;

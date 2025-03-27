@@ -26,6 +26,8 @@ public abstract class Board {
 
     public void setSize(int size) { this.size = size; }
 
+    public Cell getHead() { return head; }
+
     /**
      * Returns the initials cells of the game where the players will be set when they finish their ship
      * */
@@ -52,7 +54,7 @@ public abstract class Board {
         return new ArrayList<>(eliminatedPlayer);
     }
 
-    protected int getLevel() { return level; }
+    public int getLevel() { return level; }
 
     protected void setLevel(int level) { this.level = level; }
 
