@@ -68,7 +68,7 @@ class ShipTest {
 
     // Initializing a normal level 2 ship to be used with all test cases
     Ship initCustomShip() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(1);
 
         int[] connectors = new int[4];
 
@@ -78,14 +78,13 @@ class ShipTest {
         }
 
         /*
-                  ==== Ship Configuration ====
+               ==== Ship Configuration (LEVEL 1) ====
             \       4       5       6       7       8
             4                       a
             5               b       c       d
             6       e       f       g       h       i
             7       j       k       l       m       n
-            8       o       p       q       r       s
-            9       t       u               v       w
+            8       o       p               q       r
 
             Total components = 23 (22 + 1 core)
 
@@ -98,24 +97,18 @@ class ShipTest {
             g = CORE (6, 6)
             h = specialSingleStorage1 at (6, 7)
             i = doubleCannon2 at (6, 8)
-            j = structural1 at (7, 4)
+            j = tripleBattery1 at (7, 4)
             k = normalDoubleStorage1 at (7, 5)
             l = purpleVital1 at (7, 6)
             m = cabin1 at (7, 7)
             n = brownVital1 at (7, 8)
-            o = shield2 at (8, 4)
-            p = normalTripleStorage2 at (8, 5)
-            q = tripleBattery1 at (8, 6)
-            r = cabin2 at (8, 7)
-            s = tripleBattery2 at (8, 8)
-            t = singleEngine1 at (9, 4)
-            u = singleEngine2 at (9, 5)
-            v = doubleEngine1 at (9, 7)
-            w = singleEngine3 at (9, 8)
+            o = singleEngine1 at (9, 4)
+            p = singleEngine2 at (9, 5)
+            q = doubleEngine1 at (9, 7)
+            r = singleEngine3 at (9, 8)
         */
 
         Battery tripleBattery1 = new Battery(connectors, 3);
-        Battery tripleBattery2 = new Battery(connectors, 3);
 
         Cannon singleCannon1 = new Cannon(connectors, 1);
         Cannon singleCannon2 = new Cannon(connectors, 1);
@@ -128,14 +121,11 @@ class ShipTest {
         Engine doubleEngine1 = new Engine(connectors, 2);
 
         Cabin cabin1 = new Cabin(connectors, false);
-        Cabin cabin2 = new Cabin(connectors, false);
 
         Shield shield1 = new Shield(connectors);
-        Shield shield2 = new Shield(connectors);
 
         Storage normalDoubleStorage1 = new Storage(connectors, 2, false);
         Storage normalTripleStorage1 = new Storage(connectors, 3, false);
-        Storage normalTripleStorage2 = new Storage(connectors, 3, false);
         Storage specialSingleStorage1 = new Storage(connectors, 1, true);
         Storage specialDoubleStorage1 = new Storage(connectors, 2, true);
 
@@ -153,20 +143,15 @@ class ShipTest {
         ship.addComponent(normalTripleStorage1, 6, 5);
         ship.addComponent(specialSingleStorage1, 6, 7);
         ship.addComponent(doubleCannon2, 6, 8);
-        ship.addComponent(structural1, 7, 4);
+        ship.addComponent(tripleBattery1, 7, 4);
         ship.addComponent(normalDoubleStorage1, 7, 5);
         ship.addComponent(purpleVital1, 7, 6);
         ship.addComponent(cabin1, 7, 7);
         ship.addComponent(brownVital1, 7, 8);
-        ship.addComponent(shield2, 8, 4);
-        ship.addComponent(normalTripleStorage2, 8, 5);
-        ship.addComponent(tripleBattery1, 8, 6);
-        ship.addComponent(cabin2, 8, 7);
-        ship.addComponent(tripleBattery2, 8, 8);
-        ship.addComponent(singleEngine1, 9, 4);
-        ship.addComponent(singleEngine2, 9, 5);
-        ship.addComponent(doubleEngine1, 9, 7);
-        ship.addComponent(singleEngine3, 9, 8);
+        ship.addComponent(singleEngine1, 8, 4);
+        ship.addComponent(singleEngine2, 8, 5);
+        ship.addComponent(doubleEngine1, 8, 7);
+        ship.addComponent(singleEngine3, 8, 8);
 
         System.out.println("==== SHIP CONFIGURATION ====");
         printShipGrid(ship);
@@ -179,7 +164,7 @@ class ShipTest {
 
     @Test
     void generateComponentSubLists() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -246,7 +231,7 @@ class ShipTest {
 
     @Test
     void getAllDoubleComponents() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -307,7 +292,7 @@ class ShipTest {
 
     @Test
     void getAvailableEnergyBeforeAndAfterConsumption() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -411,7 +396,7 @@ class ShipTest {
 
     @Test
     void getEnginePowerAndFirePowerInDifferentScenarios() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -455,7 +440,7 @@ class ShipTest {
 
     @Test
     void getExposedConnectorAmount() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -505,7 +490,7 @@ class ShipTest {
 
     @Test
     void getAllItemsAndTheirValue() {
-        Ship ship = new Ship(1);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -566,7 +551,7 @@ class ShipTest {
 
     @Test
     void getWrongComponents() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         // [3, 3, 3, 3]
         int[] connectors = new int[4];
@@ -681,7 +666,7 @@ class ShipTest {
 
     @Test
     void getGridRow() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -746,7 +731,7 @@ class ShipTest {
 
     @Test
     void getGridColumn() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -812,7 +797,7 @@ class ShipTest {
 
     @Test
     void validateShip() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         assertTrue(ship.validateShip());
 
@@ -823,7 +808,7 @@ class ShipTest {
 
     @Test
     void traverse() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
         int i;
@@ -891,8 +876,78 @@ class ShipTest {
     }
 
     @Test
+    void traverseInTheCorrectOrder() {
+        Ship ship = new Ship(0);
+
+        int[] connectors = new int[4];
+
+        for (int i = 0; i < 4; i++) {
+            connectors[i] = THREE_PIPES.ordinal();
+        }
+
+        Battery battery = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 2);
+        Battery battery3 = new Battery(connectors, 3);
+        Cabin cabin = new Cabin(connectors, false);
+        Cannon cannon = new Cannon(connectors, 1);
+        Engine engine = new Engine(connectors, 1);
+        Engine engine2 = new Engine( connectors, 2);
+        Shield shield = new Shield( connectors);
+        Storage storage = new Storage(connectors, 3, false);
+        Structural structural = new Structural(connectors);
+        Vital vital = new Vital(connectors, 0);
+
+        // Adding the components created above
+        ship.addComponent(battery, 6, 7);
+        ship.addComponent(battery2, 4, 4);
+        ship.addComponent(battery3, 5, 5);
+        ship.addComponent(cabin, 5, 6);
+        ship.addComponent(cannon, 8, 4);
+        ship.addComponent(engine, 7, 6);
+        ship.addComponent(engine2, 7, 7);
+        ship.addComponent(shield, 6, 5);
+        ship.addComponent(storage, 4, 5);
+        ship.addComponent(structural, 3, 2);
+        ship.addComponent(vital, 2, 2);
+
+        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
+        printShipGrid(ship);
+
+        List<Component> actualVisitingOrder = new ArrayList<Component>();
+        List<Component> expectedVisitingOrder = new ArrayList<Component>();
+
+        // Layer 0
+        expectedVisitingOrder.add(ship.getComponent(6, 6));
+
+        // Layer 1
+        expectedVisitingOrder.add(cabin);
+        expectedVisitingOrder.add(battery);
+        expectedVisitingOrder.add(engine);
+        expectedVisitingOrder.add(shield);
+
+        // Layer 2
+        expectedVisitingOrder.add(battery3);
+        expectedVisitingOrder.add(engine2);
+
+        // Layer 3
+        expectedVisitingOrder.add(storage);
+
+        // Layer 4
+        expectedVisitingOrder.add(battery2);
+
+        ship.traverse(actualVisitingOrder::add);
+
+        assertEquals(expectedVisitingOrder.size(), actualVisitingOrder.size());
+
+        for (int i = 0; i < actualVisitingOrder.size(); i++) {
+            System.out.println("Checking index " + i);
+            assertEquals(expectedVisitingOrder.get(i), actualVisitingOrder.get(i));
+        }
+    }
+
+    @Test
     void getNearestComponents() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -951,7 +1006,7 @@ class ShipTest {
 
     @Test
     void addComponentThenGetComponent() {
-        Ship ship = new Ship(2);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -1044,7 +1099,7 @@ class ShipTest {
 
     @Test
     void removeComponent() {
-        Ship ship = new Ship(3);
+        Ship ship = new Ship(0);
 
         int[] connectors = new int[4];
 
@@ -1053,7 +1108,8 @@ class ShipTest {
         }
 
         Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
+        Battery battery2 = new Battery(connectors, 2);
+        Battery battery3 = new Battery(connectors, 3);
         Cabin cabin = new Cabin(connectors, false);
         Cannon cannon = new Cannon(connectors, 1);
         Engine engine = new Engine(connectors, 1);
@@ -1065,6 +1121,8 @@ class ShipTest {
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
+        ship.addComponent(battery2, 4, 4);
+        ship.addComponent(battery3, 5, 5);
         ship.addComponent(cabin, 5, 6);
         ship.addComponent(cannon, 8, 4);
         ship.addComponent(engine, 7, 6);
@@ -1100,12 +1158,60 @@ class ShipTest {
             System.out.println(e.getMessage());
         }
 
+        ship.recreateShipGrid();
+        List<Component> removed;
+
+        System.out.println("AFTER REMOVING ILLEGAL COMPONENTS");
+        printShipGrid(ship);
+
         // Removing the vital
-        ship.removeComponent(2, 2);
+        removed = ship.removeComponent(2, 2);
         assertNull(ship.getComponent(2, 2));
+        assertEquals(0, removed.size());
 
         // Removing the cannon
-        ship.removeComponent(8, 4);
+        removed = ship.removeComponent(8, 4);
         assertNull(ship.getComponent(8, 4));
+        assertEquals(0, removed.size());
+
+        // Removing battery at (5, 5), which should detach the storage at (4, 5) and
+        // the battery at (4, 4), thus these 3 components should be present in the removed list
+        List<Component> expectedRemoved = new ArrayList<>();
+        expectedRemoved.add(storage);
+        expectedRemoved.add(battery2);
+        expectedRemoved.add(battery3);
+
+        removed = ship.removeComponent(5, 5);
+
+        System.out.println("AFTER REMOVING HANGING BRANCH");
+        printShipGrid(ship);
+
+        assertEquals(expectedRemoved.size(), removed.size());
+        assertTrue(removed.containsAll(expectedRemoved));
+
+        // Trying to remove a single component that exists
+        // This list should only contain battery
+        expectedRemoved = new ArrayList<>();
+        expectedRemoved.add(battery);
+
+        removed = ship.removeComponent(6, 7);
+
+        printShipGrid(ship);
+
+        assertEquals(expectedRemoved.size(), removed.size());
+        assertTrue(removed.containsAll(expectedRemoved));
+
+        // Trying to remove a single component that exists
+        // This list should contain engine and engine2 (engine2 was on a hanging branch)
+        expectedRemoved = new ArrayList<>();
+        expectedRemoved.add(engine);
+        expectedRemoved.add(engine2);
+
+        removed = ship.removeComponent(7, 6);
+
+        printShipGrid(ship);
+
+        assertEquals(expectedRemoved.size(), removed.size());
+        assertTrue(removed.containsAll(expectedRemoved));
     }
 }

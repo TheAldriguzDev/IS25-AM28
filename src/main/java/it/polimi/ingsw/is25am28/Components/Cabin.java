@@ -11,11 +11,6 @@ public final class Cabin extends Component {
             super(connectors);
             this.isCore = isCore;
             this.inhabitants = new ArrayList<>();
-
-            if (isCore) {
-                  this.inhabitants.add(new Lifeform(LifeformType.ASTRONAUT));
-                  this.inhabitants.add(new Lifeform(LifeformType.ASTRONAUT));
-            }
       }
 
       public boolean isCore() {
@@ -47,9 +42,5 @@ public final class Cabin extends Component {
 
       public void removeInhabitant(Lifeform lifeform) {
             inhabitants.remove(lifeform);
-      }
-
-      public boolean check( Component[] nearest ){
-            return false;
       }
 }
