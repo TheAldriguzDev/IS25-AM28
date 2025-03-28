@@ -1369,4 +1369,93 @@ class ShipTest {
         assertEquals(expectedRemoved.size(), removed.size());
         assertTrue(removed.containsAll(expectedRemoved));
     }
+
+    @Test
+    void addingBothAliensToTheShip() {
+        Map<Integer, Pair<Integer, Integer>> chosenAliens;
+        Ship ship;
+
+        int[] connectors = new int[4];
+        Arrays.fill(connectors, THREE_PIPES.ordinal());
+
+        // (1) - Adding both aliens
+        ship = initCustomShip();
+        ship.removeComponent(6, 8);
+        ship.addComponent(new Cabin(connectors, false), 6, 8);  // Adding another cabin to the brown vital unit
+        ship.generateComponentSubLists();
+
+        chosenAliens = new HashMap<>();
+        chosenAliens.put(1, new Pair<Integer, Integer>(7, 7));
+        chosenAliens.put(2, new Pair<Integer, Integer>(6, 8));
+
+        ShipJSON shipJSON = new ShipJSON("p1", chosenAliens);
+        ship.setChosenAliensForEligibleCabins(shipJSON);
+
+        // Expecting to have 2 aliens only onboard of the ship
+        assertEquals(2, ship.getAllLifeforms().stream().filter(l -> (l.getLifeformType() == LifeformType.BROWN_ALIEN || l.getLifeformType() == LifeformType.PURPLE_ALIEN)).toList().size());
+    }
+
+    @Test
+    void addingTheWrongAlienToAnAlienLifeEligibleCabin() {
+        Map<Integer, Pair<Integer, Integer>> chosenAliens;
+        Ship ship;
+
+        int[] connectors = new int[4];
+        Arrays.fill(connectors, THREE_PIPES.ordinal());
+
+        // Adding purpleAlien to a brownAlien-eligible cabin (the one @ coords (6, 8))
+        ship = initCustomShip();
+        ship.removeComponent(6, 8);
+        ship.addComponent(new Cabin(connectors, false), 6, 8);  // Adding another cabin to the brown vital unit
+        ship.generateComponentSubLists();
+
+        chosenAliens = new HashMap<>();
+        chosenAliens.put(1, new Pair<Integer, Integer>(6, 8));
+
+        ShipJSON shipJSON = new ShipJSON("p1", chosenAliens);
+
+        try {
+            ship.setChosenAliensForEligibleCabins(shipJSON);
+        }
+        catch (IllegalArgumentException e) {
+            // Wrong behavior exception was caught correctly
+        }
+        catch (Exception e) {
+            fail("Exception not thrown");
+        }
+    }
+
+    @Test
+    void destroyingACabinWithVitalUnitsAsNeighboursDestroysAlsoTheVitalUnits() {
+        Ship ship = initCustomShip();
+
+        switch (ship.getComponent(7, 6)) {
+            case Vital vital -> {
+                // Check if it's a Purple Vital Unit
+                assertEquals(VitalType.PURPLE_VITAL, vital.getVitalType());
+            }
+            case null, default -> fail("Ship was wrongly instantiated");
+        }
+
+        switch (ship.getComponent(7, 7)) {
+            case Cabin cabin -> {
+                // Check if it's a cabin
+            }
+            case null, default -> fail("Ship was wrongly instantiated");
+        }
+
+        switch (ship.getComponent(7, 8)) {
+            case Vital vital -> {
+                // Check if it's a Brown Vital Unit
+                assertEquals(VitalType.BROWN_VITAL, vital.getVitalType());
+            }
+            case null, default -> fail("Ship was wrongly instantiated");
+        }
+
+        // Removing the cabin to test if both vital units are destroyed as well
+        ship.removeComponent(7, 7);
+
+        assertNull(ship.getComponent(7, 6));
+        assertNull(ship.getComponent(7, 8));
+    }
 }

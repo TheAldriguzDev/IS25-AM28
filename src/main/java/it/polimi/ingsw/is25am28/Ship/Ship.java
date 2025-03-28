@@ -151,6 +151,8 @@ public class Ship {
     private final int grid_cols = 12;
     private Component[][] components;
     private final Cabin core;
+    private Cabin purpleAlienPosition;
+    private Cabin brownAlienPosition;
 
     // All components are sorted into their matching category,
     // represented by one of the following sub-lists
@@ -167,17 +169,28 @@ public class Ship {
         this.difficultyLevel = difficultyLevel;
         this.components = initGrid(this.grid_rows, this.grid_cols);
 
-        // TODO: Change from int[] to List<Integer> since Andrea changed the type
-        //       of the Connector collection to give to the Component constructor
+        // TODO: Remove the following code and uncomment the part below after the
+        //       updated component constructors are pushed onto the development branch
         // Initializing the connectors of the core cabin
         int[] coreConnectors = new int[4];
         coreConnectors[0] = THREE_PIPES.ordinal();
         coreConnectors[1] = THREE_PIPES.ordinal();
         coreConnectors[2] = THREE_PIPES.ordinal();
         coreConnectors[3] = THREE_PIPES.ordinal();
+        /*
+        // Initializing the connectors of the core cabin
+        List<Integer> coreConnectors = new ArrayList<Integer>();
+        for (int i = 0; i < 4; i++) {
+            coreConnectors.add(THREE_PIPES.ordinal());
+        }
+        */
 
         // Creating the ship's core cabin
         this.core = new Cabin(coreConnectors,true);
+
+        // No aliens are present at the beginning
+        this.purpleAlienPosition = null;
+        this.brownAlienPosition = null;
 
         // Adding the core component as the first component in the ship's grid
         this.addComponent(this.core, this.grid_rows/2, this.grid_cols/2);
@@ -204,6 +217,13 @@ public class Ship {
      */
     public int getGridCols() {
         return this.grid_cols;
+    }
+
+    /**
+     * @return The ship's core cabin object
+     */
+    public Cabin getCore() {
+        return this.core;
     }
 
     /**
@@ -281,7 +301,6 @@ public class Ship {
      * @return The list of Cabins present on the ship
      */
     public List<Cabin> getCabinList() { return new ArrayList<Cabin>(this.cabinList); }
-
 
     /**
      * @return The list of Shields present on the ship
@@ -373,8 +392,23 @@ public class Ship {
                 .toList();
     }
 
-    // TODO: Test this feature
-    // TODO: Implement check that the ship can only have AT MOST 1 alien per color
+    /**
+     * @param alienType The type of the alien whose cabin coordinates you want to get
+     * @return The coordinates of the selected alien
+     * @throws IllegalArgumentException If the given alien type is neither <code>BROWN_ALIEN</code> nor <code>PURPLE_ALIEN</code>
+     */
+    public Cabin getAlienPosition(LifeformType alienType) throws IllegalArgumentException {
+        if (alienType == LifeformType.PURPLE_ALIEN) {
+            return this.purpleAlienPosition;
+        }
+        else if (alienType == LifeformType.BROWN_ALIEN) {
+            return this.brownAlienPosition;
+        }
+        else {
+            throw new IllegalArgumentException("ERROR: Given LifeformType is not of an alien");
+        }
+    }
+
     /**
      * Sets the cabins at their respective coordinates (row, col) to the
      * chosen alien type that they are matched with in the map inside data
@@ -383,10 +417,12 @@ public class Ship {
      *             Each cabin is distinguished by a set of coordinates (row, col) found inside this parameter
      *
      * @throws IllegalArgumentException If the given data is badly formatted when compared to the expected ShipJSON formatting
+     * @throws TooManyAliensException If the player tries to have either more than 2 aliens for his ship or more than 1 alien for each color
      */
-    public void setChosenAliensForEligibleCabins(ActionJSON data) throws IllegalArgumentException {
-        ShipJSON shipJSON;
+    public void setChosenAliensForEligibleCabins(ActionJSON data) throws IllegalArgumentException, TooManyAliensException {
         Map<Integer, Pair<Integer, Integer>> chosenAliens;
+        boolean vitalFound;
+        ShipJSON shipJSON;
 
         try {
             shipJSON = (ShipJSON) data;
@@ -405,11 +441,61 @@ public class Ship {
                         switch (alienType) {
                             case 1 -> {
                                 // LifeformType.PURPLE_ALIEN.ordinal() == 1
-                                cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
+                                if (this.purpleAlienPosition == null) {
+                                    Component[] neighbours = this.getNearestComponents(cabin);
+                                    vitalFound = false;
+
+                                    for (Component neighbour : neighbours) {
+                                        switch (neighbour) {
+                                            case Vital vital -> {
+                                                if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
+                                                    vitalFound = true;
+                                                }
+                                            }
+                                            case null, default -> {}
+                                        }
+                                    }
+
+                                    if (vitalFound) {
+                                        cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
+                                        this.purpleAlienPosition = cabin;
+                                    }
+                                    else {
+                                        throw new IllegalArgumentException("ERROR: Cabin cannot support purple alien life (no purple vital units as neighbours)");
+                                    }
+                                }
+                                else {
+                                    throw new TooManyAliensException("ERROR: Cannot have more than 1 purple alien onboard");
+                                }
                             }
                             case 2 -> {
                                 // LifeformType.BROWN_ALIEN.ordinal() == 2
-                                cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+                                if (this.brownAlienPosition == null) {
+                                    Component[] neighbours = this.getNearestComponents(cabin);
+                                    vitalFound = false;
+
+                                    for (Component neighbour : neighbours) {
+                                        switch (neighbour) {
+                                            case Vital vital -> {
+                                                if (vital.getVitalType() == VitalType.BROWN_VITAL) {
+                                                    vitalFound = true;
+                                                }
+                                            }
+                                            case null, default -> {}
+                                        }
+                                    }
+
+                                    if (vitalFound) {
+                                        cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+                                        this.brownAlienPosition = cabin;
+                                    }
+                                    else {
+                                        throw new IllegalArgumentException("ERROR: Cabin cannot support brown alien life (no brown vital units as neighbours)");
+                                    }
+                                }
+                                else {
+                                    throw new TooManyAliensException("ERROR: Cannot have more than 1 brown alien onboard");
+                                }
                             }
                             default -> throw new IllegalStateException("ERROR: Given alien type is not valid");
                         }
@@ -935,8 +1021,6 @@ public class Ship {
         this.components[i][j] = null;
     }
 
-    // TODO: Implement the fact that if a cabin is destroyed, and has a vital unit as its neighbour,
-    //       then they also get destroyed
     /**
      * Removes the component at coordinates (i, j) from the ship's grid.<br>
      * If that component, when removed, divides the ship into 2 or more branches, then the
@@ -978,6 +1062,24 @@ public class Ship {
             }
         }
 
+        switch (this.components[i][j]) {
+            case Cabin cabin -> {
+                Component[] neighbours = this.getNearestComponents(cabin);
+
+                for (Component neighbour : neighbours) {
+                    switch (neighbour) {
+                        case Vital vital -> {
+                            // Destroying any vital units that are direct neighbours
+                            // of a cabin that will also be destroyed
+                            this.components[vital.getPosition()[0]][vital.getPosition()[1]] = null;
+                        }
+                        case null, default -> {}
+                    }
+                }
+            }
+            case null, default -> {}
+        }
+
         // Removing the component and regenerating the new ship
         this.components[i][j] = null;
         this.recreateShipGrid();
@@ -1016,6 +1118,26 @@ public class Ship {
         return this.components[i][j];
     }
 
-    // TODO: Implement generateState() method to show all the components onboard the ship formatted into JSON
-    //       (Each component has a toMap() method that converts the component into JSONObject (i.e.: a map))
+    /**
+     * @return A description of the state of the ship
+     */
+    public List<Map<String, Object>> generateState() {
+        List<Map<String, Object>> shipState = new ArrayList<Map<String, Object>>();
+        Map<String, Object> componentDescriptor;
+        int row, col;
+
+        for (row = 0; row < this.grid_rows; row++) {
+            for (col = 0; col < this.grid_cols; col++) {
+                componentDescriptor = new HashMap<String, Object>();
+
+                componentDescriptor.put("row", row);
+                componentDescriptor.put("col", col);
+                componentDescriptor.put("tile", this.components[row][col]);
+
+                shipState.add(componentDescriptor);
+            }
+        }
+
+        return shipState;
+    }
 }
