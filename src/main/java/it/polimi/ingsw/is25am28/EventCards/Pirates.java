@@ -134,7 +134,7 @@ public class Pirates extends EventCard {
                                                 player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                             } catch (CoreDeletionAttemptException e) {
                                                 getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
-                                                System.out.println("Eliminated " + player.getNickname());
+                                                // System.out.println("Eliminated " + player.getNickname());
                                             }
                                             //System.out.println("(U)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
                                             break;

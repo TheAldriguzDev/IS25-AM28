@@ -69,6 +69,7 @@ public class ResourceBank {
             throw new IllegalStateException("The given component i: " + i + " j: " + j + " is not a valid Storage component");
         }
 
+        /*
         // Check if the given storage component has enough space
         if (storage.availableSpace() <= 0) {
             throw new IllegalStateException("The given storage component i: " + i + " j: " + j + " has no more space");
@@ -85,6 +86,23 @@ public class ResourceBank {
 
             storage.storeItem( new Item(color) );
             this.removeResourceFromBank(color);
+        }
+        */
+
+        // TODO: This modification was done in accordance with Matteo
+        //       (TIMESTAMP: 27-03-2025, 09:22 @ GMT+2)
+        // If the given storage component has enough space, then insert the given item
+        if (storage.availableSpace() > 0) {
+            // Check if the given storage component can store the given resource
+            if (color.equals(ItemColor.RED) && !storage.isSpecialStorage()) {
+                throw new IllegalStateException("The given storage component cannot store RED resources");
+            }
+
+            // Apply the action if the player is not eliminated and the bank has at least one resource of the required type
+            if ( !player.isEliminated() && this.resources.get(color) > 0) {
+                storage.storeItem( new Item(color) );
+                this.removeResourceFromBank(color);
+            }
         }
 
         return this;

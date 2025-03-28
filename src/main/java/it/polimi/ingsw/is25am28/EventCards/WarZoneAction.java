@@ -5,13 +5,22 @@ public enum WarZoneAction {
     ENGINEPOWER,
     HUMANS;
 
+    public static WarZoneAction fromInteger(Integer ordinal) throws IllegalArgumentException {
+        return switch (ordinal) {
+            case 0 -> FIREPOWER;
+            case 1 -> ENGINEPOWER;
+            case 2 -> HUMANS;
+            default -> throw new IllegalArgumentException("Unknown action from ordinal: " + ordinal);
+        };
+    }
+
     @Override
     public String toString() {
-        switch (this) {
-            case FIREPOWER: return "Firepower";
-            case ENGINEPOWER: return "Enginepower";
-            case HUMANS: return "Humans";
-            default: throw new IllegalArgumentException("Unknown action: " + this);
-        }
+        return switch (this) {
+            case FIREPOWER -> "Firepower";
+            case ENGINEPOWER -> "Enginepower";
+            case HUMANS -> "Humans";
+            default -> throw new IllegalArgumentException("Unknown action: " + this);
+        };
     }
 }

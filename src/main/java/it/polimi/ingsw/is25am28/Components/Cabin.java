@@ -26,7 +26,7 @@ public final class Cabin extends Component {
             return inhabitants;
       }
 
-      private int getAvailableSpace() {
+      public int getAvailableSpace() {
             return 2 - inhabitants
                         .stream()
                         .mapToInt(Lifeform::getRequiredSpace)

@@ -1,10 +1,13 @@
 package it.polimi.ingsw.is25am28.Ship;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.ShipJSON;
 import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -16,14 +19,9 @@ import java.util.stream.Collectors;
 import static it.polimi.ingsw.is25am28.Connector.*;
 
 public class Ship {
-    private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
     private final static Map<Integer, int[][]> shipProfiles = new HashMap<>();
 
     static {
-        shipDimensions.put(1, new Pair<>(5, 5));
-        shipDimensions.put(2, new Pair<>(5, 7));
-        shipDimensions.put(3, new Pair<>(6, 9));
-
         int[][] matrix;
         int[][] levelOneMatrix;
         int row, col;
@@ -169,6 +167,8 @@ public class Ship {
         this.difficultyLevel = difficultyLevel;
         this.components = initGrid(this.grid_rows, this.grid_cols);
 
+        // TODO: Change from int[] to List<Integer> since Andrea changed the type
+        //       of the Connector collection to give to the Component constructor
         // Initializing the connectors of the core cabin
         int[] coreConnectors = new int[4];
         coreConnectors[0] = THREE_PIPES.ordinal();
@@ -183,13 +183,27 @@ public class Ship {
         this.addComponent(this.core, this.grid_rows/2, this.grid_cols/2);
 
         // Instantiating each component list as an empty list
-        batteryList = new ArrayList<Battery>();
-        cabinList = new ArrayList<Cabin>();
-        cannonList = new ArrayList<Cannon>();
-        engineList = new ArrayList<Engine>();
-        shieldList = new ArrayList<Shield>();
-        storageList = new ArrayList<Storage>();
-        vitalList = new ArrayList<Vital>();
+        this.batteryList = new ArrayList<Battery>();
+        this.cabinList = new ArrayList<Cabin>();
+        this.cannonList = new ArrayList<Cannon>();
+        this.engineList = new ArrayList<Engine>();
+        this.shieldList = new ArrayList<Shield>();
+        this.storageList = new ArrayList<Storage>();
+        this.vitalList = new ArrayList<Vital>();
+    }
+
+    /**
+     * @return The ship's grid amount of rows
+     */
+    public int getGridRows() {
+        return this.grid_rows;
+    }
+
+    /**
+     * @return The ship's grid amount of columns
+     */
+    public int getGridCols() {
+        return this.grid_cols;
     }
 
     /**
@@ -200,25 +214,34 @@ public class Ship {
      *  otherwise it will iterate again over the ship's grid and generate the same lists.
      */
     public void generateComponentSubLists() throws IllegalStateException {
+        // Clearing all the sub-lists
+        this.batteryList.clear();
+        this.cabinList.clear();
+        this.cannonList.clear();
+        this.engineList.clear();
+        this.shieldList.clear();
+        this.storageList.clear();
+        this.vitalList.clear();
+
         traverse(
             (Component c) -> {
                 switch (c) {
                     case Battery battery:       this.batteryList.add(battery);
-                                                break;
+                        break;
                     case Cabin cabin:           this.cabinList.add(cabin);
-                                                break;
+                        break;
                     case Cannon cannon:         this.cannonList.add(cannon);
-                                                break;
+                        break;
                     case Engine engine:         this.engineList.add(engine);
-                                                break;
+                        break;
                     case Shield shield:         this.shieldList.add(shield);
-                                                break;
+                        break;
                     case Storage storage:       this.storageList.add(storage);
-                                                break;
+                        break;
                     case Vital vital:           this.vitalList.add(vital);
-                                                break;
+                        break;
                     case Structural structural: // Structural components are not sorted
-                                                break;
+                        break;
                     default:
                         throw new IllegalStateException("Unexpected class type " + c.toString());
                 }
@@ -235,14 +258,6 @@ public class Ship {
     }
 
     /**
-     * @return A pair of integers that represent the dimensions (row, col) of the ship based on the given difficulty
-     *         (NOTE: It's not the same as the grid's dimensions)
-     */
-    public Pair<Integer, Integer> getShipDimensionsByDifficulty(int difficultyLevel) {
-        return Ship.shipDimensions.get(difficultyLevel);
-    }
-
-    /**
      * @return The ship's difficulty level
      */
     public int getDifficultyLevel() { return this.difficultyLevel; }
@@ -250,54 +265,59 @@ public class Ship {
     /**
      * @return The list of Batteries present on the ship
      */
-    public List<Battery> getBatteryList() { return this.batteryList; }
-
-    /**
-     * @return The list of Cabins present on the ship
-     */
-    public List<Cabin> getCabinList() { return this.cabinList; }
+    public List<Battery> getBatteryList() { return new ArrayList<Battery>(this.batteryList); }
 
     /**
      * @return The list of Cannons present on the ship
      */
-    public List<Cannon> getCannonList() { return this.cannonList; }
+    public List<Cannon> getCannonList() { return new ArrayList<Cannon>(this.cannonList); }
 
     /**
      * @return The list of Engines present on the ship
      */
-    public List<Engine> getEngineList() { return this.engineList; }
+    public List<Engine> getEngineList() { return new ArrayList<Engine>(this.engineList); }
+
+    /**
+     * @return The list of Cabins present on the ship
+     */
+    public List<Cabin> getCabinList() { return new ArrayList<Cabin>(this.cabinList); }
+
 
     /**
      * @return The list of Shields present on the ship
      */
-    public List<Shield> getShieldList() { return this.shieldList; }
+    public List<Shield> getShieldList() { return new ArrayList<Shield>(this.shieldList); }
 
     /**
      * @return The list of Storage units present on the ship
      */
-    public List<Storage> getStorageList() { return this.storageList; }
+    public List<Storage> getStorageList() { return new ArrayList<Storage>(this.storageList); }
 
     /**
      * @return The list of Vital units present on the ship
      */
-    public List<Vital> getVitalList() { return this.vitalList; }
+    public List<Vital> getVitalList() { return new ArrayList<Vital>(this.vitalList); }
 
     /**
      * @return The list of DoubleEngines present on the ship
      */
     public List<Engine> getDoubleEngines() {
-        return this.engineList.stream()
+        return new ArrayList<Engine>(
+            this.engineList.stream()
                 .filter(e -> e.getSpeed() == 2)
-                .toList();
+                .toList()
+        );
     }
 
     /**
      * @return The list of DoubleCannons present on the ship
      */
     public List<Cannon> getDoubleCannons() {
-        return this.cannonList.stream()
+        return new ArrayList<Cannon>(
+            this.cannonList.stream()
                 .filter(c -> c.getFirePower() == 2)
-                .toList();
+                .toList()
+        );
     }
 
     /**
@@ -353,6 +373,59 @@ public class Ship {
                 .toList();
     }
 
+    // TODO: Test this feature
+    // TODO: Implement check that the ship can only have AT MOST 1 alien per color
+    /**
+     * Sets the cabins at their respective coordinates (row, col) to the
+     * chosen alien type that they are matched with in the map inside data
+     *
+     * @param data The ShipJSON containing the mapping between an alien type and which cabin the user wants to put it in. <br>
+     *             Each cabin is distinguished by a set of coordinates (row, col) found inside this parameter
+     *
+     * @throws IllegalArgumentException If the given data is badly formatted when compared to the expected ShipJSON formatting
+     */
+    public void setChosenAliensForEligibleCabins(ActionJSON data) throws IllegalArgumentException {
+        ShipJSON shipJSON;
+        Map<Integer, Pair<Integer, Integer>> chosenAliens;
+
+        try {
+            shipJSON = (ShipJSON) data;
+            chosenAliens = shipJSON.getChosenAliens();
+
+            for (Map.Entry<Integer, Pair<Integer, Integer>> entry : chosenAliens.entrySet()) {
+                int alienType = entry.getKey();
+
+                Component component = this.getComponent(
+                    entry.getValue().getKey(),
+                    entry.getValue().getValue()
+                );
+
+                switch (component) {
+                    case Cabin cabin -> {
+                        switch (alienType) {
+                            case 1 -> {
+                                // LifeformType.PURPLE_ALIEN.ordinal() == 1
+                                cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
+                            }
+                            case 2 -> {
+                                // LifeformType.BROWN_ALIEN.ordinal() == 2
+                                cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+                            }
+                            default -> throw new IllegalStateException("ERROR: Given alien type is not valid");
+                        }
+                    }
+                    case null, default -> throw new IllegalArgumentException("ERROR: Component is not a cabin");
+                }
+            }
+        }
+        catch (OutOfGridException e) {
+            System.out.printf("[Ship::setChosenAliensForEligibleCabins] " + e.getMessage());
+        }
+        catch (Exception e) {
+            throw new IllegalArgumentException("[Ship::setChosenAliensForEligibleCabins] " + e.getMessage());
+        }
+    }
+
     /**
      * Returns the real firepower by considering the baseline firepower (given by single cannons) and
      * the additional firepower (given by activating the given amount of double cannons)<br>
@@ -391,6 +464,13 @@ public class Ship {
                     .mapToDouble(Cannon::getFirePower)
                     .sum();
 
+        // Calculating the contribution of purple aliens onboard the ship
+        // to the overall firepower
+        int purpleAlienFirepowerAddon = this.cabinList.stream()
+                .flatMap((Cabin c) -> (c.getInhabitants().stream()))
+                .mapToInt(Lifeform::getAttackBoost)
+                .sum();
+
         if (doubleCannonAmount > 0) {
             if (doubleCannonsToActivate > doubleCannonAmount) {
                 // If the requested double cannons to activate surpass the
@@ -413,7 +493,7 @@ public class Ship {
             totalFirePower = singleCannonsFirePower;
         }
 
-        return totalFirePower;
+        return totalFirePower + purpleAlienFirepowerAddon;
     }
 
     /**
@@ -454,6 +534,13 @@ public class Ship {
                     .mapToDouble(Engine::getSpeed)
                     .sum();
 
+        // Calculating the contribution of brown aliens onboard the ship
+        // to the overall engine power
+        int brownAlienEnginePowerAddon = this.cabinList.stream()
+                .flatMap((Cabin c) -> (c.getInhabitants().stream()))
+                .mapToInt(Lifeform::getPowerBoost)
+                .sum();
+
         if (doubleEngineAmount > 0) {
             if (doubleEnginesToActivate > doubleEngineAmount) {
                 // If the requested double engines to activate surpass the
@@ -476,7 +563,47 @@ public class Ship {
             totalEnginePower = singleEnginesEnginePower;
         }
 
-        return totalEnginePower;
+        return totalEnginePower + brownAlienEnginePowerAddon;
+    }
+
+    /**
+     * @return The number of exposed connectors on the entire ship
+     */
+    public int getExposedConnectorAmount(){
+        AtomicInteger exposedConnectors = new AtomicInteger();
+
+        traverse(
+            (Component component) -> {
+                Component[] neighbours = this.getNearestComponents(component);
+                boolean sideIsZeroPipes = false;
+
+                for (int i = 0; i < neighbours.length; i++) {
+                    switch (i) {
+                        case 0 -> { sideIsZeroPipes = (component.getTopSide() == ZERO_PIPES); }     // Top
+                        case 1 -> { sideIsZeroPipes = (component.getRightSide() == ZERO_PIPES); }   // Right
+                        case 2 -> { sideIsZeroPipes = (component.getBottomSide() == ZERO_PIPES); }  // Bottom
+                        case 3 -> { sideIsZeroPipes = (component.getLeftSide() == ZERO_PIPES); }    // Left
+                    }
+
+                    // The component's currently checked side is exposed iff the
+                    // neighbour on that side is null and the connector is NOT a ZERO_PIPE
+                    if (!sideIsZeroPipes && neighbours[i] == null) {
+                        exposedConnectors.getAndIncrement();
+                    }
+                }
+            }
+        );
+
+        return exposedConnectors.get();
+    }
+
+    /**
+     * @return The total (normal + special) storage space that is available (i.e.: not occupied)
+     */
+    public int getAvailableStorageSpace() {
+        return this.getStorageList().stream()
+                .mapToInt(Storage::availableSpace)
+                .sum();
     }
 
     /**
@@ -486,27 +613,6 @@ public class Ship {
         return this.storageList.stream()
                 .flatMap(storage -> storage.getStoredItems().stream())
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * @return The number of exposed connectors on the entire ship
-     */
-    public int getExposedConnectorAmount(){
-        List<Component> border = new ArrayList<Component>();
-        AtomicInteger exposedConnectors = new AtomicInteger();
-
-        traverse(
-            (Component component) -> {
-                Component[] neighbours = this.getNearestComponents(component);
-                for (Component neighbour : neighbours) {
-                    if (neighbour == null) {
-                        exposedConnectors.getAndIncrement();
-                    }
-                }
-            }
-        );
-
-        return exposedConnectors.get();
     }
 
     /**
@@ -582,7 +688,7 @@ public class Ship {
      * Uses an adapted version of the BFS algorithm to validate that each component
      * is connected correctly with its neighbours, thus validating the ship
      *
-     * @return <b style="color: green">TRUE</b> if all the ship's components are connected correctly, <br>
+     * @return <b style="color: green">TRUE</b> if all the ship's components are connected correctly,
      * <b style="color: red">FALSE</b> otherwise
      */
     public boolean validateShip() {
@@ -592,6 +698,7 @@ public class Ship {
             (Component c) -> {
                 if (isShipValid.get() && !c.check(getNearestComponents(c))) {
                     isShipValid.set(false);
+                    System.out.println("ERROR: " + c.toString());
                 }
             }
         );
@@ -769,6 +876,7 @@ public class Ship {
      * @throws NullComponentException If the given component is <code>null</code>
      * @throws OutOfGridException If the given coordinates (i, j) fall outside the ship's grid
      * @throws ExistingComponentException If the component at coordinates (i, j) is already occupied
+     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship profile, determined by the current difficulty level
      */
     public void addComponent(Component component, int i, int j)
             throws NullComponentException, OutOfGridException,
@@ -797,6 +905,39 @@ public class Ship {
     }
 
     /**
+     * Removes ONLY the component at coordinates (i, j) from the ship's grid<br>
+     * When compared with the other method <code>removeComponent()</code>, the former doesn't check for
+     * any hanging branches that resulted from the removal of that particular component, whereas the latter does so.
+     * Also, this method is intended to be used mainly by the player, since he can specify precisely the component
+     * to remove, in the context of fixing the ship when the method <code>validateShip()</code> returns FALSE.
+     *
+     * @param i The index of row that contains the component to delete
+     * @param j The index of column that contains the component to delete
+     * @throws OutOfGridException If the given coordinates (i, j) fall outside the grid
+     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship profile, determined by the current difficulty level
+     * @throws CoreDeletionAttemptException If the given coordinates (i, j) correspond to the ones of the core
+     *
+     */
+    public void removeSingleComponent(int i, int j) throws OutOfGridException, OutOfShipException, CoreDeletionAttemptException {
+        if (i < 0 || j < 0 || i >= this.grid_rows || j >= this.grid_cols) {
+            throw new OutOfGridException("ERROR: Requested component is not in the ship component grid");
+        }
+        if (i == this.core.getPosition()[0] && j == this.core.getPosition()[1]) {
+            throw new CoreDeletionAttemptException("ERROR: Cannot delete core cabin from the ship");
+        }
+        if (shipProfiles.containsKey(this.difficultyLevel)) {
+            if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
+                throw new OutOfShipException("ERROR: Requested component is not in the ship's profile");
+            }
+        }
+
+        // Removing ONLY the specified component, nothing else
+        this.components[i][j] = null;
+    }
+
+    // TODO: Implement the fact that if a cabin is destroyed, and has a vital unit as its neighbour,
+    //       then they also get destroyed
+    /**
      * Removes the component at coordinates (i, j) from the ship's grid.<br>
      * If that component, when removed, divides the ship into 2 or more branches, then the
      * method keeps the branch that also has the core component and discards others
@@ -805,11 +946,13 @@ public class Ship {
      * @param i The index of row that contains the component to delete
      * @param j The index of column that contains the component to delete
      * @throws OutOfGridException If the given coordinates (i, j) fall outside the grid
+     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship profile, determined by the current difficulty level
+     * @throws CoreDeletionAttemptException If the given coordinates (i, j) correspond to the ones of the core
      *
      * @return The components removed from the ship, which are the selected one at coordinates (i, j) and any components
      *         that were left hanging from the ship as a consequence of the removal of the selected component.
      */
-    public List<Component> removeComponent(int i, int j) throws OutOfGridException, CoreDeletionAttemptException {
+    public List<Component> removeComponent(int i, int j) throws OutOfGridException, CoreDeletionAttemptException, CoreDeletionAttemptException {
         Component[][] previousShip;
         List<Component> removedComponents;
 
@@ -818,6 +961,11 @@ public class Ship {
         }
         if (i == this.core.getPosition()[0] && j == this.core.getPosition()[1]) {
             throw new CoreDeletionAttemptException("ERROR: Cannot delete core cabin from the ship");
+        }
+        if (shipProfiles.containsKey(this.difficultyLevel)) {
+            if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
+                throw new OutOfShipException("ERROR: Requested component is not in the ship's profile");
+            }
         }
 
         previousShip = new Component[this.grid_rows][this.grid_cols];
@@ -832,7 +980,7 @@ public class Ship {
 
         // Removing the component and regenerating the new ship
         this.components[i][j] = null;
-        recreateShipGrid();
+        this.recreateShipGrid();
         this.generateComponentSubLists();
 
         // If the component at coordinates (row, col) in the previousShip
@@ -857,7 +1005,8 @@ public class Ship {
      * @param j The index of the column where the component to retrieve is located
      * @return The component at coordinates (i, j)
      * @throws OutOfGridException If the given coordinates (i, j) fall outside the ship's grid
-     * @throws NullComponentException If the selected component is <code>null</code>
+     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship's profile,
+     *
      */
     public Component getComponent(int i, int j) throws OutOfGridException {
         if (i < 0 || j < 0 || i >= grid_rows || j >= grid_cols) {
@@ -866,4 +1015,7 @@ public class Ship {
 
         return this.components[i][j];
     }
+
+    // TODO: Implement generateState() method to show all the components onboard the ship formatted into JSON
+    //       (Each component has a toMap() method that converts the component into JSONObject (i.e.: a map))
 }

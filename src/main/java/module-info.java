@@ -1,6 +1,8 @@
-module it.polimi.ingsw.is25am28 {
+module it.polimi.ingsw.is25am {
     requires com.fasterxml.jackson.databind;
     opens it.polimi.ingsw.is25am28.ActionJSON to com.fasterxml.jackson.databind;
+    requires com.fasterxml.jackson.datatype.jdk8;
+    requires com.fasterxml.jackson.core;
 
     requires javafx.controls;
     requires javafx.fxml;
@@ -8,6 +10,7 @@ module it.polimi.ingsw.is25am28 {
     requires org.controlsfx.controls;
     requires json.simple;
     requires java.smartcardio;
+    requires java.desktop;
 
     opens it.polimi.ingsw.is25am28 to javafx.fxml;
     exports it.polimi.ingsw.is25am28;
@@ -31,4 +34,6 @@ module it.polimi.ingsw.is25am28 {
     opens it.polimi.ingsw.is25am28.GameModel to javafx.fxml;
     exports it.polimi.ingsw.is25am28.GameModel.Session;
     opens it.polimi.ingsw.is25am28.GameModel.Session to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.GameModel.FileLoader;
+    opens it.polimi.ingsw.is25am28.GameModel.FileLoader to javafx.fxml;
 }

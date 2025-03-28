@@ -7,13 +7,11 @@ import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
-import org.json.simple.JSONObject;
 
 import java.util.*;
 
 public class Epidemy extends EventCard {
 
-    // Constructor
     public Epidemy(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
     }
@@ -30,19 +28,17 @@ public class Epidemy extends EventCard {
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        return null;
+        return this;
     }
 
-    public void useCard() {
-        List<Player> players = this.getBoard().getPlayers();
+    public EventCard useCard() throws IllegalArgumentException {
         Set<Cabin> alreadyQuarantined;
         List<Cabin> cabinList;
         Component[] neighbours;
         Ship shipPtr;
 
         // Finding all neighbouring cabins and putting them into quarantine
-        // ready to delete
-        for (Player player : players) {
+        for (Player player : this.getBoard().getPlayers()) {
             alreadyQuarantined = new HashSet<>();
             shipPtr = player.getShip();
             cabinList = shipPtr.getCabinList();
@@ -53,11 +49,15 @@ public class Epidemy extends EventCard {
                     for (Component neighbour : neighbours) {
                         switch (neighbour) {
                             case Cabin neighbourCabin -> {
-                                alreadyQuarantined.add(cabin);
-                                alreadyQuarantined.add(neighbourCabin);
+                                // Assuming, like in the card's picture, that Epidemy strikes only
+                                // when the cabin is FULLY occupied (i.e.: there's no available space)
+                                // This means that cabins with 1 astronaut are SAFE from the Epidemy
+                                if (cabin.getAvailableSpace() == 0 && neighbourCabin.getAvailableSpace() == 0) {
+                                    alreadyQuarantined.add(cabin);
+                                    alreadyQuarantined.add(neighbourCabin);
+                                }
                             }
-                            case null, default -> {
-                            }
+                            case null, default -> {}
                         }
                     }
                 }
@@ -68,10 +68,24 @@ public class Epidemy extends EventCard {
                 cabin.removeInhabitant(cabin.getInhabitants().getFirst());
             }
         }
+
+        // Set this card as used
+        this.cardUsed();
+
+        return this;
     }
 
     @Override
     public CardStateJSON generateState() {
-        return null;
+        CardStateJSON cardState = new CardStateJSON();
+
+        cardState.setCardName(this.getCardName());
+        cardState.setCardLevel(this.cardLevel);
+
+        if (this.getCurrentPlayer().isPresent()) {
+            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+        }
+
+        return cardState;
     }
 }

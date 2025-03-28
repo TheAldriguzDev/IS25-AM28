@@ -47,6 +47,7 @@ public class Smugglers extends EventCard {
         } catch (ClassCastException e) {
             throw new ClassCastException("Card data type in invalid");
         }
+
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
@@ -56,7 +57,7 @@ public class Smugglers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
 
-                    if(player.getShip().getFirePower(smugglersData.getNumberOfDoubleCannonsActivated()) >= requiredFirepower) {
+                    if(player.getShip().getFirePower(smugglersData.getNumberOfDoubleCannonsActivated()) > requiredFirepower) {
                         // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
                         cardUsed();
                         if (smugglersData.getTakeLoot()) {
