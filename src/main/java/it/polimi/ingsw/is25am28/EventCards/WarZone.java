@@ -6,15 +6,22 @@ import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.ActionJSON.WarZoneJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Cabin;
+import it.polimi.ingsw.is25am28.Components.Cannon;
+import it.polimi.ingsw.is25am28.Components.Component;
+import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
+import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
+import it.polimi.ingsw.is25am28.Exceptions.InsufficientEnergyException;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Ship.Ship;
+import javafx.util.Pair;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class WarZone extends EventCard {
     private final ResourceBank resourceBank;
@@ -25,11 +32,13 @@ public class WarZone extends EventCard {
     private final List<WarZoneActionConsequencePair> cardActions;
     private int current_action;
 
-
     private Optional<Player> affectedPlayer;
     private Map<Player, Integer> playersEnginePower;
     private Map<Player, Float> playersFirePower;
     private int current_plasmaShot;
+
+    private final Random random;
+    private int diceResult;
 
     /**
      * WarZone constructor that sets:
@@ -60,6 +69,9 @@ public class WarZone extends EventCard {
         this.playersEnginePower = new HashMap<>();
         this.playersFirePower = new HashMap<>();
         this.current_plasmaShot = 0;
+
+        this.diceResult = generateDiceResult();
+        this.random = new Random();
     }
 
     /**
@@ -79,7 +91,7 @@ public class WarZone extends EventCard {
 
                 // When we played all the possible actions of the card --> mark the card as used
                 // Otherwise revalidate the players positions and reset the playerList since the order could be different
-                if (current_action == shootingSequence.size() - 1) {
+                if (current_action == cardActions.size() - 1) {
                     this.cardUsed();
                     return Optional.empty();
                 } else {
@@ -87,8 +99,7 @@ public class WarZone extends EventCard {
                     this.getBoard().validatePlayersPosition();
                     // Clear the current players and reset them and set the currentPlayer to the first one
                     this.players.clear();
-                    this.players.addAll(this.getBoard().getPlayers());
-                    this.currentPlayer = Optional.of(this.players.getFirst());
+                    this.initCardPlayers();
 
                     // Go to the next action
                     this.current_action++;
@@ -167,9 +178,21 @@ public class WarZone extends EventCard {
             // If we do not have the affected player yet, it means that we need to store the given inputs
 
             this.getCurrentPlayer().ifPresent( p -> {
-                // Get the total power of the player and store it
-                int usedEnergy = warZoneJSON.getUsedEnergy();
-                float totalPower = p.getShip().getFirePower(usedEnergy);
+                float totalPower = 0;
+
+                // Compute the power of the normal cannons
+                totalPower += p.getShip().getFirePower(0);
+
+                // Get the cannonList (double cannons that gets activated) to compute the power
+                List<ComponentHelper<Integer>> cannonList = warZoneJSON.getCannonList();
+                for (ComponentHelper<Integer> c : cannonList) {
+                    Cannon tmpCannon = (Cannon) p.getShip().getComponent(c.getI(), c.getJ());
+
+                    totalPower += tmpCannon.getFirePower();
+                    p.getShip().consumeEnergy(1);
+                }
+
+                //  float totalPower = p.getShip().getFirePower(usedEnergy);
                 this.playersFirePower.put(p, totalPower);
 
                 // Check if we are already arrived to the last player --> In case we need to grab the affected player
@@ -193,7 +216,7 @@ public class WarZone extends EventCard {
                         // If the consequence is one of MOVEMENTSTEPS - REQUIREDCREW - LOSSITEMS --> We can apply them immediately,
                         // for the SHOOTINGSEQUENCE we need to wait for player inputs
                         switch (warZoneAction.getConsequence()) {
-                            case MOVEMENTSTEPS, REQUIREDCREW, LOSSITEMS -> this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
+                            case MOVEMENTSTEPS -> this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
                             case null, default -> { }
                         }
                     } else {
@@ -245,7 +268,7 @@ public class WarZone extends EventCard {
                         // If the consequence is one of MOVEMENTSTEPS - REQUIREDCREW - LOSSITEMS --> We can apply them immediately,
                         // for the SHOOTINGSEQUENCE we need to wait for player inputs
                         switch (warZoneAction.getConsequence()) {
-                            case MOVEMENTSTEPS, REQUIREDCREW, LOSSITEMS -> this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
+                            case MOVEMENTSTEPS -> this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
                             case null, default -> { }
                         }
                     } else {
@@ -283,7 +306,7 @@ public class WarZone extends EventCard {
                 // If the consequence is one of MOVEMENTSTEPS - REQUIREDCREW - LOSSITEMS --> We can apply them immediately,
                 // for the SHOOTINGSEQUENCE we need to wait for player inputs
                 switch (warZoneAction.getConsequence()) {
-                    case MOVEMENTSTEPS, REQUIREDCREW, LOSSITEMS -> this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
+                    case MOVEMENTSTEPS -> this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
                     case null, default -> { }
                 }
             } else {
@@ -305,6 +328,7 @@ public class WarZone extends EventCard {
                 this.handleLossItems(player, warZoneJSON);
 
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or use the card
+                this.affectedPlayer = Optional.empty();
                 this.currentPlayer = Optional.of(this.players.getLast());
                 this.getNextPlayer();
             }
@@ -312,6 +336,7 @@ public class WarZone extends EventCard {
                 this.handleRequiredCrew(player, warZoneJSON);
 
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or use the card
+                this.affectedPlayer = Optional.empty();
                 this.currentPlayer = Optional.of(this.players.getLast());
                 this.getNextPlayer();
             }
@@ -319,6 +344,7 @@ public class WarZone extends EventCard {
                 this.getBoard().movePlayerBackwards(player, this.movementSteps);
 
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or to mark the card as used
+                this.affectedPlayer = Optional.empty();
                 this.currentPlayer = Optional.of(this.players.getLast());
                 this.getNextPlayer();
             }
@@ -327,8 +353,11 @@ public class WarZone extends EventCard {
 
                 // When we have finished the shooting sequence we can invoke the get next player to skip to the next action or to mark the card as used
                 if (this.current_plasmaShot == this.shootingSequence.size() - 1) {
+                    this.affectedPlayer = Optional.empty();
                     this.currentPlayer = Optional.of(this.players.getLast());
                     this.getNextPlayer();
+                } else {
+                    this.diceResult = this.generateDiceResult();
                 }
             }
         }
@@ -396,16 +425,165 @@ public class WarZone extends EventCard {
 
         // Check if the player has finished all of its astronauts --> if yes it needs to be eliminated from the game
         if (playerShip.getCabinList().stream().flatMap(c -> c.getInhabitants().stream()).noneMatch(i -> i.getLifeformType().equals(LifeformType.ASTRONAUT))) {
-            this.getBoard().eliminatePlayer(this.getCurrentPlayer().get());
+            this.getBoard().eliminatePlayer(player);
         }
 
         return this;
     }
 
     private WarZone handlePlasmaShot(Player player, WarZoneJSON warZoneJSON) {
+        int inboundDirection, sideToHit;
+        boolean threatDestroyed;
+        Component[] gridRow;
+        Component[] gridColumn;
+        List<ComponentHelper<Integer>> shieldList;
+        Component toHit;
+        Ship shipPtr;
+        PlasmaShot currPlasmaShot;
 
+        // Initializing variables
+        toHit = null;
+        threatDestroyed = false;
+        sideToHit = -1;
+
+        // Grab for the affected player the input about the cannon and shield to activate
+        shieldList = warZoneJSON.getShieldList();
+        shipPtr = player.getShip();
+        currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
+
+        // Adding +2 to the currMeteor's pointing direction gets the
+        // side from where the ship will see it arrive from
+        inboundDirection = (currPlasmaShot.getOrientation() + 2) % 4;
+
+        // Determine if and what component will be hit by the shot
+        switch (inboundDirection) {
+            // Case 1 - Meteor arrives from the TOP
+            case 0 -> {
+                gridColumn = shipPtr.getGridColumn(this.diceResult - 1);
+                int row = 0;
+
+                // Iterating the column in search of the side where the meteor hits
+                // If found, then check for the next components in the column
+                // to see if there are any cannons and/or shields
+                while (toHit == null && row < gridColumn.length) {
+                    toHit = gridColumn[row];
+                    row++;
+                }
+
+                if (toHit == null) break;
+            }
+
+            // Case 2 - Meteor arrives from the RIGHT
+            case 1 -> {
+                gridRow = shipPtr.getGridRow(this.diceResult - 1);
+                int column = gridRow.length - 1;
+
+                // Iterating the column in search of the side where the meteor hits
+                // If found, then check for the next components in the column
+                // to see if there are any cannons and/or shields
+                while (toHit == null && column >= 0) {
+                    toHit = gridRow[column];
+                    column--;
+                }
+
+                if (toHit == null) break;
+            }
+
+            // Case 3 - Meteor arrives from the BOTTOM
+            case 2 -> {
+                gridColumn = shipPtr.getGridColumn(this.diceResult - 1);
+                int row = gridColumn.length - 1;
+
+                // Iterating the column in search of the side where the meteor hits
+                // If found, then check for the next components in the column
+                // to see if there are any cannons and/or shields
+                while (toHit == null && row >= 0) {
+                    toHit = gridColumn[row];
+                    row--;
+                }
+
+                if (toHit == null) break;
+            }
+
+            // Case 4 - Meteor arrives from the LEFT
+            case 3 -> {
+                gridRow = shipPtr.getGridRow(this.diceResult - 1);
+                int column = 0;
+
+                // Iterating the column in search of the side where the meteor hits
+                // If found, then check for the next components in the column
+                // to see if there are any cannons and/or shields
+                while (toHit == null && column < gridRow.length) {
+                    toHit = gridRow[column];
+                    column++;
+                }
+
+                if (toHit == null) break;
+            }
+
+            default -> throw new IllegalStateException("ERROR: Only 4 directions allowed");
+        }
+
+        // If a component has been found
+        if (toHit != null) {
+            if (shieldList != null) {
+                for (ComponentHelper<Integer> shieldCoords : shieldList) {
+                    if (shieldCoords != null) {
+                        Component component = shipPtr.getComponent(
+                                shieldCoords.getI(),
+                                shieldCoords.getJ()
+                        );
+
+                        // Safe cast of Component to Shield
+                        switch (component) {
+                            case Shield shield -> {
+                                int[] shieldCoverage = shield.getCoveredSide();
+                                try {
+                                    // Consume energy only if there's enough energy available
+                                    shipPtr.consumeEnergy(1);
+                                    for (int j : shieldCoverage) {
+                                        if (currPlasmaShot.getSize() == 1 && j == inboundDirection) {
+                                            // Checking if the shield selected for activation
+                                            // can actually defend the ship from the small meteor
+                                            // by checking if it's correctly oriented towards the threat
+                                            threatDestroyed = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                catch (InsufficientEnergyException e) {
+                                    // Otherwise the ship depleted its energy reserve and the selected shields
+                                    // cannot be activated, therefore the meteor will not be deflected
+                                }
+                            }
+                            case null, default -> {}
+                        }
+                    }
+                }
+            }
+        }
+
+        // If the meteor wasn't destroyed, then remove the component
+        // that was hit from the current player's ship
+        if (toHit != null && !threatDestroyed) {
+            try {
+                shipPtr.removeComponent(
+                        toHit.getPosition()[0],
+                        toHit.getPosition()[1]
+                );
+            } catch (CoreDeletionAttemptException e) {
+                this.getBoard().eliminatePlayer(player);
+            }
+        }
 
         return this;
+    }
+
+    /**
+     * Generate the dice result
+     * */
+    private int generateDiceResult() {
+        return (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
     }
 
     @Override
@@ -418,8 +596,51 @@ public class WarZone extends EventCard {
 
     }
 
+    /**
+     * When there is the affected player we need to retrieve information about the consequence
+     * Instead, when there is no affectedPlayer we need to retrieve information about the action
+     * */
     @Override
     public CardStateJSON generateState() {
+        CardStateJSON cardState = new CardStateJSON();
+
+        // Set the card name
+        cardState.setCardName(this.getCardName());
+        // Set the card level
+        cardState.setCardLevel(this.cardLevel);
+        // If present set the current player (the one that needs to play the game)
+
+        if (this.affectedPlayer.isPresent()) {
+            cardState.setAffectedPlayer(this.affectedPlayer.get().getNickname());
+        }
+
+        if (this.getCurrentPlayer().isPresent()) {
+            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+        }
+
+        cardState.setRequiredCrewMembers(this.requiredCrew);
+        cardState.setMovementSteps(this.movementSteps);
+        cardState.setRequiredResources(this.requiredItems);
+
+        PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
+        cardState.setCurrPlasmaShotDescriptor(new Pair<>(currPlasmaShot.getSize(), currPlasmaShot.getOrientation()));
+        cardState.setDiceThrowResult(this.diceResult);
+
+        Map<String, Float> playersFirePowerMap = this.playersFirePower.entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey().getNickname(),
+                        Map.Entry::getValue
+                ));
+
+        Map<String, Integer> playersEnginePowerMap = this.playersEnginePower.entrySet().stream()
+                .collect(Collectors.toMap(
+                        entry -> entry.getKey().getNickname(),
+                        Map.Entry::getValue
+                ));
+
+        cardState.setPlayersFirePower(playersFirePowerMap);
+        cardState.setPlayersEnginePower(playersEnginePowerMap);
+
         return null;
     }
 }

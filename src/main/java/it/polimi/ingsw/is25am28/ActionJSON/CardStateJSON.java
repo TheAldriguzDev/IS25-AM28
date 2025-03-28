@@ -18,7 +18,6 @@ import java.util.ArrayList;
  * We can just use this single class to cover all the desired data
  * */
 public class CardStateJSON extends ActionJSON {
-
     private String cardName;
     private int cardLevel;
     private boolean isCardUsable;
@@ -38,9 +37,11 @@ public class CardStateJSON extends ActionJSON {
 
     // ======== WarZone Card State Attributes ======== //
 
-    private Player lowestCrewPlayer;
-    private Player lowestEnginePowerPlayer;
-    private Player lowestFirePowerPlayer;
+    private String affectedPlayer;
+    private int requiredResources;
+    private Pair<Integer, Integer> currPlasmaShotDescriptor;
+    private Map<String, Float> playersFirePower;
+    private Map<String, Integer> playersEnginePower;
 
     // ======== VisitPlanets Card State Attributes ======== //
 
@@ -154,8 +155,6 @@ public class CardStateJSON extends ActionJSON {
     }
 
 
-
-
     /**
      * Returns the cardName
      * */
@@ -254,34 +253,54 @@ public class CardStateJSON extends ActionJSON {
 
     // ======== WarZone Card State Getters/Setters ======== //
 
-    @JsonGetter("lowestCrewPlayer")
-    public Player getLowestCrewPlayer() {
-        return this.lowestCrewPlayer;
+    @JsonGetter("affectedPlayer")
+    public String getAffectedPlayer() {
+        return this.affectedPlayer;
     }
 
-    @JsonSetter("lowestCrewPlayer")
-    public void setLowestCrewPlayer(Player lowestCrewPlayer) {
-        this.lowestCrewPlayer = lowestCrewPlayer;
+    @JsonSetter("affectedPlayer")
+    public void setAffectedPlayer(String affectedPlayer) {
+        this.affectedPlayer = affectedPlayer;
     }
 
-    @JsonGetter("lowestEnginePowerPlayer")
-    public Player getLowestEnginePowerPlayer() {
-        return this.lowestEnginePowerPlayer;
+    @JsonGetter("requiredResources")
+    public int getRequiredResources() {
+        return this.requiredResources;
     }
 
-    @JsonSetter("lowestEnginePowerPlayer")
-    public void setLowestEnginePowerPlayer(Player lowestEnginePowerPlayer) {
-        this.lowestEnginePowerPlayer = lowestEnginePowerPlayer;
+    @JsonSetter("requiredResources")
+    public void setRequiredResources(int requiredResources) {
+        this.requiredResources = requiredResources;
     }
 
-    @JsonGetter("lowestFirePowerPlayer")
-    public Player getLowestFirePowerPlayer() {
-        return this.lowestFirePowerPlayer;
+    @JsonGetter("currPlasmaShotDescriptor")
+    public Pair<Integer, Integer> getCurrPlasmaShotDescriptor() {
+        return this.currPlasmaShotDescriptor;
     }
 
-    @JsonSetter("lowestFirePowerPlayer")
-    public void setLowestFirePowerPlayer(Player lowestFirePowerPlayer) {
-        this.lowestFirePowerPlayer = lowestFirePowerPlayer;
+    @JsonSetter("currPlasmaShotDescriptor")
+    public void setCurrPlasmaShotDescriptor(Pair<Integer, Integer> currPlasmaShotDescriptor) {
+        this.currPlasmaShotDescriptor = currPlasmaShotDescriptor;
+    }
+
+    @JsonGetter("playersFirePower")
+    public Map<String, Float> getPlayersFirePower() {
+        return this.playersFirePower;
+    }
+
+    @JsonSetter("playersFirePower")
+    public void setPlayersFirePower(Map<String, Float> playersFirePower) {
+        this.playersFirePower = playersFirePower;
+    }
+
+    @JsonGetter("playersEnginePower")
+    public Map<String, Integer> getPlayersEnginePower() {
+        return this.playersEnginePower;
+    }
+
+    @JsonSetter("playersEnginePower")
+    public void setPlayersEnginePower(Map<String, Integer> playersEnginePower) {
+        this.playersEnginePower = playersEnginePower;
     }
 
     // ======== VisitPlanets Card State Getters/Setters ======== //

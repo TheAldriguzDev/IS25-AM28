@@ -451,49 +451,26 @@ public class Ship {
      * @return The ship's total firepower of both single and double cannons
      */
     public float getFirePower(int doubleCannonsToActivate) {
-        List<Cannon> doubleCannonList;
-        int doubleCannonAmount;
-        float totalFirePower;
-
-        doubleCannonList = this.getDoubleCannons();
-        doubleCannonAmount = doubleCannonList.size();
+        float totalFirePower = 0;
+        int totalDoubleActivation = Math.min(doubleCannonsToActivate, this.getDoubleCannons().size());
 
         // Calculating the firepower of only the single cannons
-        float singleCannonsFirePower = (float) this.cannonList.stream()
-                    .filter((Cannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
+        totalFirePower += (float) this.cannonList.stream()
+                    .filter(c -> c.getForce() == 1)
                     .mapToDouble(Cannon::getFirePower)
                     .sum();
 
         // Calculating the contribution of purple aliens onboard the ship
         // to the overall firepower
-        int purpleAlienFirepowerAddon = this.cabinList.stream()
+        totalFirePower += this.cabinList.stream()
                 .flatMap((Cabin c) -> (c.getInhabitants().stream()))
                 .mapToInt(Lifeform::getAttackBoost)
                 .sum();
 
-        if (doubleCannonAmount > 0) {
-            if (doubleCannonsToActivate > doubleCannonAmount) {
-                // If the requested double cannons to activate surpass the
-                // actual amount of double cannons available, then activate
-                // all those double cannons and avoid consuming the excess energy
-                doubleCannonsToActivate = doubleCannonAmount;
-            }
+        totalFirePower += totalDoubleActivation * 2;
+        this.consumeEnergy(totalDoubleActivation);
 
-            // Calculating the totalFirePower
-            totalFirePower = singleCannonsFirePower
-                    + (doubleCannonsToActivate * (int) doubleCannonList.getFirst().getFirePower());
-
-            // Consuming the amount of batteries required to activate
-            // the given amount of double cannons
-            this.consumeEnergy(doubleCannonsToActivate);
-        }
-        else {
-            // No double engines to activate means that the total firepower
-            // is the result of all and only the single cannons onboard the ship
-            totalFirePower = singleCannonsFirePower;
-        }
-
-        return totalFirePower + purpleAlienFirepowerAddon;
+        return totalFirePower;
     }
 
     /**

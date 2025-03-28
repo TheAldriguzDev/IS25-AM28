@@ -8,6 +8,10 @@ public final class Cannon extends Component {
             this.force = force;
       }
 
+      public int getForce() {
+            return this.force;
+      }
+
       public float getFirePower(){
             return getDirection() != 0 ? ((float) force) / 2 : force;
       }
