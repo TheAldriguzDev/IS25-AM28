@@ -137,7 +137,6 @@ public class Smugglers extends EventCard {
 
                 }
         );
-
     }
 
     @Override

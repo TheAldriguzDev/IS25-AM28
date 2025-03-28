@@ -286,18 +286,18 @@ public class FileLoader {
 
             array = (JSONArray)json.get("warzone" );
 
-            for( Object proxy: array ){
-                  JSONObject o = (JSONObject)proxy;
-
-                  deck.add(new WarZone(
-                          "Zona di Guerra",
-                          ((Long)o.get("level")).intValue(),
-                          (JSONObject)o.get("engines"),
-                          (JSONObject)o.get("cannons"),
-                          (JSONObject)o.get("humans"),
-                          board
-                  ));
-            }
+//            for( Object proxy: array ){
+//                  JSONObject o = (JSONObject)proxy;
+//
+//                  deck.add(new WarZone(
+//                          "Zona di Guerra",
+//                          ((Long)o.get("level")).intValue(),
+//                          (JSONObject)o.get("engines"),
+//                          (JSONObject)o.get("cannons"),
+//                          (JSONObject)o.get("humans"),
+//                          board
+//                  ));
+//            }
 
             return deck;
       }
