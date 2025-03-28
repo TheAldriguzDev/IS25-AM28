@@ -43,8 +43,8 @@ public class Pirates extends EventCard {
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
-
-                    if (player.getShip().getFirePower(piratesData.getNumberOfDoubleCannonsActivated()) >= requiredFirepower) {
+                    float playerFirepower = player.getShip().getFirePower(piratesData.getNumberOfDoubleCannonsActivated());
+                    if (playerFirepower > requiredFirepower) {
                         // Pirates defeated, even if the player who defeated them does not take the credits, the card won't be used by other players
                         cardUsed();
                         if (piratesData.getTakeCredits()) {
@@ -52,7 +52,7 @@ public class Pirates extends EventCard {
                             getBoard().movePlayerBackwards(player, movementSteps);
                             getBoard().validatePlayersPosition();
                         }
-                    } else {
+                    } else if (playerFirepower < requiredFirepower) {
                         malusEffect(piratesData);
                     }
                     if (player.equals(this.players.getLast())) {

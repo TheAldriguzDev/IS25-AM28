@@ -42,15 +42,15 @@ public class Slavers extends EventCard {
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
-
-                    if (player.getShip().getFirePower(slaversData.getNumberOfDoubleCannonsActivated()) >= requiredFirepower) {
+                    float playerFirepower = player.getShip().getFirePower(slaversData.getNumberOfDoubleCannonsActivated());
+                    if (playerFirepower > requiredFirepower) {
                         cardUsed();
                         if (slaversData.getTakeCredits()) {
                             bonusEffect();
                             getBoard().movePlayerBackwards(player, movementSteps);
                             getBoard().validatePlayersPosition();
                         }
-                    } else {
+                    } else if (playerFirepower < requiredFirepower) {
                         malusEffect(data);
                     }
                     if (player.equals(this.players.getLast())) {
