@@ -107,6 +107,22 @@ class SmugglersTest {
 
     @Test
     public void all_players_lose() {
+
+
+        itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
+        itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
+        itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
+
+        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
+        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
+        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
+        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
+
+        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
+        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
+        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
+        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
+
         smugglers = new Smugglers("Smugglers", 2, 3, 5, 4, 1, 2, 1, 0, board, resourceBank);
 
         actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, 0); // Total FirePower: 2
@@ -163,6 +179,62 @@ class SmugglersTest {
         assertEquals(0, ship_4.getStorageList().get(1).getStoredItems().size());
     }
 
+    @Test void first_player_loses_second_player_ties_third_player_wins_fourth_player_does_nothing() {
+
+        // In this test the first player will lose batteries, while the third will instead drop a green and a blue item to make space for 2 yellow items
+        // The second(tie) player and the fourth(does nothing) player won't have anything changed
+        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
+        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
+
+        itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
+        itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
+
+        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, 0); // Total FirePower: 2
+        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, 0); // Total FirePower: 3
+        actionJSON3 = new SmugglersJSON("Player 3", true, itemsToBeTaken3, itemsToBeRemoved3, 1); // Total FirePower: 5
+        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, 0); // Total FirePower: 3
+
+        smugglers = new Smugglers("Smugglers", 2, 3, 3, 2, 1, 2, 1, 0, board, resourceBank);
+
+        ArrayList<Integer> playerPositionsBefore = new ArrayList<>();
+        for (Player p : board.getPlayers()) {
+            playerPositionsBefore.add(p.getCursor());
+        }
+
+        smugglers.initCardPlayers();
+
+        smugglers.useCard(actionJSON1);
+        assertFalse(smugglers.hasFinished());
+
+        smugglers.useCard(actionJSON2);
+        assertFalse(smugglers.hasFinished());
+
+        smugglers.useCard(actionJSON3);
+        assertTrue(smugglers.hasFinished());
+
+        smugglers.useCard(actionJSON4);
+        assertTrue(smugglers.hasFinished());
+
+        assertEquals(1, ship_1.getAvailableEnergy()); // Non avendo items, subisce -2 alle batterie -> vanno a 1
+
+        assertEquals(3, ship_2.getAvailableEnergy()); // Non attiva cannoni doppi e non viene derubato delle batterie, il numero non varia
+
+        assertEquals(2, ship_3.getAvailableEnergy()); // Non viene derubato ma attviva comunque un cannone doppio -> -1 alle batterie -> ne riamngono 2
+
+        // Verfico che nello storage normale ci siano solo le casse gialle (da G,B,Y a Y,Y,Y)
+        assertEquals(3, storageList3.get(0).getStoredItems().size());
+        assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(0).getColor());
+        assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(0).getColor());
+        assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(0).getColor());
+
+        // Verifico che solo la posizione del terzo player sia cambiata
+        assertEquals(playerPositionsBefore.get(0), p1.getCursor());
+        assertEquals(playerPositionsBefore.get(1), p2.getCursor());
+        assertEquals(playerPositionsBefore.get(2) -3 -1, p3.getCursor()); // -3 di movementSteps, -1 per il "salto" oltre il player 4
+        assertEquals(playerPositionsBefore.get(3), p4.getCursor());
+
+
+    }
 
     public void ship_init1(Ship ship) {
 
@@ -212,7 +284,7 @@ class SmugglersTest {
 
     public void ship_init2(Ship ship) {
 
-        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
+        // core + 3 cabine, 3 cannoni singoli, un vital(BROWN), una batteria da 3
         // 2 + 2 + 2 = umani + 1 alieno marrone
         // Il cannone doppio non viene attivato
 
@@ -221,7 +293,7 @@ class SmugglersTest {
         Cabin cabin_1 = new Cabin(new int[] {1, 1, 0, 1}, false);
         Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
         Cabin cabin_3 = new Cabin(new int[] {1, 1, 1, 1}, false);
-        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 2);
+        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 1);
         Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 0}, 1);
         Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
         Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
@@ -258,14 +330,12 @@ class SmugglersTest {
 
         storageList2.add(storage_1);
 
-        itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
-        itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
-        itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
+
     }
 
     public void ship_init3(Ship ship) {
 
-        // core + 3 cabine, 3 cannoni singoli, un vital(BROWN), una batteria da 3
+        // core + 3 cabine, 3 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
         // 2 + 2 + 2 = umani + 1 alieno marrone
 
 
@@ -276,6 +346,7 @@ class SmugglersTest {
         Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 1);
         Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 1}, 1);
         Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
+        Cannon cannon_4 = new Cannon(new int[] {0, 0, 0, 1}, 2);
         Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
         Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
         Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
@@ -304,6 +375,7 @@ class SmugglersTest {
         ship.addComponent(cannon_1, 5, 6);
         ship.addComponent(cannon_2, 6, 4);
         ship.addComponent(cannon_3, 6, 8);
+        ship.addComponent(cannon_4, 7, 9);
         ship.addComponent(vital_1, 7, 5);
         ship.addComponent(battery_1, 7, 7);
         ship.addComponent(storage_1, 7, 8);
@@ -317,10 +389,7 @@ class SmugglersTest {
         storageList3.add(storage_1);
         storageList3.add(storage_2);
 
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
+
     }
 
     public void ship_init4(Ship ship) {
@@ -376,10 +445,7 @@ class SmugglersTest {
         storageList4.add(storage_1);
         storageList4.add(storage_2);
 
-        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
-        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
-        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
-        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
+
 
     }
 
