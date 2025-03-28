@@ -57,6 +57,7 @@ public class Smugglers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
                     float playerFirepower = player.getShip().getFirePower(smugglersData.getNumberOfDoubleCannonsActivated());
+//                    System.out.println(playerFirepower);
                     if(playerFirepower > requiredFirepower) {
                         // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
                         cardUsed();

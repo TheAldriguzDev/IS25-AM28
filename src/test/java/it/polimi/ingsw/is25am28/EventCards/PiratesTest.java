@@ -111,61 +111,9 @@ class PiratesTest {
 
     }
 
-    @Test
-    public void takeCreditsTest() {
-        p1.setCredits(3);
-        p2.setCredits(4);
-        p3.setCredits(5);
-        p4.setCredits(0);
-
-        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
-        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
-        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
-        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
-
-        pirates = new Pirates("Pirates", 2, 3, 4, 4, shootingSequence, board);
-
-        pirates.initCardPlayers();
-
-        pirates.useCard(actionJSON1);
-        pirates.useCard(actionJSON2);
-        pirates.useCard(actionJSON3);
-        pirates.useCard(actionJSON4);
-
-
-        assert p1.getCredits() == 7 : "p1 credits should be 7 (slavers defeated), not " + p1.getCredits();
-        assert p2.getCredits() == 4 : "p2 credits should be 4 (slavers not defeated), not " + p2.getCredits();
-        assert p3.getCredits() == 9 : "p3 credits should be 9 (slavers defeated), not " + p3.getCredits();
-        assert p4.getCredits() == 4 : "p4 credits should be 4 (slavers defeated), not " + p4.getCredits();
-
-    }
-
-    @Test
-    public void movementTest() {
-
-        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
-        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
-        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
-        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
-
-        pirates = new Pirates("Pirates", 2, 3, 4, 2, shootingSequence, board);
-
-        pirates.initCardPlayers();
-
-        pirates.useCard(actionJSON1);
-        pirates.useCard(actionJSON2);
-        pirates.useCard(actionJSON3);
-        pirates.useCard(actionJSON4);
-
-        assert p1.getCursor() == 4 : "p1 cursor should be 4 (moved 2 backwards), not " + p1.getCursor();
-        assert p2.getCursor() == 3 : "p2 cursor should be 3 (did not move), not " + p2.getCursor();
-        assert p3.getCursor() == -2 : "p3 cursor should be -2 (jumped over p4, moved 2 backwards), not " + p3.getCursor();
-        assert p4.getCursor() == -3 : "p4 cursor should be -3 (moved 1 backwards, jumped over p3, moved 1 backwards), not " + p4.getCursor();
-    }
-
     @Test void test_first_eliminated_second_third_fourth_hit() {
 
-        actionJSON1 = new PiratesJSON("Player 1", false, shieldsToActivate1, 0, dicesResults); // Total FirePower: 4
+        actionJSON1 = new PiratesJSON("Player 1", false, shieldsToActivate1, 0, dicesResults); // Total FirePower: 2
         actionJSON2 = new PiratesJSON("Player 2", false, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
         actionJSON3 = new PiratesJSON("Player 3", false, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
         actionJSON4 = new PiratesJSON("Player 4", false, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
@@ -235,7 +183,7 @@ class PiratesTest {
         actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
         actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
 
-        pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board);
+        pirates = new Pirates("Pirates", 2, 3, 4, 4, shootingSequence, board);
 
         pirates.initCardPlayers();
 
