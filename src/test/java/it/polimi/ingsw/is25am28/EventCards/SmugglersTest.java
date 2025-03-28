@@ -224,14 +224,17 @@ class SmugglersTest {
         // Verfico che nello storage normale ci siano solo le casse gialle (da G,B,Y a Y,Y,Y)
         assertEquals(3, storageList3.get(0).getStoredItems().size());
         assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(0).getColor());
-        assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(0).getColor());
-        assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(0).getColor());
+        assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(1).getColor());
+        assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(2).getColor());
 
         // Verifico che solo la posizione del terzo player sia cambiata
         assertEquals(playerPositionsBefore.get(0), p1.getCursor());
         assertEquals(playerPositionsBefore.get(1), p2.getCursor());
         assertEquals(playerPositionsBefore.get(2) -3 -1, p3.getCursor()); // -3 di movementSteps, -1 per il "salto" oltre il player 4
         assertEquals(playerPositionsBefore.get(3), p4.getCursor());
+
+//        System.out.println(p3.getShip().getStorageList().get(1).getStoredItems());
+//        System.out.println(storageList3.get(0).getStoredItems());
 
 
     }

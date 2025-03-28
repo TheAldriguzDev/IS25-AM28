@@ -61,7 +61,7 @@ public class Smugglers extends EventCard {
                         // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
                         cardUsed();
                         if (smugglersData.getTakeLoot()) {
-                            bonusEffect();
+                            bonusEffect(data);
                             getBoard().movePlayerBackwards(player, movementSteps);
                             getBoard().validatePlayersPosition();
                             //player.setCursor(player.getCursor() - this.movementSteps);
@@ -90,13 +90,11 @@ public class Smugglers extends EventCard {
                 (Player player) -> {
                     ArrayList<ComponentHelper<ItemColor>> resourcesToLoad = smugglersData.getItemsToBeTaken();
                     ArrayList<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
-
                     // Item da lasciare per fare spazio
                     for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
                         resourceDrop.getItem().ifPresent( i ->
                                 this.resourceBank.addResourceToBankFromPlayer(player, i, resourceDrop.getI(), resourceDrop.getJ()));
                     }
-
                     // Item da caricare sulla nave
                     for ( ComponentHelper<ItemColor> resourceTake : resourcesToLoad) {
                         resourceTake.getItem().ifPresent( i ->
