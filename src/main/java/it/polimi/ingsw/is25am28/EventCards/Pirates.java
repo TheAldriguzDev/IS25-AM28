@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Player.Player;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -22,6 +23,10 @@ public class Pirates extends EventCard {
     private int diceThrowResult;
     private int plasmashotIndex;
 
+    private boolean firstRound;
+    ArrayList<Player> playersToHit;
+    private boolean hasBeenDefeated;
+
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, ArrayList<ArrayList<Integer>> shootingSequence, Board board) {
         super(name, cardLevel, board);
         this.requiredFirepower = requiredFirepower;
@@ -33,30 +38,51 @@ public class Pirates extends EventCard {
         playerUseCount = 0;
         diceThrowResult = -1;
         plasmashotIndex = 0;
+        firstRound = true;
+        playersToHit = new ArrayList<>();
+        hasBeenDefeated = false;
+    }
+    @Override
+    public void initCardPlayers() throws IllegalArgumentException {
+        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
+            throw new IllegalArgumentException("The player list is null or contains less than two player");
+        } else {
+            if (firstRound) {
+                //System.out.println("Initialised with option 1");
+                this.players = new ArrayList<>(this.getBoard().getPlayers());
+            } else {
+                //System.out.println("Initialised with option 2");
+                //System.out.println("Players to hit:");
+//                for(Player p : playersToHit) {
+//                    System.out.println(p.getNickname());
+//                }
+                if (!playersToHit.isEmpty()) {
+                    this.players = new ArrayList<>(this.playersToHit);
+                }
+            }
+            currentPlayer = Optional.of(players.getFirst());
+        }
     }
 
     // Override necessary to not set the card as used when the last index of the player's list is reached
     @Override
-    public Optional<Player> getNextPlayer() {
-        if (this.players == null || this.players.isEmpty()) {
+    protected Optional<Player> getNextPlayer() {
+        if (players == null || players.isEmpty()) {
             throw new Error("Players are not set, you must call startUsingCard method before");
         }
 
-        if (this.currentPlayer.isPresent()) {
-            int currentIndex = this.players.indexOf(this.currentPlayer.get());
-
-            // If the current player is the last one return null,
-            // otherwise return the next player
-            if (currentIndex == this.players.size() - 1) {
+        if (currentPlayer.isPresent()) {
+            int currentIndex = players.indexOf(currentPlayer.get());
+            if (currentIndex == players.size() - 1) {
                 return Optional.empty();
+            } else {
+                Player nextPlayer = players.get(currentIndex + 1);
+                currentPlayer = Optional.of(nextPlayer);
+                return currentPlayer;
             }
-            else {
-                return Optional.of(this.getBoard().getPlayers().get(currentIndex + 1));
-            }
-        }
-        else {
-            this.currentPlayer = Optional.of(this.getBoard().getPlayers().getFirst());
-            return this.currentPlayer;
+        } else {
+            currentPlayer = Optional.of(players.getFirst());
+            return currentPlayer;
         }
     }
 
@@ -67,37 +93,69 @@ public class Pirates extends EventCard {
         } catch (ClassCastException e) {
             throw new ClassCastException("Card data type in invalid");
         }
+
+//        System.out.println("Gocatori: ");
+//        for(Player p : this.players) {
+//            System.out.println(p.getNickname());
+//        }
+
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
-
+                    //System.out.println("Appena iniziato " + player.getNickname());
                     String playerNickname = piratesData.getPlayerNickname();
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
-                    float playerFirepower = player.getShip().getFirePower(piratesData.getNumberOfDoubleCannonsActivated());
-                    if (playerFirepower > requiredFirepower) {
-                        // Pirates defeated, even if the player who defeated them does not take the credits, the card won't be used by other players
-                        cardUsed();
-                        if (piratesData.getTakeCredits()) {
-                            bonusEffect();
-                            getBoard().movePlayerBackwards(player, movementSteps);
-                            getBoard().validatePlayersPosition();
+                    // if the first round of meteors has passed, this block won't be executed, assuring that no players will get the same reward twice (or activate the cannons twice)
+                    if (firstRound) {
+                        float playerFirepower = player.getShip().getFirePower(piratesData.getNumberOfDoubleCannonsActivated());
+                        if (playerFirepower > requiredFirepower && !hasBeenDefeated) {
+                            // Pirates defeated, even if the player who defeated them does not take the credits, the card won't be used by other players
+                            //cardUsed();
+                            this.hasBeenDefeated = true;
+                            if (piratesData.getTakeCredits()) {
+                                bonusEffect();
+                                getBoard().movePlayerBackwards(player, movementSteps);
+                                getBoard().validatePlayersPosition();
+                            }
+                        } else if (playerFirepower < requiredFirepower && !hasBeenDefeated) {
+                            //malusEffect(piratesData);
+                            playersToHit.add(player);
                         }
-                    } else if (playerFirepower < requiredFirepower) {
-                        malusEffect(piratesData);
                     }
                     playerUseCount++;
-                    if (this.playerUseCount % this.getBoard().getPlayers().size() == 0) {
-                        this.plasmashotIndex++;
+                    // if the first round is finished, if the player is among tye defeated players, he will be exposed to the plasmashots
+                    if (!firstRound) {
+                        if (playersToHit.contains(player)) {
+                            malusEffect(piratesData);
+                        }
+                    }
+                    if (this.playerUseCount % this.players.size() == 0) {
+                        //System.out.println("Fine round");
+                        // flag to make sure  players do not get rewards or have to use cannons twice
+                        if (firstRound) {
+                            firstRound = false;
+                            // If there are no defeated players at the end of the first round the card is set as used
+                            if (playersToHit.isEmpty()) {
+                                cardUsed();
+                            }
+                        } else {
+                            this.plasmashotIndex++;
+                            this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
+                        }
                         this.initCardPlayers();
-                        this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
+                    } else {
+                        this.getNextPlayer();
                     }
                     // The card gets marked as completed only when all players
                     // have encountered all the plasmashots
                     if (this.plasmashotIndex == shootingSequence.size()) {
+                        System.out.println("Plasmashot index finished");
                         this.cardUsed();
                     }
+
+                    //System.out.println("Appena finito " + player.getNickname());
 //                    if (player.equals(this.players.getLast())) {
 //                        this.cardUsed(); // Mark the card as used
 //                        this.getBoard().validatePlayersPosition();
@@ -169,9 +227,15 @@ public class Pirates extends EventCard {
                                 for (int row = 4; row < 9; row++) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
+                                            System.out.println(player.getNickname() + " sostenuto il colpo in [r,c] : " + row + "" + column);
                                             player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
+                                            playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
+                                            System.out.println(player.getNickname() + " eliminato");
+                                            if (playersToHit.isEmpty()) {
+                                                cardUsed();
+                                            }
                                             // System.out.println("Eliminated " + player.getNickname());
                                         }
                                         //System.out.println("(U)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
@@ -188,6 +252,10 @@ public class Pirates extends EventCard {
                                             player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
+                                            playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
+                                            if (playersToHit.isEmpty()) {
+                                                cardUsed();
+                                            }
                                         }
                                         //System.out.println("(R)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
                                         break;
@@ -203,6 +271,10 @@ public class Pirates extends EventCard {
                                             player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
+                                            playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
+                                            if (playersToHit.isEmpty()) {
+                                                cardUsed();
+                                            }
                                         }
                                         //System.out.println("(D)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
                                         break;
@@ -218,6 +290,10 @@ public class Pirates extends EventCard {
                                             player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
+                                            playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
+                                            if (playersToHit.isEmpty()) {
+                                                cardUsed();
+                                            }
                                         }
                                         //System.out.println("(L)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
                                         break;
@@ -356,14 +432,17 @@ public class Pirates extends EventCard {
                     this.givenCredits,
                     this.movementSteps,
                     this.shootingSequence,
-                    this.diceThrowResult);
+                    this.diceThrowResult,
+                    firstRound);
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
-
-        // Mettere nello stato il dado corrente ?
-
-
         return piratesStateJSON;
     }
+
+    // Only for testing
+    void setDiceThrowResult(int diceThrowResult) {
+        this.diceThrowResult = diceThrowResult;
+    }
+
 }

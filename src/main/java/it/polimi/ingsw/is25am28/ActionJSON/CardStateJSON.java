@@ -52,6 +52,10 @@ public class CardStateJSON extends ActionJSON {
     private int diceThrowResult;
     private Pair<Integer, Integer> currMeteorDescriptor;
 
+    // ======== Pirates Card State Attributes ========//
+    private boolean firstRound;
+
+
     // ======== //
 
     /**
@@ -89,7 +93,8 @@ public class CardStateJSON extends ActionJSON {
                          @JsonProperty("givenCredits") int givenCredits,
                          @JsonProperty("movementSteps") int movementSteps,
                          @JsonProperty("shootingSequence") ArrayList<ArrayList<Integer>> shootingSequence,
-                         @JsonProperty("diceThrowResult") int diceThrowResult) {
+                         @JsonProperty("diceThrowResult") int diceThrowResult,
+                         @JsonProperty("firstRound") boolean firstRound) {
         super(playerNickname);
         this.cardName = cardName;
         this.cardLevel = cardLevel;
@@ -99,6 +104,7 @@ public class CardStateJSON extends ActionJSON {
         this.movementSteps = movementSteps;
         this.shootingSequence = shootingSequence;
         this.diceThrowResult = diceThrowResult;
+        this.firstRound = firstRound;
     }
 
     // Constructor for Slavers cardState
