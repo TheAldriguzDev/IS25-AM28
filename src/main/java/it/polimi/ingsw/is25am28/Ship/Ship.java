@@ -514,119 +514,124 @@ public class Ship {
 
     /**
      * Returns the real firepower by considering the baseline firepower (given by single cannons) and
-     * the additional firepower (given by activating the given amount of double cannons)<br>
+     * the additional firepower (given by activating the given amount of double cannons) and also
+     * takes into account the bonus given by the purple alien (if present)
      *
-     * Also, <code>doubleCannonsToActivate</code> corresponds to the amount of batteries to consume, but if that value
-     * exceeds the actual amount of double cannons present on the ship, then the amount of batteries consumed will be
-     * equal to the amount of all the double cannons present on the ship, thus preserving the difference.
+     * @param doubleCannonsToActivate The list of double cannons to activate. If it's set to <code>null</code>
+     *                                or it's given empty, then it returns the baseline firepower
      *
-     * @param doubleCannonsToActivate The amount of double cannons to activate.<br>
-     *          In particular, we have two distinct cases:
-     *          <ul>
-     *              <li>
-     *                  If its value is set to <code>0</code>, then no double cannons are activated and thus the
-     *                  resulting firepower is the baseline firepower given only by the single cannons
-     *              </li>
-     *              <li>
-     *                  If its value is <code>> 0</code>, then it returns the baseline firepower plus <code>2 * doubleCannonsToActivate</code>
-     *                  and, in case <code>doubleCannonsToActivate</code> is greater than the actual amount of double cannons, then
-     *                  the resulting firepower is the baseline firepower plus all the available double cannons activated.
-     *              </li>
-     *          </ul>
-     *
-     * @return The ship's total firepower of both single and double cannons
+     * @return The current ship's total firepower
      */
-    public float getFirePower(int doubleCannonsToActivate) {
-        float totalFirePower = 0;
-        int totalDoubleActivation = Math.min(doubleCannonsToActivate, this.getDoubleCannons().size());
+    public float getFirePower(List<Pair<Integer, Integer>> doubleCannonsToActivate) {
+        float totalFirePower;
+        boolean allEnergyConsumed;
 
-        // Calculating the firepower of only the single cannons
+        totalFirePower = 0;
+        allEnergyConsumed = false;
+
+        // Adding the firepower of only the single cannons
         totalFirePower += (float) this.cannonList.stream()
-                    .filter(c -> c.getForce() == 1)
-                    .mapToDouble(Cannon::getFirePower)
-                    .sum();
-
-        // Calculating the contribution of purple aliens onboard the ship
-        // to the overall firepower
-        totalFirePower += this.cabinList.stream()
-                .flatMap((Cabin c) -> (c.getInhabitants().stream()))
-                .mapToInt(Lifeform::getAttackBoost)
+                .filter((Cannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
+                .mapToDouble(Cannon::getFirePower)
                 .sum();
 
-        totalFirePower += totalDoubleActivation * 2;
-        this.consumeEnergy(totalDoubleActivation);
+        // Adding the firepower of only the double cannons (if there are any)
+        if (doubleCannonsToActivate != null) {
+            for (Pair<Integer, Integer> doubleCannonCoords : doubleCannonsToActivate) {
+                if (doubleCannonCoords != null) {
+                    Component component = this.getComponent(
+                        doubleCannonCoords.getKey(),
+                        doubleCannonCoords.getValue()
+                    );
+
+                    switch (component) {
+                        case Cannon c -> {
+                            // If the given component at those coordinates is effectively a double cannon, then activate
+                            // it as requested and consume 1 energy from the total. If no energy is available, then the
+                            // remaining double cannons will not be activated
+                            if ((c.getFirePower() == 2 && c.getDirection() == 0) || (c.getFirePower() == 1 && c.getDirection() != 0)) {
+                                try {
+                                    this.consumeEnergy(1);
+                                    totalFirePower += c.getFirePower();
+                                }
+                                catch (InsufficientEnergyException e) {
+                                    // If it fails, the double cannon will not be activated
+                                    allEnergyConsumed = true;
+                                }
+                            }
+                        }
+                        case null, default -> {}
+                    }
+                }
+
+                if (allEnergyConsumed) {
+                    break;
+                }
+            }
+        }
+
+        // Finally, add the contribution of the single purple alien onboard the ship
+        // to the overall firepower (only if it's present and if the baseline firepower is > 0)
+        if (this.purpleAlienPosition != null && totalFirePower > 0) {
+            totalFirePower += this.purpleAlienPosition.getInhabitants().getFirst().getAttackBoost();
+        }
 
         return totalFirePower;
     }
 
+
     /**
-     * Returns the real firepower by considering the baseline firepower (given by single cannons) and
-     * the additional firepower (given by activating the given amount of double cannons)<br>
+     * Returns the real engine power by considering the baseline engine power (given by single engines)
+     * and the additional engine power (given by activating the given amount of double engines) and also
+     * takes into account the bonus given by the brown alien (if present)
      *
-     * Also, <code>doubleEnginesToActivate</code> corresponds to the amount of batteries to consume, but if that value
-     * exceeds the actual amount of double engines present on the ship, then the amount of batteries consumed will be
-     * equal to the amount of all the double engines present on the ship, thus preserving the difference.
+     * @param doubleEnginesToActivate The amount of double engines to activate.
+     *                                If set to 0, the method returns the baseline engine power
+     *                                (+ the contribution of the brown alien (if present))
      *
-     * @param doubleEnginesToActivate The amount of double engines to activate.<br>
-     *          In particular, we have two distinct cases:
-     *          <ul>
-     *              <li>
-     *                  If its value is set to <code>0</code>, then no double engines are activated and thus the
-     *                  resulting engine power is the baseline engine power given only by the single engines
-     *              </li>
-     *              <li>
-     *                  If its value is <code>> 0</code>, then it returns the baseline engine power plus <code>2 * doubleEnginesToActivate</code>
-     *                  and, in case <code>doubleEnginesToActivate</code> is greater than the actual amount of double engines, then
-     *                  the resulting engine power is the baseline engine power plus all the available double engines activated.
-     *              </li>
-     *          </ul>
-     *
-     * @return The ship's total engine power of both single and double engines
+     * @return The current ship's total engine power
      */
     public int getEnginePower(int doubleEnginesToActivate) {
         List<Engine> doubleEngineList;
         int doubleEngineAmount;
         int totalEnginePower;
+        int availableEnergy;
 
         doubleEngineList = this.getDoubleEngines();
         doubleEngineAmount = doubleEngineList.size();
+        totalEnginePower = 0;
 
-        // Calculating the engine power of only the single engines
-        int singleEnginesEnginePower = (int) this.engineList.stream()
-                    .filter((Engine c) -> (c.getSpeed() == 1))
-                    .mapToDouble(Engine::getSpeed)
-                    .sum();
+        // Adding the engine power of only the single engines
+        totalEnginePower += (int) this.engineList.stream()
+                .filter(e -> (e.getSpeed() == 1))
+                .count();
 
-        // Calculating the contribution of brown aliens onboard the ship
-        // to the overall engine power
-        int brownAlienEnginePowerAddon = this.cabinList.stream()
-                .flatMap((Cabin c) -> (c.getInhabitants().stream()))
-                .mapToInt(Lifeform::getPowerBoost)
-                .sum();
-
-        if (doubleEngineAmount > 0) {
-            if (doubleEnginesToActivate > doubleEngineAmount) {
-                // If the requested double engines to activate surpass the
-                // actual amount of double engines available, then activate
-                // all those double engine and avoid consuming the excess energy
+        // Adding the engine power of the double engines
+        if (doubleEnginesToActivate > 0) {
+            if (doubleEngineAmount < doubleEnginesToActivate) {
+                // If I want to activate more engines than available, then
+                // saturate the request to the max amount of double engines
                 doubleEnginesToActivate = doubleEngineAmount;
             }
 
-            // Calculating the totalEnginePower
-            totalEnginePower = singleEnginesEnginePower
-                    + (doubleEnginesToActivate * (int) doubleEngineList.getFirst().getSpeed());
+            availableEnergy = this.getAvailableEnergy();
+            if (availableEnergy < doubleEnginesToActivate) {
+                // Saturating the amount of engines to activate to the
+                // remaining amount of energy on the ship
+                doubleEnginesToActivate = availableEnergy;
+            }
 
-            // Consuming the amount of batteries required to activate
-            // the given amount of double engines
             this.consumeEnergy(doubleEnginesToActivate);
-        }
-        else {
-            // No double engines to activate means that the total engine power
-            // is the result of all and only the single engines onboard the ship
-            totalEnginePower = singleEnginesEnginePower;
+            totalEnginePower += doubleEngineList.getFirst().getSpeed() * doubleEnginesToActivate;
         }
 
-        return totalEnginePower + brownAlienEnginePowerAddon;
+        // Finally, add the contribution of the single purple alien onboard the ship
+        // to the overall firepower (only if it's present and if the baseline firepower is > 0)
+        if (this.brownAlienPosition != null && totalEnginePower > 0) {
+            totalEnginePower += this.brownAlienPosition.getInhabitants().getFirst().getPowerBoost();
+        }
+
+        return totalEnginePower;
     }
 
     /**

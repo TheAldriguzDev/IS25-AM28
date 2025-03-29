@@ -139,17 +139,20 @@ public class VisitPlanets extends EventCard {
         int chosenPlanetIndex;
         boolean wantsToLand;
 
-        // Check if there is a player playing the card
-        if (this.currentPlayer.isEmpty()) {
-            throw new IllegalArgumentException("[VisitPlanet::useCard] ERROR: No player is currently playing (Optional contains null)");
-        }
-
         // ActionJSON unpacking
         try {
             visitPlanetsJSON = (VisitPlanetsJSON) data;
         }
         catch (Exception e) {
             throw new IllegalArgumentException("[VisitPlanets::useCard] ERROR: JSON data parsing error");
+        }
+
+        // Check if there is a player playing the card
+        if (this.currentPlayer.isEmpty()) {
+            throw new IllegalArgumentException("[VisitPlanet::useCard] ERROR: No player is currently playing (Optional contains null)");
+        }
+        if ( !this.currentPlayer.get().getNickname().equals(visitPlanetsJSON.getPlayerNickname())) {
+            throw new IllegalArgumentException("ERROR: Current player and player in visitPlanetJSON do not match (wrong arguments)");
         }
 
         // Extracting the player's chosen planet and his landing decision

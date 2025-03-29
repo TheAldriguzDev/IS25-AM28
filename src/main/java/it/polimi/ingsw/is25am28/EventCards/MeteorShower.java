@@ -117,6 +117,9 @@ public class MeteorShower extends EventCard {
             if (this.currentPlayer.isEmpty()) {
                 throw new IllegalArgumentException("ERROR: Given player is not present in the current game");
             }
+            if ( !this.currentPlayer.get().getNickname().equals(meteorShowerJSON.getPlayerNickname())) {
+                throw new IllegalArgumentException("ERROR: Current player and player in meteorShowerJSON do not match (wrong arguments)");
+            }
             if (this.diceThrowResult < 2 || this.diceThrowResult > 12) {
                 throw new IllegalArgumentException("ERROR: Dice throw result cannot be outside of the range [2, 12]");
             }
