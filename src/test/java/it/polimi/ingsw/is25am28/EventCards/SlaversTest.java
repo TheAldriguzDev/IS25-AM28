@@ -2,7 +2,7 @@ package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.ActionJSON.SmugglersJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.SlaversJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.*;
@@ -10,20 +10,19 @@ import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import javafx.util.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class SmugglersTest {
+class SlaversTest {
     Board board;
     Player p1;
     Player p2;
@@ -37,28 +36,22 @@ class SmugglersTest {
     ActionJSON actionJSON2;
     ActionJSON actionJSON3;
     ActionJSON actionJSON4;
-    Smugglers smugglers;
-    ResourceBank resourceBank;
 
-    ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved1;
-    ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken1;
+    Slavers slavers;
 
-    ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved2;
-    ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken2;
+    ArrayList<ComponentHelper<LifeformType>> crewToRemove1;
+    ArrayList<ComponentHelper<LifeformType>>  crewToRemove2;
+    ArrayList<ComponentHelper<LifeformType>>  crewToRemove3;
+    ArrayList<ComponentHelper<LifeformType>>  crewToRemove4;
 
-    ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved3;
-    ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken3;
-
-    ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved4;
-    ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken4;
-
-    ArrayList<Storage> storageList1;
-    ArrayList<Storage> storageList2;
-    ArrayList<Storage> storageList3;
-    ArrayList<Storage> storageList4;
+    List<Cabin> cabinList1;
+    List<Cabin> cabinList2;
+    List<Cabin> cabinList3;
+    List<Cabin> cabinList4;
 
     @BeforeEach
-    public void init() {
+    void init() {
+
         board = new BoardLevel2();
         board.buildBoard();
 
@@ -73,21 +66,16 @@ class SmugglersTest {
         p3 = players.get(2);
         p4 = players.get(3);
 
-        itemsToBeRemoved1 = new ArrayList<>();
-        itemsToBeTaken1 = new ArrayList<>();
-        storageList1 = new ArrayList<>();
+        crewToRemove1 = new ArrayList<>();
+        crewToRemove2 = new ArrayList<>();
+        crewToRemove3 = new ArrayList<>();
+        crewToRemove4 = new ArrayList<>();
 
-        itemsToBeRemoved2 = new ArrayList<>();
-        itemsToBeTaken2 = new ArrayList<>();
-        storageList2 = new ArrayList<>();
+        cabinList1 = new ArrayList<>();
+        cabinList2 = new ArrayList<>();
+        cabinList3 = new ArrayList<>();
+        cabinList4 = new ArrayList<>();
 
-        itemsToBeRemoved3 = new ArrayList<>();
-        itemsToBeTaken3 = new ArrayList<>();
-        storageList3 = new ArrayList<>();
-
-        itemsToBeRemoved4 = new ArrayList<>();
-        itemsToBeTaken4 = new ArrayList<>();
-        storageList4 = new ArrayList<>();
 
         ship_1 = p1.getShip();
         ship_init1(ship_1);
@@ -103,149 +91,145 @@ class SmugglersTest {
         board.addPlayerToBoard(p3);
         board.addPlayerToBoard(p4);
 
-        resourceBank = new ResourceBank();
     }
 
     @Test
-    public void all_players_lose() {
-
-
-        itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
-        itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
-        itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
-
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
-
-        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
-        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
-        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
-        itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
-
-        smugglers = new Smugglers("Smugglers", 2, 3, 5, 4, 1, 2, 1, 0, board, resourceBank);
-
-        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>()); // Total FirePower: 2
-        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>()); // Total FirePower: 2
-        actionJSON3 = new SmugglersJSON("Player 3", false, itemsToBeTaken3, itemsToBeRemoved3, new ArrayList<>()); // Total FirePower: 3
-        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, new ArrayList<>()); // Total FirePower: 3
-
-        smugglers.initCardPlayers();
-
-        smugglers.useCard(actionJSON1);
-        assertFalse(smugglers.hasFinished());
-
-        smugglers.useCard(actionJSON2);
-        assertFalse(smugglers.hasFinished());
-
-        smugglers.useCard(actionJSON3);
-        assertFalse(smugglers.hasFinished());
-
-        smugglers.useCard(actionJSON4);
-        assertTrue(smugglers.hasFinished());
-
-
-        assertEquals(0, ship_1.getAvailableEnergy()); // Non avendo items, subisce -4 alle batterie -> -3 in quanto ne ha solo 3
-
-        // System.out.println("p2 storage: ");
-        for (Storage storage : ship_2.getStorageList()) {
-            for(Item item : storage.getStoredItems()) {
-                // System.out.println(item.toString());
-            }
-        }
-
-        assertEquals(2, ship_2.getAvailableEnergy()); // Rimossi 3 items (G,G,Y) e 1 batteria
-
-
-//        System.out.println("StorageList3: ");
-//        for (Storage storage : storageList3) {
-//            for(Item item : storage.getStoredItems()) {
-//                System.out.println(item.toString());
-//            }
-//        }
-//        System.out.println("p3 storage: ");
-//        for (Storage storage : ship_3.getStorageList()) {
-//            for(Item item : storage.getStoredItems()) {
-//                System.out.println(item.toString());
-//            }
-//        }
-
-        assertEquals(3, ship_3.getAvailableEnergy()); // Rimossi 4 items e 0 batterie
-        assertEquals(ItemColor.GREEN, ship_3.getStorageList().get(1).getStoredItems().get(0).getColor());
-
-
-        assertEquals(3, ship_4.getAvailableEnergy()); // Rimossi 4 items e 0 batterie
-        assertEquals(0, ship_4.getStorageList().get(0).getStoredItems().size());
-        assertEquals(0, ship_4.getStorageList().get(1).getStoredItems().size());
-    }
-
-    @Test void first_player_loses_second_player_ties_third_player_wins_fourth_player_does_nothing() {
-
-        // In this test the first player will lose batteries, while the third will instead drop a green and a blue item to make space for 2 yellow items
-        // The second(tie) player and the fourth(does nothing) player won't have anything changed
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
-
-        itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
-        itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
+    public void test_first_player_loses_crew_second_player_eliminated_third_player_defeats_slavers_and_takes_loot_fourth_player_does_not_use_the_card() {
+        slavers = new Slavers("Slavers", 2, 4, 2, 4, 6, board);
 
         ArrayList<Pair<Integer, Integer>> doubleCannonActivated = new ArrayList<>();
         doubleCannonActivated.add(new Pair<>(7, 9));
 
-        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>()); // Total FirePower: 2
-        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>()); // Total FirePower: 3
-        actionJSON3 = new SmugglersJSON("Player 3", true, itemsToBeTaken3, itemsToBeRemoved3, doubleCannonActivated); // Total FirePower: 5
-        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, new ArrayList<>()); // Total FirePower: 3
+        actionJSON1 = new SlaversJSON("Player 1", false, crewToRemove1, new ArrayList<>()); // Total FirePower: 3
+        actionJSON2 = new SlaversJSON("Player 2", false, crewToRemove2, new ArrayList<>()); // Total FirePower: 3
+        actionJSON3 = new SlaversJSON("Player 3", true, crewToRemove3, doubleCannonActivated); // Total FirePower: 5
+        actionJSON4 = new SlaversJSON("Player 4", false, crewToRemove4, new ArrayList<>()); // Total FirePower: 3
 
-        smugglers = new Smugglers("Smugglers", 2, 3, 3, 2, 1, 2, 1, 0, board, resourceBank);
+        // Player 1 should lose all crew members except for a single Astronaut in the core
+        crewToRemove1.add(new ComponentHelper<LifeformType>(6,5).addItem(LifeformType.ASTRONAUT));
+        crewToRemove1.add(new ComponentHelper<LifeformType>(6,5).addItem(LifeformType.ASTRONAUT));
+        crewToRemove1.add(new ComponentHelper<LifeformType>(6, 7).addItem(LifeformType.ASTRONAUT));
+        crewToRemove1.add(new ComponentHelper<LifeformType>(7, 6).addItem(LifeformType.BROWN_ALIEN));
+        crewToRemove1.add(new ComponentHelper<LifeformType>(6, 7).addItem(LifeformType.ASTRONAUT));
+        crewToRemove1.add(new ComponentHelper<LifeformType>(6,6).addItem(LifeformType.ASTRONAUT));
+
+        ArrayList<Integer> occupiedSpace1Before = new ArrayList<>();
+        for(Cabin cabin : cabinList1) {
+            occupiedSpace1Before.add(cabin.getInhabitants().size());
+        }
+        // Player 2 should be eliminated
+        crewToRemove2.add((new ComponentHelper<LifeformType>(6,6).addItem(LifeformType.ASTRONAUT)));
+        crewToRemove2.add((new ComponentHelper<LifeformType>(6,6).addItem(LifeformType.ASTRONAUT)));
+        crewToRemove2.add((new ComponentHelper<LifeformType>(6,7).addItem(LifeformType.ASTRONAUT)));
+        crewToRemove2.add((new ComponentHelper<LifeformType>(6,7).addItem(LifeformType.ASTRONAUT)));
+        crewToRemove2.add((new ComponentHelper<LifeformType>(6,5).addItem(LifeformType.ASTRONAUT)));
+        crewToRemove2.add((new ComponentHelper<LifeformType>(6,5).addItem(LifeformType.ASTRONAUT)));
+
+
+        Player eliminatedPlayer = board.getPlayers().get(1);
 
         ArrayList<Integer> playerPositionsBefore = new ArrayList<>();
-        for (Player p : board.getPlayers()) {
-            playerPositionsBefore.add(p.getCursor());
+        for (Player player : board.getPlayers()) {
+            playerPositionsBefore.add(player.getCursor());
         }
 
-        smugglers.initCardPlayers();
+        slavers.initCardPlayers();
 
-        smugglers.useCard(actionJSON1);
-        assertFalse(smugglers.hasFinished());
+        if (!slavers.hasFinished()) {
+            slavers.useCard(actionJSON1);
+        }
+        if (!slavers.hasFinished()) {
+            slavers.useCard(actionJSON2);
+        }
+        if (!slavers.hasFinished()) {
+            slavers.useCard(actionJSON3);
+        }
 
-        smugglers.useCard(actionJSON2);
-        assertFalse(smugglers.hasFinished());
+        assertTrue(slavers.hasFinished());
 
-        smugglers.useCard(actionJSON3);
-        assertTrue(smugglers.hasFinished());
+        if (!slavers.hasFinished()) {
+            slavers.useCard(actionJSON4);
+        }
 
-        smugglers.useCard(actionJSON4);
-        assertTrue(smugglers.hasFinished());
 
-        assertEquals(1, ship_1.getAvailableEnergy()); // Non avendo items, subisce -2 alle batterie -> vanno a 1
+        assertEquals(occupiedSpace1Before.get(0) - 1, cabinList1.get(0).getInhabitants().size());
+        assertEquals(occupiedSpace1Before.get(1) - 2, cabinList1.get(1).getInhabitants().size());
+        assertEquals(occupiedSpace1Before.get(2) - 2, cabinList1.get(2).getInhabitants().size());
+        assertEquals(occupiedSpace1Before.get(3) - 1, cabinList1.get(3).getInhabitants().size());
 
-        assertEquals(3, ship_2.getAvailableEnergy()); // Non attiva cannoni doppi e non viene derubato delle batterie, il numero non varia
+        assertEquals(board.getEliminatedPlayers().size(), 1);
+        assertEquals(eliminatedPlayer, board.getEliminatedPlayers().getFirst());
 
-        assertEquals(2, ship_3.getAvailableEnergy()); // Non viene derubato ma attviva comunque un cannone doppio -> -1 alle batterie -> ne riamngono 2
-
-        // Verfico che nello storage normale ci siano solo le casse gialle (da G,B,Y a Y,Y,Y)
-        assertEquals(3, storageList3.get(0).getStoredItems().size());
-        assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(0).getColor());
-        assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(1).getColor());
-        assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(2).getColor());
-
-        // Verifico che solo la posizione del terzo player sia cambiata
         assertEquals(playerPositionsBefore.get(0), p1.getCursor());
-        assertEquals(playerPositionsBefore.get(1), p2.getCursor());
-        assertEquals(playerPositionsBefore.get(2) -3 -1, p3.getCursor()); // -3 di movementSteps, -1 per il "salto" oltre il player 4
+        assertEquals(playerPositionsBefore.get(2) - 2 - 1, p3.getCursor()); // 2 steps backwards + jump over p4
         assertEquals(playerPositionsBefore.get(3), p4.getCursor());
 
-//        System.out.println(p3.getShip().getStorageList().get(1).getStoredItems());
-//        System.out.println(storageList3.get(0).getStoredItems());
+        assertEquals(0, p1.getCredits());
+
+        assertEquals(4, p3.getCredits());
+        assertEquals(0, p4.getCredits());
+
+    }
+
+    @Test
+    public void test_first_three_players_tie_fourth_one_wins() {
+        slavers = new Slavers("Slavers", 2, 3, 2, 4, 6, board);
+
+        ArrayList<Pair<Integer, Integer>> doubleCannonActivated = new ArrayList<>();
+        doubleCannonActivated.add(new Pair<>(7, 9));
+
+        actionJSON1 = new SlaversJSON("Player 1", false, crewToRemove1, new ArrayList<>()); // Total FirePower: 3
+        actionJSON2 = new SlaversJSON("Player 2", false, crewToRemove2, new ArrayList<>()); // Total FirePower: 3
+        actionJSON3 = new SlaversJSON("Player 3", false, crewToRemove3, new ArrayList<>()); // Total FirePower: 3
+        actionJSON4 = new SlaversJSON("Player 4", true, crewToRemove4, doubleCannonActivated); // Total FirePower: 5
+
+        ArrayList<Integer> playerPositionsBefore = new ArrayList<>();
+        for (Player player : board.getPlayers()) {
+            playerPositionsBefore.add(player.getCursor());
+        }
+
+        slavers.initCardPlayers();
+
+        if (!slavers.hasFinished()) {
+            slavers.useCard(actionJSON1);
+        }
+
+        assertFalse(slavers.hasFinished());
+
+        if (!slavers.hasFinished()) {
+            slavers.useCard(actionJSON2);
+        }
+
+        assertFalse(slavers.hasFinished());
+
+        if (!slavers.hasFinished()) {
+            slavers.useCard(actionJSON3);
+        }
+
+        assertFalse(slavers.hasFinished());
+
+        if (!slavers.hasFinished()) {
+            slavers.useCard(actionJSON4);
+        }
+
+        assertTrue(slavers.hasFinished());
+
+        assertEquals(playerPositionsBefore.get(0), p1.getCursor());
+        assertEquals(playerPositionsBefore.get(1), p2.getCursor());
+        assertEquals(playerPositionsBefore.get(2), p3.getCursor());
+        assertEquals(playerPositionsBefore.get(3) - 2, p4.getCursor());
+
+        assertEquals(0, p1.getCredits());
+        assertEquals(0, p2.getCredits());
+        assertEquals(0, p3.getCredits());
+        assertEquals(4, p4.getCredits());
 
 
     }
 
     public void ship_init1(Ship ship) {
 
-        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
+        // core + 3 cabine, 3 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
         // 2 + 2 + 2 = umani + 1 alieno marrone
         // Il cannone doppio viene attivato
 
@@ -257,6 +241,7 @@ class SmugglersTest {
         Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 2);
         Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 0}, 1);
         Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
+        Cannon cannon_4 = new Cannon(new int[] {0, 0, 0, 1}, 1);
         Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
         Battery battery_1 = new Battery(new int[] {0, 0, 0, 1}, 3);
         //cannon_1.rotateLeft();
@@ -270,28 +255,36 @@ class SmugglersTest {
 
         cabin_3.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
 
-        ship.addComponent(cabin_1, 6, 5);
-        ship.addComponent(cabin_2, 6, 7);
-        ship.addComponent(cabin_3, 7, 6);
-        ship.addComponent(cannon_1, 5, 6);
-        ship.addComponent(cannon_2, 6, 4);
-        ship.addComponent(cannon_3, 6, 8);
-        ship.addComponent(vital_1, 7, 5);
-        ship.addComponent(battery_1, 7, 7);
+          ship.addComponent(cabin_1, 6, 5);
+          ship.addComponent(cabin_2, 6, 7);
+          ship.addComponent(cabin_3, 7, 6);
+          ship.addComponent(cannon_1, 5, 6);
+          ship.addComponent(cannon_2, 6, 4);
+          ship.addComponent(cannon_3, 6, 8);
+          ship.addComponent(cannon_4, 7, 8);
+          ship.addComponent(vital_1, 7, 5);
+          ship.addComponent(battery_1, 7, 7);
 
-        ship.generateComponentSubLists();
+          ship.generateComponentSubLists();
 
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
 
 
+
+
+
+        cabinList1.add(ship.getCabinList().getFirst());
+        cabinList1.add(cabin_1);
+        cabinList1.add(cabin_2);
+        cabinList1.add(cabin_3);
 
     }
 
     public void ship_init2(Ship ship) {
 
-        // core + 3 cabine, 3 cannoni singoli, un vital(BROWN), una batteria da 3
+        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
         // 2 + 2 + 2 = umani + 1 alieno marrone
         // Il cannone doppio non viene attivato
 
@@ -300,13 +293,15 @@ class SmugglersTest {
         Cabin cabin_1 = new Cabin(new int[] {1, 1, 0, 1}, false);
         Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
         Cabin cabin_3 = new Cabin(new int[] {1, 1, 1, 1}, false);
-        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 1);
+        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 2);
         Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 0}, 1);
         Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
+        Cannon cannon_4 = new Cannon(new int[] {0, 0, 0, 1}, 1);
         Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
         Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
         Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
         //cannon_1.rotateLeft();
+
 
         cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
@@ -326,6 +321,7 @@ class SmugglersTest {
         ship.addComponent(cannon_1, 5, 6);
         ship.addComponent(cannon_2, 6, 4);
         ship.addComponent(cannon_3, 6, 8);
+        ship.addComponent(cannon_4, 7, 9);
         ship.addComponent(vital_1, 7, 5);
         ship.addComponent(battery_1, 7, 7);
         ship.addComponent(storage_1, 7, 8);
@@ -335,15 +331,18 @@ class SmugglersTest {
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        storageList2.add(storage_1);
-
+        cabinList2.add(ship.getCabinList().getFirst());
+        cabinList2.add(cabin_1);
+        cabinList2.add(cabin_2);
+        cabinList2.add(cabin_3);
 
     }
 
     public void ship_init3(Ship ship) {
 
-        // core + 3 cabine, 3 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
+        // core + 3 cabine, 3 cannoni singoli, un vital(BROWN), una batteria da 3
         // 2 + 2 + 2 = umani + 1 alieno marrone
+
 
 
         //Cabin core = new Cabin(connectors, true);
@@ -393,9 +392,10 @@ class SmugglersTest {
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        storageList3.add(storage_1);
-        storageList3.add(storage_2);
-
+        cabinList3.add(ship.getCabinList().getFirst());
+        cabinList3.add(cabin_1);
+        cabinList3.add(cabin_2);
+        cabinList3.add(cabin_3);
 
     }
 
@@ -412,6 +412,7 @@ class SmugglersTest {
         Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 1);
         Cannon cannon_2 = new Cannon(new int[] {1, 1, 0, 1}, 1);
         Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
+        Cannon cannon_4 = new Cannon(new int[] {0, 0, 0, 1}, 2);
         Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
         Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
         Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
@@ -439,6 +440,7 @@ class SmugglersTest {
         ship.addComponent(cannon_1, 5, 6);
         ship.addComponent(cannon_2, 6, 4);
         ship.addComponent(cannon_3, 6, 8);
+        ship.addComponent(cannon_4, 7, 9);
         ship.addComponent(vital_1, 7, 5);
         ship.addComponent(battery_1, 7, 7);
         ship.addComponent(storage_1, 7, 8);
@@ -449,12 +451,11 @@ class SmugglersTest {
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        storageList4.add(storage_1);
-        storageList4.add(storage_2);
-
-
+        cabinList4.add(ship.getCabinList().getFirst());
+        cabinList4.add(cabin_1);
+        cabinList4.add(cabin_2);
+        cabinList4.add(cabin_3);
 
     }
-
 
 }

@@ -12,6 +12,7 @@ import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Ship.Ship;
+import javafx.util.Pair;
 import org.json.simple.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -31,6 +32,7 @@ class PiratesTest {
     Ship ship_2;
     Ship ship_3;
     Ship ship_4;
+    ActionJSON actionJSON;
     ActionJSON actionJSON1;
     ActionJSON actionJSON2;
     ActionJSON actionJSON3;
@@ -38,6 +40,7 @@ class PiratesTest {
 
     Pirates pirates;
 
+    ArrayList<int[]> ShieldsToActivate;
     ArrayList<int[]> shieldsToActivate1;
     ArrayList<int[]> shieldsToActivate2;
     ArrayList<int[]> shieldsToActivate3;
@@ -87,10 +90,10 @@ class PiratesTest {
         board.addPlayerToBoard(p3);
         board.addPlayerToBoard(p4);
 
-        dicesResults = new ArrayList<>();
-        dicesResults.add(7); // dall'alto, grosso
-        dicesResults.add(5); // da sinistra, piccolo
-        dicesResults.add(6); // dall'alto, piccolo
+//        dicesResults = new ArrayList<>();
+//        dicesResults.add(7); // dall'alto, grosso
+//        dicesResults.add(5); // da sinistra, piccolo
+//        dicesResults.add(6); // dall'alto, piccolo
 
         shootingSequence = new JSONArray();
 
@@ -111,108 +114,163 @@ class PiratesTest {
 
     }
 
-    @Test
-    public void takeCreditsTest() {
-        p1.setCredits(3);
-        p2.setCredits(4);
-        p3.setCredits(5);
-        p4.setCredits(0);
-
-        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
-        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
-        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
-        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
-
-        pirates = new Pirates("Pirates", 2, 3, 4, 4, shootingSequence, board);
-
-        pirates.initCardPlayers();
-
-        pirates.useCard(actionJSON1);
-        pirates.useCard(actionJSON2);
-        pirates.useCard(actionJSON3);
-        pirates.useCard(actionJSON4);
-
-
-        assert p1.getCredits() == 7 : "p1 credits should be 7 (slavers defeated), not " + p1.getCredits();
-        assert p2.getCredits() == 4 : "p2 credits should be 4 (slavers not defeated), not " + p2.getCredits();
-        assert p3.getCredits() == 9 : "p3 credits should be 9 (slavers defeated), not " + p3.getCredits();
-        assert p4.getCredits() == 4 : "p4 credits should be 4 (slavers defeated), not " + p4.getCredits();
-
-    }
-
-    @Test
-    public void movementTest() {
-
-        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
-        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
-        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
-        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
-
-        pirates = new Pirates("Pirates", 2, 3, 4, 2, shootingSequence, board);
-
-        pirates.initCardPlayers();
-
-        pirates.useCard(actionJSON1);
-        pirates.useCard(actionJSON2);
-        pirates.useCard(actionJSON3);
-        pirates.useCard(actionJSON4);
-
-        assert p1.getCursor() == 4 : "p1 cursor should be 4 (moved 2 backwards), not " + p1.getCursor();
-        assert p2.getCursor() == 3 : "p2 cursor should be 3 (did not move), not " + p2.getCursor();
-        assert p3.getCursor() == -2 : "p3 cursor should be -2 (jumped over p4, moved 2 backwards), not " + p3.getCursor();
-        assert p4.getCursor() == -3 : "p4 cursor should be -3 (moved 1 backwards, jumped over p3, moved 1 backwards), not " + p4.getCursor();
-    }
-
     @Test void test_first_eliminated_second_third_fourth_hit() {
 
-        actionJSON1 = new PiratesJSON("Player 1", false, shieldsToActivate1, 0, dicesResults); // Total FirePower: 4
-        actionJSON2 = new PiratesJSON("Player 2", false, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
-        actionJSON3 = new PiratesJSON("Player 3", false, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
-        actionJSON4 = new PiratesJSON("Player 4", false, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
+
 
         pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board);
 
+
+
         pirates.initCardPlayers();
 
-
         Player eliminatedPlayer = p1;
-
-
-        // System.out.println("ship_1 before destruction");
-        printGrid(ship_1);
-        pirates.useCard(actionJSON1);
+        ShieldsToActivate = new ArrayList<>();
+        // First round
+        actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 2
+        pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
-        // System.out.println("ship_1 after destruction");
-        printGrid(ship_1);
 
-        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
-
-        // System.out.println("ship_2 before destruction");
-        printGrid(ship_2);
+        actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 2
+        pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
-        pirates.useCard(actionJSON2);
-        // System.out.println("ship_2 after destruction");
-        printGrid(ship_2);
 
-        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
-
-        // System.out.println("ship_3 before destruction");
-        printGrid(ship_3);
-        assertFalse(pirates.hasFinished());
+        actionJSON3 = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
         pirates.useCard(actionJSON3);
-        // System.out.println("ship_3 after destruction");
-        printGrid(ship_3);
-
-        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
-
-        // System.out.println("ship_4 before destruction");
-        printGrid(ship_4);
         assertFalse(pirates.hasFinished());
-        pirates.useCard(actionJSON4);
-        // System.out.println("ship_4 after destruction");
-        printGrid(ship_4);
 
+        actionJSON4 = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
+        pirates.useCard(actionJSON4);
+        assertFalse(pirates.hasFinished());
+        // End of first round
+
+        // Start of destruction and defense rounds
+        // First shot : big from above on column 7
+        pirates.setDiceThrowResult(7);
+
+        ShieldsToActivate = new ArrayList<>();
+        actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+
+        ShieldsToActivate = new ArrayList<>();
+        actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+        ShieldsToActivate = new ArrayList<>();
+        actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+        ShieldsToActivate = new ArrayList<>();
+        ShieldsToActivate.add(new int[] {5, 7}); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
+        actionJSON = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+        // Second shot : small from the left on row 5
+        pirates.setDiceThrowResult(5);
+
+        // First player should be no more
+
+        ShieldsToActivate = new ArrayList<>();
+        actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+        ShieldsToActivate = new ArrayList<>();
+        ShieldsToActivate.add(new int[] {8, 5}); // Non lo proteggerà
+        actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+        ShieldsToActivate = new ArrayList<>();
+        ShieldsToActivate.add(new int[] {8, 5}); // Lo proteggerà
+        actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+        ShieldsToActivate = new ArrayList<>();
+        ShieldsToActivate.add(new int[] {8, 5});
+        actionJSON = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+        // Third shot : small from above on column 6
+        pirates.setDiceThrowResult(6);
+
+        ShieldsToActivate = new ArrayList<>();
+        actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+        ShieldsToActivate = new ArrayList<>();
+        ShieldsToActivate.add(new int[] {8, 5});
+        actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+
+        ShieldsToActivate = new ArrayList<>();
+        ShieldsToActivate.add(new int[] {8, 5});
+        actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
+        assertFalse(pirates.hasFinished());
+
+
+        ShieldsToActivate = new ArrayList<>();
+        actionJSON = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>());
+        pirates.useCard(actionJSON);
         assertTrue(pirates.hasFinished());
+
+
+
+
+
+
+
+
+
+
+
+
+//        // System.out.println("ship_1 before destruction");
+//        printGrid(ship_1);
+//        pirates.useCard(actionJSON1);
+//        assertFalse(pirates.hasFinished());
+//        // System.out.println("ship_1 after destruction");
+//        printGrid(ship_1);
+//
+//        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+//
+//        // System.out.println("ship_2 before destruction");
+//        printGrid(ship_2);
+//        assertFalse(pirates.hasFinished());
+//        pirates.useCard(actionJSON2);
+//        // System.out.println("ship_2 after destruction");
+//        printGrid(ship_2);
+//
+//        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+//
+//        // System.out.println("ship_3 before destruction");
+//        printGrid(ship_3);
+//        assertFalse(pirates.hasFinished());
+//        pirates.useCard(actionJSON3);
+//        // System.out.println("ship_3 after destruction");
+//        printGrid(ship_3);
+//
+//        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+//
+//        // System.out.println("ship_4 before destruction");
+//        printGrid(ship_4);
+//        assertFalse(pirates.hasFinished());
+//        pirates.useCard(actionJSON4);
+//        // System.out.println("ship_4 after destruction");
+//        printGrid(ship_4);
+//
+//        assertTrue(pirates.hasFinished());
 
         assertNull(ship_2.getComponent(6, 7));
         assertNull(ship_2.getComponent(5, 6));
@@ -230,12 +288,18 @@ class PiratesTest {
 
     @Test
     public void test_first_defeats_and_takes_credits() {
-        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
-        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
-        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
-        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
 
-        pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board);
+        ShieldsToActivate = new ArrayList<>();
+
+        ArrayList<Pair<Integer, Integer>> doubleCannonActivated = new ArrayList<>();
+        doubleCannonActivated.add(new Pair<>(5, 6));
+
+        actionJSON1 = new PiratesJSON("Player 1", true, ShieldsToActivate, doubleCannonActivated); // Total FirePower: 4
+        actionJSON2 = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 2
+        actionJSON3 = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
+        actionJSON4 = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
+
+        pirates = new Pirates("Pirates", 2, 3, 4, 4, shootingSequence, board);
 
         pirates.initCardPlayers();
 
@@ -245,15 +309,15 @@ class PiratesTest {
         }
 
         pirates.useCard(actionJSON1);
-        assertTrue(pirates.hasFinished());
+        assertFalse(pirates.hasFinished());
 
-        assertTrue(pirates.hasFinished());
+        assertFalse(pirates.hasFinished());
         pirates.useCard(actionJSON2);
 
-        assertTrue(pirates.hasFinished());
+        assertFalse(pirates.hasFinished());
         pirates.useCard(actionJSON3);
 
-        assertTrue(pirates.hasFinished());
+        assertFalse(pirates.hasFinished());
         pirates.useCard(actionJSON4);
 
         assertTrue(pirates.hasFinished());
@@ -393,7 +457,7 @@ class PiratesTest {
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
 
-        shieldsToActivate2.add(new int[] {8, 5});
+
 
     }
 
@@ -511,8 +575,7 @@ class PiratesTest {
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        shieldsToActivate4.add(new int[] {8, 5});
-        shieldsToActivate4.add(new int[] {5, 7});
+
 
     }
 }

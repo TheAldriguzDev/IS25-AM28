@@ -56,17 +56,18 @@ public class Smugglers extends EventCard {
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
-
-                    if(player.getShip().getFirePower(smugglersData.getNumberOfDoubleCannonsActivated()) > requiredFirepower) {
+                    float playerFirepower = player.getShip().getFirePower(smugglersData.getDoubleCannonsToActivateCoordinates());
+//                    System.out.println(playerFirepower);
+                    if(playerFirepower > requiredFirepower) {
                         // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
                         cardUsed();
                         if (smugglersData.getTakeLoot()) {
-                            bonusEffect();
+                            bonusEffect(data);
                             getBoard().movePlayerBackwards(player, movementSteps);
                             getBoard().validatePlayersPosition();
                             //player.setCursor(player.getCursor() - this.movementSteps);
                         }
-                    } else {
+                    } else if (playerFirepower < requiredFirepower) {
                         malusEffect(smugglersData);
                     }
                     if (player.equals(this.players.getLast())) {
@@ -90,13 +91,11 @@ public class Smugglers extends EventCard {
                 (Player player) -> {
                     ArrayList<ComponentHelper<ItemColor>> resourcesToLoad = smugglersData.getItemsToBeTaken();
                     ArrayList<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
-
                     // Item da lasciare per fare spazio
                     for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
                         resourceDrop.getItem().ifPresent( i ->
                                 this.resourceBank.addResourceToBankFromPlayer(player, i, resourceDrop.getI(), resourceDrop.getJ()));
                     }
-
                     // Item da caricare sulla nave
                     for ( ComponentHelper<ItemColor> resourceTake : resourcesToLoad) {
                         resourceTake.getItem().ifPresent( i ->
