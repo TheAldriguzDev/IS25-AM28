@@ -2,10 +2,7 @@ package it.polimi.ingsw.is25am28.Ship;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ShipJSON;
 import it.polimi.ingsw.is25am28.Components.*;
-import it.polimi.ingsw.is25am28.Exceptions.ExistingComponentException;
-import it.polimi.ingsw.is25am28.Exceptions.InsufficientEnergyException;
-import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
-import it.polimi.ingsw.is25am28.Exceptions.OutOfGridException;
+import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
@@ -489,15 +486,18 @@ class ShipTest {
         assertEquals(4, ship.getAvailableEnergy());
 
         // Overconsumption
-        try {
-            ship.consumeEnergy(20);
-        }
-        catch (InsufficientEnergyException e) {
+        InsufficientEnergyException iee = assertThrowsExactly(InsufficientEnergyException.class, () -> ship.consumeEnergy(20));
+
+//        try {
+//            ship.consumeEnergy(20);
+//        }
+//        catch (InsufficientEnergyException e) {
 //            System.out.println("InsufficientEnergyException CAUGHT");
-        }
-        catch (Exception e) {
-            fail("Wrong exception thrown");
-        }
+//        }
+//        catch (Exception e) {
+//            fail("Wrong exception thrown");
+//        }
+//
 
         int prevEnergy = ship.getAvailableEnergy();
 
@@ -1218,57 +1218,67 @@ class ShipTest {
 
         // Testing edge cases
         // (1) - OutOfGridException
-        try {
-            ship.addComponent(engine, -1, 0);
-        }
-        catch (OutOfGridException e) {
+        OutOfGridException ooge = assertThrowsExactly(OutOfGridException.class, () -> ship.addComponent(engine, -1, 0));
+
+//        try {
+//            ship.addComponent(engine, -1, 0);
+//        }
+//        catch (OutOfGridException e) {
 //            System.out.println("OutOfGridException CAUGHT (1)");
-        }
-        catch (Exception e) {
-            fail("Wrong exception caught");
-        }
+//        }
+//        catch (Exception e) {
+//            fail("Wrong exception caught");
+//        }
 
-        try {
-            ship.addComponent(engine, 2, -1);
-        }
-        catch (OutOfGridException e) {
+        ooge = assertThrowsExactly(OutOfGridException.class, () -> ship.addComponent(engine, 2, -1));
+
+//        try {
+//            ship.addComponent(engine, 2, -1);
+//        }
+//        catch (OutOfGridException e) {
 //            System.out.println("OutOfGridException CAUGHT (2)");
-        }
-        catch (Exception e) {
-            fail("Wrong exception caught");
-        }
+//        }
+//        catch (Exception e) {
+//            fail("Wrong exception caught");
+//        }
 
-        try {
-            ship.addComponent(engine, -22, -7);
-        }
-        catch (OutOfGridException e) {
+        ooge = assertThrowsExactly(OutOfGridException.class, () -> ship.addComponent(engine, -22, -7));
+
+//        try {
+//            ship.addComponent(engine, -22, -7);
+//        }
+//        catch (OutOfGridException e) {
 //            System.out.println("OutOfGridException CAUGHT (3)");
-        }
-        catch (Exception e) {
-            fail("Wrong exception caught");
-        }
+//        }
+//        catch (Exception e) {
+//            fail("Wrong exception caught");
+//        }
 
         // (2) - NullComponentException
-        try {
-            ship.addComponent(null, 3, 0);
-        }
-        catch (NullComponentException e) {
+        NullComponentException nce = assertThrowsExactly(NullComponentException.class, () -> ship.addComponent(null, 3, 0));
+
+//        try {
+//            ship.addComponent(null, 3, 0);
+//        }
+//        catch (NullComponentException e) {
 //            System.out.println("NullComponentException CAUGHT");
-        }
-        catch (Exception e) {
-            fail("Wrong exception caught");
-        }
+//        }
+//        catch (Exception e) {
+//            fail("Wrong exception caught");
+//        }
 
         // (3) - ExistingComponentException
-        try {
-            ship.addComponent(engine, 6, 6);
-        }
-        catch (ExistingComponentException e) {
+        ExistingComponentException ece = assertThrowsExactly(ExistingComponentException.class, () -> ship.addComponent(engine, 6, 6));
+
+//        try {
+//            ship.addComponent(engine, 6, 6);
+//        }
+//        catch (ExistingComponentException e) {
 //            System.out.println("ExistingComponentException CAUGHT");
-        }
-        catch (Exception e) {
-            fail("Wrong exception caught");
-        }
+//        }
+//        catch (Exception e) {
+//            fail("Wrong exception caught");
+//        }
     }
 
     @Test
@@ -1310,27 +1320,31 @@ class ShipTest {
 //        printShipGrid(ship);
 
         // Removing components
-        try {
-            ship.removeComponent(-1, -1);
-            throw new Exception("Should not have removed it");
-        }
-        catch (OutOfGridException e) {
-//            System.out.println("OutOfGridException CAUGHT");
-        }
-        catch (Exception e) {
-            fail("Wrong exception caught");
-        }
+        OutOfGridException ooge = assertThrowsExactly(OutOfGridException.class, () -> ship.removeComponent(-1, -1));
 
-        try {
-            ship.removeComponent(11, 12);
-            throw new Exception("Should not have removed it");
-        }
-        catch (OutOfGridException e) {
+//        try {
+//            ship.removeComponent(-1, -1);
+//            throw new Exception("Should not have removed it");
+//        }
+//        catch (OutOfGridException e) {
 //            System.out.println("OutOfGridException CAUGHT");
-        }
-        catch (Exception e) {
-            fail("Wrong exception caught");
-        }
+//        }
+//        catch (Exception e) {
+//            fail("Wrong exception caught");
+//        }
+
+        ooge = assertThrowsExactly(OutOfGridException.class, () -> ship.removeSingleComponent(11, 12));
+
+//        try {
+//            ship.removeComponent(11, 12);
+//            throw new Exception("Should not have removed it");
+//        }
+//        catch (OutOfGridException e) {
+//            System.out.println("OutOfGridException CAUGHT");
+//        }
+//        catch (Exception e) {
+//            fail("Wrong exception caught");
+//        }
 
         ship.recreateShipGrid();
         List<Component> removed;
@@ -1433,15 +1447,17 @@ class ShipTest {
 
         ShipJSON shipJSON = new ShipJSON("p1", chosenAliens);
 
-        try {
-            ship.setChosenAliensForEligibleCabins(shipJSON);
-        }
-        catch (IllegalArgumentException e) {
-            // Wrong behavior exception was caught correctly
-        }
-        catch (Exception e) {
-            fail("Wrong exception caught");
-        }
+        IllegalArgumentException iae = assertThrowsExactly(IllegalArgumentException.class, () -> ship.setChosenAliensForEligibleCabins(shipJSON));
+
+//        try {
+//            ship.setChosenAliensForEligibleCabins(shipJSON);
+//        }
+//        catch (IllegalArgumentException e) {
+//            // Wrong behavior exception was caught correctly
+//        }
+//        catch (Exception e) {
+//            fail("Wrong exception caught");
+//        }
     }
 
     @Test

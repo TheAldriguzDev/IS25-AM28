@@ -131,7 +131,7 @@ class SmugglersTest {
 
         assertEquals(0, ship_1.getAvailableEnergy()); // Non avendo items, subisce -4 alle batterie -> -3 in quanto ne ha solo 3
 
-        System.out.println("p2 storage: ");
+//        System.out.println("p2 storage: ");
         for (Storage storage : ship_2.getStorageList()) {
             for(Item item : storage.getStoredItems()) {
                 System.out.println(item.toString());

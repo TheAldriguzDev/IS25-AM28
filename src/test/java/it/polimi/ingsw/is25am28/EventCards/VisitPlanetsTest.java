@@ -245,7 +245,7 @@ class VisitPlanetsTest {
         initialPositions.add(this.board.getPlayers().get(2).getCursor());
         initialPositions.add(this.board.getPlayers().get(3).getCursor());
 
-        System.out.println(initialPositions);
+//        System.out.println(initialPositions);
 
         // Player 1 (P1) - P1 plays correctly (he's not greedy nor nihilist)
         // --> P1 will: drop (2 BLUE) and take (1 YELLOW, 1 GREEN, 2 BLUE) from planet with planetID=0
@@ -380,17 +380,18 @@ class VisitPlanetsTest {
         visitPlanetsJSON.setPlayerNickname(currPlayer.getNickname());
 
         // P2 uses the card
-        // Should throw an IllegalStateException due to the overflowing of items
-        try {
-            this.visitPlanets.useCard(visitPlanetsJSON);
-        }
-        catch (IllegalStateException e) {
-            // Overflow causes this
+        this.visitPlanets.useCard(visitPlanetsJSON);
+
+//        try {
+//            this.visitPlanets.useCard(visitPlanetsJSON);
+//        }
+//        catch (IllegalStateException e) {
+//            // Overflow causes this
 //            System.out.println("Storage Overflow CAUGHT");
-        }
-        catch (Exception e) {
-            throw new Error("ERROR: Storage overflow wasn't caught");
-        }
+//        }
+//        catch (Exception e) {
+//            throw new Error("ERROR: Storage overflow wasn't caught");
+//        }
 
         // Adding the chosen planetID to the list of used ones
         chosenPlanets.add(chosenPlanetIndex);
@@ -628,10 +629,10 @@ class VisitPlanetsTest {
         assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
         assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
 
-        System.out.println(this.visitPlanets.getBoard().getPlayers().get(0).getCursor());
-        System.out.println(this.visitPlanets.getBoard().getPlayers().get(1).getCursor());
-        System.out.println(this.visitPlanets.getBoard().getPlayers().get(2).getCursor());
-        System.out.println(this.visitPlanets.getBoard().getPlayers().get(3).getCursor());
+//        System.out.println(this.visitPlanets.getBoard().getPlayers().get(0).getCursor());
+//        System.out.println(this.visitPlanets.getBoard().getPlayers().get(1).getCursor());
+//        System.out.println(this.visitPlanets.getBoard().getPlayers().get(2).getCursor());
+//        System.out.println(this.visitPlanets.getBoard().getPlayers().get(3).getCursor());
 
         // (FINAL) Check that each player that decided to land got moved backwards
         // A list of the previous positions is needed to confront them with the new positions
