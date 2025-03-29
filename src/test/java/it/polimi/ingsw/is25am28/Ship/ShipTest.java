@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
+import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 
 import javafx.util.Pair;
@@ -21,53 +22,53 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ShipTest {
 
-    /**
-     * Outputs the given ship to terminal
-     * @param ship The ship to print to terminal
-     */
-    void printShipGrid(Ship ship) {
-        if (ship != null) {
-            List<Component> components = new ArrayList<>();
-            Component c;
-            int rows = ship.getGridDimensions().getKey();
-            int cols = ship.getGridDimensions().getValue();
-            int i, j, k;
-
-            System.out.print("\n\\");
-            for (i = 0; i < cols; i++) {
-                System.out.print("\t" + i);
-            }
-            System.out.print("\n");
-
-            k = 0;
-
-            for (i = 0; i < rows; i++) {
-                System.out.print(i + "\t");
-                for (j = 0; j < cols; j++) {
-                    c = ship.getComponent(i, j);
-                    if (c == null) {
-                        System.out.print("." + "\t");
-                    }
-                    else {
-                        System.out.print(k++ + "\t");
-                        components.add(c);
-                    }
-                }
-                System.out.print("\n");
-            }
-
-            int size = components.size();
-
-            System.out.println("\nFound these components:");
-
-            for (i = 0; i < size; i++) {
-                System.out.println(i + " - " + components.get(i));
-            }
-        }
-        else {
-            System.out.println("ERROR: Given ship is null");
-        }
-    }
+//    /**
+//     * Outputs the given ship to terminal
+//     * @param ship The ship to print to terminal
+//     */
+//    void printShipGrid(Ship ship) {
+//        if (ship != null) {
+//            List<Component> components = new ArrayList<>();
+//            Component c;
+//            int rows = ship.getGridDimensions().getKey();
+//            int cols = ship.getGridDimensions().getValue();
+//            int i, j, k;
+//
+//            System.out.print("\n\\");
+//            for (i = 0; i < cols; i++) {
+//                System.out.print("\t" + i);
+//            }
+//            System.out.print("\n");
+//
+//            k = 0;
+//
+//            for (i = 0; i < rows; i++) {
+//                System.out.print(i + "\t");
+//                for (j = 0; j < cols; j++) {
+//                    c = ship.getComponent(i, j);
+//                    if (c == null) {
+//                        System.out.print("." + "\t");
+//                    }
+//                    else {
+//                        System.out.print(k++ + "\t");
+//                        components.add(c);
+//                    }
+//                }
+//                System.out.print("\n");
+//            }
+//
+//            int size = components.size();
+//
+//            System.out.println("\nFound these components:");
+//
+//            for (i = 0; i < size; i++) {
+//                System.out.println(i + " - " + components.get(i));
+//            }
+//        }
+//        else {
+//            System.out.println("ERROR: Given ship is null");
+//        }
+//    }
 
     Ship initCustomShip() {
         Ship ship = new Ship(1);
@@ -155,8 +156,8 @@ class ShipTest {
         ship.addComponent(doubleEngine1, 8, 7);
         ship.addComponent(singleEngine3, 8, 8);
 
-        System.out.println("==== SHIP CONFIGURATION ====");
-        printShipGrid(ship);
+//        System.out.println("==== SHIP CONFIGURATION ====");
+//        printShipGrid(ship);
 
         // Generating the component sub-lists right after the ship is created
         ship.generateComponentSubLists();
@@ -185,8 +186,8 @@ class ShipTest {
         Structural structural = new Structural(connectors);
         Vital vital = new Vital(connectors, 0);
 
-        System.out.println("==== BEFORE ====");
-        printShipGrid(ship);
+//        System.out.println("==== BEFORE ====");
+//        printShipGrid(ship);
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -199,8 +200,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== AFTER ====");
-        printShipGrid(ship);
+//        System.out.println("==== AFTER ====");
+//        printShipGrid(ship);
 
         List<Engine> engineList = new ArrayList<Engine>();
         engineList.add(engine);
@@ -318,8 +319,8 @@ class ShipTest {
         ship.addComponent(doubleEngine1, 8, 7);
         ship.addComponent(singleEngine3, 8, 8);
 
-        System.out.println("==== SHIP CONFIGURATION ====");
-        printShipGrid(ship);
+//        System.out.println("==== SHIP CONFIGURATION ====");
+//        printShipGrid(ship);
 
         // Generating the component sub-lists right after the ship is created
         ship.generateComponentSubLists();
@@ -401,8 +402,8 @@ class ShipTest {
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
-        System.out.println("==== BEFORE ====");
-        printShipGrid(ship);
+//        System.out.println("==== BEFORE ====");
+//        printShipGrid(ship);
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -420,8 +421,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== AFTER ====");
-        printShipGrid(ship);
+//        System.out.println("==== AFTER ====");
+//        printShipGrid(ship);
 
         ship.generateComponentSubLists();
 
@@ -460,8 +461,8 @@ class ShipTest {
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
-        System.out.println("==== BEFORE ====");
-        printShipGrid(ship);
+//        System.out.println("==== BEFORE ====");
+//        printShipGrid(ship);
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -475,8 +476,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== AFTER ====");
-        printShipGrid(ship);
+//        System.out.println("==== AFTER ====");
+//        printShipGrid(ship);
 
         ship.generateComponentSubLists();
 
@@ -492,7 +493,10 @@ class ShipTest {
             ship.consumeEnergy(20);
         }
         catch (InsufficientEnergyException e) {
-            System.out.println("InsufficientEnergyException CAUGHT");
+//            System.out.println("InsufficientEnergyException CAUGHT");
+        }
+        catch (Exception e) {
+            fail("Wrong exception thrown");
         }
 
         int prevEnergy = ship.getAvailableEnergy();
@@ -573,8 +577,8 @@ class ShipTest {
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
-        System.out.println("==== BEFORE ====");
-        printShipGrid(ship);
+//        System.out.println("==== BEFORE ====");
+//        printShipGrid(ship);
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -588,8 +592,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== AFTER ====");
-        printShipGrid(ship);
+//        System.out.println("==== AFTER ====");
+//        printShipGrid(ship);
 
         ship.generateComponentSubLists();
     }
@@ -618,8 +622,8 @@ class ShipTest {
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
-        System.out.println("==== BEFORE ====");
-        printShipGrid(ship);
+//        System.out.println("==== BEFORE ====");
+//        printShipGrid(ship);
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -634,8 +638,8 @@ class ShipTest {
         ship.addComponent(vital, 2, 2);
         ship.addComponent(vital, 3, 5);
 
-        System.out.println("==== AFTER ====");
-        printShipGrid(ship);
+//        System.out.println("==== AFTER ====");
+//        printShipGrid(ship);
 
         // Expected from the ship created above
         // (counted by looking at the ship printed to terminal)
@@ -683,8 +687,8 @@ class ShipTest {
         ship.addComponent(topStorage, 5, 6);
         ship.addComponent(disconnectedStorage, 7, 8);
 
-        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
-        printShipGrid(ship);
+//        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
+//        printShipGrid(ship);
 
         ship.generateComponentSubLists();
 
@@ -773,17 +777,17 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== SHIP CONFIGURATION ====");
-        printShipGrid(ship);
+//        System.out.println("==== SHIP CONFIGURATION ====");
+//        printShipGrid(ship);
 
         List<Component> wrongs = ship.getWrongComponents();
 
-        if (!wrongs.isEmpty()) {
-            System.out.println("\nWRONG COMPONENTS FOUND:");
-            for (Component c : wrongs) {
-                System.out.println(" - " + c.toString() + " at coordinates (" + c.getPosition()[0] + ", " + c.getPosition()[1] + ")");
-            }
-        }
+//        if (!wrongs.isEmpty()) {
+//            System.out.println("\nWRONG COMPONENTS FOUND:");
+//            for (Component c : wrongs) {
+//                System.out.println(" - " + c.toString() + " at coordinates (" + c.getPosition()[0] + ", " + c.getPosition()[1] + ")");
+//            }
+//        }
 
         List<Component> expectedWrongs = new ArrayList<>();
         expectedWrongs.add(battery);
@@ -803,17 +807,17 @@ class ShipTest {
         ship.addComponent(engine2, 8, 5);
         ship.addComponent(structural, 7, 5);
 
-        System.out.println("\n==== SHIP CONFIGURATION (after moving some components (see the test code)) ====");
-        printShipGrid(ship);
+//        System.out.println("\n==== SHIP CONFIGURATION (after moving some components (see the test code)) ====");
+//        printShipGrid(ship);
 
         wrongs = ship.getWrongComponents();
 
-        if (!wrongs.isEmpty()) {
-            System.out.println("\nWRONG COMPONENTS FOUND:");
-            for (Component c : wrongs) {
-                System.out.println(" - " + c.toString() + " at coordinates (" + c.getPosition()[0] + ", " + c.getPosition()[1] + ")");
-            }
-        }
+//        if (!wrongs.isEmpty()) {
+//            System.out.println("\nWRONG COMPONENTS FOUND:");
+//            for (Component c : wrongs) {
+//                System.out.println(" - " + c.toString() + " at coordinates (" + c.getPosition()[0] + ", " + c.getPosition()[1] + ")");
+//            }
+//        }
 
         assertTrue(wrongs.isEmpty());
         assertTrue(ship.validateShip());
@@ -854,8 +858,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
-        printShipGrid(ship);
+//        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
+//        printShipGrid(ship);
 
         int i;
         int indexRow1 = 6;
@@ -919,8 +923,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
-        printShipGrid(ship);
+//        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
+//        printShipGrid(ship);
 
         int i;
         int indexCol1 = 5;
@@ -985,8 +989,8 @@ class ShipTest {
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
-        System.out.println("==== BEFORE ====");
-        printShipGrid(ship);
+//        System.out.println("==== BEFORE ====");
+//        printShipGrid(ship);
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -1000,8 +1004,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== AFTER ====");
-        printShipGrid(ship);
+//        System.out.println("==== AFTER ====");
+//        printShipGrid(ship);
 
         List<Component> expectedVisited = new ArrayList<>();
         List<Component> actualVisited = new ArrayList<>();
@@ -1018,7 +1022,7 @@ class ShipTest {
         ship.traverse(actualVisited::add);
 
         int size = expectedVisited.size();
-        System.out.println("\tsize: " + size + " | actualVisited.size(): " + actualVisited.size());
+//        System.out.println("\tsize: " + size + " | actualVisited.size(): " + actualVisited.size());
 
         for (i = 0; i < size; i++) {
             assertEquals(expectedVisited.get(i), actualVisited.get(i));
@@ -1065,8 +1069,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
-        printShipGrid(ship);
+//        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
+//        printShipGrid(ship);
 
         List<Component> actualVisitingOrder = new ArrayList<Component>();
         List<Component> expectedVisitingOrder = new ArrayList<Component>();
@@ -1095,7 +1099,7 @@ class ShipTest {
         assertEquals(expectedVisitingOrder.size(), actualVisitingOrder.size());
 
         for (int i = 0; i < actualVisitingOrder.size(); i++) {
-            System.out.println("Checking index " + i);
+//            System.out.println("Checking index " + i);
             assertEquals(expectedVisitingOrder.get(i), actualVisitingOrder.get(i));
         }
     }
@@ -1123,8 +1127,8 @@ class ShipTest {
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
-        System.out.println("==== BEFORE ====");
-        printShipGrid(ship);
+//        System.out.println("==== BEFORE ====");
+//        printShipGrid(ship);
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -1137,8 +1141,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== AFTER ====");
-        printShipGrid(ship);
+//        System.out.println("==== AFTER ====");
+//        printShipGrid(ship);
 
         // Asserting the shield's neighbours
         assertEquals(null, ship.getNearestComponents(shield)[0]);
@@ -1180,8 +1184,8 @@ class ShipTest {
         Structural structural = new Structural(connectors);
         Vital vital = new Vital(connectors, 0);
 
-        System.out.println("==== BEFORE ====");
-        printShipGrid(ship);
+//        System.out.println("==== BEFORE ====");
+//        printShipGrid(ship);
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -1193,8 +1197,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== AFTER ====");
-        printShipGrid(ship);
+//        System.out.println("==== AFTER ====");
+//        printShipGrid(ship);
 
         // All these components should be added
         assertEquals(ship.getComponent(6, 7), battery);
@@ -1218,21 +1222,30 @@ class ShipTest {
             ship.addComponent(engine, -1, 0);
         }
         catch (OutOfGridException e) {
-            System.out.println("OutOfGridException CAUGHT (1)");
+//            System.out.println("OutOfGridException CAUGHT (1)");
+        }
+        catch (Exception e) {
+            fail("Wrong exception caught");
         }
 
         try {
             ship.addComponent(engine, 2, -1);
         }
         catch (OutOfGridException e) {
-            System.out.println("OutOfGridException CAUGHT (2)");
+//            System.out.println("OutOfGridException CAUGHT (2)");
+        }
+        catch (Exception e) {
+            fail("Wrong exception caught");
         }
 
         try {
             ship.addComponent(engine, -22, -7);
         }
         catch (OutOfGridException e) {
-            System.out.println("OutOfGridException CAUGHT (3)");
+//            System.out.println("OutOfGridException CAUGHT (3)");
+        }
+        catch (Exception e) {
+            fail("Wrong exception caught");
         }
 
         // (2) - NullComponentException
@@ -1240,7 +1253,10 @@ class ShipTest {
             ship.addComponent(null, 3, 0);
         }
         catch (NullComponentException e) {
-            System.out.println("NullComponentException CAUGHT");
+//            System.out.println("NullComponentException CAUGHT");
+        }
+        catch (Exception e) {
+            fail("Wrong exception caught");
         }
 
         // (3) - ExistingComponentException
@@ -1248,7 +1264,10 @@ class ShipTest {
             ship.addComponent(engine, 6, 6);
         }
         catch (ExistingComponentException e) {
-            System.out.println("ExistingComponentException CAUGHT");
+//            System.out.println("ExistingComponentException CAUGHT");
+        }
+        catch (Exception e) {
+            fail("Wrong exception caught");
         }
     }
 
@@ -1287,8 +1306,8 @@ class ShipTest {
         ship.addComponent(structural, 3, 2);
         ship.addComponent(vital, 2, 2);
 
-        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
-        printShipGrid(ship);
+//        System.out.println("==== CURRENT SHIP CONFIGURATION ====");
+//        printShipGrid(ship);
 
         // Removing components
         try {
@@ -1296,10 +1315,10 @@ class ShipTest {
             throw new Exception("Should not have removed it");
         }
         catch (OutOfGridException e) {
-            System.out.println("OutOfGridException CAUGHT");
+//            System.out.println("OutOfGridException CAUGHT");
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            fail("Wrong exception caught");
         }
 
         try {
@@ -1307,17 +1326,17 @@ class ShipTest {
             throw new Exception("Should not have removed it");
         }
         catch (OutOfGridException e) {
-            System.out.println("OutOfGridException CAUGHT");
+//            System.out.println("OutOfGridException CAUGHT");
         }
         catch (Exception e) {
-            System.out.println(e.getMessage());
+            fail("Wrong exception caught");
         }
 
         ship.recreateShipGrid();
         List<Component> removed;
 
-        System.out.println("AFTER REMOVING ILLEGAL COMPONENTS");
-        printShipGrid(ship);
+//        System.out.println("AFTER REMOVING ILLEGAL COMPONENTS");
+//        printShipGrid(ship);
 
         // Removing the vital
         removed = ship.removeComponent(2, 2);
@@ -1338,8 +1357,8 @@ class ShipTest {
 
         removed = ship.removeComponent(5, 5);
 
-        System.out.println("AFTER REMOVING HANGING BRANCH");
-        printShipGrid(ship);
+//        System.out.println("AFTER REMOVING HANGING BRANCH");
+//        printShipGrid(ship);
 
         assertEquals(expectedRemoved.size(), removed.size());
         assertTrue(removed.containsAll(expectedRemoved));
@@ -1351,7 +1370,7 @@ class ShipTest {
 
         removed = ship.removeComponent(6, 7);
 
-        printShipGrid(ship);
+//        printShipGrid(ship);
 
         assertEquals(expectedRemoved.size(), removed.size());
         assertTrue(removed.containsAll(expectedRemoved));
@@ -1364,7 +1383,7 @@ class ShipTest {
 
         removed = ship.removeComponent(7, 6);
 
-        printShipGrid(ship);
+//        printShipGrid(ship);
 
         assertEquals(expectedRemoved.size(), removed.size());
         assertTrue(removed.containsAll(expectedRemoved));
@@ -1421,41 +1440,142 @@ class ShipTest {
             // Wrong behavior exception was caught correctly
         }
         catch (Exception e) {
-            fail("Exception not thrown");
+            fail("Wrong exception caught");
         }
     }
 
     @Test
-    void destroyingACabinWithVitalUnitsAsNeighboursDestroysAlsoTheVitalUnits() {
-        Ship ship = initCustomShip();
+    void removingVitalUnitDoesNotRemoveAlien() {
+        // Testing all cases where if a vital unit is destroyed, then
+        // any aliens that were in neighbouring cabins need to check if they
+        // now have any other neighbouring vital units of their same type, otherwise
+        // they cannot live in their cabins anymore and thus will be removed
 
-        switch (ship.getComponent(7, 6)) {
-            case Vital vital -> {
-                // Check if it's a Purple Vital Unit
-                assertEquals(VitalType.PURPLE_VITAL, vital.getVitalType());
-            }
-            case null, default -> fail("Ship was wrongly instantiated");
-        }
+        Ship ship = new Ship(0);
 
-        switch (ship.getComponent(7, 7)) {
-            case Cabin cabin -> {
-                // Check if it's a cabin
-            }
-            case null, default -> fail("Ship was wrongly instantiated");
-        }
+        int[] connectors = new int[4];
+        Arrays.fill(connectors, THREE_PIPES.ordinal());
 
-        switch (ship.getComponent(7, 8)) {
-            case Vital vital -> {
-                // Check if it's a Brown Vital Unit
-                assertEquals(VitalType.BROWN_VITAL, vital.getVitalType());
-            }
-            case null, default -> fail("Ship was wrongly instantiated");
-        }
+        Cabin cabin = new Cabin(connectors, false);
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
+        Vital purpleVital2 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+        Vital brownVital2 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
 
-        // Removing the cabin to test if both vital units are destroyed as well
+        Lifeform purpleAlien = new Lifeform(LifeformType.PURPLE_ALIEN);
+        Lifeform brownAlien = new Lifeform(LifeformType.BROWN_ALIEN);
+
+        ship.addComponent(cabin, 6, 7);
+        ship.addComponent(purpleVital1, 6, 8);
+        ship.addComponent(purpleVital2, 5, 7);
+        ship.addComponent(brownVital1, 7, 7);
+
+        // Case 1 - Removing the vital unit has no problem (PURPLE alien, PURPLE vital)
+        // (i.e.: another vital unit is now supporting the current alien)
+        cabin.addInhabitant(purpleAlien);
+        ship.removeComponent(5, 7);
+        assertEquals(1, cabin.getInhabitants().size());
+        assertEquals(purpleAlien, cabin.getInhabitants().getFirst());
+        ship.addComponent(purpleVital2, 5, 7);
+
+        // Case 2 - Removing the vital unit has no problem (PURPLE alien, BROWN vital)
+        // (i.e.: another vital unit is now supporting the current alien)
         ship.removeComponent(7, 7);
+        assertEquals(1, cabin.getInhabitants().size());
+        assertEquals(purpleAlien, cabin.getInhabitants().getFirst());
+        ship.addComponent(brownVital1, 7, 7);
 
-        assertNull(ship.getComponent(7, 6));
-        assertNull(ship.getComponent(7, 8));
+        // Case 3 - Removing both purple vital units should remove the purpleAlien in the cabin
+        // (i.e.: there are no purpleVitals to support the purpleAlien)
+        ship.removeComponent(5, 7);
+        ship.removeComponent(6, 8);
+        assertTrue(cabin.getInhabitants().isEmpty());
+        ship.addComponent(purpleVital2, 5, 7);
+
+        // Substituting a purple vital with a brown vital
+        // and adding a brownAlien to the cabin
+        ship.addComponent(brownVital2, 6, 8);
+        cabin.addInhabitant(brownAlien);
+
+        // Case 4 - Removing the vital unit has no problem (BROWN alien, BROWN vital)
+        // (i.e.: another vital unit is now supporting the current alien)
+        ship.removeComponent(6, 8);
+        assertEquals(1, cabin.getInhabitants().size());
+        assertEquals(brownAlien, cabin.getInhabitants().getFirst());
+        ship.addComponent(brownVital2, 6, 8);
+
+        // Case 5 - Removing the vital unit has no problem (BROWN alien, PURPLE vital)
+        // (i.e.: another vital unit is now supporting the current alien)
+        ship.removeComponent(5, 7);
+        assertEquals(1, cabin.getInhabitants().size());
+        assertEquals(brownAlien, cabin.getInhabitants().getFirst());
+        ship.addComponent(purpleVital2, 5, 7);
+
+        // Case 6 - Removing both brown vital units should remove the brownAlien in the cabin
+        // (i.e.: there are no brownVitals to support the brownAlien)
+        ship.removeComponent(7, 7);
+        ship.removeComponent(6, 8);
+        assertTrue(cabin.getInhabitants().isEmpty());
+    }
+
+    @Test
+    void removingVitalUnitDoesNotRemoveHumans() {
+        Ship ship = new Ship(0);
+
+        int[] connectors = new int[4];
+        Arrays.fill(connectors, THREE_PIPES.ordinal());
+
+        Cabin cabin = new Cabin(connectors, false);
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
+        Vital purpleVital2 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+
+        Lifeform astronaut = new Lifeform(LifeformType.ASTRONAUT);
+
+        ship.addComponent(cabin, 6, 7);
+        ship.addComponent(purpleVital1, 6, 8);
+        ship.addComponent(purpleVital2, 5, 7);
+        ship.addComponent(brownVital1, 7, 7);
+
+        ship.generateComponentSubLists();
+
+        // Adding humans to cabins and checking if all humans are still there
+        // even after removing vitals that are neighbouring their cabin
+        ship.getCabinList().forEach(
+            (Cabin c) -> {
+                if (c != ship.getCore()) {
+                    c.addInhabitant(astronaut);
+                    c.addInhabitant(astronaut);
+                }
+            }
+        );
+
+        List<Lifeform> expectedInhabitants = new ArrayList<Lifeform>();
+        expectedInhabitants.add(astronaut);
+        expectedInhabitants.add(astronaut);
+
+        ship.removeComponent(6, 8);
+        for (Cabin c : ship.getCabinList()) {
+            assertEquals(2, c.getInhabitants().size());
+            for (int i = 0; i < 2; i++) {
+                assertEquals(expectedInhabitants.get(i).getLifeformType(), c.getInhabitants().get(i).getLifeformType());
+            }
+        }
+
+        ship.removeComponent(5, 7);
+        for (Cabin c : ship.getCabinList()) {
+            assertEquals(2, c.getInhabitants().size());
+            for (int i = 0; i < 2; i++) {
+                assertEquals(expectedInhabitants.get(i).getLifeformType(), c.getInhabitants().get(i).getLifeformType());
+            }
+        }
+
+        ship.removeComponent(7, 7);
+        for (Cabin c : ship.getCabinList()) {
+            assertEquals(2, c.getInhabitants().size());
+            for (int i = 0; i < 2; i++) {
+                assertEquals(expectedInhabitants.get(i).getLifeformType(), c.getInhabitants().get(i).getLifeformType());
+            }
+        }
     }
 }

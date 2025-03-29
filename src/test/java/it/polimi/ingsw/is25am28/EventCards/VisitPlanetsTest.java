@@ -27,14 +27,14 @@ class VisitPlanetsTest {
     private VisitPlanets visitPlanets;
     private int movementStep = 5;
 
-    void printAvailableResources(ResourceBank resourceBank) {
-        System.out.println("\n ==== CURR RESOURCE BANK CONTENTS ====");
-        System.out.println(" - BLUE(1) = " + resourceBank.getResources().get(ItemColor.BLUE));
-        System.out.println(" - GREEN(2) = " + resourceBank.getResources().get(ItemColor.GREEN));
-        System.out.println(" - YELLOW(3) = " + resourceBank.getResources().get(ItemColor.YELLOW));
-        System.out.println(" - RED(4) = " + resourceBank.getResources().get(ItemColor.RED));
-        System.out.println(" ===================================== \n");
-    }
+//    void printAvailableResources(ResourceBank resourceBank) {
+//        System.out.println("\n ==== CURR RESOURCE BANK CONTENTS ====");
+//        System.out.println(" - BLUE(1) = " + resourceBank.getResources().get(ItemColor.BLUE));
+//        System.out.println(" - GREEN(2) = " + resourceBank.getResources().get(ItemColor.GREEN));
+//        System.out.println(" - YELLOW(3) = " + resourceBank.getResources().get(ItemColor.YELLOW));
+//        System.out.println(" - RED(4) = " + resourceBank.getResources().get(ItemColor.RED));
+//        System.out.println(" ===================================== \n");
+//    }
 
     void initCustomShip(Player player) {
         Ship ship = player.getShip();
@@ -151,29 +151,29 @@ class VisitPlanetsTest {
         }
     }
 
-    void visualizeVisitPlanetsCardStateParameters(CardStateJSON cardStateJSON) {
-        try {
-            System.out.println(cardStateJSON.getPlayerNickname());
-        }
-        catch (Exception e) {
-            System.out.println("null");
-        }
-        System.out.println(cardStateJSON.getCardName());
-        System.out.println(cardStateJSON.getCardLevel());
-        System.out.println(cardStateJSON.getIsCardUsable());
-        System.out.println(cardStateJSON.getAvailablePlanets());
-    }
-
-    void visualizeAllStoragesCoordinatesAndContents(Player player) {
-        System.out.println("\n ==== \"" + player.getNickname() + "\" STORAGE CONTENTS ==== ");
-        for (Storage storage : player.getShip().getStorageList()) {
-            System.out.println(" - (isSpecialStorage=" + storage.isSpecialStorage() + ")");
-            System.out.println(" - (" + storage.getPosition()[0] + ", " + storage.getPosition()[1] + ")");
-            System.out.println(" - (maxCapacity=" + storage.getCapacity() + ", occupied=" + storage.getStoredItems().size() + ")");
-            System.out.println(" - stored = " + storage.getStoredItems().stream().map(Item::getColor).toList() + "\n");
-        }
-        System.out.println(" ========================== \n");
-    }
+//    void visualizeVisitPlanetsCardStateParameters(CardStateJSON cardStateJSON) {
+//        try {
+//            System.out.println(cardStateJSON.getPlayerNickname());
+//        }
+//        catch (Exception e) {
+//            System.out.println("null");
+//        }
+//        System.out.println(cardStateJSON.getCardName());
+//        System.out.println(cardStateJSON.getCardLevel());
+//        System.out.println(cardStateJSON.getIsCardUsable());
+//        System.out.println(cardStateJSON.getAvailablePlanets());
+//    }
+//
+//    void visualizeAllStoragesCoordinatesAndContents(Player player) {
+//        System.out.println("\n ==== \"" + player.getNickname() + "\" STORAGE CONTENTS ==== ");
+//        for (Storage storage : player.getShip().getStorageList()) {
+//            System.out.println(" - (isSpecialStorage=" + storage.isSpecialStorage() + ")");
+//            System.out.println(" - (" + storage.getPosition()[0] + ", " + storage.getPosition()[1] + ")");
+//            System.out.println(" - (maxCapacity=" + storage.getCapacity() + ", occupied=" + storage.getStoredItems().size() + ")");
+//            System.out.println(" - stored = " + storage.getStoredItems().stream().map(Item::getColor).toList() + "\n");
+//        }
+//        System.out.println(" ========================== \n");
+//    }
 
     @BeforeEach
     void init() {
@@ -252,10 +252,10 @@ class VisitPlanetsTest {
         //     (i.e.: The 2 BLUE items are moved into another storage)
         chosenPlanetIndex = 0;
         cardStateJSON = this.visitPlanets.generateState();
-        System.out.println("\n ======== P1 BEFORE ========");
-        printAvailableResources(this.resourceBank);
-        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
-        visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
+//        System.out.println("\n ======== P1 BEFORE ========");
+//        printAvailableResources(this.resourceBank);
+//        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
+//        visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
 
         itemsToDrop = new ArrayList<>();
         itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
@@ -299,10 +299,10 @@ class VisitPlanetsTest {
         assertTrue(cardStateJSON.getIsCardUsable());
 
         // Visualize changes
-        System.out.println("\n ======== P1 AFTER ========");
-        printAvailableResources(this.resourceBank);
-        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
-        visualizeAllStoragesCoordinatesAndContents(currPlayer);
+//        System.out.println("\n ======== P1 AFTER ========");
+//        printAvailableResources(this.resourceBank);
+//        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
+//        visualizeAllStoragesCoordinatesAndContents(currPlayer);
 
         // Verify that the correct resources are dropped and taken by P1
         // specialDoubleStorage1
@@ -343,10 +343,10 @@ class VisitPlanetsTest {
         //              (NOTE: 2 BLUE are reorganized, they're not dropped and thus nor deposited to the resourceBank)
         chosenPlanetIndex = 2;
         cardStateJSON = this.visitPlanets.generateState();
-        System.out.println("\n ======== P2 BEFORE ========");
-        printAvailableResources(this.resourceBank);
-        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
-        visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
+//        System.out.println("\n ======== P2 BEFORE ========");
+//        printAvailableResources(this.resourceBank);
+//        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
+//        visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
 
         itemsToDrop = new ArrayList<>();
         itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
@@ -386,7 +386,7 @@ class VisitPlanetsTest {
         }
         catch (IllegalStateException e) {
             // Overflow causes this
-            System.out.println("Storage Overflow CAUGHT");
+//            System.out.println("Storage Overflow CAUGHT");
         }
         catch (Exception e) {
             throw new Error("ERROR: Storage overflow wasn't caught");
@@ -406,10 +406,10 @@ class VisitPlanetsTest {
         assertTrue(cardStateJSON.getIsCardUsable());
 
         // Visualize changes
-        System.out.println("\n ======== P2 AFTER ========");
-        printAvailableResources(this.resourceBank);
-        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
-        visualizeAllStoragesCoordinatesAndContents(currPlayer);
+//        System.out.println("\n ======== P2 AFTER ========");
+//        printAvailableResources(this.resourceBank);
+//        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
+//        visualizeAllStoragesCoordinatesAndContents(currPlayer);
 
         // Verify that the correct resources are dropped and taken by P2
         // specialDoubleStorage1
@@ -451,10 +451,10 @@ class VisitPlanetsTest {
         //     (HOWEVER: Even if he wants to drop/take stuff, he doesn't want to land, therefore his storage stays the same)
         chosenPlanetIndex = 3;
         cardStateJSON = this.visitPlanets.generateState();
-        System.out.println("\n ======== P3 BEFORE ========");
-        printAvailableResources(this.resourceBank);
-        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
-        visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
+//        System.out.println("\n ======== P3 BEFORE ========");
+//        printAvailableResources(this.resourceBank);
+//        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
+//        visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
 
         itemsToDrop = new ArrayList<>();
         itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
@@ -501,10 +501,10 @@ class VisitPlanetsTest {
         assertTrue(cardStateJSON.getIsCardUsable());
 
         // Visualize changes
-        System.out.println("\n ======== P3 AFTER ========");
-        printAvailableResources(this.resourceBank);
-        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
-        visualizeAllStoragesCoordinatesAndContents(currPlayer);
+//        System.out.println("\n ======== P3 AFTER ========");
+//        printAvailableResources(this.resourceBank);
+//        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
+//        visualizeAllStoragesCoordinatesAndContents(currPlayer);
 
         // Verify that the correct resources are dropped and taken by P3
         // specialDoubleStorage1
@@ -540,10 +540,10 @@ class VisitPlanetsTest {
         // Player 4 (P4) - Chooses the last planet and fills his storage
         chosenPlanetIndex = 1;
         cardStateJSON = this.visitPlanets.generateState();
-        System.out.println("\n ======== P4 BEFORE ========");
-        printAvailableResources(this.resourceBank);
-        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
-        visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
+//        System.out.println("\n ======== P4 BEFORE ========");
+//        printAvailableResources(this.resourceBank);
+//        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
+//        visualizeAllStoragesCoordinatesAndContents(this.visitPlanets.currentPlayer.get());
 
         itemsToDrop = new ArrayList<>();
         itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
@@ -590,10 +590,10 @@ class VisitPlanetsTest {
         }
 
         // Visualize changes
-        System.out.println("\n ======== P4 AFTER ========");
-        printAvailableResources(this.resourceBank);
-        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
-        visualizeAllStoragesCoordinatesAndContents(currPlayer);
+//        System.out.println("\n ======== P4 AFTER ========");
+//        printAvailableResources(this.resourceBank);
+//        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
+//        visualizeAllStoragesCoordinatesAndContents(currPlayer);
 
         // Verify that the correct resources are dropped and taken by P3
         // specialDoubleStorage1
@@ -645,7 +645,7 @@ class VisitPlanetsTest {
     void generateState() {
         CardStateJSON state = this.visitPlanets.generateState();
 
-        visualizeVisitPlanetsCardStateParameters(state);
+//        visualizeVisitPlanetsCardStateParameters(state);
 
         assertEquals("VisitPlanets", state.getCardName());
         assertEquals(2, state.getCardLevel());

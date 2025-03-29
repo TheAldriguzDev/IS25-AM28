@@ -19,53 +19,53 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EpidemyTest {
 
-    /**
-     * Outputs the given ship to terminal
-     * @param ship The ship to print to terminal
-     */
-    void printShipGrid(Ship ship) {
-        if (ship != null) {
-            List<Component> components = new ArrayList<>();
-            Component c;
-            int rows = ship.getGridDimensions().getKey();
-            int cols = ship.getGridDimensions().getValue();
-            int i, j, k;
-
-            System.out.print("\n\\");
-            for (i = 0; i < cols; i++) {
-                System.out.print("\t" + i);
-            }
-            System.out.print("\n");
-
-            k = 0;
-
-            for (i = 0; i < rows; i++) {
-                System.out.print(i + "\t");
-                for (j = 0; j < cols; j++) {
-                    c = ship.getComponent(i, j);
-                    if (c == null) {
-                        System.out.print("." + "\t");
-                    }
-                    else {
-                        System.out.print(k++ + "\t");
-                        components.add(c);
-                    }
-                }
-                System.out.print("\n");
-            }
-
-            int size = components.size();
-
-            System.out.println("\nFound these components:");
-
-            for (i = 0; i < size; i++) {
-                System.out.println(i + " - " + components.get(i));
-            }
-        }
-        else {
-            System.out.println("ERROR: Given ship is null");
-        }
-    }
+//    /**
+//     * Outputs the given ship to terminal
+//     * @param ship The ship to print to terminal
+//     */
+//    void printShipGrid(Ship ship) {
+//        if (ship != null) {
+//            List<Component> components = new ArrayList<>();
+//            Component c;
+//            int rows = ship.getGridDimensions().getKey();
+//            int cols = ship.getGridDimensions().getValue();
+//            int i, j, k;
+//
+//            System.out.print("\n\\");
+//            for (i = 0; i < cols; i++) {
+//                System.out.print("\t" + i);
+//            }
+//            System.out.print("\n");
+//
+//            k = 0;
+//
+//            for (i = 0; i < rows; i++) {
+//                System.out.print(i + "\t");
+//                for (j = 0; j < cols; j++) {
+//                    c = ship.getComponent(i, j);
+//                    if (c == null) {
+//                        System.out.print("." + "\t");
+//                    }
+//                    else {
+//                        System.out.print(k++ + "\t");
+//                        components.add(c);
+//                    }
+//                }
+//                System.out.print("\n");
+//            }
+//
+//            int size = components.size();
+//
+//            System.out.println("\nFound these components:");
+//
+//            for (i = 0; i < size; i++) {
+//                System.out.println(i + " - " + components.get(i));
+//            }
+//        }
+//        else {
+//            System.out.println("ERROR: Given ship is null");
+//        }
+//    }
 
     void initCustomShip(Player player) {
         Ship ship = player.getShip();
@@ -153,8 +153,8 @@ class EpidemyTest {
         ship.addComponent(doubleEngine1, 8, 7);
         ship.addComponent(singleEngine3, 8, 8);
 
-        System.out.println("==== SHIP CONFIGURATION ====");
-        printShipGrid(ship);
+//        System.out.println("==== SHIP CONFIGURATION ====");
+//        printShipGrid(ship);
 
         // Generating the component sub-lists right after the ship is created
         ship.generateComponentSubLists();

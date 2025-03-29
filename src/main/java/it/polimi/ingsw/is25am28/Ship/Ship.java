@@ -784,7 +784,6 @@ public class Ship {
             (Component c) -> {
                 if (isShipValid.get() && !c.check(getNearestComponents(c))) {
                     isShipValid.set(false);
-                    System.out.println("ERROR: " + c.toString());
                 }
             }
         );
@@ -796,7 +795,7 @@ public class Ship {
      * Regenerates the ship's grid by using the <code>traverse()</code> method.<br>
      * This method is useful only when deleting a component divides the ship into two
      * separate branches and, since the core must be kept, the branch that does not
-     * contain the component will be the one to be deleted.
+     * contain the core component will be the one to be deleted.
      */
     public void recreateShipGrid() {
         // Initializing all components of the grid to null
@@ -857,14 +856,14 @@ public class Ship {
                 // Applying the lambda to currComp
                 lambda.accept(currComp);
 
-                neighbours = getNearestComponents(currComp);
+                neighbours = this.getNearestComponents(currComp);
                 alreadyChecked.add(currComp);
 
                 // Creating the nextLayer list of components for next iteration
                 // by populating it with the neighbours of each component in
                 // found in the currLayer list, except the ones that are already there
                 // (avoids overlapping) or were already checked (avoids backtracking)
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < neighbours.length; i++) {
                     //      !nextLayer.contains(neighbours[i]) ==> Avoids overlapping
                     // !alreadyChecked.contains(neighbours[i]) ==> Avoids backtracking
                     if (neighbours[i] != null) {
@@ -1062,24 +1061,6 @@ public class Ship {
             }
         }
 
-        switch (this.components[i][j]) {
-            case Cabin cabin -> {
-                Component[] neighbours = this.getNearestComponents(cabin);
-
-                for (Component neighbour : neighbours) {
-                    switch (neighbour) {
-                        case Vital vital -> {
-                            // Destroying any vital units that are direct neighbours
-                            // of a cabin that will also be destroyed
-                            this.components[vital.getPosition()[0]][vital.getPosition()[1]] = null;
-                        }
-                        case null, default -> {}
-                    }
-                }
-            }
-            case null, default -> {}
-        }
-
         // Removing the component and regenerating the new ship
         this.components[i][j] = null;
         this.recreateShipGrid();
@@ -1093,6 +1074,58 @@ public class Ship {
                 if (previousShip[row][col] != null && this.components[row][col] == null) {
                     removedComponents.add(previousShip[row][col]);
                 }
+            }
+        }
+
+        // If a vital is removed, then check to see whether there are aliens
+        // in the neighbouring cabins (if there are any) and, in that case, also
+        // check that if those aliens have another vital unit to support them.
+        // If the latter condition is false, then remove that alien
+        for (Component removedComponent : removedComponents) {
+            switch (removedComponent) {
+                case Vital vital -> {
+                    // Getting the vital unit neighbours before deleting it
+                    Component[] vitalNeighbours = this.getNearestComponents(removedComponent);
+
+                    // If this vital unit has any cabins as neighbours, then check
+                    // whether there were any aliens in them
+                    for (Component neighbour : vitalNeighbours) {
+                        switch (neighbour) {
+                            case Cabin cabin -> {
+                                // If the size == 1, then it means that the cabin has an alien inside
+                                if (cabin.getInhabitants().size() == 1) {
+                                    Lifeform alien = cabin.getInhabitants().getFirst();
+                                    Component[] cabinNeighbours = this.getNearestComponents(cabin);
+                                    boolean otherVitalUnitFound = false;
+
+                                    // Check whether that alien, after removing the vital unit, can
+                                    // still live in that cabin by checking if the latter has as its
+                                    // neighbours any other vital units of the same type of the alien
+                                    for (Component cabinNeighbour : cabinNeighbours) {
+                                        if (otherVitalUnitFound) break;
+
+                                        switch (cabinNeighbour) {
+                                            case Vital otherVital -> {
+                                                if (alien.getLifeformType().ordinal() - 1 == otherVital.getVitalType().ordinal()) {
+                                                    otherVitalUnitFound = true;
+                                                }
+                                            }
+                                            case null, default -> {}
+                                        }
+                                    }
+
+                                    // If a vital unit of the same type of that alien was found, then the alien
+                                    // can still live in that cabin, otherwise it needs to be removed
+                                    if (!otherVitalUnitFound) {
+                                        cabin.removeInhabitant(alien);
+                                    }
+                                }
+                            }
+                            case null, default -> {}
+                        }
+                    }
+                }
+                case null, default -> {}
             }
         }
 
