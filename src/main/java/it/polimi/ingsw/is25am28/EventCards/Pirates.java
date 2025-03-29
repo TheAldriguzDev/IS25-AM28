@@ -214,6 +214,10 @@ public class Pirates extends EventCard {
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
+
+        // Mettere nello stato il dado corrente ?
+
+
         return piratesStateJSON;
     }
 }
