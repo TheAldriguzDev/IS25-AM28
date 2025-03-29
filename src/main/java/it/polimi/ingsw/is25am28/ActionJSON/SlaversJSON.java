@@ -8,15 +8,18 @@ public class SlaversJSON extends ActionJSON {
     private final boolean takeCredits;
     private final ArrayList<ComponentHelper<LifeformType>> crewToRemove;
     private final int numberOfDoubleCannonsActivated;
+   // private final ArrayList<int[]> doubleCannonsToActivateCoordinates;
 
     public SlaversJSON (@JsonProperty("playerNickname") String playerNickname,
                         @JsonProperty("takeCredits") boolean takeCredits,
                         @JsonProperty("crewToRemove") ArrayList<ComponentHelper<LifeformType>> crewToRemove,
-                        @JsonProperty("numberOfDoubleCannonsActivated") int numberOfDoubleCannonsActivated) {
+                        @JsonProperty("numberOfDoubleCannonsActivated") int numberOfDoubleCannonsActivated
+                        /*@JsonProperty("doubleCannonsToActivateCoordinates") ArrayList<int[]> doubleCannonsToActivateCoordinates*/) {
         super(playerNickname);
         this.takeCredits = takeCredits;
         this.crewToRemove = crewToRemove;
         this.numberOfDoubleCannonsActivated = numberOfDoubleCannonsActivated;
+        //this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
 
     public boolean getTakeCredits() {
@@ -26,6 +29,11 @@ public class SlaversJSON extends ActionJSON {
     public ArrayList<ComponentHelper<LifeformType>> getCrewToRemove() {
         return crewToRemove;
     }
+
+//    public ArrayList<int[]> getDoubleCannonsToActivateCoordinates() {
+//        return doubleCannonsToActivateCoordinates;
+//    }
+
 
     public int getNumberOfDoubleCannonsActivated() {
         return numberOfDoubleCannonsActivated;

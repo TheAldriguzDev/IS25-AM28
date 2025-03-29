@@ -7,7 +7,7 @@ import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Player.Player;
-import org.junit.Test;
+
 
 import java.util.ArrayList;
 import java.util.Optional;
