@@ -88,7 +88,8 @@ public class CardStateJSON extends ActionJSON {
                          @JsonProperty("requiredFirepower") int requiredFirepower,
                          @JsonProperty("givenCredits") int givenCredits,
                          @JsonProperty("movementSteps") int movementSteps,
-                         @JsonProperty("shootingSequence") ArrayList<ArrayList<Integer>> shootingSequence) {
+                         @JsonProperty("shootingSequence") ArrayList<ArrayList<Integer>> shootingSequence,
+                         @JsonProperty("diceThrowResult") int diceThrowResult) {
         super(playerNickname);
         this.cardName = cardName;
         this.cardLevel = cardLevel;
@@ -97,6 +98,7 @@ public class CardStateJSON extends ActionJSON {
         this.givenCredits = givenCredits;
         this.movementSteps = movementSteps;
         this.shootingSequence = shootingSequence;
+        this.diceThrowResult = diceThrowResult;
     }
 
     // Constructor for Slavers cardState

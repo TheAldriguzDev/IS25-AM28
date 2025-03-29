@@ -12,7 +12,7 @@ public class PiratesJSON extends ActionJSON {
 //    private final boolean shieldBelow;
 //    private final boolean shieldLeft;
     private final int numberOfDoubleCannonsActivated;
-    private final ArrayList<Integer> dicesResults;
+    //private final ArrayList<Integer> dicesResults;
 
     public PiratesJSON(@JsonProperty("PlayerNickname") String playerNickname,
                        @JsonProperty("takeCredits") boolean takeCredits,
@@ -21,8 +21,7 @@ public class PiratesJSON extends ActionJSON {
 //                       @JsonProperty("shieldBelow") boolean shieldBelow,
 //                       @JsonProperty("shieldLeft") boolean shieldLeft,
                        @JsonProperty("shieldsActivatedCoordinates") ArrayList<int[]> shieldsActivatedCoordinates,
-                       @JsonProperty("numberOfDoubleCannonsActivated") int numberOfDoubleCannonsActivated,
-                       @JsonProperty("dicesResults") ArrayList<Integer> dicesResults) {
+                       @JsonProperty("numberOfDoubleCannonsActivated") int numberOfDoubleCannonsActivated) {
         super(playerNickname);
         this.takeCredits = takeCredits;
         this.shieldsActivatedCoordinates = shieldsActivatedCoordinates;
@@ -31,7 +30,7 @@ public class PiratesJSON extends ActionJSON {
 //        this.shieldBelow = shieldBelow;
 //        this.shieldLeft = shieldLeft;
         this.numberOfDoubleCannonsActivated = numberOfDoubleCannonsActivated;
-        this.dicesResults = dicesResults;
+        //this.dicesResults = dicesResults;
     }
 
     public boolean getTakeCredits() {
@@ -62,9 +61,6 @@ public class PiratesJSON extends ActionJSON {
         return numberOfDoubleCannonsActivated;
     }
 
-    public ArrayList<Integer> getDicesResults() {
-        return dicesResults;
-    }
 
     /*s
     public PiratesJSON(JSONObject data) {
