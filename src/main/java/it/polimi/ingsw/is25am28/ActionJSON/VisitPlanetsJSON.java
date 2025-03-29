@@ -1,31 +1,70 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
-import it.polimi.ingsw.is25am28.EventCards.VisitPlanets;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
+import it.polimi.ingsw.is25am28.Items.ItemColor;
+
+import java.util.List;
 
 public class VisitPlanetsJSON extends ActionJSON {
-    /**
-     * Constructor used when we need to BUILD a new JSON
-     * */
-    public VisitPlanetsJSON() {
-        this.data = new JSONObject();
-        this.data.put("playerName", "");
-        this.data.put("selectedPlanetID", "");
-        this.data.put("wantsToLand", "");
+    private int chosenPlanetIndex;
+    private boolean wantsToLand;
+    private List<ComponentHelper<ItemColor>> itemsToDrop;
+    private List<ComponentHelper<ItemColor>> itemsToTake;
+
+    @JsonCreator
+    public VisitPlanetsJSON(
+            @JsonProperty("chosenPlanetIndex") int chosenPlanetIndex,
+            @JsonProperty("wantsToLand") boolean wantsToLand,
+            @JsonProperty("itemsToDrop") List<ComponentHelper<ItemColor>> itemsToDrop,
+            @JsonProperty("itemsToTake") List<ComponentHelper<ItemColor>> itemsToTake
+    ) {
+        this.chosenPlanetIndex = chosenPlanetIndex;
+        this.wantsToLand = wantsToLand;
+        this.itemsToDrop = itemsToDrop;
+        this.itemsToTake = itemsToTake;
     }
 
-    /**
-     * Constructor used when we need to PARSE a JSONObject
-     * */
-    public VisitPlanetsJSON(JSONObject data) {
-        super(data);
+    @JsonGetter("chosenPlanetIndex")
+    public int getChosenPlanetIndex() {
+        return this.chosenPlanetIndex;
     }
 
-    /**
-     * Constructor used when we need to PARSE a JSONObject, but we only have a String that represent the JSONObject
-     * */
-    public VisitPlanetsJSON(String dataString) throws ParseException {
-        super(ActionJSON.Parse(dataString));
+    @JsonSetter("chosenPlanetIndex")
+    public void setChosenPlanetIndex(int chosenPlanetIndex) {
+        this.chosenPlanetIndex = chosenPlanetIndex;
+    }
+
+    @JsonGetter("wantsToLand")
+    public boolean getLandingDecision() {
+        return this.wantsToLand;
+    }
+
+    @JsonSetter("wantsToLand")
+    public void setLandingDecision(boolean wantsToLand) {
+        this.wantsToLand = wantsToLand;
+    }
+
+    @JsonGetter("itemsToDrop")
+    public List<ComponentHelper<ItemColor>> getItemsToDrop() {
+        return this.itemsToDrop;
+    }
+
+    @JsonSetter("itemsToDrop")
+    public void setItemsToDrop(List<ComponentHelper<ItemColor>> itemsToDrop) {
+        this.itemsToDrop = itemsToDrop;
+    }
+
+    @JsonGetter("itemsToTake")
+    public List<ComponentHelper<ItemColor>> getItemsToTake() {
+        return this.itemsToTake;
+    }
+
+    @JsonSetter("itemsToTake")
+    public void setItemsToTake(List<ComponentHelper<ItemColor>> itemsToTake) {
+        this.itemsToTake = itemsToTake;
     }
 }

@@ -15,6 +15,7 @@ public abstract class Board {
     final ArrayList<Cell> initialCells = new ArrayList<>();
     private final List<Player> players;
     private final List<Player> eliminatedPlayer;
+    private int level;
 
     public Board() {
         this.players = new ArrayList<>();
@@ -38,18 +39,22 @@ public abstract class Board {
     }
 
     /**
-     * Returns the current playing players
+     * Returns the current playing players without exposing the ref
      * */
     public List<Player> getPlayers() {
-        return players;
+        return new ArrayList<>(players);
     }
 
     /**
-     * Returns the eliminated players
+     * Returns the eliminated players without exposing the ref
      * */
     public List<Player> getEliminatedPlayers() {
-        return eliminatedPlayer;
+        return new ArrayList<>(eliminatedPlayer);
     }
+
+    public int getLevel() { return level; }
+
+    protected void setLevel(int level) { this.level = level; }
 
     /**
      * Add a new player in the game if the nickname and the color is unique in the session
@@ -59,8 +64,7 @@ public abstract class Board {
             throw new IllegalArgumentException("The selected nickname or color has been already used");
         }
 
-        // TODO: Fix
-        //players.add(new Player(nickname, color));
+        players.add(new Player(nickname, color, this.getLevel()));
         return this;
     }
 
@@ -178,14 +182,14 @@ public abstract class Board {
      * */
     public synchronized void validatePlayersPosition() {
         int maxCursor = players.stream()
-                        .mapToInt(Player::getCursor)
-                        .max()
-                        .orElse(0);
+                .mapToInt(Player::getCursor)
+                .max()
+                .orElse(0);
 
         List<Player> doubledPlayers = players
-                                        .stream()
-                                        .filter(player -> player.getCursor() + this.getSize() < maxCursor)
-                                        .toList();
+                .stream()
+                .filter(player -> player.getCursor() + this.getSize() < maxCursor)
+                .toList();
 
         // Remove the player from the current players and add it to the eliminated ones
         // Set the cell to null, since it has been removed from the board and mark the player as eliminated

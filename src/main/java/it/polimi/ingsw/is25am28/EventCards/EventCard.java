@@ -1,9 +1,11 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Player.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +18,8 @@ public abstract class EventCard {
     protected Optional<Player> currentPlayer;
     private Board board;
 
+    private boolean hasBeenUsed;
+
     /**
      * General constructor shared between the classes
      * */
@@ -23,6 +27,7 @@ public abstract class EventCard {
         this.name = name;
         this.cardLevel = cardLevel;
         this.board = board;
+        this.hasBeenUsed = false;
     }
 
     /**
@@ -35,7 +40,7 @@ public abstract class EventCard {
         if ( this.board.getPlayers() == null || this.board.getPlayers().isEmpty() || this.board.getPlayers().size() < 2 ) {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
         } else {
-            this.players = this.board.getPlayers();
+            this.players = new ArrayList<>(this.board.getPlayers());
             currentPlayer = Optional.of(players.getFirst());
         }
     }
@@ -48,21 +53,23 @@ public abstract class EventCard {
      * Set the currentPlayer to the next player in the game's turn order. If there are no more players left, set the attribute to an empty optional.
      * */
     protected Optional<Player> getNextPlayer() {
-
-        if( players == null || players.isEmpty() ) {
+        if (players == null || players.isEmpty()) {
             throw new Error("Players are not set, you must call startUsingCard method before");
         }
 
-        if ( currentPlayer.isPresent() ) {
-            if (currentPlayer.get().equals(players.getLast())) {
+        if (currentPlayer.isPresent()) {
+            int currentIndex = players.indexOf(currentPlayer.get());
+            if (currentIndex == players.size() - 1) {
+                this.cardUsed();
                 return Optional.empty();
             } else {
-                currentPlayer = Optional.of(players.get( players.indexOf(currentPlayer.get()) + 1 ));
-                return Optional.of(players.get( players.indexOf(currentPlayer.get()) + 1 ));
+                Player nextPlayer = players.get(currentIndex + 1);
+                currentPlayer = Optional.of(nextPlayer);
+                return currentPlayer;
             }
         } else {
             currentPlayer = Optional.of(players.getFirst());
-            return Optional.of(players.getFirst());
+            return currentPlayer;
         }
     }
 
@@ -75,12 +82,19 @@ public abstract class EventCard {
     }
 
     /**
+     * Mark the card as used. In this way the game model can understand when to get the next card
+     * */
+    protected void cardUsed() {
+        this.hasBeenUsed = true;
+    }
+
+    /**
      * This method will be used in the specific class, but also from outside (game model).
      *
      * It returns true if the current player is the last one of the card players or if there are no active players in the card
      * */
     public boolean hasFinished() {
-        return currentPlayer.map(player -> player.equals(players.getLast())).orElse(false);
+        return this.hasBeenUsed;
     }
 
     public String getCardName() {
@@ -102,10 +116,10 @@ public abstract class EventCard {
     public abstract EventCard useCard( ActionJSON data ) throws IllegalArgumentException;
 
     /**
-     * generateState return a JSONObject that return the current state of the card. It MUST contains all the specific information like:
+     * generateState return a JSONObject that return the current state of the card. It MUST contain all the specific information like:
      * - currentPlayer
      * - cardName
      * - cardData (e.g. planets list with all the related resources)
      * */
-    public abstract JSONObject generateState();
+    public abstract CardStateJSON generateState();
 }

@@ -1,15 +1,72 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.ArrayList;
 
 public class PiratesJSON extends ActionJSON {
+    private final boolean takeCredits;
+    private final ArrayList<int []> shieldsActivatedCoordinates;
+//    private final boolean shieldAbove;
+//    private final boolean shieldRight;
+//    private final boolean shieldBelow;
+//    private final boolean shieldLeft;
+    private final int numberOfDoubleCannonsActivated;
+    private final ArrayList<Integer> dicesResults;
 
-    public PiratesJSON() {
-        super();
+    public PiratesJSON(@JsonProperty("PlayerNickname") String playerNickname,
+                       @JsonProperty("takeCredits") boolean takeCredits,
+//                       @JsonProperty("shieldAbove") boolean shieldAbove,
+//                       @JsonProperty("shieldRight") boolean shieldRight,
+//                       @JsonProperty("shieldBelow") boolean shieldBelow,
+//                       @JsonProperty("shieldLeft") boolean shieldLeft,
+                       @JsonProperty("shieldsActivatedCoordinates") ArrayList<int[]> shieldsActivatedCoordinates,
+                       @JsonProperty("numberOfDoubleCannonsActivated") int numberOfDoubleCannonsActivated,
+                       @JsonProperty("dicesResults") ArrayList<Integer> dicesResults) {
+        super(playerNickname);
+        this.takeCredits = takeCredits;
+        this.shieldsActivatedCoordinates = shieldsActivatedCoordinates;
+//        this.shieldAbove = shieldAbove;
+//        this.shieldRight = shieldRight;
+//        this.shieldBelow = shieldBelow;
+//        this.shieldLeft = shieldLeft;
+        this.numberOfDoubleCannonsActivated = numberOfDoubleCannonsActivated;
+        this.dicesResults = dicesResults;
     }
 
+    public boolean getTakeCredits() {
+        return takeCredits;
+    }
+
+//    public boolean getShieldAbove() {
+//        return shieldAbove;
+//    }
+//
+//    public boolean getShieldRight() {
+//        return shieldRight;
+//    }
+//
+//    public boolean getShieldBelow() {
+//        return shieldBelow;
+//    }
+//
+//    public boolean getShieldLeft() {
+//        return shieldLeft;
+//    }
+
+    public ArrayList<int[]> getShieldsActivatedCoordinates() {
+        return shieldsActivatedCoordinates;
+    }
+
+    public int getNumberOfDoubleCannonsActivated() {
+        return numberOfDoubleCannonsActivated;
+    }
+
+    public ArrayList<Integer> getDicesResults() {
+        return dicesResults;
+    }
+
+    /*s
     public PiratesJSON(JSONObject data) {
         super(data);
     }
@@ -65,7 +122,8 @@ public class PiratesJSON extends ActionJSON {
         }
         return (int)data.get("numberOfDoubleCannonsActivated");
     }
-
+    */
+    /*
     // Setters
     @SuppressWarnings("unchecked")
     public void setTakeCredits (boolean takeCredits) throws IllegalArgumentException {
@@ -95,4 +153,5 @@ public class PiratesJSON extends ActionJSON {
     public void setNumOfDoubleCannonsActivated (int numOfDoubleCannonsActivated) throws IllegalArgumentException {
         data.put("numOfDoubleCannonsActivated", numOfDoubleCannonsActivated);
     }
+    */
 }

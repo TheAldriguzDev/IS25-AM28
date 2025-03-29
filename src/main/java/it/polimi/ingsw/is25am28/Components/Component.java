@@ -18,7 +18,7 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
       public Component( int[] connectors ) {
             sides = new Connector[4];
-            
+
             for( int i = 0; i < 4; i++ ){
                   switch(connectors[i]){
                         case 0: sides[i] = Connector.ZERO_PIPES;

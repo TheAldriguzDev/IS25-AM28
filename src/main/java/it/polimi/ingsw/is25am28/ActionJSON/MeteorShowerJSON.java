@@ -1,40 +1,71 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import javafx.util.Pair;
+
+import java.util.List;
 
 public class MeteorShowerJSON extends ActionJSON {
-    /**
-     * Constructor used when we need to BUILD a new JSON
-     * */
-    public MeteorShowerJSON() {
-        // Fields that it needs to contain:
-        // "diceThrow" - to specify row and column that are potentially targeted
-        // "shield" - The coordinates (row, col) of the shield to activate to defend from a small meteor
-        // "shoot" - The coordinates (row, col) of the cannon to activate to defend from a big meteor
+    private int currMeteorIndex;
+    private int diceThrowResult;
+    private List<Pair<Integer, Integer>>  shieldsCoordinates;
+    private List<Pair<Integer, Integer>> cannonsCoordinates;
 
-        // Constructing the JSONObject fields
-        // -1 is a placeholder that will be overwritten with real data
-        JSONObject container = new JSONObject();
-
-        container.put("diceResult", -1);
-        container.put("shield", -1);
-        container.put("shoot", -1);
-
-        this.setData(container);
+    @JsonCreator
+    public MeteorShowerJSON(
+            @JsonProperty("playerNickname") String playerNickname,
+            @JsonProperty("currMeteorIndex") int currMeteorIndex,
+            @JsonProperty("diceThrowResult") int diceThrowResult,
+            @JsonProperty("shieldsCoordinates") List<Pair<Integer, Integer>> shieldsCoordinates,
+            @JsonProperty("cannonsCoordinates") List<Pair<Integer, Integer>> cannonsCoordinates
+    ) {
+        super(playerNickname);
+        this.currMeteorIndex = currMeteorIndex;
+        this.diceThrowResult = diceThrowResult;
+        this.shieldsCoordinates = shieldsCoordinates;
+        this.cannonsCoordinates = cannonsCoordinates;
     }
 
-    /**
-     * Constructor used when we need to PARSE a JSONObject
-     * */
-    public MeteorShowerJSON(JSONObject data) {
-        super(data);
+    @JsonGetter("currMeteorIndex")
+    public int getCurrMeteorIndex() {
+        return this.currMeteorIndex;
     }
 
-    /**
-     * Constructor used when we need to PARSE a JSONObject, but we only have a String that represent the JSONObject
-     * */
-    public MeteorShowerJSON(String dataString) throws ParseException {
-        super(ActionJSON.Parse(dataString));
+    @JsonSetter("currMeteorIndex")
+    public void setCurrMeteorIndex(int currMeteorIndex) {
+        this.currMeteorIndex = currMeteorIndex;
+    }
+
+    @JsonGetter("diceThrowResult")
+    public int getDiceThrowResult() {
+        return this.diceThrowResult;
+    }
+
+    @JsonSetter("diceThrowResult")
+    public void setDiceThrowResult(int diceThrowResult) {
+        this.diceThrowResult = diceThrowResult;
+    }
+
+    @JsonGetter("shieldsCoordinates")
+    public List<Pair<Integer, Integer>> getShieldsCoordinates() {
+        return this.shieldsCoordinates;
+    }
+
+    @JsonSetter("shieldsCoordinates")
+    public void setShieldsCoordinates(List<Pair<Integer, Integer>> shieldsCoordinates) {
+        this.shieldsCoordinates = shieldsCoordinates;
+    }
+
+    @JsonGetter("cannonsCoordinates")
+    public List<Pair<Integer, Integer>> getCannonsCoordinates() {
+        return this.cannonsCoordinates;
+    }
+
+    @JsonSetter("cannonsCoordinates")
+    public void setCannonsCoordinates(List<Pair<Integer, Integer>> cannonsCoordinates) {
+        this.cannonsCoordinates = cannonsCoordinates;
     }
 }

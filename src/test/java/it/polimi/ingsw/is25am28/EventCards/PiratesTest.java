@@ -1,0 +1,518 @@
+package it.polimi.ingsw.is25am28.EventCards;
+
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
+import it.polimi.ingsw.is25am28.Board.BoardLevel2;
+import it.polimi.ingsw.is25am28.Components.*;
+import it.polimi.ingsw.is25am28.Items.Item;
+import it.polimi.ingsw.is25am28.Items.ItemColor;
+import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Player.Player;
+import it.polimi.ingsw.is25am28.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Ship.Ship;
+import org.json.simple.JSONArray;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+class PiratesTest {
+    Board board;
+    Player p1;
+    Player p2;
+    Player p3;
+    Player p4;
+    Ship ship_1;
+    Ship ship_2;
+    Ship ship_3;
+    Ship ship_4;
+    ActionJSON actionJSON1;
+    ActionJSON actionJSON2;
+    ActionJSON actionJSON3;
+    ActionJSON actionJSON4;
+
+    Pirates pirates;
+
+    ArrayList<int[]> shieldsToActivate1;
+    ArrayList<int[]> shieldsToActivate2;
+    ArrayList<int[]> shieldsToActivate3;
+    ArrayList<int[]> shieldsToActivate4;
+
+    ArrayList<Integer> dicesResults;
+
+    ArrayList<ArrayList<Integer>> shootingSequence;
+
+    ArrayList<Integer> plasmaShot1;
+    ArrayList<Integer> plasmaShot2;
+    ArrayList<Integer> plasmaShot3;
+
+    @BeforeEach
+    public void init() {
+
+        board = new BoardLevel2();
+        board.buildBoard();
+
+        board.newPlayer("Player 1", PlayerColor.RED);
+        board.newPlayer("Player 2", PlayerColor.BLUE);
+        board.newPlayer("Player 3", PlayerColor.GREEN);
+        board.newPlayer("Player 4", PlayerColor.YELLOW);
+
+        List<Player> players = board.getPlayers();
+        p1 = players.get(0);
+        p2 = players.get(1);
+        p3 = players.get(2);
+        p4 = players.get(3);
+
+        shieldsToActivate1 = new ArrayList<>();
+        shieldsToActivate2 = new ArrayList<>();
+        shieldsToActivate3 = new ArrayList<>();
+        shieldsToActivate4 = new ArrayList<>();
+
+        ship_1 = p1.getShip();
+        ship_init1(ship_1);
+        ship_2 = p2.getShip();
+        ship_init2(ship_2);
+        ship_3 = p3.getShip();
+        ship_init3(ship_3);
+        ship_4 = p4.getShip();
+        ship_init4(ship_4);
+
+        board.addPlayerToBoard(p1);
+        board.addPlayerToBoard(p2);
+        board.addPlayerToBoard(p3);
+        board.addPlayerToBoard(p4);
+
+        dicesResults = new ArrayList<>();
+        dicesResults.add(7); // dall'alto, grosso
+        dicesResults.add(5); // da sinistra, piccolo
+        dicesResults.add(6); // dall'alto, piccolo
+
+        shootingSequence = new JSONArray();
+
+        plasmaShot1 = new ArrayList<Integer>();
+        plasmaShot1.add(2); // grande
+        plasmaShot1.add(0); // dall'alto
+        plasmaShot2 = new ArrayList<Integer>();
+        plasmaShot2.add(1); // piccolo
+        plasmaShot2.add(3); // da sinistra
+        plasmaShot3 = new ArrayList<Integer>();
+        plasmaShot3.add(1); // piccolo
+        plasmaShot3.add(0); // dall'alto
+
+        shootingSequence.add(plasmaShot1);
+        shootingSequence.add(plasmaShot2);
+        shootingSequence.add(plasmaShot3);
+
+
+    }
+
+    @Test
+    public void takeCreditsTest() {
+        p1.setCredits(3);
+        p2.setCredits(4);
+        p3.setCredits(5);
+        p4.setCredits(0);
+
+        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
+        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
+        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
+        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
+
+        pirates = new Pirates("Pirates", 2, 3, 4, 4, shootingSequence, board);
+
+        pirates.initCardPlayers();
+
+        pirates.useCard(actionJSON1);
+        pirates.useCard(actionJSON2);
+        pirates.useCard(actionJSON3);
+        pirates.useCard(actionJSON4);
+
+
+        assert p1.getCredits() == 7 : "p1 credits should be 7 (slavers defeated), not " + p1.getCredits();
+        assert p2.getCredits() == 4 : "p2 credits should be 4 (slavers not defeated), not " + p2.getCredits();
+        assert p3.getCredits() == 9 : "p3 credits should be 9 (slavers defeated), not " + p3.getCredits();
+        assert p4.getCredits() == 4 : "p4 credits should be 4 (slavers defeated), not " + p4.getCredits();
+
+    }
+
+    @Test
+    public void movementTest() {
+
+        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
+        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
+        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
+        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
+
+        pirates = new Pirates("Pirates", 2, 3, 4, 2, shootingSequence, board);
+
+        pirates.initCardPlayers();
+
+        pirates.useCard(actionJSON1);
+        pirates.useCard(actionJSON2);
+        pirates.useCard(actionJSON3);
+        pirates.useCard(actionJSON4);
+
+        assert p1.getCursor() == 4 : "p1 cursor should be 4 (moved 2 backwards), not " + p1.getCursor();
+        assert p2.getCursor() == 3 : "p2 cursor should be 3 (did not move), not " + p2.getCursor();
+        assert p3.getCursor() == -2 : "p3 cursor should be -2 (jumped over p4, moved 2 backwards), not " + p3.getCursor();
+        assert p4.getCursor() == -3 : "p4 cursor should be -3 (moved 1 backwards, jumped over p3, moved 1 backwards), not " + p4.getCursor();
+    }
+
+    @Test void test_first_eliminated_second_third_fourth_hit() {
+
+        actionJSON1 = new PiratesJSON("Player 1", false, shieldsToActivate1, 0, dicesResults); // Total FirePower: 4
+        actionJSON2 = new PiratesJSON("Player 2", false, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
+        actionJSON3 = new PiratesJSON("Player 3", false, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
+        actionJSON4 = new PiratesJSON("Player 4", false, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
+
+        pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board);
+
+        pirates.initCardPlayers();
+
+
+        Player eliminatedPlayer = p1;
+
+
+//        System.out.println("ship_1 before destruction");
+//        printGrid(ship_1);
+        pirates.useCard(actionJSON1);
+        assertFalse(pirates.hasFinished());
+//        System.out.println("ship_1 after destruction");
+//        printGrid(ship_1);
+
+//        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+
+//        System.out.println("ship_2 before destruction");
+//        printGrid(ship_2);
+        assertFalse(pirates.hasFinished());
+        pirates.useCard(actionJSON2);
+//        System.out.println("ship_2 after destruction");
+//        printGrid(ship_2);
+
+//        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+
+//        System.out.println("ship_3 before destruction");
+//        printGrid(ship_3);
+        assertFalse(pirates.hasFinished());
+        pirates.useCard(actionJSON3);
+//        System.out.println("ship_3 after destruction");
+//        printGrid(ship_3);
+
+//        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
+
+//        System.out.println("ship_4 before destruction");
+//        printGrid(ship_4);
+        assertFalse(pirates.hasFinished());
+        pirates.useCard(actionJSON4);
+//        System.out.println("ship_4 after destruction");
+//        printGrid(ship_4);
+
+        assertTrue(pirates.hasFinished());
+
+        assertNull(ship_2.getComponent(6, 7));
+        assertNull(ship_2.getComponent(5, 6));
+
+        assertNull(ship_3.getComponent(6, 7));
+        assertNotNull(ship_3.getComponent(5, 6));
+
+        assertNull(ship_4.getComponent(5, 7));
+        assertNull(ship_4.getComponent(5, 6));
+
+        assertEquals(board.getEliminatedPlayers().size(), 1);
+        assertEquals(eliminatedPlayer, board.getEliminatedPlayers().getFirst());
+        // In visual representation the core is still present since trying to remove it triggers an exception
+    }
+
+    @Test
+    public void test_first_defeats_and_takes_credits() {
+        actionJSON1 = new PiratesJSON("Player 1", true, shieldsToActivate1, 1, dicesResults); // Total FirePower: 4
+        actionJSON2 = new PiratesJSON("Player 2", true, shieldsToActivate2, 0, dicesResults); // Total FirePower: 2
+        actionJSON3 = new PiratesJSON("Player 3", true, shieldsToActivate3, 0, dicesResults); // Total FirePower: 3
+        actionJSON4 = new PiratesJSON("Player 4", true, shieldsToActivate4, 0, dicesResults); // Total FirePower: 3
+
+        pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board);
+
+        pirates.initCardPlayers();
+
+        ArrayList<Integer> playerPositionsBefore = new ArrayList<>();
+        for (Player player : board.getPlayers()) {
+            playerPositionsBefore.add(player.getCursor());
+        }
+
+        pirates.useCard(actionJSON1);
+        assertTrue(pirates.hasFinished());
+
+        assertTrue(pirates.hasFinished());
+        pirates.useCard(actionJSON2);
+
+        assertTrue(pirates.hasFinished());
+        pirates.useCard(actionJSON3);
+
+        assertTrue(pirates.hasFinished());
+        pirates.useCard(actionJSON4);
+
+        assertTrue(pirates.hasFinished());
+
+        assertEquals(playerPositionsBefore.get(0) - 7, p1.getCursor()); // 4 steps + 3 jumps over players (2, 3, 4)
+        assertEquals(playerPositionsBefore.get(1), p2.getCursor());
+        assertEquals(playerPositionsBefore.get(2), p3.getCursor());
+        assertEquals(playerPositionsBefore.get(3), p4.getCursor());
+
+        assertEquals(4, p1.getCredits());
+        assertEquals(0, p2.getCredits());
+        assertEquals(0, p3.getCredits());
+        assertEquals(0, p4.getCredits());
+
+    }
+
+//    public void printGrid(Ship ship) {
+//        char[][] grid = new char[12][12];
+//        for (int i = 0; i < grid.length; i++) {
+//            for (int j = 0; j < grid[i].length; j++) {
+//                grid[i][j] = '-';
+//            }
+//        }
+//        for (int i = 0; i < grid.length; i++) {
+//            for (int j = 0; j < grid[i].length; j++) {
+//                if (ship.getComponent(i, j) != null) {
+//                    if(i == 6 && j == 6) {
+//                        grid[i][j] = 'C';
+//                    } else {
+//                        grid[i][j] = 'X';
+//                    }
+//
+//                }
+//            }
+//        }
+//        for (int i = 0; i < grid.length; i++) {
+//            System.out.println();
+//            for (int j = 0; j < grid[i].length; j++) {
+//                System.out.print(grid[i][j] + " ");
+//            }
+//        }
+//        System.out.println();
+//    }
+
+    public void ship_init1(Ship ship) {
+
+        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
+        // 2 + 2 + 2 = umani + 1 alieno marrone
+        // Il cannone doppio viene attivato
+
+
+        //Cabin core = new Cabin(connectors, true);
+        Cabin cabin_1 = new Cabin(new int[] {0, 1, 0, 1}, false);
+        Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
+        Cabin cabin_3 = new Cabin(new int[] {1, 1, 0, 1}, false);
+        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 2);
+        Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 0}, 1);
+        Cannon cannon_3 = new Cannon(new int[] {0, 0, 0, 1}, 1);
+        Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
+        Battery battery_1 = new Battery(new int[] {0, 0, 0, 1}, 3);
+        //cannon_1.rotateLeft();
+
+
+        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+        cabin_3.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+
+        ship.addComponent(cabin_1, 6, 5);
+        ship.addComponent(cabin_2, 6, 7);
+        ship.addComponent(cabin_3, 7, 6);
+        ship.addComponent(cannon_1, 5, 6);
+        ship.addComponent(cannon_2, 6, 4);
+        ship.addComponent(cannon_3, 6, 8);
+        ship.addComponent(vital_1, 7, 5);
+        ship.addComponent(battery_1, 7, 7);
+
+        ship.generateComponentSubLists();
+
+//        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+//        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+
+
+    }
+
+    public void ship_init2(Ship ship) {
+
+        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
+        // 2 + 2 + 2 = umani + 1 alieno marrone
+        // Il cannone doppio non viene attivato
+
+
+        //Cabin core = new Cabin(connectors, true);
+        Cabin cabin_1 = new Cabin(new int[] {1, 1, 0, 1}, false);
+        Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
+        Cabin cabin_3 = new Cabin(new int[] {1, 1, 1, 1}, false);
+        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 2);
+        Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 1}, 1);
+        Cannon cannon_3 = new Cannon(new int[] {0, 0, 0, 1}, 1);
+        Vital vital_1 = new Vital(new int[] {0, 1, 1, 0}, 0);
+        Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
+        Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
+        Shield shield_1 = new Shield(new int[] {1, 0, 0, 0});
+        //cannon_1.rotateLeft();
+
+
+        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+        cabin_3.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+
+        storage_1.storeItem(new Item(ItemColor.GREEN));
+        storage_1.storeItem(new Item(ItemColor.GREEN));
+        storage_1.storeItem(new Item(ItemColor.YELLOW));
+
+        ship.addComponent(cabin_1, 6, 5);
+        ship.addComponent(cabin_2, 6, 7);
+        ship.addComponent(cabin_3, 7, 6);
+        ship.addComponent(cannon_1, 5, 6);
+        ship.addComponent(cannon_2, 6, 4);
+        ship.addComponent(cannon_3, 6, 8);
+        ship.addComponent(vital_1, 7, 5);
+        ship.addComponent(battery_1, 7, 7);
+        ship.addComponent(storage_1, 7, 8);
+        ship.addComponent(shield_1, 8, 5);
+
+        ship.generateComponentSubLists();
+
+//        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+//        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+
+        shieldsToActivate2.add(new int[] {8, 5});
+
+    }
+
+    public void ship_init3(Ship ship) {
+
+        // core + 3 cabine, 3 cannoni singoli, un vital(BROWN), una batteria da 3
+        // 2 + 2 + 2 = umani + 1 alieno marrone
+
+
+
+        //Cabin core = new Cabin(connectors, true);
+        Cabin cabin_1 = new Cabin(new int[] {1, 1, 0, 1}, false);
+        Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
+        Cabin cabin_3 = new Cabin(new int[] {1, 1, 0, 1}, false);
+        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 1);
+        Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 1}, 1);
+        Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
+        Vital vital_1 = new Vital(new int[] {0, 1, 1, 0}, 0);
+        Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
+        Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
+        Storage storage_2 = new Storage(new int[] {0, 0, 0, 1}, 2, true);
+        Shield shield_1 = new Shield(new int[] {1, 0, 0, 0});
+        shield_1.rotateLeft();
+
+
+        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+        cabin_3.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+
+        storage_1.storeItem(new Item(ItemColor.BLUE));
+        storage_1.storeItem(new Item(ItemColor.YELLOW));
+        storage_1.storeItem(new Item(ItemColor.GREEN));
+
+        storage_2.storeItem(new Item(ItemColor.RED));
+        storage_2.storeItem(new Item(ItemColor.RED));
+
+        ship.addComponent(cabin_1, 6, 5);
+        ship.addComponent(cabin_2, 6, 7);
+        ship.addComponent(cabin_3, 7, 6);
+        ship.addComponent(cannon_1, 5, 6);
+        ship.addComponent(cannon_2, 6, 4);
+        ship.addComponent(cannon_3, 6, 8);
+        ship.addComponent(vital_1, 7, 5);
+        ship.addComponent(battery_1, 7, 7);
+        ship.addComponent(storage_1, 7, 8);
+        ship.addComponent(storage_2, 6, 9);
+        ship.addComponent(shield_1, 8, 5);
+
+        ship.generateComponentSubLists();
+
+//        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+//        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+        shieldsToActivate3.add(new int[] {8, 5});
+
+    }
+
+    public void ship_init4(Ship ship) {
+
+        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
+        // 2 + 2 + 2 = umani + 1 alieno marrone
+
+
+        //Cabin core = new Cabin(connectors, true);
+        Cabin cabin_1 = new Cabin(new int[] {1, 1, 0, 1}, false);
+        Cabin cabin_2 = new Cabin(new int[] {1, 1, 0, 1}, false);
+        Cabin cabin_3 = new Cabin(new int[] {1, 1, 1, 1}, false);
+        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 1);
+        Cannon cannon_2 = new Cannon(new int[] {1, 1, 0, 1}, 1);
+        Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
+        Vital vital_1 = new Vital(new int[] {0, 1, 1, 0}, 0);
+        Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
+        Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
+        Storage storage_2 = new Storage(new int[] {0, 0, 0, 1}, 2, true);
+        Shield shield_1 = new Shield(new int[] {1, 0, 0, 0});
+        Shield shield_2 = new Shield(new int[] {0, 0, 1, 0});
+        shield_1.rotateLeft();
+        shield_1.rotateLeft();
+        //cannon_1.rotateLeft();
+
+
+        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+        cabin_3.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+
+        storage_1.storeItem(new Item(ItemColor.BLUE));
+        storage_1.storeItem(new Item(ItemColor.YELLOW));
+        storage_1.storeItem(new Item(ItemColor.GREEN));
+
+        storage_2.storeItem(new Item(ItemColor.RED));
+
+        ship.addComponent(cabin_1, 6, 5);
+        ship.addComponent(cabin_2, 6, 7);
+        ship.addComponent(cabin_3, 7, 6);
+        ship.addComponent(cannon_1, 5, 6);
+        ship.addComponent(cannon_2, 6, 4);
+        ship.addComponent(cannon_3, 6, 8);
+        ship.addComponent(vital_1, 7, 5);
+        ship.addComponent(battery_1, 7, 7);
+        ship.addComponent(storage_1, 7, 8);
+        ship.addComponent(storage_2, 6, 9);
+        ship.addComponent(shield_1, 8, 5);
+        ship.addComponent(shield_2, 5, 7);
+
+        ship.generateComponentSubLists();
+
+//        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+//        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+
+        shieldsToActivate4.add(new int[] {8, 5});
+        shieldsToActivate4.add(new int[] {5, 7});
+
+    }
+}

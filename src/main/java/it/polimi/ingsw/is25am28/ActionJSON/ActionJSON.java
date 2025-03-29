@@ -1,81 +1,46 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-public abstract class ActionJSON {
-    protected JSONObject data;
+public class ActionJSON {
+    protected String playerNickname;
 
     /**
-     * Constructor used to build a new JSONObject (client side)
+     * Default constructor used client side
      * */
-    public ActionJSON() {
-        data = new JSONObject();
+    public ActionJSON() {}
+
+    /**
+     * Constructor that initialize the JSON with a nickname, used mainly serverside
+     * */
+    @JsonCreator
+    public ActionJSON(@JsonProperty("playerNickname")  String playerNickname) {
+        this.playerNickname = playerNickname;
     }
 
     /**
-     * Constructor used when we need to parse a given JSONObject (server side)
+     * Returns the player Nickname
      * */
-    public ActionJSON(JSONObject data) {
-        this.data = data;
-    }
-
-    /**
-     * Returns the JSON data
-     * */
-    public JSONObject getData() {
-        return data;
-    }
-
-    /**
-     * Set the JSON data
-     * */
-    @SuppressWarnings("unchecked")
-    public void setData(JSONObject data) {
-        this.data.clear();
-        this.data.putAll(data);
-    }
-
-    /**
-     * Returns the player nickname that should be set in the JSON, otherwise it throws an Exception
-     * */
-    public String getPlayerNickname() throws IllegalStateException{
-        if (!data.containsKey("playerNickname")) {
+    public String getPlayerNickname() throws IllegalStateException {
+        if (this.playerNickname == null || this.playerNickname.isEmpty()) {
             throw new IllegalStateException("Key 'playerNickname' is missing in JSON data");
         }
 
-        return (String) data.get("playerNickname");
+        return this.playerNickname;
     }
 
     /**
-     * Set the player nickname to the given value
+     * Set the playerNickname to the given data
      * */
-    @SuppressWarnings("unchecked")
-    public void setPlayerNickname(String playerNickname) throws IllegalArgumentException {
-        if (playerNickname == null) {
-            throw new IllegalArgumentException("Player nickname cannot be null");
+    public void setPlayerNickname(String playerNickname) throws IllegalStateException {
+        if (playerNickname == null || playerNickname.isEmpty()) {
+            throw new IllegalStateException("playerNickname cannot be null or empty");
         }
 
-        data.put("playerNickname", playerNickname);
-    }
-
-    /**
-     * Returns the string of the given JSONObject
-     * */
-    public static String Stringify(JSONObject data) throws IllegalArgumentException {
-        if (data == null || data.isEmpty()) {
-            throw new IllegalArgumentException("The JSON string is either null or empty");
-        }
-
-        return data.toString();
-    }
-
-    /**
-     * Returns the JSONObject of the given JSON String
-     * */
-    public static JSONObject Parse(String data) throws ParseException {
-        JSONParser parser = new JSONParser();
-        return (JSONObject) parser.parse(data);
+        this.playerNickname = playerNickname;
     }
 }

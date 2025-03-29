@@ -1,91 +1,60 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.ParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class OpenSpaceJSONTest {
 
-    @Test
-    void test_default_constructor_and_playerNickname() {
-        // Verify that the default constructor initializes a non-null JSONObject
-        OpenSpaceJSON openSpace = new OpenSpaceJSON();
-        assertNotNull(openSpace.getData(), "Internal JSONObject should not be null");
-
-        // Set a nickname and verify that it is correctly returned
-        String nickname = "Player1";
-        openSpace.setPlayerNickname(nickname);
-        assertEquals(nickname, openSpace.getPlayerNickname(), "The nickname should be correctly set and retrieved");
-    }
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Test
-    void test_get_playerNickname_missing_throws_exception() {
-        // Verify that if no playerNickname is set, an exception is thrown
+    void test_default_constructor_and_set_playerNickname() {
         OpenSpaceJSON openSpace = new OpenSpaceJSON();
+
+        // Verify that without the player nickname the exception is thrown
         IllegalStateException exception = assertThrows(IllegalStateException.class, openSpace::getPlayerNickname);
         assertEquals("Key 'playerNickname' is missing in JSON data", exception.getMessage());
+
+        // Set the playerNickname and verify it is returned
+        String nickname = "Player1";
+        openSpace.setPlayerNickname(nickname);
+        assertEquals(nickname, openSpace.getPlayerNickname(), "The playerNickname has not been set or retrieved correctly");
     }
 
     @Test
     void test_set_playerNickname_throws_exception_when_null() {
-        // Verify that setting a null nickname throws an exception
+        // Verify that a null playerNickname throws an exception
         OpenSpaceJSON openSpace = new OpenSpaceJSON();
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            openSpace.setPlayerNickname(null);
-        });
-        assertEquals("Player nickname cannot be null", exception.getMessage());
+        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> openSpace.setPlayerNickname(null));
+        assertEquals("playerNickname cannot be null or empty", exception.getMessage());
     }
 
     @Test
-    void test_set_data() {
-        // Create a new JSONObject and set it in the OpenSpaceJSON object
-        OpenSpaceJSON openSpace = new OpenSpaceJSON();
-        JSONObject newData = new JSONObject();
-        newData.put("playerNickname", "Player2");
-        newData.put("score", 100);
+    void test_serialization() throws JsonProcessingException {
+        // Create a new JSON instance and verify it contains the given data
+        OpenSpaceJSON openSpace = new OpenSpaceJSON("TestPlayer", 42);
 
-        openSpace.setData(newData);
-        JSONObject data = openSpace.getData();
+        // Serialize the object
+        String json = objectMapper.writeValueAsString(openSpace);
 
-        // Verify that the JSONObject contains the expected values
-        assertEquals("Player2", data.get("playerNickname"));
-        assertEquals(100, data.get("score"));
+        // Verify that the string contains the given JSON data
+        assertTrue(json.contains("\"playerNickname\":\"TestPlayer\""), "The JSON does not contains the playerNickname");
+        assertTrue(json.contains("\"usedEnergy\":42"), "The JSON does not contains the usedEnergy");
     }
 
     @Test
-    void test_stringify_and_parse() throws ParseException {
-        // Set a nickname and convert the JSONObject to a string
-        OpenSpaceJSON openSpace = new OpenSpaceJSON();
-        openSpace.setPlayerNickname("TestPlayer");
-        String jsonString = ActionJSON.Stringify(openSpace.getData());
+    void test_deserialization() throws JsonProcessingException {
+        // From a given string we try to get the JSON object
+        String json = "{\"playerNickname\":\"TestPlayer\",\"usedEnergy\":55}";
 
-        // Parse the string to obtain the JSONObject again and verify the value
-        JSONObject parsedData = ActionJSON.Parse(jsonString);
-        assertEquals("TestPlayer", parsedData.get("playerNickname"));
-    }
+        // Deserialize the JSON string
+        OpenSpaceJSON openSpace = objectMapper.readValue(json, OpenSpaceJSON.class);
 
-    @Test
-    void test_constructor_with_JSONString() throws ParseException {
-        // Create a JSON string containing keys, including playerNickname
-        String jsonString = "{\"playerNickname\":\"TestPlayer2\", \"level\":5}";
-        OpenSpaceJSON openSpace = new OpenSpaceJSON(jsonString);
-
-        // Verify that the constructor accepting a JSON string works correctly
-        assertEquals("TestPlayer2", openSpace.getPlayerNickname());
-        JSONObject data = openSpace.getData();
-        // Note: the parser might interpret numbers as Long
-        assertEquals(5L, data.get("level"));
-    }
-
-    @Test
-    void test_stringify_throws_exception_for_empty_JSONObject() {
-        // Verify that the static Stringify method throws an exception if the JSONObject is empty
-        JSONObject emptyData = new JSONObject();
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            ActionJSON.Stringify(emptyData);
-        });
-        assertEquals("The JSON string is either null or empty", exception.getMessage());
+        // Verify that we have the correct values with the class methods
+        assertEquals("TestPlayer", openSpace.getPlayerNickname());
+        assertEquals(55, openSpace.getUsedEnergy());
     }
 }
