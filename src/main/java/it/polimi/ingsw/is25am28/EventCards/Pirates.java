@@ -413,6 +413,8 @@ public class Pirates extends EventCard {
 
     protected void malusEffect() {}
 
+    // TODO: fix pirates' generate state to include the individual shot data instead of the full sequence at once
+
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();

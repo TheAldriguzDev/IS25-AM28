@@ -1,19 +1,9 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Board.Board;
-import it.polimi.ingsw.is25am28.Components.*;
-import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
-import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Ship.Ship;
 
-import javafx.util.Pair;
-
-import java.util.*;
-
-public class WarZoneTest extends EventCard {
+public class WarZoneTest_outdated extends EventCard {
     /**
      * General constructor shared between the classes
      *
@@ -21,7 +11,7 @@ public class WarZoneTest extends EventCard {
      * @param cardLevel
      * @param board
      */
-    protected WarZoneTest(String name, int cardLevel, Board board) {
+    protected WarZoneTest_outdated(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
     }
 
