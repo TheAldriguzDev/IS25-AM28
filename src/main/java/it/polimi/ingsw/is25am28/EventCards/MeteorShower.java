@@ -20,6 +20,8 @@ import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Connector.ZERO_PIPES;
 
+// TODO: Change the reference frame (0 != meteor POINTS to the top, but 0 == meteor COMES from the top)
+
 public class MeteorShower extends EventCard {
     private final List<Meteor> meteorSequence;
     private int currMeteorIndex;
@@ -134,7 +136,9 @@ public class MeteorShower extends EventCard {
 
         // Adding +2 to the currMeteor's pointing direction gets the
         // side from where the ship will see it arrive from
-        inboundDirection = (currMeteor.getOrientation() + 2) % 4;
+        inboundDirection = currMeteor.getOrientation();
+
+        // inboundDirection = (currMeteor.getOrientation() + 2) % 4;
 
         switch (inboundDirection) {
             // Case 1 - Meteor arrives from the TOP

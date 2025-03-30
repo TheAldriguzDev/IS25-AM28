@@ -153,33 +153,33 @@ class MeteorShowerTest {
         List<Pair<Integer, Integer>> meteorSequence = new ArrayList<>();
 
         // [1, 0] - Small Meteor, pointing up (comes from the bottom in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(1, 0));
-
-        // [1, 1] - Small Meteor, pointing right (comes from the left in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(1, 1));
-
-        // [1, 2] - Small Meteor, pointing down (comes from the top in the ship)
         meteorSequence.add(new Pair<Integer, Integer>(1, 2));
 
-        // [1, 3] - Small Meteor, pointing left (comes from the right in the ship)
+        // [1, 1] - Small Meteor, pointing right (comes from the left in the ship)
         meteorSequence.add(new Pair<Integer, Integer>(1, 3));
 
+        // [1, 2] - Small Meteor, pointing down (comes from the top in the ship)
+        meteorSequence.add(new Pair<Integer, Integer>(1, 0));
+
+        // [1, 3] - Small Meteor, pointing left (comes from the right in the ship)
+        meteorSequence.add(new Pair<Integer, Integer>(1, 1));
+
         // [2, 0] - Big Meteor, pointing up (comes from the bottom in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(2, 0));
+        meteorSequence.add(new Pair<Integer, Integer>(2, 2));
 
         // [2, 1] - Big Meteor, pointing right (comes from the left in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(2, 1));
+        meteorSequence.add(new Pair<Integer, Integer>(2, 3));
 
         // Meteor 7 of 9 --> Testing if active shields shouldn't block the big meteor
         // [2, 2] - Big Meteor, pointing down (comes from the top in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(2, 2));
+        meteorSequence.add(new Pair<Integer, Integer>(2, 0));
 
         // Meteor 8 of 9 --> Testing destruction with both single and double cannons
         // [2, 2] - Big Meteor, pointing down (comes from the top in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(2, 2));
+        meteorSequence.add(new Pair<Integer, Integer>(2, 0));
 
         // [2, 3] - Big Meteor, pointing left (comes from the right in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(2, 3));
+        meteorSequence.add(new Pair<Integer, Integer>(2, 1));
 
         // MeteorShower card with all 8 possible meteor configurations
         this.meteorShower = new MeteorShower(

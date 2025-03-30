@@ -513,6 +513,31 @@ public class Ship {
     }
 
     /**
+     * Removes the alien of the given type from the ship (if present, otherwise the method does nothing)
+     *
+     * @param alienType The type of alien to remove from the ship (if present)
+     */
+    public void removeAlienOfType(LifeformType alienType) {
+        switch (alienType) {
+            case PURPLE_ALIEN -> {
+                if (this.purpleAlienPosition != null) {
+                    this.purpleAlienPosition.removeInhabitant(this.purpleAlienPosition.getInhabitants().getFirst());
+                    this.purpleAlienPosition = null;
+                }
+            }
+            case BROWN_ALIEN -> {
+                if (this.brownAlienPosition != null) {
+                    this.brownAlienPosition.removeInhabitant(this.brownAlienPosition.getInhabitants().getFirst());
+                    this.brownAlienPosition = null;
+                }
+            }
+            case null, default -> {
+                // Either null or wrong type => no action
+            }
+        }
+    }
+
+    /**
      * Returns the real firepower by considering the baseline firepower (given by single cannons) and
      * the additional firepower (given by activating the given amount of double cannons) and also
      * takes into account the bonus given by the purple alien (if present)

@@ -1,5 +1,5 @@
 package it.polimi.ingsw.is25am28.EventCards;
-    
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Board.Board;
@@ -22,6 +22,9 @@ public class VisitPlanets extends EventCard {
     private int playerUseCount;
     private List<ComponentHelper<ItemColor>> itemsToDrop;
     private List<ComponentHelper<ItemColor>> itemsToTake;
+
+    // TODO: Modify to remove the booleans, since it's if a player chooses a planet THEN lands, not that
+    //       if a player chooses a planet THEN needs to also choose whether to land.
 
     public VisitPlanets(
             @JsonProperty("cardName") String cardName,
