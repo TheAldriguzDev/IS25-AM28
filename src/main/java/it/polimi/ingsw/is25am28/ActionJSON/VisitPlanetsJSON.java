@@ -11,19 +11,16 @@ import java.util.List;
 
 public class VisitPlanetsJSON extends ActionJSON {
     private int chosenPlanetIndex;
-    private boolean wantsToLand;
     private List<ComponentHelper<ItemColor>> itemsToDrop;
     private List<ComponentHelper<ItemColor>> itemsToTake;
 
     @JsonCreator
     public VisitPlanetsJSON(
             @JsonProperty("chosenPlanetIndex") int chosenPlanetIndex,
-            @JsonProperty("wantsToLand") boolean wantsToLand,
             @JsonProperty("itemsToDrop") List<ComponentHelper<ItemColor>> itemsToDrop,
             @JsonProperty("itemsToTake") List<ComponentHelper<ItemColor>> itemsToTake
     ) {
         this.chosenPlanetIndex = chosenPlanetIndex;
-        this.wantsToLand = wantsToLand;
         this.itemsToDrop = itemsToDrop;
         this.itemsToTake = itemsToTake;
     }
@@ -36,16 +33,6 @@ public class VisitPlanetsJSON extends ActionJSON {
     @JsonSetter("chosenPlanetIndex")
     public void setChosenPlanetIndex(int chosenPlanetIndex) {
         this.chosenPlanetIndex = chosenPlanetIndex;
-    }
-
-    @JsonGetter("wantsToLand")
-    public boolean getLandingDecision() {
-        return this.wantsToLand;
-    }
-
-    @JsonSetter("wantsToLand")
-    public void setLandingDecision(boolean wantsToLand) {
-        this.wantsToLand = wantsToLand;
     }
 
     @JsonGetter("itemsToDrop")

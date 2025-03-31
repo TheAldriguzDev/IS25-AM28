@@ -252,6 +252,13 @@ class VisitPlanetsTest {
         //     (i.e.: The 2 BLUE items are moved into another storage)
         chosenPlanetIndex = 0;
         cardStateJSON = this.visitPlanets.generateState();
+
+        // Verify that all planets are currently available
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(0));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(2));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
+
 //        System.out.println("\n ======== P1 BEFORE ========");
 //        printAvailableResources(this.resourceBank);
 //        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
@@ -266,10 +273,9 @@ class VisitPlanetsTest {
         itemsToTake.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.BLUE));
 
         visitPlanetsJSON = new VisitPlanetsJSON(
-                chosenPlanetIndex,
-            true,
-                itemsToDrop,
-                itemsToTake
+            chosenPlanetIndex,
+            itemsToDrop,
+            itemsToTake
         );
 
         if (this.visitPlanets.getCurrentPlayer().isPresent()) {
@@ -291,9 +297,10 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P1 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        for (Integer chosenPlanetID : chosenPlanets) {
-            assertFalse(cardStateJSON.getAvailablePlanets().containsKey(chosenPlanetID));
-        }
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(2));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
 
         // Verify that the card is not finished yet
         assertTrue(cardStateJSON.getIsCardUsable());
@@ -356,17 +363,16 @@ class VisitPlanetsTest {
         itemsToTake.add(new ComponentHelper<ItemColor>(6, 5).addItem(ItemColor.BLUE));
         itemsToTake.add(new ComponentHelper<ItemColor>(6, 5).addItem(ItemColor.BLUE));
         itemsToTake.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.BLUE));
-        itemsToTake.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.BLUE));      // <--- This overflows storage@(7, 5)
-        itemsToTake.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.GREEN));     // Actions below are not performed in useCard
+        itemsToTake.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.BLUE));
+        itemsToTake.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.GREEN));
         itemsToTake.add(new ComponentHelper<ItemColor>(6, 7).addItem(ItemColor.YELLOW));
         itemsToTake.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.RED));
         itemsToTake.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.RED));
 
         visitPlanetsJSON = new VisitPlanetsJSON(
-                chosenPlanetIndex,
-                true,
-                itemsToDrop,
-                itemsToTake
+            chosenPlanetIndex,
+            itemsToDrop,
+            itemsToTake
         );
 
         if (this.visitPlanets.getCurrentPlayer().isPresent()) {
@@ -396,12 +402,13 @@ class VisitPlanetsTest {
         // Adding the chosen planetID to the list of used ones
         chosenPlanets.add(chosenPlanetIndex);
 
-        // Verifying that the planetID chosen by P3 cannot
+        // Verifying that the planetID chosen by P2 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        for (Integer chosenPlanetID : chosenPlanets) {
-            assertFalse(cardStateJSON.getAvailablePlanets().containsKey(chosenPlanetID));
-        }
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
 
         // Verify that the card is not finished yet
         assertTrue(cardStateJSON.getIsCardUsable());
@@ -466,14 +473,15 @@ class VisitPlanetsTest {
         itemsToTake = new ArrayList<>();
         itemsToTake.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.GREEN));
 
-        // P3 doesn't land on the planet, therefore just occupies it in orbit,
-        // preventing P4 from choosing such planet
-        visitPlanetsJSON = new VisitPlanetsJSON(
-            chosenPlanetIndex,
-            false,  // NO LANDING !!
-            itemsToDrop,
-            itemsToTake
-        );
+        // P3 doesn't land on the planet, therefore gives an empty/null response
+//        visitPlanetsJSON = new VisitPlanetsJSON(
+//            chosenPlanetIndex,
+//            itemsToDrop,
+//            itemsToTake
+//        );
+        // Equivalent to an empty ActionJSON to signal the fact
+        // that the player doesn't want to land on a planet
+        visitPlanetsJSON = null;
 
         if (this.visitPlanets.getCurrentPlayer().isPresent()) {
             currPlayer = this.visitPlanets.getCurrentPlayer().get();
@@ -483,7 +491,7 @@ class VisitPlanetsTest {
         }
 
         // Adding the current player to the payload to identify who sent it
-        visitPlanetsJSON.setPlayerNickname(currPlayer.getNickname());
+        // visitPlanetsJSON.setPlayerNickname(currPlayer.getNickname());
 
         // P3 uses the card
         this.visitPlanets.useCard(visitPlanetsJSON);
@@ -491,12 +499,12 @@ class VisitPlanetsTest {
         // Adding the chosen planetID to the list of used ones
         chosenPlanets.add(chosenPlanetIndex);
 
-        // Verifying that the planetID chosen by P3 cannot
-        // be chosen by the other players
+        // Verifying that the planetID chosen by P3 is not available
         cardStateJSON = this.visitPlanets.generateState();
-        for (Integer chosenPlanetID : chosenPlanets) {
-            assertFalse(cardStateJSON.getAvailablePlanets().containsKey(chosenPlanetID));
-        }
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
 
         // Verify that the card is not finished yet
         assertTrue(cardStateJSON.getIsCardUsable());
@@ -559,10 +567,9 @@ class VisitPlanetsTest {
         // P3 doesn't land on the planet, therefore just occupies it in orbit,
         // preventing P4 from choosing such planet
         visitPlanetsJSON = new VisitPlanetsJSON(
-                chosenPlanetIndex,
-                true,
-                itemsToDrop,
-                itemsToTake
+            chosenPlanetIndex,
+            itemsToDrop,
+            itemsToTake
         );
 
         if (this.visitPlanets.getCurrentPlayer().isPresent()) {
@@ -575,20 +582,22 @@ class VisitPlanetsTest {
         // Adding the current player to the payload to identify who sent it
         visitPlanetsJSON.setPlayerNickname(currPlayer.getNickname());
 
-        // P3 uses the card
+        // P4 uses the card
         this.visitPlanets.useCard(visitPlanetsJSON);
 
         // Adding the chosen planetID to the list of used ones
         chosenPlanets.add(chosenPlanetIndex);
 
-        // Verifying that the planetID chosen by P3 cannot
+        // Verifying that the planetID chosen by P4 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
+
         // Since P4 is the last player, the state should say that the card is not usable anymore
         assertFalse(cardStateJSON.getIsCardUsable());
-        for (Integer chosenPlanetID : chosenPlanets) {
-            assertFalse(cardStateJSON.getAvailablePlanets().containsKey(chosenPlanetID));
-        }
 
         // Visualize changes
 //        System.out.println("\n ======== P4 AFTER ========");
@@ -596,7 +605,7 @@ class VisitPlanetsTest {
 //        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
 //        visualizeAllStoragesCoordinatesAndContents(currPlayer);
 
-        // Verify that the correct resources are dropped and taken by P3
+        // Verify that the correct resources are dropped and taken by P4
         // specialDoubleStorage1
         storageToCheck = (Storage) currPlayer.getShip().getComponent(5, 6);
         expectedStorageContents = new ArrayList<ItemColor>();
@@ -639,6 +648,316 @@ class VisitPlanetsTest {
         assertEquals(initialPositions.get(3) - this.movementStep, this.visitPlanets.getBoard().getPlayers().get(3).getCursor());
         assertEquals(initialPositions.get(2), this.visitPlanets.getBoard().getPlayers().get(2).getCursor());
         assertEquals(initialPositions.get(1) - this.movementStep - 1, this.visitPlanets.getBoard().getPlayers().get(1).getCursor());
+        assertEquals(initialPositions.get(0) - this.movementStep - 1, this.visitPlanets.getBoard().getPlayers().get(0).getCursor());
+    }
+
+    @Test
+    void useCard_twoPlayersAndTwoPlanets() {
+        VisitPlanets twoPlanetVisitPlanets;
+        VisitPlanetsJSON visitPlanetsJSON;
+        CardStateJSON cardStateJSON;
+        List<ComponentHelper<ItemColor>> itemsToDrop;
+        List<ComponentHelper<ItemColor>> itemsToTake;
+        List<ItemColor> expectedStorageContents;
+        List<Integer> chosenPlanets = new ArrayList<>();
+        List<Integer> initialPositions = new ArrayList<>();
+        Storage storageToCheck;
+        Player currPlayer;
+        int chosenPlanetIndex;
+        Random random = new Random(100);
+        Map<Integer, Map<Integer, Integer>> itemsPerPlanet = new HashMap<>();
+
+        // Compiling the initial positions of all players in the board
+        initialPositions.add(this.board.getPlayers().get(0).getCursor());
+        initialPositions.add(this.board.getPlayers().get(1).getCursor());
+        initialPositions.add(this.board.getPlayers().get(2).getCursor());
+        initialPositions.add(this.board.getPlayers().get(3).getCursor());
+
+        // Removing the last player since this test works with 2 planets and 3 players
+        // (1 player does not land on a planet, whereas the other 2 do so)
+        this.board.eliminatePlayer(this.board.getPlayers().getLast());
+
+        // Creating the two planet VisitPlanets card
+        for (int planetID = 0; planetID < 2; planetID++) {
+            Map<Integer, Integer> planetConfig = new HashMap<>();
+
+            // Each of the 4 planets has a random amount of items
+            planetConfig.put(1, random.nextInt(0, 4));
+            planetConfig.put(2, random.nextInt(0, 3));
+            planetConfig.put(3, random.nextInt(0, 2));
+            planetConfig.put(4, random.nextInt(0, 3));
+
+            itemsPerPlanet.put(planetID, planetConfig);
+        }
+
+        this.visitPlanets = new VisitPlanets(
+            "VisitPlanets",
+            2,
+            this.movementStep,
+            itemsPerPlanet,
+            this.resourceBank,
+            this.board
+        );
+
+        // Initializing the internal player list
+        this.visitPlanets.initCardPlayers();
+
+        // Compiling the initial positions of all players in the board
+        initialPositions.add(this.board.getPlayers().get(0).getCursor());
+        initialPositions.add(this.board.getPlayers().get(1).getCursor());
+        initialPositions.add(this.board.getPlayers().get(2).getCursor());
+
+        // Player 1 (P1) - P1 plays correctly (he's not greedy nor nihilist)
+        // --> P1 will: drop (2 BLUE) and take (1 YELLOW, 1 GREEN, 2 BLUE) from planet with planetID=0
+        //     (i.e.: The 2 BLUE items are moved into another storage)
+        chosenPlanetIndex = 0;
+        cardStateJSON = this.visitPlanets.generateState();
+
+        // Verify that all planets are currently available
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(0));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+
+        itemsToDrop = new ArrayList<>();
+        itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
+
+        itemsToTake = new ArrayList<>();
+        itemsToTake.add(new ComponentHelper<ItemColor>(6, 5).addItem(ItemColor.YELLOW));
+        itemsToTake.add(new ComponentHelper<ItemColor>(6, 5).addItem(ItemColor.GREEN));
+        itemsToTake.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.BLUE));
+
+        visitPlanetsJSON = new VisitPlanetsJSON(
+            chosenPlanetIndex,
+            itemsToDrop,
+            itemsToTake
+        );
+
+        currPlayer = null;
+
+        if (this.visitPlanets.getCurrentPlayer().isPresent()) {
+            currPlayer = this.visitPlanets.getCurrentPlayer().get();
+        }
+        else {
+            fail("ERROR: Current player is null");
+        }
+
+        // Adding the current player to the payload to identify who sent it
+        visitPlanetsJSON.setPlayerNickname(currPlayer.getNickname());
+
+        // P1 uses the card
+        this.visitPlanets.useCard(visitPlanetsJSON);
+
+        // Adding the chosen planetID to the list of used ones
+        chosenPlanets.add(chosenPlanetIndex);
+
+        // Verifying that the planetID chosen by P1 cannot
+        // be chosen by the other players
+        cardStateJSON = this.visitPlanets.generateState();
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+
+        // Verify that the card is not finished yet
+        assertTrue(cardStateJSON.getIsCardUsable());
+
+        // Verify that the correct resources are dropped and taken by P1
+        // specialDoubleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(5, 6);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+        // specialSingleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(6, 7);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        expectedStorageContents.add(ItemColor.RED);
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+        // normalTripleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(6, 5);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        expectedStorageContents.add(ItemColor.YELLOW);
+        expectedStorageContents.add(ItemColor.YELLOW);
+        expectedStorageContents.add(ItemColor.GREEN);
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+        // normalDoubleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(7, 5);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        expectedStorageContents.add(ItemColor.BLUE);
+        expectedStorageContents.add(ItemColor.BLUE);
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+
+
+        // Player 2 (P2) - P2 will drop everything he had and take everything the planet has
+        // --> P2 will: drop (all) and take (all) from his chosen planer with planetID=3
+        //     (HOWEVER: Even if he wants to drop/take stuff, he doesn't want to land, therefore his storage stays the same)
+        chosenPlanetIndex = -1; // Doesn't care about landing
+        cardStateJSON = this.visitPlanets.generateState();
+
+        itemsToDrop = new ArrayList<>();
+        itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
+        itemsToDrop.add(new ComponentHelper<ItemColor>(6, 7).addItem(ItemColor.GREEN));
+        itemsToDrop.add(new ComponentHelper<ItemColor>(6, 5).addItem(ItemColor.YELLOW));
+        itemsToDrop.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.BLUE));
+
+        itemsToTake = new ArrayList<>();
+        itemsToTake.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.GREEN));
+
+        // P2 doesn't land on the planet
+        visitPlanetsJSON = new VisitPlanetsJSON(
+            chosenPlanetIndex,
+            itemsToDrop,
+            itemsToTake
+        );
+
+        if (this.visitPlanets.getCurrentPlayer().isPresent()) {
+            currPlayer = this.visitPlanets.getCurrentPlayer().get();
+        }
+        else {
+            throw new IllegalArgumentException("ERROR: Current player is null");
+        }
+
+        // Adding the current player to the payload to identify who sent it
+        visitPlanetsJSON.setPlayerNickname(currPlayer.getNickname());
+
+        // P2 uses the card
+        this.visitPlanets.useCard(visitPlanetsJSON);
+
+        // Adding the chosen planetID to the list of used ones
+        chosenPlanets.add(chosenPlanetIndex);
+
+        // Verifying that the planetID chosen by P2 is still available,
+        // since he specified that he did not want to land
+        cardStateJSON = this.visitPlanets.generateState();
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+
+        // Verify that the card is not finished yet
+        assertTrue(cardStateJSON.getIsCardUsable());
+
+        // Verify that the correct resources are dropped and taken by P2
+        // specialDoubleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(5, 6);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        expectedStorageContents.add(ItemColor.BLUE);
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+        // specialSingleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(6, 7);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        expectedStorageContents.add(ItemColor.BLUE);
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+        // normalTripleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(6, 5);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        expectedStorageContents.add(ItemColor.BLUE);
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+        // normalDoubleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(7, 5);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        expectedStorageContents.add(ItemColor.YELLOW);
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+
+
+        // Player 3 (P3) - P3 will try to take more resources than available on his planet (greedy behaviour)
+        //                 and he will try to overflow his storage
+        // --> P3 will: drop (nothing) and take (all) from planet with planetID=2
+        //              (NOTE: 1 BLUE and 1 GREEN are reorganized, they're not dropped and thus nor deposited to the resourceBank)
+        chosenPlanetIndex = 1;
+        cardStateJSON = this.visitPlanets.generateState();
+
+        itemsToDrop = new ArrayList<>();
+        itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
+        itemsToDrop.add(new ComponentHelper<ItemColor>(6, 7).addItem(ItemColor.GREEN));
+
+        itemsToTake = new ArrayList<>();
+        itemsToTake.add(new ComponentHelper<ItemColor>(6, 5).addItem(ItemColor.BLUE));
+        itemsToTake.add(new ComponentHelper<ItemColor>(6, 5).addItem(ItemColor.BLUE));
+        itemsToTake.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.BLUE));
+        itemsToTake.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.BLUE));
+        itemsToTake.add(new ComponentHelper<ItemColor>(7, 5).addItem(ItemColor.GREEN));
+        itemsToTake.add(new ComponentHelper<ItemColor>(6, 7).addItem(ItemColor.YELLOW));
+        itemsToTake.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.RED));
+        itemsToTake.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.RED));
+
+        visitPlanetsJSON = new VisitPlanetsJSON(
+            chosenPlanetIndex,
+            itemsToDrop,
+            itemsToTake
+        );
+
+        if (this.visitPlanets.getCurrentPlayer().isPresent()) {
+            currPlayer = this.visitPlanets.getCurrentPlayer().get();
+        }
+        else {
+            throw new IllegalArgumentException("ERROR: Current player is null");
+        }
+
+        // Adding the current player to the payload to identify who sent it
+        visitPlanetsJSON.setPlayerNickname(currPlayer.getNickname());
+
+        // P3 uses the card
+        this.visitPlanets.useCard(visitPlanetsJSON);
+
+        // Adding the chosen planetID to the list of used ones
+        chosenPlanets.add(chosenPlanetIndex);
+
+        // Verifying that the planetID chosen by P3 cannot
+        // be chosen by the other players
+        cardStateJSON = this.visitPlanets.generateState();
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
+
+        // Verify that, since all planets have been chosen, P4 will not be able to choose, thus
+        // he should be skipped and the card should be then marked as used
+        assertFalse(cardStateJSON.getIsCardUsable());
+
+        // Verify that the correct resources are dropped and taken by P3
+        // specialDoubleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(5, 6);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        expectedStorageContents.add(ItemColor.RED);
+        expectedStorageContents.add(ItemColor.RED);
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+        // specialSingleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(6, 7);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+        // normalTripleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(6, 5);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        expectedStorageContents.add(ItemColor.YELLOW);
+        expectedStorageContents.add(ItemColor.BLUE);
+        expectedStorageContents.add(ItemColor.BLUE);
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+        // normalDoubleStorage1
+        storageToCheck = (Storage) currPlayer.getShip().getComponent(7, 5);
+        expectedStorageContents = new ArrayList<ItemColor>();
+        expectedStorageContents.add(ItemColor.BLUE);
+        expectedStorageContents.add(ItemColor.BLUE);
+        assertEquals(expectedStorageContents.size(), storageToCheck.getStoredItems().size());
+        assertTrue(storageToCheck.getStoredItems().stream().map(Item::getColor).toList().containsAll(expectedStorageContents));
+
+        // (FINAL) Check that each player that decided to land got moved backwards
+        // A list of the previous positions is needed to confront them with the new positions
+        assertEquals(initialPositions.get(2) - this.movementStep, this.visitPlanets.getBoard().getPlayers().get(2).getCursor());
+        assertEquals(initialPositions.get(1), this.visitPlanets.getBoard().getPlayers().get(1).getCursor());
         assertEquals(initialPositions.get(0) - this.movementStep - 1, this.visitPlanets.getBoard().getPlayers().get(0).getCursor());
     }
 
