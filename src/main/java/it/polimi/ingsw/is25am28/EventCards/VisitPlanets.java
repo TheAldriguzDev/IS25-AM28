@@ -17,14 +17,11 @@ import java.util.*;
 public class VisitPlanets extends EventCard {
     private final int movementSteps;
     private final Map<Integer, Map<ItemColor, Integer>> itemsPerPlanet;
-    private final Map<Integer, Pair<Player, Boolean>> playersChosenPlanetAndLandingDecision;
+    private final Map<Integer, Player> playersChosenPlanet;
     private final ResourceBank resourceBank;
     private int playerUseCount;
     private List<ComponentHelper<ItemColor>> itemsToDrop;
     private List<ComponentHelper<ItemColor>> itemsToTake;
-
-    // TODO: Modify to remove the booleans, since it's if a player chooses a planet THEN lands, not that
-    //       if a player chooses a planet THEN needs to also choose whether to land.
 
     public VisitPlanets(
             @JsonProperty("cardName") String cardName,
@@ -71,9 +68,9 @@ public class VisitPlanets extends EventCard {
             this.itemsPerPlanet.put(planetIndex, planetResourceDescriptor);
         }
 
-        // Map containing all the chosen planets and the corresponding player
-        // that chose it, as well as if that player decided to land or not
-        this.playersChosenPlanetAndLandingDecision = new HashMap<Integer, Pair<Player, Boolean>>();
+        // Map containing each player and its chosen planet to land on. If a player
+        // is not present in this map, then it means that he didn't choose a planet to land on
+        this.playersChosenPlanet = new HashMap<Integer, Player>();
         this.playerUseCount = 0;
     }
 
@@ -115,19 +112,17 @@ public class VisitPlanets extends EventCard {
         List<Player> activePlayers = this.getBoard().getPlayers();
         int i;
 
-        // Moves each player that chose a planet and decided to land on it
-        // backwards by the amount specified by the attribute movementSteps
+        // Moves each player that chose a planet to lan on backwards
+        // by the amount specified by the attribute movementSteps
         // NOTE: The players that landed are moved backwards starting from the
         //       player in last place to the player in first place (it's a rule)
         for (i = activePlayers.size() - 1; i >= 0; i--) {
-            for (Pair<Player, Boolean> playerChoice : this.playersChosenPlanetAndLandingDecision.values()) {
-                if (playerChoice.getKey().equals(activePlayers.get(i))) {
-                    if (playerChoice.getValue()) {
-                        this.getBoard().movePlayerBackwards(
-                            activePlayers.get(i),
-                            this.movementSteps
-                        );
-                    }
+            for (Player player : this.playersChosenPlanet.values()) {
+                if (player.equals(activePlayers.get(i))) {
+                    this.getBoard().movePlayerBackwards(
+                        player,
+                        this.movementSteps
+                    );
                 }
             }
         }
@@ -140,7 +135,6 @@ public class VisitPlanets extends EventCard {
         Map<ItemColor, Integer> planetConfig;
         ItemColor itemToVerify;
         int chosenPlanetIndex;
-        boolean wantsToLand;
 
         // ActionJSON unpacking
         try {
@@ -150,26 +144,31 @@ public class VisitPlanets extends EventCard {
             throw new IllegalArgumentException("[VisitPlanets::useCard] ERROR: JSON data parsing error");
         }
 
-        // Check if there is a player playing the card
-        if (this.currentPlayer.isEmpty()) {
-            throw new IllegalArgumentException("[VisitPlanet::useCard] ERROR: No player is currently playing (Optional contains null)");
-        }
-        if ( !this.currentPlayer.get().getNickname().equals(visitPlanetsJSON.getPlayerNickname())) {
-            throw new IllegalArgumentException("ERROR: Current player and player in visitPlanetJSON do not match (wrong arguments)");
-        }
+        // If the given player's ActionJSON response is null, this means that
+        // the player did not want to choose a planet, therefore he's skipped
+        if (visitPlanetsJSON != null) {
+            // Check if there is a player playing the card
+            if (this.currentPlayer.isEmpty()) {
+                throw new IllegalArgumentException("[VisitPlanet::useCard] ERROR: No player is currently playing (Optional contains null)");
+            }
+            if ( !this.currentPlayer.get().getNickname().equals(visitPlanetsJSON.getPlayerNickname())) {
+                throw new IllegalArgumentException("ERROR: Current player and player in visitPlanetJSON do not match (wrong arguments)");
+            }
 
-        // Extracting the player's chosen planet and his landing decision
-        chosenPlanetIndex = visitPlanetsJSON.getChosenPlanetIndex();
-        wantsToLand = visitPlanetsJSON.getLandingDecision();
+            // Extracting the player's chosen planet and his landing decision
+            chosenPlanetIndex = visitPlanetsJSON.getChosenPlanetIndex();
 
-        // If the chosenPlanetIndex is already present as a key in the map, it
-        // means that the specified planet was already chosen, therefore the player
-        // must choose another planet among the remaining ones
-        if (this.itemsPerPlanet.containsKey(chosenPlanetIndex)) {
-            if (!this.playersChosenPlanetAndLandingDecision.containsKey(chosenPlanetIndex)) {
-                // Activating the resource handling routine only if
-                // the player decided to land on his selected planet
-                if (wantsToLand) {
+            // If the given chosenPlanetIndex is not a valid planetID, then
+            // the request will be interpreted as if the player did not want
+            // to choose a planet to land on
+            if (this.itemsPerPlanet.containsKey(chosenPlanetIndex)) {
+                // If the chosenPlanetIndex is already present as a key in the map, it
+                // means that the specified planet was already chosen, therefore the player
+                // must choose another planet among the remaining ones
+                if ( !this.playersChosenPlanet.containsKey(chosenPlanetIndex)) {
+                    // Activating the resource handling routine only if
+                    // the player decided to land on his selected planet
+
                     // (1) - Before depositing the selected resources on the planet,
                     //       verify that they are actually present on the ship, otherwise
                     //       consider the selected item as unavailable
@@ -239,35 +238,32 @@ public class VisitPlanets extends EventCard {
                     // Finally, apply all the deposits and withdrawals
                     // that are now considered valid resource transfers
                     this.bonusEffect();
+
+                    // Storing the chosen planet to avoid showing
+                    // another player the same planetIDs
+                    this.playersChosenPlanet.put(
+                            chosenPlanetIndex,
+                            this.currentPlayer.get()
+                    );
+
+                    // Incrementing the use counter for each player that
+                    // actually used the card
+                    this.playerUseCount++;
                 }
-
-                // Storing the chosen planet and landing decision of the current player
-                this.playersChosenPlanetAndLandingDecision.put(
-                    chosenPlanetIndex,
-                    new Pair<Player, Boolean>(
-                        this.currentPlayer.get(),
-                        wantsToLand
-                    )
-                );
-
-                // Incrementing the use counter for each player that used it
-                // and get the next player (in order of leaderboard placement)
-                this.playerUseCount++;
-                this.currentPlayer = this.getNextPlayer();
-
-                // Set the "hasBeenUsed" flag to true iff all
-                // the available planets have been chosen
-                if (this.playerUseCount == this.itemsPerPlanet.size()) {
-                    this.malusEffect();
-                    this.cardUsed();
+                else {
+                    throw new IllegalArgumentException("ERROR: Chosen planet index was already chosen by someone else");
                 }
-            }
-            else {
-                throw new IllegalArgumentException("ERROR: Chosen planet index was already chosen by someone else");
             }
         }
+
+        // Set the "hasBeenUsed" flag to true iff all the available planets
+        // have been chosen or if all players have answered to the card (i.e.: currPlayer == players.getLast())
+        if (this.playerUseCount == this.itemsPerPlanet.size() || this.currentPlayer.get() == this.players.getLast()) {
+            this.malusEffect();
+            this.cardUsed();
+        }
         else {
-            throw new IllegalArgumentException("ERROR: Chosen planet index does not exist (no planet associated to such index)");
+            this.currentPlayer = this.getNextPlayer();
         }
 
         return this;
@@ -281,7 +277,7 @@ public class VisitPlanets extends EventCard {
         // Generating the map of all the remaining planets to choose from
         availablePlanets = new HashMap<>(this.itemsPerPlanet);
 
-        for (Integer chosenPlanetIndex : this.playersChosenPlanetAndLandingDecision.keySet()) {
+        for (Integer chosenPlanetIndex : this.playersChosenPlanet.keySet()) {
             availablePlanets.remove(chosenPlanetIndex);
         }
 
