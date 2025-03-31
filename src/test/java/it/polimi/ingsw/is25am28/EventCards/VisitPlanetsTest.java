@@ -678,7 +678,7 @@ class VisitPlanetsTest {
         this.board.eliminatePlayer(this.board.getPlayers().getLast());
 
         // Creating the two planet VisitPlanets card
-        for (int planetID = 0; planetID < 4; planetID++) {
+        for (int planetID = 0; planetID < 2; planetID++) {
             Map<Integer, Integer> planetConfig = new HashMap<>();
 
             // Each of the 4 planets has a random amount of items
@@ -716,8 +716,6 @@ class VisitPlanetsTest {
         // Verify that all planets are currently available
         assertTrue(cardStateJSON.getAvailablePlanets().containsKey(0));
         assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(2));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
 
         itemsToDrop = new ArrayList<>();
         itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
@@ -756,8 +754,6 @@ class VisitPlanetsTest {
         cardStateJSON = this.visitPlanets.generateState();
         assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
         assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(2));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
 
         // Verify that the card is not finished yet
         assertTrue(cardStateJSON.getIsCardUsable());
