@@ -1024,7 +1024,7 @@ class ShipTest {
 
         int[] connectors = new int[4];
         int i;
-        
+
         for (i = 0; i < 4; i++) {
             connectors[i] = THREE_PIPES.ordinal();
         }
@@ -1611,12 +1611,12 @@ class ShipTest {
         // Adding humans to cabins and checking if all humans are still there
         // even after removing vitals that are neighbouring their cabin
         ship.getCabinList().forEach(
-            (Cabin c) -> {
-                if (c != ship.getCore()) {
-                    c.addInhabitant(astronaut);
-                    c.addInhabitant(astronaut);
+                (Cabin c) -> {
+                    if (c != ship.getCore()) {
+                        c.addInhabitant(astronaut);
+                        c.addInhabitant(astronaut);
+                    }
                 }
-            }
         );
 
         List<Lifeform> expectedInhabitants = new ArrayList<Lifeform>();
