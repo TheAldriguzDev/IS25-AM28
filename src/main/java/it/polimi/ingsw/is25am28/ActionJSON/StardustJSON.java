@@ -9,13 +9,4 @@ public class StardustJSON extends ActionJSON {
     public StardustJSON (@JsonProperty("playerNickname") String playerNickname) {
         super(playerNickname);
     }
-
-    /*
-    public StardustJSON (JSONObject data) {
-        super(data);
-    }
-
-    public StardustJSON (String dataString) throws ParseException {
-        super(ActionJSON.Parse(dataString));
-    }*/
 }

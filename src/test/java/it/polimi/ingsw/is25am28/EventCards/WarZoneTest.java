@@ -120,13 +120,6 @@ class WarZoneTest {
 
         warzone.initCardPlayers();
 
-        //DEBUG:
-        numOfLifeForms(p1);
-        numOfLifeForms(p2);
-        numOfLifeForms(p3);
-        numOfLifeForms(p4);
-
-
         ActionJSON actionJSON;
 
         ArrayList<Player> eliminatedPlayers = new ArrayList<>();
@@ -192,13 +185,12 @@ class WarZoneTest {
 
                 // Player 1 has to send shields to activate for each plasmashot
                 // Player 1 will block the first small plasmashot from behing, the second one, headet to the ship's core, will eliminate him
-                warzone.forceDiceThrow(7);
-                System.out.println("Forzato dado");
+
                 actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate1, doubleCannons_empty);
                 warzone.useCard(actionJSON);
                 assertFalse(warzone.hasFinished());
 
-                System.out.println("Forzato dado");
+
                 actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate1, doubleCannons_empty);
                 warzone.useCard(actionJSON);
                 assertTrue(warzone.hasFinished());

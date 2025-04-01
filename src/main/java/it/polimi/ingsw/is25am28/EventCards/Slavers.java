@@ -94,9 +94,6 @@ public class Slavers extends EventCard {
         SlaversJSON slaversData = (SlaversJSON) data;
         playerOptional.ifPresent(
                 (Player player) -> {
-//                    for (Cabin cabin : slaversData.getCrewToRemove()) {
-//                        cabin.removeInhabitant(cabin.getInhabitants().getFirst());
-//                    }
                     // Remove the crew members from the given cabins
                     for (ComponentHelper<LifeformType> lifeform : slaversData.getCrewToRemove()) {
                         Cabin tmpCabin;

@@ -57,7 +57,6 @@ public class Smugglers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
                     float playerFirepower = player.getShip().getFirePower(smugglersData.getDoubleCannonsToActivateCoordinates());
-//                    System.out.println(playerFirepower);
                     if(playerFirepower > requiredFirepower) {
                         // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
                         cardUsed();
@@ -65,7 +64,6 @@ public class Smugglers extends EventCard {
                             bonusEffect(data);
                             getBoard().movePlayerBackwards(player, movementSteps);
                             getBoard().validatePlayersPosition();
-                            //player.setCursor(player.getCursor() - this.movementSteps);
                         }
                     } else if (playerFirepower < requiredFirepower) {
                         malusEffect(smugglersData);
@@ -164,8 +162,5 @@ public class Smugglers extends EventCard {
         }
         return smugglersStateJSON;
     }
-
-
-
 }
 

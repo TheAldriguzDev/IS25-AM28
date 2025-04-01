@@ -87,11 +87,9 @@ public class WarZone extends EventCard {
 
         if (currentPlayer.isPresent()) {
             int currentIndex = players.indexOf(currentPlayer.get());
-            System.out.println("CurrentIndex (1): " + currentIndex);
 
             // Handle when the current player is the last one of the playerList
             if (currentIndex == players.size() - 1) {
-                System.out.println("CurrentIndex (2): " + currentIndex);
 
 
 
@@ -103,23 +101,13 @@ public class WarZone extends EventCard {
                 } else {
                     // Revalidate the board position
                     this.getBoard().validatePlayersPosition();
-                    System.out.println("Giocatori: ");
-                    for (Player p : players) {
-                        System.out.println(p.getNickname());
-                    }
                     // Clear the current players and reset them and set the currentPlayer to the first one
                     this.initCardPlayers();
-
-                    System.out.println("(dopo init)Giocatori: ");
-                    for (Player p : players) {
-                        System.out.println(p.getNickname());
-                    }
                     // Go to the next action
                     this.current_action++;
                     return this.currentPlayer;
                 }
             } else {
-                System.out.println("----------------Index avanzato");
                 Player nextPlayer = players.get(currentIndex + 1);
                 currentPlayer = Optional.of(nextPlayer);
                 return currentPlayer;
@@ -135,11 +123,6 @@ public class WarZone extends EventCard {
      * */
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-//        System.out.println("Giocatori: ");
-//        for (Player p : players) {
-//            System.out.println(p.getNickname());
-//        }
-        System.out.println("CurrentIndex all'inizio di useCard: " + players.indexOf(currentPlayer.get()));
         // Check if there is a player playing the card
         if (this.currentPlayer.isEmpty()) {
             throw new IllegalArgumentException("There is no player playing in this moment");
@@ -158,7 +141,6 @@ public class WarZone extends EventCard {
         if ( playerNickname == null ||
                 playerNickname.isEmpty() ||
                 !playerNickname.equals(this.getCurrentPlayer().get().getNickname()) ) {
-            System.out.println("Given player: " + playerNickname + " | Expected player: " + this.getCurrentPlayer().get().getNickname());
             throw new IllegalArgumentException("The given player does not match with the current one!");
         }
         // Use the card with the specific action
@@ -166,17 +148,14 @@ public class WarZone extends EventCard {
         switch (currentAction.getAction()) {
             // Needs to handle multiple user input, and then we can apply the effect
             case FIREPOWER -> {
-                System.out.println("FIREPOWER");
                 this.handleFirePower(currentAction, warZoneJSON);
             }
             // Needs to handle multiple user input, and then we can apply the effect
             case ENGINEPOWER -> {
-                System.out.println("ENGINEPOWER");
                 this.handleEnginePower(currentAction, warZoneJSON);
             }
             // Does not need to handle the user input to start the game
             case HUMANS -> {
-                System.out.println("HUMAN");
                 this.handleHumans(currentAction, warZoneJSON);
             }
             case null, default -> {
@@ -195,7 +174,6 @@ public class WarZone extends EventCard {
     private WarZone handleFirePower(WarZoneActionConsequencePair warZoneAction, WarZoneJSON warZoneJSON) {
         // If the affected player is present we can execute the effect (Will be used when the consequence are the plasma shots)
         if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
-            System.out.println("Player affected in handleFirepower");
             this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
         } else {
             // If we do not have the affected player yet, it means that we need to store the given inputs
@@ -220,7 +198,6 @@ public class WarZone extends EventCard {
 
                 // Check if we are already arrived to the last player --> In case we need to grab the affected player
                 if (this.players.getLast().equals(p)) {
-                    System.out.println("Reached last player in handleFirepower");
                     Player tmpPlayer = null;
                     float minValue = Integer.MAX_VALUE;
 
@@ -235,7 +212,6 @@ public class WarZone extends EventCard {
                     }
 
                     if (tmpPlayer != null) {
-                        System.out.println("Reached last player in handleFirepower 2");
                         this.affectedPlayer = Optional.of(tmpPlayer);
                         this.currentPlayer = Optional.of(tmpPlayer);
                         // If the consequence is one of MOVEMENTSTEPS - REQUIREDCREW - LOSSITEMS --> We can apply them immediately,
@@ -265,7 +241,6 @@ public class WarZone extends EventCard {
     private WarZone handleEnginePower(WarZoneActionConsequencePair warZoneAction, WarZoneJSON warZoneJSON) {
         // If the affected player is present we can execute the effect (Will be used when the consequence are the plasma shots)
         if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
-            System.out.println("Player affected in handleEnginePower");
             this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
         } else {
             // If we do not have the affected player yet, it means that we need to store the given inputs
@@ -278,7 +253,6 @@ public class WarZone extends EventCard {
 
                 // Check if we are already arrived to the last player --> In case we need to grab the affected player
                 if (this.players.getLast().equals(p)) {
-                    System.out.println("Reached last player in handleEnginePower");
                     Player tmpPlayer = null;
                     float minValue = Integer.MAX_VALUE;
 
@@ -295,8 +269,6 @@ public class WarZone extends EventCard {
 
 
                     if (tmpPlayer != null) {
-                        System.out.println("Reached last player in handleEnginePower 2");
-                        System.out.println("player with the minimum amount of nuclearReactors: " + tmpPlayer.getNickname() + "with this total of uranium bars: " + minValue);
                         this.affectedPlayer = Optional.of(tmpPlayer);
                         this.currentPlayer = Optional.of(tmpPlayer);
                         // If the consequence is one of MOVEMENTSTEPS - REQUIREDCREW - LOSSITEMS --> We can apply them immediately,
@@ -324,7 +296,6 @@ public class WarZone extends EventCard {
     private WarZone handleHumans(WarZoneActionConsequencePair warZoneAction, WarZoneJSON warZoneJSON) {
         // If the affected player is present we can execute the effect (Will be used when the consequence are the plasma shots)
         if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
-            System.out.println("Player affected in handleHumans");
             this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
         } else {
             // Get the min lifeform available in the players
@@ -338,8 +309,6 @@ public class WarZone extends EventCard {
                     .max( Comparator.comparingInt( Player::getCursor ));
 
             if (tmpPlayer.isPresent()) {
-                System.out.println("Player with the fewer lifeforms: " + tmpPlayer.get().getNickname());
-                System.out.println("Player affected in handleHumans 2");
                 this.affectedPlayer = tmpPlayer;
                 this.currentPlayer = tmpPlayer;
 
@@ -370,7 +339,6 @@ public class WarZone extends EventCard {
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or use the card
                 this.affectedPlayer = Optional.empty();
                 this.currentPlayer = Optional.of(this.players.getLast());
-                System.out.println("Invoked LOSSITEMS getNextPlayer");
                 this.getNextPlayer();
             }
             case REQUIREDCREW -> {
@@ -379,7 +347,6 @@ public class WarZone extends EventCard {
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or use the card
                 this.affectedPlayer = Optional.empty();
                 this.currentPlayer = Optional.of(this.players.getLast());
-                System.out.println("Invoked REQUIREDCREW getNextPlayer");
                 this.getNextPlayer();
             }
             case MOVEMENTSTEPS -> {
@@ -388,7 +355,6 @@ public class WarZone extends EventCard {
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or to mark the card as used
                 this.affectedPlayer = Optional.empty();
                 this.currentPlayer = Optional.of(this.players.getLast());
-                System.out.println("Invoked MOVEMENTSTEPS getNextPlayer");
                 this.getNextPlayer();
             }
             case SHOOTINGSEQUENCE -> {
@@ -398,11 +364,9 @@ public class WarZone extends EventCard {
                 if (this.current_plasmaShot == this.shootingSequence.size() - 1 || this.affectedPlayer.get().isEliminated()) {
                     this.affectedPlayer = Optional.empty();
                     this.currentPlayer = Optional.of(this.players.getLast());
-                    System.out.println("Invoked SHOOTINGSEQUENCE getNextPlayer");
                     this.getNextPlayer();
                 } else {
                     this.diceResult = this.generateDiceResult();
-                    System.out.println("Generato dado random: " + this.diceResult + "|||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||||");
                 }
                 this.current_plasmaShot++;
             }
@@ -478,7 +442,7 @@ public class WarZone extends EventCard {
     }
 
     private WarZone handlePlasmaShot(Player player, WarZoneJSON warZoneJSON) {
-        System.out.println("gwevcnhweoifgvisygnfixnsabouyftwyoixfdbvy8ewtxdioqwuebviyftt");
+
         int inboundDirection, sideToHit;
         boolean threatDestroyed;
         Component[] gridRow;
@@ -659,7 +623,7 @@ public class WarZone extends EventCard {
         // If present set the current player (the one that needs to play the game)
 
         if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
-            System.out.println("Player affected in useCard");
+
             cardState.setAffectedPlayer(this.affectedPlayer.get().getNickname());
         }
 
