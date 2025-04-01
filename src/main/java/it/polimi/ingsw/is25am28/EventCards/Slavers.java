@@ -133,17 +133,16 @@ public class Slavers extends EventCard {
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
-        CardStateJSON slaversStateJSON;
+        CardStateJSON slaversStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
-            slaversStateJSON = new CardStateJSON(
-                    playerOptional.get().getNickname(),
-                    getCardName(),
-                    getCardLevel(),
-                    !hasFinished(),
-                    this.requiredFirepower,
-                    this.givenCredits,
-                    this.movementSteps,
-                    this.takenCrew);
+            slaversStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            slaversStateJSON.setCardName(this.getCardName());
+            slaversStateJSON.setCardLevel(this.getCardLevel());
+            slaversStateJSON.setCardIsUsable(!hasFinished());
+            slaversStateJSON.setRequiredFirepower(requiredFirepower);
+            slaversStateJSON.setGivenCredits(this.givenCredits);
+            slaversStateJSON.setMovementSteps(this.movementSteps);
+            slaversStateJSON.setRequiredCrewMembers(this.takenCrew);
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }

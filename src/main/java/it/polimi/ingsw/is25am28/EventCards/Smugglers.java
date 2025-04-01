@@ -143,20 +143,19 @@ public class Smugglers extends EventCard {
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
-        CardStateJSON smugglersStateJSON;
+        CardStateJSON smugglersStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
-            smugglersStateJSON = new CardStateJSON(
-                    playerOptional.get().getNickname(),
-                    getCardName(),
-                    getCardLevel(),
-                    !hasFinished(),
-                    this.requiredFirepower,
-                    this.movementSteps,
-                    this.takenItems,
-                    this.redItems,
-                    this.yellowItems,
-                    this.blueItems,
-                    this.greenItems);
+            smugglersStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            smugglersStateJSON.setCardName(getCardName());
+            smugglersStateJSON.setCardLevel(getCardLevel());
+            smugglersStateJSON.setCardIsUsable(!hasFinished());
+            smugglersStateJSON.setRequiredFirepower(requiredFirepower);
+            smugglersStateJSON.setMovementSteps(movementSteps);
+            smugglersStateJSON.setTakenItems(takenItems);
+            smugglersStateJSON.setRedItems(redItems);
+            smugglersStateJSON.setYellowItems(yellowItems);
+            smugglersStateJSON.setBlueItems(blueItems);
+            smugglersStateJSON.setGreenItems(greenItems);
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }

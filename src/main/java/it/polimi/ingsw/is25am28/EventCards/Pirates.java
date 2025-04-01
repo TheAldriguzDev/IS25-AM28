@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Player.Player;
+import javafx.util.Pair;
 
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class Pirates extends EventCard {
     private int playerUseCount;
     private int diceThrowResult;
     private int plasmashotIndex;
+    Pair<Integer, Integer> currentPlasmaShot;
 
     private boolean firstRound;
     ArrayList<Player> playersToHit;
@@ -169,6 +171,7 @@ public class Pirates extends EventCard {
 
                     int shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
                     int shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
+                    Pair<Integer, Integer> currentPlasmaShot = new Pair<>(shotSize, shotDirection);
 
                     // Impostazione dei lati protetti della ship
                     for (int[] coordinates : piratesData.getShieldsActivatedCoordinates()) {
@@ -287,24 +290,23 @@ public class Pirates extends EventCard {
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
-        CardStateJSON piratesStateJSON;
+        CardStateJSON piratesStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
             // The dice throw is performed by generateState only at the beginning
             // since the card hasn't been used yet
             if (this.diceThrowResult == -1) {
                 this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
             }
-            piratesStateJSON = new CardStateJSON(
-                    playerOptional.get().getNickname(),
-                    getCardName(),
-                    getCardLevel(),
-                    !hasFinished(),
-                    this.requiredFirepower,
-                    this.givenCredits,
-                    this.movementSteps,
-                    this.shootingSequence,
-                    this.diceThrowResult,
-                    firstRound);
+            piratesStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            piratesStateJSON.setCardName(getCardName());
+            piratesStateJSON.setCardLevel(getCardLevel());
+            piratesStateJSON.setCardIsUsable(!hasFinished());
+            piratesStateJSON.setRequiredFirepower(this.requiredFirepower);
+            piratesStateJSON.setGivenCredits(this.givenCredits);
+            piratesStateJSON.setMovementSteps(this.movementSteps);
+            piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
+            piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
+            piratesStateJSON.setFirstRound(this.firstRound);
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }

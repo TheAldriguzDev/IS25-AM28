@@ -104,14 +104,12 @@ public class Stardust extends EventCard {
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
-        CardStateJSON stardustStateJSON;
+        CardStateJSON stardustStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
-            stardustStateJSON = new CardStateJSON(
-                    playerOptional.get().getNickname(),
-                    getCardName(),
-                    getCardLevel(),
-                    !hasFinished()
-                    );
+            stardustStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            stardustStateJSON.setCardName(getCardName());
+            stardustStateJSON.setCardLevel(getCardLevel());
+            stardustStateJSON.setCardIsUsable(!hasFinished());
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
