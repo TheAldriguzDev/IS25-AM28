@@ -36,6 +36,7 @@ public class Slavers extends EventCard {
             throw new IllegalArgumentException("Card data type in invalid");
         }
         Optional<Player> playerOptional = getCurrentPlayer();
+
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
                     String playerNickname = slaversData.getPlayerNickname();
