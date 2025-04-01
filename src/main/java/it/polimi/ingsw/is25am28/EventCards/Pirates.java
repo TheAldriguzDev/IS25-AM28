@@ -307,6 +307,13 @@ public class Pirates extends EventCard {
             piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
             piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
             piratesStateJSON.setFirstRound(this.firstRound);
+            if (!firstRound) {
+                ArrayList<String> defeatedPlayers = new ArrayList<>();
+                for (Player player : playersToHit) {
+                    defeatedPlayers.add(player.getNickname());
+                }
+                piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
+            }
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }

@@ -31,6 +31,8 @@ public class CardStateJSON extends ActionJSON {
     private int yellowItems;
     private int blueItems;
     private int greenItems;
+    private ArrayList<String> defeatedPlayers;
+
     private ArrayList<ArrayList<Integer>> shootingSequence;
     private int requiredCrewMembers;
     private List<ItemColor> stationResources;
@@ -64,6 +66,17 @@ public class CardStateJSON extends ActionJSON {
         return Math.max(requiredFirepower, 0);
     }
 
+    @JsonSetter("defeatedPlayers")
+    public void setDefeatedPlayers(List<String> defeatedPlayers) {
+        this.defeatedPlayers = new ArrayList<>();
+    }
+
+    @JsonGetter("defeatedPlayers")
+    public List<String> getDefeatedPlayers() {
+        return defeatedPlayers;
+    }
+
+
     // ======== Pirates Card State Attributes ========//
     private boolean firstRound;
 
@@ -76,6 +89,8 @@ public class CardStateJSON extends ActionJSON {
     public boolean getFirstRound() {
         return firstRound;
     }
+
+
     // ======== Smugglers Card State Attributes ========//
     @JsonSetter("takenItems")
     public void setTakenItems(int takenItems) {
@@ -126,7 +141,19 @@ public class CardStateJSON extends ActionJSON {
     public int getGreenItems() {
         return greenItems;
     }
+
+
     // ======== Slavers Card State Attributes ========//
+    @JsonSetter("takenCrew")
+    public int getTakenCrew() {
+        return takenCrew;
+    }
+
+    @JsonGetter("takenCrew")
+    public void setTakenCrew(int takenCrew) {
+        this.takenCrew = takenCrew;
+    }
+
 
     /**
      * Default constructor

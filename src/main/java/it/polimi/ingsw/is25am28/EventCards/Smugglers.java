@@ -22,6 +22,8 @@ public class Smugglers extends EventCard {
     private final int greenItems;
     private final ResourceBank resourceBank;
     private final int takenItems;
+    private boolean hasBeenDefeated;
+    private ArrayList<String> defeatedPlayers;
 
     public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
@@ -33,6 +35,8 @@ public class Smugglers extends EventCard {
         this.greenItems = greenItems;
         this.resourceBank = resourceBank;
         this.takenItems = takenItems;
+        this.hasBeenDefeated = false;
+        defeatedPlayers = new ArrayList<>();
     }
 
     /*
