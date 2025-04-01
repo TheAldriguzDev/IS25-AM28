@@ -512,6 +512,115 @@ public class Ship {
         }
     }
 
+    // TODO: Test this feature
+    /**
+     * Adds the given lifeform to the given cabin. If an alien is added, it also
+     * checks whether the given cabin has a matching vital unit attached
+     *
+     * @param i Row where the given cabin is located
+     * @param j Col where the given cabin is located
+     * @param type Type of lifeform to add to the ship
+     * @throws IllegalArgumentException If the ship can have the given alien type onboard but the given cabin is not empty,
+     *                                  or if the given alien type is null or unrecognised
+     * @throws TooManyAliensException If a player tries to add a second alien of the same type
+     * @throws OutOfGridException If the given coordinates fall out of the grid
+     * @throws OutOfShipException If the given coordinates fall out of the ship
+     */
+    public void addLifeformToCabin(int i, int j, LifeformType type)
+            throws IllegalArgumentException, TooManyAliensException,
+                   OutOfGridException, OutOfShipException
+    {
+        boolean vitalFound;
+        Component[] neighbours;
+        Component component;
+
+        if (i < 0 || j < 0 || i >= this.grid_rows || j >= this.grid_cols) {
+            throw new OutOfGridException("ERROR: Given coordinates fall outside the grid");
+        }
+        if (shipProfiles.containsKey(this.difficultyLevel)) {
+            if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
+                throw new OutOfShipException("ERROR: Cannot select a component that is outside the ship");
+            }
+        }
+
+        component = this.getComponent(i, j);
+
+        switch (component) {
+            case Cabin cabin -> {
+                neighbours = this.getNearestComponents(cabin);
+
+                switch (type) {
+                    // LifeformType.ASTRONAUT.ordinal() == 0
+                    case ASTRONAUT -> {
+                        while (cabin.getAvailableSpace() > 0) {
+                            cabin.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+                        }
+                    }
+                    // LifeformType.PURPLE_ALIEN.ordinal() == 1
+                    case PURPLE_ALIEN -> {
+                        if (this.purpleAlienPosition != null) {
+                            if (cabin.getAvailableSpace() == LifeformType.PURPLE_ALIEN.getRequiredSpace()) {
+                                vitalFound = false;
+
+                                for (Component neighbour : neighbours) {
+                                    switch (neighbour) {
+                                        case Vital vital -> {
+                                            if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
+                                                vitalFound = true;
+                                            }
+                                        }
+                                        case null, default -> {}
+                                    }
+                                }
+
+                                if (vitalFound) {
+                                    cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
+                                }
+                            }
+                            else {
+                                throw new IllegalArgumentException("ERROR: Given cabin is partially occupied");
+                            }
+                        }
+                        else {
+                            throw new TooManyAliensException("ERROR: Purple Alien is already present");
+                        }
+                    }
+                    // LifeformType.BROWN_ALIEN.ordinal() == 2
+                    case BROWN_ALIEN -> {
+                        if (this.brownAlienPosition != null) {
+                            if (cabin.getAvailableSpace() == LifeformType.BROWN_ALIEN.getRequiredSpace()) {
+                                vitalFound = false;
+
+                                for (Component neighbour : neighbours) {
+                                    switch (neighbour) {
+                                        case Vital vital -> {
+                                            if (vital.getVitalType() == VitalType.BROWN_VITAL) {
+                                                vitalFound = true;
+                                            }
+                                        }
+                                        case null, default -> {}
+                                    }
+                                }
+
+                                if (vitalFound) {
+                                    cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+                                }
+                            }
+                            else {
+                                throw new IllegalArgumentException("ERROR: Given cabin is partially occupied");
+                            }
+                        }
+                        else {
+                            throw new TooManyAliensException("ERROR: Brown Alien is already present");
+                        }
+                    }
+                    case null, default -> throw new IllegalArgumentException("ERROR: Given lifeform type is null or invalid");
+                }
+            }
+            case null, default -> throw new IllegalArgumentException("ERROR: Given component is not a cabin");
+        }
+    }
+
     /**
      * Removes the alien of the given type from the ship (if present, otherwise the method does nothing)
      *
