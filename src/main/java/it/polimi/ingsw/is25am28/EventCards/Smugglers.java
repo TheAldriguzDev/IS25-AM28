@@ -197,6 +197,13 @@ public class Smugglers extends EventCard {
             smugglersStateJSON.setYellowItems(yellowItems);
             smugglersStateJSON.setBlueItems(blueItems);
             smugglersStateJSON.setGreenItems(greenItems);
+            if (!firstRound) {
+                ArrayList<String> defeatedPlayers = new ArrayList<>();
+                for (Player player : playersToTakeItemsFrom) {
+                    defeatedPlayers.add(player.getNickname());
+                }
+                smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
+            }
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
