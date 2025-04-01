@@ -27,7 +27,7 @@ public class VisitPlanets extends EventCard {
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
             @JsonProperty("movementSteps") int movementSteps,
-            @JsonProperty("itemsPerPlanet") Map<Integer, Map<Integer, Integer>> itemsPerPlanet,
+            @JsonProperty("itemsPerPlanet") List<Map<String, Integer>> itemsPerPlanet,
             ResourceBank resourceBank,
             Board board
     ) {
@@ -37,36 +37,70 @@ public class VisitPlanets extends EventCard {
         this.itemsPerPlanet = new HashMap<>();
         this.resourceBank = resourceBank;
 
-        // Parsing the incoming data and transforming the integer value
-        // found in the map into the corresponding color
-        for (Integer planetIndex : itemsPerPlanet.keySet()) {
-            Map<ItemColor, Integer> planetResourceDescriptor = new HashMap<>();
+        int planetIndex = 0;
 
-            for (Integer itemColor : itemsPerPlanet.get(planetIndex).keySet()) {
-                switch (itemColor) {
-                    // Blue Item
-                    case 1 -> {
-                        planetResourceDescriptor.put(ItemColor.BLUE, itemsPerPlanet.get(planetIndex).get(1));
-                    }
-                    // Green Item
-                    case 2 -> {
-                        planetResourceDescriptor.put(ItemColor.GREEN, itemsPerPlanet.get(planetIndex).get(2));
-                    }
-                    // Yellow Item
-                    case 3 -> {
-                        planetResourceDescriptor.put(ItemColor.YELLOW, itemsPerPlanet.get(planetIndex).get(3));
-                    }
-                    // Red Item
-                    case 4 -> {
-                        planetResourceDescriptor.put(ItemColor.RED, itemsPerPlanet.get(planetIndex).get(4));
-                    }
-                    default -> throw new IllegalStateException("[VisitPlanets] ERROR: There cannon be more than 4 item colors");
-                }
-            }
+        for (Map<String, Integer> planetDescriptor : itemsPerPlanet) {
+            Map<ItemColor, Integer> formattedPlanetDescriptor = new HashMap<>();
+
+            // Blue Items Initializer
+            formattedPlanetDescriptor.put(
+                ItemColor.BLUE,
+                planetDescriptor.get("blue")
+            );
+
+            // Green Items Initializer
+            formattedPlanetDescriptor.put(
+                    ItemColor.GREEN,
+                    planetDescriptor.get("green")
+            );
+
+            // Yellow Items Initializer
+            formattedPlanetDescriptor.put(
+                    ItemColor.YELLOW,
+                    planetDescriptor.get("yellow")
+            );
+
+            // Red Items Initializer
+            formattedPlanetDescriptor.put(
+                    ItemColor.RED,
+                    planetDescriptor.get("red")
+            );
 
             // Putting the transformed entry into the itemsPerPlanet map
-            this.itemsPerPlanet.put(planetIndex, planetResourceDescriptor);
+            this.itemsPerPlanet.put(planetIndex, formattedPlanetDescriptor);
+            planetIndex++;
         }
+
+        // Parsing the incoming data and transforming the integer value
+        // found in the map into the corresponding color
+//        for (Integer planetIndex : itemsPerPlanet.keySet()) {
+//            Map<ItemColor, Integer> planetResourceDescriptor = new HashMap<>();
+//
+//            for (Integer itemColor : itemsPerPlanet.get(planetIndex).keySet()) {
+//                switch (itemColor) {
+//                    // Blue Item
+//                    case 1 -> {
+//                        planetResourceDescriptor.put(ItemColor.BLUE, itemsPerPlanet.get(planetIndex).get(1));
+//                    }
+//                    // Green Item
+//                    case 2 -> {
+//                        planetResourceDescriptor.put(ItemColor.GREEN, itemsPerPlanet.get(planetIndex).get(2));
+//                    }
+//                    // Yellow Item
+//                    case 3 -> {
+//                        planetResourceDescriptor.put(ItemColor.YELLOW, itemsPerPlanet.get(planetIndex).get(3));
+//                    }
+//                    // Red Item
+//                    case 4 -> {
+//                        planetResourceDescriptor.put(ItemColor.RED, itemsPerPlanet.get(planetIndex).get(4));
+//                    }
+//                    default -> throw new IllegalStateException("[VisitPlanets] ERROR: There cannon be more than 4 item colors");
+//                }
+//            }
+//
+//            // Putting the transformed entry into the itemsPerPlanet map
+//            this.itemsPerPlanet.put(planetIndex, planetResourceDescriptor);
+//        }
 
         // Map containing each player and its chosen planet to land on. If a player
         // is not present in this map, then it means that he didn't choose a planet to land on

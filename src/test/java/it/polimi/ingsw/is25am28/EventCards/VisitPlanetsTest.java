@@ -178,7 +178,7 @@ class VisitPlanetsTest {
         this.resourceBank = new ResourceBank();
         this.board = new BoardLevel2();
         Random random = new Random(100);    // Fixed seed for predictable results
-        Map<Integer, Map<Integer, Integer>> itemsPerPlanet = new HashMap<>();
+        List<Map<String, Integer>> itemsPerPlanet = new ArrayList<>();
 
         this.board.newPlayer("P1", PlayerColor.BLUE);
         this.board.newPlayer("P2", PlayerColor.GREEN);
@@ -199,15 +199,15 @@ class VisitPlanetsTest {
         }
 
         for (int planetID = 0; planetID < 4; planetID++) {
-            Map<Integer, Integer> planetConfig = new HashMap<>();
+            Map<String, Integer> planetConfig = new HashMap<>();
 
             // Each of the 4 planets has a random amount of items
-            planetConfig.put(1, random.nextInt(0, 4));
-            planetConfig.put(2, random.nextInt(0, 3));
-            planetConfig.put(3, random.nextInt(0, 2));
-            planetConfig.put(4, random.nextInt(0, 3));
+            planetConfig.put("blue", random.nextInt(0, 4));
+            planetConfig.put("green", random.nextInt(0, 3));
+            planetConfig.put("yellow", random.nextInt(0, 2));
+            planetConfig.put("red", random.nextInt(0, 3));
 
-            itemsPerPlanet.put(planetID, planetConfig);
+            itemsPerPlanet.add(planetID, planetConfig);
         }
 
         this.visitPlanets = new VisitPlanets(
@@ -663,7 +663,7 @@ class VisitPlanetsTest {
         Player currPlayer;
         int chosenPlanetIndex;
         Random random = new Random(100);
-        Map<Integer, Map<Integer, Integer>> itemsPerPlanet = new HashMap<>();
+        List<Map<String, Integer>> itemsPerPlanet = new ArrayList<>();
 
         // Compiling the initial positions of all players in the board
         initialPositions.add(this.board.getPlayers().get(0).getCursor());
@@ -677,15 +677,15 @@ class VisitPlanetsTest {
 
         // Creating the two planet VisitPlanets card
         for (int planetID = 0; planetID < 2; planetID++) {
-            Map<Integer, Integer> planetConfig = new HashMap<>();
+            Map<String, Integer> planetConfig = new HashMap<>();
 
             // Each of the 4 planets has a random amount of items
-            planetConfig.put(1, random.nextInt(0, 4));
-            planetConfig.put(2, random.nextInt(0, 3));
-            planetConfig.put(3, random.nextInt(0, 2));
-            planetConfig.put(4, random.nextInt(0, 3));
+            planetConfig.put("blue", random.nextInt(0, 4));
+            planetConfig.put("green", random.nextInt(0, 3));
+            planetConfig.put("yellow", random.nextInt(0, 2));
+            planetConfig.put("red", random.nextInt(0, 3));
 
-            itemsPerPlanet.put(planetID, planetConfig);
+            itemsPerPlanet.add(planetID, planetConfig);
         }
 
         this.visitPlanets = new VisitPlanets(
