@@ -108,8 +108,6 @@ class VisitPlanetsTest {
         // Random seed is instantiated by the number of the current player
         Random random = new Random(player.getNickname().charAt(1) - '0');
 
-        System.out.println("\n\n");
-
         // Random storage assignment to each player
         int len = ship.getAvailableStorageSpace() - random.nextInt(0,ship.getAvailableStorageSpace() / 2);
 

@@ -410,7 +410,4 @@ class WarZoneTest {
         );
         System.out.println("NumOfLifeForms of player: " + player.getNickname() + " : " + numOfLifeForms.get());
     }
-
-
-
 }
