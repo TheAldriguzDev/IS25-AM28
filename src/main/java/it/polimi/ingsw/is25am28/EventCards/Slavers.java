@@ -186,6 +186,14 @@ public class Slavers extends EventCard {
             slaversStateJSON.setGivenCredits(this.givenCredits);
             slaversStateJSON.setMovementSteps(this.movementSteps);
             slaversStateJSON.setTakenCrew(this.takenCrew);
+            slaversStateJSON.setFirstRound(this.firstRound);
+            if (!firstRound) {
+                ArrayList<String> defeatedPlayers = new ArrayList<>();
+                for (Player player : playersToTakeCrewFrom) {
+                    defeatedPlayers.add(player.getNickname());
+                }
+                slaversStateJSON.setDefeatedPlayers(defeatedPlayers);
+            }
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }

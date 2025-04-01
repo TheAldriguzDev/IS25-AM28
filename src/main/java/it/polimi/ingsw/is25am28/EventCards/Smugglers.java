@@ -24,6 +24,8 @@ public class Smugglers extends EventCard {
     private final int takenItems;
     private boolean hasBeenDefeated;
     private ArrayList<String> defeatedPlayers;
+    private boolean firstRound;
+    private ArrayList<Player> playersToTakeItemsFrom;
 
     public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
@@ -36,13 +38,31 @@ public class Smugglers extends EventCard {
         this.resourceBank = resourceBank;
         this.takenItems = takenItems;
         this.hasBeenDefeated = false;
-        defeatedPlayers = new ArrayList<>();
+        this.defeatedPlayers = new ArrayList<>();
+        this.firstRound = true;
+        this.playersToTakeItemsFrom = new ArrayList<>();
     }
 
     /*
      * Se il tipo di response non è corretto la classe
      * lancia un'eccezione di tipo ClassCastException
      * */
+
+    @Override
+    public void initCardPlayers() throws IllegalArgumentException {
+        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
+            throw new IllegalArgumentException("The player list is null or contains less than two player");
+        } else {
+            if (firstRound) {
+                this.players = new ArrayList<>(this.getBoard().getPlayers());
+            } else {
+                if (!playersToTakeItemsFrom.isEmpty()) {
+                    this.players = new ArrayList<>(this.playersToTakeItemsFrom);
+                }
+            }
+            currentPlayer = Optional.of(players.getFirst());
+        }
+    }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         SmugglersJSON smugglersData;
@@ -60,23 +80,40 @@ public class Smugglers extends EventCard {
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
-                    float playerFirepower = player.getShip().getFirePower(smugglersData.getDoubleCannonsToActivateCoordinates());
-                    if(playerFirepower > requiredFirepower) {
-                        // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
-                        cardUsed();
-                        if (smugglersData.getTakeLoot()) {
-                            bonusEffect(data);
-                            getBoard().movePlayerBackwards(player, movementSteps);
-                            getBoard().validatePlayersPosition();
+                    if (firstRound) {
+                        float playerFirepower = player.getShip().getFirePower(smugglersData.getDoubleCannonsToActivateCoordinates());
+                        if (playerFirepower > requiredFirepower) {
+                            // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
+                            hasBeenDefeated = true;
+                            //cardUsed();
+                            if (smugglersData.getTakeLoot()) {
+                                bonusEffect(data);
+                                getBoard().movePlayerBackwards(player, movementSteps);
+                                getBoard().validatePlayersPosition();
+                            }
+                        } else if (playerFirepower < requiredFirepower) {
+                            playersToTakeItemsFrom.add(player);
+                            //malusEffect(smugglersData);
                         }
-                    } else if (playerFirepower < requiredFirepower) {
-                        malusEffect(smugglersData);
                     }
-                    if (player.equals(this.players.getLast())) {
-                        this.cardUsed(); // Mark the card as used
-                        this.getBoard().validatePlayersPosition();
+                    if (!firstRound) {
+                        if (playersToTakeItemsFrom.contains(player)) {
+                            malusEffect(smugglersData);
+                        }
+                    }
+                    if (player.equals(players.getLast())) {
+                        if (firstRound) {
+                            firstRound = false;
+                            if (playersToTakeItemsFrom.isEmpty()) {
+                                cardUsed();
+                            } else {
+                                initCardPlayers();
+                            }
+                        } else {
+                            cardUsed();
+                        }
                     } else {
-                        this.getNextPlayer();
+                        getNextPlayer();
                     }
                 },
                 () -> {
