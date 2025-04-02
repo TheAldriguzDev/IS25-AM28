@@ -1,10 +1,13 @@
 package it.polimi.ingsw.is25am28.Components;
 
+import java.util.List;
+import java.util.Map;
+
 public final class Battery extends Component {
       private final int maxAvailability;
       private int available;
 
-      public Battery(int[] connectors, int maxAvailability ){
+      public Battery(List<Integer> connectors, int maxAvailability ){
             super(connectors);
             this.maxAvailability = maxAvailability;
             available = maxAvailability;
@@ -43,6 +46,15 @@ public final class Battery extends Component {
             }
 
             return this;
+      }
+
+      @Override
+      public Map<String,Object> toMap(){
+            Map<String,Object> map = super.toMap();
+
+            map.put("capacity", maxAvailability );
+
+            return map;
       }
 
 }

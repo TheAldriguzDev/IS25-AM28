@@ -1,19 +1,18 @@
 package it.polimi.ingsw.is25am28.Components;
 
+import java.util.List;
+import java.util.Map;
+
 public final class Cannon extends Component {
       private final int force;
 
-      public Cannon( int[] connectors, int force ){
-            super( connectors);
+      public Cannon( List<Integer> connectors, int force ){
+            super( connectors );
             this.force = force;
       }
 
-      public int getForce() {
-            return this.force;
-      }
-
       public float getFirePower(){
-            return getDirection() != 0 ? ((float) force) / 2 : force;
+            return getDirection() != 0 ? force/2: force;
       }
 
       public boolean requireEnergy(){
@@ -28,5 +27,14 @@ public final class Cannon extends Component {
             }
 
             return super.check(nearest);
+      }
+
+      @Override
+      public Map<String,Object> toMap(){
+            Map<String,Object> map = super.toMap();
+
+            map.put("force", force );
+
+            return map;
       }
 }
