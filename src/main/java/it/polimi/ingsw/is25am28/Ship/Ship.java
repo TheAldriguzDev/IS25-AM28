@@ -169,21 +169,11 @@ public class Ship {
         this.difficultyLevel = difficultyLevel;
         this.components = initGrid(this.grid_rows, this.grid_cols);
 
-        // TODO: Remove the following code and uncomment the part below after the
-        //       updated component constructors are pushed onto the development branch
-        // Initializing the connectors of the core cabin
-        int[] coreConnectors = new int[4];
-        coreConnectors[0] = THREE_PIPES.ordinal();
-        coreConnectors[1] = THREE_PIPES.ordinal();
-        coreConnectors[2] = THREE_PIPES.ordinal();
-        coreConnectors[3] = THREE_PIPES.ordinal();
-        /*
         // Initializing the connectors of the core cabin
         List<Integer> coreConnectors = new ArrayList<Integer>();
         for (int i = 0; i < 4; i++) {
             coreConnectors.add(THREE_PIPES.ordinal());
         }
-        */
 
         // Creating the ship's core cabin
         this.core = new Cabin(coreConnectors,true);

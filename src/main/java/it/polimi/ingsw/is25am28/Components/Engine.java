@@ -1,9 +1,11 @@
 package it.polimi.ingsw.is25am28.Components;
+import java.util.List;
+import java.util.Map;
 
 public final class Engine extends Component {
       private final int speed;
 
-      public Engine( int[] connectors, int speed ){
+      public Engine( List<Integer> connectors, int speed ){
             super( connectors );
             this.speed = speed;
       }
@@ -30,5 +32,14 @@ public final class Engine extends Component {
             }
 
             return super.check(nearest);
+      }
+
+      @Override
+      public Map<String,Object> toMap(){
+            Map<String,Object> map = super.toMap();
+
+            map.put("speed", speed );
+
+            return map;
       }
 }
