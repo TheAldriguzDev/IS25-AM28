@@ -2,12 +2,13 @@ package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.Lifeform.*;
 import java.util.ArrayList;
+import java.util.List;
 
 public final class Cabin extends Component {
       private final boolean isCore;
       private final ArrayList<Lifeform> inhabitants;
 
-      public Cabin( int[] connectors, boolean isCore ) {
+      public Cabin( List<Integer> connectors, boolean isCore ) {
             super(connectors);
             this.isCore = isCore;
             this.inhabitants = new ArrayList<>();
@@ -28,9 +29,9 @@ public final class Cabin extends Component {
 
       public int getAvailableSpace() {
             return 2 - inhabitants
-                        .stream()
-                        .mapToInt(Lifeform::getRequiredSpace)
-                        .sum();
+                    .stream()
+                    .mapToInt(Lifeform::getRequiredSpace)
+                    .sum();
       }
 
       public void addInhabitant(Lifeform lifeform) throws IllegalArgumentException {

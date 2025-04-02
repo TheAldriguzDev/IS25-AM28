@@ -39,11 +39,11 @@ class VisitPlanetsTest {
     void initCustomShip(Player player) {
         Ship ship = player.getShip();
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<Integer>();
 
         // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add(THREE_PIPES.ordinal());
         }
 
         Battery tripleBattery1 = new Battery(connectors, 6);
