@@ -2,7 +2,12 @@ package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.Connector;
 
-import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import it.polimi.ingsw.is25am28.Components.Cannon;
 
 public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield, Structural {
       private int col;
@@ -13,24 +18,38 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
        * index between 0 and 3,
        * that indicates which is the direction side of the component
        */
-      protected int direction = 0;
+      protected int direction;
+
+      /**
+       * return unique id of the class called
+       */
+      public int getId(){
+            switch(this){
+                  case Cannon _:
+                        return 0;
+                  case Cabin _:
+                        return 1;
+                  case Storage _:
+                        return 2;
+                  case Vital _:
+                        return 3;
+                  case Engine _:
+                        return 4;
+                  case Battery _:
+                        return 5;
+                  case Shield _:
+                        return 6;
+                  case Structural _:
+                        return 7;
+            }
+      }
 
 
-      public Component( int[] connectors ) {
+      public Component( List<Integer> connectors ) {
             sides = new Connector[4];
 
             for( int i = 0; i < 4; i++ ){
-                  switch(connectors[i]){
-                        case 0: sides[i] = Connector.ZERO_PIPES;
-                              break;
-                        case 1: sides[i] = Connector.ONE_PIPE;
-                              break;
-                        case 2: sides[i] = Connector.TWO_PIPES;
-                              break;
-                        case 3: sides[i] = Connector.THREE_PIPES;
-                              break;
-                        default: throw new Error("invalid connections " + sides[i] );
-                  }
+                  sides[i] = Connector.fromOrdinal( connectors.get(i) );
             }
       }
 
@@ -102,6 +121,13 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
             this.col = col;
       }
 
+      public Component setRotation( int rotation ){
+
+            direction = rotation%4;
+
+            return this;
+      }
+
       public Component rotateLeft(){
             direction--;
 
@@ -133,5 +159,24 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       }
       public Connector getBottomSide(){
             return sides[ (direction + 2)%4 ];
+      }
+
+      /**
+       * method used to transform the component in a sendable way.
+       * the result is similar to the "Tile.json" file.
+       * @return
+       */
+      public Map<String,Object> toMap(){
+            HashMap<String,Object> map = new HashMap<>();
+            List<Integer> connectors = new ArrayList<>();
+
+            for( int i = 0; i < 4; i++ ){
+                  connectors.add( sides[i].ordinal() );
+            }
+
+            map.put("id", getId());
+            map.put("connectors", connectors );
+
+            return map;
       }
 }

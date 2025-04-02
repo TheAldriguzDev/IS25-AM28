@@ -23,62 +23,62 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ShipTest {
 
-    /**
-     * Outputs the given ship to terminal
-     * @param ship The ship to print to terminal
-     */
-    void printShipGrid(Ship ship) {
-        if (ship != null) {
-            List<Component> components = new ArrayList<>();
-            Component c;
-            int rows = ship.getGridDimensions().getKey();
-            int cols = ship.getGridDimensions().getValue();
-            int i, j, k;
-
-            System.out.print("\n\\");
-            for (i = 0; i < cols; i++) {
-                System.out.print("\t" + i);
-            }
-            System.out.print("\n");
-
-            k = 0;
-
-            for (i = 0; i < rows; i++) {
-                System.out.print(i + "\t");
-                for (j = 0; j < cols; j++) {
-                    c = ship.getComponent(i, j);
-                    if (c == null) {
-                        System.out.print("." + "\t");
-                    }
-                    else {
-                        System.out.print(k++ + "\t");
-                        components.add(c);
-                    }
-                }
-                System.out.print("\n");
-            }
-
-            int size = components.size();
-
-            System.out.println("\nFound these components:");
-
-            for (i = 0; i < size; i++) {
-                System.out.println(i + " - " + components.get(i));
-            }
-        }
-        else {
-            System.out.println("ERROR: Given ship is null");
-        }
-    }
+//    /**
+//     * Outputs the given ship to terminal
+//     * @param ship The ship to print to terminal
+//     */
+//    void printShipGrid(Ship ship) {
+//        if (ship != null) {
+//            List<Component> components = new ArrayList<>();
+//            Component c;
+//            int rows = ship.getGridDimensions().getKey();
+//            int cols = ship.getGridDimensions().getValue();
+//            int i, j, k;
+//
+//            System.out.print("\n\\");
+//            for (i = 0; i < cols; i++) {
+//                System.out.print("\t" + i);
+//            }
+//            System.out.print("\n");
+//
+//            k = 0;
+//
+//            for (i = 0; i < rows; i++) {
+//                System.out.print(i + "\t");
+//                for (j = 0; j < cols; j++) {
+//                    c = ship.getComponent(i, j);
+//                    if (c == null) {
+//                        System.out.print("." + "\t");
+//                    }
+//                    else {
+//                        System.out.print(k++ + "\t");
+//                        components.add(c);
+//                    }
+//                }
+//                System.out.print("\n");
+//            }
+//
+//            int size = components.size();
+//
+//            System.out.println("\nFound these components:");
+//
+//            for (i = 0; i < size; i++) {
+//                System.out.println(i + " - " + components.get(i));
+//            }
+//        }
+//        else {
+//            System.out.println("ERROR: Given ship is null");
+//        }
+//    }
 
     Ship initCustomShip() {
         Ship ship = new Ship(1);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
         // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         /*
@@ -136,7 +136,7 @@ class ShipTest {
         Structural structural1 = new Structural(connectors);
 
         Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital brownVital1 = new Vital(connectors, BROWN_VITAL.ordinal());
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
 
         // Adding the components created above
         ship.addComponent(doubleCannon1, 4, 6);
@@ -170,10 +170,11 @@ class ShipTest {
     void generateComponentSubLists() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -237,11 +238,11 @@ class ShipTest {
     void generateComponentSubLists_testingInitShipForDuplicateComponents() {
         Ship ship = new Ship(1);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
         // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         /*
@@ -299,7 +300,7 @@ class ShipTest {
         Structural structural1 = new Structural(connectors);
 
         Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital brownVital1 = new Vital(connectors, BROWN_VITAL.ordinal());
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
 
         // Adding the components created above
         ship.addComponent(doubleCannon1, 4, 6);
@@ -382,10 +383,11 @@ class ShipTest {
     void getAllDoubleComponents() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -443,10 +445,11 @@ class ShipTest {
     void getAvailableEnergyBeforeAndAfterConsumption() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -531,11 +534,15 @@ class ShipTest {
         Map<Integer, Pair<Integer, Integer>> alienCoords;
         List<Pair<Integer, Integer>> doubleCannonCoords;
         int expectedFirePower;
-        int[] connectors = new int[4];
+
         ShipJSON shipJSON;
         Ship ship;
+        List<Integer> connectors = new ArrayList<>();
 
-        Arrays.fill(connectors, THREE_PIPES.ordinal());
+        // Default connector is THREE_PIPES
+        for (int i = 0; i < 4; i++) {
+            connectors.add( THREE_PIPES.ordinal() );
+        }
 
         // Case 0 - No cannons + no purple alien on board
         ship = new Ship(0);
@@ -594,11 +601,14 @@ class ShipTest {
     void getEnginePower() {
         Map<Integer, Pair<Integer, Integer>> alienCoords;
         int expectedEnginePower, batteries;
-        int[] connectors = new int[4];
         ShipJSON shipJSON;
         Ship ship;
+        List<Integer> connectors = new ArrayList<>();
 
-        Arrays.fill(connectors, THREE_PIPES.ordinal());
+        // Default connector is THREE_PIPES
+        for (int i = 0; i < 4; i++) {
+            connectors.add( THREE_PIPES.ordinal() );
+        }
 
         // Case 0 - No engines + no brown alien on board
         ship = new Ship(0);
@@ -655,10 +665,11 @@ class ShipTest {
     void getExposedConnectorAmount() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -705,10 +716,11 @@ class ShipTest {
     void getAllItemsAndTheirValue() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Storage leftStorage = new Storage(connectors, 3, false);
@@ -765,47 +777,50 @@ class ShipTest {
     void getWrongComponents() {
         Ship ship = new Ship(0);
 
-        // [3, 3, 3, 3]
-        int[] connectors = new int[4];
-        connectors[0] = THREE_PIPES.ordinal();
-        connectors[1] = THREE_PIPES.ordinal();
-        connectors[2] = THREE_PIPES.ordinal();
-        connectors[3] = THREE_PIPES.ordinal();
 
-        // [0, 3, 2, 2]
-        int[] connector1 = new int[4];
-        connector1[0] = ZERO_PIPES.ordinal();
-        connector1[1] = THREE_PIPES.ordinal();
-        connector1[2] = TWO_PIPES.ordinal();
-        connector1[3] = TWO_PIPES.ordinal();
+        List<Integer> connectors = new ArrayList<>();
 
-        // [1, 2, 1, 3]
-        int[] connector2 = new int[4];
-        connector2[0] = ONE_PIPE.ordinal();
-        connector2[1] = TWO_PIPES.ordinal();
-        connector2[2] = ONE_PIPE.ordinal();
-        connector2[3] = THREE_PIPES.ordinal();
+        // Default connector is THREE_PIPES
+        for (int i = 0; i < 4; i++) {
+            connectors.add( THREE_PIPES.ordinal() );
+        }
 
-        // [3, 0, 2, 0]
-        int[] connector3 = new int[4];
-        connector3[0] = THREE_PIPES.ordinal();
-        connector3[1] = ZERO_PIPES.ordinal();
-        connector3[2] = TWO_PIPES.ordinal();
-        connector3[3] = ZERO_PIPES.ordinal();
+        List<Integer> connector1 = new ArrayList<>();
 
-        // [2, 3, 2, 3]
-        int[] connector4 = new int[4];
-        connector4[0] = TWO_PIPES.ordinal();
-        connector4[1] = THREE_PIPES.ordinal();
-        connector4[2] = TWO_PIPES.ordinal();
-        connector4[3] = THREE_PIPES.ordinal();
+        connector1.add( ZERO_PIPES.ordinal() );
+        connector1.add( THREE_PIPES.ordinal() );
+        connector1.add( TWO_PIPES.ordinal() );
+        connector1.add( TWO_PIPES.ordinal() );
 
-        // [1, 0, 0, 3]
-        int[] connector5 = new int[4];
-        connector5[0] = ONE_PIPE.ordinal();
-        connector5[1] = ZERO_PIPES.ordinal();
-        connector5[2] = ZERO_PIPES.ordinal();
-        connector5[3] = THREE_PIPES.ordinal();
+        List<Integer> connector2 = new ArrayList<>();
+
+        connector2.add( ONE_PIPE.ordinal() );
+        connector2.add( TWO_PIPES.ordinal() );
+        connector2.add( ONE_PIPE.ordinal() );
+        connector2.add( THREE_PIPES.ordinal() );
+
+
+        List<Integer> connector3 = new ArrayList<>();
+
+        connector3.add( THREE_PIPES.ordinal() );
+        connector3.add( ZERO_PIPES.ordinal() );
+        connector3.add( TWO_PIPES.ordinal() );
+        connector3.add( ZERO_PIPES.ordinal() );
+
+        List<Integer> connector4 = new ArrayList<>();
+
+        connector4.add( TWO_PIPES.ordinal() );
+        connector4.add( THREE_PIPES.ordinal() );
+        connector4.add( TWO_PIPES.ordinal() );
+        connector4.add( THREE_PIPES.ordinal() );
+
+        List<Integer> connector5 = new ArrayList<>();
+
+        connector5.add( ONE_PIPE.ordinal() );
+        connector5.add( ZERO_PIPES.ordinal() );
+        connector5.add( ZERO_PIPES.ordinal() );
+        connector5.add( THREE_PIPES.ordinal() );
+
 
         Battery battery = new Battery(connector3, 3);
         Cabin cabin = new Cabin(connector4, false);
@@ -880,10 +895,11 @@ class ShipTest {
     void getGridRow() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -945,10 +961,11 @@ class ShipTest {
     void getGridColumn() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -1022,11 +1039,12 @@ class ShipTest {
     void traverse() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
         int i;
 
+        // Default connector is THREE_PIPES
         for (i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -1091,10 +1109,11 @@ class ShipTest {
     void traverseInTheCorrectOrder() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -1161,10 +1180,11 @@ class ShipTest {
     void getNearestComponents() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -1220,10 +1240,11 @@ class ShipTest {
     void addComponentThenGetComponent() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -1338,10 +1359,11 @@ class ShipTest {
     void removeComponent() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<>();
 
+        // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add( THREE_PIPES.ordinal() );
         }
 
         Battery battery = new Battery(connectors, 3);
@@ -1461,8 +1483,12 @@ class ShipTest {
         Map<Integer, Pair<Integer, Integer>> chosenAliens;
         Ship ship;
 
-        int[] connectors = new int[4];
-        Arrays.fill(connectors, THREE_PIPES.ordinal());
+        List<Integer> connectors = new ArrayList<>();
+
+        // Default connector is THREE_PIPES
+        for (int i = 0; i < 4; i++) {
+            connectors.add( THREE_PIPES.ordinal() );
+        }
 
         // (1) - Adding both aliens
         ship = initCustomShip();
@@ -1486,8 +1512,12 @@ class ShipTest {
         Map<Integer, Pair<Integer, Integer>> chosenAliens;
         Ship ship;
 
-        int[] connectors = new int[4];
-        Arrays.fill(connectors, THREE_PIPES.ordinal());
+        List<Integer> connectors = new ArrayList<>();
+
+        // Default connector is THREE_PIPES
+        for (int i = 0; i < 4; i++) {
+            connectors.add( THREE_PIPES.ordinal() );
+        }
 
         // Adding purpleAlien to a brownAlien-eligible cabin (the one @ coords (6, 8))
         ship = initCustomShip();
@@ -1522,8 +1552,12 @@ class ShipTest {
 
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
-        Arrays.fill(connectors, THREE_PIPES.ordinal());
+        List<Integer> connectors = new ArrayList<>();
+
+        // Default connector is THREE_PIPES
+        for (int i = 0; i < 4; i++) {
+            connectors.add( THREE_PIPES.ordinal() );
+        }
 
         Cabin cabin = new Cabin(connectors, false);
         Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
@@ -1591,8 +1625,12 @@ class ShipTest {
     void removingVitalUnitDoesNotRemoveHumans() {
         Ship ship = new Ship(0);
 
-        int[] connectors = new int[4];
-        Arrays.fill(connectors, THREE_PIPES.ordinal());
+        List<Integer> connectors = new ArrayList<>();
+
+        // Default connector is THREE_PIPES
+        for (int i = 0; i < 4; i++) {
+            connectors.add( THREE_PIPES.ordinal() );
+        }
 
         Cabin cabin = new Cabin(connectors, false);
         Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());

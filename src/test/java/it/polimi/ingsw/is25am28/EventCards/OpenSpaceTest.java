@@ -45,10 +45,11 @@ class OpenSpaceTest {
         for (Player player : board.getPlayers()) {
             board.addPlayerToBoard(player);
 
-            int[] connectors = new int[4];
+            List<Integer> connectors = new ArrayList<Integer>();
 
+            // Default connector is THREE_PIPES
             for (int i = 0; i < 4; i++) {
-                connectors[i] = THREE_PIPES.ordinal();
+                connectors.add(THREE_PIPES.ordinal());
             }
 
             if (player.getNickname().equals("Player 1") || player.getNickname().equals("Player 3") || player.getNickname().equals("Player 4")) {

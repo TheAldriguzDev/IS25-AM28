@@ -48,10 +48,11 @@ class AbandonedStationTest {
         for (Player player : board.getPlayers()) {
             board.addPlayerToBoard(player);
 
-            int[] connectors = new int[4];
+            List<Integer> connectors = new ArrayList<Integer>();
 
+            // Default connector is THREE_PIPES
             for (int i = 0; i < 4; i++) {
-                connectors[i] = THREE_PIPES.ordinal();
+                connectors.add(THREE_PIPES.ordinal());
             }
 
             // The first player has only 4 lifeforms in his ship: 2 astronauts in the core cabin and then 2 aliens
