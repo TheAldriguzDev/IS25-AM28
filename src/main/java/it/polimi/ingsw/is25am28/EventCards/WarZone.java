@@ -73,7 +73,7 @@ public class WarZone extends EventCard {
         this.random = new Random();
         this.diceResult = generateDiceResult();
 
-        //this.affectedPlayer = Optional.empty();
+        this.affectedPlayer = Optional.empty();
     }
 
     /**
@@ -135,7 +135,6 @@ public class WarZone extends EventCard {
         } catch (Exception e) {
             throw new IllegalArgumentException("The given JSON data is not a valid warZoneJSON");
         }
-
         // Check if the card can be used by matching the player
         String playerNickname = warZoneJSON.getPlayerNickname();
         if ( playerNickname == null ||
@@ -210,7 +209,6 @@ public class WarZone extends EventCard {
                             tmpPlayer = entry.getKey();
                         }
                     }
-
                     if (tmpPlayer != null) {
                         this.affectedPlayer = Optional.of(tmpPlayer);
                         this.currentPlayer = Optional.of(tmpPlayer);
@@ -321,7 +319,12 @@ public class WarZone extends EventCard {
             } else {
                 this.affectedPlayer = Optional.empty();
             }
+            // Fix test
+            if (this.affectedPlayer.isEmpty()) {
+                this.getNextPlayer();
+            }
         }
+
 
         return this;
     }
@@ -355,7 +358,7 @@ public class WarZone extends EventCard {
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or to mark the card as used
                 this.affectedPlayer = Optional.empty();
                 this.currentPlayer = Optional.of(this.players.getLast());
-                this.getNextPlayer();
+                //this.getNextPlayer();
             }
             case SHOOTINGSEQUENCE -> {
                 this.handlePlasmaShot(player, warZoneJSON);
@@ -594,8 +597,8 @@ public class WarZone extends EventCard {
      * Generate the dice result
      * */
     private int generateDiceResult() {
-        //return (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
-        return 7; // Column 6
+        return (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
+        //return 7; // Column 6
     }
 
     @Override
@@ -659,6 +662,6 @@ public class WarZone extends EventCard {
 
     //Only for testing purposes
     public void forceDiceThrow(int result) {
-        this.diceResult = result;
+        this.diceResult = result + 1;
     }
 }
