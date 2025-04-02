@@ -135,21 +135,37 @@ class SlaversTest {
 
         slavers.initCardPlayers();
 
+        // Input gathering phase
         if (!slavers.hasFinished()) {
-            slavers.useCard(actionJSON1);
+            slavers.useCard(new SlaversJSON("Player 1", false, new ArrayList<>(), new ArrayList<>()));
         }
+        assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
-            slavers.useCard(actionJSON2);
+            slavers.useCard(new SlaversJSON("Player 2", false, new ArrayList<>(), new ArrayList<>()));
         }
+        assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
-            slavers.useCard(actionJSON3);
+            slavers.useCard(new SlaversJSON("Player 3", true, new ArrayList<>(), doubleCannonActivated));
         }
+        assertFalse(slavers.hasFinished());
+        if (!slavers.hasFinished()) {
+            slavers.useCard(new SlaversJSON("Player 4", false, new ArrayList<>(), new ArrayList<>()));
+        }
+        assertFalse(slavers.hasFinished());
 
+            // Phase in which the defeated players need to send the crew members they want to remove form the ship
+            if (!slavers.hasFinished()) {
+                slavers.useCard(new SlaversJSON("Player 1", false, crewToRemove1, new ArrayList<>()));
+            }
+            assertFalse(slavers.hasFinished());
+
+        if (!slavers.hasFinished()) {
+            slavers.useCard(new SlaversJSON("Player 2", false, crewToRemove2, new ArrayList<>()));
+        }
         assertTrue(slavers.hasFinished());
 
-        if (!slavers.hasFinished()) {
-            slavers.useCard(actionJSON4);
-        }
+
+
 
 
         assertEquals(occupiedSpace1Before.get(0) - 1, cabinList1.get(0).getInhabitants().size());
@@ -190,28 +206,23 @@ class SlaversTest {
 
         slavers.initCardPlayers();
 
+        // Input gathering phase
         if (!slavers.hasFinished()) {
             slavers.useCard(actionJSON1);
         }
-
         assertFalse(slavers.hasFinished());
-
         if (!slavers.hasFinished()) {
             slavers.useCard(actionJSON2);
         }
-
         assertFalse(slavers.hasFinished());
-
         if (!slavers.hasFinished()) {
             slavers.useCard(actionJSON3);
         }
-
         assertFalse(slavers.hasFinished());
-
         if (!slavers.hasFinished()) {
             slavers.useCard(actionJSON4);
         }
-
+        // There should be no players to affect
         assertTrue(slavers.hasFinished());
 
         assertEquals(playerPositionsBefore.get(0), p1.getCursor());

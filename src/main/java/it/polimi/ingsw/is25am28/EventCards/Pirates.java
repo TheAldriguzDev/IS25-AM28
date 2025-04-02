@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Player.Player;
+import javafx.util.Pair;
 
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class Pirates extends EventCard {
     private int playerUseCount;
     private int diceThrowResult;
     private int plasmashotIndex;
+    Pair<Integer, Integer> currentPlasmaShot;
 
     private boolean firstRound;
     ArrayList<Player> playersToHit;
@@ -48,14 +50,8 @@ public class Pirates extends EventCard {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
         } else {
             if (firstRound) {
-                //System.out.println("Initialised with option 1");
                 this.players = new ArrayList<>(this.getBoard().getPlayers());
             } else {
-                //System.out.println("Initialised with option 2");
-                //System.out.println("Players to hit:");
-//                for(Player p : playersToHit) {
-//                    System.out.println(p.getNickname());
-//                }
                 if (!playersToHit.isEmpty()) {
                     this.players = new ArrayList<>(this.playersToHit);
                 }
@@ -94,15 +90,9 @@ public class Pirates extends EventCard {
             throw new ClassCastException("Card data type in invalid");
         }
 
-//        System.out.println("Gocatori: ");
-//        for(Player p : this.players) {
-//            System.out.println(p.getNickname());
-//        }
-
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
-                    //System.out.println("Appena iniziato " + player.getNickname());
                     String playerNickname = piratesData.getPlayerNickname();
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
@@ -132,7 +122,6 @@ public class Pirates extends EventCard {
                         }
                     }
                     if (this.playerUseCount % this.players.size() == 0) {
-                        //System.out.println("Fine round");
                         // flag to make sure  players do not get rewards or have to use cannons twice
                         if (firstRound) {
                             firstRound = false;
@@ -151,17 +140,8 @@ public class Pirates extends EventCard {
                     // The card gets marked as completed only when all players
                     // have encountered all the plasmashots
                     if (this.plasmashotIndex == shootingSequence.size()) {
-                        System.out.println("Plasmashot index finished");
                         this.cardUsed();
                     }
-
-                    //System.out.println("Appena finito " + player.getNickname());
-//                    if (player.equals(this.players.getLast())) {
-//                        this.cardUsed(); // Mark the card as used
-//                        this.getBoard().validatePlayersPosition();
-//                    } else {
-//                        this.getNextPlayer();
-//                    }
                 },
                 () -> {
                     throw new IllegalArgumentException("There is no player playing in this moment");
@@ -191,6 +171,7 @@ public class Pirates extends EventCard {
 
                     int shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
                     int shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
+                    Pair<Integer, Integer> currentPlasmaShot = new Pair<>(shotSize, shotDirection);
 
                     // Impostazione dei lati protetti della ship
                     for (int[] coordinates : piratesData.getShieldsActivatedCoordinates()) {
@@ -227,18 +208,14 @@ public class Pirates extends EventCard {
                                 for (int row = 4; row < 9; row++) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
-                                            System.out.println(player.getNickname() + " sostenuto il colpo in [r,c] : " + row + "" + column);
                                             player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
-                                            System.out.println(player.getNickname() + " eliminato");
                                             if (playersToHit.isEmpty()) {
                                                 cardUsed();
                                             }
-                                            // System.out.println("Eliminated " + player.getNickname());
                                         }
-                                        //System.out.println("(U)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
                                         break;
                                     }
                                 }
@@ -257,7 +234,6 @@ public class Pirates extends EventCard {
                                                 cardUsed();
                                             }
                                         }
-                                        //System.out.println("(R)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
                                         break;
                                     }
                                 }
@@ -276,7 +252,6 @@ public class Pirates extends EventCard {
                                                 cardUsed();
                                             }
                                         }
-                                        //System.out.println("(D)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
                                         break;
                                     }
                                 }
@@ -295,7 +270,6 @@ public class Pirates extends EventCard {
                                                 cardUsed();
                                             }
                                         }
-                                        //System.out.println("(L)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
                                         break;
                                     }
                                 }
@@ -304,136 +278,42 @@ public class Pirates extends EventCard {
                         }
                     }
 
-                    /*
-                    for (ArrayList<Integer> pair : shootingSequence) {
-                        int shotSize = (int) pair.getFirst(); // 1 -> small, 2 -> big
-                        int shotDirection = (int) pair.getLast(); // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
 
-
-
-                        // Prima di ogni colpo resetta shieldedSides per poi ricalcolarli
-                        for (int i = 0; i < 2; i++) {
-                            shieldedSides[i] = false;
-                        }
-                        // Funzione prima di ogni colpo imposta i lati protetti
-                        for (int[] coordinates : piratesData.getShieldsActivatedCoordinates()) {
-                            try {
-                                Shield shield = (Shield) player.getShip().getComponent(coordinates[0], coordinates[1]);
-                                switch (shield.getCoveredSide()[0]) {
-                                    case 0:
-                                        shieldedSides[0] = true;
-                                        shieldedSides[1] = true;
-                                        break;
-                                    case 1:
-                                        shieldedSides[1] = true;
-                                        shieldedSides[2] = true;
-                                        break;
-                                    case 2:
-                                        shieldedSides[2] = true;
-                                        shieldedSides[3] = true;
-                                        break;
-                                    case 3:
-                                        shieldedSides[3] = true;
-                                        shieldedSides[0] = true;
-                                }
-                            } catch (NullPointerException e) {
-                                //Non attiva lo scudo in quanto è stato distrutto
-                            }
-                        }
-                        if ((shotSize == 1 && !shieldedSides[shotDirection]) || shotSize == 2) {
-                            switch (shotDirection) {
-                                case 0: {
-                                    int column = dicesResults.get(dicesResult);
-                                    for (int row = 4; row < 9; row++) {
-                                        if (player.getShip().getComponent(row, column) != null) {
-                                            try {
-                                                player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
-                                            } catch (CoreDeletionAttemptException e) {
-                                                getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
-                                                // System.out.println("Eliminated " + player.getNickname());
-                                            }
-                                            //System.out.println("(U)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
-                                            break;
-                                        }
-                                    }
-                                    break;
-                                }
-                                case 1: {
-                                    int row = dicesResults.get(dicesResult);
-                                    for (int column = 3; column < 10; column++) {
-                                        if (player.getShip().getComponent(row, column) != null) {
-                                            try {
-                                                player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
-                                            } catch (CoreDeletionAttemptException e) {
-                                                getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
-                                            }
-                                            //System.out.println("(R)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
-                                            break;
-                                        }
-                                    }
-                                    break;
-                                }
-                                case 2: {
-                                    int column = dicesResults.get(dicesResult);
-                                    for (int row = 8; row > 3; row--) {
-                                        if (player.getShip().getComponent(row, column) != null) {
-                                            try {
-                                                player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
-                                            } catch (CoreDeletionAttemptException e) {
-                                                getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
-                                            }
-                                            //System.out.println("(D)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
-                                            break;
-                                        }
-                                    }
-                                break;
-                                }
-                                case 3: {
-                                    int row = dicesResults.get(dicesResult);
-                                    for (int column = 9; column > 2; column--) {
-                                        if (player.getShip().getComponent(row, column) != null) {
-                                            try {
-                                                player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
-                                            } catch (CoreDeletionAttemptException e) {
-                                                getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
-                                            }
-                                            //System.out.println("(L)Removed component:" + player.getShip().getComponent(row, column) + ", in i: " + row + ", column: " + column);
-                                            break;
-                                        }
-                                    }
-                                    break;
-                                }
-                            }
-                        }
-                        dicesResult++;
-                    }*/
                 }
         );
     }
 
     protected void malusEffect() {}
 
+    // TODO: fix pirates' generate state to include the individual shot data instead of the full sequence at once
+
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
-        CardStateJSON piratesStateJSON;
+        CardStateJSON piratesStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
             // The dice throw is performed by generateState only at the beginning
             // since the card hasn't been used yet
             if (this.diceThrowResult == -1) {
                 this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
             }
-            piratesStateJSON = new CardStateJSON(
-                    playerOptional.get().getNickname(),
-                    getCardName(),
-                    getCardLevel(),
-                    !hasFinished(),
-                    this.requiredFirepower,
-                    this.givenCredits,
-                    this.movementSteps,
-                    this.shootingSequence,
-                    this.diceThrowResult,
-                    firstRound);
+            piratesStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            piratesStateJSON.setCardName(getCardName());
+            piratesStateJSON.setCardLevel(getCardLevel());
+            piratesStateJSON.setCardIsUsable(!hasFinished());
+            piratesStateJSON.setRequiredFirepower(this.requiredFirepower);
+            piratesStateJSON.setGivenCredits(this.givenCredits);
+            piratesStateJSON.setMovementSteps(this.movementSteps);
+            piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
+            piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
+            piratesStateJSON.setFirstRound(this.firstRound);
+            if (!firstRound) {
+                ArrayList<String> defeatedPlayers = new ArrayList<>();
+                for (Player player : playersToHit) {
+                    defeatedPlayers.add(player.getNickname());
+                }
+                piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
+            }
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
@@ -444,5 +324,4 @@ public class Pirates extends EventCard {
     void setDiceThrowResult(int diceThrowResult) {
         this.diceThrowResult = diceThrowResult;
     }
-
 }

@@ -11,6 +11,7 @@ import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Player.Player;
 import org.json.simple.JSONObject;
 
+import java.util.ArrayList;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -19,6 +20,10 @@ public class Slavers extends EventCard {
     private final int movementSteps;
     private final int givenCredits;
     private final int takenCrew;
+    private boolean hasBeenDefeated;
+    ArrayList<String> defeatedPlayers;
+    private boolean firstRound;
+    ArrayList<Player> playersToTakeCrewFrom;
 
     public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board) {
         super(name, cardLevel, board);
@@ -26,7 +31,28 @@ public class Slavers extends EventCard {
         this.movementSteps = movementSteps;
         this.givenCredits = givenCredits;
         this.takenCrew = takenCrew;
+        this.hasBeenDefeated = false;
+        this.defeatedPlayers = new ArrayList<>();
+        this.firstRound = true;
+        this.playersToTakeCrewFrom = new ArrayList<>();
     }
+
+    @Override
+    public void initCardPlayers() throws IllegalArgumentException {
+        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
+            throw new IllegalArgumentException("The player list is null or contains less than two player");
+        } else {
+            if (firstRound) {
+                this.players = new ArrayList<>(this.getBoard().getPlayers());
+            } else {
+                if (!playersToTakeCrewFrom.isEmpty()) {
+                    this.players = new ArrayList<>(this.playersToTakeCrewFrom);
+                }
+            }
+            currentPlayer = Optional.of(players.getFirst());
+        }
+    }
+
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         SlaversJSON slaversData;
@@ -36,28 +62,46 @@ public class Slavers extends EventCard {
             throw new IllegalArgumentException("Card data type in invalid");
         }
         Optional<Player> playerOptional = getCurrentPlayer();
+
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
                     String playerNickname = slaversData.getPlayerNickname();
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
-                    float playerFirepower = player.getShip().getFirePower(slaversData.getDoubleCannonsToActivateCoordinates());
-                    if (playerFirepower > requiredFirepower) {
-                        cardUsed();
-                        if (slaversData.getTakeCredits()) {
-                            bonusEffect();
-                            getBoard().movePlayerBackwards(player, movementSteps);
-                            getBoard().validatePlayersPosition();
+                    if (firstRound) {
+                        float playerFirepower = player.getShip().getFirePower(slaversData.getDoubleCannonsToActivateCoordinates());
+                        if (playerFirepower > requiredFirepower && !hasBeenDefeated) {
+                            hasBeenDefeated = true;
+                            //cardUsed();
+                            if (slaversData.getTakeCredits()) {
+                                bonusEffect();
+                                getBoard().movePlayerBackwards(player, movementSteps);
+                                getBoard().validatePlayersPosition();
+                            }
+                        } else if (playerFirepower < requiredFirepower && !hasBeenDefeated) {
+                            playersToTakeCrewFrom.add(player);
+                            //malusEffect(data);
                         }
-                    } else if (playerFirepower < requiredFirepower) {
-                        malusEffect(data);
                     }
-                    if (player.equals(this.players.getLast())) {
-                        this.cardUsed(); // Mark the card as used
-                        this.getBoard().validatePlayersPosition();
+                    if (!firstRound) {
+                        if (playersToTakeCrewFrom.contains(player)) {
+                            malusEffect(slaversData);
+                        }
+                    }
+                    if (player.equals(players.getLast())) {
+                        if (firstRound) {
+                            firstRound = false;
+                            if (playersToTakeCrewFrom.isEmpty()) {
+                                cardUsed();
+                            } else {
+                                initCardPlayers();
+                            }
+                        } else {
+                            cardUsed();
+                        }
                     } else {
-                        this.getNextPlayer();
+                        getNextPlayer();
                     }
                 },
                 () -> {
@@ -93,9 +137,6 @@ public class Slavers extends EventCard {
         SlaversJSON slaversData = (SlaversJSON) data;
         playerOptional.ifPresent(
                 (Player player) -> {
-//                    for (Cabin cabin : slaversData.getCrewToRemove()) {
-//                        cabin.removeInhabitant(cabin.getInhabitants().getFirst());
-//                    }
                     // Remove the crew members from the given cabins
                     for (ComponentHelper<LifeformType> lifeform : slaversData.getCrewToRemove()) {
                         Cabin tmpCabin;
@@ -135,17 +176,24 @@ public class Slavers extends EventCard {
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
-        CardStateJSON slaversStateJSON;
+        CardStateJSON slaversStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
-            slaversStateJSON = new CardStateJSON(
-                    playerOptional.get().getNickname(),
-                    getCardName(),
-                    getCardLevel(),
-                    !hasFinished(),
-                    this.requiredFirepower,
-                    this.givenCredits,
-                    this.movementSteps,
-                    this.takenCrew);
+            slaversStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            slaversStateJSON.setCardName(this.getCardName());
+            slaversStateJSON.setCardLevel(this.getCardLevel());
+            slaversStateJSON.setCardIsUsable(!hasFinished());
+            slaversStateJSON.setRequiredFirepower(requiredFirepower);
+            slaversStateJSON.setGivenCredits(this.givenCredits);
+            slaversStateJSON.setMovementSteps(this.movementSteps);
+            slaversStateJSON.setTakenCrew(this.takenCrew);
+            slaversStateJSON.setFirstRound(this.firstRound);
+            if (!firstRound) {
+                ArrayList<String> defeatedPlayers = new ArrayList<>();
+                for (Player player : playersToTakeCrewFrom) {
+                    defeatedPlayers.add(player.getNickname());
+                }
+                slaversStateJSON.setDefeatedPlayers(defeatedPlayers);
+            }
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }

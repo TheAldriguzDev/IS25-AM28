@@ -30,6 +30,7 @@ public class WarZoneJSON extends ActionJSON {
             @JsonProperty("shieldList") List<ComponentHelper<Integer>> shieldList,
             @JsonProperty("cannonList") List<ComponentHelper<Integer>> cannonList
     ) {
+        this.playerNickname = playerNickname;
         this.usedEnergy = usedEnergy;
         this.lifeformsToBeRemoved = lifeformsToBeRemoved;
         this.itemsToBeRemoved = itemsToBeRemoved;

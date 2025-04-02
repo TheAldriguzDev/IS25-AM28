@@ -22,6 +22,10 @@ public class Smugglers extends EventCard {
     private final int greenItems;
     private final ResourceBank resourceBank;
     private final int takenItems;
+    private boolean hasBeenDefeated;
+    private ArrayList<String> defeatedPlayers;
+    private boolean firstRound;
+    private ArrayList<Player> playersToTakeItemsFrom;
 
     public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
@@ -33,12 +37,32 @@ public class Smugglers extends EventCard {
         this.greenItems = greenItems;
         this.resourceBank = resourceBank;
         this.takenItems = takenItems;
+        this.hasBeenDefeated = false;
+        this.defeatedPlayers = new ArrayList<>();
+        this.firstRound = true;
+        this.playersToTakeItemsFrom = new ArrayList<>();
     }
 
     /*
      * Se il tipo di response non è corretto la classe
      * lancia un'eccezione di tipo ClassCastException
      * */
+
+    @Override
+    public void initCardPlayers() throws IllegalArgumentException {
+        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
+            throw new IllegalArgumentException("The player list is null or contains less than two player");
+        } else {
+            if (firstRound) {
+                this.players = new ArrayList<>(this.getBoard().getPlayers());
+            } else {
+                if (!playersToTakeItemsFrom.isEmpty()) {
+                    this.players = new ArrayList<>(this.playersToTakeItemsFrom);
+                }
+            }
+            currentPlayer = Optional.of(players.getFirst());
+        }
+    }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         SmugglersJSON smugglersData;
@@ -56,25 +80,40 @@ public class Smugglers extends EventCard {
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
-                    float playerFirepower = player.getShip().getFirePower(smugglersData.getDoubleCannonsToActivateCoordinates());
-//                    System.out.println(playerFirepower);
-                    if(playerFirepower > requiredFirepower) {
-                        // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
-                        cardUsed();
-                        if (smugglersData.getTakeLoot()) {
-                            bonusEffect(data);
-                            getBoard().movePlayerBackwards(player, movementSteps);
-                            getBoard().validatePlayersPosition();
-                            //player.setCursor(player.getCursor() - this.movementSteps);
+                    if (firstRound) {
+                        float playerFirepower = player.getShip().getFirePower(smugglersData.getDoubleCannonsToActivateCoordinates());
+                        if (playerFirepower > requiredFirepower) {
+                            // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
+                            hasBeenDefeated = true;
+                            //cardUsed();
+                            if (smugglersData.getTakeLoot()) {
+                                bonusEffect(data);
+                                getBoard().movePlayerBackwards(player, movementSteps);
+                                getBoard().validatePlayersPosition();
+                            }
+                        } else if (playerFirepower < requiredFirepower) {
+                            playersToTakeItemsFrom.add(player);
+                            //malusEffect(smugglersData);
                         }
-                    } else if (playerFirepower < requiredFirepower) {
-                        malusEffect(smugglersData);
                     }
-                    if (player.equals(this.players.getLast())) {
-                        this.cardUsed(); // Mark the card as used
-                        this.getBoard().validatePlayersPosition();
+                    if (!firstRound) {
+                        if (playersToTakeItemsFrom.contains(player)) {
+                            malusEffect(smugglersData);
+                        }
+                    }
+                    if (player.equals(players.getLast())) {
+                        if (firstRound) {
+                            firstRound = false;
+                            if (playersToTakeItemsFrom.isEmpty()) {
+                                cardUsed();
+                            } else {
+                                initCardPlayers();
+                            }
+                        } else {
+                            cardUsed();
+                        }
                     } else {
-                        this.getNextPlayer();
+                        getNextPlayer();
                     }
                 },
                 () -> {
@@ -145,27 +184,30 @@ public class Smugglers extends EventCard {
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
-        CardStateJSON smugglersStateJSON;
+        CardStateJSON smugglersStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
-            smugglersStateJSON = new CardStateJSON(
-                    playerOptional.get().getNickname(),
-                    getCardName(),
-                    getCardLevel(),
-                    !hasFinished(),
-                    this.requiredFirepower,
-                    this.movementSteps,
-                    this.takenItems,
-                    this.redItems,
-                    this.yellowItems,
-                    this.blueItems,
-                    this.greenItems);
+            smugglersStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            smugglersStateJSON.setCardName(getCardName());
+            smugglersStateJSON.setCardLevel(getCardLevel());
+            smugglersStateJSON.setCardIsUsable(!hasFinished());
+            smugglersStateJSON.setRequiredFirepower(requiredFirepower);
+            smugglersStateJSON.setMovementSteps(movementSteps);
+            smugglersStateJSON.setTakenItems(takenItems);
+            smugglersStateJSON.setRedItems(redItems);
+            smugglersStateJSON.setYellowItems(yellowItems);
+            smugglersStateJSON.setBlueItems(blueItems);
+            smugglersStateJSON.setGreenItems(greenItems);
+            if (!firstRound) {
+                ArrayList<String> defeatedPlayers = new ArrayList<>();
+                for (Player player : playersToTakeItemsFrom) {
+                    defeatedPlayers.add(player.getNickname());
+                }
+                smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
+            }
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
         return smugglersStateJSON;
     }
-
-
-
 }
 

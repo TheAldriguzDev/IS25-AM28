@@ -36,35 +36,8 @@ public class Stardust extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
 
-                    AtomicInteger movementSteps = new AtomicInteger();
-                    Ship ship = player.getShip();
-                    ship.traverse(
-                            (Component c) -> {
-                                // For each exposed side movementsSteps++;
-                                Component[] otherC = ship.getNearestComponents(c);
-                                if (otherC[0] == null) {
-                                    if (c.getTopSide() != Connector.ZERO_PIPES) {
-                                        movementSteps.getAndIncrement();
-                                    }
-                                }
-                                if (otherC[1] == null) {
-                                    if (c.getRightSide() != Connector.ZERO_PIPES) {
-                                        movementSteps.getAndIncrement();
-                                    }
-                                }
-                                if (otherC[2] == null) {
-                                    if (c.getBottomSide() != Connector.ZERO_PIPES) {
-                                        movementSteps.getAndIncrement();
-                                    }
-                                }
-                                if (otherC[3] == null) {
-                                    if (c.getLeftSide() != Connector.ZERO_PIPES) {
-                                        movementSteps.getAndIncrement();
-                                    }
-                                }
-                            }
-                    );
-                    getBoard().movePlayerBackwards(player, movementSteps.get());
+                    int movementSteps = player.getShip().getExposedConnectorAmount();
+                    getBoard().movePlayerBackwards(player, movementSteps);
                     if (player.equals(this.players.getLast())) {
                         this.cardUsed(); // Mark the card as used
                         this.getBoard().validatePlayersPosition();
@@ -104,14 +77,12 @@ public class Stardust extends EventCard {
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
-        CardStateJSON stardustStateJSON;
+        CardStateJSON stardustStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
-            stardustStateJSON = new CardStateJSON(
-                    playerOptional.get().getNickname(),
-                    getCardName(),
-                    getCardLevel(),
-                    !hasFinished()
-                    );
+            stardustStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            stardustStateJSON.setCardName(getCardName());
+            stardustStateJSON.setCardLevel(getCardLevel());
+            stardustStateJSON.setCardIsUsable(!hasFinished());
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }

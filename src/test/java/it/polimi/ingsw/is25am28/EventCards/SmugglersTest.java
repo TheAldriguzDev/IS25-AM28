@@ -133,17 +133,34 @@ class SmugglersTest {
 
         smugglers.initCardPlayers();
 
-        smugglers.useCard(actionJSON1);
+        //Input gathering phase
+        smugglers.useCard(new SmugglersJSON("Player 1", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
-        smugglers.useCard(actionJSON2);
+        smugglers.useCard(new SmugglersJSON("Player 2", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
-        smugglers.useCard(actionJSON3);
+        smugglers.useCard(new SmugglersJSON("Player 3", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
-        smugglers.useCard(actionJSON4);
-        assertTrue(smugglers.hasFinished());
+        smugglers.useCard(new SmugglersJSON("Player 4", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        assertFalse(smugglers.hasFinished());
+
+            // The defeated players now need to specify what resources to get rid of
+            smugglers.useCard(actionJSON1);
+            assertFalse(smugglers.hasFinished());
+
+            smugglers.useCard(actionJSON2);
+            assertFalse(smugglers.hasFinished());
+
+            smugglers.useCard(actionJSON3);
+            assertFalse(smugglers.hasFinished());
+
+            smugglers.useCard(actionJSON4);
+            assertTrue(smugglers.hasFinished());
+
+
+
 
 
         assertEquals(0, ship_1.getAvailableEnergy()); // Non avendo items, subisce -4 alle batterie -> -3 in quanto ne ha solo 3
@@ -207,17 +224,24 @@ class SmugglersTest {
 
         smugglers.initCardPlayers();
 
-        smugglers.useCard(actionJSON1);
+        // Input gathering phase
+        smugglers.useCard(new SmugglersJSON("Player 1", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
-        smugglers.useCard(actionJSON2);
+        smugglers.useCard(new SmugglersJSON("Player 2", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
         smugglers.useCard(actionJSON3);
+        assertFalse(smugglers.hasFinished());
+
+        smugglers.useCard(new SmugglersJSON("Player 4", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        assertFalse(smugglers.hasFinished());
+
+        // The defeated players now need to specify what resources to get rid of
+        smugglers.useCard(actionJSON1);
         assertTrue(smugglers.hasFinished());
 
-        smugglers.useCard(actionJSON4);
-        assertTrue(smugglers.hasFinished());
+
 
         assertEquals(1, ship_1.getAvailableEnergy()); // Non avendo items, subisce -2 alle batterie -> vanno a 1
 
