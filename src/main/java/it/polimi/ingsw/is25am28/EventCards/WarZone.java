@@ -386,9 +386,10 @@ public class WarZone extends EventCard {
         // Get the list of components and resources to be dropped
         List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>(warZoneJSON.getItemsToBeRemoved());
 
-        if (itemsToBeRemoved.size() != this.requiredItems) {
-            throw new IllegalArgumentException("The itemsToBeRemoved size does not match with the card requirements!");
-        }
+        // This check cannot be made, if the list sent by the player is smaller than requiredItems, the player's batteries must be taken instead
+//        if (itemsToBeRemoved.size() != this.requiredItems) {
+//            throw new IllegalArgumentException("The itemsToBeRemoved size does not match with the card requirements!");
+//        }
 
         // Remove the resources from the player to the bank
         for ( ComponentHelper<ItemColor> resourceDrop : itemsToBeRemoved ) {
@@ -399,6 +400,13 @@ public class WarZone extends EventCard {
                             resourceDrop.getI(),
                             resourceDrop.getJ()));
         }
+
+        // Le batterie da rimuovere solo nel caso la lista di elementi da rimuovere non isa abbastanza grande, il client farà il controllo di fare la lista di elementi da togliore il piu grande possibile se non è possibile raggiungere una grandezza pari a takenItems
+        if (player.getShip().getAvailableEnergy() >= (requiredItems - itemsToBeRemoved.size())) {
+            player.getShip().consumeEnergy(requiredItems - itemsToBeRemoved.size());
+        } else {
+            player.getShip().consumeEnergy(player.getShip().getAvailableEnergy());
+        } // Se viene presa più energia di quanta ne è disponibile semplicemente va a 0
 
         return this;
     }
