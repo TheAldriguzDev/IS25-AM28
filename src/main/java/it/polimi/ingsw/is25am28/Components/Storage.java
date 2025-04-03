@@ -5,13 +5,14 @@ import it.polimi.ingsw.is25am28.Items.ItemColor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class Storage extends Component {
       final int capacity;
       final boolean isSpecialStorage;
       final List<Item> storedItems;
 
-      public Storage(int[] connectors, int capacity, boolean isSpecialStorage) {
+      public Storage(List<Integer> connectors, int capacity, boolean isSpecialStorage) {
             super(connectors);
             this.capacity = capacity;
             this.isSpecialStorage = isSpecialStorage;
@@ -55,7 +56,21 @@ public final class Storage extends Component {
             storedItems.remove(item);
       }
 
+      public boolean check( Component[] nearest ){
+            return false;
+      }
+
       public int availableSpace() {
             return capacity - storedItems.size();
+      }
+
+      @Override
+      public Map<String,Object> toMap(){
+            Map<String,Object> map = super.toMap();
+
+            map.put("capacity", capacity );
+            map.put("special", isSpecialStorage );
+
+            return map;
       }
 }

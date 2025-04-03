@@ -32,7 +32,7 @@ public class MeteorShower extends EventCard {
     public MeteorShower(
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
-            @JsonProperty("meteorSequence") List<Pair<Integer, Integer>> meteorSequence,
+            @JsonProperty("meteorSequence") List<List<Integer>> meteorSequence,
             Board board
     ) {
         super(cardName, cardLevel, board);
@@ -44,11 +44,11 @@ public class MeteorShower extends EventCard {
         this.random = new Random();
 
         try {
-            for (Pair<Integer, Integer> meteorDescriptor : meteorSequence) {
+            for (List<Integer> meteorDescriptor : meteorSequence) {
                 this.meteorSequence.add(
                     new Meteor(
-                        meteorDescriptor.getKey(),  // Meteor size
-                        meteorDescriptor.getValue() // Meteor orientation
+                        meteorDescriptor.get(0),  // Meteor size
+                        meteorDescriptor.get(1) // Meteor orientation
                     )
                 );
             }

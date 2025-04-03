@@ -73,11 +73,11 @@ class MeteorShowerTest {
     void initCustomShip(Player player) {
         Ship ship = player.getShip();
 
-        int[] connectors = new int[4];
+        List<Integer> connectors = new ArrayList<Integer>();
 
         // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors[i] = THREE_PIPES.ordinal();
+            connectors.add(THREE_PIPES.ordinal());
         }
 
         Battery tripleBattery1 = new Battery(connectors, 6);
@@ -150,36 +150,64 @@ class MeteorShowerTest {
 //            printShipGrid(player.getShip());
         }
 
-        List<Pair<Integer, Integer>> meteorSequence = new ArrayList<>();
+        List<List<Integer>> meteorSequence = new ArrayList<>();
+        List<Integer> meteorDescriptor;
 
         // [1, 0] - Small Meteor, pointing up (comes from the bottom in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(1, 2));
+        meteorDescriptor = new ArrayList<>(2);
+        meteorDescriptor.add(1);
+        meteorDescriptor.add(2);
+        meteorSequence.add(meteorDescriptor);
 
         // [1, 1] - Small Meteor, pointing right (comes from the left in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(1, 3));
+        meteorDescriptor = new ArrayList<>(2);
+        meteorDescriptor.add(1);
+        meteorDescriptor.add(3);
+        meteorSequence.add(meteorDescriptor);
 
         // [1, 2] - Small Meteor, pointing down (comes from the top in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(1, 0));
+        meteorDescriptor = new ArrayList<>(2);
+        meteorDescriptor.add(1);
+        meteorDescriptor.add(0);
+        meteorSequence.add(meteorDescriptor);
 
         // [1, 3] - Small Meteor, pointing left (comes from the right in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(1, 1));
+        meteorDescriptor = new ArrayList<>(2);
+        meteorDescriptor.add(1);
+        meteorDescriptor.add(1);
+        meteorSequence.add(meteorDescriptor);
 
         // [2, 0] - Big Meteor, pointing up (comes from the bottom in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(2, 2));
+        meteorDescriptor = new ArrayList<>(2);
+        meteorDescriptor.add(2);
+        meteorDescriptor.add(2);
+        meteorSequence.add(meteorDescriptor);
 
         // [2, 1] - Big Meteor, pointing right (comes from the left in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(2, 3));
+        meteorDescriptor = new ArrayList<>(2);
+        meteorDescriptor.add(2);
+        meteorDescriptor.add(3);
+        meteorSequence.add(meteorDescriptor);
 
         // Meteor 7 of 9 --> Testing if active shields shouldn't block the big meteor
         // [2, 2] - Big Meteor, pointing down (comes from the top in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(2, 0));
+        meteorDescriptor = new ArrayList<>(2);
+        meteorDescriptor.add(2);
+        meteorDescriptor.add(0);
+        meteorSequence.add(meteorDescriptor);
 
         // Meteor 8 of 9 --> Testing destruction with both single and double cannons
         // [2, 2] - Big Meteor, pointing down (comes from the top in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(2, 0));
+        meteorDescriptor = new ArrayList<>(2);
+        meteorDescriptor.add(2);
+        meteorDescriptor.add(0);
+        meteorSequence.add(meteorDescriptor);
 
         // [2, 3] - Big Meteor, pointing left (comes from the right in the ship)
-        meteorSequence.add(new Pair<Integer, Integer>(2, 1));
+        meteorDescriptor = new ArrayList<>(2);
+        meteorDescriptor.add(2);
+        meteorDescriptor.add(1);
+        meteorSequence.add(meteorDescriptor);
 
         // MeteorShower card with all 8 possible meteor configurations
         this.meteorShower = new MeteorShower(

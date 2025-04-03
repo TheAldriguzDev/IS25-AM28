@@ -1,7 +1,9 @@
 package it.polimi.ingsw.is25am28.Components;
+import java.util.List;
+import java.util.Map;
 
 public final class Shield extends Component {
-      public Shield( int[] connectors ){
+      public Shield( List<Integer> connectors ){
             super(connectors);
       }
       /**
