@@ -4,5 +4,18 @@ public enum PlayerColor {
     GREEN,
     RED,
     BLUE,
-    YELLOW,
+    YELLOW;
+
+    public static PlayerColor fromInteger( int color ){
+        
+        if( color == GREEN.ordinal() ){
+            return GREEN;
+        }else if( color == RED.ordinal() ){
+            return RED;
+        }else if( color == BLUE.ordinal() ){
+            return BLUE;
+        } 
+
+        return YELLOW;
+    }
 }

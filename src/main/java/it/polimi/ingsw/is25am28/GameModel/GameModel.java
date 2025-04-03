@@ -4,46 +4,56 @@ package it.polimi.ingsw.is25am28.GameModel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import it.polimi.ingsw.is25am28.GameModel.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
-import org.json.simple.JSONArray;
-
-import it.polimi.ingsw.is25am28.Components.Component;
+import it.polimi.ingsw.is25am28.State.FlipActionState;
+import it.polimi.ingsw.is25am28.State.ShipConstructionInitialState;
 import it.polimi.ingsw.is25am28.Player.Player;
+import it.polimi.ingsw.is25am28.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Exceptions.TimerFLipException;
+import it.polimi.ingsw.is25am28.GameModel.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.GameModel.Session.RoundSession;
 import it.polimi.ingsw.is25am28.GameModel.Session.SessionSubscriber;
 import it.polimi.ingsw.is25am28.GameModel.Session.ShipConstructionSession;
+import it.polimi.ingsw.is25am28.GameModel.Session.ControlSession;
+import it.polimi.ingsw.is25am28.Controller.Sender;
 
-public class GameModel {
+public class GameModel implements SessionSubscriber {
 
       // CONSTANTS
       static private final int DECOY_DECK_SIZE = 2;
-      static private final int NUM_OF_DECOY_DECKS = 3;
-
-
-      //private final HashSet<Player> players;
 
       private final List<EventCard> deck;
       private final Board board;
       private final ResourceBank resourceBank;
+      private final Map<String,Player> players = new HashMap<>();
+      private final Sender controller;
 
       private final int level;
 
-      // indicate the round number and the card to draw from the deck
-      //private int round = 0;
-      private ShipConstructionSession builder;
-      private RoundSession round;
+      private ControlSession control;
+      private RoundSession roundHandler;
+      private ShipConstructionSession construction;
 
-      public GameModel( int level ){
+
+
+      public GameModel( Sender controller, int level ){
             this.level = level;
-            deck = generateDeck( level );
-            // if( level > 1 )
+
+            //if( level == 2 )
             board = new BoardLevel2();
+            board.buildBoard();
+
             this.resourceBank = new ResourceBank();
+            this.controller = controller;
+            deck = new ArrayList<>();
       }
 
       /**
@@ -52,10 +62,7 @@ public class GameModel {
        */
       private List<EventCard> generateDeck( int level ) {
 
-            if( deck != null )
-                  return deck;
-
-            List<EventCard> deck = CardLoader.get().read(this.board, this.resourceBank);
+            List<EventCard> deck = CardLoader.get().read( board, this.resourceBank, level );
 
             // random sort
             deck.sort((_,_) -> (int)( (Math.random() - Math.random())*1000 ) );
@@ -63,56 +70,118 @@ public class GameModel {
             return deck;
       }
 
-      public GameModel newPlayer( Player player ) {
-            board.addPlayerToBoard(player);
+      public ShipConstructionInitialState start(){
+            deck.addAll( generateDeck( level ) );
+
+            roundHandler = new RoundSession( 
+                  board,
+                  level, 
+                  deck.subList( 3 * DECOY_DECK_SIZE, deck.size() )
+            );
+
+            control = new ControlSession( players );
+
+            construction = new ShipConstructionSession( 
+                  board,
+                  players, 
+                  level, 
+                  this,
+                  deck.subList(0, 3 * DECOY_DECK_SIZE )
+            );
+
+            return construction.init();
+      }
+
+      public GameModel addNewPlayer( String nickname, PlayerColor color ){
+            Player player = new Player(nickname, color, level);
+            
+            players.put(
+                  nickname, 
+                  player
+            );
+
+            board.newPlayer(player);
+
             return this;
       }
+
+      public GameModel setPlayerConnectionStatus( String nickname, boolean status ){
+            
+            players.get( nickname ).setConnected( status );
+
+            return this;
+      }
+
+      public void onSessionEnd( Object state ){
+            controller.sendToAll(
+                  getPlayersNickname(), 
+                  state
+            );
+      }
+
+      
       /**
-       * show the "decoy" deck used in ship-building phase.
-       * the int parameter could be 0,1 or 2. if none of these values is passed,
-       * an error is thrown
-       * @return
+       * the id is the position in the array, also sent to client
        */
-      public List<EventCard> showDeck( int deckIndex ) throws IndexOutOfBoundsException {
-
-            if( deckIndex > NUM_OF_DECOY_DECKS - 1 || deckIndex < 0 )
-                  throw new IndexOutOfBoundsException("deck index must be a value between 0 and 2 (inclusive).");
-
-            return new ArrayList<>( deck.subList( deckIndex * DECOY_DECK_SIZE, deckIndex * DECOY_DECK_SIZE + DECOY_DECK_SIZE ) );
+      public FlipActionState selectTile( String player, Integer i, Integer j ){
+            return construction.select( player, i, j );
       }
 
       /**
-       * @return the list of players that needs to fix their ships.
-       * for later use, check if the size of the result is equal to 0,
-       * then, all player's ships are ok.
+       * the id is the position in the array, also sent to client
        */
-      public HashMap<Player, List<Component>> checkAllShips(){
+      public FlipActionState deselectTile( String player, Integer i, Integer j ){
+            return construction.deselect( player, i, j );
+      }
 
-            HashMap<Player, List<Component>> toFix = new HashMap<>();
-            List<Player> players = board.getPlayers();
+      /**
+       * method used by the players to flip the clock and reduce times for other players
+       */
+      public Boolean flipTimer( String player ) throws TimerFLipException {
+            return construction.flip( player );
+      }
 
-            for( Player player : players ) {
+      /**
+       * executed whenever player ended construction of its ship.
+       */
+      public GameModel setPlayerEndedBuilding( String playerNickname, List<ComponentJSON> shipProxy, int discarded ){
 
-                  List<Component> wrongs = player.getShip().getWrongComponents();
+            construction.setPlayerEnded( playerNickname, shipProxy,  discarded );
 
-                  if( wrongs.size() > 0 )
-                        toFix.put( player, wrongs );
-            }
+            return this;
+      }
 
-            return toFix;
+      /**
+       * fix broken ship
+       */
+      public Boolean fixShip( String nickname, List<ComponentJSON> ship ){
+            return control.fixShip( nickname, ship );
+      }
+
+      /**
+       * populate a ship with lifeforms
+       */
+      public List<Map<String, Object>> populateShip( String nickname, List<ComponentJSON> ship ){
+            return control.populateShip( nickname, ship );
+      }
+
+      /**
+       * method used to play a card
+       */
+      public CardStateJSON playCard( ActionJSON action ){
+            return roundHandler.playCard(action);
       }
 
       /**
        * add credits to each player, based on the
        * number of rewards obtained at the end of the game
        */
-      public GameModel endGameRewards(){
-
+      public Map<String,Map<String,Integer>> endGameRewards(){
             List<Player> players = board
-                    .getPlayers()
-                    .stream()
-                    .sorted((p1,p2) -> p1.getCursor() - p2.getCursor() )
-                    .toList();
+                  .getPlayers()
+                  .stream()
+                  .sorted((p1,p2) -> p1.getCursor() - p2.getCursor() )
+                  .toList();
 
             // add credits based on position
             for( int i = 0; i < players.size(); i++ ){
@@ -123,6 +192,7 @@ public class GameModel {
 
             List<Player> withTheBestShip = new ArrayList<>();
             int min = Integer.MAX_VALUE;
+            Map<String,Map<String,Integer>> map = new HashMap<>();
 
             players.clear();
             players.addAll(board.getPlayers());
@@ -152,46 +222,48 @@ public class GameModel {
                   player.addCredits( player.isEliminated() ? (int)(value + 1)/2 : value );
             });
 
-            return this;
+            this.players.forEach( (k,player) -> {
+                  Map<String,Integer> descriptor = new HashMap<>();
+                  
+                  descriptor.put("credits", player.getCredits() );
+
+                  if( board.getEliminatedPlayers().contains(player) ){
+                        descriptor.put("position", -1 );
+                  }else{
+                        descriptor.put("position", board.getPlayers().indexOf(player) + 1 );
+                  }
+                  
+                  map.put( k, descriptor );
+            });
+
+            return map;
       }
 
-      public GameModel startRoundSession(){
-            round = new RoundSession( level, deck.subList( NUM_OF_DECOY_DECKS * DECOY_DECK_SIZE, deck.size() ) );
-            return this;
+      public boolean hasControlSessionEnded(){
+            return control.hasFinished();
       }
 
-      public Object useCurrentCard( Object response ){
-            Object cardState = round.play( response );
+      public boolean hasRoundSessionEnded(){
+            return roundHandler.hasFinished();
+      }
 
-            //TODO wrap card state into global state
+      public boolean hasShipConstructionSessionEnded(){
+            return construction.hasFinished();
+      }
 
-            return cardState;
+      public List<PlayerColor> getAvailableColors(){
+            return players
+                  .values()
+                  .stream()
+                  .map( player -> player.getPlayerColor() )
+                  .toList();
+      }
+
+      public List<String> getPlayersNickname(){
+            return players.keySet().stream().toList();
       }
 
       public Board getBoard(){
             return board;
-      }
-
-      public JSONArray startBuildSession( SessionSubscriber controller ){
-
-            builder = new ShipConstructionSession( board.getPlayers(), level, controller );
-            builder.flip();
-
-            return builder.generateInitialBoardState();
-      }
-
-      public GameModel selectComponent( int id ){
-            builder.select(id);
-            return this;
-      }
-
-      public GameModel deselectComponent( int id ){
-            builder.deselect(id);
-            return this;
-      }
-
-      public GameModel flip(){
-            builder.flip();
-            return this;
       }
 }

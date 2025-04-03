@@ -29,9 +29,9 @@ public final class Cabin extends Component {
 
       public int getAvailableSpace() {
             return 2 - inhabitants
-                    .stream()
-                    .mapToInt(Lifeform::getRequiredSpace)
-                    .sum();
+                        .stream()
+                        .mapToInt(Lifeform::getRequiredSpace)
+                        .sum();
       }
 
       public void addInhabitant(Lifeform lifeform) throws IllegalArgumentException {

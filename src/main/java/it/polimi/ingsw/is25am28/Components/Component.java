@@ -21,23 +21,28 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       protected int direction;
 
       /**
+       * used to recognize the specific tile
+       */
+      private int id = 0;
+
+      /**
        * return unique id of the class called
        */
-      public int getId(){
+      public int getTypeId(){
             switch(this){
-                  case Cannon _:
+                  case Cannon _: 
                         return 0;
-                  case Cabin _:
+                  case Cabin _: 
                         return 1;
-                  case Storage _:
+                  case Storage _: 
                         return 2;
-                  case Vital _:
+                  case Vital _: 
                         return 3;
                   case Engine _:
                         return 4;
                   case Battery _:
                         return 5;
-                  case Shield _:
+                  case Shield _: 
                         return 6;
                   case Structural _:
                         return 7;
@@ -122,7 +127,7 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
       }
 
       public Component setRotation( int rotation ){
-
+            
             direction = rotation%4;
 
             return this;
@@ -161,6 +166,18 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
             return sides[ (direction + 2)%4 ];
       }
 
+      public int getId(){
+            return id;
+      }
+
+      /**
+       * NEVER CALL THIS METHOD. USED TO NOT BREAK ANYTHING
+       */
+      public Component setId( int id ){
+            this.id = id;
+            return this;
+      }
+
       /**
        * method used to transform the component in a sendable way.
        * the result is similar to the "Tile.json" file.
@@ -174,7 +191,9 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
                   connectors.add( sides[i].ordinal() );
             }
 
-            map.put("id", getId());
+
+            map.put("id", getId() );
+            map.put("tid", getTypeId());
             map.put("connectors", connectors );
 
             return map;

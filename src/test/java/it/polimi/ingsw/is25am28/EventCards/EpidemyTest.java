@@ -23,63 +23,86 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EpidemyTest {
 
-//    /**
-//     * Outputs the given ship to terminal
-//     * @param ship The ship to print to terminal
-//     */
-//    void printShipGrid(Ship ship) {
-//        if (ship != null) {
-//            List<Component> components = new ArrayList<>();
-//            Component c;
-//            int rows = ship.getGridDimensions().getKey();
-//            int cols = ship.getGridDimensions().getValue();
-//            int i, j, k;
-//
-//            System.out.print("\n\\");
-//            for (i = 0; i < cols; i++) {
-//                System.out.print("\t" + i);
-//            }
-//            System.out.print("\n");
-//
-//            k = 0;
-//
-//            for (i = 0; i < rows; i++) {
-//                System.out.print(i + "\t");
-//                for (j = 0; j < cols; j++) {
-//                    c = ship.getComponent(i, j);
-//                    if (c == null) {
-//                        System.out.print("." + "\t");
-//                    }
-//                    else {
-//                        System.out.print(k++ + "\t");
-//                        components.add(c);
-//                    }
-//                }
-//                System.out.print("\n");
-//            }
-//
-//            int size = components.size();
-//
-//            System.out.println("\nFound these components:");
-//
-//            for (i = 0; i < size; i++) {
-//                System.out.println(i + " - " + components.get(i));
-//            }
-//        }
-//        else {
-//            System.out.println("ERROR: Given ship is null");
-//        }
-//    }
+    List<Integer> getConnectors(){
+        List<Integer> connectors = new ArrayList<>();
+
+        for( int i = 0; i < 4; i++ )
+            connectors.add( THREE_PIPES.ordinal() );
+        return connectors;
+    }
+
+    void add2PlayersToBoard( Board board ){
+
+        Player p1 = new Player("p1", PlayerColor.RED, 2);
+        Player p2 = new Player("p2", PlayerColor.BLUE, 2);
+
+        board.newPlayer(p1);
+        board.newPlayer(p2);
+    }
+
+    void add3PlayersToBoard( Board board ){
+
+        Player p1 = new Player("p1", PlayerColor.RED, 2);
+        Player p2 = new Player("p2", PlayerColor.BLUE, 2);
+        Player p3 = new Player("p3", PlayerColor.YELLOW, 2);
+
+        board.newPlayer(p1);
+        board.newPlayer(p2);
+        board.newPlayer(p3);
+    }
+
+    /**
+     * Outputs the given ship to terminal
+     * @param ship The ship to print to terminal
+     */
+    void printShipGrid(Ship ship) {
+        if (ship != null) {
+            List<Component> components = new ArrayList<>();
+            Component c;
+            int rows = ship.getGridDimensions().getKey();
+            int cols = ship.getGridDimensions().getValue();
+            int i, j, k;
+
+            System.out.print("\n\\");
+            for (i = 0; i < cols; i++) {
+                System.out.print("\t" + i);
+            }
+            System.out.print("\n");
+
+            k = 0;
+
+            for (i = 0; i < rows; i++) {
+                System.out.print(i + "\t");
+                for (j = 0; j < cols; j++) {
+                    c = ship.getComponent(i, j);
+                    if (c == null) {
+                        System.out.print("." + "\t");
+                    }
+                    else {
+                        System.out.print(k++ + "\t");
+                        components.add(c);
+                    }
+                }
+                System.out.print("\n");
+            }
+
+            int size = components.size();
+
+            System.out.println("\nFound these components:");
+
+            for (i = 0; i < size; i++) {
+                System.out.println(i + " - " + components.get(i));
+            }
+        }
+        else {
+            System.out.println("ERROR: Given ship is null");
+        }
+    }
 
     void initCustomShip(Player player) {
         Ship ship = player.getShip();
 
-        List<Integer> connectors = new ArrayList<Integer>();
-
-        // Default connector is THREE_PIPES
-        for (int i = 0; i < 4; i++) {
-            connectors.add(THREE_PIPES.ordinal());
-        }
+        List<Integer> connectors = getConnectors();
 
         /*
                ==== Ship Configuration (LEVEL 2) ====
@@ -175,9 +198,8 @@ class EpidemyTest {
 
         Board board = new BoardLevel2();
 
-        board.newPlayer("p1", PlayerColor.RED);
-        board.newPlayer("p2", PlayerColor.BLUE);
-        board.newPlayer("p3", PlayerColor.YELLOW);
+
+        add3PlayersToBoard( board );
 
         for (Player player : board.getPlayers()) {
             initCustomShip(player);
@@ -187,12 +209,8 @@ class EpidemyTest {
         Ship shipPlayer2 = board.getPlayers().get(1).getShip();
         Ship shipPlayer3 = board.getPlayers().get(2).getShip();
 
-        List<Integer> connectors = new ArrayList<Integer>();
+        List<Integer> connectors = getConnectors();
 
-        // Default connector is THREE_PIPES
-        for (int i = 0; i < 4; i++) {
-            connectors.add(THREE_PIPES.ordinal());
-        }
 
         Cabin cabin2 = new Cabin(connectors, false);
         Cabin cabin3 = new Cabin(connectors, false);
@@ -356,8 +374,7 @@ class EpidemyTest {
 
         Board board = new BoardLevel2();
 
-        board.newPlayer("p1", PlayerColor.RED);
-        board.newPlayer("p2", PlayerColor.BLUE);
+        add2PlayersToBoard(board);
 
         for (Player player : board.getPlayers()) {
             initCustomShip(player);
@@ -366,12 +383,8 @@ class EpidemyTest {
         Ship shipPlayer1 = board.getPlayers().get(0).getShip();
         Ship shipPlayer2 = board.getPlayers().get(1).getShip();
 
-        List<Integer> connectors = new ArrayList<Integer>();
+        List<Integer> connectors = getConnectors();
 
-        // Default connector is THREE_PIPES
-        for (int i = 0; i < 4; i++) {
-            connectors.add(THREE_PIPES.ordinal());
-        }
 
         Cabin cabin2 = new Cabin(connectors, false);
         Cabin cabin3 = new Cabin(connectors, false);
@@ -440,9 +453,8 @@ class EpidemyTest {
         //              when Epidemy strikes the number of lifeforms should stay at 4 (2 aliens and 2 humans)
 
         Board board = new BoardLevel2();
-
-        board.newPlayer("p1", PlayerColor.RED);
-        board.newPlayer("p2", PlayerColor.BLUE);
+        
+        add2PlayersToBoard(board);
 
         for (Player player : board.getPlayers()) {
             initCustomShip(player);
@@ -451,12 +463,8 @@ class EpidemyTest {
         Ship shipPlayer1 = board.getPlayers().get(0).getShip();
         Ship shipPlayer2 = board.getPlayers().get(1).getShip();
 
-        List<Integer> connectors = new ArrayList<Integer>();
+        List<Integer> connectors = getConnectors();
 
-        // Default connector is THREE_PIPES
-        for (int i = 0; i < 4; i++) {
-            connectors.add(THREE_PIPES.ordinal());
-        }
 
         Cabin cabin2 = new Cabin(connectors, false);
         Cabin cabin3 = new Cabin(connectors, false);
@@ -481,17 +489,17 @@ class EpidemyTest {
 
         alienCoords = new HashMap<>();
         alienCoords.put(1, new Pair<>(7, 7));
-        shipJSON = new ShipJSON("P1", alienCoords);
+        shipJSON = new ShipJSON("p1", alienCoords);
         shipPlayer1.setChosenAliensForEligibleCabins(shipJSON);
 
         alienCoords = new HashMap<>();
         alienCoords.put(1, new Pair<>(7, 7));
-        shipJSON = new ShipJSON("P2", alienCoords);
+        shipJSON = new ShipJSON("p2", alienCoords);
         shipPlayer2.setChosenAliensForEligibleCabins(shipJSON);
 
         alienCoords = new HashMap<>();
         alienCoords.put(2, new Pair<>(6, 8));
-        shipJSON = new ShipJSON("P2", alienCoords);
+        shipJSON = new ShipJSON("p2", alienCoords);
         shipPlayer2.setChosenAliensForEligibleCabins(shipJSON);
 
         Epidemy epidemy = new Epidemy(
