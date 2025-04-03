@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import it.polimi.ingsw.is25am28.ActionJSON.NetworkJSON;
 import it.polimi.ingsw.is25am28.GameModel.GameModel;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.State.NetworkState;
@@ -86,7 +85,7 @@ public class Controller {
 
       private synchronized Controller useResponse( Object json ){
 
-            NetworkJSON res = (NetworkJSON)json;
+            /*NetworkJSON res = (NetworkJSON)json;
 
             if( num == 0 ){
                   createNewGameModel( 
@@ -118,7 +117,7 @@ public class Controller {
 
             if( isWaitingForSomeone() ){
                   sendRequest(waitingQueue.getFirst());
-            }
+            }*/
 
             return this;
       }
@@ -141,7 +140,7 @@ public class Controller {
             GameModel model = register.get(id);
             Object state;
             try{
-                  state = model.play( response );
+                  /*state = model.play( response );
 
                   if( state == null ){
                         // session ended
@@ -152,7 +151,7 @@ public class Controller {
                         return this;
                   }
 
-                  network.sendToAll( model.getPlayersNickname(), state );
+                  network.sendToAll( model.getPlayersNickname(), state );*/
 
             }catch( Error e ){
                   // discard the catch-ed error and notify the client
@@ -165,7 +164,7 @@ public class Controller {
       }
 
       public Controller onMessageArrived( Object request ){
-            NetworkJSON json = (NetworkJSON)request;
+            /*NetworkJSON json = (NetworkJSON)request;
 
             if( json.getAction() == NetworkJSON.Action.CONNECT ){
                   connectPlayer( json.getNickname() );
@@ -173,7 +172,7 @@ public class Controller {
                   useResponse(json);
             }else if( json.getAction() == NetworkJSON.Action.PLAY ){
                   play( json.getNickname(), json.getResponse() );
-            }
+            }*/
 
             return this;
       }     
