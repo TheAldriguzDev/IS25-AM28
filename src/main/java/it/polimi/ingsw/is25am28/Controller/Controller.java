@@ -1,17 +1,7 @@
 package it.polimi.ingsw.is25am28.Controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import it.polimi.ingsw.is25am28.ActionJSON.NetworkJSON;
-import it.polimi.ingsw.is25am28.GameModel.GameModel;
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.State.NetworkState;
-import it.polimi.ingsw.is25am28.State.State;
-
 public class Controller {
-
+      /*
       static private int id = 0;
 
       // register that hold all the games available
@@ -43,7 +33,7 @@ public class Controller {
       /**
        * if true, the leader is choosing the 
        * configuration of the game session
-       */
+       *
       private Boolean isWaitingForSomeone(){
             return waitingQueue.size() > 0;
       }
@@ -68,7 +58,7 @@ public class Controller {
        * it also requires data about number of players and level of the game
        * @param nickname
        * @return
-       */
+       *
       private Controller sendRequest( String nickname ){
             NetworkState state = new NetworkState();
 
@@ -141,7 +131,7 @@ public class Controller {
             GameModel model = register.get(id);
             Object state;
             try{
-                  state = model.play( response );
+                  // state = model.play( response );
 
                   if( state == null ){
                         // session ended
@@ -186,5 +176,5 @@ public class Controller {
 
             return this;
       }
-
+      */
 }

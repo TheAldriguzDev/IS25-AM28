@@ -27,7 +27,7 @@ public class Pirates extends EventCard {
     Pair<Integer, Integer> currentPlasmaShot;
 
     private boolean firstRound;
-    ArrayList<Player> playersToHit;
+    List<Player> playersToHit;
     private boolean hasBeenDefeated;
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board) {
