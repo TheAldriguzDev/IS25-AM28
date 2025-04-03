@@ -428,66 +428,64 @@ public class Ship {
 
                 switch (component) {
                     case Cabin cabin -> {
-                        switch (alienType) {
-                            case 1 -> {
-                                // LifeformType.PURPLE_ALIEN.ordinal() == 1
-                                if (this.purpleAlienPosition == null) {
-                                    Component[] neighbours = this.getNearestComponents(cabin);
-                                    vitalFound = false;
+                        if (alienType == LifeformType.PURPLE_ALIEN.ordinal()) {
+                            if (this.purpleAlienPosition == null) {
+                                Component[] neighbours = this.getNearestComponents(cabin);
+                                vitalFound = false;
 
-                                    for (Component neighbour : neighbours) {
-                                        switch (neighbour) {
-                                            case Vital vital -> {
-                                                if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
-                                                    vitalFound = true;
-                                                }
+                                for (Component neighbour : neighbours) {
+                                    switch (neighbour) {
+                                        case Vital vital -> {
+                                            if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
+                                                vitalFound = true;
                                             }
-                                            case null, default -> {}
                                         }
+                                        case null, default -> {}
                                     }
+                                }
 
-                                    if (vitalFound) {
-                                        cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
-                                        this.purpleAlienPosition = cabin;
-                                    }
-                                    else {
-                                        throw new IllegalArgumentException("ERROR: Cabin cannot support purple alien life (no purple vital units as neighbours)");
-                                    }
+                                if (vitalFound) {
+                                    cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
+                                    this.purpleAlienPosition = cabin;
                                 }
                                 else {
-                                    throw new TooManyAliensException("ERROR: Cannot have more than 1 purple alien onboard");
+                                    throw new IllegalArgumentException("ERROR: Cabin cannot support purple alien life (no purple vital units as neighbours)");
                                 }
                             }
-                            case 2 -> {
-                                // LifeformType.BROWN_ALIEN.ordinal() == 2
-                                if (this.brownAlienPosition == null) {
-                                    Component[] neighbours = this.getNearestComponents(cabin);
-                                    vitalFound = false;
+                            else {
+                                throw new TooManyAliensException("ERROR: Cannot have more than 1 purple alien onboard");
+                            }
+                        }
+                        else if (alienType == LifeformType.BROWN_ALIEN.ordinal()) {
+                            if (this.brownAlienPosition == null) {
+                                Component[] neighbours = this.getNearestComponents(cabin);
+                                vitalFound = false;
 
-                                    for (Component neighbour : neighbours) {
-                                        switch (neighbour) {
-                                            case Vital vital -> {
-                                                if (vital.getVitalType() == VitalType.BROWN_VITAL) {
-                                                    vitalFound = true;
-                                                }
+                                for (Component neighbour : neighbours) {
+                                    switch (neighbour) {
+                                        case Vital vital -> {
+                                            if (vital.getVitalType() == VitalType.BROWN_VITAL) {
+                                                vitalFound = true;
                                             }
-                                            case null, default -> {}
                                         }
+                                        case null, default -> {}
                                     }
+                                }
 
-                                    if (vitalFound) {
-                                        cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
-                                        this.brownAlienPosition = cabin;
-                                    }
-                                    else {
-                                        throw new IllegalArgumentException("ERROR: Cabin cannot support brown alien life (no brown vital units as neighbours)");
-                                    }
+                                if (vitalFound) {
+                                    cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+                                    this.brownAlienPosition = cabin;
                                 }
                                 else {
-                                    throw new TooManyAliensException("ERROR: Cannot have more than 1 brown alien onboard");
+                                    throw new IllegalArgumentException("ERROR: Cabin cannot support brown alien life (no brown vital units as neighbours)");
                                 }
                             }
-                            default -> throw new IllegalStateException("ERROR: Given alien type is not valid");
+                            else {
+                                throw new TooManyAliensException("ERROR: Cannot have more than 1 brown alien onboard");
+                            }
+                        }
+                        else {
+                            throw new IllegalStateException("ERROR: Given alien type is not valid");
                         }
                     }
                     case null, default -> throw new IllegalArgumentException("ERROR: Component is not a cabin");
