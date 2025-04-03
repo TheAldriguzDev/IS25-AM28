@@ -90,9 +90,6 @@ public class WarZone extends EventCard {
 
             // Handle when the current player is the last one of the playerList
             if (currentIndex == players.size() - 1) {
-
-
-
                 // When we played all the possible actions of the card --> mark the card as used
                 // Otherwise revalidate the players positions and reset the playerList since the order could be different
                 if (current_action == cardActions.size() - 1) {
@@ -119,7 +116,7 @@ public class WarZone extends EventCard {
     }
 
     /**
-     * Methods that needs to handle the user interaction, more precisely it handles the different type of action
+     * Method that needs to handle the user interaction, more precisely it handles the different types of actions
      * */
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
@@ -135,6 +132,7 @@ public class WarZone extends EventCard {
         } catch (Exception e) {
             throw new IllegalArgumentException("The given JSON data is not a valid warZoneJSON");
         }
+
         // Check if the card can be used by matching the player
         String playerNickname = warZoneJSON.getPlayerNickname();
         if ( playerNickname == null ||
@@ -142,7 +140,8 @@ public class WarZone extends EventCard {
                 !playerNickname.equals(this.getCurrentPlayer().get().getNickname()) ) {
             throw new IllegalArgumentException("The given player does not match with the current one!");
         }
-        // Use the card with the specific action
+
+        // Switch the handling to the specific action
         WarZoneActionConsequencePair currentAction = this.cardActions.get(this.current_action);
         switch (currentAction.getAction()) {
             // Needs to handle multiple user input, and then we can apply the effect
@@ -168,16 +167,18 @@ public class WarZone extends EventCard {
     /**
      * This method handle two different possible behavior:
      * 1. When it needs the user input it will store them in the map
-     * 2. When the affected player is determined it will apply the effects to it
+     * 2. When the affected player is present it will apply the effects to it
      * */
     private WarZone handleFirePower(WarZoneActionConsequencePair warZoneAction, WarZoneJSON warZoneJSON) {
-        // If the affected player is present we can execute the effect (Will be used when the consequence are the plasma shots)
+        // If the affected player is present we can execute the effect
         if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
             this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
         } else {
             // If we do not have the affected player yet, it means that we need to store the given inputs
 
-            this.getCurrentPlayer().ifPresent( p -> {
+            if (this.getCurrentPlayer().isPresent()) {
+                Player p = this.getCurrentPlayer().get();
+
                 float totalPower = 0;
 
                 // Compute the power of the normal cannons
@@ -212,20 +213,25 @@ public class WarZone extends EventCard {
                     if (tmpPlayer != null) {
                         this.affectedPlayer = Optional.of(tmpPlayer);
                         this.currentPlayer = Optional.of(tmpPlayer);
-                        // If the consequence is one of MOVEMENTSTEPS - REQUIREDCREW - LOSSITEMS --> We can apply them immediately,
-                        // for the SHOOTINGSEQUENCE we need to wait for player inputs
+                        // If the consequence is MOVEMENTSTEPS --> We can apply them immediately,
+                        // for the others we need to wait for user inputs
                         switch (warZoneAction.getConsequence()) {
-                            case MOVEMENTSTEPS -> this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
+                            case MOVEMENTSTEPS -> {
+                                this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
+                                return this;
+                            }
                             case null, default -> { }
                         }
                     } else {
                         this.affectedPlayer = Optional.empty();
                     }
                 }
+
+                // If we do not have the affected player yet --> we are collecting players inputs
                 if (this.affectedPlayer.isEmpty()) {
                     this.getNextPlayer();
                 }
-            });
+            }
         }
 
         return this;
@@ -243,7 +249,9 @@ public class WarZone extends EventCard {
         } else {
             // If we do not have the affected player yet, it means that we need to store the given inputs
 
-            this.getCurrentPlayer().ifPresent( p -> {
+            if (this.getCurrentPlayer().isPresent()) {
+                Player p = this.getCurrentPlayer().get();
+
                 // Get the total power of the player and store it
                 int usedEnergy = warZoneJSON.getUsedEnergy();
                 int totalEnginePower = p.getShip().getEnginePower(usedEnergy);
@@ -264,25 +272,28 @@ public class WarZone extends EventCard {
                         }
                     }
 
-
-
                     if (tmpPlayer != null) {
                         this.affectedPlayer = Optional.of(tmpPlayer);
                         this.currentPlayer = Optional.of(tmpPlayer);
-                        // If the consequence is one of MOVEMENTSTEPS - REQUIREDCREW - LOSSITEMS --> We can apply them immediately,
-                        // for the SHOOTINGSEQUENCE we need to wait for player inputs
+                        // If the consequence is MOVEMENTSTEPS --> We can apply them immediately,
+                        // for the others we need to wait for user inputs
                         switch (warZoneAction.getConsequence()) {
-                            case MOVEMENTSTEPS -> this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
+                            case MOVEMENTSTEPS -> {
+                                this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
+                                return this;
+                            }
                             case null, default -> { }
                         }
                     } else {
                         this.affectedPlayer = Optional.empty();
                     }
                 }
+
+                // If we do not have the affected player yet --> we are collecting players inputs
                 if (this.affectedPlayer.isEmpty()) {
                     this.getNextPlayer();
                 }
-            });
+            }
         }
 
         return this;
@@ -310,27 +321,31 @@ public class WarZone extends EventCard {
                 this.affectedPlayer = tmpPlayer;
                 this.currentPlayer = tmpPlayer;
 
-                // If the consequence is one of MOVEMENTSTEPS - REQUIREDCREW - LOSSITEMS --> We can apply them immediately,
-                // for the SHOOTINGSEQUENCE we need to wait for player inputs
+                // If the consequence is MOVEMENTSTEPS --> We can apply them immediately,
+                // for the others we need to wait for user inputs
                 switch (warZoneAction.getConsequence()) {
-                    case MOVEMENTSTEPS -> this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
+                    case MOVEMENTSTEPS -> {
+                        this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
+                        return this;
+                    }
                     case null, default -> { }
                 }
             } else {
                 this.affectedPlayer = Optional.empty();
             }
-            // Fix test
+
+            // If we do not have the affected player yet --> we are collecting the users input
             if (this.affectedPlayer.isEmpty()) {
                 this.getNextPlayer();
             }
         }
 
-
         return this;
     }
 
     /**
-     * Apply the consequence of the card to a specific player
+     * Apply the consequence of the card to the affected player.
+     * The method getNextPlayer is used to go to the next action or the mark the card as used.
      * */
     private WarZone applyConsequence(Player player, WarZoneJSON warZoneJSON) throws IllegalStateException, NoSuchElementException {
         WarZoneActionConsequencePair currentAction = this.cardActions.get(this.current_action);
@@ -358,7 +373,7 @@ public class WarZone extends EventCard {
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or to mark the card as used
                 this.affectedPlayer = Optional.empty();
                 this.currentPlayer = Optional.of(this.players.getLast());
-                //this.getNextPlayer();
+                this.getNextPlayer();
             }
             case SHOOTINGSEQUENCE -> {
                 this.handlePlasmaShot(player, warZoneJSON);
