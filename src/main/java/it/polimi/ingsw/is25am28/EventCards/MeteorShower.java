@@ -20,8 +20,6 @@ import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Connector.ZERO_PIPES;
 
-// TODO: Change the reference frame (0 != meteor POINTS to the top, but 0 == meteor COMES from the top)
-
 public class MeteorShower extends EventCard {
     private final List<Meteor> meteorSequence;
     private int currMeteorIndex;

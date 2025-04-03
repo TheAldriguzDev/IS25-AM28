@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Ship;
 
-import it.polimi.ingsw.is25am28.ActionJSON.ShipJSON;
 import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
@@ -514,16 +513,18 @@ class ShipTest {
     }
 
     @Test
-    void setChosenAliensForEligibleCabins_settingPurpleAlien() {
+    void addLifeformToCabin_addingPurpleAlienTest() {
         Ship ship = initCustomShip();
 
-        Map<Integer, Pair<Integer, Integer>> chosenAliens = new HashMap<>();
+//        Map<Integer, Pair<Integer, Integer>> chosenAliens = new HashMap<>();
+//
+//        chosenAliens.put(1, new Pair<Integer, Integer>(7, 7));
+//
+//        ShipJSON shipJson = new ShipJSON("p1", chosenAliens);
+//
+//        ship.setChosenAliensForEligibleCabins(shipJson);
 
-        chosenAliens.put(1, new Pair<Integer, Integer>(7, 7));
-
-        ShipJSON shipJson = new ShipJSON("p1", chosenAliens);
-
-        ship.setChosenAliensForEligibleCabins(shipJson);
+        ship.addLifeformToCabin(7, 7, PURPLE_ALIEN);
 
         assertEquals(LifeformType.PURPLE_ALIEN.ordinal(), ((Cabin) ship.getComponent(7, 7)).getInhabitants().getFirst().getLifeformType().ordinal());
         assertEquals(0, ((Cabin) ship.getComponent(7, 7)).getAvailableSpace());
@@ -531,12 +532,10 @@ class ShipTest {
 
     @Test
     void getFirePower() {
-        Map<Integer, Pair<Integer, Integer>> alienCoords;
         List<Pair<Integer, Integer>> doubleCannonCoords;
         int expectedFirePower;
-
-        ShipJSON shipJSON;
         Ship ship;
+
         List<Integer> connectors = new ArrayList<>();
 
         // Default connector is THREE_PIPES
@@ -553,10 +552,12 @@ class ShipTest {
         ship.addComponent(new Cabin(connectors, false), 6, 7);
         ship.addComponent(new Vital(connectors, PURPLE_VITAL.ordinal()), 6, 8);
 
-        alienCoords = new HashMap<>();
-        alienCoords.put(PURPLE_ALIEN.ordinal(), new Pair<>(6, 7));
-        shipJSON = new ShipJSON("p1", alienCoords);
-        ship.setChosenAliensForEligibleCabins(shipJSON);
+//        alienCoords = new HashMap<>();
+//        alienCoords.put(PURPLE_ALIEN.ordinal(), new Pair<>(6, 7));
+//        shipJSON = new ShipJSON("p1", alienCoords);
+//        ship.setChosenAliensForEligibleCabins(shipJSON);
+
+        ship.addLifeformToCabin(6, 7, PURPLE_ALIEN);
 
         expectedFirePower = 0;
         assertEquals(expectedFirePower, ship.getFirePower(null));
@@ -569,10 +570,12 @@ class ShipTest {
         expectedFirePower = 2;
         assertEquals(expectedFirePower, ship.getFirePower(doubleCannonCoords));
 
-        alienCoords = new HashMap<>();
-        alienCoords.put(PURPLE_ALIEN.ordinal(), new Pair<>(7, 7));
-        shipJSON = new ShipJSON("p1", alienCoords);
-        ship.setChosenAliensForEligibleCabins(shipJSON);
+//        alienCoords = new HashMap<>();
+//        alienCoords.put(PURPLE_ALIEN.ordinal(), new Pair<>(7, 7));
+//        shipJSON = new ShipJSON("p1", alienCoords);
+//        ship.setChosenAliensForEligibleCabins(shipJSON);
+
+        ship.addLifeformToCabin(7, 7, PURPLE_ALIEN);
 
         // Case 3 - baseline engine power + purple alien on board
         doubleCannonCoords = new ArrayList<>();
@@ -599,10 +602,9 @@ class ShipTest {
 
     @Test
     void getEnginePower() {
-        Map<Integer, Pair<Integer, Integer>> alienCoords;
         int expectedEnginePower, batteries;
-        ShipJSON shipJSON;
         Ship ship;
+
         List<Integer> connectors = new ArrayList<>();
 
         // Default connector is THREE_PIPES
@@ -620,10 +622,12 @@ class ShipTest {
         ship.addComponent(new Cabin(connectors, false), 6, 7);
         ship.addComponent(new Vital(connectors, BROWN_VITAL.ordinal()), 6, 8);
 
-        alienCoords = new HashMap<>();
-        alienCoords.put(BROWN_ALIEN.ordinal(), new Pair<>(6, 7));
-        shipJSON = new ShipJSON("p1", alienCoords);
-        ship.setChosenAliensForEligibleCabins(shipJSON);
+//        alienCoords = new HashMap<>();
+//        alienCoords.put(BROWN_ALIEN.ordinal(), new Pair<>(6, 7));
+//        shipJSON = new ShipJSON("p1", alienCoords);
+//        ship.setChosenAliensForEligibleCabins(shipJSON);
+
+        ship.addLifeformToCabin(6, 7, BROWN_ALIEN);
 
         batteries = 0;
         expectedEnginePower = 0;
@@ -637,10 +641,12 @@ class ShipTest {
         expectedEnginePower = 3;
         assertEquals(expectedEnginePower, ship.getEnginePower(batteries));
 
-        alienCoords = new HashMap<>();
-        alienCoords.put(BROWN_ALIEN.ordinal(), new Pair<>(7, 7));
-        shipJSON = new ShipJSON("p1", alienCoords);
-        ship.setChosenAliensForEligibleCabins(shipJSON);
+//        alienCoords = new HashMap<>();
+//        alienCoords.put(BROWN_ALIEN.ordinal(), new Pair<>(7, 7));
+//        shipJSON = new ShipJSON("p1", alienCoords);
+//        ship.setChosenAliensForEligibleCabins(shipJSON);
+
+        ship.addLifeformToCabin(7, 7, BROWN_ALIEN);
 
         // Case 3 - baseline engine power + brown alien on board
         batteries = 0;
@@ -1480,14 +1486,12 @@ class ShipTest {
 
     @Test
     void addingBothAliensToTheShip() {
-        Map<Integer, Pair<Integer, Integer>> chosenAliens;
-        Ship ship;
-
         List<Integer> connectors = new ArrayList<>();
+        Ship ship;
 
         // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors.add( THREE_PIPES.ordinal() );
+            connectors.add(THREE_PIPES.ordinal());
         }
 
         // (1) - Adding both aliens
@@ -1496,12 +1500,8 @@ class ShipTest {
         ship.addComponent(new Cabin(connectors, false), 6, 8);  // Adding another cabin to the brown vital unit
         ship.generateComponentSubLists();
 
-        chosenAliens = new HashMap<>();
-        chosenAliens.put(1, new Pair<Integer, Integer>(7, 7));
-        chosenAliens.put(2, new Pair<Integer, Integer>(6, 8));
-
-        ShipJSON shipJSON = new ShipJSON("p1", chosenAliens);
-        ship.setChosenAliensForEligibleCabins(shipJSON);
+        ship.addLifeformToCabin(7, 7, PURPLE_ALIEN);
+        ship.addLifeformToCabin(6, 8, BROWN_ALIEN);
 
         // Expecting to have 2 aliens only onboard of the ship
         assertEquals(2, ship.getAllLifeforms().stream().filter(l -> (l.getLifeformType() == BROWN_ALIEN || l.getLifeformType() == LifeformType.PURPLE_ALIEN)).toList().size());
@@ -1516,7 +1516,7 @@ class ShipTest {
 
         // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors.add( THREE_PIPES.ordinal() );
+            connectors.add(THREE_PIPES.ordinal());
         }
 
         // Adding purpleAlien to a brownAlien-eligible cabin (the one @ coords (6, 8))
@@ -1525,22 +1525,8 @@ class ShipTest {
         ship.addComponent(new Cabin(connectors, false), 6, 8);  // Adding another cabin to the brown vital unit
         ship.generateComponentSubLists();
 
-        chosenAliens = new HashMap<>();
-        chosenAliens.put(1, new Pair<Integer, Integer>(6, 8));
-
-        ShipJSON shipJSON = new ShipJSON("p1", chosenAliens);
-
-        IllegalArgumentException iae = assertThrowsExactly(IllegalArgumentException.class, () -> ship.setChosenAliensForEligibleCabins(shipJSON));
-
-//        try {
-//            ship.setChosenAliensForEligibleCabins(shipJSON);
-//        }
-//        catch (IllegalArgumentException e) {
-//            // Wrong behavior exception was caught correctly
-//        }
-//        catch (Exception e) {
-//            fail("Wrong exception caught");
-//        }
+        ship.addLifeformToCabin(6, 8, PURPLE_ALIEN);
+        assertEquals(0, ((Cabin) ship.getComponent(6, 8)).getInhabitants().size());
     }
 
     @Test
@@ -1565,9 +1551,6 @@ class ShipTest {
         Vital brownVital1 = new Vital(connectors, BROWN_VITAL.ordinal());
         Vital brownVital2 = new Vital(connectors, BROWN_VITAL.ordinal());
 
-        Lifeform purpleAlien = new Lifeform(LifeformType.PURPLE_ALIEN);
-        Lifeform brownAlien = new Lifeform(BROWN_ALIEN);
-
         ship.addComponent(cabin, 6, 7);
         ship.addComponent(purpleVital1, 6, 8);
         ship.addComponent(purpleVital2, 5, 7);
@@ -1575,17 +1558,17 @@ class ShipTest {
 
         // Case 1 - Removing the vital unit has no problem (PURPLE alien, PURPLE vital)
         // (i.e.: another vital unit is now supporting the current alien)
-        cabin.addInhabitant(purpleAlien);
+        ship.addLifeformToCabin(6, 7, PURPLE_ALIEN);
         ship.removeComponent(5, 7);
         assertEquals(1, cabin.getInhabitants().size());
-        assertEquals(purpleAlien, cabin.getInhabitants().getFirst());
+        assertEquals(PURPLE_ALIEN, cabin.getInhabitants().getFirst().getLifeformType());
         ship.addComponent(purpleVital2, 5, 7);
 
         // Case 2 - Removing the vital unit has no problem (PURPLE alien, BROWN vital)
         // (i.e.: another vital unit is now supporting the current alien)
         ship.removeComponent(7, 7);
         assertEquals(1, cabin.getInhabitants().size());
-        assertEquals(purpleAlien, cabin.getInhabitants().getFirst());
+        assertEquals(PURPLE_ALIEN, cabin.getInhabitants().getFirst().getLifeformType());
         ship.addComponent(brownVital1, 7, 7);
 
         // Case 3 - Removing both purple vital units should remove the purpleAlien in the cabin
@@ -1598,20 +1581,20 @@ class ShipTest {
         // Substituting a purple vital with a brown vital
         // and adding a brownAlien to the cabin
         ship.addComponent(brownVital2, 6, 8);
-        cabin.addInhabitant(brownAlien);
+        ship.addLifeformToCabin(6, 7, BROWN_ALIEN);
 
         // Case 4 - Removing the vital unit has no problem (BROWN alien, BROWN vital)
         // (i.e.: another vital unit is now supporting the current alien)
         ship.removeComponent(6, 8);
         assertEquals(1, cabin.getInhabitants().size());
-        assertEquals(brownAlien, cabin.getInhabitants().getFirst());
+        assertEquals(BROWN_ALIEN, cabin.getInhabitants().getFirst().getLifeformType());
         ship.addComponent(brownVital2, 6, 8);
 
         // Case 5 - Removing the vital unit has no problem (BROWN alien, PURPLE vital)
         // (i.e.: another vital unit is now supporting the current alien)
         ship.removeComponent(5, 7);
         assertEquals(1, cabin.getInhabitants().size());
-        assertEquals(brownAlien, cabin.getInhabitants().getFirst());
+        assertEquals(BROWN_ALIEN, cabin.getInhabitants().getFirst().getLifeformType());
         ship.addComponent(purpleVital2, 5, 7);
 
         // Case 6 - Removing both brown vital units should remove the brownAlien in the cabin

@@ -2,7 +2,6 @@ package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.ActionJSON.ShipJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.WarZoneJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
@@ -21,9 +20,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
-import javax.swing.*;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -69,12 +66,18 @@ class WarZoneTest {
         board = new BoardLevel2();
         board.buildBoard();
 
-        board.newPlayer("Player 1", PlayerColor.RED);
-        board.newPlayer("Player 2", PlayerColor.BLUE);
-        board.newPlayer("Player 3", PlayerColor.GREEN);
-        board.newPlayer("Player 4", PlayerColor.YELLOW);
+        List<Player> players = new ArrayList<Player>();
 
-        List<Player> players = board.getPlayers();
+        players.add(new Player("Player 1", PlayerColor.RED, 2));
+        players.add(new Player("Player 2", PlayerColor.BLUE, 2));
+        players.add(new Player("Player 3", PlayerColor.GREEN, 2));
+        players.add(new Player("Player 4", PlayerColor.YELLOW, 2));
+
+        for (Player player : players) {
+            this.board.newPlayer(player);
+        }
+
+        players = board.getPlayers();
         p1 = players.get(0);
         p2 = players.get(1);
         p3 = players.get(2);
@@ -160,13 +163,13 @@ class WarZoneTest {
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
-                // Player 4 has to send lifeform to remove
-                actionJSON = new WarZoneJSON("Player 4", 0, lifeformsToRemove_4, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
-                warzone.useCard(actionJSON);
-                assertFalse(warzone.hasFinished());
+            // Player 4 has to send lifeform to remove
+            actionJSON = new WarZoneJSON("Player 4", 0, lifeformsToRemove_4, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+            warzone.useCard(actionJSON);
+            assertFalse(warzone.hasFinished());
 
-                assertEquals(1, board.getEliminatedPlayers().size());
-                assertEquals(eliminatedPlayers.get(0), board.getEliminatedPlayers().get(0));
+            assertEquals(1, board.getEliminatedPlayers().size());
+            assertEquals(eliminatedPlayers.get(0), board.getEliminatedPlayers().get(0));
 
         //Lowest Firepower action
             // actionJson del player 1
@@ -364,22 +367,70 @@ class WarZoneTest {
     *
     * This is the ship with the lowest firepower*/
     public void ship_init1(Ship ship) {
-        Cabin cabin_1 = new Cabin(new int[] {0, 1, 1, 1}, false);
+        List<Integer> connectors1 = new ArrayList<Integer>();
+        connectors1.add(0);
+        connectors1.add(1);
+        connectors1.add(0);
+        connectors1.add(1);
+
+        List<Integer> connectors2 = new ArrayList<Integer>();
+        connectors2.add(1);
+        connectors2.add(1);
+        connectors2.add(0);
+        connectors2.add(1);
+
+        List<Integer> connectors3 = new ArrayList<Integer>();
+        connectors3.add(0);
+        connectors3.add(0);
+        connectors3.add(1);
+        connectors3.add(0);
+
+        List<Integer> connectors4 = new ArrayList<Integer>();
+        connectors4.add(0);
+        connectors4.add(1);
+        connectors4.add(0);
+        connectors4.add(0);
+
+        List<Integer> connectors5 = new ArrayList<Integer>();
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(1);
+
+        List<Integer> connectors6 = new ArrayList<Integer>();
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+
+        List<Integer> connectors7 = new ArrayList<Integer>();
+        connectors7.add(0);
+        connectors7.add(1);
+        connectors7.add(1);
+        connectors7.add(1);
+
+        List<Integer> connectors8 = new ArrayList<Integer>();
+        connectors8.add(1);
+        connectors8.add(0);
+        connectors8.add(0);
+        connectors8.add(0);
+
+        Cabin cabin_1 = new Cabin(connectors7, false);
         cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        Cabin cabin_2 = new Cabin(new int[] {0, 0, 0, 1}, false);
+        Cabin cabin_2 = new Cabin(connectors5, false);
         cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        Engine double_booster = new Engine(new int[] {1, 0, 0, 0}, 2);
+        Engine double_booster = new Engine(connectors8, 2);
 
-        Battery battery = new Battery(new int[] {0, 1, 1, 1}, 3);
+        Battery battery = new Battery(connectors7, 3);
 
-        Shield shield = new Shield(new int[] {0, 0, 0, 1});
+        Shield shield = new Shield(connectors5);
         shield.rotateRight(); // Covers right and lower side
 
-        Cannon single_cannon = new Cannon(new int[] {0, 1, 0, 0}, 1);
+        Cannon single_cannon = new Cannon(connectors4, 1);
 
         ship.addComponent(cabin_1, 6, 7);
         ship.addComponent(cabin_2, 6, 8);
@@ -406,29 +457,74 @@ class WarZoneTest {
     *
     * This is the ship with the lowest crew count*/
     public void ship_init2(Ship ship) {
-        Cabin cabin_1 = new Cabin(new int[] {0, 1, 0, 1}, false);
+        List<Integer> connectors1 = new ArrayList<Integer>();
+        connectors1.add(0);
+        connectors1.add(1);
+        connectors1.add(0);
+        connectors1.add(1);
+
+        List<Integer> connectors2 = new ArrayList<Integer>();
+        connectors2.add(1);
+        connectors2.add(1);
+        connectors2.add(0);
+        connectors2.add(1);
+
+        List<Integer> connectors3 = new ArrayList<Integer>();
+        connectors3.add(0);
+        connectors3.add(0);
+        connectors3.add(1);
+        connectors3.add(0);
+
+        List<Integer> connectors4 = new ArrayList<Integer>();
+        connectors4.add(0);
+        connectors4.add(1);
+        connectors4.add(0);
+        connectors4.add(0);
+
+        List<Integer> connectors5 = new ArrayList<Integer>();
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(1);
+
+        List<Integer> connectors6 = new ArrayList<Integer>();
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+
+        List<Integer> connectors7 = new ArrayList<Integer>();
+        connectors7.add(0);
+        connectors7.add(1);
+        connectors7.add(1);
+        connectors7.add(1);
+
+        List<Integer> connectors8 = new ArrayList<Integer>();
+        connectors8.add(1);
+        connectors8.add(0);
+        connectors8.add(0);
+        connectors8.add(0);
+
+        Cabin cabin_1 = new Cabin(connectors1, false);
         //cabin_1.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
 
-        Vital purple_vital = new Vital(new int[] {0, 1, 0, 0}, 0); // 0 -> purple, 1 -> brown
+        Vital purple_vital = new Vital(connectors4, 0); // 0 -> purple, 1 -> brown
 
-        Battery battery_1 = new Battery(new int[] {0, 0, 1, 0}, 3);
+        Battery battery_1 = new Battery(connectors3, 3);
 
-        Engine double_booster = new Engine(new int[] {1, 0, 0, 0}, 2);
+        Engine double_booster = new Engine(connectors8, 2);
 
-        Shield shield_top_right = new Shield(new int[] {0, 1, 0, 1});
+        Shield shield_top_right = new Shield(connectors1);
 
-        Shield shield_bottom_left = new Shield(new int[] {0, 1, 0, 0});
+        Shield shield_bottom_left = new Shield(connectors4);
         shield_bottom_left.rotateLeft();
         shield_bottom_left.rotateLeft();
 
-        Engine single_booster = new Engine(new int[] {0, 0, 0, 1}, 1);
+        Engine single_booster = new Engine(connectors5, 1);
 
-        Battery battery_2 = new Battery(new int[] {0, 1, 1, 1}, 3);
+        Battery battery_2 = new Battery(connectors7, 3);
 
-        Cannon double_cannon = new Cannon(new int[] {0, 1, 0, 0}, 2);
-
-        Map<Integer, Pair<Integer, Integer>> alienCoords;
-        ShipJSON shipJSON;
+        Cannon double_cannon = new Cannon(connectors4, 2);
 
         ship.addComponent(cabin_1, 6, 7);
         ship.addComponent(purple_vital, 6, 8);
@@ -442,10 +538,7 @@ class WarZoneTest {
 
         ship.generateComponentSubLists();
 
-        alienCoords = new HashMap<>();
-        alienCoords.put(PURPLE_ALIEN.ordinal(), new Pair<>(6, 7));
-        shipJSON = new ShipJSON("Player 2", alienCoords);
-        ship.setChosenAliensForEligibleCabins(shipJSON);
+        ship.addLifeformToCabin(6, 7, PURPLE_ALIEN);
 
         doubleCannons_2.add(new ComponentHelper<>(6, 4));
 
@@ -467,17 +560,74 @@ class WarZoneTest {
     *
     * This ship will not be affected by the WarZone since its lowestCrewCount and lowestFirepower are also present in ships ahead of it*/
     public void ship_init3(Ship ship) {
-        Cannon single_cannon = new Cannon(new int[] {0, 0, 1, 0}, 1);
+        List<Integer> connectors1 = new ArrayList<Integer>();
+        connectors1.add(0);
+        connectors1.add(1);
+        connectors1.add(0);
+        connectors1.add(1);
 
-        Engine single_booster = new Engine(new int[] {1, 0, 0, 1}, 1);
+        List<Integer> connectors2 = new ArrayList<Integer>();
+        connectors2.add(1);
+        connectors2.add(1);
+        connectors2.add(0);
+        connectors2.add(0);
 
-        Cabin cabin_1 = new Cabin(new int[] {0, 1, 1, 0}, false);
+        List<Integer> connectors3 = new ArrayList<Integer>();
+        connectors3.add(0);
+        connectors3.add(0);
+        connectors3.add(1);
+        connectors3.add(0);
+
+        List<Integer> connectors4 = new ArrayList<Integer>();
+        connectors4.add(0);
+        connectors4.add(1);
+        connectors4.add(0);
+        connectors4.add(0);
+
+        List<Integer> connectors5 = new ArrayList<Integer>();
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(1);
+
+        List<Integer> connectors6 = new ArrayList<Integer>();
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+
+        List<Integer> connectors7 = new ArrayList<Integer>();
+        connectors7.add(0);
+        connectors7.add(1);
+        connectors7.add(1);
+        connectors7.add(1);
+
+        List<Integer> connectors8 = new ArrayList<Integer>();
+        connectors8.add(1);
+        connectors8.add(0);
+        connectors8.add(0);
+        connectors8.add(0);
+
+        List<Integer> connectors9 = new ArrayList<Integer>();
+        connectors9.add(1);
+        connectors9.add(0);
+        connectors9.add(0);
+        connectors9.add(1);
+
+        List<Integer> connectors10 = new ArrayList<Integer>();
+        connectors10.add(0);
+        connectors10.add(1);
+        connectors10.add(1);
+        connectors10.add(0);
+
+        Cannon single_cannon = new Cannon(connectors3, 1);
+
+        Engine single_booster = new Engine(connectors9, 1);
+
+        Cabin cabin_1 = new Cabin(connectors10, false);
         //cabin_1.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
 
-        Vital brown_vital = new Vital(new int[] {1, 1, 0, 0}, 1);
-
-        Map<Integer, Pair<Integer, Integer>> alienCoords;
-        ShipJSON shipJSON;
+        Vital brown_vital = new Vital(connectors2, 1);
 
         ship.addComponent(single_cannon, 5, 6);
         ship.addComponent(single_booster, 7, 6);
@@ -486,10 +636,7 @@ class WarZoneTest {
 
         ship.generateComponentSubLists();
 
-        alienCoords = new HashMap<>();
-        alienCoords.put(BROWN_ALIEN.ordinal(), new Pair<>(6, 5));
-        shipJSON = new ShipJSON("Player 3", alienCoords);
-        ship.setChosenAliensForEligibleCabins(shipJSON);
+        ship.addLifeformToCabin(6, 5, BROWN_ALIEN);
 
         lifeformsToRemove_3 = new ArrayList<>();
         lifeformsToRemove_3.add(new ComponentHelper<LifeformType>(6,6).addItem(LifeformType.ASTRONAUT));
@@ -504,27 +651,84 @@ class WarZoneTest {
     *
     * This is the ship with the lowest enginePower*/
     public void ship_init4(Ship ship) {
-        Battery battery = new Battery(new int[] {0, 1, 0, 1}, 3);
+        List<Integer> connectors1 = new ArrayList<Integer>();
+        connectors1.add(0);
+        connectors1.add(1);
+        connectors1.add(0);
+        connectors1.add(1);
 
-        Cannon double_cannon = new Cannon(new int[] {0, 0, 0, 1}, 2);
+        List<Integer> connectors2 = new ArrayList<Integer>();
+        connectors2.add(1);
+        connectors2.add(1);
+        connectors2.add(0);
+        connectors2.add(1);
 
-        Engine single_booster = new Engine(new int[] {1, 0, 0, 0}, 1);
+        List<Integer> connectors3 = new ArrayList<Integer>();
+        connectors3.add(0);
+        connectors3.add(0);
+        connectors3.add(1);
+        connectors3.add(0);
 
-        Cabin cabin_1 = new Cabin(new int[] {1, 1, 0, 1}, false);
+        List<Integer> connectors4 = new ArrayList<Integer>();
+        connectors4.add(0);
+        connectors4.add(1);
+        connectors4.add(0);
+        connectors4.add(0);
+
+        List<Integer> connectors5 = new ArrayList<Integer>();
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(1);
+
+        List<Integer> connectors6 = new ArrayList<Integer>();
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+
+        List<Integer> connectors7 = new ArrayList<Integer>();
+        connectors7.add(0);
+        connectors7.add(1);
+        connectors7.add(1);
+        connectors7.add(1);
+
+        List<Integer> connectors8 = new ArrayList<Integer>();
+        connectors8.add(1);
+        connectors8.add(0);
+        connectors8.add(0);
+        connectors8.add(0);
+
+        List<Integer> connectors9 = new ArrayList<Integer>();
+        connectors9.add(1);
+        connectors9.add(0);
+        connectors9.add(0);
+        connectors9.add(1);
+
+        List<Integer> connectors10 = new ArrayList<Integer>();
+        connectors10.add(0);
+        connectors10.add(1);
+        connectors10.add(1);
+        connectors10.add(0);
+
+        Battery battery = new Battery(connectors1, 3);
+
+        Cannon double_cannon = new Cannon(connectors5, 2);
+
+        Engine single_booster = new Engine(connectors8, 1);
+
+        Cabin cabin_1 = new Cabin(connectors2, false);
         //cabin_1.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
 
-        Vital purple_vital = new Vital(new int[] {0, 1, 1, 0}, 0);
+        Vital purple_vital = new Vital(connectors10, 0);
 
-        Storage special_storage = new Storage(new int[] {0, 0, 1, 0}, 2, true);
+        Storage special_storage = new Storage(connectors3, 2, true);
         special_storage.storeItem(new Item(ItemColor.RED));
 
-        Storage normal_storage = new Storage(new int[] {1, 0, 0, 0}, 3, false);
+        Storage normal_storage = new Storage(connectors8, 3, false);
         normal_storage.storeItem(new Item(ItemColor.YELLOW));
         normal_storage.storeItem(new Item(ItemColor.BLUE));
         normal_storage.storeItem(new Item(ItemColor.GREEN));
-
-        Map<Integer, Pair<Integer, Integer>> alienCoords;
-        ShipJSON shipJSON;
 
         ship.addComponent(battery, 6, 7);
         ship.addComponent(double_cannon, 6, 8);
@@ -536,10 +740,7 @@ class WarZoneTest {
 
         ship.generateComponentSubLists();
 
-        alienCoords = new HashMap<>();
-        alienCoords.put(PURPLE_ALIEN.ordinal(), new Pair<>(6, 5));
-        shipJSON = new ShipJSON("Player 4", alienCoords);
-        ship.setChosenAliensForEligibleCabins(shipJSON);
+        ship.addLifeformToCabin(6, 5, PURPLE_ALIEN);
 
         doubleCannons_4.add(new ComponentHelper<>(6, 8));
 

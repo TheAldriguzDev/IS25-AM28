@@ -133,6 +133,9 @@ public class WarZone extends EventCard {
             throw new IllegalArgumentException("The given JSON data is not a valid warZoneJSON");
         }
 
+        this.affectedPlayer.ifPresent(p -> System.out.println("affectedPlayer: " + p.getNickname()));
+        System.out.println("(ACTION: " + this.current_action + ") givenCurrPlayer: " + warZoneJSON.getPlayerNickname() + " | expectedCurrPlayer: " + currentPlayer.get().getNickname());
+
         // Check if the card can be used by matching the player
         String playerNickname = warZoneJSON.getPlayerNickname();
         if ( playerNickname == null ||
@@ -440,23 +443,31 @@ public class WarZone extends EventCard {
 
         Ship playerShip = player.getShip();
 
+//        for (ComponentHelper<LifeformType> lifeform : lifeFormToBeRemoved) {
+//
+//            Cabin tmpCabin;
+//            try {
+//                tmpCabin = (Cabin) playerShip.getComponent(lifeform.getI(), lifeform.getJ());
+//            } catch (Exception e) {
+//                throw new IllegalStateException("The given component is not a valid cabin");
+//            }
+//
+//            lifeform.getItem().ifPresent( l -> {
+//                Lifeform tmpLifeFormToBeRemoved = tmpCabin.getInhabitants().stream()
+//                        .filter( i -> i.getLifeformType().equals(l))
+//                        .findFirst()
+//                        .orElseThrow( () -> new NoSuchElementException("The requested lifeform has not been found in the given cabin"));
+//
+//                tmpCabin.removeInhabitant(tmpLifeFormToBeRemoved);
+//            });
+//        }
+
         for (ComponentHelper<LifeformType> lifeform : lifeFormToBeRemoved) {
-
-            Cabin tmpCabin;
-            try {
-                tmpCabin = (Cabin) playerShip.getComponent(lifeform.getI(), lifeform.getJ());
-            } catch (Exception e) {
-                throw new IllegalStateException("The given component is not a valid cabin");
-            }
-
-            lifeform.getItem().ifPresent( l -> {
-                Lifeform tmpLifeFormToBeRemoved = tmpCabin.getInhabitants().stream()
-                        .filter( i -> i.getLifeformType().equals(l))
-                        .findFirst()
-                        .orElseThrow( () -> new NoSuchElementException("The requested lifeform has not been found in the given cabin"));
-
-                tmpCabin.removeInhabitant(tmpLifeFormToBeRemoved);
-            });
+            playerShip.removeLifeformFromCabin(
+                lifeform.getI(),
+                lifeform.getJ(),
+                lifeform.getItem().get()
+            );
         }
 
         // Check if the player has finished all of its astronauts --> if yes it needs to be eliminated from the game

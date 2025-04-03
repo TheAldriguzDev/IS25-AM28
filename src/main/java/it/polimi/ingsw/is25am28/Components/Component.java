@@ -7,110 +7,100 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import it.polimi.ingsw.is25am28.Components.Cannon;
-
 public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield, Structural {
-      private int col;
       private int row;
+      private int col;
 
       protected Connector[] sides;
+
       /**
-       * index between 0 and 3,
-       * that indicates which is the direction side of the component
+       * Value between 0 and 3 that indicates the direction the component is currently facing
+       * (the values are: 0 (top), 1 (right), 2 (bottom), 3 (left))
        */
       protected int direction;
 
       /**
-       * used to recognize the specific tile
+       * Unique tile identifier
        */
       private int id = 0;
 
       /**
-       * return unique id of the class called
+       * @return This component's unique identifier
        */
       public int getTypeId(){
-            switch(this){
-                  case Cannon _: 
-                        return 0;
-                  case Cabin _: 
-                        return 1;
-                  case Storage _: 
-                        return 2;
-                  case Vital _: 
-                        return 3;
-                  case Engine _:
-                        return 4;
-                  case Battery _:
-                        return 5;
-                  case Shield _: 
-                        return 6;
-                  case Structural _:
-                        return 7;
+            switch (this){
+                  case Cannon _:    return 0;
+                  case Cabin _:     return 1;
+                  case Storage _:   return 2;
+                  case Vital _:     return 3;
+                  case Engine _:    return 4;
+                  case Battery _:   return 5;
+                  case Shield _:    return 6;
+                  case Structural _:return 7;
             }
       }
 
-
-      public Component( List<Integer> connectors ) {
+      public Component(List<Integer> connectors) {
             sides = new Connector[4];
 
-            for( int i = 0; i < 4; i++ ){
-                  sides[i] = Connector.fromOrdinal( connectors.get(i) );
+            for (int i = 0; i < sides.length; i++) {
+                  sides[i] = Connector.fromOrdinal(connectors.get(i));
             }
       }
 
       /**
-       *
-       * @param nearest order is direction[0], right[1], bottom[2], left[3]
-       * @return if the component is placed correctly
+       * @param nearest This component's adjacent neighbours
+       * @return TRUE if this component's connectors are all compatible with their neighbours', FALSE otherwise
        */
-      public boolean check( Component[] nearest ) {
-            if(
+      public boolean check(Component[] nearest) {
+            if (
                     nearest[0] != null && (
-                            ( getTopSide() == Connector.ZERO_PIPES && nearest[0].getBottomSide() != Connector.ZERO_PIPES ) || // they are not both 0
-                                    ( getTopSide() != Connector.THREE_PIPES && nearest[0].getBottomSide() != Connector.THREE_PIPES && getTopSide() != nearest[0].getBottomSide() ) // they are not equals (even with 3 piped conjunction)
+                            (getTopSide() == Connector.ZERO_PIPES && nearest[0].getBottomSide() != Connector.ZERO_PIPES ) || // they are not both 0
+                                    (getTopSide() != Connector.THREE_PIPES && nearest[0].getBottomSide() != Connector.THREE_PIPES && getTopSide() != nearest[0].getBottomSide()) // they are not equals (even with 3 piped conjunction)
                     )
-            ){
+            ) {
                   return false;
             }
 
-            if(
+            if (
                     nearest[1] != null && (
-                            ( getRightSide() == Connector.ZERO_PIPES && nearest[1].getLeftSide() != Connector.ZERO_PIPES ) || // they are not both 0
-                                    ( getRightSide() != Connector.THREE_PIPES && nearest[1].getLeftSide() != Connector.THREE_PIPES && getRightSide() != nearest[1].getLeftSide() ) // they are not equals (even with 3 piped conjunction)
+                            (getRightSide() == Connector.ZERO_PIPES && nearest[1].getLeftSide() != Connector.ZERO_PIPES ) || // they are not both 0
+                                    (getRightSide() != Connector.THREE_PIPES && nearest[1].getLeftSide() != Connector.THREE_PIPES && getRightSide() != nearest[1].getLeftSide()) // they are not equals (even with 3 piped conjunction)
                     )
-            ){
+            ) {
                   return false;
             }
 
-            if(
+            if (
                     nearest[2] != null && (
-                            ( getBottomSide() == Connector.ZERO_PIPES && nearest[2].getTopSide() != Connector.ZERO_PIPES ) || // they are not both 0
-                                    ( getBottomSide() != Connector.THREE_PIPES && nearest[2].getTopSide() != Connector.THREE_PIPES && getBottomSide() != nearest[2].getTopSide() ) // they are not equals (even with 3 piped conjunction)
+                            (getBottomSide() == Connector.ZERO_PIPES && nearest[2].getTopSide() != Connector.ZERO_PIPES ) || // they are not both 0
+                                    (getBottomSide() != Connector.THREE_PIPES && nearest[2].getTopSide() != Connector.THREE_PIPES && getBottomSide() != nearest[2].getTopSide()) // they are not equals (even with 3 piped conjunction)
                     )
-            ){
+            ) {
                   return false;
             }
 
-            if(
+            if (
                     nearest[3] != null && (
-                            ( getLeftSide() == Connector.ZERO_PIPES && nearest[3].getRightSide() != Connector.ZERO_PIPES ) || // they are not both 0
-                                    ( getLeftSide() != Connector.THREE_PIPES && nearest[3].getRightSide() != Connector.THREE_PIPES && getLeftSide() != nearest[3].getRightSide() ) // they are not equals (even with 3 piped conjunction)
+                            (getLeftSide() == Connector.ZERO_PIPES && nearest[3].getRightSide() != Connector.ZERO_PIPES ) || // they are not both 0
+                                    (getLeftSide() != Connector.THREE_PIPES && nearest[3].getRightSide() != Connector.THREE_PIPES && getLeftSide() != nearest[3].getRightSide()) // they are not equals (even with 3 piped conjunction)
                     )
-            ){
+            ) {
                   return false;
             }
 
             return true;
       }
 
-      // Returns the component's direction
+      /**
+       * @return The direction that this component is currently facing
+       */
       public int getDirection() {
             return this.direction;
       }
 
       /**
-       * coordinates into the ship
-       * @return [row, col]
+       * @return A coordinate pair [row, col] describing this component's position in the ship's grid
        */
       public int[] getPosition() {
             int[] position = new int[2];
@@ -121,52 +111,52 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
             return position;
       }
 
+      /**
+       * The position of this component, which is set when it gets placed in the ship's grid
+       * @param row The row where this component is located at
+       * @param col The column where this component is located at
+       */
       public void setPosition(int row, int col) {
             this.row = row;
             this.col = col;
       }
 
-      public Component setRotation( int rotation ){
-            
-            direction = rotation%4;
-
+      public Component setRotation(int rotation) {
+            direction = rotation % 4;
             return this;
       }
 
       public Component rotateLeft(){
             direction--;
-
-            if( direction < 0 )
-                  direction = 3;
-
+            if (direction < 0) { direction = 3; }
             return this;
       }
 
       public Component rotateRight(){
             direction++;
-
-            if( direction > 3 )
-                  direction = 0;
-
+            if (direction > 3) { direction = 0; }
             return this;
       }
 
-      public Connector getLeftSide(){
-            return sides[ (direction + 3)%4 ];
+      public Connector getLeftSide() {
+            return sides[(direction + 3) % 4];
       }
 
-      public Connector getRightSide(){
-            return sides[ (direction + 1)%4 ];
+      public Connector getRightSide() {
+            return sides[(direction + 1) % 4];
       }
 
-      public Connector getTopSide(){
+      public Connector getTopSide() {
             return sides[direction];
       }
-      public Connector getBottomSide(){
-            return sides[ (direction + 2)%4 ];
+      public Connector getBottomSide() {
+            return sides[(direction + 2) % 4];
       }
 
-      public int getId(){
+      /**
+       * @return This component's unique identifier
+       */
+      public int getId() {
             return id;
       }
 
