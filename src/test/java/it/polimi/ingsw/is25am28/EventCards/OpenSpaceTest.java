@@ -41,7 +41,7 @@ class OpenSpaceTest {
 
         // Add the players to the board and create the ships for each player
         // Player1 - Player3 - Player4 have the same ship
-        // Player2 has a different ship without any form of engine power
+        // Player2's ship has no engine power — it has a brown alien that gives +2 power but since there is no engine power, the boost cannot be applied
         for (Player player : board.getPlayers()) {
             board.addPlayerToBoard(player);
 
@@ -136,8 +136,7 @@ class OpenSpaceTest {
                 cabin1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
                 cabin1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
                 Cabin cabin2 = new Cabin(connectors, false);
-                cabin2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
-                cabin2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+                cabin2.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
 
                 Vital vital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
                 Vital vital2 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
@@ -184,54 +183,6 @@ class OpenSpaceTest {
         board.validatePlayersPosition();
     }
 
-    /**
-     * Outputs the given ship to terminal
-     * @param ship The ship to print to terminal
-     */
-    void printShipGrid(Ship ship) {
-        if (ship != null) {
-            List<Component> components = new ArrayList<>();
-            Component c;
-            int rows = ship.getGridDimensions().getKey();
-            int cols = ship.getGridDimensions().getValue();
-            int i, j, k;
-
-            System.out.print("\n\\");
-            for (i = 0; i < cols; i++) {
-                System.out.print("\t" + i);
-            }
-            System.out.print("\n");
-
-            k = 0;
-
-            for (i = 0; i < rows; i++) {
-                System.out.print(i + "\t");
-                for (j = 0; j < cols; j++) {
-                    c = ship.getComponent(i, j);
-                    if (c == null) {
-                        System.out.print("." + "\t");
-                    }
-                    else {
-                        System.out.print(k++ + "\t");
-                        components.add(c);
-                    }
-                }
-                System.out.print("\n");
-            }
-
-            int size = components.size();
-
-            System.out.println("\nFound these components:");
-
-            for (i = 0; i < size; i++) {
-                System.out.println(i + " - " + components.get(i));
-            }
-        }
-        else {
-            System.out.println("ERROR: Given ship is null");
-        }
-    }
-
     @Test
     void test_open_space_with_1_players_eliminated_and_3_players_with_all_the_engines_supply() {
         // Create the card that will be used in the simulation
@@ -244,7 +195,7 @@ class OpenSpaceTest {
         Player tmpPlayer = this.board.getPlayers().get(1);
 
         // Use the card for each player.
-        // We expect that p1 - p3 - p4 will be able to use the card, instead the p2 will be eliminated since he doesn't have any power
+        // We expect that p1 - p3 - p4 will be able to use the card, instead the p2 will be eliminated since he doesn't have any power (the alien boost can't be used)
         ArrayList<Player> players = new ArrayList<>(board.getPlayers());
         for (Player player : players) {
             // Add the initial cursor of each player

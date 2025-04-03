@@ -646,8 +646,8 @@ public class WarZone extends EventCard {
         cardState.setCardName(this.getCardName());
         // Set the card level
         cardState.setCardLevel(this.cardLevel);
-        // If present set the current player (the one that needs to play the game)
 
+        // If present set the current player (the one that needs to play the game)
         if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
 
             cardState.setAffectedPlayer(this.affectedPlayer.get().getNickname());
