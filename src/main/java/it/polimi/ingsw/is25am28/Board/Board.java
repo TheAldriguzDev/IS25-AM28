@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Board;
 
+import it.polimi.ingsw.is25am28.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.GameModel.GameModel;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
@@ -61,12 +62,9 @@ public abstract class Board {
     /**
      * Add a new player in the game if the nickname and the color is unique in the session
      * */
-    public Board newPlayer(String nickname, PlayerColor color) throws IllegalArgumentException {
-        if (!players.stream().filter(p -> p.getNickname().equals(nickname) || p.getPlayerColor().equals(color)).toList().isEmpty()) {
-            throw new IllegalArgumentException("The selected nickname or color has been already used");
-        }
-
-        players.add(new Player(nickname, color, this.getLevel()));
+    public Board newPlayer(Player player) {
+        if( !players.contains(player) )
+            players.add(player);
         return this;
     }
 
@@ -115,6 +113,7 @@ public abstract class Board {
      * It is synchronized since multiple clients can request to be added to the board in the same time
      * */
     public synchronized void addPlayerToBoard(Player player) {
+
         for (Cell cell : initialCells) {
             if (cell.isEmpty()) {
                 cell.setPlayer(player);
@@ -218,5 +217,9 @@ public abstract class Board {
             System.out.println(curr.toString());
             curr = curr.getNextCell();
         } while (curr != head);
+    }
+
+    public BoardJSON generateState(){
+        return BoardJSON.fromBoard(this);
     }
 }

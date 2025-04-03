@@ -3,42 +3,58 @@ package it.polimi.ingsw.is25am28.GameModel.FileLoader;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.EventCards.AbandonedShip;
+import it.polimi.ingsw.is25am28.EventCards.AbandonedStation;
+import it.polimi.ingsw.is25am28.EventCards.Epidemy;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.EventCards.MeteorShower;
+import it.polimi.ingsw.is25am28.EventCards.OpenSpace;
+import it.polimi.ingsw.is25am28.EventCards.Pirates;
+import it.polimi.ingsw.is25am28.EventCards.Slavers;
+import it.polimi.ingsw.is25am28.EventCards.Smugglers;
+import it.polimi.ingsw.is25am28.EventCards.Stardust;
+import it.polimi.ingsw.is25am28.EventCards.VisitPlanets;
+import it.polimi.ingsw.is25am28.EventCards.WarZone;
+import it.polimi.ingsw.is25am28.EventCards.WarZoneAction;
+import it.polimi.ingsw.is25am28.EventCards.WarZoneActionConsequencePair;
+import it.polimi.ingsw.is25am28.EventCards.WarZoneConsequence;
+import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
+import it.polimi.ingsw.is25am28.Items.Item;
+import it.polimi.ingsw.is25am28.Items.ItemColor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class CardLoader extends FileLoader {
-    private static CardLoader instance;
+      private static CardLoader instance;
 
-    static public CardLoader get(){
-        if( instance == null )
-            instance = new CardLoader();
-        return instance;
-    }
+      static public CardLoader get(){
+            if( instance == null )
+                  instance = new CardLoader();
+            return instance;
+      }
 
-    private CardLoader(){
-        super("./json/cards.json");
-    }
+      private CardLoader(){
+            super("./json/cards.json");
+      }
 
-    public List<EventCard> read( Board board, ResourceBank bank ){
-        final List<EventCard> deck = new ArrayList<>();
-        Map<String,List<Map<String,Object>>> json = getJSONObject();
+      public List<EventCard> read( Board board, ResourceBank bank, int level ){
+            final List<EventCard> deck = new ArrayList<>();
+            Map<String,List<Map<String,Object>>> json = getJSONObject();
 
-        json.get("abandonedShip" ).forEach( map -> {
-            deck.add(new AbandonedShip(
-                    "nave abbandonata",
-                    (Integer)map.get("level"),
-                    (Integer)map.get("people"),
-                    (Integer)map.get("days"),
-                    (Integer)map.get("credits"),
-                    board
-            ));
-        });
+            json.get("abandonedShip" ).forEach( map -> {
+                  deck.add(new AbandonedShip(
+                        "nave abbandonata",
+                        (Integer)map.get("level"),
+                        (Integer)map.get("people"),
+                        (Integer)map.get("days"),
+                        (Integer)map.get("credits"),
+                        board
+                  ));
+            });
 
 
-            /*json.get("abandonedStation" ).forEach( map -> {
+            json.get("abandonedStation" ).forEach( map -> {
                   ArrayList<Item> items = new ArrayList<>();
 
                   int len = (Integer)map.get("red");
@@ -102,7 +118,8 @@ public class CardLoader extends FileLoader {
                         "Pianeti",
                         (Integer)map.get("level"),
                         (Integer)map.get("days"),
-                        (List<Object>)map.get("planets"),
+                        (List<Map<String,Integer>>)map.get("planets"),
+                        bank,
                         board
                   ));
             });
@@ -160,16 +177,34 @@ public class CardLoader extends FileLoader {
             });
 
             json.get("warzone" ).forEach( map -> {
-                  deck.add(new WarZone(
-                          "Zona di Guerra",
-                          (Integer)map.get("level"),
-                          (Map<String,Object>)map.get("engines"),
-                          (Map<String,Object>)map.get("cannons"),
-                          (Map<String,Object>)map.get("humans"),
-                          board
-                  ));
-            });*/
 
-        return deck;
-    }
+                  List<WarZoneActionConsequencePair> actions = ((List<Map<String,Integer>>)map.get("actions"))
+                        .stream()
+                        .map( m -> new WarZoneActionConsequencePair(
+                              WarZoneAction.fromInteger(m.get("action")), 
+                              WarZoneConsequence.fromInteger(m.get("consequence")))
+                        ).toList();
+
+                  List<PlasmaShot> shoots = ((List<List<Integer>>)map.get("shoots"))
+                  .stream()
+                  .map( pair -> new PlasmaShot( pair.get(0), pair.get(1)))
+                  .toList();                  
+
+                  deck.add(new WarZone(
+                        "Zona di Guerra",
+                        (Integer)map.get("level"),
+                        board,
+                        bank,
+                        (Integer)map.get("days"),
+                        (Integer)map.get("peoples"),
+                        (Integer)map.get("items"),
+                        shoots,
+                        actions
+                  )); 
+            });
+
+            deck.removeIf( card -> card.getCardLevel() > level );
+      
+            return deck;
+      }
 }

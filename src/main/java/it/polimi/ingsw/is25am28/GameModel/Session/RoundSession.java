@@ -1,12 +1,16 @@
 package it.polimi.ingsw.is25am28.GameModel.Session;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import org.json.simple.JSONObject;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.State.State;
 
-public class RoundSession {
+public class RoundSession extends Session {
     // CONSTANTS
     static private final int DECK_SIZE = 8;
 
@@ -18,8 +22,11 @@ public class RoundSession {
     // indicate the round number and the card to draw from the deck
     private int round = 0;
 
-    public RoundSession( int level, List<EventCard> deck ){
+    private final Board board;
+
+    public RoundSession( Board board, int level, List<EventCard> deck ){
         this.deck = deck;
+        this.board = board;
     }
 
     /**
@@ -57,6 +64,23 @@ public class RoundSession {
         return card.hasFinished();
     }
 
+    /**
+     * initialize the rounds and send the first card
+     */
+    public CardStateJSON init(){
+        Map<String,Object> ships = new HashMap<>();
+
+        board
+        .getPlayers()
+        .forEach( player -> ships.put( 
+                                player.getNickname(), 
+                                player.getShip().generateState() 
+                            ) 
+                );
+        deck.get(0).initCardPlayers();
+
+        return deck.get(0).generateState();
+    }
 
     /**
      * make the game state to progress,
@@ -64,10 +88,10 @@ public class RoundSession {
      * @param response
      * @return
      */
-    public Object play( Object response ){
+    public CardStateJSON playCard( Object response ){
         EventCard nextCard;
 
-        useCard(response);
+        useCard( response );
 
         if( hasCurrentCardFinished() ){
             nextCard = nextRound();
@@ -75,7 +99,11 @@ public class RoundSession {
             nextCard = deck.get( round );
         }
 
-        //TODO send game ended
-        return nextCard != null ? nextCard.generateState() : null;
+        if( nextCard == null ){
+            setHasFinished();
+            return null;
+        }
+
+        return nextCard.generateState();
     }
 }

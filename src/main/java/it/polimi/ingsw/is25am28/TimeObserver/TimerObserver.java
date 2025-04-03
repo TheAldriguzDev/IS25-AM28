@@ -7,21 +7,28 @@ import java.util.concurrent.TimeUnit;
 
 public class TimerObserver {
       private final HashSet<TimeSubscriber> subscribed;
+      private final int timeout;
       private Thread thd;
 
       private long lastTimestamp = 0;
 
-      public TimerObserver(){
+      private boolean finished = false;
+
+      public TimerObserver( int timeoutMillis ){
             this.subscribed = new HashSet<>();
+            this.timeout = timeoutMillis;
       }
 
       private Thread createSleepThread(){
             
             return new Thread(() -> {
                   try {
-                        TimeUnit.MINUTES.sleep(2);
+                        TimeUnit.MILLISECONDS.sleep(timeout);
+
+                        finished = true;
                         if( subscribed.size() > 0 )
                               subscribed.forEach( sub -> sub.onTimerEnd() );
+
                   }catch(InterruptedException e){
 
                   }
@@ -38,22 +45,19 @@ public class TimerObserver {
             return this;
       }
 
-      public TimerObserver flip(){
-            long newTimestamp = ZonedDateTime.now().toInstant().toEpochMilli();
+      public Boolean hasFinished(){
+            return finished;
+      }
 
-            // request sent in less than a second. 
-            // refused for race condition between players
-            if( newTimestamp - lastTimestamp < 1000 )
+      public TimerObserver flip(){
+
+            if( !finished )
                   return this;
             
-            lastTimestamp = newTimestamp;
+            finished = false;
 
-            if( thd.isAlive() ){
-                  try{
-                        thd.join( (long)0.0001 );
-                  }catch(InterruptedException e){
-
-                  }
+            if( thd != null && thd.isAlive() ){
+                  thd.interrupt();
             }
 
             try {
@@ -64,6 +68,12 @@ public class TimerObserver {
             }
 
             return this;
+      }
+
+      public long getElapsedTime(){
+            long newTimestamp = ZonedDateTime.now().toInstant().toEpochMilli();
+
+            return newTimestamp - lastTimestamp;
       }
 
 }

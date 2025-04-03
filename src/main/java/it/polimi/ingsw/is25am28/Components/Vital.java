@@ -7,9 +7,9 @@ public final class Vital extends Component {
 
       public Vital(List<Integer> connectors, int type ) {
             super(connectors);
-            if( type == 0 )
+            if( type == VitalType.BROWN_VITAL.ordinal() )
                   this.vitalType = VitalType.BROWN_VITAL;
-            else if( type == 1 )
+            else if( type == VitalType.PURPLE_VITAL.ordinal() )
                   this.vitalType = VitalType.PURPLE_VITAL;
             else
                   throw new Error("vital type not recognized");
@@ -23,10 +23,7 @@ public final class Vital extends Component {
       public Map<String,Object> toMap(){
             Map<String,Object> map = super.toMap();
 
-            if( vitalType == VitalType.BROWN_VITAL )
-                  map.put("type", 0 );
-            else
-                  map.put("type", 1 );
+            map.put("type", vitalType.ordinal() );
 
             return map;
       }

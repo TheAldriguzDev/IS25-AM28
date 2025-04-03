@@ -180,10 +180,21 @@ class VisitPlanetsTest {
         Random random = new Random(100);    // Fixed seed for predictable results
         List<Map<String, Integer>> itemsPerPlanet = new ArrayList<>();
 
-        this.board.newPlayer("P1", PlayerColor.BLUE);
-        this.board.newPlayer("P2", PlayerColor.GREEN);
-        this.board.newPlayer("P3", PlayerColor.YELLOW);
-        this.board.newPlayer("P4", PlayerColor.RED);
+        Player p1 = new Player("P1", PlayerColor.BLUE, 2);
+        Player p2 = new Player("P2", PlayerColor.GREEN, 2);
+        Player p3 = new Player("P3", PlayerColor.YELLOW, 2);
+        Player p4 = new Player("P4", PlayerColor.RED, 2);
+
+
+        board.newPlayer(p1);
+        board.newPlayer(p2);
+        board.newPlayer(p3);
+        board.newPlayer(p4);
+
+        board.addPlayerToBoard(p1);
+        board.addPlayerToBoard(p2);
+        board.addPlayerToBoard(p3);
+        board.addPlayerToBoard(p4);
 
         // Creating the level 2 board
         this.board.buildBoard();

@@ -10,7 +10,7 @@ public enum Connector {
 
     /**
      * ######### IMPORTANT NOTE ############
-     * must be overwritten if the declaration changes.
+     * must be overwritten if the declaration changes. 
      * generally, DON'T change declaration order.
      * @param ordinal
      * @return

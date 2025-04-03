@@ -56,10 +56,6 @@ public final class Storage extends Component {
             storedItems.remove(item);
       }
 
-      public boolean check( Component[] nearest ){
-            return false;
-      }
-
       public int availableSpace() {
             return capacity - storedItems.size();
       }

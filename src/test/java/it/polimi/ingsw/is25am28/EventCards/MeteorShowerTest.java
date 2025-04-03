@@ -141,8 +141,15 @@ class MeteorShowerTest {
         // Each player has the same ship (for simplicity)
         // The meteor sequence is composed of all 8 possible combinations (4 directions * 2 sizes = 8 meteor configs)
 
-        board.newPlayer("p1", PlayerColor.RED);
-        board.newPlayer("p2", PlayerColor.GREEN);
+        Player p1 = new Player("p1", PlayerColor.RED, 2);
+        Player p2 = new Player("p2", PlayerColor.GREEN, 2);
+
+
+        board.newPlayer(p1);
+        board.newPlayer(p2);
+
+        board.addPlayerToBoard(p1);
+        board.addPlayerToBoard(p2);
 
         for (Player player : board.getPlayers()) {
             initCustomShip(player);

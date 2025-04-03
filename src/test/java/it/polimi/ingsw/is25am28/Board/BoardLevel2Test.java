@@ -20,10 +20,15 @@ class BoardLevel2Test {
 
         this.board.buildBoard();
 
-        board.newPlayer("Player 1", PlayerColor.RED);
-        board.newPlayer("Player 2", PlayerColor.BLUE);
-        board.newPlayer("Player 3", PlayerColor.GREEN);
-        board.newPlayer("Player 4", PlayerColor.YELLOW);
+        Player p1 = new Player("Player 1", PlayerColor.RED, 2);
+        Player p2 = new Player("Player 2", PlayerColor.BLUE, 2);
+        Player p3 = new Player("Player 3", PlayerColor.GREEN, 2);
+        Player p4 = new Player("Player 4", PlayerColor.YELLOW, 2);
+
+        board.newPlayer(p1);
+        board.newPlayer(p2);
+        board.newPlayer(p3);
+        board.newPlayer(p4);
     }
 
     @Test

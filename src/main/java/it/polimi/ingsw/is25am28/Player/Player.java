@@ -11,6 +11,7 @@ public class Player {
       private int credits = 0;
       private int lostPieces = 0;
       private Cell cell;
+      private boolean connected = true;
 
       private boolean lost = false;
 
@@ -93,5 +94,12 @@ public class Player {
             return lost;
       }
 
+      public boolean isConnected(){
+            return connected;
+      }
 
+      public Player setConnected( boolean connectionStatus ){
+            connected = connectionStatus;
+            return this;
+      }
 }
