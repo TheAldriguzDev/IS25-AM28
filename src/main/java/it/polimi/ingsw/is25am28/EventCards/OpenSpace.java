@@ -78,13 +78,6 @@ public class OpenSpace extends EventCard {
             Ship ship = this.getCurrentPlayer().get().getShip();
             int totalPower = 0;
 
-            // Power given by the aliens
-            totalPower += ship.getCabinList()
-                            .stream()
-                            .flatMap( c -> c.getInhabitants().stream() )
-                            .mapToInt( Lifeform::getPowerBoost )
-                            .sum();
-
             // Power given by the engine
             totalPower += ship.getEngineList().stream()
                             .filter( e -> !e.requireEnergy())
@@ -100,6 +93,14 @@ public class OpenSpace extends EventCard {
                 availableDoubleEngines--;
                 ship.consumeEnergy(1);
             }
+
+            // Power given by the alien:
+            // If the power given by the engines is 0 than we cannot apply the boost given by the alien
+            totalPower += totalPower == 0 ? 0 : ship.getCabinList()
+                    .stream()
+                    .flatMap( c -> c.getInhabitants().stream() )
+                    .mapToInt( Lifeform::getPowerBoost )
+                    .sum();
 
             // Apply the effect to the player
             // if no power has been declared eliminate the player
