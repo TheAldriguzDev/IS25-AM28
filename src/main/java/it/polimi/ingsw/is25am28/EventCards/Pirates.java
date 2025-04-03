@@ -11,6 +11,7 @@ import javafx.util.Pair;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
@@ -18,7 +19,7 @@ public class Pirates extends EventCard {
     private final int requiredFirepower;
     private final int givenCredits;
     private final int movementSteps;
-    private final ArrayList<ArrayList<Integer>> shootingSequence;
+    private final List<List<Integer>> shootingSequence;
     private final Random random;
     private int playerUseCount;
     private int diceThrowResult;
@@ -29,7 +30,7 @@ public class Pirates extends EventCard {
     ArrayList<Player> playersToHit;
     private boolean hasBeenDefeated;
 
-    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, ArrayList<ArrayList<Integer>> shootingSequence, Board board) {
+    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board) {
         super(name, cardLevel, board);
         this.requiredFirepower = requiredFirepower;
         this.givenCredits = givenCredits;

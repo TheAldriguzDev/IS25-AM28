@@ -48,7 +48,7 @@ class PiratesTest {
 
     ArrayList<Integer> dicesResults;
 
-    ArrayList<ArrayList<Integer>> shootingSequence;
+    List<List<Integer>> shootingSequence;
 
     ArrayList<Integer> plasmaShot1;
     ArrayList<Integer> plasmaShot2;
