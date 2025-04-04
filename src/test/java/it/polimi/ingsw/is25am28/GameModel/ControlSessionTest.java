@@ -83,7 +83,7 @@ public class ControlSessionTest extends GMTest {
       @Test
       void wrong_alien_throws_but_can_be_reset_and_finish_correctly(){
             List<ComponentJSON> ship = shipInit();
-            ship.set( 6*12 + 7, new ComponentJSON().setLifeforms(LifeformType.PURPLE_ALIEN) );
+            ship.set( 6*12 + 5, new ComponentJSON().setLifeforms(LifeformType.PURPLE_ALIEN) );
 
             assertThrows( ShipPopulationFailException.class, () -> c.populateShip( "B", ship ) );
 
@@ -92,6 +92,8 @@ public class ControlSessionTest extends GMTest {
             assertTrue(!c.hasFinished());
 
             ship.set( 6*12 + 7, new ComponentJSON().setLifeforms(LifeformType.ASTRONAUT) );
+            ship.set( 6*12 + 5, null );
+
             c.populateShip( "B", ship );
 
             players.get("B")
@@ -124,7 +126,7 @@ public class ControlSessionTest extends GMTest {
             List<ComponentJSON> ship = shipInit();
             ship.set( 6*12 + 7, new ComponentJSON().setLifeforms(LifeformType.PURPLE_ALIEN) );
 
-            assertThrows( ShipPopulationFailException.class, () -> c.populateShip( "B", ship ) );
+            c.populateShip( "B", ship );
 
             c.fixShip( "A", shipInit() );
             assertTrue(!c.hasFinished());

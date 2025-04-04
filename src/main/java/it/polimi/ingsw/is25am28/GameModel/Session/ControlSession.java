@@ -7,10 +7,7 @@ import java.util.Map;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
-import it.polimi.ingsw.is25am28.Exceptions.UncompletedShipException;
-import it.polimi.ingsw.is25am28.Exceptions.FixNotRequiredError;
-import it.polimi.ingsw.is25am28.Exceptions.ShipPopulationFailException;
-import it.polimi.ingsw.is25am28.Exceptions.TooManyAliensException;
+import it.polimi.ingsw.is25am28.Exceptions.*;
 
 
 public class ControlSession extends Session {
@@ -100,6 +97,10 @@ public class ControlSession extends Session {
             }catch(TooManyAliensException e){
                   throw new ShipPopulationFailException(nickname);
             }catch(IllegalArgumentException e){
+                  throw new ShipPopulationFailException(nickname);
+            }catch(OutOfGridException e){
+                  throw new ShipPopulationFailException(nickname);
+            }catch(OutOfShipException e){
                   throw new ShipPopulationFailException(nickname);
             }
             

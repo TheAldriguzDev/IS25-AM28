@@ -40,7 +40,7 @@ public class ComponentJSON {
             return lifeforms;
       }
 
-      public ComponentJSON setLifeforms( LifeformType lifeforms) {
+      public ComponentJSON setLifeforms( LifeformType lifeforms ) {
             this.lifeforms = lifeforms;
             return this;
       }
