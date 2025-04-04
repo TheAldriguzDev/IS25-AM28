@@ -1193,7 +1193,8 @@ public class Ship {
 
         for (row = 0; row < this.grid_rows; row++) {
             for (col = 0; col < this.grid_cols; col++) {
-                shipState.add(this.components[row][col].toMap());
+                if( components[row][col] != null )
+                    shipState.add(this.components[row][col].toMap());
             }
         }
 
