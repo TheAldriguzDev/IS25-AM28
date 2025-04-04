@@ -1189,18 +1189,11 @@ public class Ship {
      */
     public List<Map<String, Object>> generateState() {
         List<Map<String, Object>> shipState = new ArrayList<Map<String, Object>>();
-        Map<String, Object> componentDescriptor;
         int row, col;
 
         for (row = 0; row < this.grid_rows; row++) {
             for (col = 0; col < this.grid_cols; col++) {
-                componentDescriptor = new HashMap<String, Object>();
-
-                componentDescriptor.put("row", row);
-                componentDescriptor.put("col", col);
-                componentDescriptor.put("tile", this.components[row][col]);
-
-                shipState.add(componentDescriptor);
+                shipState.add(this.components[row][col].toMap());
             }
         }
 

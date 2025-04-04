@@ -133,9 +133,6 @@ public class WarZone extends EventCard {
             throw new IllegalArgumentException("The given JSON data is not a valid warZoneJSON");
         }
 
-        this.affectedPlayer.ifPresent(p -> System.out.println("affectedPlayer: " + p.getNickname()));
-        System.out.println("(ACTION: " + this.current_action + ") givenCurrPlayer: " + warZoneJSON.getPlayerNickname() + " | expectedCurrPlayer: " + currentPlayer.get().getNickname());
-
         // Check if the card can be used by matching the player
         String playerNickname = warZoneJSON.getPlayerNickname();
         if ( playerNickname == null ||

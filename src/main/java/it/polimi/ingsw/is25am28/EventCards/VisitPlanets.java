@@ -71,37 +71,6 @@ public class VisitPlanets extends EventCard {
             planetIndex++;
         }
 
-        // Parsing the incoming data and transforming the integer value
-        // found in the map into the corresponding color
-//        for (Integer planetIndex : itemsPerPlanet.keySet()) {
-//            Map<ItemColor, Integer> planetResourceDescriptor = new HashMap<>();
-//
-//            for (Integer itemColor : itemsPerPlanet.get(planetIndex).keySet()) {
-//                switch (itemColor) {
-//                    // Blue Item
-//                    case 1 -> {
-//                        planetResourceDescriptor.put(ItemColor.BLUE, itemsPerPlanet.get(planetIndex).get(1));
-//                    }
-//                    // Green Item
-//                    case 2 -> {
-//                        planetResourceDescriptor.put(ItemColor.GREEN, itemsPerPlanet.get(planetIndex).get(2));
-//                    }
-//                    // Yellow Item
-//                    case 3 -> {
-//                        planetResourceDescriptor.put(ItemColor.YELLOW, itemsPerPlanet.get(planetIndex).get(3));
-//                    }
-//                    // Red Item
-//                    case 4 -> {
-//                        planetResourceDescriptor.put(ItemColor.RED, itemsPerPlanet.get(planetIndex).get(4));
-//                    }
-//                    default -> throw new IllegalStateException("[VisitPlanets] ERROR: There cannon be more than 4 item colors");
-//                }
-//            }
-//
-//            // Putting the transformed entry into the itemsPerPlanet map
-//            this.itemsPerPlanet.put(planetIndex, planetResourceDescriptor);
-//        }
-
         // Map containing each player and its chosen planet to land on. If a player
         // is not present in this map, then it means that he didn't choose a planet to land on
         this.playersChosenPlanet = new HashMap<Integer, Player>();
@@ -173,14 +142,18 @@ public class VisitPlanets extends EventCard {
         // ActionJSON unpacking
         try {
             visitPlanetsJSON = (VisitPlanetsJSON) data;
+
+            if (this.currentPlayer.isEmpty()) {
+                throw new IllegalArgumentException("ERROR: Given player is not present in the current game");
+            }
         }
         catch (Exception e) {
-            throw new IllegalArgumentException("[VisitPlanets::useCard] ERROR: JSON data parsing error");
+            throw new IllegalArgumentException("[VisitPlanets::useCard] " + e.getMessage());
         }
 
         // If the given player's ActionJSON response is null, this means that
         // the player did not want to choose a planet, therefore he's skipped
-        if (visitPlanetsJSON != null) {
+        if (visitPlanetsJSON != null && this.currentPlayer.get().isConnected()) {
             // Check if there is a player playing the card
             if (this.currentPlayer.isEmpty()) {
                 throw new IllegalArgumentException("[VisitPlanet::useCard] ERROR: No player is currently playing (Optional contains null)");
@@ -290,14 +263,14 @@ public class VisitPlanets extends EventCard {
             }
         }
 
+        // Getting the next active player
+        this.currentPlayer = this.getNextPlayer();
+
         // Set the "hasBeenUsed" flag to true iff all the available planets
         // have been chosen or if all players have answered to the card (i.e.: currPlayer == players.getLast())
-        if (this.playerUseCount == this.itemsPerPlanet.size() || this.currentPlayer.get() == this.players.getLast()) {
+        if (this.playerUseCount == this.itemsPerPlanet.size() || this.currentPlayer.isEmpty()) {
             this.malusEffect();
             this.cardUsed();
-        }
-        else {
-            this.currentPlayer = this.getNextPlayer();
         }
 
         return this;

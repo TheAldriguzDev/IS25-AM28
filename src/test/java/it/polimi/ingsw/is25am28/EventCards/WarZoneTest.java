@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.WarZoneJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.*;
+import it.polimi.ingsw.is25am28.Connector;
 import it.polimi.ingsw.is25am28.EventCards.HazardEntities.PlasmaShot;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
@@ -25,8 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static it.polimi.ingsw.is25am28.Lifeform.LifeformType.BROWN_ALIEN;
-import static it.polimi.ingsw.is25am28.Lifeform.LifeformType.PURPLE_ALIEN;
+import static it.polimi.ingsw.is25am28.Lifeform.LifeformType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WarZoneTest {
@@ -39,6 +39,9 @@ class WarZoneTest {
     Ship ship_2;
     Ship ship_3;
     Ship ship_4;
+
+    // All THREE_PIPES connectors
+    List<Integer> connectorsThree = new ArrayList<Integer>();
 
     List<ComponentHelper<Integer>> doubleCannons_1 = new ArrayList<>();
     List<ComponentHelper<Integer>> doubleCannons_2 = new ArrayList<>();
@@ -63,6 +66,12 @@ class WarZoneTest {
 
     @BeforeEach
     void init() {
+        // All THREE_PIPES connectors
+        connectorsThree.add(Connector.THREE_PIPES.ordinal());
+        connectorsThree.add(Connector.THREE_PIPES.ordinal());
+        connectorsThree.add(Connector.THREE_PIPES.ordinal());
+        connectorsThree.add(Connector.THREE_PIPES.ordinal());
+
         board = new BoardLevel2();
         board.buildBoard();
 
@@ -416,12 +425,12 @@ class WarZoneTest {
         connectors8.add(0);
 
         Cabin cabin_1 = new Cabin(connectors7, false);
-        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
-        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+//        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+//        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
         Cabin cabin_2 = new Cabin(connectors5, false);
-        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
-        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+//        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+//        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
         Engine double_booster = new Engine(connectors8, 2);
 
@@ -438,6 +447,11 @@ class WarZoneTest {
         ship.addComponent(battery, 6, 5);
         ship.addComponent(shield, 7, 5);
         ship.addComponent(single_cannon, 6, 4);
+
+        ship.addLifeformToCabin(6, 7, ASTRONAUT);
+        ship.addLifeformToCabin(6, 7, ASTRONAUT);
+        ship.addLifeformToCabin(6, 8, ASTRONAUT);
+        ship.addLifeformToCabin(6, 8, ASTRONAUT);
 
         ship.generateComponentSubLists();
 
@@ -508,7 +522,7 @@ class WarZoneTest {
         Cabin cabin_1 = new Cabin(connectors1, false);
         //cabin_1.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
 
-        Vital purple_vital = new Vital(connectors4, 0); // 0 -> purple, 1 -> brown
+        Vital purple_vital = new Vital(connectors4, VitalType.PURPLE_VITAL.ordinal());
 
         Battery battery_1 = new Battery(connectors3, 3);
 
@@ -627,7 +641,7 @@ class WarZoneTest {
         Cabin cabin_1 = new Cabin(connectors10, false);
         //cabin_1.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
 
-        Vital brown_vital = new Vital(connectors2, 1);
+        Vital brown_vital = new Vital(connectors2, VitalType.BROWN_VITAL.ordinal());
 
         ship.addComponent(single_cannon, 5, 6);
         ship.addComponent(single_booster, 7, 6);
@@ -720,7 +734,7 @@ class WarZoneTest {
         Cabin cabin_1 = new Cabin(connectors2, false);
         //cabin_1.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
 
-        Vital purple_vital = new Vital(connectors10, 0);
+        Vital purple_vital = new Vital(connectors10, VitalType.PURPLE_VITAL.ordinal());
 
         Storage special_storage = new Storage(connectors3, 2, true);
         special_storage.storeItem(new Item(ItemColor.RED));

@@ -40,8 +40,7 @@ public class Epidemy extends EventCard {
 
         // Finding all neighbouring cabins and putting them into quarantine
         for (Player player : this.getBoard().getPlayers()) {
-            // Skips any players that, when their turn arrives,
-            // appear disconnected from the game
+            // Skips any player marked as disconnected during their turn
             if (!player.isConnected()) continue;
 
             alreadyQuarantined = new HashSet<>();

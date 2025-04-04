@@ -173,18 +173,17 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
        * the result is similar to the "Tile.json" file.
        * @return
        */
-      public Map<String,Object> toMap(){
-            HashMap<String,Object> map = new HashMap<>();
+      public Map<String, Object> toMap() {
+            HashMap<String, Object> map = new HashMap<>();
             List<Integer> connectors = new ArrayList<>();
 
-            for( int i = 0; i < 4; i++ ){
-                  connectors.add( sides[i].ordinal() );
+            for (int i = 0; i < 4; i++) {
+                  connectors.add(sides[i].ordinal());
             }
-
 
             map.put("id", getId() );
             map.put("tid", getTypeId());
-            map.put("connectors", connectors );
+            map.put("connectors", connectors);
 
             return map;
       }

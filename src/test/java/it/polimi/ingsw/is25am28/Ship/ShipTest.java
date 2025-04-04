@@ -668,6 +668,16 @@ class ShipTest {
     }
 
     @Test
+    void addLifeformToCabin() {
+
+    }
+
+    @Test
+    void removeLifeformFromCabin() {
+
+    }
+
+    @Test
     void getExposedConnectorAmount() {
         Ship ship = new Ship(0);
 
