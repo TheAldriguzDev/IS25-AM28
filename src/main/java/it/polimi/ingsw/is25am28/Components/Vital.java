@@ -1,18 +1,23 @@
 package it.polimi.ingsw.is25am28.Components;
+
 import java.util.List;
 import java.util.Map;
 
 public final class Vital extends Component {
       private final VitalType vitalType;
 
-      public Vital(List<Integer> connectors, int type ) {
+      public Vital(List<Integer> connectors, int type) {
             super(connectors);
-            if( type == VitalType.BROWN_VITAL.ordinal() )
+
+            if (type == VitalType.BROWN_VITAL.ordinal()) {
                   this.vitalType = VitalType.BROWN_VITAL;
-            else if( type == VitalType.PURPLE_VITAL.ordinal() )
+            }
+            else if (type == VitalType.PURPLE_VITAL.ordinal()) {
                   this.vitalType = VitalType.PURPLE_VITAL;
-            else
-                  throw new Error("vital type not recognized");
+            }
+            else {
+                  throw new IllegalArgumentException("ERROR: Given vital type is not recognized");
+            }
       }
 
       public VitalType getVitalType() {
@@ -20,10 +25,10 @@ public final class Vital extends Component {
       }
 
       @Override
-      public Map<String,Object> toMap(){
+      public Map<String,Object> toMap() {
             Map<String,Object> map = super.toMap();
 
-            map.put("type", vitalType.ordinal() );
+            map.put("type", vitalType.ordinal());
 
             return map;
       }

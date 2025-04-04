@@ -55,12 +55,18 @@ class SlaversTest {
         board = new BoardLevel2();
         board.buildBoard();
 
-        board.newPlayer("Player 1", PlayerColor.RED);
-        board.newPlayer("Player 2", PlayerColor.BLUE);
-        board.newPlayer("Player 3", PlayerColor.GREEN);
-        board.newPlayer("Player 4", PlayerColor.YELLOW);
+        List<Player> players = new ArrayList<Player>();
 
-        List<Player> players = board.getPlayers();
+        players.add(new Player("Player 1", PlayerColor.RED, 2));
+        players.add(new Player("Player 2", PlayerColor.BLUE, 2));
+        players.add(new Player("Player 3", PlayerColor.GREEN, 2));
+        players.add(new Player("Player 4", PlayerColor.YELLOW, 2));
+
+        for (Player player : players) {
+            this.board.newPlayer(player);
+        }
+
+        players = board.getPlayers();
         p1 = players.get(0);
         p2 = players.get(1);
         p3 = players.get(2);
@@ -244,17 +250,64 @@ class SlaversTest {
         // 2 + 2 + 2 = umani + 1 alieno marrone
         // Il cannone doppio viene attivato
 
+        List<Integer> connectors1 = new ArrayList<Integer>();
+        connectors1.add(0);
+        connectors1.add(1);
+        connectors1.add(0);
+        connectors1.add(1);
+
+        List<Integer> connectors2 = new ArrayList<Integer>();
+        connectors2.add(1);
+        connectors2.add(1);
+        connectors2.add(0);
+        connectors2.add(1);
+
+        List<Integer> connectors3 = new ArrayList<Integer>();
+        connectors3.add(0);
+        connectors3.add(0);
+        connectors3.add(1);
+        connectors3.add(0);
+
+        List<Integer> connectors4 = new ArrayList<Integer>();
+        connectors4.add(0);
+        connectors4.add(1);
+        connectors4.add(0);
+        connectors4.add(0);
+
+        List<Integer> connectors5 = new ArrayList<Integer>();
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(1);
+
+        List<Integer> connectors6 = new ArrayList<Integer>();
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+
+        List<Integer> connectors7 = new ArrayList<Integer>();
+        connectors7.add(0);
+        connectors7.add(1);
+        connectors7.add(1);
+        connectors7.add(0);
+
+        List<Integer> connectors8 = new ArrayList<Integer>();
+        connectors8.add(1);
+        connectors8.add(0);
+        connectors8.add(0);
+        connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(new int[] {0, 1, 0, 1}, false);
-        Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
-        Cabin cabin_3 = new Cabin(new int[] {1, 1, 0, 1}, false);
-        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 2);
-        Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 0}, 1);
-        Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
-        Cannon cannon_4 = new Cannon(new int[] {0, 0, 0, 1}, 1);
-        Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
-        Battery battery_1 = new Battery(new int[] {0, 0, 0, 1}, 3);
+        Cabin cabin_1 = new Cabin(connectors1, false);
+        Cabin cabin_2 = new Cabin(connectors1, false);
+        Cabin cabin_3 = new Cabin(connectors2, false);
+        Cannon cannon_1 = new Cannon(connectors3, 2);
+        Cannon cannon_2 = new Cannon(connectors4, 1);
+        Cannon cannon_3 = new Cannon(connectors1, 1);
+        Cannon cannon_4 = new Cannon(connectors5, 1);
+        Vital vital_1 = new Vital(connectors4, 0);
+        Battery battery_1 = new Battery(connectors5, 3);
         //cannon_1.rotateLeft();
 
 
@@ -299,18 +352,65 @@ class SlaversTest {
         // 2 + 2 + 2 = umani + 1 alieno marrone
         // Il cannone doppio non viene attivato
 
+        List<Integer> connectors1 = new ArrayList<Integer>();
+        connectors1.add(0);
+        connectors1.add(1);
+        connectors1.add(0);
+        connectors1.add(1);
+
+        List<Integer> connectors2 = new ArrayList<Integer>();
+        connectors2.add(1);
+        connectors2.add(1);
+        connectors2.add(0);
+        connectors2.add(1);
+
+        List<Integer> connectors3 = new ArrayList<Integer>();
+        connectors3.add(0);
+        connectors3.add(0);
+        connectors3.add(1);
+        connectors3.add(0);
+
+        List<Integer> connectors4 = new ArrayList<Integer>();
+        connectors4.add(0);
+        connectors4.add(1);
+        connectors4.add(0);
+        connectors4.add(0);
+
+        List<Integer> connectors5 = new ArrayList<Integer>();
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(1);
+
+        List<Integer> connectors6 = new ArrayList<Integer>();
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+
+        List<Integer> connectors7 = new ArrayList<Integer>();
+        connectors7.add(0);
+        connectors7.add(1);
+        connectors7.add(1);
+        connectors7.add(0);
+
+        List<Integer> connectors8 = new ArrayList<Integer>();
+        connectors8.add(1);
+        connectors8.add(0);
+        connectors8.add(0);
+        connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(new int[] {1, 1, 0, 1}, false);
-        Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
-        Cabin cabin_3 = new Cabin(new int[] {1, 1, 1, 1}, false);
-        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 2);
-        Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 0}, 1);
-        Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
-        Cannon cannon_4 = new Cannon(new int[] {0, 0, 0, 1}, 1);
-        Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
-        Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
-        Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
+        Cabin cabin_1 = new Cabin(connectors2, false);
+        Cabin cabin_2 = new Cabin(connectors1, false);
+        Cabin cabin_3 = new Cabin(connectors6, false);
+        Cannon cannon_1 = new Cannon(connectors3, 2);
+        Cannon cannon_2 = new Cannon(connectors4, 1);
+        Cannon cannon_3 = new Cannon(connectors1, 1);
+        Cannon cannon_4 = new Cannon(connectors5, 1);
+        Vital vital_1 = new Vital(connectors4, 0);
+        Battery battery_1 = new Battery(connectors1, 3);
+        Storage storage_1 = new Storage(connectors5, 3, false);
         //cannon_1.rotateLeft();
 
 
@@ -354,20 +454,66 @@ class SlaversTest {
         // core + 3 cabine, 3 cannoni singoli, un vital(BROWN), una batteria da 3
         // 2 + 2 + 2 = umani + 1 alieno marrone
 
+        List<Integer> connectors1 = new ArrayList<Integer>();
+        connectors1.add(0);
+        connectors1.add(1);
+        connectors1.add(0);
+        connectors1.add(1);
 
+        List<Integer> connectors2 = new ArrayList<Integer>();
+        connectors2.add(1);
+        connectors2.add(1);
+        connectors2.add(0);
+        connectors2.add(1);
+
+        List<Integer> connectors3 = new ArrayList<Integer>();
+        connectors3.add(0);
+        connectors3.add(0);
+        connectors3.add(1);
+        connectors3.add(0);
+
+        List<Integer> connectors4 = new ArrayList<Integer>();
+        connectors4.add(0);
+        connectors4.add(1);
+        connectors4.add(0);
+        connectors4.add(0);
+
+        List<Integer> connectors5 = new ArrayList<Integer>();
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(1);
+
+        List<Integer> connectors6 = new ArrayList<Integer>();
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+
+        List<Integer> connectors7 = new ArrayList<Integer>();
+        connectors7.add(0);
+        connectors7.add(1);
+        connectors7.add(1);
+        connectors7.add(0);
+
+        List<Integer> connectors8 = new ArrayList<Integer>();
+        connectors8.add(1);
+        connectors8.add(0);
+        connectors8.add(0);
+        connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(new int[] {1, 1, 0, 1}, false);
-        Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
-        Cabin cabin_3 = new Cabin(new int[] {1, 1, 0, 1}, false);
-        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 1);
-        Cannon cannon_2 = new Cannon(new int[] {0, 1, 0, 1}, 1);
-        Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
-        Cannon cannon_4 = new Cannon(new int[] {0, 0, 0, 1}, 2);
-        Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
-        Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
-        Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
-        Storage storage_2 = new Storage(new int[] {0, 0, 0, 1}, 2, true);
+        Cabin cabin_1 = new Cabin(connectors2, false);
+        Cabin cabin_2 = new Cabin(connectors1, false);
+        Cabin cabin_3 = new Cabin(connectors2, false);
+        Cannon cannon_1 = new Cannon(connectors3, 1);
+        Cannon cannon_2 = new Cannon(connectors1, 1);
+        Cannon cannon_3 = new Cannon(connectors1, 1);
+        Cannon cannon_4 = new Cannon(connectors5, 2);
+        Vital vital_1 = new Vital(connectors4, 0);
+        Battery battery_1 = new Battery(connectors1, 3);
+        Storage storage_1 = new Storage(connectors5, 3, false);
+        Storage storage_2 = new Storage(connectors5, 2, true);
         //cannon_1.rotateLeft();
 
 
@@ -415,19 +561,66 @@ class SlaversTest {
         // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
         // 2 + 2 + 2 = umani + 1 alieno marrone
 
+        List<Integer> connectors1 = new ArrayList<Integer>();
+        connectors1.add(0);
+        connectors1.add(1);
+        connectors1.add(0);
+        connectors1.add(1);
+
+        List<Integer> connectors2 = new ArrayList<Integer>();
+        connectors2.add(1);
+        connectors2.add(1);
+        connectors2.add(0);
+        connectors2.add(1);
+
+        List<Integer> connectors3 = new ArrayList<Integer>();
+        connectors3.add(0);
+        connectors3.add(0);
+        connectors3.add(1);
+        connectors3.add(0);
+
+        List<Integer> connectors4 = new ArrayList<Integer>();
+        connectors4.add(0);
+        connectors4.add(1);
+        connectors4.add(0);
+        connectors4.add(0);
+
+        List<Integer> connectors5 = new ArrayList<Integer>();
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(0);
+        connectors5.add(1);
+
+        List<Integer> connectors6 = new ArrayList<Integer>();
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+        connectors6.add(1);
+
+        List<Integer> connectors7 = new ArrayList<Integer>();
+        connectors7.add(0);
+        connectors7.add(1);
+        connectors7.add(1);
+        connectors7.add(0);
+
+        List<Integer> connectors8 = new ArrayList<Integer>();
+        connectors8.add(1);
+        connectors8.add(0);
+        connectors8.add(0);
+        connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(new int[] {1, 1, 0, 1}, false);
-        Cabin cabin_2 = new Cabin(new int[] {0, 1, 0, 1}, false);
-        Cabin cabin_3 = new Cabin(new int[] {1, 1, 1, 1}, false);
-        Cannon cannon_1 = new Cannon(new int[] {0, 0, 1, 0}, 1);
-        Cannon cannon_2 = new Cannon(new int[] {1, 1, 0, 1}, 1);
-        Cannon cannon_3 = new Cannon(new int[] {0, 1, 0, 1}, 1);
-        Cannon cannon_4 = new Cannon(new int[] {0, 0, 0, 1}, 2);
-        Vital vital_1 = new Vital(new int[] {0, 1, 0, 0}, 0);
-        Battery battery_1 = new Battery(new int[] {0, 1, 0, 1}, 3);
-        Storage storage_1 = new Storage(new int[] {0, 0, 0, 1}, 3, false);
-        Storage storage_2 = new Storage(new int[] {0, 0, 0, 1}, 2, true);
+        Cabin cabin_1 = new Cabin(connectors2, false);
+        Cabin cabin_2 = new Cabin(connectors1, false);
+        Cabin cabin_3 = new Cabin(connectors6, false);
+        Cannon cannon_1 = new Cannon(connectors3, 1);
+        Cannon cannon_2 = new Cannon(connectors2, 1);
+        Cannon cannon_3 = new Cannon(connectors1, 1);
+        Cannon cannon_4 = new Cannon(connectors5, 2);
+        Vital vital_1 = new Vital(connectors4, 0);
+        Battery battery_1 = new Battery(connectors1, 3);
+        Storage storage_1 = new Storage(connectors5, 3, false);
+        Storage storage_2 = new Storage(connectors5, 2, true);
         //cannon_1.rotateLeft();
 
 

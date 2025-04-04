@@ -173,14 +173,18 @@ public class VisitPlanets extends EventCard {
         // ActionJSON unpacking
         try {
             visitPlanetsJSON = (VisitPlanetsJSON) data;
+
+            if (this.currentPlayer.isEmpty()) {
+                throw new IllegalArgumentException("ERROR: Given player is not present in the current game");
+            }
         }
         catch (Exception e) {
-            throw new IllegalArgumentException("[VisitPlanets::useCard] ERROR: JSON data parsing error");
+            throw new IllegalArgumentException("[VisitPlanets::useCard] " + e.getMessage());
         }
 
         // If the given player's ActionJSON response is null, this means that
         // the player did not want to choose a planet, therefore he's skipped
-        if (visitPlanetsJSON != null) {
+        if (visitPlanetsJSON != null && this.currentPlayer.get().isConnected()) {
             // Check if there is a player playing the card
             if (this.currentPlayer.isEmpty()) {
                 throw new IllegalArgumentException("[VisitPlanet::useCard] ERROR: No player is currently playing (Optional contains null)");
@@ -290,14 +294,14 @@ public class VisitPlanets extends EventCard {
             }
         }
 
+        // Getting the next active player
+        this.currentPlayer = this.getNextPlayer();
+
         // Set the "hasBeenUsed" flag to true iff all the available planets
         // have been chosen or if all players have answered to the card (i.e.: currPlayer == players.getLast())
-        if (this.playerUseCount == this.itemsPerPlanet.size() || this.currentPlayer.get() == this.players.getLast()) {
+        if (this.playerUseCount == this.itemsPerPlanet.size() || this.currentPlayer.isEmpty()) {
             this.malusEffect();
             this.cardUsed();
-        }
-        else {
-            this.currentPlayer = this.getNextPlayer();
         }
 
         return this;

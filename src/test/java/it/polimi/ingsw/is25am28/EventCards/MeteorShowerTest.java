@@ -144,7 +144,6 @@ class MeteorShowerTest {
         Player p1 = new Player("p1", PlayerColor.RED, 2);
         Player p2 = new Player("p2", PlayerColor.GREEN, 2);
 
-
         board.newPlayer(p1);
         board.newPlayer(p2);
 
@@ -1294,5 +1293,367 @@ class MeteorShowerTest {
             }
         );
         assertEquals(expectedShipP2ComponentCount.get(), actualShipP2ComponentCount.get());
+    }
+
+    @Test
+    void useCard_threePlayersButOneIsDisconnected() {
+        MeteorShowerJSON meteorShowerJSON;
+        CardStateJSON meteorShowerStateJSON;
+        List<Player> playerList;
+        List<Pair<Integer, Integer>> shieldsCoordinates;
+        List<Pair<Integer, Integer>> cannonsCoordinates;
+
+        Player player3 = new Player("p3", PlayerColor.RED, 2);
+        this.board.newPlayer(player3);
+        this.board.addPlayerToBoard(player3);
+
+        playerList = this.board.getPlayers();
+
+        initCustomShip(this.board.getPlayers().get(2));
+
+        int energyP1 = playerList.get(0).getShip().getAvailableEnergy();
+        int energyP2 = playerList.get(1).getShip().getAvailableEnergy();
+        int energyP3 = playerList.get(2).getShip().getAvailableEnergy();
+        int currMeteorIndex = 0;
+
+        final AtomicInteger expectedShipP1ComponentCount = new AtomicInteger(0);
+        final AtomicInteger expectedShipP2ComponentCount = new AtomicInteger(0);
+        final AtomicInteger expectedShipP3ComponentCount = new AtomicInteger(0);
+        final AtomicInteger actualShipP1ComponentCount = new AtomicInteger(0);
+        final AtomicInteger actualShipP2ComponentCount = new AtomicInteger(0);
+        final AtomicInteger actualShipP3ComponentCount = new AtomicInteger(0);
+
+        // Counting the component amount on P1's ship
+        playerList.get(0).getShip().traverse(
+                (Component c) -> {
+                    expectedShipP1ComponentCount.getAndIncrement();
+                }
+        );
+
+        // Counting the component amount on P2's ship
+        playerList.get(1).getShip().traverse(
+                (Component c) -> {
+                    expectedShipP2ComponentCount.getAndIncrement();
+                }
+        );
+
+        // Counting the component amount on P3's ship
+        playerList.get(2).getShip().traverse(
+            (Component c) -> {
+                expectedShipP3ComponentCount.getAndIncrement();
+            }
+        );
+
+        this.meteorShower.initCardPlayers();
+
+        // ======== Meteor 1 of 9 (Small, Bottom) ========
+        // Player 1 --> Turns on the shield, but it's not oriented correctly, therefore still loses 1 energy
+        //              Also gives a wrong pair of coordinates, these will not be of a shield and thus energy shouldn't be consumed
+        // Player 2 --> Does nothing
+        // Player 3 --> Does nothing
+
+        shieldsCoordinates = new ArrayList<>();
+        cannonsCoordinates = new ArrayList<>();
+
+        // Meteor 1 - Player 1 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShowerStateJSON.setDiceThrowResult(6);
+
+        // Player 1 response
+        currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
+        shieldsCoordinates.add(new Pair<>(6, 4));   // Shield, 1 energy should be consumed
+        shieldsCoordinates.add(new Pair<>(0, 0));   // Wrong component, no energy should be consumed
+        cannonsCoordinates.add(null);
+        meteorShowerJSON = new MeteorShowerJSON(
+                playerList.get(0).getNickname(),
+                meteorShowerStateJSON.getCurrMeteorIndex(),
+                meteorShowerStateJSON.getDiceThrowResult(),
+                shieldsCoordinates,
+                cannonsCoordinates
+        );
+
+        // Using card on player 1
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        meteorShower.useCard(meteorShowerJSON);
+        assertFalse(meteorShower.hasFinished());
+        currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+
+        // Player 1 energy check
+        if (!playerList.get(0).getShip().getBatteryList().isEmpty()) {
+            // If the ship still has batteries, then evaluate the energy amount
+            energyP1--;
+            assertEquals(energyP1, playerList.get(0).getShip().getAvailableEnergy());
+        }
+        else {
+            // Else the ship should have 0 energy
+            if (energyP1 > 0) { energyP1 = 0; }
+            assertEquals(energyP1, playerList.get(0).getShip().getAvailableEnergy());
+        }
+
+        // Player1 - Meteor 1 aftermath --> Meteor hits and removes 1 component
+
+        // Checking that Player1's ship has a component removed
+        expectedShipP1ComponentCount.getAndDecrement();
+        actualShipP1ComponentCount.set(0);
+        playerList.get(0).getShip().traverse(
+                (Component c) -> {
+                    actualShipP1ComponentCount.getAndIncrement();
+                }
+        );
+        assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
+
+        // Meteor 1 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
+        shieldsCoordinates = new ArrayList<>();
+        cannonsCoordinates = new ArrayList<>();
+
+        // Player 2 response
+        shieldsCoordinates.add(null);   // P2 no shields selected
+        cannonsCoordinates.add(null);   // P2 no cannons selected
+        meteorShowerJSON = new MeteorShowerJSON(
+                playerList.get(1).getNickname(),
+                meteorShowerStateJSON.getCurrMeteorIndex(),
+                meteorShowerStateJSON.getDiceThrowResult(),
+                shieldsCoordinates,
+                cannonsCoordinates
+        );
+
+        // Using card on player 2
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        meteorShower.useCard(meteorShowerJSON);
+        assertFalse(meteorShower.hasFinished());
+        currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+
+        // Player 2 energy check
+        if (!playerList.get(1).getShip().getBatteryList().isEmpty()) {
+            // If the ship still has batteries, then evaluate the energy amount
+            assertEquals(energyP2, playerList.get(1).getShip().getAvailableEnergy());
+        }
+        else {
+            // Else the ship should have 0 energy
+            if (energyP2 > 0) { energyP2 = 0; }
+            assertEquals(energyP2, playerList.get(1).getShip().getAvailableEnergy());
+        }
+
+        // Player2 - Meteor 1 aftermath --> Meteor hits and removes 1 component
+//        System.out.println("\n\t ==== SHIP Player2 after Meteor 1 ====");
+//        printShipGrid(playerList.get(1).getShip());
+
+        // Checking that Player2's ship has a component removed
+        expectedShipP2ComponentCount.getAndDecrement();
+        actualShipP2ComponentCount.set(0);
+        playerList.get(1).getShip().traverse(
+                (Component c) -> {
+                    actualShipP2ComponentCount.getAndIncrement();
+                }
+        );
+        assertEquals(expectedShipP2ComponentCount.get(), actualShipP2ComponentCount.get());
+
+        shieldsCoordinates = new ArrayList<>();
+        cannonsCoordinates = new ArrayList<>();
+
+        // Meteor 1 - Player 3 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShowerStateJSON.setDiceThrowResult(6);
+
+        // Player 3 response
+        currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
+//        shieldsCoordinates.add(null)      // P3 does nothing
+//        cannonsCoordinates.add(null);     // P3 does nothing
+        meteorShowerJSON = new MeteorShowerJSON(
+                playerList.get(2).getNickname(),
+                meteorShowerStateJSON.getCurrMeteorIndex(),
+                meteorShowerStateJSON.getDiceThrowResult(),
+                shieldsCoordinates,
+                cannonsCoordinates
+        );
+
+        // Using card on player 3
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        meteorShower.useCard(meteorShowerJSON);
+        assertFalse(meteorShower.hasFinished());
+        currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+
+        // Player 3 energy check
+        if (!playerList.get(2).getShip().getBatteryList().isEmpty()) {
+            // If the ship still has batteries, then evaluate the energy amount
+            assertEquals(energyP3, playerList.get(2).getShip().getAvailableEnergy());
+        }
+        else {
+            // Else the ship should have 0 energy
+            if (energyP3 > 0) { energyP3 = 0; }
+            assertEquals(energyP3, playerList.get(2).getShip().getAvailableEnergy());
+        }
+
+        // Player3 - Meteor 1 aftermath --> Meteor hits and removes 1 component
+        // Checking that Player3's ship has a component removed
+        expectedShipP3ComponentCount.getAndDecrement();
+        actualShipP3ComponentCount.set(0);
+        playerList.get(0).getShip().traverse(
+            (Component c) -> {
+                actualShipP3ComponentCount.getAndIncrement();
+            }
+        );
+        assertEquals(expectedShipP3ComponentCount.get(), actualShipP3ComponentCount.get());
+
+
+
+        // Simulating P3 disconnecting before meteor sequence
+        this.board.getPlayers().get(2).setConnected(false);
+
+        // Now we'll test that the meteor sequence will iterate only upon the currently connected players
+        // (which are P1 and P2 since P3 was disconnected above)
+
+
+
+        // ======== Meteor 2 of 9 (Small, Left) ========
+        // Player 1 --> Does nothing
+        // Player 2 --> Does nothing
+        // Player 3 --> Gets disconnected before his turn, therefore no meteors should hit him
+
+        shieldsCoordinates = new ArrayList<>();
+        cannonsCoordinates = new ArrayList<>();
+
+        // Meteor 2 - Player 1 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShowerStateJSON.setDiceThrowResult(6);
+
+        // Player 1 response
+        currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
+        shieldsCoordinates.add(null);   // P1 no shields selected
+        cannonsCoordinates.add(null);   // P1 no cannons selected
+        meteorShowerJSON = new MeteorShowerJSON(
+                playerList.get(0).getNickname(),
+                meteorShowerStateJSON.getCurrMeteorIndex(),
+                meteorShowerStateJSON.getDiceThrowResult(),
+                shieldsCoordinates,
+                cannonsCoordinates
+        );
+
+        // Using card on player 1
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        meteorShower.useCard(meteorShowerJSON);
+        assertFalse(meteorShower.hasFinished());
+        currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+
+        // Player 1 energy check
+        if (!playerList.get(0).getShip().getBatteryList().isEmpty()) {
+            // If the ship still has batteries, then evaluate the energy amount
+            assertEquals(energyP1, playerList.get(0).getShip().getAvailableEnergy());
+        }
+        else {
+            // Else the ship should have 0 energy
+            if (energyP1 > 0) { energyP1 = 0; }
+            assertEquals(energyP1, playerList.get(0).getShip().getAvailableEnergy());
+        }
+
+        // Player1 - Meteor 2 aftermath --> Meteor hits and removes 1 component
+        // Checking that Player1's ship has a component removed
+        expectedShipP1ComponentCount.getAndDecrement();
+        actualShipP1ComponentCount.set(0);
+        playerList.get(0).getShip().traverse(
+                (Component c) -> {
+                    actualShipP1ComponentCount.getAndIncrement();
+                }
+        );
+        assertEquals(expectedShipP1ComponentCount.get(), actualShipP1ComponentCount.get());
+
+        // Meteor 2 - Player 2 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
+        shieldsCoordinates = new ArrayList<>();
+        cannonsCoordinates = new ArrayList<>();
+
+        // Player 2 response
+        shieldsCoordinates.add(null);   // P2 no shields selected
+        cannonsCoordinates.add(null);   // P2 no cannons selected
+        meteorShowerJSON = new MeteorShowerJSON(
+                playerList.get(1).getNickname(),
+                meteorShowerStateJSON.getCurrMeteorIndex(),
+                meteorShowerStateJSON.getDiceThrowResult(),
+                shieldsCoordinates,
+                cannonsCoordinates
+        );
+
+        // Using card on player 2
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        meteorShower.useCard(meteorShowerJSON);
+        assertFalse(meteorShower.hasFinished());
+        currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+
+        // Player 2 energy check
+        if (!playerList.get(1).getShip().getBatteryList().isEmpty()) {
+            // If the ship still has batteries, then evaluate the energy amount
+            assertEquals(energyP2, playerList.get(1).getShip().getAvailableEnergy());
+        }
+        else {
+            // Else the ship should have 0 energy
+            if (energyP2 > 0) { energyP2 = 0; }
+            assertEquals(energyP2, playerList.get(1).getShip().getAvailableEnergy());
+        }
+
+        // Player2 - Meteor 2 aftermath --> Meteor hits and takes away 1 component
+        // Checking that Player2's ship has a component removed
+        expectedShipP2ComponentCount.getAndDecrement();
+        actualShipP2ComponentCount.set(0);
+        playerList.get(1).getShip().traverse(
+                (Component c) -> {
+                    actualShipP2ComponentCount.getAndIncrement();
+                }
+        );
+        assertEquals(expectedShipP2ComponentCount.get(), actualShipP2ComponentCount.get());
+
+        shieldsCoordinates = new ArrayList<>();
+        cannonsCoordinates = new ArrayList<>();
+
+        // Meteor 1 - Player 3 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
+        // Altering the seed result to try to shoot a big meteor\
+        // coming from the top with a single cannon
+        meteorShowerStateJSON.setDiceThrowResult(6);
+
+        // Since P3 is disconnected, the meteorIndex should go to the next meteor
+        currMeteorIndex++;
+        assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertFalse(meteorShower.hasFinished());
+
+        // Player 3 energy check
+        if (!playerList.get(2).getShip().getBatteryList().isEmpty()) {
+            // If the ship still has batteries, then evaluate the energy amount
+            assertEquals(energyP3, playerList.get(2).getShip().getAvailableEnergy());
+        }
+        else {
+            // Else the ship should have 0 energy
+            if (energyP3 > 0) { energyP3 = 0; }
+            assertEquals(energyP3, playerList.get(2).getShip().getAvailableEnergy());
+        }
+
+        // Player3 - Meteor 1 aftermath --> Meteor hits and removes 1 component
+        // BUT since P3 is disconnected, the meteor is skipped and thus no components should be removed
+
+        // Checking that Player3's ship has the same components as before (because he got skipped due to being disconnected)
+        actualShipP3ComponentCount.set(0);
+        playerList.get(2).getShip().traverse(
+            (Component c) -> {
+                actualShipP3ComponentCount.getAndIncrement();
+            }
+        );
+        assertEquals(expectedShipP3ComponentCount.get(), actualShipP3ComponentCount.get());
     }
 }

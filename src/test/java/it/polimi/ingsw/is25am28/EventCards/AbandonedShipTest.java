@@ -34,20 +34,26 @@ class AbandonedShipTest {
 
         this.board.buildBoard();
 
-        board.newPlayer("Player 1", PlayerColor.RED);
-        board.newPlayer("Player 2", PlayerColor.BLUE);
-        board.newPlayer("Player 3", PlayerColor.GREEN);
-        board.newPlayer("Player 4", PlayerColor.YELLOW);
+        List<Player> players = new ArrayList<Player>();
+
+        players.add(new Player("Player 1", PlayerColor.RED, 2));
+        players.add(new Player("Player 2", PlayerColor.BLUE, 2));
+        players.add(new Player("Player 3", PlayerColor.GREEN, 2));
+        players.add(new Player("Player 4", PlayerColor.YELLOW, 2));
+
+        for (Player player : players) {
+            this.board.newPlayer(player);
+        }
 
         // Add the players to the board and create the ships for each player
         // All the players have the same amount of Astronauts (that is 6) --> So they can play the card
         for (Player player : board.getPlayers()) {
             board.addPlayerToBoard(player);
 
-            int[] connectors = new int[4];
+            List<Integer> connectors = new ArrayList<Integer>();
 
             for (int i = 0; i < 4; i++) {
-                connectors[i] = THREE_PIPES.ordinal();
+                connectors.add(THREE_PIPES.ordinal());
             }
 
             if (player.getNickname().equals("Player 1")) {

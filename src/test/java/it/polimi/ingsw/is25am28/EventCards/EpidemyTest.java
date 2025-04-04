@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-import it.polimi.ingsw.is25am28.ActionJSON.ShipJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.*;
@@ -10,28 +9,29 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import javafx.util.Pair;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
+import static it.polimi.ingsw.is25am28.Lifeform.LifeformType.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 class EpidemyTest {
 
-    List<Integer> getConnectors(){
+    List<Integer> getConnectors() {
         List<Integer> connectors = new ArrayList<>();
 
-        for( int i = 0; i < 4; i++ )
-            connectors.add( THREE_PIPES.ordinal() );
+        for (int i = 0; i < 4; i++) {
+            connectors.add(THREE_PIPES.ordinal());
+        }
+
         return connectors;
     }
 
-    void add2PlayersToBoard( Board board ){
+    void add2PlayersToBoard(Board board) {
 
         Player p1 = new Player("p1", PlayerColor.RED, 2);
         Player p2 = new Player("p2", PlayerColor.BLUE, 2);
@@ -40,7 +40,7 @@ class EpidemyTest {
         board.newPlayer(p2);
     }
 
-    void add3PlayersToBoard( Board board ){
+    void add3PlayersToBoard(Board board) {
 
         Player p1 = new Player("p1", PlayerColor.RED, 2);
         Player p2 = new Player("p2", PlayerColor.BLUE, 2);
@@ -51,53 +51,65 @@ class EpidemyTest {
         board.newPlayer(p3);
     }
 
-    /**
-     * Outputs the given ship to terminal
-     * @param ship The ship to print to terminal
-     */
-    void printShipGrid(Ship ship) {
-        if (ship != null) {
-            List<Component> components = new ArrayList<>();
-            Component c;
-            int rows = ship.getGridDimensions().getKey();
-            int cols = ship.getGridDimensions().getValue();
-            int i, j, k;
+    void add4PlayersToBoard(Board board) {
+        Player p1 = new Player("p1", PlayerColor.RED, 2);
+        Player p2 = new Player("p2", PlayerColor.BLUE, 2);
+        Player p3 = new Player("p3", PlayerColor.YELLOW, 2);
+        Player p4 = new Player("p3", PlayerColor.GREEN, 2);
 
-            System.out.print("\n\\");
-            for (i = 0; i < cols; i++) {
-                System.out.print("\t" + i);
-            }
-            System.out.print("\n");
-
-            k = 0;
-
-            for (i = 0; i < rows; i++) {
-                System.out.print(i + "\t");
-                for (j = 0; j < cols; j++) {
-                    c = ship.getComponent(i, j);
-                    if (c == null) {
-                        System.out.print("." + "\t");
-                    }
-                    else {
-                        System.out.print(k++ + "\t");
-                        components.add(c);
-                    }
-                }
-                System.out.print("\n");
-            }
-
-            int size = components.size();
-
-            System.out.println("\nFound these components:");
-
-            for (i = 0; i < size; i++) {
-                System.out.println(i + " - " + components.get(i));
-            }
-        }
-        else {
-            System.out.println("ERROR: Given ship is null");
-        }
+        board.newPlayer(p1);
+        board.newPlayer(p2);
+        board.newPlayer(p3);
+        board.newPlayer(p4);
     }
+
+//    /**
+//     * Outputs the given ship to terminal
+//     * @param ship The ship to print to terminal
+//     */
+//    void printShipGrid(Ship ship) {
+//        if (ship != null) {
+//            List<Component> components = new ArrayList<>();
+//            Component c;
+//            int rows = ship.getGridDimensions().getKey();
+//            int cols = ship.getGridDimensions().getValue();
+//            int i, j, k;
+//
+//            System.out.print("\n\\");
+//            for (i = 0; i < cols; i++) {
+//                System.out.print("\t" + i);
+//            }
+//            System.out.print("\n");
+//
+//            k = 0;
+//
+//            for (i = 0; i < rows; i++) {
+//                System.out.print(i + "\t");
+//                for (j = 0; j < cols; j++) {
+//                    c = ship.getComponent(i, j);
+//                    if (c == null) {
+//                        System.out.print("." + "\t");
+//                    }
+//                    else {
+//                        System.out.print(k++ + "\t");
+//                        components.add(c);
+//                    }
+//                }
+//                System.out.print("\n");
+//            }
+//
+//            int size = components.size();
+//
+//            System.out.println("\nFound these components:");
+//
+//            for (i = 0; i < size; i++) {
+//                System.out.println(i + " - " + components.get(i));
+//            }
+//        }
+//        else {
+//            System.out.println("ERROR: Given ship is null");
+//        }
+//    }
 
     void initCustomShip(Player player) {
         Ship ship = player.getShip();
@@ -198,8 +210,7 @@ class EpidemyTest {
 
         Board board = new BoardLevel2();
 
-
-        add3PlayersToBoard( board );
+        add3PlayersToBoard(board);
 
         for (Player player : board.getPlayers()) {
             initCustomShip(player);
@@ -210,7 +221,6 @@ class EpidemyTest {
         Ship shipPlayer3 = board.getPlayers().get(2).getShip();
 
         List<Integer> connectors = getConnectors();
-
 
         Cabin cabin2 = new Cabin(connectors, false);
         Cabin cabin3 = new Cabin(connectors, false);
@@ -224,17 +234,11 @@ class EpidemyTest {
         shipPlayer2.generateComponentSubLists();
         shipPlayer3.generateComponentSubLists();
 
-        Lifeform brownAlien = new Lifeform(LifeformType.BROWN_ALIEN);
-        Lifeform purpleAlien = new Lifeform(LifeformType.PURPLE_ALIEN);
-        Lifeform astronaut = new Lifeform(LifeformType.ASTRONAUT);
-
         // Adding all humans to player1's ship
         shipPlayer1.getCabinList().forEach(
             (Cabin c) -> {
-                if (c != shipPlayer1.getComponent(6, 6)) {
-                    c.addInhabitant(astronaut);
-                    c.addInhabitant(astronaut);
-                }
+                shipPlayer1.addLifeformToCabin(c.getPosition()[0], c.getPosition()[1], ASTRONAUT);
+                shipPlayer1.addLifeformToCabin(c.getPosition()[0], c.getPosition()[1], ASTRONAUT);
             }
         );
 
@@ -242,42 +246,58 @@ class EpidemyTest {
         // (Just for testing & simplicity) The type of alien added is based on the first vital unit found connected to a cabin
         shipPlayer2.getCabinList().forEach(
             (Cabin c) -> {
-                boolean alienPlaced = false;
-                Component[] neighbours = shipPlayer2.getNearestComponents(c);
+                if (c != shipPlayer2.getCore()) {
+                    Component[] neighbours = shipPlayer2.getNearestComponents(c);
+                    boolean alienPlaced = false;
 
-                if (c != shipPlayer2.getComponent(6, 6)) {
                     for (Component neighbour : neighbours) {
                         switch (neighbour) {
                             case Vital vital -> {
-                                alienPlaced = true;
                                 if (vital.getVitalType() == VitalType.BROWN_VITAL) {
-                                    Map<Integer, Pair<Integer, Integer>> alienCoords;
-                                    ShipJSON shipJSON;
-
-                                    alienCoords = new HashMap<>();
-                                    alienCoords.put(2, new Pair<>(c.getPosition()[0], c.getPosition()[1]));
-                                    shipJSON = new ShipJSON("P2", alienCoords);
-                                    shipPlayer2.setChosenAliensForEligibleCabins(shipJSON);
+                                    if (shipPlayer2.getBrownAlienPosition() == null) {
+                                        shipPlayer2.addLifeformToCabin(
+                                                c.getPosition()[0],
+                                                c.getPosition()[1],
+                                                BROWN_ALIEN
+                                        );
+                                        alienPlaced = true;
+                                    }
+                                    else {
+                                        System.out.println("BROWN ALIEN already there!!!");
+                                    }
+                                }
+                                else if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
+                                    if (shipPlayer2.getPurpleAlienPosition() == null) {
+                                        shipPlayer2.addLifeformToCabin(
+                                                c.getPosition()[0],
+                                                c.getPosition()[1],
+                                                PURPLE_ALIEN
+                                        );
+                                        alienPlaced = true;
+                                    }
+                                    else {
+                                        System.out.println("PURPLE ALIEN already there!!!");
+                                    }
                                 }
                                 else {
-                                    Map<Integer, Pair<Integer, Integer>> alienCoords;
-                                    ShipJSON shipJSON;
-
-                                    alienCoords = new HashMap<>();
-                                    alienCoords.put(1, new Pair<>(c.getPosition()[0], c.getPosition()[1]));
-                                    shipJSON = new ShipJSON("P2", alienCoords);
-                                    shipPlayer2.setChosenAliensForEligibleCabins(shipJSON);
+                                    throw new IllegalArgumentException("ERROR: Vital type not recognized");
                                 }
                             }
                             case null, default -> {}
                         }
-                        if (alienPlaced) break;
                     }
 
-                    // NOTE: Core cabin is already filled with 2 humans
                     if (!alienPlaced) {
-                        c.addInhabitant(astronaut);
-                        c.addInhabitant(astronaut);
+                        shipPlayer2.addLifeformToCabin(
+                                c.getPosition()[0],
+                                c.getPosition()[1],
+                                ASTRONAUT
+                        );
+                        shipPlayer2.addLifeformToCabin(
+                                c.getPosition()[0],
+                                c.getPosition()[1],
+                                ASTRONAUT
+                        );
                     }
                 }
             }
@@ -287,42 +307,59 @@ class EpidemyTest {
         // (Just for testing & simplicity) The type of alien added is based on the first vital unit found connected to a cabin
         shipPlayer3.getCabinList().forEach(
             (Cabin c) -> {
-                boolean alienPlaced = false;
-                Component[] neighbours = shipPlayer3.getNearestComponents(c);
+                if (c != shipPlayer3.getCore()) {
 
-                if (c != shipPlayer3.getComponent(6, 6)) {
+                    Component[] neighbours = shipPlayer3.getNearestComponents(c);
+                    boolean alienPlaced = false;
+
                     for (Component neighbour : neighbours) {
                         switch (neighbour) {
                             case Vital vital -> {
-                                alienPlaced = true;
                                 if (vital.getVitalType() == VitalType.BROWN_VITAL) {
-                                    Map<Integer, Pair<Integer, Integer>> alienCoords;
-                                    ShipJSON shipJSON;
-
-                                    alienCoords = new HashMap<>();
-                                    alienCoords.put(2, new Pair<>(c.getPosition()[0], c.getPosition()[1]));
-                                    shipJSON = new ShipJSON("P3", alienCoords);
-                                    shipPlayer3.setChosenAliensForEligibleCabins(shipJSON);
+                                    if (shipPlayer3.getBrownAlienPosition() == null) {
+                                        shipPlayer3.addLifeformToCabin(
+                                                c.getPosition()[0],
+                                                c.getPosition()[1],
+                                                BROWN_ALIEN
+                                        );
+                                        alienPlaced = true;
+                                    }
+                                    else {
+                                        System.out.println("BROWN ALIEN already there!!!");
+                                    }
+                                }
+                                else if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
+                                    if (shipPlayer3.getPurpleAlienPosition() == null) {
+                                        shipPlayer3.addLifeformToCabin(
+                                                c.getPosition()[0],
+                                                c.getPosition()[1],
+                                                PURPLE_ALIEN
+                                        );
+                                        alienPlaced = true;
+                                    }
+                                    else {
+                                        System.out.println("PURPLE ALIEN already there!!!");
+                                    }
                                 }
                                 else {
-                                    Map<Integer, Pair<Integer, Integer>> alienCoords;
-                                    ShipJSON shipJSON;
-
-                                    alienCoords = new HashMap<>();
-                                    alienCoords.put(1, new Pair<>(c.getPosition()[0], c.getPosition()[1]));
-                                    shipJSON = new ShipJSON("P3", alienCoords);
-                                    shipPlayer3.setChosenAliensForEligibleCabins(shipJSON);
+                                    throw new IllegalArgumentException("ERROR: Vital type not recognized");
                                 }
                             }
                             case null, default -> {}
                         }
-                        if (alienPlaced) break;
                     }
 
-                    // NOTE: Core cabin is already filled with 2 humans
                     if (!alienPlaced) {
-                        c.addInhabitant(astronaut);
-                        c.addInhabitant(astronaut);
+                        shipPlayer3.addLifeformToCabin(
+                                c.getPosition()[0],
+                                c.getPosition()[1],
+                                ASTRONAUT
+                        );
+                        shipPlayer3.addLifeformToCabin(
+                                c.getPosition()[0],
+                                c.getPosition()[1],
+                                ASTRONAUT
+                        );
                     }
                 }
             }
@@ -384,7 +421,6 @@ class EpidemyTest {
         Ship shipPlayer2 = board.getPlayers().get(1).getShip();
 
         List<Integer> connectors = getConnectors();
-
 
         Cabin cabin2 = new Cabin(connectors, false);
         Cabin cabin3 = new Cabin(connectors, false);
@@ -465,7 +501,6 @@ class EpidemyTest {
 
         List<Integer> connectors = getConnectors();
 
-
         Cabin cabin2 = new Cabin(connectors, false);
         Cabin cabin3 = new Cabin(connectors, false);
 
@@ -477,30 +512,11 @@ class EpidemyTest {
         shipPlayer1.generateComponentSubLists();
         shipPlayer2.generateComponentSubLists();
 
-        Lifeform astronaut = new Lifeform(LifeformType.ASTRONAUT);
-        Lifeform purpleAlien = new Lifeform(LifeformType.PURPLE_ALIEN);
-        Lifeform brownAlien = new Lifeform(LifeformType.BROWN_ALIEN);
+        shipPlayer1.addLifeformToCabin(6, 7, ASTRONAUT);
+        shipPlayer1.addLifeformToCabin(7, 7, PURPLE_ALIEN);
 
-        ((Cabin) shipPlayer1.getComponent(6, 7)).addInhabitant(astronaut);
-        ((Cabin) shipPlayer1.getComponent(6, 7)).addInhabitant(astronaut);
-
-        Map<Integer, Pair<Integer, Integer>> alienCoords;
-        ShipJSON shipJSON;
-
-        alienCoords = new HashMap<>();
-        alienCoords.put(1, new Pair<>(7, 7));
-        shipJSON = new ShipJSON("p1", alienCoords);
-        shipPlayer1.setChosenAliensForEligibleCabins(shipJSON);
-
-        alienCoords = new HashMap<>();
-        alienCoords.put(1, new Pair<>(7, 7));
-        shipJSON = new ShipJSON("p2", alienCoords);
-        shipPlayer2.setChosenAliensForEligibleCabins(shipJSON);
-
-        alienCoords = new HashMap<>();
-        alienCoords.put(2, new Pair<>(6, 8));
-        shipJSON = new ShipJSON("p2", alienCoords);
-        shipPlayer2.setChosenAliensForEligibleCabins(shipJSON);
+        shipPlayer2.addLifeformToCabin(7, 7, PURPLE_ALIEN);
+        shipPlayer2.addLifeformToCabin(6, 8, BROWN_ALIEN);
 
         Epidemy epidemy = new Epidemy(
             "Epidemy",
@@ -529,5 +545,164 @@ class EpidemyTest {
         assertTrue(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer1Lifeforms));
         assertEquals(expectedPlayer2Lifeforms.size(), shipPlayer2.getAllLifeforms().size());
         assertTrue(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer2Lifeforms));
+    }
+
+    @Test
+    void useCardAndSkipTwoOfFourPlayers() {
+        // Player 1 & 4 --> Always connected; P1 has neighbouring occupied cabins, thus epidemy will have an effect on his ship
+        //                  but player 4 has all cabins disconnected from each other, thus epidemy won't have an effect on his ship
+        // Player 2 & 3 --> They mirror the same ship config as P4 and P1 respectively, but they both get disconnected, thus
+        //                  they should be skipped and their ships should stay the same, as if epidemy didn't have any effecto on them
+
+        Board board = new BoardLevel2();
+
+        add4PlayersToBoard(board);
+
+        for (Player player : board.getPlayers()) {
+            initCustomShip(player);
+        }
+
+        Ship shipPlayer1 = board.getPlayers().get(0).getShip();
+        Ship shipPlayer2 = board.getPlayers().get(1).getShip();
+        Ship shipPlayer3 = board.getPlayers().get(2).getShip();
+        Ship shipPlayer4 = board.getPlayers().get(3).getShip();
+
+        List<Integer> connectors = getConnectors();
+
+        Cabin cabin2 = new Cabin(connectors, false);
+        Cabin cabin3 = new Cabin(connectors, false);
+        Cabin cabin4 = new Cabin(connectors, false);
+        Cabin cabin5 = new Cabin(connectors, false);
+
+        shipPlayer1.removeComponent(6, 7);
+        shipPlayer1.addComponent(cabin2, 6, 7);
+        shipPlayer1.addLifeformToCabin(6, 7, ASTRONAUT);
+        shipPlayer1.addLifeformToCabin(6, 7, ASTRONAUT);
+        shipPlayer1.addLifeformToCabin(7, 7, PURPLE_ALIEN);
+
+        shipPlayer2.removeComponent(6, 8);
+        shipPlayer2.addComponent(cabin3, 6, 8);
+        shipPlayer2.addLifeformToCabin(6, 8, BROWN_ALIEN);
+        shipPlayer2.addLifeformToCabin(7, 7, PURPLE_ALIEN);
+
+        shipPlayer3.removeComponent(6, 7);
+        shipPlayer3.addComponent(cabin4, 6, 7);
+        shipPlayer3.addLifeformToCabin(6, 7, ASTRONAUT);
+        shipPlayer3.addLifeformToCabin(6, 7, ASTRONAUT);
+        shipPlayer3.addLifeformToCabin(7, 7, PURPLE_ALIEN);
+
+        shipPlayer4.removeComponent(6, 8);
+        shipPlayer4.addComponent(cabin5, 6, 8);
+        shipPlayer4.addLifeformToCabin(6, 8, BROWN_ALIEN);
+        shipPlayer4.addLifeformToCabin(7, 7, ASTRONAUT);
+        shipPlayer4.addLifeformToCabin(7, 7, ASTRONAUT);
+
+        shipPlayer1.generateComponentSubLists();
+        shipPlayer2.generateComponentSubLists();
+        shipPlayer3.generateComponentSubLists();
+        shipPlayer4.generateComponentSubLists();
+
+        Epidemy epidemy = new Epidemy(
+                "Epidemy",
+                board.getLevel(),
+                board
+        );
+
+        List<LifeformType> expectedLifeformsP1 = new ArrayList<>();
+        List<LifeformType> expectedLifeformsP2 = new ArrayList<>();
+        List<LifeformType> expectedLifeformsP3 = new ArrayList<>();
+        List<LifeformType> expectedLifeformsP4 = new ArrayList<>();
+
+        expectedLifeformsP1.add(ASTRONAUT);
+        expectedLifeformsP1.add(ASTRONAUT);
+        expectedLifeformsP1.add(ASTRONAUT);
+        expectedLifeformsP1.add(ASTRONAUT);
+        expectedLifeformsP1.add(PURPLE_ALIEN);
+
+        assertEquals(expectedLifeformsP1.size(), shipPlayer1.getAllLifeforms().size());
+        assertTrue(expectedLifeformsP1.containsAll(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
+
+        expectedLifeformsP2.add(ASTRONAUT);
+        expectedLifeformsP2.add(ASTRONAUT);
+        expectedLifeformsP2.add(BROWN_ALIEN);
+        expectedLifeformsP2.add(PURPLE_ALIEN);
+
+        assertEquals(expectedLifeformsP2.size(), shipPlayer2.getAllLifeforms().size());
+        assertTrue(expectedLifeformsP2.containsAll(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
+
+        expectedLifeformsP3.add(ASTRONAUT);
+        expectedLifeformsP3.add(ASTRONAUT);
+        expectedLifeformsP3.add(ASTRONAUT);
+        expectedLifeformsP3.add(ASTRONAUT);
+        expectedLifeformsP3.add(PURPLE_ALIEN);
+
+        assertEquals(expectedLifeformsP3.size(), shipPlayer3.getAllLifeforms().size());
+        assertTrue(expectedLifeformsP3.containsAll(shipPlayer3.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
+
+        expectedLifeformsP4.add(ASTRONAUT);
+        expectedLifeformsP4.add(ASTRONAUT);
+        expectedLifeformsP4.add(ASTRONAUT);
+        expectedLifeformsP4.add(ASTRONAUT);
+        expectedLifeformsP4.add(BROWN_ALIEN);
+
+        assertEquals(expectedLifeformsP4.size(), shipPlayer4.getAllLifeforms().size());
+        assertTrue(expectedLifeformsP4.containsAll(shipPlayer4.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
+
+        epidemy.initCardPlayers();
+
+        // Disconnecting P2 and P3
+        board.getPlayers().get(1).setConnected(false);
+        board.getPlayers().get(2).setConnected(false);
+
+        epidemy.useCard();
+
+        // Verifying the expected lifeforms onboard each player's ship
+        expectedLifeformsP1 = new ArrayList<>();
+        expectedLifeformsP2 = new ArrayList<>();
+        expectedLifeformsP3 = new ArrayList<>();
+        expectedLifeformsP4 = new ArrayList<>();
+
+        // P1 has 3 cabins close to each other, therefore 1 lifeform is subtracted from each
+        // --> After epidemy, the remaining lifeforms are 2 ASTRONAUTS, 1 in Core, 1 in Cabin@(6, 7)
+        expectedLifeformsP1.add(ASTRONAUT);
+        expectedLifeformsP1.add(ASTRONAUT);
+
+        assertEquals(1, shipPlayer1.getCore().getInhabitants().size());
+        assertEquals(ASTRONAUT, shipPlayer1.getCore().getInhabitants().getFirst().getLifeformType());
+        assertEquals(1, ((Cabin) shipPlayer1.getComponent(6, 7)).getInhabitants().size());
+        assertEquals(ASTRONAUT, ((Cabin) shipPlayer1.getComponent(6, 7)).getInhabitants().getFirst().getLifeformType());
+        assertEquals(0, ((Cabin) shipPlayer1.getComponent(7, 7)).getInhabitants().size());
+
+        assertEquals(expectedLifeformsP1.size(), shipPlayer1.getAllLifeforms().size());
+        assertTrue(expectedLifeformsP1.containsAll(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
+
+        // P2 was disconnected, thus his lifeforms should be the same
+        expectedLifeformsP2.add(ASTRONAUT);
+        expectedLifeformsP2.add(ASTRONAUT);
+        expectedLifeformsP2.add(BROWN_ALIEN);
+        expectedLifeformsP2.add(PURPLE_ALIEN);
+
+        assertEquals(expectedLifeformsP2.size(), shipPlayer2.getAllLifeforms().size());
+        assertTrue(expectedLifeformsP2.containsAll(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
+
+        // P3 was disconnected, thus his lifeforms should be the same
+        expectedLifeformsP3.add(ASTRONAUT);
+        expectedLifeformsP3.add(ASTRONAUT);
+        expectedLifeformsP3.add(ASTRONAUT);
+        expectedLifeformsP3.add(ASTRONAUT);
+        expectedLifeformsP3.add(PURPLE_ALIEN);
+
+        assertEquals(expectedLifeformsP3.size(), shipPlayer3.getAllLifeforms().size());
+        assertTrue(expectedLifeformsP3.containsAll(shipPlayer3.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
+
+        // P4 had well-distanced cabins, therefore his lifeforms should stay the same
+        expectedLifeformsP4.add(ASTRONAUT);
+        expectedLifeformsP4.add(ASTRONAUT);
+        expectedLifeformsP4.add(ASTRONAUT);
+        expectedLifeformsP4.add(ASTRONAUT);
+        expectedLifeformsP4.add(BROWN_ALIEN);
+
+        assertEquals(expectedLifeformsP4.size(), shipPlayer4.getAllLifeforms().size());
+        assertTrue(expectedLifeformsP4.containsAll(shipPlayer4.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
     }
 }
