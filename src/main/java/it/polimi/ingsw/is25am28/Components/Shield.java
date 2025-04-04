@@ -1,9 +1,10 @@
 package it.polimi.ingsw.is25am28.Components;
+
 import java.util.List;
-import java.util.Map;
 
 public final class Shield extends Component {
-      public Shield( List<Integer> connectors ){
+
+      public Shield(List<Integer> connectors) {
             super(connectors);
       }
       /**
@@ -14,11 +15,11 @@ public final class Shield extends Component {
        * 2: bottom
        * 3: left
        */
-      public int[] getCoveredSide(){
+      public int[] getCoveredSide() {
             int[] covered = new int[2];
 
-            for( int i = 0; i < 2; i++ ){
-                  covered[i] = (direction + i)%4;
+            for (int i = 0; i < 2; i++) {
+                  covered[i] = (direction + i) % 4;
             }
 
             return covered;

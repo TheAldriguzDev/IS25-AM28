@@ -32,8 +32,10 @@ public final class Storage extends Component {
       }
 
       /**
-       * This method needs to handle eventual items drops, since the user can decide to drop some items
-       * */
+       * @param item The item to store inside this Storage component
+       * @throws IllegalArgumentException If the storage is full or if someone tries to put
+       *         a RED item into a non-special storage component
+       */
       public void storeItem(Item item) throws IllegalArgumentException{
             if (!isSpecialStorage && item.getColor() == ItemColor.RED) {
                   throw new IllegalArgumentException("You can't store a special item in a normal storage unit!");
@@ -52,16 +54,22 @@ public final class Storage extends Component {
             storedItems.add(idx, item);
       }
 
+      /**
+       * @param item The item to remove from this storage component
+       */
       public void removeItem(Item item) {
             storedItems.remove(item);
       }
 
+      /**
+       * @return The units of space that are currently free
+       */
       public int availableSpace() {
             return capacity - storedItems.size();
       }
 
       @Override
-      public Map<String,Object> toMap(){
+      public Map<String,Object> toMap() {
             Map<String,Object> map = super.toMap();
 
             map.put("capacity", capacity );

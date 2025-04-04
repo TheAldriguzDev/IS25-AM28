@@ -59,16 +59,31 @@ public abstract class EventCard {
 
         if (currentPlayer.isPresent()) {
             int currentIndex = players.indexOf(currentPlayer.get());
+
             if (currentIndex == players.size() - 1) {
                 this.cardUsed();
                 return Optional.empty();
-            } else {
+            }
+            else {
                 Player nextPlayer = players.get(currentIndex + 1);
                 currentPlayer = Optional.of(nextPlayer);
+
+                // If the current player is disconnected, then get the next one in line
+                if ( !currentPlayer.get().isConnected()) {
+                    currentPlayer = this.getNextPlayer();
+                }
+
                 return currentPlayer;
             }
-        } else {
+        }
+        else {
             currentPlayer = Optional.of(players.getFirst());
+
+            // If the first player is disconnected, then get the next one in line
+            if ( !currentPlayer.get().isConnected()) {
+                currentPlayer = this.getNextPlayer();
+            }
+
             return currentPlayer;
         }
     }

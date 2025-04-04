@@ -88,8 +88,6 @@ public class RoundSession extends Session {
     /**
      * make the game state to progress,
      * updating the card state with the player response
-     * @param response
-     * @return
      */
     public CardStateJSON playCard( Object response ){
         EventCard nextCard;

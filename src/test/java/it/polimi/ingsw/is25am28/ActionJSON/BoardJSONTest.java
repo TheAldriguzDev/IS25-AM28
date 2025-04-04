@@ -11,9 +11,7 @@ import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,10 +30,16 @@ class BoardJSONTest {
 
         this.board.buildBoard();
 
-        board.newPlayer("Player 1", PlayerColor.RED);
-        board.newPlayer("Player 2", PlayerColor.BLUE);
-        board.newPlayer("Player 3", PlayerColor.GREEN);
-        board.newPlayer("Player 4", PlayerColor.YELLOW);
+        List<Player> players = new ArrayList<Player>();
+
+        players.add(new Player("Player 1", PlayerColor.RED, 2));
+        players.add(new Player("Player 2", PlayerColor.BLUE, 2));
+        players.add(new Player("Player 3", PlayerColor.GREEN, 2));
+        players.add(new Player("Player 4", PlayerColor.YELLOW, 2));
+
+        for (Player player : players) {
+            this.board.newPlayer(player);
+        }
 
         // Add the players to the board and create the ships for each player
         // All the players have the same amount of Astronauts (that is 6) --> So they can play the card

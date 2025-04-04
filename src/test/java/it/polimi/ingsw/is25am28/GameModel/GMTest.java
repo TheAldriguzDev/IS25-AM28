@@ -27,6 +27,8 @@ public abstract class GMTest {
             board.newPlayer(players.get("A"));
             board.newPlayer(players.get("B"));
 
+            board.buildBoard();
+
             return board;
       }
 

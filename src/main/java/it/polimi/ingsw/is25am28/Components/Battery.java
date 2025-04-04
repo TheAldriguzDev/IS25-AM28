@@ -7,49 +7,54 @@ public final class Battery extends Component {
       private final int maxAvailability;
       private int available;
 
-      public Battery(List<Integer> connectors, int maxAvailability ){
+      public Battery(List<Integer> connectors, int maxAvailability) {
             super(connectors);
             this.maxAvailability = maxAvailability;
             available = maxAvailability;
       }
 
-      public int getAvailability(){
+      /**
+       * @return The currently available energy amount stored inside the battery
+       */
+      public int getAvailability() {
             return available;
       }
 
-      public int getMaxAvailability(){
+      /**
+       * @return The maximum charge this battery can hold when full
+       */
+      public int getMaxAvailability() {
             return maxAvailability;
       }
 
       /**
-       * set the availability to a specific value
-       * @param battery
-       * @return
+       * @param energyLevel The energy level that this battery will be set to
+       * @throws IllegalArgumentException If anyone tries to overcharge the battery or set its charge level to a negative value
        */
-      public Battery setAvailability( int battery ){
-            available = battery;
-
-            return this;
+      public void setAvailability(int energyLevel) throws IllegalArgumentException {
+            if (energyLevel < 0 || energyLevel > maxAvailability) {
+                  throw new IllegalArgumentException("ERROR: Battery energy level must be between 0 and maxAvailability");
+            }
+            else {
+                  available = energyLevel;
+            }
       }
 
-
       /**
-       *  used to remove specific qty of battery
-       * @param battery
-       * @throws Error if the availability goes under 0
+       * @param energyToConsume The units of charge that will be consumed from this battery
+       * @throws IllegalArgumentException If anyone attempts to discharge the battery for more than its currently storing
        */
-      public Battery useBattery( int battery ) throws Error {
-            available -= battery;
-
-            if( available < 0 ){
-                  throw new Error("removed too much battery");
+      public void useBattery(int energyToConsume) throws IllegalArgumentException {
+            if (available >= energyToConsume) {
+                  available -= energyToConsume;
             }
-
-            return this;
+            else {
+                  throw new IllegalArgumentException("ERROR: Cannot consume more charge than available");
+            }
       }
 
       @Override
-      public Map<String,Object> toMap(){
+      public Map<String,Object> toMap() {
             Map<String,Object> map = super.toMap();
 
             map.put("capacity", maxAvailability );
@@ -58,5 +63,4 @@ public final class Battery extends Component {
 
             return map;
       }
-
 }
