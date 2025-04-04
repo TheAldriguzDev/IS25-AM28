@@ -17,11 +17,6 @@ public class ShipConstructionInitialState {
       @JsonProperty("deck")
       private List<CardStateJSON> deck;
 
-
-      public ShipConstructionInitialState(){
-
-      }
-
       
       public List<Map<String,Object>> getAllTiles() {
             return allTiles;

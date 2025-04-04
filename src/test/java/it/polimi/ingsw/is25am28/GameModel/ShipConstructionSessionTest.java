@@ -123,7 +123,7 @@ public class ShipConstructionSessionTest extends GMTest {
 
             try{
                   // 300 to prevent thread errors
-                  TimeUnit.MILLISECONDS.sleep(2*60*1000 + 300 );
+                  TimeUnit.MILLISECONDS.sleep(1000*60*2 + 300 );
             }catch(InterruptedException _ ){
 
             }

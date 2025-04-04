@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.GameModel.Session;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -71,7 +72,7 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
             this.board = board;
 
             all = TileLoader.get().read();
-            all.sort((a,b) -> (int)( (Math.random() - Math.random())*1000 ) );
+            Collections.shuffle(all);
             selected = new ArrayList<>();
 
             level = gameLevel;
@@ -102,7 +103,6 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
                   }
 
                   flippedTimes++;
-                  clock.flip();
             }
       }
 
@@ -166,6 +166,7 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
             }
 
             onTimerEnd();
+            clock.flip();
 
             return true;
       }

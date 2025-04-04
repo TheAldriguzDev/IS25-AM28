@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.GameModel;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,6 +67,7 @@ public class GameModel implements SessionSubscriber {
 
             List<EventCard> deck = CardLoader.get().read( board, this.resourceBank, level );
 
+            Collections.shuffle(deck);
             // random sort
             deck.sort((_,_) -> (int)( (Math.random() - Math.random())*1000 ) );
 
