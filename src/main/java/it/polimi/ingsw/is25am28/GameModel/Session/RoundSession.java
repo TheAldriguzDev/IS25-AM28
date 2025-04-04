@@ -8,7 +8,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.State.State;
+import it.polimi.ingsw.is25am28.State.FirstRoundState;
 
 public class RoundSession extends Session {
     // CONSTANTS
@@ -67,8 +67,8 @@ public class RoundSession extends Session {
     /**
      * initialize the rounds and send the first card
      */
-    public CardStateJSON init(){
-        Map<String,Object> ships = new HashMap<>();
+    public FirstRoundState init(){
+        Map<String,List<Map<String, Object>>> ships = new HashMap<>();
 
         board
         .getPlayers()
@@ -79,7 +79,10 @@ public class RoundSession extends Session {
                 );
         deck.get(0).initCardPlayers();
 
-        return deck.get(0).generateState();
+        return new FirstRoundState()
+            .setBoard(board.generateState())
+            .setShips(ships)
+            .setCard(deck.get(0).generateState());
     }
 
     /**

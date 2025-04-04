@@ -53,6 +53,8 @@ public final class Battery extends Component {
             Map<String,Object> map = super.toMap();
 
             map.put("capacity", maxAvailability );
+            map.put("available", available );
+
 
             return map;
       }

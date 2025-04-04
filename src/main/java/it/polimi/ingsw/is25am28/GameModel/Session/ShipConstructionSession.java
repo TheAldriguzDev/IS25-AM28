@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.GameModel.Session;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,6 @@ import it.polimi.ingsw.is25am28.Exceptions.TimerFLipException;
 public class ShipConstructionSession extends Session implements TimeSubscriber {
       private final static int FLIP_TIMES_LV2 = 1;
       private final static int TWO_MIN = 2*1000*60;
-      private final static int FIVE_MIN = 5*1000*60;
       private final static int SHIP_GRID_SIZE = 12;
 
       private final TimerObserver clock;
@@ -43,14 +43,12 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
       // count the number of players that finished to build the ship
       private int waiting = 0;
 
-      private boolean timerEnded = false;
-
       // all cards.
       // sent only during init. 
       // Are used client side only to render the components.
       // IMPORTANT
       // id is the index into this list.
-      private List<Component> all;
+      private final List<Component> all;
       // cards that are not available
       private List<Integer> selected = new ArrayList<>();
       // cards that are already flipped
@@ -80,12 +78,8 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
 
             this.players = players;
 
-            if( level == 2){
-                  clock = new TimerObserver( TWO_MIN );
-            }else{
-                  // wait 10 minutes for the players to finish. Prevent connection lost
-                  clock = new TimerObserver( FIVE_MIN ); 
-            }
+
+            clock = new TimerObserver( TWO_MIN );
 
             clock.observe(this);
       }
@@ -102,18 +96,13 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
                   if( flippedTimes == FLIP_TIMES_LV2 ){
                         // force all players to go to the ENDED state. Watch Action.
                         // start the game
-                        controller.onSessionEnd(
-                              new State()
-                                    .setTimerEnded(true)
-                                    .setGameState(State.GameState.CREATION)
-                        );
-
-                        timerEnded = true;
-
+                        setHasFinished();
+                        controller.onSessionEnd();
                         return;
                   }
 
                   flippedTimes++;
+                  clock.flip();
             }
       }
 
@@ -136,8 +125,8 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
 
             return 
                   new FlipActionState()
-                  .setI(j)
-                  .setJ(i)
+                  .setI(i)
+                  .setJ(j)
                   .setPlayer( player )
                   .setSelected( true );
       }
@@ -157,8 +146,8 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
             selected.remove(id);
 
             return new FlipActionState()
-            .setI(j)
-            .setJ(i)
+            .setI(i)
+            .setJ(j)
             .setPlayer( player )
             .setSelected( false );
       }
@@ -167,6 +156,11 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
        * method used by the players to flip the clock and reduce times for other players
        */
       public Boolean flip( String player ) throws TimerFLipException {
+
+            if( level != 2 ){
+                  throw new TimerFLipException( player );
+            }
+
             if( !clock.hasFinished() ){
                   throw new TimerFLipException( player );
             }
@@ -184,6 +178,7 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
 
             Player player = players.get( playerNickname );
             Ship ship = player.getShip();
+            List<Component> ordered = all.stream().sorted((c1,c2) -> c1.getId() - c2.getId() ).toList();
 
             waiting++;
 
@@ -191,7 +186,7 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
             for( int i = 0; i < shipProxy.size(); i++ ){
                   if( shipProxy.get(i) != null && shipProxy.get(i).getId() != null ){
 
-                        Component component = all.get(shipProxy.get(i).getId());
+                        Component component = ordered.get(shipProxy.get(i).getId());
 
                         component.setRotation( shipProxy.get(i).getRotation() );
 
@@ -219,7 +214,8 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
        */
       public ShipConstructionInitialState init(){
 
-            clock.flip();
+            if( level == 2 )
+                  clock.flip();
 
             return new ShipConstructionInitialState()
                   .setAllTilesFromComponentList(all)

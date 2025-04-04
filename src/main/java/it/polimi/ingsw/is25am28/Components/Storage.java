@@ -66,6 +66,8 @@ public final class Storage extends Component {
 
             map.put("capacity", capacity );
             map.put("special", isSpecialStorage );
+            map.put("storedItems", storedItems.stream().map( item -> item.getValue() ).toList() );
+
 
             return map;
       }

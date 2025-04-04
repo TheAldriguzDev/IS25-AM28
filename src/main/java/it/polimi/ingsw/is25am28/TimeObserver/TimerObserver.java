@@ -12,7 +12,7 @@ public class TimerObserver {
 
       private long lastTimestamp = 0;
 
-      private boolean finished = false;
+      private boolean finished = true;
 
       public TimerObserver( int timeoutMillis ){
             this.subscribed = new HashSet<>();
@@ -24,7 +24,6 @@ public class TimerObserver {
             return new Thread(() -> {
                   try {
                         TimeUnit.MILLISECONDS.sleep(timeout);
-
                         finished = true;
                         if( subscribed.size() > 0 )
                               subscribed.forEach( sub -> sub.onTimerEnd() );
@@ -50,7 +49,6 @@ public class TimerObserver {
       }
 
       public TimerObserver flip(){
-
             if( !finished )
                   return this;
             
@@ -75,5 +73,4 @@ public class TimerObserver {
 
             return newTimestamp - lastTimestamp;
       }
-
 }

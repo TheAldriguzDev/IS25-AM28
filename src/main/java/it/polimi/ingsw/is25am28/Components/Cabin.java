@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Components;
 import it.polimi.ingsw.is25am28.Lifeform.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public final class Cabin extends Component {
       private final boolean isCore;
@@ -50,5 +51,13 @@ public final class Cabin extends Component {
             inhabitants.remove(lifeform);
       }
 
+      @Override
+      public Map<String,Object> toMap(){
+            Map<String,Object> map = super.toMap();
 
+            map.put("inhabitants", inhabitants.stream().map( lifeform -> lifeform.getLifeformType() ).toList());
+
+
+            return map;
+      }
 }

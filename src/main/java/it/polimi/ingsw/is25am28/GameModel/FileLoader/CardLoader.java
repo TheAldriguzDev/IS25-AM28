@@ -101,7 +101,7 @@ public class CardLoader extends FileLoader {
                   ));
             });
 
-            json.get("pirates" ).forEach( map -> {
+            /*json.get("pirates" ).forEach( map -> {
                   deck.add(new Pirates(
                         "pirati",
                         (Integer)map.get("level"),
@@ -111,7 +111,7 @@ public class CardLoader extends FileLoader {
                         ((List<List<Integer>>)map.get("shoots")),
                         board
                   ));
-            });
+            });*/
 
             json.get("planets" ).forEach( map -> {
                   deck.add(new VisitPlanets(

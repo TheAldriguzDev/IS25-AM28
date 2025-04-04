@@ -6,18 +6,18 @@ import java.util.Map;
 
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
-import it.polimi.ingsw.is25am28.State.State;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
 import it.polimi.ingsw.is25am28.Exceptions.UncompletedShipException;
 import it.polimi.ingsw.is25am28.Exceptions.FixNotRequiredError;
+import it.polimi.ingsw.is25am28.Exceptions.ShipPopulationFailException;
+import it.polimi.ingsw.is25am28.Exceptions.TooManyAliensException;
 
 
 public class ControlSession extends Session {
       
       private final Map<String,Player> players;
       private final HashSet<String> toFix = new HashSet<>();
-
-      private int waiting = 0;
+      private final HashSet<String> finished = new HashSet<>();
 
       public ControlSession( Map<String,Player> players ){
             this.players = players;
@@ -84,19 +84,28 @@ public class ControlSession extends Session {
             Player player = players.get(nickname);
             Ship ship = player.getShip();
 
+            try{
 
-            for( int i = 0; i < shipProxy.size(); i++ ){
-                  int x = (int)(i/ship.getGridCols());
-                  int y = i%ship.getGridCols();
-
-                  if( shipProxy.get(i).getLifeforms() != null ){
-                        ship.addLifeformToCabin( x, y, shipProxy.get(i).getLifeforms() );
-                  }                  
+                  for( int i = 0; i < shipProxy.size(); i++ ){
+                        int x = (int)(i/ship.getGridCols());
+                        int y = i%ship.getGridCols();
+      
+                        if( shipProxy.get(i) != null && shipProxy.get(i).getLifeforms() != null ){
+                              ship.addLifeformToCabin( x, y, shipProxy.get(i).getLifeforms() );
+                        }                  
+                  }
+            }catch(Error e){
+                  // prevent waiting increment
+                  throw new ShipPopulationFailException(nickname);
+            }catch(TooManyAliensException e){
+                  throw new ShipPopulationFailException(nickname);
+            }catch(IllegalArgumentException e){
+                  throw new ShipPopulationFailException(nickname);
             }
+            
+            finished.add(nickname);
 
-            waiting++;
-
-            if( waiting == players.size() ){
+            if( finished.size() == players.size() ){
                   setHasFinished();
             }
 

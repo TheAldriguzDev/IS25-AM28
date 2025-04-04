@@ -195,6 +195,8 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
             map.put("id", getId() );
             map.put("tid", getTypeId());
             map.put("connectors", connectors );
+            map.put( "row", row );
+            map.put( "col", col );
 
             return map;
       }

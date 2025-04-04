@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.State.FirstRoundState;
 import it.polimi.ingsw.is25am28.State.FlipActionState;
 import it.polimi.ingsw.is25am28.State.ShipConstructionInitialState;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -17,6 +18,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Exceptions.IllegalSessionStateException;
 import it.polimi.ingsw.is25am28.Exceptions.TimerFLipException;
 import it.polimi.ingsw.is25am28.GameModel.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.GameModel.Session.RoundSession;
@@ -92,30 +94,10 @@ public class GameModel implements SessionSubscriber {
             return construction.init();
       }
 
-      public GameModel addNewPlayer( String nickname, PlayerColor color ){
-            Player player = new Player(nickname, color, level);
-            
-            players.put(
-                  nickname, 
-                  player
-            );
-
-            board.newPlayer(player);
-
-            return this;
-      }
-
-      public GameModel setPlayerConnectionStatus( String nickname, boolean status ){
-            
-            players.get( nickname ).setConnected( status );
-
-            return this;
-      }
-
-      public void onSessionEnd( Object state ){
+      public void onSessionEnd(){
             controller.sendToAll(
                   getPlayersNickname(), 
-                  state
+                  null//state
             );
       }
 
@@ -251,18 +233,92 @@ public class GameModel implements SessionSubscriber {
             return construction.hasFinished();
       }
 
-      public List<PlayerColor> getAvailableColors(){
-            return players
-                  .values()
-                  .stream()
-                  .map( player -> player.getPlayerColor() )
-                  .toList();
+      /**
+       * initialize the control state. Must be called at the end of construction session
+       */
+      public void initControlSession(){
+
+            if( !construction.hasFinished() )
+                  throw new IllegalSessionStateException();
+            if( control.hasFinished() )
+                  throw new IllegalSessionStateException();
+            
+            control.init();
+      }
+      /**
+       * initialize the round. Must be called at the end of control session
+       */
+      public FirstRoundState initRoundSession(){
+
+            if( !construction.hasFinished() )
+                  throw new IllegalSessionStateException();
+            if( !control.hasFinished() )
+                  throw new IllegalSessionStateException();
+
+            return roundHandler.init();
       }
 
+      /**
+       * return available colors
+       */
+      public List<PlayerColor> getAvailableColors(){
+
+            List<PlayerColor> available = new ArrayList<>();
+            List<PlayerColor> used = players
+            .values()
+            .stream()
+            .map( player -> player.getPlayerColor() )
+            .toList();
+
+            for( int i = 0; i < 4; i++ ){
+                  available.add(PlayerColor.fromInteger(i));
+            }
+
+            available.removeIf( color -> used.contains(color) );
+
+            return available;
+      }
+
+      /**
+       * returns the list of nickname of *all* participant players. 
+       * To prefer over getPlayers because it doesn't expose refs.
+       */
       public List<String> getPlayersNickname(){
             return players.keySet().stream().toList();
       }
 
+      /**
+       * to avoid wether possible. If you are tempted to use this method, 
+       * check if other methods exists, like GameModel.getPlayersNickname(),
+       * GameModel.getAvailableNickname(), GameModel.setPlayerConnectionStatus()
+       */
+      public List<Player> getPlayers(){
+            return players.values().stream().toList();
+      }
+
+      public GameModel addNewPlayer( String nickname, PlayerColor color ){
+            Player player = new Player(nickname, color, level);
+            
+            players.put(
+                  nickname, 
+                  player
+            );
+
+            board.newPlayer(player);
+
+            return this;
+      }
+
+      public GameModel setPlayerConnectionStatus( String nickname, boolean status ){
+            
+            players.get( nickname ).setConnected( status );
+
+            return this;
+      }
+
+      /**
+       * used for retro-compatibility. If possible, delete.
+       */
       public Board getBoard(){
             return board;
       }
