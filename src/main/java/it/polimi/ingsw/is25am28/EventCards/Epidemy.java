@@ -36,11 +36,13 @@ public class Epidemy extends EventCard {
         Set<Cabin> alreadyQuarantined;
         List<Cabin> cabinList;
         Component[] neighbours;
-        Lifeform lifeformToRemove;
         Ship shipPtr;
 
         // Finding all neighbouring cabins and putting them into quarantine
         for (Player player : this.getBoard().getPlayers()) {
+            // Skips any player marked as disconnected during their turn
+            if (!player.isConnected()) continue;
+
             alreadyQuarantined = new HashSet<>();
             shipPtr = player.getShip();
             cabinList = shipPtr.getCabinList();
@@ -66,17 +68,11 @@ public class Epidemy extends EventCard {
 
             // Removing a lifeform for each cabin placed in quarantine
             for (Cabin cabin : alreadyQuarantined) {
-                lifeformToRemove = cabin.getInhabitants().getFirst();
-
-                switch (lifeformToRemove.getLifeformType()) {
-                    case ASTRONAUT -> {
-                        cabin.removeInhabitant(lifeformToRemove);
-                    }
-                    case PURPLE_ALIEN, BROWN_ALIEN -> {
-                        shipPtr.removeAlienOfType(lifeformToRemove.getLifeformType());
-                    }
-                    case null, default -> throw new IllegalArgumentException("ERROR: Unidentified lifeform type");
-                }
+                shipPtr.removeLifeformFromCabin(
+                    cabin.getPosition()[0],
+                    cabin.getPosition()[1],
+                    cabin.getInhabitants().getFirst().getLifeformType()
+                );
             }
         }
 

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Ship;
 
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.ShipJSON;
 import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
@@ -217,6 +215,20 @@ public class Ship {
     }
 
     /**
+     * @return A pointer to the cabin that is housing the Purple Alien (if onboard)
+     */
+    public Cabin getPurpleAlienPosition() {
+        return this.purpleAlienPosition;
+    }
+
+    /**
+     * @return A pointer to the cabin that is housing the Brown Alien (if onboard)
+     */
+    public Cabin getBrownAlienPosition() {
+        return this.brownAlienPosition;
+    }
+
+    /**
      *  Uses an adapted version of the BFS algorithm to generate the sub-lists of
      *  each component type, which will be stored in this class for ease of use <br>
      *  <br>
@@ -383,37 +395,19 @@ public class Ship {
     }
 
     /**
-     * @param alienType The type of the alien whose cabin coordinates you want to get
-     * @return The coordinates of the selected alien
-     * @throws IllegalArgumentException If the given alien type is neither <code>BROWN_ALIEN</code> nor <code>PURPLE_ALIEN</code>
-     */
-    public Cabin getAlienPosition(LifeformType alienType) throws IllegalArgumentException {
-        if (alienType == LifeformType.PURPLE_ALIEN) {
-            return this.purpleAlienPosition;
-        }
-        else if (alienType == LifeformType.BROWN_ALIEN) {
-            return this.brownAlienPosition;
-        }
-        else {
-            throw new IllegalArgumentException("ERROR: Given LifeformType is not of an alien");
-        }
-    }
-
-    // TODO: Test this feature
-    /**
      * Adds the given lifeform to the given cabin. If an alien is added, it also
      * checks whether the given cabin has a matching vital unit attached
      *
      * @param i Row where the given cabin is located
      * @param j Col where the given cabin is located
-     * @param type Type of lifeform to add to the ship
+     * @param lifeformType Type of lifeform to add to the ship
      * @throws IllegalArgumentException If the ship can have the given alien type onboard but the given cabin is not empty,
      *                                  or if the given alien type is null or unrecognised
      * @throws TooManyAliensException If a player tries to add a second alien of the same type
      * @throws OutOfGridException If the given coordinates fall out of the grid
      * @throws OutOfShipException If the given coordinates fall out of the ship
      */
-    public void addLifeformToCabin(int i, int j, LifeformType type)
+    public void addLifeformToCabin(int i, int j, LifeformType lifeformType)
             throws IllegalArgumentException, TooManyAliensException,
                    OutOfGridException, OutOfShipException
     {
@@ -421,9 +415,6 @@ public class Ship {
         Component[] neighbours;
         Component component;
 
-        if (i < 0 || j < 0 || i >= this.grid_rows || j >= this.grid_cols) {
-            throw new OutOfGridException("ERROR: Given coordinates fall outside the grid");
-        }
         if (shipProfiles.containsKey(this.difficultyLevel)) {
             if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
                 throw new OutOfShipException("ERROR: Cannot select a component that is outside the ship");
@@ -434,9 +425,7 @@ public class Ship {
 
         switch (component) {
             case Cabin cabin -> {
-                neighbours = this.getNearestComponents(cabin);
-
-                switch (type) {
+                switch (lifeformType) {
                     // LifeformType.ASTRONAUT.ordinal() == 0
                     case ASTRONAUT -> {
                         while (cabin.getAvailableSpace() > 0) {
@@ -445,8 +434,9 @@ public class Ship {
                     }
                     // LifeformType.PURPLE_ALIEN.ordinal() == 1
                     case PURPLE_ALIEN -> {
-                        if (this.purpleAlienPosition != null) {
+                        if (this.purpleAlienPosition == null) {
                             if (cabin.getAvailableSpace() == LifeformType.PURPLE_ALIEN.getRequiredSpace()) {
+                                neighbours = this.getNearestComponents(cabin);
                                 vitalFound = false;
 
                                 for (Component neighbour : neighbours) {
@@ -462,10 +452,8 @@ public class Ship {
 
                                 if (vitalFound) {
                                     cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
+                                    this.purpleAlienPosition = cabin;
                                 }
-                            }
-                            else {
-                                throw new IllegalArgumentException("ERROR: Given cabin is partially occupied");
                             }
                         }
                         else {
@@ -474,8 +462,9 @@ public class Ship {
                     }
                     // LifeformType.BROWN_ALIEN.ordinal() == 2
                     case BROWN_ALIEN -> {
-                        if (this.brownAlienPosition != null) {
+                        if (this.brownAlienPosition == null) {
                             if (cabin.getAvailableSpace() == LifeformType.BROWN_ALIEN.getRequiredSpace()) {
+                                neighbours = this.getNearestComponents(cabin);
                                 vitalFound = false;
 
                                 for (Component neighbour : neighbours) {
@@ -491,10 +480,8 @@ public class Ship {
 
                                 if (vitalFound) {
                                     cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+                                    this.brownAlienPosition = cabin;
                                 }
-                            }
-                            else {
-                                throw new IllegalArgumentException("ERROR: Given cabin is partially occupied");
                             }
                         }
                         else {
@@ -509,27 +496,55 @@ public class Ship {
     }
 
     /**
-     * Removes the alien of the given type from the ship (if present, otherwise the method does nothing)
+     * Removes the given lifeform type from the given cabin at coordinates (i, j)
      *
-     * @param alienType The type of alien to remove from the ship (if present)
+     * @param i The row where the cabin is located
+     * @param j The column where the cabin is located
+     * @param type The type of lifeform to remove from such cabin
+     *
+     * @throws IllegalArgumentException If either the component at coordinates (i, j) is not a cabin or
+     *                                  if the given lifeform type is not recognized
      */
-    public void removeAlienOfType(LifeformType alienType) {
-        switch (alienType) {
-            case PURPLE_ALIEN -> {
-                if (this.purpleAlienPosition != null) {
-                    this.purpleAlienPosition.removeInhabitant(this.purpleAlienPosition.getInhabitants().getFirst());
-                    this.purpleAlienPosition = null;
+    public void removeLifeformFromCabin(int i, int j, LifeformType type) throws IllegalArgumentException {
+        Component component;
+
+        if (shipProfiles.containsKey(this.difficultyLevel)) {
+            if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
+                throw new OutOfShipException("ERROR: Cannot select a component that is outside the ship");
+            }
+        }
+
+        component = this.getComponent(i, j);
+
+        switch (component) {
+            case Cabin cabin -> {
+                switch (type) {
+                    case ASTRONAUT -> {
+                        // This condition ensures that
+                        // 1 - If there are 2 astronauts, then the inhabitants list's size is 2 and the first
+                        //      lifeform is an astronaut
+                        // 2 - If there is only 1 astronaut, then the size is 1 and to distinguish it from a cabin with an alien
+                        //     inside, then the first (and only) lifeform must be an astronaut
+                        if (cabin.getInhabitants().size() <= 2 && cabin.getInhabitants().getFirst().getLifeformType() == LifeformType.ASTRONAUT) {
+                            cabin.removeInhabitant(cabin.getInhabitants().getFirst());
+                        }
+                    }
+                    case PURPLE_ALIEN -> {
+                        if (cabin == this.purpleAlienPosition) {
+                            this.purpleAlienPosition.removeInhabitant(this.purpleAlienPosition.getInhabitants().getFirst());
+                            this.purpleAlienPosition = null;
+                        }
+                    }
+                    case BROWN_ALIEN -> {
+                        if (cabin == this.brownAlienPosition) {
+                            this.brownAlienPosition.removeInhabitant(this.brownAlienPosition.getInhabitants().getFirst());
+                            this.brownAlienPosition = null;
+                        }
+                    }
+                    case null, default -> throw new IllegalArgumentException("ERROR: Given lifeform type is not recognized");
                 }
             }
-            case BROWN_ALIEN -> {
-                if (this.brownAlienPosition != null) {
-                    this.brownAlienPosition.removeInhabitant(this.brownAlienPosition.getInhabitants().getFirst());
-                    this.brownAlienPosition = null;
-                }
-            }
-            case null, default -> {
-                // Either null or wrong type => no action
-            }
+            case null, default -> throw new IllegalArgumentException("ERROR: Given component at coordinates (" + i + ", " + j + ") is not a cabin");
         }
     }
 
@@ -1095,8 +1110,9 @@ public class Ship {
                     for (Component neighbour : vitalNeighbours) {
                         switch (neighbour) {
                             case Cabin cabin -> {
-                                // If the size == 1, then it means that the cabin has an alien inside
-                                if (cabin.getInhabitants().size() == 1) {
+                                // If the size == 1 and the available space is == 0, then
+                                // it means that the cabin has an alien inside
+                                if (cabin.getInhabitants().size() == 1 && cabin.getAvailableSpace() == 0) {
                                     Lifeform alien = cabin.getInhabitants().getFirst();
                                     Component[] cabinNeighbours = this.getNearestComponents(cabin);
                                     boolean otherVitalUnitFound = false;
@@ -1109,8 +1125,18 @@ public class Ship {
 
                                         switch (cabinNeighbour) {
                                             case Vital otherVital -> {
-                                                if (alien.getLifeformType().ordinal() - 1 == otherVital.getVitalType().ordinal()) {
-                                                    otherVitalUnitFound = true;
+                                                if (otherVital.getVitalType() == VitalType.PURPLE_VITAL) {
+                                                    if (alien.getLifeformType() == LifeformType.PURPLE_ALIEN) {
+                                                        otherVitalUnitFound = true;
+                                                    }
+                                                }
+                                                else if (otherVital.getVitalType() == VitalType.BROWN_VITAL) {
+                                                    if (alien.getLifeformType() == LifeformType.BROWN_ALIEN) {
+                                                        otherVitalUnitFound = true;
+                                                    }
+                                                }
+                                                else {
+                                                    throw new IllegalStateException("ERROR: Found vital unit of unrecognized type");
                                                 }
                                             }
                                             case null, default -> {}
@@ -1120,7 +1146,11 @@ public class Ship {
                                     // If a vital unit of the same type of that alien was found, then the alien
                                     // can still live in that cabin, otherwise it needs to be removed
                                     if (!otherVitalUnitFound) {
-                                        cabin.removeInhabitant(alien);
+                                        this.removeLifeformFromCabin(
+                                            cabin.getPosition()[0],
+                                            cabin.getPosition()[1],
+                                            alien.getLifeformType()
+                                        );
                                     }
                                 }
                             }
@@ -1159,18 +1189,11 @@ public class Ship {
      */
     public List<Map<String, Object>> generateState() {
         List<Map<String, Object>> shipState = new ArrayList<Map<String, Object>>();
-        Map<String, Object> componentDescriptor;
         int row, col;
 
         for (row = 0; row < this.grid_rows; row++) {
             for (col = 0; col < this.grid_cols; col++) {
-                componentDescriptor = new HashMap<String, Object>();
-
-                componentDescriptor.put("row", row);
-                componentDescriptor.put("col", col);
-                componentDescriptor.put("tile", this.components[row][col]);
-
-                shipState.add(componentDescriptor);
+                shipState.add(this.components[row][col].toMap());
             }
         }
 
