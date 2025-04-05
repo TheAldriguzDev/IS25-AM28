@@ -110,7 +110,7 @@ public class PrintUtils {
                 padding = width - 2 - 1 - ComponentAlias.VITAL.getAlias().length();
                 paddedString = new StringBuilder();
                 if(vital.getVitalType() == VitalType.PURPLE_VITAL) {
-                    paddedString.append(addColor(" " + ComponentAlias.VITAL.getAlias(), ANSIColors.PURPLE));
+                    paddedString.append(addColor(" " + ComponentAlias.VITAL.getAlias(), ANSIColors.MAGENTA));
                 } else {
                     paddedString.append(addColor(" " + ComponentAlias.VITAL.getAlias(), ANSIColors.BRIGHT_YELLOW));
                 }
