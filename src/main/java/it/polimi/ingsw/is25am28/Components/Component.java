@@ -200,61 +200,69 @@ public abstract sealed class Component implements Printable permits Cannon, Cabi
             int scale = 5; // needs to be odd
 
             int height = scale;
-            int width = 3*height - 2;
-            String tmpString;
+            int width = 3 * height - 2;
+            StringBuilder tmpString;
 
             // Return a list of strings that represents the internal information of the component
             List<String> componentInfo = PrintUtils.getComponentInfo(this, width, height);
             int lineCount = 0;
 
+            // Top Left Corner
+            tmpString = new StringBuilder("\u250C");
 
             // Upper border
-            tmpString = "\u250C";
             for (int i = 1; i < width - 1; i++) {
                   if (i == (width / 2)) {
-                        tmpString += this.sides[0].ordinal();
+                        tmpString.append(this.sides[0].ordinal());
                   } else {
-                        tmpString += "\u2500";
+                        tmpString.append("\u2500");
                   }
             }
-            tmpString += "\u2510";
-            screen.add(tmpString);
+
+            // Top Right Corner
+            tmpString.append("\u2510");
+            screen.add(tmpString.toString());
 
             // Middle
             for (int i = 1; i < height - 1; i++) {
-                  tmpString = "";
+                  tmpString = new StringBuilder();
+
                   for (int j = 0; j < width; j++) {
                         if (j == 0) {
                               if (i == height / 2) {
-                                    tmpString += this.sides[3].ordinal();
+                                    tmpString.append(this.sides[3].ordinal());
                               } else {
-                                    tmpString += "\u2502";
+                                    tmpString.append("\u2502");
                               }
                         } else if (j == width - 1) {
                               if (i == height / 2) {
-                                    tmpString += this.sides[1].ordinal();
+                                    tmpString.append(this.sides[1].ordinal());
                               } else {
-                                    tmpString += "\u2502";
+                                    tmpString.append("\u2502");
                               }
                         } else if (j == 1) {
-                              tmpString += componentInfo.get(lineCount);
+                              tmpString.append(componentInfo.get(lineCount));
                               lineCount++;
                         }
                   }
-                  screen.add(tmpString);
+                  screen.add(tmpString.toString());
             }
 
+            // Bottom Left Corner
+            tmpString = new StringBuilder("\u2514");
+
             // Lower border
-            tmpString = "\u2514";
             for (int i = 1; i < width - 1; i++) {
                   if (i == (width / 2)) {
-                        tmpString += this.sides[2].ordinal();
+                        tmpString.append(this.sides[2].ordinal());
                   } else {
-                        tmpString += "\u2500";
+                        tmpString.append("\u2500");
                   }
             }
-            tmpString += "\u2518";
-            screen.add(tmpString);
+
+            // Bottom Right Corner
+            tmpString.append("\u2518");
+            screen.add(tmpString.toString());
 
             return screen;
       }

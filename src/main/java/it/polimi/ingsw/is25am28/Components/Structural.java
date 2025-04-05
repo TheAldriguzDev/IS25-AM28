@@ -9,8 +9,4 @@ public final class Structural extends Component implements Printable {
       public Structural(List<Integer> connectors) {
             super(connectors);
       }
-
-
-      //Creates a 5x5
-
 }

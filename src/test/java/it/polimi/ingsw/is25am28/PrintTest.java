@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28;
 
+import it.polimi.ingsw.is25am28.Components.Battery;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Components.Structural;
 import org.junit.jupiter.api.Test;
@@ -12,7 +13,7 @@ import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
 public class PrintTest {
 
     @Test
-    public void printTest() {
+    void printTest() {
         List<String> screen = new ArrayList<>();
         // widht = 3*height - 2 | width =  height + i*4
         int scale = 3; // needs to be odd
@@ -70,22 +71,57 @@ public class PrintTest {
     }
 
     @Test
-    public void printTest2() {
+    void printTest_structural() {
         List<Integer> connectors = new ArrayList<>();
         connectors.add(0);
         connectors.add(2);
         connectors.add(3);
         connectors.add(3);
 
-        Component structure = new Structural(connectors);
+        Structural structure = new Structural(connectors);
 
         List<String> screen = structure.print();
 
         for (String s : screen) {
             System.out.println(s);
         }
-
     }
 
+    @Test
+    void printTest_battery() {
+        List<Integer> connectors = new ArrayList<>();
+        connectors.add(0);
+        connectors.add(2);
+        connectors.add(3);
+        connectors.add(3);
 
+        Battery battery1 = new Battery(connectors, 2);
+        Battery battery2 = new Battery(connectors, 2);
+        Battery battery3 = new Battery(connectors, 3);
+        Battery battery4 = new Battery(connectors, 3);
+
+        battery2.setAvailability(1);
+        battery4.setAvailability(2);
+
+        List<String> screenBattery1 = battery1.print();
+        List<String> screenBattery2 = battery2.print();
+        List<String> screenBattery3 = battery3.print();
+        List<String> screenBattery4 = battery4.print();
+
+        for (String s : screenBattery1) {
+            System.out.println(s);
+        }
+
+        for (String s : screenBattery2) {
+            System.out.println(s);
+        }
+
+        for (String s : screenBattery3) {
+            System.out.println(s);
+        }
+
+        for (String s : screenBattery4) {
+            System.out.println(s);
+        }
+    }
 }
