@@ -28,9 +28,7 @@ public class PrintUtils {
                 padding = width - 2 - 1 - ComponentAlias.BATTERY.getAlias().length();
                 paddedString = new StringBuilder(" " + ComponentAlias.BATTERY.getAlias());
 
-                for (int i = 0; i < padding; i++) {
-                    paddedString.append(" ");
-                }
+                paddedString.append(" ".repeat(Math.max(0, padding)));
                 componentInfo.add(paddedString.toString());
 
                 int maxCapacity = battery.getMaxAvailability();
@@ -178,8 +176,63 @@ public class PrintUtils {
 
 
             }
+            // Storage - Showing this storage's contents
             case Storage storage -> {
+                // Writes the component's name
+                padding = width - 2 - 1 - ComponentAlias.STORAGE.getAlias().length();
+                paddedString = new StringBuilder(" " + ComponentAlias.STORAGE.getAlias());
 
+                paddedString.append(" ".repeat(Math.max(0, padding)));
+                componentInfo.add(paddedString.toString());
+
+                int maxCapacity = storage.getCapacity();
+                int occupiedSlots = storage.getStoredItems().size();
+                int storageStringLength = 2 * maxCapacity - 1;
+                int currItemIndex = 0;
+
+                for (int i = 1; i < height - 2; i++) {
+                    paddedString = new StringBuilder();
+
+                    for (int j = 0; j < width - 2; j++) {
+                        if (i == height / 2 && j == width / 2) {
+                            padding = (width - 2 - storageStringLength) / 2;
+                            paddedString = new StringBuilder();
+
+                            // Padding before the storage indicator
+                            paddedString.append(" ".repeat(padding));
+
+                            // Adding alternated storage indicators
+                            for (int k = 0; k < storageStringLength; k++) {
+                                if (k % 2 == 0) {
+                                    if (occupiedSlots > 0) {
+                                        switch (storage.getStoredItems().get(currItemIndex).getColor()) {
+                                            case RED -> paddedString.append(PrintUtils.addColor("\u2588", ANSIColors.RED));
+                                            case YELLOW -> paddedString.append(PrintUtils.addColor("\u2588", ANSIColors.YELLOW));
+                                            case GREEN -> paddedString.append(PrintUtils.addColor("\u2588", ANSIColors.GREEN));
+                                            case BLUE -> paddedString.append(PrintUtils.addColor("\u2588", ANSIColors.BLUE));
+                                        }
+                                        occupiedSlots--;
+                                        currItemIndex++;
+                                    }
+                                    else {
+                                        paddedString.append("\u2588");
+                                    }
+                                }
+                                else {
+                                    paddedString.append(" ");
+                                }
+                            }
+
+                            // Padding after the storage indicator
+                            paddedString.append(" ".repeat(padding));
+                            break;
+                        }
+                        else {
+                            paddedString.append(" ");
+                        }
+                    }
+                    componentInfo.add(paddedString.toString());
+                }
             }
             case Structural structure -> {
                 // Writes the component's name

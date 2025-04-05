@@ -1,6 +1,9 @@
 package it.polimi.ingsw.is25am28.PrintUtils;
 
 import it.polimi.ingsw.is25am28.Components.*;
+import it.polimi.ingsw.is25am28.Components.*;
+import it.polimi.ingsw.is25am28.Items.Item;
+import it.polimi.ingsw.is25am28.Items.ItemColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -113,7 +116,6 @@ public class PrintTest {
         List<String> screenBattery3 = battery3.print();
         List<String> screenBattery4 = battery4.print();
         List<String> screenBattery5 = battery5.print();
-
         List<String> screenEmptyBattery2 = emptyBattery2.print();
         List<String> screenEmptyBattery3 = emptyBattery3.print();
 
@@ -142,6 +144,61 @@ public class PrintTest {
         }
 
         for (String s : screenEmptyBattery3) {
+            System.out.println(s);
+        }
+    }
+
+    @Test
+    void printTest_storage() {
+        Storage specialSingleStorage = new Storage(connectors, 1, true);
+        Storage specialDoubleStorage = new Storage(connectors, 2, true);
+        Storage normalDoubleStorage = new Storage(connectors, 2, false);
+        Storage normalTripleStorage = new Storage(connectors, 3, false);
+        Storage emptySpecialSingleStorage = new Storage(connectors, 1, true);
+        Storage emptyNormalTripleStorage = new Storage(connectors, 3, false);
+
+        Item red = new Item(ItemColor.RED);
+        Item yellow = new Item(ItemColor.YELLOW);
+        Item green = new Item(ItemColor.GREEN);
+        Item blue = new Item(ItemColor.BLUE);
+
+        specialSingleStorage.storeItem(yellow);
+        specialDoubleStorage.storeItem(red);
+        specialDoubleStorage.storeItem(red);
+        normalDoubleStorage.storeItem(yellow);
+        normalDoubleStorage.storeItem(blue);
+        normalTripleStorage.storeItem(green);
+        normalTripleStorage.storeItem(green);
+        normalTripleStorage.storeItem(blue);
+
+        List<String> screenSpecialSingleStorage = specialSingleStorage.print();
+        List<String> screenSpecialDoubleStorage = specialDoubleStorage.print();
+        List<String> screenNormalDoubleStorage = normalDoubleStorage.print();
+        List<String> screenNormalTripleStorage  = normalTripleStorage.print();
+        List<String> screenEmptySpecialSingleStorage  = emptySpecialSingleStorage.print();
+        List<String> screenEmptyNormalTripleStorage  = emptyNormalTripleStorage.print();
+
+        for (String s : screenSpecialSingleStorage) {
+            System.out.println(s);
+        }
+
+        for (String s : screenSpecialDoubleStorage) {
+            System.out.println(s);
+        }
+
+        for (String s : screenNormalDoubleStorage) {
+            System.out.println(s);
+        }
+
+        for (String s : screenNormalTripleStorage) {
+            System.out.println(s);
+        }
+
+        for (String s : screenEmptySpecialSingleStorage) {
+            System.out.println(s);
+        }
+
+        for (String s : screenEmptyNormalTripleStorage) {
             System.out.println(s);
         }
     }
