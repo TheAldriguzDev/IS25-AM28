@@ -20,7 +20,7 @@ public class ControlSession extends Session {
             this.players = players;
       }
 
-      public void init(){
+      public List<String> init(){
 
             for( Player player : players.values() ) {
 
@@ -28,6 +28,8 @@ public class ControlSession extends Session {
                         toFix.add( player.getNickname() );
                   }
             }
+
+            return toFix.stream().toList();
       }
 
       /**

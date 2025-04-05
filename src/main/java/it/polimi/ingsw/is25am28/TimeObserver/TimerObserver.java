@@ -7,10 +7,8 @@ import java.util.concurrent.TimeUnit;
 
 public class TimerObserver {
       private final HashSet<TimeSubscriber> subscribed;
-      private final int timeout;
+      private int timeout;
       private Thread thd;
-
-      private long lastTimestamp = 0;
 
       private boolean finished = true;
 
@@ -68,9 +66,8 @@ public class TimerObserver {
             return this;
       }
 
-      public long getElapsedTime(){
-            long newTimestamp = ZonedDateTime.now().toInstant().toEpochMilli();
-
-            return newTimestamp - lastTimestamp;
+      public TimerObserver setTimeout( int timeout ){
+            this.timeout = timeout;
+            return this;
       }
 }

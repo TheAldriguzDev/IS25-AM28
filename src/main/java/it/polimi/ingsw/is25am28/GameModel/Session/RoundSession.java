@@ -11,11 +11,6 @@ import it.polimi.ingsw.is25am28.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.State.FirstRoundState;
 
 public class RoundSession extends Session {
-    // CONSTANTS
-    static private final int DECK_SIZE = 8;
-
-
-    //private final HashSet<Player> players;
 
     private final List<EventCard> deck;
 
@@ -37,7 +32,7 @@ public class RoundSession extends Session {
 
         round++;
 
-        if( round == DECK_SIZE )
+        if( round == deck.size() )
             return null;
 
         EventCard card = deck.get( round );
@@ -99,12 +94,15 @@ public class RoundSession extends Session {
         }else {
             nextCard = deck.get( round );
         }
-
+        
         if( nextCard == null ){
             setHasFinished();
             return null;
         }
 
         return nextCard.generateState();
+    }
+    public int getRound() {
+          return round;
     }
 }

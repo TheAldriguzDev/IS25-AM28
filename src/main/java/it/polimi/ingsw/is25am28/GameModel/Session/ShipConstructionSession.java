@@ -20,7 +20,7 @@ import it.polimi.ingsw.is25am28.Ship.Ship;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Exceptions.TimerFLipException;
+import it.polimi.ingsw.is25am28.Exceptions.TimerFlipException;
 
 /**
  * class that implements the first part of the game, like construction of ships
@@ -155,17 +155,17 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
       /**
        * method used by the players to flip the clock and reduce times for other players
        */
-      public Boolean flip( String player ) throws TimerFLipException {
+      public Boolean flip( String player ) throws TimerFlipException {
 
             if( level != 2 ){
-                  throw new TimerFLipException( player );
+                  throw new TimerFlipException( player );
             }
 
             if( !clock.hasFinished() ){
-                  throw new TimerFLipException( player );
+                  throw new TimerFlipException( player );
             }
 
-            onTimerEnd();
+            //onTimerEnd();
             clock.flip();
 
             return true;
@@ -226,7 +226,8 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
       /**
        * method used only for debug purpose
        */
-      public long getElapsedTimeFromLastFlip(){
-            return clock.getElapsedTime();
+      public ShipConstructionSession setTimeoutTo1000ms(){
+            clock.setTimeout(1000 );
+            return this;
       } 
 }

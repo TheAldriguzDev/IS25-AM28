@@ -96,12 +96,12 @@ public class CardLoader extends FileLoader {
                   deck.add(new MeteorShower(
                         "meteore",
                         (Integer)map.get("level"),
-                        ((List<List<Integer>>)map.get("Meteors")),
+                        ((List<List<Integer>>)map.get("meteors")),
                         board
                   ));
             });
 
-            /*json.get("pirates" ).forEach( map -> {
+            json.get("pirates" ).forEach( map -> {
                   deck.add(new Pirates(
                         "pirati",
                         (Integer)map.get("level"),
@@ -111,7 +111,7 @@ public class CardLoader extends FileLoader {
                         ((List<List<Integer>>)map.get("shoots")),
                         board
                   ));
-            });*/
+            });
 
             json.get("planets" ).forEach( map -> {
                   deck.add(new VisitPlanets(

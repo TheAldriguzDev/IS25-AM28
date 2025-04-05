@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.GameModel;
 
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -20,13 +21,14 @@ import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Exceptions.IllegalSessionStateException;
-import it.polimi.ingsw.is25am28.Exceptions.TimerFLipException;
+import it.polimi.ingsw.is25am28.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.GameModel.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.GameModel.Session.RoundSession;
 import it.polimi.ingsw.is25am28.GameModel.Session.SessionSubscriber;
 import it.polimi.ingsw.is25am28.GameModel.Session.ShipConstructionSession;
 import it.polimi.ingsw.is25am28.GameModel.Session.ControlSession;
 import it.polimi.ingsw.is25am28.Controller.Sender;
+import java.lang.Class;
 
 public class GameModel implements SessionSubscriber {
 
@@ -57,6 +59,22 @@ public class GameModel implements SessionSubscriber {
             this.resourceBank = new ResourceBank();
             this.controller = controller;
             deck = new ArrayList<>();
+      }
+
+      private void isInShipConstructionSession(){
+            if( construction.hasFinished() )
+                  throw new IllegalSessionStateException();
+      }
+
+      private void isInControlSession(){
+            if( !construction.hasFinished() || control.hasFinished() )
+                  throw new IllegalSessionStateException();
+            
+      }
+
+      private void isInRoundSession(){
+            if( !construction.hasFinished() || !control.hasFinished() )
+                  throw new IllegalSessionStateException();
       }
 
       /**
@@ -108,6 +126,9 @@ public class GameModel implements SessionSubscriber {
        * the id is the position in the array, also sent to client
        */
       public FlipActionState selectTile( String player, Integer i, Integer j ){
+
+            isInShipConstructionSession();
+
             return construction.select( player, i, j );
       }
 
@@ -115,13 +136,19 @@ public class GameModel implements SessionSubscriber {
        * the id is the position in the array, also sent to client
        */
       public FlipActionState deselectTile( String player, Integer i, Integer j ){
+
+            isInShipConstructionSession();
+
             return construction.deselect( player, i, j );
       }
 
       /**
        * method used by the players to flip the clock and reduce times for other players
        */
-      public Boolean flipTimer( String player ) throws TimerFLipException {
+      public Boolean flipTimer( String player ) throws TimerFlipException {
+
+            isInShipConstructionSession();
+
             return construction.flip( player );
       }
 
@@ -129,6 +156,8 @@ public class GameModel implements SessionSubscriber {
        * executed whenever player ended construction of its ship.
        */
       public GameModel setPlayerEndedBuilding( String playerNickname, List<ComponentJSON> shipProxy, int discarded ){
+
+            isInShipConstructionSession();
 
             construction.setPlayerEnded( playerNickname, shipProxy,  discarded );
 
@@ -139,6 +168,9 @@ public class GameModel implements SessionSubscriber {
        * fix broken ship
        */
       public Boolean fixShip( String nickname, List<ComponentJSON> ship ){
+
+            isInControlSession();
+
             return control.fixShip( nickname, ship );
       }
 
@@ -146,6 +178,9 @@ public class GameModel implements SessionSubscriber {
        * populate a ship with lifeforms
        */
       public List<Map<String, Object>> populateShip( String nickname, List<ComponentJSON> ship ){
+
+            isInControlSession();
+
             return control.populateShip( nickname, ship );
       }
 
@@ -153,6 +188,9 @@ public class GameModel implements SessionSubscriber {
        * method used to play a card
        */
       public CardStateJSON playCard( ActionJSON action ){
+            
+            isInRoundSession();
+
             return roundHandler.playCard(action);
       }
 
@@ -240,10 +278,7 @@ public class GameModel implements SessionSubscriber {
        */
       public void initControlSession(){
 
-            if( !construction.hasFinished() )
-                  throw new IllegalSessionStateException();
-            if( control.hasFinished() )
-                  throw new IllegalSessionStateException();
+            isInControlSession();
             
             control.init();
       }
@@ -252,10 +287,7 @@ public class GameModel implements SessionSubscriber {
        */
       public FirstRoundState initRoundSession(){
 
-            if( !construction.hasFinished() )
-                  throw new IllegalSessionStateException();
-            if( !control.hasFinished() )
-                  throw new IllegalSessionStateException();
+            isInRoundSession();
 
             return roundHandler.init();
       }

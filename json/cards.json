@@ -143,7 +143,6 @@
                         [2,0],
                         [1,0]
                   ],
-                  "smallShoots": 2,
                   "days": 1,
                   "credits": 4,
                   "path": "galaxy_trucker_imgs/cards/pirates/GT-cards_I_IT_013.jpg"
@@ -475,56 +474,54 @@
       ],
       "warzone": [
             {
-
-                  "engines": {
-                        "humans": 2,
-                        "storage": 0,
-                        "shoots": [],
-                        "days": 0
-                  },
-                  "cannons": {
-                        "humans": 0,
-                        "storage": 0,
-                        "shoots": [
-                              [1,2],
-                              [2,2]
-                        ],
-                        "days": 0
-                  },
-                  "humans": {
-                        "humans": 0,
-                        "storage": 0,
-                        "shoots": [],
-                        "days": 3
-                  },
+                  "items": 0,
+                  "peoples": 2,
+                  "days": 3,
+                  "shoots": [
+                        [1,2],
+                        [2,2]
+                  ],
+                  "actions": [
+                        {
+                              "action": 0,
+                              "consequence": 0
+                        },
+                        {
+                              "action": 1,
+                              "consequence": 0
+                        },
+                        {
+                              "action": 2,
+                              "consequence": 0
+                        }
+                  ],
                   "level": 1,
                   "path": "galaxy_trucker_imgs/cards/warzone/GT-cards_I_IT_0116.jpg"
             },
             {
-
-                  "engines": {
-                        "humans": 0,
-                        "storage": 3,
-                        "shoots": [],
-                        "days": 0
-                  },
-                  "cannons": {
-                        "humans": 0,
-                        "storage": 0,
-                        "shoots": [],
-                        "days": 4
-                  },
-                  "humans": {
-                        "humans": 0,
-                        "storage": 0,
-                        "shoots": [
-                              [1,0],
-                              [1,3],
-                              [1,1],
-                              [2,2]
-                        ],
-                        "days": 0
-                  },
+                  "items": 3,
+                  "peoples": 0,
+                  "days": 4,
+                  "shoots": [
+                        [1,0],
+                        [1,3],
+                        [1,1],
+                        [1,2]
+                  ],
+                  "actions": [
+                        {
+                              "action": 0,
+                              "consequence": 0
+                        },
+                        {
+                              "action": 1,
+                              "consequence": 0
+                        },
+                        {
+                              "action": 2,
+                              "consequence": 0
+                        }
+                  ],
                   "level": 2,
                   "path": "galaxy_trucker_imgs/cards/warzone/GT-cards_II_IT_0116.jpg"
             }

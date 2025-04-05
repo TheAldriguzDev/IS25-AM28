@@ -51,7 +51,7 @@ public class MeteorShower extends EventCard {
             }
         }
         catch (Exception e) {
-            throw new IllegalArgumentException("ERROR: JSON parsing error in MeteorShower constructor");
+            throw new IllegalArgumentException("ERROR: JSON parsing error in MeteorShower constructor " + e.getMessage() );
         }
     }
 

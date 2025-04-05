@@ -6,18 +6,20 @@ import it.polimi.ingsw.is25am28.GameModel.Session.RoundSession;
 import it.polimi.ingsw.is25am28.State.FirstRoundState;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.VisitPlanetsJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.EventCards.MeteorShower;
 import it.polimi.ingsw.is25am28.EventCards.VisitPlanets;
-import it.polimi.ingsw.is25am28.EventCards.OpenSpace;
 import org.junit.jupiter.api.BeforeEach;
 import java.util.List;
 
@@ -67,11 +69,37 @@ public class RoundSessionTest extends GMTest {
             assertEquals( 2, state.getShips().size() );
       }
 
+      /**
+       * card behavior is supposed to be correct
+       */
       @Test
-      void transit_correctly(){
+      void simulate_game_correctly(){
+            CardStateJSON s;
+
             r.init();
+            assertEquals( 0, r.getRound() );
 
-            r.playCard( new MeteorShowerJSON("A", 0, 2, null, null) );
+            s = r.playCard( new MeteorShowerJSON("A", 0, 2, null, null) );
+            assertTrue(!r.hasFinished());
+            assertEquals( 0, r.getRound() );
 
+
+            assertEquals( "B", s.getPlayerNickname() );
+            s = r.playCard(new MeteorShowerJSON("B", 0, 2, null, null));
+            assertTrue(!r.hasFinished());
+
+            assertEquals( 1, r.getRound() );
+            assertEquals( "pianeti", s.getCardName() );
+
+            var json = new VisitPlanetsJSON(-1, null, null );
+
+            json.setPlayerNickname("A");
+            r.playCard( json );
+            assertTrue(!r.hasFinished());
+            assertEquals( 1, r.getRound() );
+
+            json.setPlayerNickname("B");
+            r.playCard( json );
+            assertTrue(r.hasFinished());
       }
 }

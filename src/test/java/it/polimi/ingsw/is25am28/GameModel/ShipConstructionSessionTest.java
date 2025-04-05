@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Exceptions.TimerFLipException;
+import it.polimi.ingsw.is25am28.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.GameModel.Session.SessionSubscriber;
 import it.polimi.ingsw.is25am28.GameModel.Session.ShipConstructionSession;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -63,12 +63,13 @@ public class ShipConstructionSessionTest extends GMTest {
                   new ArrayList<>()
             );
 
+            s.setTimeoutTo1000ms();
+
             s.init();
       }
 
       @Test
-      public void test_multiple_selections_deselection()
-      throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException{
+      public void test_multiple_selections_deselection() {
             
             FlipActionState state = s.select("A", 1, 0 );
 
@@ -107,28 +108,39 @@ public class ShipConstructionSessionTest extends GMTest {
                         s.deselect("B", 1, 0 );
                   } 
             );
+
+            state = s.select("B", 1, 0 );
+
+            assertEquals( 1, state.getI() );
+            assertEquals( 0, state.getJ() );
+            assertEquals( "B", state.getPlayer() );
+            assertEquals( true, state.getSelected() );
       }
 
-      /**
-       * expected behavior is that the clock is not flipped if the two requests arrived in a small
-       * interval of time
-       * 
-       * - test also if arguments are ignored based on invocation method
-       */
       @Test
       public void multiple_flip_before_clock_end()
       throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 
-            assertThrows( TimerFLipException.class, () -> s.flip("A") );
+            assertThrows( TimerFlipException.class, () -> s.flip("A") );
 
             try{
                   // 300 to prevent thread errors
-                  TimeUnit.MILLISECONDS.sleep(1000*60*2 + 300 );
+                  TimeUnit.MILLISECONDS.sleep( 300 + 1000  );
             }catch(InterruptedException _ ){
 
             }
 
             assertTrue(s.flip("A"));
+            assertTrue(!s.hasFinished());
+
+            try{
+                  // 300 to prevent thread errors
+                  TimeUnit.MILLISECONDS.sleep( 300 + 1000  );
+            }catch(InterruptedException _ ){
+
+            }
+
+            assertTrue(s.hasFinished());
       }
 
       @Test
@@ -187,18 +199,5 @@ public class ShipConstructionSessionTest extends GMTest {
             s.setPlayerEnded( "B", ship, 2 );
 
             assertTrue(s.hasFinished());
-      }
-
-
-      /**
-       * expected behavior is that the session end even if the timer hasn't finished
-       */
-      @Test
-      public void end_session_naturally(){
-            try{
-                  TimeUnit.MILLISECONDS.sleep(6000);
-            }catch(InterruptedException _ ){
-
-            }
       }
 }

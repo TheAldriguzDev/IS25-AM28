@@ -178,7 +178,9 @@ public class AbandonedShip extends EventCard {
 
         // Set the card isUsable to true when the player has at least the required crew members
         // --> since we filter them in advance should be always set to true
-        cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get()));
+        if (this.getCurrentPlayer().isPresent()) {
+            cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get()));
+        }
 
         // Set the card information that are needed to play
         cardState.setRequiredCrewMembers(this.requiredCrew);
