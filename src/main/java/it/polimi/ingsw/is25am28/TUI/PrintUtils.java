@@ -126,8 +126,41 @@ public class PrintUtils {
 
 
                     }
-                    case 2 -> {}
-                    case 3 -> {}
+                    case 2 -> {
+
+                        for (int i = 0; i < height - 3; i++) {
+                            paddedString = new StringBuilder();
+                            paddedString.append(" ");
+                            paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                            paddedString.append(" ".repeat(width - 4));
+                            componentInfo.add(paddedString.toString());
+                        }
+
+                        paddedString = new StringBuilder();
+                        paddedString.append(" ");
+                        paddedString.append(addColor("\u2514", ANSIColors.GREEN));
+                        paddedString.append(addColor("\u2500", ANSIColors.GREEN).repeat(width - 5));
+                        paddedString.append(" ");
+                        componentInfo.add(paddedString.toString());
+                    }
+                    case 3 -> {
+
+                        paddedString = new StringBuilder();
+                        paddedString.append(" ");
+                        paddedString.append(addColor("\u250C", ANSIColors.GREEN));
+                        paddedString.append(addColor("\u2500", ANSIColors.GREEN).repeat(width - 5));
+                        paddedString.append(" ");
+                        componentInfo.add(paddedString.toString());
+                        for (int i = 1; i < height - 2; i++) {
+                            paddedString = new StringBuilder();
+                            paddedString.append(" ");
+                            paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                            paddedString.append(" ".repeat(width - 4));
+                            componentInfo.add(paddedString.toString());
+                        }
+
+
+                    }
                 }
 
 

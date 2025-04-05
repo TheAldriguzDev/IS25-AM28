@@ -171,14 +171,31 @@ public class PrintTest {
         Shield shield_bottom_right = new Shield(connectors);
         shield_bottom_right.rotateRight();
 
+        Shield shield_bottom_left = new Shield(connectors);
+        shield_bottom_left.rotateRight();
+        shield_bottom_left.rotateRight();
+
+        Shield shield_top_left = new Shield(connectors);
+        shield_top_left.rotateLeft();
+
         List<String> screenShield_top_right = shield_top_right.print();
         List<String> screenShield_bottom_right = shield_bottom_right.print();
+        List<String> screenShield_bottom_left = shield_bottom_left.print();
+        List<String> screenShield_top_left = shield_top_left.print();
 
         for (String s : screenShield_top_right) {
             System.out.println(s);
         }
 
         for (String s : screenShield_bottom_right) {
+            System.out.println(s);
+        }
+
+        for (String s : screenShield_bottom_left) {
+            System.out.println(s);
+        }
+
+        for (String s : screenShield_top_left) {
             System.out.println(s);
         }
     }
