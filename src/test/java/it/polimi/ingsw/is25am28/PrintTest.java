@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28;
 
+import it.polimi.ingsw.is25am28.Components.Component;
+import it.polimi.ingsw.is25am28.Components.Structural;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -31,6 +33,7 @@ public class PrintTest {
         tmpString += "\u2510";
         screen.add(tmpString);
 
+        // Middle
         for (int i = 1; i < height - 1; i++) {
             tmpString = "";
             for (int j = 0; j < width; j++) {
@@ -40,13 +43,14 @@ public class PrintTest {
                     } else {
                         tmpString += "\u2502";
                     }
+                } else if (j == width / 2 && i == height / 2) {
+                    tmpString += "X";
                 } else {
                     tmpString += " ";
                 }
             }
             screen.add(tmpString);
         }
-
 
         // Lower border
         tmpString = "\u2514";
@@ -63,15 +67,25 @@ public class PrintTest {
         for (String s : screen) {
             System.out.println(s);
         }
+    }
 
-            //
+    @Test
+    public void printTest2() {
+        List<Integer> connectors = new ArrayList<>();
+        connectors.add(0);
+        connectors.add(2);
+        connectors.add(3);
+        connectors.add(3);
 
+        Component structure = new Structural(connectors);
 
+        List<String> screen = structure.print();
 
-
-
-
-
+        for (String s : screen) {
+            System.out.println(s);
+        }
 
     }
+
+
 }

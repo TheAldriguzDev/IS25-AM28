@@ -1,13 +1,17 @@
 package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.Connector;
+import it.polimi.ingsw.is25am28.TUI.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.Printable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield, Structural {
+import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
+
+public abstract sealed class Component implements Printable permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield, Structural {
       private int row;
       private int col;
 
@@ -189,4 +193,72 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
 
             return map;
       }
+
+      public List<String> print() {
+            List<String> screen = new ArrayList<>();
+            // widht = 3*height - 2 | width =  height + i*4
+            int scale = 5; // needs to be odd
+
+            int height = scale;
+            int width = 3*height - 2;
+            String tmpString;
+
+            // Return a list of strings that represents the internal information of the component
+            List<String> componentInfo = PrintUtils.getComponentInfo(this, width, height);
+            int lineCount = 0;
+
+
+            // Upper border
+            tmpString = "\u250C";
+            for (int i = 1; i < width - 1; i++) {
+                  if (i == (width / 2)) {
+                        tmpString += this.sides[0].ordinal();
+                  } else {
+                        tmpString += "\u2500";
+                  }
+            }
+            tmpString += "\u2510";
+            screen.add(tmpString);
+
+            // Middle
+            for (int i = 1; i < height - 1; i++) {
+                  tmpString = "";
+                  for (int j = 0; j < width; j++) {
+                        if (j == 0) {
+                              if (i == height / 2) {
+                                    tmpString += this.sides[3].ordinal();
+                              } else {
+                                    tmpString += "\u2502";
+                              }
+                        } else if (j == width - 1) {
+                              if (i == height / 2) {
+                                    tmpString += this.sides[1].ordinal();
+                              } else {
+                                    tmpString += "\u2502";
+                              }
+                        } else if (j == 1) {
+                              tmpString += componentInfo.get(lineCount);
+                              lineCount++;
+                        }
+                  }
+                  screen.add(tmpString);
+            }
+
+            // Lower border
+            tmpString = "\u2514";
+            for (int i = 1; i < width - 1; i++) {
+                  if (i == (width / 2)) {
+                        tmpString += this.sides[2].ordinal();
+                  } else {
+                        tmpString += "\u2500";
+                  }
+            }
+            tmpString += "\u2518";
+            screen.add(tmpString);
+
+            return screen;
+      }
+
+
 }
+

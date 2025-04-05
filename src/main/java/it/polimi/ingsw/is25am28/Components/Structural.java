@@ -12,19 +12,5 @@ public final class Structural extends Component implements Printable {
 
 
       //Creates a 5x5
-      public List<String> print() {
-            List<String> screen = new ArrayList<>();
-            int width = 5;
-            int height = 5;
-            String tmpString = "";
-            tmpString += "\\U+250F";
 
-            System.out.println(tmpString);
-
-
-
-
-
-            return null;
-      }
 }
