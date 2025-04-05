@@ -1,16 +1,15 @@
 package it.polimi.ingsw.is25am28.PrintUtils;
 
 import it.polimi.ingsw.is25am28.Components.*;
-import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
+import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
 
 public class PrintTest {
     List<Integer> connectors;
@@ -83,17 +82,6 @@ public class PrintTest {
 //    }
 
     @Test
-    void printTest_structural() {
-        Structural structure = new Structural(connectors);
-
-        List<String> screen = structure.print();
-
-        for (String s : screen) {
-            System.out.println(s);
-        }
-    }
-
-    @Test
     void printTest_battery() {
         Battery battery1 = new Battery(connectors, 2);
         Battery battery2 = new Battery(connectors, 2);
@@ -144,6 +132,104 @@ public class PrintTest {
         }
 
         for (String s : screenEmptyBattery3) {
+            System.out.println(s);
+        }
+    }
+
+    @Test
+    void printTest_cabin() {
+        Cabin coreCabin = new Cabin(connectors, true);
+        Cabin emptyCabin = new Cabin(connectors, false);
+        Cabin oneAstronautCabin = new Cabin(connectors, false);
+        Cabin twoAstronautCabin = new Cabin(connectors, false);
+        Cabin purpleAlienCabin = new Cabin(connectors, false);
+        Cabin brownAlienCabin = new Cabin(connectors, false);
+
+        Lifeform astronaut = new Lifeform(LifeformType.ASTRONAUT);
+        Lifeform purpleAlien = new Lifeform(LifeformType.PURPLE_ALIEN);
+        Lifeform brownAlien = new Lifeform(LifeformType.BROWN_ALIEN);
+
+        oneAstronautCabin.addInhabitant(astronaut);
+        twoAstronautCabin.addInhabitant(astronaut);
+        twoAstronautCabin.addInhabitant(astronaut);
+
+        purpleAlienCabin.addInhabitant(purpleAlien);
+        brownAlienCabin.addInhabitant(brownAlien);
+
+        List<String> screenCoreCabin = coreCabin.print();
+        List<String> screenEmptyCabin = emptyCabin.print();
+        List<String> screenOneAstronautCabin = oneAstronautCabin.print();
+        List<String> screenTwoAstronautCabin = twoAstronautCabin.print();
+        List<String> screenPurpleAlienCabin = purpleAlienCabin.print();
+        List<String> screenBrownAlienCabin = brownAlienCabin.print();
+
+        for (String s : screenCoreCabin) {
+            System.out.println(s);
+        }
+
+        for (String s : screenEmptyCabin) {
+            System.out.println(s);
+        }
+
+        for (String s : screenOneAstronautCabin) {
+            System.out.println(s);
+        }
+
+        for (String s : screenTwoAstronautCabin) {
+            System.out.println(s);
+        }
+
+        for (String s : screenPurpleAlienCabin) {
+            System.out.println(s);
+        }
+
+        for (String s : screenBrownAlienCabin) {
+            System.out.println(s);
+        }
+    }
+
+    @Test
+    void printTest_cannon() {
+
+    }
+
+    @Test
+    void printTest_engine() {
+
+    }
+
+    @Test
+    void printTest_shield() {
+        Shield shield_top_right = new Shield(connectors);
+
+        Shield shield_bottom_right = new Shield(connectors);
+        shield_bottom_right.rotateRight();
+
+        Shield shield_bottom_left = new Shield(connectors);
+        shield_bottom_left.rotateRight();
+        shield_bottom_left.rotateRight();
+
+        Shield shield_top_left = new Shield(connectors);
+        shield_top_left.rotateLeft();
+
+        List<String> screenShield_top_right = shield_top_right.print();
+        List<String> screenShield_bottom_right = shield_bottom_right.print();
+        List<String> screenShield_bottom_left = shield_bottom_left.print();
+        List<String> screenShield_top_left = shield_top_left.print();
+
+        for (String s : screenShield_top_right) {
+            System.out.println(s);
+        }
+
+        for (String s : screenShield_bottom_right) {
+            System.out.println(s);
+        }
+
+        for (String s : screenShield_bottom_left) {
+            System.out.println(s);
+        }
+
+        for (String s : screenShield_top_left) {
             System.out.println(s);
         }
     }
@@ -204,6 +290,17 @@ public class PrintTest {
     }
 
     @Test
+    void printTest_structural() {
+        Structural structure = new Structural(connectors);
+
+        List<String> screen = structure.print();
+
+        for (String s : screen) {
+            System.out.println(s);
+        }
+    }
+
+    @Test
     void printTest_vital() {
         Vital vital_purple = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
         Vital vital_brown = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
@@ -216,43 +313,6 @@ public class PrintTest {
         }
 
         for (String s : screenVital2) {
-            System.out.println(s);
-        }
-    }
-
-    @Test
-    void printTest_shield() {
-
-        Shield shield_top_right = new Shield(connectors);
-
-        Shield shield_bottom_right = new Shield(connectors);
-        shield_bottom_right.rotateRight();
-
-        Shield shield_bottom_left = new Shield(connectors);
-        shield_bottom_left.rotateRight();
-        shield_bottom_left.rotateRight();
-
-        Shield shield_top_left = new Shield(connectors);
-        shield_top_left.rotateLeft();
-
-        List<String> screenShield_top_right = shield_top_right.print();
-        List<String> screenShield_bottom_right = shield_bottom_right.print();
-        List<String> screenShield_bottom_left = shield_bottom_left.print();
-        List<String> screenShield_top_left = shield_top_left.print();
-
-        for (String s : screenShield_top_right) {
-            System.out.println(s);
-        }
-
-        for (String s : screenShield_bottom_right) {
-            System.out.println(s);
-        }
-
-        for (String s : screenShield_bottom_left) {
-            System.out.println(s);
-        }
-
-        for (String s : screenShield_top_left) {
             System.out.println(s);
         }
     }
