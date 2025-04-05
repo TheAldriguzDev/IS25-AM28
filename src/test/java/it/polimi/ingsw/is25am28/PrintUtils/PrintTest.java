@@ -1,8 +1,10 @@
-package it.polimi.ingsw.is25am28;
+package it.polimi.ingsw.is25am28.PrintUtils;
 
 import it.polimi.ingsw.is25am28.Components.Battery;
-import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Components.Structural;
+import it.polimi.ingsw.is25am28.Components.Vital;
+import it.polimi.ingsw.is25am28.Components.VitalType;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -11,6 +13,16 @@ import java.util.List;
 import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
 
 public class PrintTest {
+    List<Integer> connectors;
+
+    @BeforeEach
+    void init() {
+        connectors = new ArrayList<>();
+        connectors.add(1);
+        connectors.add(2);
+        connectors.add(3);
+        connectors.add(0);
+    }
 
     @Test
     void printTest() {
@@ -72,11 +84,6 @@ public class PrintTest {
 
     @Test
     void printTest_structural() {
-        List<Integer> connectors = new ArrayList<>();
-        connectors.add(0);
-        connectors.add(2);
-        connectors.add(3);
-        connectors.add(3);
 
         Structural structure = new Structural(connectors);
 
@@ -89,11 +96,6 @@ public class PrintTest {
 
     @Test
     void printTest_battery() {
-        List<Integer> connectors = new ArrayList<>();
-        connectors.add(0);
-        connectors.add(2);
-        connectors.add(3);
-        connectors.add(3);
 
         Battery battery1 = new Battery(connectors, 2);
         Battery battery2 = new Battery(connectors, 2);
@@ -123,5 +125,24 @@ public class PrintTest {
         for (String s : screenBattery4) {
             System.out.println(s);
         }
+    }
+
+    @Test
+    void printTest_vital() {
+
+        Vital vital_purple = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
+        Vital vital_brown = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+
+        List<String> screenVital1 = vital_purple.print();
+        List<String> screenVital2 = vital_brown.print();
+
+        for (String s : screenVital1) {
+            System.out.println(s);
+        }
+
+        for (String s : screenVital2) {
+            System.out.println(s);
+        }
+
     }
 }

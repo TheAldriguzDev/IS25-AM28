@@ -6,16 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrintUtils {
-    public static final String ANSI_RESET = "\u001B[0m";
-    public static final String ANSI_BLACK = "\u001B[30m";
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-    public static final String ANSI_YELLOW = "\u001B[33m";
-    public static final String ANSI_BLUE = "\u001B[34m";
-    public static final String ANSI_PURPLE = "\u001B[35m";
-    public static final String ANSI_CYAN = "\u001B[36m";
-    public static final String ANSI_WHITE = "\u001B[37m";
-    public static final String ANSI_GRAY = "\u001B[90m";
 
     /**
      * @param string The string to color
@@ -23,7 +13,7 @@ public class PrintUtils {
      * @return The colored string
      */
     public static String addColor(String string, String unicodeColorString) {
-        return unicodeColorString + string + PrintUtils.ANSI_RESET;
+        return unicodeColorString + string + ANSIColors.RESET;
     }
 
     public static List<String> getComponentInfo(Component component, int width, int height) {
@@ -62,7 +52,7 @@ public class PrintUtils {
                             for (int k = 0; k < batteryStringLength; k++) {
                                 if (k % 2 == 0) {
                                     if (batteryLevel > 0) {
-                                        paddedString.append(PrintUtils.addColor("\u2588", PrintUtils.ANSI_GREEN));
+                                        paddedString.append(PrintUtils.addColor("\u2588", ANSIColors.GREEN));
                                         batteryLevel--;
                                     }
                                     else {
@@ -117,7 +107,24 @@ public class PrintUtils {
                 }
             }
             case Vital vital -> {
+                padding = width - 2 - 1 - ComponentAlias.VITAL.getAlias().length();
+                paddedString = new StringBuilder();
+                if(vital.getVitalType() == VitalType.PURPLE_VITAL) {
+                    paddedString.append(addColor(" " + ComponentAlias.VITAL.getAlias(), ANSIColors.PURPLE));
+                } else {
+                    paddedString.append(addColor(" " + ComponentAlias.VITAL.getAlias(), ANSIColors.BRIGHT_YELLOW));
+                }
 
+                for (int i = 0; i < padding; i++) {
+                    paddedString.append(" ");
+                }
+                componentInfo.add(paddedString.toString());
+
+                for (int i = 0; i < height - 2; i++) {
+                    paddedString = new StringBuilder();
+                    paddedString.append(" ".repeat(width - 2));
+                    componentInfo.add(paddedString.toString());
+                }
             }
         }
 
