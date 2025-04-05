@@ -276,11 +276,11 @@ public class GameModel implements SessionSubscriber {
       /**
        * initialize the control state. Must be called at the end of construction session
        */
-      public void initControlSession(){
+      public List<String> initControlSession(){
 
             isInControlSession();
             
-            control.init();
+            return control.init();
       }
       /**
        * initialize the round. Must be called at the end of control session
@@ -355,5 +355,13 @@ public class GameModel implements SessionSubscriber {
        */
       public Board getBoard(){
             return board;
+      }
+
+      /**
+       * debug only
+       */
+      public GameModel setDeck( List<EventCard> deck ){
+            roundHandler.setDeck(deck);
+            return this;
       }
 }

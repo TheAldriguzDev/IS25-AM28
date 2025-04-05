@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
@@ -11,12 +12,40 @@ import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Components.Structural;
+import it.polimi.ingsw.is25am28.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.EventCards.MeteorShower;
+import it.polimi.ingsw.is25am28.EventCards.VisitPlanets;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
 
 public abstract class GMTest {
+      protected List<EventCard> initFakeDeck( Board board ){
+            ArrayList<EventCard> deck = new ArrayList<>();
+
+            ArrayList<Integer> meteor = new ArrayList<>();
+            List<List<Integer>> sequence = new ArrayList<>();
+
+            meteor.add(1);
+            meteor.add(1);
+
+            sequence.add(meteor);
+
+            List<Map<String,Integer>> planets = new ArrayList<>();
+
+            planets.add( new HashMap<>() );
+
+            planets.getFirst().put("red", 3);
+
+            
+
+            deck.add( new MeteorShower("meteore", 2, sequence, board ) );
+            deck.add( new VisitPlanets("pianeti", 2, 3, planets, new ResourceBank(), board ) );
+
+            return deck;
+      }
       protected Board initBoard( HashMap<String,Player> players ){
             players = new HashMap<>();
             BoardLevel2 board = new BoardLevel2();

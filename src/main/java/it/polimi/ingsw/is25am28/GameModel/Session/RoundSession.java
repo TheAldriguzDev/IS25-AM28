@@ -12,7 +12,7 @@ import it.polimi.ingsw.is25am28.State.FirstRoundState;
 
 public class RoundSession extends Session {
 
-    private final List<EventCard> deck;
+    private List<EventCard> deck;
 
     // indicate the round number and the card to draw from the deck
     private int round = 0;
@@ -102,6 +102,12 @@ public class RoundSession extends Session {
 
         return nextCard.generateState();
     }
+
+    public RoundSession setDeck( List<EventCard> deck ){
+        this.deck = deck;
+        return this;
+    }
+    
     public int getRound() {
           return round;
     }

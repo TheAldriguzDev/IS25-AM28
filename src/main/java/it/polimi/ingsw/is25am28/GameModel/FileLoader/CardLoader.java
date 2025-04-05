@@ -44,7 +44,7 @@ public class CardLoader extends FileLoader {
 
             json.get("abandonedShip" ).forEach( map -> {
                   deck.add(new AbandonedShip(
-                        "nave abbandonata",
+                        "Nave Abbandonata",
                         (Integer)map.get("level"),
                         (Integer)map.get("people"),
                         (Integer)map.get("days"),
@@ -82,7 +82,7 @@ public class CardLoader extends FileLoader {
                   }
 
                   deck.add(new AbandonedStation(
-                        "stazione abbandonata",
+                        "Stazione Abbandonata",
                         (Integer)map.get("level"),
                         (Integer)map.get("people"),
                         (Integer)map.get("days"),
@@ -94,7 +94,7 @@ public class CardLoader extends FileLoader {
 
             json.get("meteors" ).forEach( map -> {
                   deck.add(new MeteorShower(
-                        "meteore",
+                        "Meteore",
                         (Integer)map.get("level"),
                         ((List<List<Integer>>)map.get("meteors")),
                         board
@@ -103,7 +103,7 @@ public class CardLoader extends FileLoader {
 
             json.get("pirates" ).forEach( map -> {
                   deck.add(new Pirates(
-                        "pirati",
+                        "Pirati",
                         (Integer)map.get("level"),
                         (Integer)map.get("firepower"),
                         (Integer)map.get("credits"),
