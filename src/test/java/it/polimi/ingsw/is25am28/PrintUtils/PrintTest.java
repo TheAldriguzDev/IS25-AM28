@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is25am28.PrintUtils;
 
-import it.polimi.ingsw.is25am28.Components.Battery;
-import it.polimi.ingsw.is25am28.Components.Structural;
-import it.polimi.ingsw.is25am28.Components.Vital;
-import it.polimi.ingsw.is25am28.Components.VitalType;
+import it.polimi.ingsw.is25am28.Components.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -144,5 +141,25 @@ public class PrintTest {
             System.out.println(s);
         }
 
+    }
+
+    @Test
+    void printTest_shield() {
+
+        Shield shield_top_right = new Shield(connectors);
+
+        Shield shield_bottom_right = new Shield(connectors);
+        shield_bottom_right.rotateRight();
+
+        List<String> screenShield_top_right = shield_top_right.print();
+        List<String> screenShield_bottom_right = shield_bottom_right.print();
+
+        for (String s : screenShield_top_right) {
+            System.out.println(s);
+        }
+
+        for (String s : screenShield_bottom_right) {
+            System.out.println(s);
+        }
     }
 }

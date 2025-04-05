@@ -86,6 +86,64 @@ public class PrintUtils {
             }
             case Shield shield -> {
 
+                int direction = shield.getDirection();
+
+
+
+                switch (direction) {
+                    case 0 -> {
+
+                        paddedString = new StringBuilder();
+                        paddedString.append(" ");
+                        paddedString.append(addColor("\u2500", ANSIColors.GREEN).repeat(width - 5));
+                        paddedString.append(addColor("\u2510", ANSIColors.GREEN));
+                        paddedString.append(" ");
+                        componentInfo.add(paddedString.toString());
+
+                        for (int i = 1; i < height - 2; i++) {
+                            paddedString = new StringBuilder();
+                            paddedString.append(" ".repeat(width - 4));
+                            paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                            paddedString.append(" ");
+                            componentInfo.add(paddedString.toString());
+                        }
+                    }
+                    case 1 -> {
+
+                        for (int i = 0; i < height - 3; i++) {
+                            paddedString = new StringBuilder();
+                            paddedString.append(" ".repeat(width - 4));
+                            paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                            paddedString.append(" ");
+                            componentInfo.add(paddedString.toString());
+                        }
+                        paddedString = new StringBuilder();
+                        paddedString.append(" ");
+                        paddedString.append(addColor("\u2500", ANSIColors.GREEN).repeat(width - 5));
+                        paddedString.append(addColor("\u2518", ANSIColors.GREEN));
+                        paddedString.append(" ");
+                        componentInfo.add(paddedString.toString());
+
+
+                    }
+                    case 2 -> {}
+                    case 3 -> {}
+                }
+
+
+
+
+
+
+//                for (int i = 0; i < height - 2; i++) {
+//                    paddedString = new StringBuilder();
+//                    paddedString.append(" ".repeat(width - 2));
+//                    componentInfo.add(paddedString.toString());
+//                }
+
+
+
+
             }
             case Storage storage -> {
 
@@ -95,9 +153,7 @@ public class PrintUtils {
                 padding = width - 2 - 1 - ComponentAlias.STRUCTURAL.getAlias().length();
                 paddedString = new StringBuilder(" " + ComponentAlias.STRUCTURAL.getAlias());
 
-                for (int i = 0; i < padding; i++) {
-                    paddedString.append(" ");
-                }
+                paddedString.append(" ".repeat(padding));
                 componentInfo.add(paddedString.toString());
 
                 for (int i = 0; i < height - 2; i++) {
@@ -115,9 +171,7 @@ public class PrintUtils {
                     paddedString.append(addColor(" " + ComponentAlias.VITAL.getAlias(), ANSIColors.BRIGHT_YELLOW));
                 }
 
-                for (int i = 0; i < padding; i++) {
-                    paddedString.append(" ");
-                }
+                paddedString.append(" ".repeat(padding));
                 componentInfo.add(paddedString.toString());
 
                 for (int i = 0; i < height - 2; i++) {
