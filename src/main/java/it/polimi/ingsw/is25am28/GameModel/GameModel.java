@@ -1,35 +1,18 @@
 package it.polimi.ingsw.is25am28.GameModel;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
-import it.polimi.ingsw.is25am28.State.FirstRoundState;
-import it.polimi.ingsw.is25am28.State.FlipActionState;
-import it.polimi.ingsw.is25am28.State.ShipConstructionInitialState;
-import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
-import it.polimi.ingsw.is25am28.Board.Board;
-import it.polimi.ingsw.is25am28.Board.BoardLevel2;
+import it.polimi.ingsw.is25am28.State.*;
+import it.polimi.ingsw.is25am28.TimeObserver.TimeEndedNotifier;
+import it.polimi.ingsw.is25am28.Player.*;
+import it.polimi.ingsw.is25am28.ActionJSON.*;
+import it.polimi.ingsw.is25am28.Board.*;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.Exceptions.IllegalSessionStateException;
-import it.polimi.ingsw.is25am28.Exceptions.TimerFlipException;
+import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.GameModel.FileLoader.CardLoader;
-import it.polimi.ingsw.is25am28.GameModel.Session.RoundSession;
-import it.polimi.ingsw.is25am28.GameModel.Session.SessionSubscriber;
-import it.polimi.ingsw.is25am28.GameModel.Session.ShipConstructionSession;
-import it.polimi.ingsw.is25am28.GameModel.Session.ControlSession;
-import it.polimi.ingsw.is25am28.Controller.Sender;
-import java.lang.Class;
+import it.polimi.ingsw.is25am28.GameModel.Session.*;
 
 public class GameModel implements SessionSubscriber {
 
@@ -37,12 +20,12 @@ public class GameModel implements SessionSubscriber {
       static private final int DECOY_DECK_SIZE = 2;
 
       private final List<EventCard> deck;
-      private final Board board;
       private final ResourceBank resourceBank;
       private final Map<String,Player> players = new HashMap<>();
-      private final Sender controller;
+      private final TimeEndedNotifier notifier;
 
-      private final int level;
+      private int level;
+      private Board board;
 
       private ControlSession control;
       private RoundSession roundHandler;
@@ -50,15 +33,10 @@ public class GameModel implements SessionSubscriber {
 
 
 
-      public GameModel( Sender controller, int level ){
-            this.level = level;
-
-            //if( level == 2 )
-            board = new BoardLevel2();
-            board.buildBoard();
+      public GameModel( TimeEndedNotifier notifier ){
 
             this.resourceBank = new ResourceBank();
-            this.controller = controller;
+            this.notifier = notifier;
             deck = new ArrayList<>();
       }
 
@@ -93,6 +71,11 @@ public class GameModel implements SessionSubscriber {
             return deck;
       }
 
+
+      public void onSessionEnd(){
+            notifier.sendTimeEndedNotification( getPlayersNickname() );
+      }
+
       public ShipConstructionInitialState start(){
             deck.addAll( generateDeck( level ) );
 
@@ -114,14 +97,6 @@ public class GameModel implements SessionSubscriber {
 
             return construction.init();
       }
-
-      public void onSessionEnd(){
-            controller.sendToAll(
-                  getPlayersNickname(), 
-                  null//state
-            );
-      }
-
       
       /**
        * the id is the position in the array, also sent to client
@@ -178,11 +153,13 @@ public class GameModel implements SessionSubscriber {
       /**
        * populate a ship with lifeforms
        */
-      public List<Map<String, Object>> populateShip( String nickname, List<ComponentJSON> ship ){
+      public GameModel populateShip( String nickname, List<ComponentJSON> ship ){
 
             isInControlSession();
 
-            return control.populateShip( nickname, ship );
+            control.populateShip( nickname, ship );
+
+            return this;
       }
 
       /**
@@ -361,6 +338,19 @@ public class GameModel implements SessionSubscriber {
        */
       public GameModel setDeck( List<EventCard> deck ){
             roundHandler.setDeck(deck);
+            return this;
+      }
+
+      public GameModel setLevel( int level ){
+            this.level = level;
+
+            if( level == 2 ){
+                  board = new BoardLevel2();
+                  board.buildBoard();
+            }else{
+                  throw new Error("board level 1 must be implemented");
+            }
+
             return this;
       }
 }

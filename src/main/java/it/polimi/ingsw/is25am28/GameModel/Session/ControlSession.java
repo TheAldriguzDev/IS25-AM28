@@ -73,7 +73,7 @@ public class ControlSession extends Session {
        * used to add lifeforms to ship.
        * return the state of the ship
        */
-      public List<Map<String, Object>> populateShip( String nickname, List<ComponentJSON> shipProxy ){
+      public ControlSession populateShip( String nickname, List<ComponentJSON> shipProxy ){
 
             if(  toFix.contains( nickname ) ){
                   throw new UncompletedShipException( nickname );
@@ -112,6 +112,6 @@ public class ControlSession extends Session {
                   setHasFinished();
             }
 
-            return ship.generateState();
+            return this;
       }
 }

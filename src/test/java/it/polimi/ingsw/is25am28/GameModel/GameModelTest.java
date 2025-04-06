@@ -12,9 +12,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.VisitPlanetsJSON;
-import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Components.Storage;
-import it.polimi.ingsw.is25am28.Controller.Sender;
 import it.polimi.ingsw.is25am28.Exceptions.IllegalSessionStateException;
 import it.polimi.ingsw.is25am28.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.Items.Item;
@@ -22,30 +20,23 @@ import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.State.FlipActionState;
+import it.polimi.ingsw.is25am28.TimeObserver.TimeEndedNotifier;
 
 public class GameModelTest extends GMTest {
 
    
 
-      class Stub implements Sender {
+      class Stub implements TimeEndedNotifier {
 
             @Override
-            public void sendTo(String nickname, Object state) {
-            }
-
-            @Override
-            public void sendToAll(List<String> players, Object state) {
-            }
-
-            @Override
-            public void closeConnections(List<String> players) {
-            }
-
+            public void sendTimeEndedNotification(List<String> players) {}
       }
 
       @Test
       void simulate_game_correctly(){
-            GameModel g = new GameModel( new Stub(), 2 );
+            GameModel g = new GameModel( new Stub() );
+
+            g.setLevel(2 );
 
             g.addNewPlayer("A", PlayerColor.BLUE );
 
@@ -208,7 +199,8 @@ public class GameModelTest extends GMTest {
 
       @Test 
       void test_rewards_with_eliminated_players(){
-            GameModel g = new GameModel( new Stub(), 2 );
+            GameModel g = new GameModel( new Stub() );
+            g.setLevel(2 );
 
             g.addNewPlayer("A", PlayerColor.BLUE );
             g.addNewPlayer("B", PlayerColor.YELLOW );
@@ -277,7 +269,8 @@ public class GameModelTest extends GMTest {
 
       @Test 
       void test_rewards_with_players_with_same_exposed(){
-            GameModel g = new GameModel( new Stub(), 2 );
+            GameModel g = new GameModel( new Stub() );
+            g.setLevel(2 );
 
             g.addNewPlayer("A", PlayerColor.BLUE );
             g.addNewPlayer("B", PlayerColor.YELLOW );
