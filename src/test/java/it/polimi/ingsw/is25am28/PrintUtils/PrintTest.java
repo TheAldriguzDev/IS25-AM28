@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Ship.Ship;
 import it.polimi.ingsw.is25am28.TUI.PrintUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -373,6 +374,66 @@ public class PrintTest {
          for (String s : composedInfo) {
              System.out.println(s);
          }
+
+
+
+    }
+
+    @Test
+    void printShipTest1() {
+        System.out.println("======================== PRINT SHIP TEST 1 ==========================");
+
+        Ship ship = new Ship(2);
+
+        Structural structural = new Structural(connectors);
+        ship.addComponent(structural, 5, 6);
+
+        Battery battery_1 = new Battery(connectors, 3);
+        ship.addComponent(battery_1, 6, 7);
+
+        Storage normal_storage_1 = new Storage(connectors, 3, false);
+        normal_storage_1.storeItem(new Item(ItemColor.YELLOW));
+        normal_storage_1.storeItem(new Item(ItemColor.BLUE));
+        normal_storage_1.storeItem(new Item(ItemColor.GREEN));
+        ship.addComponent(normal_storage_1, 6, 5);
+
+        Shield shield_1 = new Shield(connectors);
+        ship.addComponent(shield_1, 7, 6);
+
+        Shield shield_2 = new Shield(connectors);
+        shield_2.rotateRight();
+        ship.addComponent(shield_2, 6, 4);
+
+        Vital brown_vital = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+        ship.addComponent(brown_vital, 7, 7);
+
+        Cabin cabin_1 = new Cabin(connectors, false);
+        cabin_1.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+        ship.addComponent(cabin_1, 7, 8);
+
+        Cabin cabin_2 = new Cabin(connectors, false);
+        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        ship.addComponent(cabin_2, 7, 5);
+
+        Battery battery_2 = new Battery(connectors, 2);
+        ship.addComponent(battery_2, 8, 5);
+
+        Storage special_storage_1 = new Storage(connectors, 2, true);
+        special_storage_1.storeItem(new Item(ItemColor.RED));
+        ship.addComponent(special_storage_1, 6, 8);
+
+        Cabin cabin_3 = new Cabin(connectors, false);
+        cabin_3.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+        ship.addComponent(cabin_3, 5, 5);
+
+
+
+        List<String> shipScreen = ship.print(scale);
+
+        for (String s : shipScreen) {
+            System.out.println(s);
+        }
 
 
 

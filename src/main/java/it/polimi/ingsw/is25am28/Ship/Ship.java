@@ -6,6 +6,8 @@ import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.TUI.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.Printable;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -16,7 +18,7 @@ import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.is25am28.Connector.*;
 
-public class Ship {
+public class Ship implements Printable {
     private final static Map<Integer, int[][]> shipProfiles = new HashMap<>();
 
     static {
@@ -1199,5 +1201,49 @@ public class Ship {
         }
 
         return shipState;
+    }
+
+    private int scale = 5;
+    public List<String> print(int scale) {
+
+        List<String> emptyBlock = new ArrayList<>();
+
+        int height = scale;
+        int width = 3 * height - 2;
+
+        for (int i = 0; i < height; i++) {
+            emptyBlock.add(" ".repeat(width));
+        }
+
+//        int cardBoardWidth = this.difficultyLevel == 1 ? 5 : 7;
+//        int cardBoardHeight = this.difficultyLevel == 1 ? 5 : 7;
+        int cardBoardWidth = 7;
+        int cardBoardHeight = 5;
+
+        List<String> shipScreen = new ArrayList<>();
+        List<String> composedShipLine;
+        List<List<String>> allShipLines = new ArrayList<>();
+
+        for (int i = 4; i < cardBoardHeight + 4; i++) {
+            List<List<String>> componentsScreens = new ArrayList<>();
+            for (int j = 3; j < cardBoardWidth + 3; j++) {
+                if (this.components[i][j] == null) {
+//                    System.out.println("Empty Block in (" + i + ", " + j + ")");
+                    componentsScreens.add(emptyBlock);
+                } else {
+//                    System.out.println("Found something in (" + i + ", " + j + ")");
+                    componentsScreens.add(this.components[i][j].print(scale));
+                }
+            }
+            composedShipLine = PrintUtils.composeComponents(componentsScreens, width, height);
+            allShipLines.add(composedShipLine);
+        }
+
+
+        for (List<String> shipLine : allShipLines) {
+            shipScreen.addAll(shipLine);
+        }
+
+        return shipScreen;
     }
 }
