@@ -199,12 +199,56 @@ public class PrintTest {
 
     @Test
     void printTest_cannon() {
+        System.out.println("======================== CANNON PRINT TEST ==========================");
 
+        Cannon singleCannon = new Cannon(connectors, 1);
+        Cannon doubleCannon = new Cannon(connectors, 2);
+
+        List<String> screenSingleCannon;
+        List<String> screenDoubleCannon;
+
+        for (int i = 0; i < 4; i++) {
+            screenSingleCannon = singleCannon.print(scale);
+            screenDoubleCannon = doubleCannon.print(scale);
+
+            for (String s : screenSingleCannon) {
+                System.out.println(s);
+            }
+
+            for (String s : screenDoubleCannon) {
+                System.out.println(s);
+            }
+
+            singleCannon.rotateRight();
+            doubleCannon.rotateRight();
+        }
     }
 
     @Test
     void printTest_engine() {
+        System.out.println("======================== ENGINE PRINT TEST ==========================");
 
+        Engine singleEngine = new Engine(connectors, 1);
+        Engine doubleEngine = new Engine(connectors, 2);
+
+        List<String> screenSingleEngine;
+        List<String> screenDoubleEngine;
+
+        for (int i = 0; i < 4; i++) {
+            screenSingleEngine = singleEngine.print(scale);
+            screenDoubleEngine = doubleEngine.print(scale);
+
+            for (String s : screenSingleEngine) {
+                System.out.println(s);
+            }
+
+            for (String s : screenDoubleEngine) {
+                System.out.println(s);
+            }
+
+            singleEngine.rotateRight();
+            doubleEngine.rotateRight();
+        }
     }
 
     @Test

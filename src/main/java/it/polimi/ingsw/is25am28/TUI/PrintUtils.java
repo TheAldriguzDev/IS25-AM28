@@ -184,10 +184,170 @@ public class PrintUtils {
                 }
             }
             case Cannon cannon -> {
+                int direction = cannon.getDirection();
+                paddedString = new StringBuilder(SPACE + ComponentAlias.CANNON.getAlias());
 
+                // Padding to use with the component's name
+                padding = width - 2 - 1 - ComponentAlias.CANNON.getAlias().length();
+                paddedString.append(SPACE.repeat(padding));
+                componentInfo.add(paddedString.toString());
+
+                for (int i = 1; i < height - 2; i++) {
+                    paddedString = new StringBuilder();
+
+                    if (i == (height / 2)) {
+                        switch (direction) {
+                            // 0 --> Cannon is pointing in front of the ship
+                            case 0 -> {
+                                if (cannon.getFirePower() == 2) {
+                                    padding = (width - 2 - 3) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                    paddedString.append("\u2191");
+                                    paddedString.append(SPACE);
+                                }
+                                else {
+                                    padding = (width - 2 - 1) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                }
+                                paddedString.append("\u2191");
+                                paddedString.append(SPACE.repeat(padding));
+                            }
+                            // 1 --> Cannon is pointing to the right of the ship
+                            case 1 -> {
+                                if (cannon.getFirePower() == 1) {
+                                    padding = (width - 2 - 3) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                    paddedString.append("\u2192");
+                                    paddedString.append(SPACE);
+                                }
+                                else {
+                                    padding = (width - 2 - 1) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                }
+                                paddedString.append("\u2192");
+                                paddedString.append(SPACE.repeat(padding));
+                            }
+                            // 2 --> Cannon is pointing to the back of the ship
+                            case 2 -> {
+                                if (cannon.getFirePower() == 1) {
+                                    padding = (width - 2 - 3) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                    paddedString.append("\u2193");
+                                    paddedString.append(SPACE);
+                                }
+                                else {
+                                    padding = (width - 2 - 1) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                }
+                                paddedString.append("\u2193");
+                                paddedString.append(SPACE.repeat(padding));
+                            }
+                            // 3 --> Cannon is pointing to the left of the ship
+                            case 3 -> {
+                                if (cannon.getFirePower() == 1) {
+                                    padding = (width - 2 - 3) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                    paddedString.append("\u2190");
+                                    paddedString.append(SPACE);
+                                }
+                                else {
+                                    padding = (width - 2 - 1) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                }
+                                paddedString.append("\u2190");
+                                paddedString.append(SPACE.repeat(padding));
+                            }
+                        }
+                    }
+                    else {
+                        paddedString.append(SPACE.repeat(width - 2));
+                    }
+
+                    componentInfo.add(paddedString.toString());
+                }
             }
             case Engine engine -> {
+                int direction = engine.getDirection();
+                paddedString = new StringBuilder(SPACE + ComponentAlias.ENGINE.getAlias());
 
+                // Padding to use with the component's name
+                padding = width - 2 - 1 - ComponentAlias.ENGINE.getAlias().length();
+                paddedString.append(SPACE.repeat(padding));
+                componentInfo.add(paddedString.toString());
+
+                for (int i = 1; i < height - 2; i++) {
+                    paddedString = new StringBuilder();
+
+                    if (i == (height / 2)) {
+                        switch (direction) {
+                            // 0 --> Engine's thruster is pointing to the back of the ship
+                            case 0 -> {
+                                if (engine.getSpeed() == 2) {
+                                    padding = (width - 2 - 3) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                    paddedString.append("\u2193");
+                                    paddedString.append(SPACE);
+                                }
+                                else {
+                                    padding = (width - 2 - 1) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                }
+                                paddedString.append("\u2193");
+                                paddedString.append(SPACE.repeat(padding));
+                            }
+                            // 1 --> Engine's thruster is pointing to the left of the ship
+                            case 1 -> {
+                                if (engine.getSpeed() == 2) {
+                                    padding = (width - 2 - 3) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                    paddedString.append("\u2190");
+                                    paddedString.append(SPACE);
+                                }
+                                else {
+                                    padding = (width - 2 - 1) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                }
+                                paddedString.append("\u2190");
+                                paddedString.append(SPACE.repeat(padding));
+                            }
+                            // 2 --> Engine's thruster is pointing to the top of the ship
+                            case 2 -> {
+                                if (engine.getSpeed() == 2) {
+                                    padding = (width - 2 - 3) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                    paddedString.append("\u2191");
+                                    paddedString.append(SPACE);
+                                }
+                                else {
+                                    padding = (width - 2 - 1) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                }
+                                paddedString.append("\u2191");
+                                paddedString.append(SPACE.repeat(padding));
+                            }
+                            // 3 --> Engine's thruster is pointing to the right of the ship
+                            case 3 -> {
+                                if (engine.getSpeed() == 2) {
+                                    padding = (width - 2 - 3) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                    paddedString.append("\u2192");
+                                    paddedString.append(SPACE);
+                                }
+                                else {
+                                    padding = (width - 2 - 1) / 2;
+                                    paddedString.append(SPACE.repeat(padding));
+                                }
+                                paddedString.append("\u2192");
+                                paddedString.append(SPACE.repeat(padding));
+                            }
+                        }
+                    }
+                    else {
+                        paddedString.append(SPACE.repeat(width - 2));
+                    }
+
+                    componentInfo.add(paddedString.toString());
+                }
             }
             case Shield shield -> {
                 int direction = shield.getDirection();
