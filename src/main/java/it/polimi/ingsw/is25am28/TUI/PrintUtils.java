@@ -101,21 +101,43 @@ public class PrintUtils {
                         componentInfo.add(paddedString.toString());
 
                         for (int i = 1; i < height - 2; i++) {
-                            paddedString = new StringBuilder();
-                            paddedString.append(" ".repeat(width - 4));
-                            paddedString.append(addColor("\u2502", ANSIColors.GREEN));
-                            paddedString.append(" ");
-                            componentInfo.add(paddedString.toString());
+                            if(i == (height - 2) / 2){
+                                padding = (width - 6 -2 - 2) / 2;
+                                paddedString = new StringBuilder();
+                                paddedString.append(" ".repeat(padding + 1));
+                                paddedString.append(addColor(ComponentAlias.SHIELD.getAlias(), ANSIColors.GREEN));
+                                paddedString.append(" ".repeat(padding));
+                                paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                                paddedString.append(" ");
+                                componentInfo.add(paddedString.toString());
+                            } else {
+                                paddedString = new StringBuilder();
+                                paddedString.append(" ".repeat(width - 4));
+                                paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                                paddedString.append(" ");
+                                componentInfo.add(paddedString.toString());
+                            }
                         }
                     }
                     case 1 -> {
 
                         for (int i = 0; i < height - 3; i++) {
+                            if(i == (height - 3) / 2){
+                                padding = (width - 6 -2 - 2) / 2;
+                                paddedString = new StringBuilder();
+                                paddedString.append(" ".repeat(padding + 1));
+                                paddedString.append(addColor(ComponentAlias.SHIELD.getAlias(), ANSIColors.GREEN));
+                                paddedString.append(" ".repeat(padding));
+                                paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                                paddedString.append(" ");
+                                componentInfo.add(paddedString.toString());
+                            } else {
                             paddedString = new StringBuilder();
                             paddedString.append(" ".repeat(width - 4));
                             paddedString.append(addColor("\u2502", ANSIColors.GREEN));
                             paddedString.append(" ");
                             componentInfo.add(paddedString.toString());
+                            }
                         }
                         paddedString = new StringBuilder();
                         paddedString.append(" ");
@@ -123,17 +145,26 @@ public class PrintUtils {
                         paddedString.append(addColor("\u2518", ANSIColors.GREEN));
                         paddedString.append(" ");
                         componentInfo.add(paddedString.toString());
-
-
                     }
                     case 2 -> {
 
                         for (int i = 0; i < height - 3; i++) {
-                            paddedString = new StringBuilder();
-                            paddedString.append(" ");
-                            paddedString.append(addColor("\u2502", ANSIColors.GREEN));
-                            paddedString.append(" ".repeat(width - 4));
-                            componentInfo.add(paddedString.toString());
+                            if(i == (height - 3) / 2){
+                                padding = (width - 6 -2 - 2) / 2;
+                                paddedString = new StringBuilder();
+                                paddedString.append(" ");
+                                paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                                paddedString.append(" ".repeat(padding - 1));
+                                paddedString.append(addColor(ComponentAlias.SHIELD.getAlias(), ANSIColors.GREEN));
+                                paddedString.append(" ".repeat(padding + 2));
+                                componentInfo.add(paddedString.toString());
+                            } else {
+                                paddedString = new StringBuilder();
+                                paddedString.append(" ");
+                                paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                                paddedString.append(" ".repeat(width - 4));
+                                componentInfo.add(paddedString.toString());
+                            }
                         }
 
                         paddedString = new StringBuilder();
@@ -152,14 +183,23 @@ public class PrintUtils {
                         paddedString.append(" ");
                         componentInfo.add(paddedString.toString());
                         for (int i = 1; i < height - 2; i++) {
-                            paddedString = new StringBuilder();
-                            paddedString.append(" ");
-                            paddedString.append(addColor("\u2502", ANSIColors.GREEN));
-                            paddedString.append(" ".repeat(width - 4));
-                            componentInfo.add(paddedString.toString());
+                            if(i == (height - 2) / 2){
+                                padding = (width - 6 -2 - 2) / 2;
+                                paddedString = new StringBuilder();
+                                paddedString.append(" ");
+                                paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                                paddedString.append(" ".repeat(padding - 1));
+                                paddedString.append(addColor(ComponentAlias.SHIELD.getAlias(), ANSIColors.GREEN));
+                                paddedString.append(" ".repeat(padding + 2));
+                                componentInfo.add(paddedString.toString());
+                            } else {
+                                paddedString = new StringBuilder();
+                                paddedString.append(" ");
+                                paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                                paddedString.append(" ".repeat(width - 4));
+                                componentInfo.add(paddedString.toString());
+                            }
                         }
-
-
                     }
                 }
 
