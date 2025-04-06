@@ -83,6 +83,8 @@ public class PrintTest {
 
     @Test
     void printTest_battery() {
+        System.out.println("======================== BATTERY PRINT TEST ==========================");
+
         Battery battery1 = new Battery(connectors, 2);
         Battery battery2 = new Battery(connectors, 2);
         Battery battery3 = new Battery(connectors, 3);
@@ -138,6 +140,8 @@ public class PrintTest {
 
     @Test
     void printTest_cabin() {
+        System.out.println("======================== CABIN PRINT TEST ==========================");
+
         Cabin coreCabin = new Cabin(connectors, true);
         Cabin emptyCabin = new Cabin(connectors, false);
         Cabin oneAstronautCabin = new Cabin(connectors, false);
@@ -186,6 +190,7 @@ public class PrintTest {
         for (String s : screenBrownAlienCabin) {
             System.out.println(s);
         }
+
     }
 
     @Test
@@ -200,6 +205,8 @@ public class PrintTest {
 
     @Test
     void printTest_shield() {
+        System.out.println("======================== SHIELD PRINT TEST ==========================");
+
         Shield shield_top_right = new Shield(connectors);
 
         Shield shield_bottom_right = new Shield(connectors);
@@ -232,10 +239,13 @@ public class PrintTest {
         for (String s : screenShield_top_left) {
             System.out.println(s);
         }
+
     }
 
     @Test
     void printTest_storage() {
+        System.out.println("======================== STORAGE PRINT TEST ==========================");
+
         Storage specialSingleStorage = new Storage(connectors, 1, true);
         Storage specialDoubleStorage = new Storage(connectors, 2, true);
         Storage normalDoubleStorage = new Storage(connectors, 2, false);
@@ -287,10 +297,12 @@ public class PrintTest {
         for (String s : screenEmptyNormalTripleStorage) {
             System.out.println(s);
         }
+
     }
 
     @Test
     void printTest_structural() {
+        System.out.println("======================== STRUCTURAL PRINT TEST ==========================");
         Structural structure = new Structural(connectors);
 
         List<String> screen = structure.print();
@@ -298,10 +310,12 @@ public class PrintTest {
         for (String s : screen) {
             System.out.println(s);
         }
+
     }
 
     @Test
     void printTest_vital() {
+        System.out.println("======================== VITAL PRINT TEST ==========================");
         Vital vital_purple = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
         Vital vital_brown = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
 
@@ -315,5 +329,6 @@ public class PrintTest {
         for (String s : screenVital2) {
             System.out.println(s);
         }
+
     }
 }
