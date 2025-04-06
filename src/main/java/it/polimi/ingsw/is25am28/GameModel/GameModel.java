@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -199,11 +200,7 @@ public class GameModel implements SessionSubscriber {
        * number of rewards obtained at the end of the game
        */
       public Map<String,Map<String,Integer>> endGameRewards(){
-            List<Player> players = board
-                  .getPlayers()
-                  .stream()
-                  .sorted((p1,p2) -> p1.getCursor() - p2.getCursor() )
-                  .toList();
+            List<Player> players = board.getPlayers();
 
             // add credits based on position
             for( int i = 0; i < players.size(); i++ ){
@@ -212,15 +209,18 @@ public class GameModel implements SessionSubscriber {
 
 
 
-            List<Player> withTheBestShip = new ArrayList<>();
-            int min = Integer.MAX_VALUE;
+            HashSet<Player> withTheBestShip = new HashSet<>();
             Map<String,Map<String,Integer>> map = new HashMap<>();
+            int min = 0; // used only if no player win
 
-            players.clear();
-            players.addAll(board.getPlayers());
+            if( players.size() > 0 ){
+                  min = players.get(0).getShip().getExposedConnectorAmount();
+                  withTheBestShip.add(players.get(0));
 
-            for (Player player : players){
+            }
 
+            for( int i = 0; i < players.size(); i++ ){
+                  Player player = players.get(i);
                   int curr = player.getShip().getExposedConnectorAmount();
 
                   if( curr < min ){
@@ -230,13 +230,12 @@ public class GameModel implements SessionSubscriber {
                   }else if( curr == min ){
                         withTheBestShip.add(player);
                   }
-
             }
 
             // add 2 credits to all the players with the best ship
             withTheBestShip.forEach(player -> player.addCredits(2));
 
-            players.addAll(board.getEliminatedPlayers());
+            players = this.players.values().stream().toList();
 
             // add credits for storage
             players.forEach( player -> {

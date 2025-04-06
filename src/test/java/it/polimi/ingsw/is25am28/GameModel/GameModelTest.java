@@ -1,22 +1,32 @@
 package it.polimi.ingsw.is25am28.GameModel;
 
+import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
 import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.VisitPlanetsJSON;
+import it.polimi.ingsw.is25am28.Components.Component;
+import it.polimi.ingsw.is25am28.Components.Storage;
 import it.polimi.ingsw.is25am28.Controller.Sender;
 import it.polimi.ingsw.is25am28.Exceptions.IllegalSessionStateException;
 import it.polimi.ingsw.is25am28.Exceptions.SelectedConcurrencyException;
+import it.polimi.ingsw.is25am28.Items.Item;
+import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.State.FlipActionState;
 
 public class GameModelTest extends GMTest {
+
+   
+
       class Stub implements Sender {
 
             @Override
@@ -113,7 +123,7 @@ public class GameModelTest extends GMTest {
             setPlayerShip( g.getPlayers().getLast() );
 
 
-            System.out.println(g.initControlSession());
+            g.initControlSession();
 
             List<ComponentJSON> ship = shipInit();
             ship.set( 6*12 + 7, new ComponentJSON().setLifeforms(LifeformType.PURPLE_ALIEN) );
@@ -124,6 +134,7 @@ public class GameModelTest extends GMTest {
             assertTrue(!g.hasControlSessionEnded());
 
             ship.set( 6*12 + 7, new ComponentJSON().setLifeforms(LifeformType.ASTRONAUT) );
+            
             g.populateShip( "B", ship );
 
             assertTrue(!g.hasControlSessionEnded());
@@ -134,6 +145,13 @@ public class GameModelTest extends GMTest {
             
             CardStateJSON s;
 
+            List<Integer> connectors = new ArrayList<>();
+
+            for( int i = 0; i < 4; i++ ){
+                  connectors.add(THREE_PIPES.ordinal());
+            }
+
+            g.getPlayers().getFirst().getShip().addComponent(new Storage( connectors, 3, true), 6, 5);
             g.initRoundSession();
 
             s = g.playCard( new MeteorShowerJSON("A", 0, 2, null, null) );
@@ -146,14 +164,186 @@ public class GameModelTest extends GMTest {
 
             assertEquals( "pianeti", s.getCardName() );
 
-            var json = new VisitPlanetsJSON(-1, null, null );
+            List<ComponentHelper<ItemColor>> it = new ArrayList<>();
+
+            for( int i = 0; i < 3; i++)
+                  it.add( new ComponentHelper<ItemColor>( 6, 5 ).addItem(ItemColor.RED) );
+
+            var json = new VisitPlanetsJSON(0, new ArrayList<>(), it  );
 
             json.setPlayerNickname("A");
             g.playCard( json );
 
-            json.setPlayerNickname("B");
-            g.playCard( json );
-      
             assertTrue(g.hasRoundSessionEnded());
+
+            /*
+             * A
+             * - 18 connectors -> + 0
+             * - 7 lost pieces -> - 7
+             * - red(4) storage (x3) -> + 12
+             * - first -> + 4
+             * TOTAL: 9
+             */
+
+
+             /*
+             * B
+             * - 12 connectors -> + 2
+             * - 0 lost pieces -> - 0
+             * - storage (x0) -> + 0
+             * - last -> +3
+             * 
+             * TOTAL: 5
+             */
+            
+            var res = g.endGameRewards();
+
+
+            assertEquals( 9, res.get("A").get("credits"));
+            assertEquals( 1, res.get("A").get("position"));
+
+            assertEquals( 5, res.get("B").get("credits"));
+            assertEquals( 2, res.get("B").get("position"));
+      }
+
+      @Test 
+      void test_rewards_with_eliminated_players(){
+            GameModel g = new GameModel( new Stub(), 2 );
+
+            g.addNewPlayer("A", PlayerColor.BLUE );
+            g.addNewPlayer("B", PlayerColor.YELLOW );
+
+            var A = g.getPlayers().getFirst();
+            var B = g.getPlayers().getLast();
+
+            g.start();
+
+            g.setPlayerEndedBuilding( "A", shipInit(), 0 );
+            g.setPlayerEndedBuilding( "B", shipInit(), 0 );
+
+            g.initControlSession();
+
+            g.populateShip("A", shipInit());
+            g.populateShip("B", shipInit());
+
+            List<Integer> connectors = new ArrayList<>();
+
+            for( int i = 0; i < 4; i++ ){
+                  connectors.add(THREE_PIPES.ordinal());
+            }
+
+            setPlayerShip( A );
+            setPlayerShip( B );
+            B.getShip().addComponent(new Storage( connectors, 3, true), 6, 5);
+
+            g.initRoundSession();
+
+
+            B.getShip().getStorageList().getFirst().storeItem( new Item(ItemColor.RED) ); 
+            B.getShip().getStorageList().getFirst().storeItem( new Item(ItemColor.RED) ); 
+
+            g.getBoard().eliminatePlayer(B);
+
+            A.addCredits(-5); // some lost pieces
+
+
+            /*
+             * A
+             * - 9 connectors -> + 2
+             * - 5 lost pieces -> - 5
+             * - storage (x0) -> + 0
+             * - first -> + 4
+             * TOTAL: 1
+             */
+
+             /*
+             * B
+             * - 9 connectors -> + 0
+             * - 0 lost pieces -> - 0
+             * - red(4) storage (x2) but has lost -> + 4
+             * - lost -> + 0
+             * 
+             * TOTAL: 6
+             */
+
+            var res = g.endGameRewards();
+
+            assertEquals( 1, res.get("A").get("credits"));
+            assertEquals( 1, res.get("A").get("position"));
+
+            assertEquals( 4, res.get("B").get("credits"));
+            assertEquals( -1, res.get("B").get("position"));
+      }
+
+      @Test 
+      void test_rewards_with_players_with_same_exposed(){
+            GameModel g = new GameModel( new Stub(), 2 );
+
+            g.addNewPlayer("A", PlayerColor.BLUE );
+            g.addNewPlayer("B", PlayerColor.YELLOW );
+
+            var A = g.getPlayers().getFirst();
+            var B = g.getPlayers().getLast();
+
+            g.start();
+
+            g.setPlayerEndedBuilding( "A", shipInit(), 0 );
+            g.setPlayerEndedBuilding( "B", shipInit(), 0 );
+
+            g.initControlSession();
+
+            g.populateShip("A", shipInit());
+            g.populateShip("B", shipInit());
+
+            List<Integer> connectors = new ArrayList<>();
+
+            for( int i = 0; i < 4; i++ ){
+                  connectors.add(THREE_PIPES.ordinal());
+            }
+
+            connectors.set(3, 1);
+
+            setPlayerShip( A );
+            setPlayerShip( B );
+
+            A.getShip().addComponent(new Storage( connectors, 3, true), 6, 5);
+            B.getShip().addComponent(new Storage( connectors, 3, true), 6, 5);
+
+            g.initRoundSession();
+
+
+            B.getShip().getStorageList().getFirst().storeItem( new Item(ItemColor.RED) ); 
+            B.getShip().getStorageList().getFirst().storeItem( new Item(ItemColor.RED) ); 
+
+
+            A.addCredits(-5); // some lost pieces
+
+
+            /*
+             * A
+             * - 9 connectors -> + 2
+             * - 5 lost pieces -> - 5
+             * - storage (x0) -> + 0
+             * - first -> + 4
+             * TOTAL: 1
+             */
+
+             /*
+             * B
+             * - 9 connectors -> + 2
+             * - 0 lost pieces -> - 0
+             * - red(4) storage (x2) -> + 8
+             * - last -> + 3
+             * 
+             * TOTAL: 13
+             */
+
+            var res = g.endGameRewards();
+
+            assertEquals( 1, res.get("A").get("credits"));
+            assertEquals( 1, res.get("A").get("position"));
+
+            assertEquals( 13, res.get("B").get("credits"));
+            assertEquals( 2, res.get("B").get("position"));
       }
 }

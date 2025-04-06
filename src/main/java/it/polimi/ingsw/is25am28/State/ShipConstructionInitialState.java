@@ -48,7 +48,6 @@ public class ShipConstructionInitialState {
       public ShipConstructionInitialState setDeckFromEventCards(List<EventCard> deck){
             this.deck = deck.stream().map( card ->{
                   card.initCardPlayers();
-                  System.out.println(card);
                   return card.generateState();
             }).toList();
             return this;

@@ -67,11 +67,13 @@ public class RoundSession extends Session {
 
         board
         .getPlayers()
-        .forEach( player -> ships.put( 
-                                player.getNickname(), 
-                                player.getShip().generateState() 
-                            ) 
-                );
+        .forEach( player -> {
+            player.getShip().generateComponentSubLists();
+            ships.put( 
+                player.getNickname(), 
+                player.getShip().generateState() 
+            );
+        });
         deck.get(0).initCardPlayers();
 
         return new FirstRoundState()
