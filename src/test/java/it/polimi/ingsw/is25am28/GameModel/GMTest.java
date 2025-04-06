@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
@@ -85,6 +86,7 @@ public abstract class GMTest {
             return ship;
       }
 
+
       protected Ship setPlayerShipWrong( Player player ){
 
             Ship ship = player.getShip();
@@ -100,6 +102,16 @@ public abstract class GMTest {
             ship.addComponent( new Structural(connectors), 6, 4);
 
             return ship;
+      }
+
+      public List<ComponentHelper<Integer>> basicFix(){
+            ArrayList<ComponentHelper<Integer>> fix = new ArrayList<>();
+
+            fix.add( new ComponentHelper<>(6, 4));
+            fix.add( new ComponentHelper<>(6, 5));
+            fix.add( new ComponentHelper<>(5, 5));
+
+            return fix;
       }
 
       protected Ship setPlayerShip( Player player ){

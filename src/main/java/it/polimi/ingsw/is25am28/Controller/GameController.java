@@ -2,9 +2,12 @@ package it.polimi.ingsw.is25am28.Controller;
 
 import java.util.*;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
+
 import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.GameModel.GameModel;
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.State.*;
 
 public class GameController {
@@ -89,7 +92,7 @@ public class GameController {
       /**
        * fix broken ship
        */
-      public Boolean fixShip( String nickname, List<ComponentJSON> ship ){
+      public Boolean fixShip( String nickname, List<ComponentHelper<Integer>> ship ){
             int id = players.get(nickname);
             GameModel model = register.get( id );
             
@@ -101,7 +104,7 @@ public class GameController {
       /**
        * populate a ship with lifeforms
        */
-      public Optional<FirstRoundState> populateShip( String nickname, List<ComponentJSON> ship ){
+      public Optional<FirstRoundState> populateShip( String nickname, List<ComponentHelper<LifeformType>> ship ){
             int id = players.get(nickname);
             GameModel model = register.get( id );
             

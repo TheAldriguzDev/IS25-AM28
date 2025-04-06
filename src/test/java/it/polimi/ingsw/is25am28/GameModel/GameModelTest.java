@@ -15,6 +15,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.VisitPlanetsJSON;
 import it.polimi.ingsw.is25am28.Components.Storage;
 import it.polimi.ingsw.is25am28.Exceptions.IllegalSessionStateException;
 import it.polimi.ingsw.is25am28.Exceptions.SelectedConcurrencyException;
+import it.polimi.ingsw.is25am28.Exceptions.ShipPopulationFailException;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
@@ -116,21 +117,21 @@ public class GameModelTest extends GMTest {
 
             g.initControlSession();
 
-            List<ComponentJSON> ship = shipInit();
-            ship.set( 6*12 + 7, new ComponentJSON().setLifeforms(LifeformType.PURPLE_ALIEN) );
+            List<ComponentHelper<LifeformType>> ship = new ArrayList<>();
+            ship.add( new ComponentHelper<LifeformType>(6,5).addItem(LifeformType.PURPLE_ALIEN) );
 
-            g.populateShip( "B", ship );
+            assertThrows( ShipPopulationFailException.class, () -> g.populateShip( "B", ship ) );
 
-            g.fixShip( "A", shipInit() );
+            assertTrue( g.fixShip( "A", basicFix() ) );
+
+            g.populateShip( "A", new ArrayList<>() );
             assertTrue(!g.hasControlSessionEnded());
 
-            ship.set( 6*12 + 7, new ComponentJSON().setLifeforms(LifeformType.ASTRONAUT) );
-            
+            ship.add( new ComponentHelper<LifeformType>(6,7).addItem(LifeformType.ASTRONAUT) );
+
+            ship.removeFirst();
+
             g.populateShip( "B", ship );
-
-            assertTrue(!g.hasControlSessionEnded());
-
-            g.populateShip( "A", shipInit() );
 
             assertTrue(g.hasControlSessionEnded());
             
@@ -170,10 +171,10 @@ public class GameModelTest extends GMTest {
             /*
              * A
              * - 18 connectors -> + 0
-             * - 7 lost pieces -> - 7
+             * - 5 lost pieces -> -5
              * - red(4) storage (x3) -> + 12
              * - first -> + 4
-             * TOTAL: 9
+             * TOTAL: 13
              */
 
 
@@ -190,7 +191,7 @@ public class GameModelTest extends GMTest {
             var res = g.endGameRewards();
 
 
-            assertEquals( 9, res.get("A").get("credits"));
+            assertEquals( 13, res.get("A").get("credits"));
             assertEquals( 1, res.get("A").get("position"));
 
             assertEquals( 5, res.get("B").get("credits"));
@@ -215,8 +216,8 @@ public class GameModelTest extends GMTest {
 
             g.initControlSession();
 
-            g.populateShip("A", shipInit());
-            g.populateShip("B", shipInit());
+            g.populateShip("A", new ArrayList<>());
+            g.populateShip("B", new ArrayList<>());
 
             List<Integer> connectors = new ArrayList<>();
 
@@ -285,8 +286,8 @@ public class GameModelTest extends GMTest {
 
             g.initControlSession();
 
-            g.populateShip("A", shipInit());
-            g.populateShip("B", shipInit());
+            g.populateShip("A", new ArrayList<>());
+            g.populateShip("B", new ArrayList<>());
 
             List<Integer> connectors = new ArrayList<>();
 

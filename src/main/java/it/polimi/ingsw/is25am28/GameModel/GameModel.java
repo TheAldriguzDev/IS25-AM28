@@ -3,6 +3,8 @@ package it.polimi.ingsw.is25am28.GameModel;
 
 import java.util.*;
 
+import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
+
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.State.*;
 import it.polimi.ingsw.is25am28.TimeObserver.TimeEndedNotifier;
@@ -13,6 +15,7 @@ import it.polimi.ingsw.is25am28.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.GameModel.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.GameModel.Session.*;
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 
 public class GameModel implements SessionSubscriber {
 
@@ -143,7 +146,7 @@ public class GameModel implements SessionSubscriber {
       /**
        * fix broken ship
        */
-      public Boolean fixShip( String nickname, List<ComponentJSON> ship ){
+      public Boolean fixShip( String nickname, List<ComponentHelper<Integer>> ship ){
 
             isInControlSession();
 
@@ -153,7 +156,7 @@ public class GameModel implements SessionSubscriber {
       /**
        * populate a ship with lifeforms
        */
-      public GameModel populateShip( String nickname, List<ComponentJSON> ship ){
+      public GameModel populateShip( String nickname, List<ComponentHelper<LifeformType>> ship ){
 
             isInControlSession();
 
