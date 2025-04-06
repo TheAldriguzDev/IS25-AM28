@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.TUI;
 
 import it.polimi.ingsw.is25am28.Components.*;
-import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 
 import java.util.ArrayList;
@@ -191,15 +190,11 @@ public class PrintUtils {
 
             }
             case Shield shield -> {
-
                 int direction = shield.getDirection();
-
-
 
                 switch (direction) {
                     // 0 --> Shield is covering top and right sides
                     case 0 -> {
-
                         paddedString = new StringBuilder();
                         paddedString.append(" ");
                         paddedString.append(addColor("\u2500", ANSIColors.GREEN).repeat(width - 5));
@@ -208,7 +203,7 @@ public class PrintUtils {
                         componentInfo.add(paddedString.toString());
 
                         for (int i = 1; i < height - 2; i++) {
-                            if(i == (height - 2) / 2){
+                            if (i == (height - 2) / 2) {
                                 padding = (width - 6 -2 - 2) / 2;
                                 paddedString = new StringBuilder();
                                 paddedString.append(" ".repeat(padding + 1));
@@ -228,9 +223,8 @@ public class PrintUtils {
                     }
                     // 1 --> Shield is covering right and bottom sides
                     case 1 -> {
-
                         for (int i = 0; i < height - 3; i++) {
-                            if(i == (height - 3) / 2){
+                            if (i == (height - 3) / 2) {
                                 padding = (width - 6 -2 - 2) / 2;
                                 paddedString = new StringBuilder();
                                 paddedString.append(" ".repeat(padding + 1));
@@ -240,27 +234,25 @@ public class PrintUtils {
                                 paddedString.append(" ");
                                 componentInfo.add(paddedString.toString());
                             } else {
-                            paddedString = new StringBuilder();
-                            paddedString.append(" ".repeat(width - 4));
-                            paddedString.append(addColor("\u2502", ANSIColors.GREEN));
-                            paddedString.append(" ");
-                            componentInfo.add(paddedString.toString());
+                                paddedString = new StringBuilder();
+                                paddedString.append(" ".repeat(width - 4));
+                                paddedString.append(addColor("\u2502", ANSIColors.GREEN));
+                                paddedString.append(" ");
+                                componentInfo.add(paddedString.toString());
                             }
                         }
+
                         paddedString = new StringBuilder();
                         paddedString.append(" ");
                         paddedString.append(addColor("\u2500", ANSIColors.GREEN).repeat(width - 5));
                         paddedString.append(addColor("\u2518", ANSIColors.GREEN));
                         paddedString.append(" ");
                         componentInfo.add(paddedString.toString());
-
-
                     }
                     // 2 --> Shield is covering bottom and left sides
                     case 2 -> {
-
                         for (int i = 0; i < height - 3; i++) {
-                            if(i == (height - 3) / 2){
+                            if (i == (height - 3) / 2) {
                                 padding = (width - 6 -2 - 2) / 2;
                                 paddedString = new StringBuilder();
                                 paddedString.append(" ");
@@ -287,15 +279,15 @@ public class PrintUtils {
                     }
                     // 3 --> Shield is covering left and top sides
                     case 3 -> {
-
                         paddedString = new StringBuilder();
                         paddedString.append(" ");
                         paddedString.append(addColor("\u250C", ANSIColors.GREEN));
                         paddedString.append(addColor("\u2500", ANSIColors.GREEN).repeat(width - 5));
                         paddedString.append(" ");
                         componentInfo.add(paddedString.toString());
+
                         for (int i = 1; i < height - 2; i++) {
-                            if(i == (height - 2) / 2){
+                            if (i == (height - 2) / 2) {
                                 padding = (width - 6 -2 - 2) / 2;
                                 paddedString = new StringBuilder();
                                 paddedString.append(" ");
@@ -312,25 +304,8 @@ public class PrintUtils {
                                 componentInfo.add(paddedString.toString());
                             }
                         }
-
-
                     }
                 }
-
-
-
-
-
-
-//                for (int i = 0; i < height - 2; i++) {
-//                    paddedString = new StringBuilder();
-//                    paddedString.append(" ".repeat(width - 2));
-//                    componentInfo.add(paddedString.toString());
-//                }
-
-
-
-
             }
             case Storage storage -> {
                 // Writes the component's name
@@ -426,7 +401,6 @@ public class PrintUtils {
         return componentInfo;
     }
 
-    // Test version, will be tested with 2 parameters
     /**
      * ATTENTION: The components given in input will be composed on a single line!
      *
@@ -437,20 +411,18 @@ public class PrintUtils {
      * */
     public static List<String> composeComponents(List<List<String>> componentsInfo, int width, int height) {
         List<String> composedInfo = new ArrayList<>();
+
         for (int i = 0; i < height; i++) {
             StringBuilder composedLine = new StringBuilder();
-            for (int j = 0; j < componentsInfo.size(); j++) {
-                composedLine.append(componentsInfo.get(j).get(i));
+
+            for (List<String> strings : componentsInfo) {
+                composedLine.append(strings.get(i));
                 composedLine.append(SPACE);
             }
-//            for (List<String> componentInfo : componentsInfo) {
-//                composedLine.append(componentInfo);
-//                composedLine.append(SPACE);
-//            }
+
             composedInfo.add(composedLine.toString());
         }
+
         return composedInfo;
     }
-
-
 }
