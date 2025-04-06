@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.TUI.PrintUtils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +14,9 @@ import java.util.List;
 
 public class PrintTest {
     List<Integer> connectors;
+    int scale = 5;
+    int height = scale;
+    int width = 3 * height - 2;
 
     @BeforeEach
     void init() {
@@ -101,13 +105,13 @@ public class PrintTest {
         emptyBattery2.setAvailability(0);
         emptyBattery3.setAvailability(0);
 
-        List<String> screenBattery1 = battery1.print();
-        List<String> screenBattery2 = battery2.print();
-        List<String> screenBattery3 = battery3.print();
-        List<String> screenBattery4 = battery4.print();
-        List<String> screenBattery5 = battery5.print();
-        List<String> screenEmptyBattery2 = emptyBattery2.print();
-        List<String> screenEmptyBattery3 = emptyBattery3.print();
+        List<String> screenBattery1 = battery1.print(scale);
+        List<String> screenBattery2 = battery2.print(scale);
+        List<String> screenBattery3 = battery3.print(scale);
+        List<String> screenBattery4 = battery4.print(scale);
+        List<String> screenBattery5 = battery5.print(scale);
+        List<String> screenEmptyBattery2 = emptyBattery2.print(scale);
+        List<String> screenEmptyBattery3 = emptyBattery3.print(scale);
 
         for (String s : screenBattery1) {
             System.out.println(s);
@@ -160,12 +164,12 @@ public class PrintTest {
         purpleAlienCabin.addInhabitant(purpleAlien);
         brownAlienCabin.addInhabitant(brownAlien);
 
-        List<String> screenCoreCabin = coreCabin.print();
-        List<String> screenEmptyCabin = emptyCabin.print();
-        List<String> screenOneAstronautCabin = oneAstronautCabin.print();
-        List<String> screenTwoAstronautCabin = twoAstronautCabin.print();
-        List<String> screenPurpleAlienCabin = purpleAlienCabin.print();
-        List<String> screenBrownAlienCabin = brownAlienCabin.print();
+        List<String> screenCoreCabin = coreCabin.print(scale);
+        List<String> screenEmptyCabin = emptyCabin.print(scale);
+        List<String> screenOneAstronautCabin = oneAstronautCabin.print(scale);
+        List<String> screenTwoAstronautCabin = twoAstronautCabin.print(scale);
+        List<String> screenPurpleAlienCabin = purpleAlienCabin.print(scale);
+        List<String> screenBrownAlienCabin = brownAlienCabin.print(scale);
 
         for (String s : screenCoreCabin) {
             System.out.println(s);
@@ -219,10 +223,10 @@ public class PrintTest {
         Shield shield_top_left = new Shield(connectors);
         shield_top_left.rotateLeft();
 
-        List<String> screenShield_top_right = shield_top_right.print();
-        List<String> screenShield_bottom_right = shield_bottom_right.print();
-        List<String> screenShield_bottom_left = shield_bottom_left.print();
-        List<String> screenShield_top_left = shield_top_left.print();
+        List<String> screenShield_top_right = shield_top_right.print(scale);
+        List<String> screenShield_bottom_right = shield_bottom_right.print(scale);
+        List<String> screenShield_bottom_left = shield_bottom_left.print(scale);
+        List<String> screenShield_top_left = shield_top_left.print(scale);
 
         for (String s : screenShield_top_right) {
             System.out.println(s);
@@ -267,12 +271,12 @@ public class PrintTest {
         normalTripleStorage.storeItem(green);
         normalTripleStorage.storeItem(blue);
 
-        List<String> screenSpecialSingleStorage = specialSingleStorage.print();
-        List<String> screenSpecialDoubleStorage = specialDoubleStorage.print();
-        List<String> screenNormalDoubleStorage = normalDoubleStorage.print();
-        List<String> screenNormalTripleStorage  = normalTripleStorage.print();
-        List<String> screenEmptySpecialSingleStorage  = emptySpecialSingleStorage.print();
-        List<String> screenEmptyNormalTripleStorage  = emptyNormalTripleStorage.print();
+        List<String> screenSpecialSingleStorage = specialSingleStorage.print(scale);
+        List<String> screenSpecialDoubleStorage = specialDoubleStorage.print(scale);
+        List<String> screenNormalDoubleStorage = normalDoubleStorage.print(scale);
+        List<String> screenNormalTripleStorage  = normalTripleStorage.print(scale);
+        List<String> screenEmptySpecialSingleStorage  = emptySpecialSingleStorage.print(scale);
+        List<String> screenEmptyNormalTripleStorage  = emptyNormalTripleStorage.print(scale);
 
         for (String s : screenSpecialSingleStorage) {
             System.out.println(s);
@@ -305,7 +309,7 @@ public class PrintTest {
         System.out.println("======================== STRUCTURAL PRINT TEST ==========================");
         Structural structure = new Structural(connectors);
 
-        List<String> screen = structure.print();
+        List<String> screen = structure.print(scale);
 
         for (String s : screen) {
             System.out.println(s);
@@ -319,8 +323,8 @@ public class PrintTest {
         Vital vital_purple = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
         Vital vital_brown = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
 
-        List<String> screenVital1 = vital_purple.print();
-        List<String> screenVital2 = vital_brown.print();
+        List<String> screenVital1 = vital_purple.print(scale);
+        List<String> screenVital2 = vital_brown.print(scale);
 
         for (String s : screenVital1) {
             System.out.println(s);
@@ -329,6 +333,48 @@ public class PrintTest {
         for (String s : screenVital2) {
             System.out.println(s);
         }
+    }
+
+    @Test
+    void composeTest() {
+        System.out.println("======================== COMPOSE TEST ==========================");
+
+        List<List<String>> composedInfoInput = new ArrayList<>();
+        List<String> composedInfo;
+
+        // In this test we'll be composing shields along a line
+        Shield shield_top_right = new Shield(connectors);
+
+        Shield shield_bottom_right = new Shield(connectors);
+        shield_bottom_right.rotateRight();
+
+        Shield shield_bottom_left = new Shield(connectors);
+        shield_bottom_left.rotateRight();
+        shield_bottom_left.rotateRight();
+
+        Shield shield_top_left = new Shield(connectors);
+        shield_top_left.rotateLeft();
+
+        List<String> screenShield_top_right = shield_top_right.print(scale);
+        List<String> screenShield_bottom_right = shield_bottom_right.print(scale);
+        List<String> screenShield_bottom_left = shield_bottom_left.print(scale);
+        List<String> screenShield_top_left = shield_top_left.print(scale);
+
+        composedInfoInput.add(screenShield_top_right);
+        composedInfoInput.add(screenShield_bottom_right);
+        composedInfoInput.add(screenShield_bottom_left);
+        composedInfoInput.add(screenShield_top_left);
+
+
+
+
+         composedInfo =  PrintUtils.composeComponents(composedInfoInput, width, height);
+
+         for (String s : composedInfo) {
+             System.out.println(s);
+         }
+
+
 
     }
 }

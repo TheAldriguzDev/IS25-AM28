@@ -194,10 +194,10 @@ public abstract sealed class Component implements Printable permits Cannon, Cabi
             return map;
       }
 
-      public List<String> print() {
+      public List<String> print(int scale) {
             List<String> screen = new ArrayList<>();
             // width = 3 * height - 2 | width =  height + i * 4
-            int scale = 5; // needs to be odd
+            //int scale = 5; // needs to be odd
 
             int height = scale;
             int width = 3 * height - 2;

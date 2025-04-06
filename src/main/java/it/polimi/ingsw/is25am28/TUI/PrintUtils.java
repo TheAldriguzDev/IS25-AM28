@@ -426,5 +426,31 @@ public class PrintUtils {
         return componentInfo;
     }
 
+    // Test version, will be tested with 2 parameters
+    /**
+     * ATTENTION: The components given in input will be composed on a single line!
+     *
+     * @param componentsInfo A list which contains multiple componentInfo
+     * @param width The width of the box that holds the component (minimum is 5)
+     * @param height The height of the box that holds the component (minimum is 5)
+     * @return A single List<String> that contains the composition of all the component info give in input
+     * */
+    public static List<String> composeComponents(List<List<String>> componentsInfo, int width, int height) {
+        List<String> composedInfo = new ArrayList<>();
+        for (int i = 0; i < height; i++) {
+            StringBuilder composedLine = new StringBuilder();
+            for (int j = 0; j < componentsInfo.size(); j++) {
+                composedLine.append(componentsInfo.get(j).get(i));
+                composedLine.append(SPACE);
+            }
+//            for (List<String> componentInfo : componentsInfo) {
+//                composedLine.append(componentInfo);
+//                composedLine.append(SPACE);
+//            }
+            composedInfo.add(composedLine.toString());
+        }
+        return composedInfo;
+    }
+
 
 }
