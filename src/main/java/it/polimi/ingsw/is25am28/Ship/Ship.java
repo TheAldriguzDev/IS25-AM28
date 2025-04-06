@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.TUI.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Printable;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -20,13 +21,17 @@ import static it.polimi.ingsw.is25am28.Connector.*;
 
 public class Ship implements Printable {
     private final static Map<Integer, int[][]> shipProfiles = new HashMap<>();
+    private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
+    private final static Map<Integer, Pair<Integer, Integer>> shipOffsets = new HashMap<>();
 
     static {
+
+        // (1) - Setting the Ship Profile Matrices
         int[][] matrix;
         int[][] levelOneMatrix;
         int row, col;
 
-        // (1) - Difficulty level 1 ship layout
+        // (1.1) - Difficulty level 1 ship layout
         // Starting from scratch
         matrix = new int[12][12];
 
@@ -68,7 +73,7 @@ public class Ship implements Printable {
         // building the other 2 ship profiles
         levelOneMatrix = shipProfiles.get(1);
 
-        // (2) - Difficulty level 2 ship layout
+        // (1.2) - Difficulty level 2 ship layout
         // Creating the level 2 layout by starting from the level 1 layout
         matrix = new int[12][12];
 
@@ -101,7 +106,7 @@ public class Ship implements Printable {
 
         shipProfiles.put(2, matrix);
 
-        // (3) - Difficulty level 3 ship layout
+        // (1.3) - Difficulty level 3 ship layout
         // Creating the level 3 layout by starting from the level 1 layout
         matrix = new int[12][12];
 
@@ -144,6 +149,20 @@ public class Ship implements Printable {
         matrix[8][10] = 1;  // Row #9
 
         shipProfiles.put(3, matrix);
+
+        // (2) - Setting the Ship dimensions per difficultyLevel
+        // --> Dimensions per difficultyLevel represent the smallest square/rectangle that wraps the entire ship
+        shipDimensions.put(1, new Pair<Integer, Integer>(5, 5));
+        shipDimensions.put(2, new Pair<Integer, Integer>(5, 7));
+        shipDimensions.put(3, new Pair<Integer, Integer>(6, 9));
+
+        // (3) - Setting the Ship's offsets per difficultyLevel
+        // --> Offsets are between the 12x12 grid and the actual ship placement (just like in the cardboard version)
+        // --> When scanning the 12x12 grid, you add these values to the respective row and column iterators
+        //     to start scanning the ship from the top-left corner of the square/rectangle that wraps the entire ship
+        shipOffsets.put(1, new Pair<Integer, Integer>(4, 3));
+        shipOffsets.put(2, new Pair<Integer, Integer>(4, 3));
+        shipOffsets.put(3, new Pair<Integer, Integer>(3, 2));
     }
 
     private final int difficultyLevel;
@@ -1203,47 +1222,81 @@ public class Ship implements Printable {
         return shipState;
     }
 
-    private int scale = 5;
+    /**
+     * Prints the ship's grid
+     *
+     * @param scale
+     * @return
+     */
     public List<String> print(int scale) {
-
         List<String> emptyBlock = new ArrayList<>();
 
         int height = scale;
         int width = 3 * height - 2;
 
+        // Creating the empty block for null components
         for (int i = 0; i < height; i++) {
-            emptyBlock.add(" ".repeat(width));
+            emptyBlock.add(PrintUtils.getSpace().repeat(width));
         }
 
-//        int cardBoardWidth = this.difficultyLevel == 1 ? 5 : 7;
-//        int cardBoardHeight = this.difficultyLevel == 1 ? 5 : 7;
-        int cardBoardWidth = 7;
-        int cardBoardHeight = 5;
+        // Getting the ship offset and dimensions needed to know
+        // from where to start printing the components
+        int shipHeight = Ship.shipDimensions.get(this.difficultyLevel).getKey();
+        int shipWidth = Ship.shipDimensions.get(this.difficultyLevel).getValue();
+
+        int rowOffset = Ship.shipOffsets.get(this.difficultyLevel).getKey();
+        int colOffset = Ship.shipOffsets.get(this.difficultyLevel).getValue();
 
         List<String> shipScreen = new ArrayList<>();
         List<String> composedShipLine;
         List<List<String>> allShipLines = new ArrayList<>();
 
-        for (int i = 4; i < cardBoardHeight + 4; i++) {
+        // Collecting all components' prints
+        for (int i = rowOffset; i < shipHeight + 4; i++) {
             List<List<String>> componentsScreens = new ArrayList<>();
-            for (int j = 3; j < cardBoardWidth + 3; j++) {
+
+            for (int j = colOffset; j < shipWidth + 3; j++) {
                 if (this.components[i][j] == null) {
-//                    System.out.println("Empty Block in (" + i + ", " + j + ")");
                     componentsScreens.add(emptyBlock);
-                } else {
-//                    System.out.println("Found something in (" + i + ", " + j + ")");
+                }
+                else {
                     componentsScreens.add(this.components[i][j].print(scale));
                 }
             }
+
             composedShipLine = PrintUtils.composeComponents(componentsScreens, width, height);
             allShipLines.add(composedShipLine);
         }
 
-
+        // Sorting the component's lines to create the ship's grid output screen
         for (List<String> shipLine : allShipLines) {
             shipScreen.addAll(shipLine);
         }
 
         return shipScreen;
+    }
+
+    private WidgetTUI getShipStatsWidget() {
+        // Creating the ship's stats widget with the correct dimensions
+        WidgetTUI shipStatsWidget = new WidgetTUI(
+
+        );
+
+        return shipStatsWidget;
+    }
+
+    /**
+     * Creates a Widget containing this ship's grid, its owner and its statistics
+     *
+     * @return This ship's TUI widget, which will be composed alongside other widgets
+     *         in the final TUI
+     */
+    public WidgetTUI print() {
+        // Creating the ship's complete widget with the correct dimensions
+        WidgetTUI shipWidget = new WidgetTUI(
+            0, 0
+        );
+
+        return shipWidget;
     }
 }

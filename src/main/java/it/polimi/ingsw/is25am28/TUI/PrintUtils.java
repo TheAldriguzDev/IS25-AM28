@@ -10,6 +10,13 @@ public class PrintUtils {
     private static final String SPACE = " ";
 
     /**
+     * @return A single SPACE character
+     */
+    public static String getSpace() {
+        return PrintUtils.SPACE;
+    }
+
+    /**
      * @param string The string to color
      * @param unicodeColorString The color to add to the string
      * @return The colored string
