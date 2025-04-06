@@ -1,8 +1,10 @@
 package it.polimi.ingsw.is25am28.Network;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Controller.*;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.State.ShipConstructionInitialState;
+import it.polimi.ingsw.is25am28.TimeObserver.TimeEndedNotifier;
 
 import java.util.*;
 
@@ -11,13 +13,13 @@ import java.util.*;
  * for simplicity all messages will be represented as strings
  * THIS CLASS IS AN ABSTRACTION, MEANT <B>ONLY TO SHOW WORKFLOW</B>
  */
-public class ExampleNetwork {
+public class ExampleNetwork implements TimeEndedNotifier {
 
       private final PlayerQueueController queueController;
       private final GameController gameController;
 
       public ExampleNetwork(){
-            queueController = new PlayerQueueController();
+            queueController = new PlayerQueueController( this );
             gameController = new GameController();
       }
 
@@ -61,5 +63,24 @@ public class ExampleNetwork {
             }
       }
 
+      public void sendTimeEndedNotification(List<String> players) {
+            // send notification to all players that timer ended
+      }
+
+      
+
       // ... handle messages that regards game itself (ex. select, deselect ...)
+
+      public void playCard( ActionJSON json ){
+            var state = gameController.playCard(json);
+
+            if( state.isPresent() ){
+                  // send state of the card
+                  return;
+            }
+
+            // send the following state as is
+            gameController.endGameRewards(json);
+
+      }
 }

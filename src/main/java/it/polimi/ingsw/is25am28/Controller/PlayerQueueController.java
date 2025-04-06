@@ -7,9 +7,11 @@ import java.util.Optional;
 import it.polimi.ingsw.is25am28.GameModel.GameModel;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.State.ShipConstructionInitialState;
+import it.polimi.ingsw.is25am28.TimeObserver.TimeEndedNotifier;
 
 public class PlayerQueueController {
       private final List<String> waitingQueue = new ArrayList<>();
+      private final TimeEndedNotifier notifier;
 
       /**
        * game that is being initialized
@@ -18,8 +20,9 @@ public class PlayerQueueController {
       private int num = 0;
 
 
-      public PlayerQueueController(){
-      }
+      public PlayerQueueController( TimeEndedNotifier notifier ){
+            this.notifier = notifier;
+      }     
 
       /**
        * used when the leader respond with the configuration of the game and 
@@ -90,7 +93,7 @@ public class PlayerQueueController {
             
             if ( num == 0 ){
                   // no game is available right now
-                  currentGame = new GameModel( null );
+                  currentGame = new GameModel( notifier );
             }
 
             if( waitingQueue.size() > 0 )
