@@ -1,17 +1,18 @@
 package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.Connector;
+import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 import it.polimi.ingsw.is25am28.TUI.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.Printable;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.TUI.UnicodeBlockElements;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
-
-public abstract sealed class Component implements Printable permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield, Structural {
+public abstract sealed class Component implements WidgetTUIGenerator permits Cannon, Cabin, Storage, Vital, Engine, Battery, Shield, Structural {
       private int row;
       private int col;
 
@@ -194,79 +195,118 @@ public abstract sealed class Component implements Printable permits Cannon, Cabi
             return map;
       }
 
-      public List<String> print(int scale) {
-            List<String> screen = new ArrayList<>();
-            // width = 3 * height - 2 | width =  height + i * 4
-            //int scale = 5; // needs to be odd
+//      /**
+//       * @return A TUI border-wrapped widget containing the component's text representation
+//       *         as well as other information about itself (e.g.: energy left inside a battery)
+//       */
+//      public WidgetTUI generateWidget() {
+//            WidgetTUI componentWidget = new WidgetTUI();
+//            StringBuilder tmpString;
+//            int lineCount = 0;
+//
+//            // TODO: Discuss where to put the scale and/or height&width parameters
+//            int scale = 5;    // NOTE: Scale must be odd for perfect centering
+//            int height = scale;
+//            int width = 3 * height - 2;
+//
+//            // Return a list of strings that represents the internal information of the component
+//            List<String> componentInfo = PrintUtils.getComponentInfo(this, width, height);
+//
+//            // Top Left Corner
+//            tmpString = new StringBuilder(UnicodeBlockElements.SINGLE_LINE_TL_CORNER);
+//
+//            // Upper border
+//            for (int i = 1; i < width - 1; i++) {
+//                  if (i == (width / 2)) {
+//                        tmpString.append(this.sides[0].ordinal());
+//                  } else {
+//                        tmpString.append(UnicodeBlockElements.HORIZONTAL_TOP_SINGLE_LINE);
+//                  }
+//            }
+//
+//            // Top Right Corner
+//            tmpString.append(UnicodeBlockElements.SINGLE_LINE_TR_CORNER);
+//            componentWidget.appendString(tmpString.toString());
+//
+//            // Middle
+//            for (int i = 1; i < height - 1; i++) {
+//                  tmpString = new StringBuilder();
+//
+//                  for (int j = 0; j < width; j++) {
+//                        if (j == 0) {
+//                              if (i == height / 2) {
+//                                    tmpString.append(this.sides[3].ordinal());
+//                              } else {
+//                                    tmpString.append(UnicodeBlockElements.VERTICAL_LEFT_SINGLE_LINE);
+//                              }
+//                        } else if (j == width - 1) {
+//                              if (i == height / 2) {
+//                                    tmpString.append(this.sides[1].ordinal());
+//                              } else {
+//                                    tmpString.append(UnicodeBlockElements.VERTICAL_RIGHT_SINGLE_LINE);
+//                              }
+//                        } else if (j == 1) {
+//                              tmpString.append(componentInfo.get(lineCount));
+//                              lineCount++;
+//                        }
+//                  }
+//                  componentWidget.appendString(tmpString.toString());
+//            }
+//
+//            // Bottom Left Corner
+//            tmpString = new StringBuilder(UnicodeBlockElements.SINGLE_LINE_BL_CORNER);
+//
+//            // Lower border
+//            for (int i = 1; i < width - 1; i++) {
+//                  if (i == (width / 2)) {
+//                        tmpString.append(this.sides[2].ordinal());
+//                  } else {
+//                        tmpString.append(UnicodeBlockElements.HORIZONTAL_BOTTOM_SINGLE_LINE);
+//                  }
+//            }
+//
+//            // Bottom Right Corner
+//            tmpString.append(UnicodeBlockElements.SINGLE_LINE_BR_CORNER);
+//            componentWidget.appendString(tmpString.toString());
+//
+//            return componentWidget;
+//      }
 
+      /**
+       * @param componentWidget The component's widget to which the screen will be added to
+       */
+      protected abstract void setComponentScreen(WidgetTUI componentWidget) throws NullWidgetException;
+
+      /**
+       * @return A TUI border-wrapped widget containing the component's text representation
+       *         as well as other information about itself (e.g.: energy left inside a battery)
+       */
+      public WidgetTUI generateWidget() {
+            WidgetTUI componentWidget = new WidgetTUI();
+            List<String> customBorderScheme = new ArrayList<String>();
+
+            // TODO: Understand better these indexes
+            int scale = 3;
             int height = scale;
-            int width = 3 * height - 2;
-            StringBuilder tmpString;
+            int width = 3 * height + 2;
 
-            // Return a list of strings that represents the internal information of the component
-            List<String> componentInfo = PrintUtils.getComponentInfo(this, width, height);
-            int lineCount = 0;
+            componentWidget.setHeight(height);
+            componentWidget.setWidth(width);
 
-            // Top Left Corner
-            tmpString = new StringBuilder("\u250C");
-
-            // Upper border
-            for (int i = 1; i < width - 1; i++) {
-                  if (i == (width / 2)) {
-                        tmpString.append(this.sides[0].ordinal());
-                  } else {
-                        tmpString.append("\u2500");
-                  }
+            // Creating the custom border character list that will be
+            // used by the wrapper to create the border
+            for (int i = 0; i < 8; i++) {
+                  customBorderScheme.add(WidgetTUI.defaultBorderCharacters.get(i));
             }
 
-            // Top Right Corner
-            tmpString.append("\u2510");
-            screen.add(tmpString.toString());
-
-            // Middle
-            for (int i = 1; i < height - 1; i++) {
-                  tmpString = new StringBuilder();
-
-                  for (int j = 0; j < width; j++) {
-                        if (j == 0) {
-                              if (i == height / 2) {
-                                    tmpString.append(this.sides[3].ordinal());
-                              } else {
-                                    tmpString.append("\u2502");
-                              }
-                        } else if (j == width - 1) {
-                              if (i == height / 2) {
-                                    tmpString.append(this.sides[1].ordinal());
-                              } else {
-                                    tmpString.append("\u2502");
-                              }
-                        } else if (j == 1) {
-                              tmpString.append(componentInfo.get(lineCount));
-                              lineCount++;
-                        }
-                  }
-                  screen.add(tmpString.toString());
+            // Adding this component's connectors as the center side symbols in the border schema
+            for (Connector connector : this.sides) {
+                  customBorderScheme.add("" + connector.ordinal());
             }
 
-            // Bottom Left Corner
-            tmpString = new StringBuilder("\u2514");
+            this.setComponentScreen(componentWidget);
+            componentWidget.wrapScreenWithBorder(customBorderScheme);
 
-            // Lower border
-            for (int i = 1; i < width - 1; i++) {
-                  if (i == (width / 2)) {
-                        tmpString.append(this.sides[2].ordinal());
-                  } else {
-                        tmpString.append("\u2500");
-                  }
-            }
-
-            // Bottom Right Corner
-            tmpString.append("\u2518");
-            screen.add(tmpString.toString());
-
-            return screen;
+            return componentWidget;
       }
-
-
 }
-

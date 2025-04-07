@@ -7,11 +7,15 @@ import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import it.polimi.ingsw.is25am28.TUI.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PrintTest {
     List<Integer> connectors;
@@ -187,41 +191,21 @@ public class PrintTest {
         emptyBattery2.setAvailability(0);
         emptyBattery3.setAvailability(0);
 
-        List<String> screenBattery1 = battery1.print(scale);
-        List<String> screenBattery2 = battery2.print(scale);
-        List<String> screenBattery3 = battery3.print(scale);
-        List<String> screenBattery4 = battery4.print(scale);
-        List<String> screenBattery5 = battery5.print(scale);
-        List<String> screenEmptyBattery2 = emptyBattery2.print(scale);
-        List<String> screenEmptyBattery3 = emptyBattery3.print(scale);
+        WidgetTUI widgetBattery1 = battery1.generateWidget();
+        WidgetTUI widgetBattery2 = battery2.generateWidget();
+        WidgetTUI widgetBattery3 = battery3.generateWidget();
+        WidgetTUI widgetBattery4 = battery4.generateWidget();
+        WidgetTUI widgetBattery5 = battery5.generateWidget();
+        WidgetTUI widgetEmptyBattery2 = emptyBattery2.generateWidget();
+        WidgetTUI widgetEmptyBattery3 = emptyBattery3.generateWidget();
 
-        for (String s : screenBattery1) {
-            System.out.println(s);
-        }
-
-        for (String s : screenBattery2) {
-            System.out.println(s);
-        }
-
-        for (String s : screenBattery3) {
-            System.out.println(s);
-        }
-
-        for (String s : screenBattery4) {
-            System.out.println(s);
-        }
-
-        for (String s : screenBattery5) {
-            System.out.println(s);
-        }
-
-        for (String s : screenEmptyBattery2) {
-            System.out.println(s);
-        }
-
-        for (String s : screenEmptyBattery3) {
-            System.out.println(s);
-        }
+        widgetBattery1.printWidget();
+        widgetBattery2.printWidget();
+        widgetBattery3.printWidget();
+        widgetBattery4.printWidget();
+        widgetBattery5.printWidget();
+        widgetEmptyBattery2.printWidget();
+        widgetEmptyBattery3.printWidget();
     }
 
     @Test
@@ -246,36 +230,19 @@ public class PrintTest {
         purpleAlienCabin.addInhabitant(purpleAlien);
         brownAlienCabin.addInhabitant(brownAlien);
 
-        List<String> screenCoreCabin = coreCabin.print(scale);
-        List<String> screenEmptyCabin = emptyCabin.print(scale);
-        List<String> screenOneAstronautCabin = oneAstronautCabin.print(scale);
-        List<String> screenTwoAstronautCabin = twoAstronautCabin.print(scale);
-        List<String> screenPurpleAlienCabin = purpleAlienCabin.print(scale);
-        List<String> screenBrownAlienCabin = brownAlienCabin.print(scale);
+        WidgetTUI widgetCoreCabin = coreCabin.generateWidget();
+        WidgetTUI widgetEmptyCabin = emptyCabin.generateWidget();
+        WidgetTUI widgetOneAstronautCabin = oneAstronautCabin.generateWidget();
+        WidgetTUI widgetTwoAstronautCabin = twoAstronautCabin.generateWidget();
+        WidgetTUI widgetPurpleAlienCabin = purpleAlienCabin.generateWidget();
+        WidgetTUI widgetBrownAlienCabin = brownAlienCabin.generateWidget();
 
-        for (String s : screenCoreCabin) {
-            System.out.println(s);
-        }
-
-        for (String s : screenEmptyCabin) {
-            System.out.println(s);
-        }
-
-        for (String s : screenOneAstronautCabin) {
-            System.out.println(s);
-        }
-
-        for (String s : screenTwoAstronautCabin) {
-            System.out.println(s);
-        }
-
-        for (String s : screenPurpleAlienCabin) {
-            System.out.println(s);
-        }
-
-        for (String s : screenBrownAlienCabin) {
-            System.out.println(s);
-        }
+        widgetCoreCabin.printWidget();
+        widgetEmptyCabin.printWidget();
+        widgetOneAstronautCabin.printWidget();
+        widgetTwoAstronautCabin.printWidget();
+        widgetPurpleAlienCabin.printWidget();
+        widgetBrownAlienCabin.printWidget();
     }
 
     @Test
@@ -285,20 +252,15 @@ public class PrintTest {
         Cannon singleCannon = new Cannon(connectors, 1);
         Cannon doubleCannon = new Cannon(connectors, 2);
 
-        List<String> screenSingleCannon;
-        List<String> screenDoubleCannon;
+        WidgetTUI widgetSingleCannon;
+        WidgetTUI widgetDoubleCannon;
 
         for (int i = 0; i < 4; i++) {
-            screenSingleCannon = singleCannon.print(scale);
-            screenDoubleCannon = doubleCannon.print(scale);
+            widgetSingleCannon = singleCannon.generateWidget();
+            widgetDoubleCannon = doubleCannon.generateWidget();
 
-            for (String s : screenSingleCannon) {
-                System.out.println(s);
-            }
-
-            for (String s : screenDoubleCannon) {
-                System.out.println(s);
-            }
+            widgetSingleCannon.printWidget();
+            widgetDoubleCannon.printWidget();
 
             singleCannon.rotateRight();
             doubleCannon.rotateRight();
@@ -312,20 +274,15 @@ public class PrintTest {
         Engine singleEngine = new Engine(connectors, 1);
         Engine doubleEngine = new Engine(connectors, 2);
 
-        List<String> screenSingleEngine;
-        List<String> screenDoubleEngine;
+        WidgetTUI widgetSingleEngine;
+        WidgetTUI widgetDoubleEngine;
 
         for (int i = 0; i < 4; i++) {
-            screenSingleEngine = singleEngine.print(scale);
-            screenDoubleEngine = doubleEngine.print(scale);
+            widgetSingleEngine = singleEngine.generateWidget();
+            widgetDoubleEngine = doubleEngine.generateWidget();
 
-            for (String s : screenSingleEngine) {
-                System.out.println(s);
-            }
-
-            for (String s : screenDoubleEngine) {
-                System.out.println(s);
-            }
+            widgetSingleEngine.printWidget();
+            widgetDoubleEngine.printWidget();
 
             singleEngine.rotateRight();
             doubleEngine.rotateRight();
@@ -348,26 +305,15 @@ public class PrintTest {
         Shield shield_top_left = new Shield(connectors);
         shield_top_left.rotateLeft();
 
-        List<String> screenShield_top_right = shield_top_right.print(scale);
-        List<String> screenShield_bottom_right = shield_bottom_right.print(scale);
-        List<String> screenShield_bottom_left = shield_bottom_left.print(scale);
-        List<String> screenShield_top_left = shield_top_left.print(scale);
+        WidgetTUI widgetShield_top_right = shield_top_right.generateWidget();
+        WidgetTUI widgetShield_bottom_right = shield_bottom_right.generateWidget();
+        WidgetTUI widgetShield_bottom_left = shield_bottom_left.generateWidget();
+        WidgetTUI widgetShield_top_left = shield_top_left.generateWidget();
 
-        for (String s : screenShield_top_right) {
-            System.out.println(s);
-        }
-
-        for (String s : screenShield_bottom_right) {
-            System.out.println(s);
-        }
-
-        for (String s : screenShield_bottom_left) {
-            System.out.println(s);
-        }
-
-        for (String s : screenShield_top_left) {
-            System.out.println(s);
-        }
+        widgetShield_top_right.printWidget();
+        widgetShield_bottom_right.printWidget();
+        widgetShield_bottom_left.printWidget();
+        widgetShield_top_left.printWidget();
     }
 
     @Test
@@ -395,36 +341,19 @@ public class PrintTest {
         normalTripleStorage.storeItem(green);
         normalTripleStorage.storeItem(blue);
 
-        List<String> screenSpecialSingleStorage = specialSingleStorage.print(scale);
-        List<String> screenSpecialDoubleStorage = specialDoubleStorage.print(scale);
-        List<String> screenNormalDoubleStorage = normalDoubleStorage.print(scale);
-        List<String> screenNormalTripleStorage  = normalTripleStorage.print(scale);
-        List<String> screenEmptySpecialSingleStorage  = emptySpecialSingleStorage.print(scale);
-        List<String> screenEmptyNormalTripleStorage  = emptyNormalTripleStorage.print(scale);
+        WidgetTUI widgetSpecialSingleStorage = specialSingleStorage.generateWidget();
+        WidgetTUI widgetSpecialDoubleStorage = specialDoubleStorage.generateWidget();
+        WidgetTUI widgetNormalDoubleStorage = normalDoubleStorage.generateWidget();
+        WidgetTUI widgetNormalTripleStorage  = normalTripleStorage.generateWidget();
+        WidgetTUI widgetEmptySpecialSingleStorage  = emptySpecialSingleStorage.generateWidget();
+        WidgetTUI widgetEmptyNormalTripleStorage  = emptyNormalTripleStorage.generateWidget();
 
-        for (String s : screenSpecialSingleStorage) {
-            System.out.println(s);
-        }
-
-        for (String s : screenSpecialDoubleStorage) {
-            System.out.println(s);
-        }
-
-        for (String s : screenNormalDoubleStorage) {
-            System.out.println(s);
-        }
-
-        for (String s : screenNormalTripleStorage) {
-            System.out.println(s);
-        }
-
-        for (String s : screenEmptySpecialSingleStorage) {
-            System.out.println(s);
-        }
-
-        for (String s : screenEmptyNormalTripleStorage) {
-            System.out.println(s);
-        }
+        widgetSpecialSingleStorage.printWidget();
+        widgetSpecialDoubleStorage.printWidget();
+        widgetNormalDoubleStorage.printWidget();
+        widgetNormalTripleStorage.printWidget();
+        widgetEmptySpecialSingleStorage.printWidget();
+        widgetEmptyNormalTripleStorage.printWidget();
     }
 
     @Test
@@ -432,11 +361,8 @@ public class PrintTest {
         System.out.println("======================== STRUCTURAL PRINT TEST ==========================");
         Structural structure = new Structural(connectors);
 
-        List<String> screen = structure.print(scale);
-
-        for (String s : screen) {
-            System.out.println(s);
-        }
+        WidgetTUI widget = structure.generateWidget();
+        widget.printWidget();
     }
 
     @Test
@@ -445,16 +371,10 @@ public class PrintTest {
         Vital vital_purple = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
         Vital vital_brown = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
 
-        List<String> screenVital1 = vital_purple.print(scale);
-        List<String> screenVital2 = vital_brown.print(scale);
-
-        for (String s : screenVital1) {
-            System.out.println(s);
-        }
-
-        for (String s : screenVital2) {
-            System.out.println(s);
-        }
+        WidgetTUI purpleVitalWidget = vital_purple.generateWidget();
+        WidgetTUI brownVitalWidget = vital_brown.generateWidget();
+        purpleVitalWidget.printWidget();
+        brownVitalWidget.printWidget();
     }
 
     @Test
@@ -477,10 +397,10 @@ public class PrintTest {
         Shield shield_top_left = new Shield(connectors);
         shield_top_left.rotateLeft();
 
-        List<String> screenShield_top_right = shield_top_right.print(scale);
-        List<String> screenShield_bottom_right = shield_bottom_right.print(scale);
-        List<String> screenShield_bottom_left = shield_bottom_left.print(scale);
-        List<String> screenShield_top_left = shield_top_left.print(scale);
+        List<String> screenShield_top_right = shield_top_right.generateWidget().getScreen();
+        List<String> screenShield_bottom_right = shield_bottom_right.generateWidget().getScreen();
+        List<String> screenShield_bottom_left = shield_bottom_left.generateWidget().getScreen();
+        List<String> screenShield_top_left = shield_top_left.generateWidget().getScreen();
 
         composedInfoInput.add(screenShield_top_right);
         composedInfoInput.add(screenShield_bottom_right);
@@ -542,11 +462,9 @@ public class PrintTest {
         cabin_3.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         ship.addComponent(cabin_3, 5, 5);
 
-        List<String> shipScreen = ship.print(scale);
-
-        for (String s : shipScreen) {
-            System.out.println(s);
-        }
+        WidgetTUI shipWidget = ship.generateWidget();
+        shipWidget.wrapScreenWithBorder();
+        shipWidget.printWidget();
     }
 
     @Test
@@ -556,10 +474,122 @@ public class PrintTest {
         Ship ship = new Ship(2);
         customShip2(ship);
 
-        List<String> shipScreen = ship.print(scale);
+        WidgetTUI shipWidget = ship.generateWidget();
+        shipWidget.wrapScreenWithBorder();
+        shipWidget.printWidget();
+    }
 
-        for (String s : shipScreen) {
-            System.out.println(s);
-        }
+    @Test
+    void widget_wrapUnwrapBorderTest() {
+        System.out.println("======================== BORDER MULTIPLE LAYERING TEST ==========================");
+
+        WidgetTUI widget = new WidgetTUI();
+        int layerCount = 0;
+
+        widget.appendString("==HELLO WORLD==");
+        widget.printWidget();
+        assertEquals(layerCount, widget.getLayerCount());
+
+        // (1) - One border wrapping and One unwrapping
+        // First border wrapping
+        widget.wrapScreenWithBorder();
+        widget.printWidget();
+        layerCount++;
+        assertEquals(layerCount, widget.getLayerCount());
+
+        // First border unwrapping
+        widget.unwrapScreenFromBorder();
+        widget.printWidget();
+        layerCount--;
+        assertEquals(layerCount, widget.getLayerCount());
+
+        // (2) - Two border wrapping and two unwrapping
+        // First border wrapping
+        widget.wrapScreenWithBorder();
+        widget.printWidget();
+        layerCount++;
+        assertEquals(layerCount, widget.getLayerCount());
+
+        // Second border wrapping
+        widget.wrapScreenWithBorder();
+        widget.printWidget();
+        layerCount++;
+        assertEquals(layerCount, widget.getLayerCount());
+
+        // Second border unwrapping
+        widget.unwrapScreenFromBorder();
+        widget.printWidget();
+        layerCount--;
+        assertEquals(layerCount, widget.getLayerCount());
+
+        // First border unwrapping
+        widget.unwrapScreenFromBorder();
+        widget.printWidget();
+        layerCount--;
+        assertEquals(layerCount, widget.getLayerCount());
+    }
+
+    @Test
+    void widget_verticalCompositionTest() {
+        System.out.println("======================== VERTICAL COMPOSITION TEST ==========================");
+
+        WidgetTUI widgetTop = new WidgetTUI();
+        WidgetTUI widgetBottom = new WidgetTUI();
+        WidgetTUI composition;
+
+        widgetTop.appendString("HELLO");
+        widgetBottom.appendString("WORLD");
+
+        widgetTop.wrapScreenWithBorder();
+        widgetTop.wrapScreenWithBorder();
+        widgetBottom.wrapScreenWithBorder();
+
+        List<WidgetTUI> widgetList = new ArrayList<>();
+        widgetList.add(widgetTop);
+        widgetList.add(widgetBottom);
+
+        composition = WidgetTUI.composeWidgetsVertically(widgetList);
+        composition.centerWidgetScreen();
+        composition.wrapScreenWithBorder();
+        composition.printWidget();
+
+        widgetList.remove(widgetTop);
+        widgetList.add(widgetTop);
+
+        composition = WidgetTUI.composeWidgetsVertically(widgetList);
+        composition.centerWidgetScreen();
+        composition.wrapScreenWithBorder();
+        composition.printWidget();
+    }
+
+    @Test
+    void widget_horizontalCompositionTest() {
+        System.out.println("======================== HORIZONTAL COMPOSITION TEST ==========================");
+
+        WidgetTUI widgetTop = new WidgetTUI();
+        WidgetTUI widgetBottom = new WidgetTUI();
+        WidgetTUI composition;
+
+        widgetTop.appendString("HELLO");
+        widgetBottom.appendString("WORLD");
+
+        widgetTop.wrapScreenWithBorder();
+        widgetTop.wrapScreenWithBorder();
+        widgetBottom.wrapScreenWithBorder();
+
+        List<WidgetTUI> widgetList = new ArrayList<>();
+        widgetList.add(widgetTop);
+        widgetList.add(widgetBottom);
+
+        composition = WidgetTUI.composeWidgetsHorizontally(widgetList);
+        composition.wrapScreenWithBorder();
+        composition.printWidget();
+
+        widgetList.remove(widgetTop);
+        widgetList.add(widgetTop);
+
+        composition = WidgetTUI.composeWidgetsHorizontally(widgetList);
+        composition.wrapScreenWithBorder();
+        composition.printWidget();
     }
 }

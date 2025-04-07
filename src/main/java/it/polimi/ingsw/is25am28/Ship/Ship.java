@@ -7,7 +7,7 @@ import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.TUI.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.Printable;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUIGenerator;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 import javafx.util.Pair;
 
@@ -19,13 +19,12 @@ import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.is25am28.Connector.*;
 
-public class Ship implements Printable {
+public class Ship implements WidgetTUIGenerator {
     private final static Map<Integer, int[][]> shipProfiles = new HashMap<>();
     private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
     private final static Map<Integer, Pair<Integer, Integer>> shipOffsets = new HashMap<>();
 
     static {
-
         // (1) - Setting the Ship Profile Matrices
         int[][] matrix;
         int[][] levelOneMatrix;
@@ -160,7 +159,7 @@ public class Ship implements Printable {
         // --> Offsets are between the 12x12 grid and the actual ship placement (just like in the cardboard version)
         // --> When scanning the 12x12 grid, you add these values to the respective row and column iterators
         //     to start scanning the ship from the top-left corner of the square/rectangle that wraps the entire ship
-        shipOffsets.put(1, new Pair<Integer, Integer>(4, 3));
+        shipOffsets.put(1, new Pair<Integer, Integer>(4, 4));
         shipOffsets.put(2, new Pair<Integer, Integer>(4, 3));
         shipOffsets.put(3, new Pair<Integer, Integer>(3, 2));
     }
@@ -1223,64 +1222,88 @@ public class Ship implements Printable {
     }
 
     /**
-     * Prints the ship's grid
-     *
-     * @param scale
-     * @return
+     * @return The widget containing all of this ship's component's widgets
+     *         as they are put inside this ship's grid
      */
-    public List<String> print(int scale) {
-        List<String> emptyBlock = new ArrayList<>();
+    private WidgetTUI getShipGridWidget() {
+        List<WidgetTUI> widgetRowList;
+        List<WidgetTUI> mergedWidgetRowList;
+        WidgetTUI shipGridWidget;
+        WidgetTUI emptyWidget;
 
-        int height = scale;
-        int width = 3 * height - 2;
+        // Initializations
+        mergedWidgetRowList = new ArrayList<>();
+        shipGridWidget = new WidgetTUI();
+        emptyWidget = new WidgetTUI();
+        int scale = 5;
 
-        // Creating the empty block for null components
-        for (int i = 0; i < height; i++) {
-            emptyBlock.add(PrintUtils.getSpace().repeat(width));
+        // Generating the empty widget that will act as a spacer
+        // when the current component at coords (i, j) is null
+        for (int i = 0; i < scale; i++) {
+            //emptyWidget.appendString(PrintUtils.getSpace().repeat(3 * scale - 2));
+            emptyWidget.appendString(".".repeat(3 * scale - 2));
         }
 
-        // Getting the ship offset and dimensions needed to know
-        // from where to start printing the components
-        int shipHeight = Ship.shipDimensions.get(this.difficultyLevel).getKey();
-        int shipWidth = Ship.shipDimensions.get(this.difficultyLevel).getValue();
+        int shipRows= Ship.shipDimensions.get(this.difficultyLevel).getKey();
+        int shipCols= Ship.shipDimensions.get(this.difficultyLevel).getValue();
 
         int rowOffset = Ship.shipOffsets.get(this.difficultyLevel).getKey();
         int colOffset = Ship.shipOffsets.get(this.difficultyLevel).getValue();
 
-        List<String> shipScreen = new ArrayList<>();
-        List<String> composedShipLine;
-        List<List<String>> allShipLines = new ArrayList<>();
+        int shipRowRange = rowOffset + shipRows;
+        int shipColRange = colOffset + shipCols;
 
-        // Collecting all components' prints
-        for (int i = rowOffset; i < shipHeight + 4; i++) {
-            List<List<String>> componentsScreens = new ArrayList<>();
+        // Generating the ship's widget screen by composing each row of the ship
+        // horizontally first, and then compose each row horizontally, thus
+        // creating the ship's grid screen
+        for (int i = rowOffset; i < shipRowRange; i++) {
+            widgetRowList = new ArrayList<>();
 
-            for (int j = colOffset; j < shipWidth + 3; j++) {
-                if (this.components[i][j] == null) {
-                    componentsScreens.add(emptyBlock);
-                }
-                else {
-                    componentsScreens.add(this.components[i][j].print(scale));
+            for (int j = colOffset; j < shipColRange; j++) {
+                Component component = this.components[i][j];
+
+                if (component != null) {
+                    // If the component is not null, then generate its widget
+                    widgetRowList.add(component.generateWidget());
+                } else {
+                    widgetRowList.add(emptyWidget);
                 }
             }
 
-            composedShipLine = PrintUtils.composeComponents(componentsScreens, width, height);
-            allShipLines.add(composedShipLine);
+            // Appending the row widget's screen to the ship's grid screen
+            mergedWidgetRowList.add(WidgetTUI.composeWidgetsHorizontally(widgetRowList));
         }
 
-        // Sorting the component's lines to create the ship's grid output screen
-        for (List<String> shipLine : allShipLines) {
-            shipScreen.addAll(shipLine);
-        }
+        // Merging all rows together into the final widget
+        shipGridWidget.appendScreen(WidgetTUI.composeWidgetsVertically(mergedWidgetRowList).getScreen());
 
-        return shipScreen;
+        // Wrapping the ship's grid widget with the default border
+        shipGridWidget.wrapScreenWithBorder();
+
+        return shipGridWidget;
     }
 
+    /**
+     * @return The widget containing this ship's statistics
+     */
     private WidgetTUI getShipStatsWidget() {
         // Creating the ship's stats widget with the correct dimensions
-        WidgetTUI shipStatsWidget = new WidgetTUI(
+        WidgetTUI shipStatsWidget = new WidgetTUI();
+        List<String> shipStatsScreen = new ArrayList<String>();
 
-        );
+        WidgetTUI shipStatsTitle = new WidgetTUI();
+        shipStatsTitle.appendString("SHIP STATS");
+        shipStatsTitle.wrapScreenWithBorder();
+        shipStatsWidget.setScreen(shipStatsTitle.getScreen());
+
+        // Getting all the ship's stats
+        shipStatsScreen.add("Total Crew: " + this.getAllLifeforms().size());
+        shipStatsScreen.add("Firepower: " + this.getFirePower(null));
+        shipStatsScreen.add("EnginePower: " + this.getEnginePower(0));
+
+        shipStatsWidget.appendScreen(shipStatsScreen);
+        shipStatsWidget.centerWidgetScreen();
+        shipStatsWidget.wrapScreenWithBorder();
 
         return shipStatsWidget;
     }
@@ -1291,12 +1314,14 @@ public class Ship implements Printable {
      * @return This ship's TUI widget, which will be composed alongside other widgets
      *         in the final TUI
      */
-    public WidgetTUI print() {
-        // Creating the ship's complete widget with the correct dimensions
-        WidgetTUI shipWidget = new WidgetTUI(
-            0, 0
-        );
+    public WidgetTUI generateWidget() {
+        List<WidgetTUI> shipWidgets = new ArrayList<>();
 
-        return shipWidget;
+        // Stats + Grid
+        shipWidgets.add(this.getShipStatsWidget());
+        shipWidgets.add(this.getShipGridWidget());
+
+        // Ship's stats on the left, ship's grid on the right
+        return WidgetTUI.composeWidgetsHorizontally(shipWidgets);
     }
 }

@@ -17,6 +17,17 @@ public class PrintUtils {
     }
 
     /**
+     * Applies a REGEX to remove UNICODE strings, needed in cases where we want
+     * to calculate the real string length
+     *
+     * @param string
+     * @return The given string with all UNICODE strings removed
+     */
+    public static String removeUnicodeFromString(String string) {
+        return string.replaceAll("\\\\u[0-9A-Fa-f]{4}", "");
+    }
+
+    /**
      * @param string The string to color
      * @param unicodeColorString The color to add to the string
      * @return The colored string
@@ -531,7 +542,7 @@ public class PrintUtils {
                     componentInfo.add(paddedString.toString());
                 }
             }
-            case Structural structure -> {
+            case Structural structural -> {
                 // Writes the component's name
                 padding = width - 2 - 1 - ComponentAlias.STRUCTURAL.getAlias().length();
                 paddedString = new StringBuilder(SPACE + ComponentAlias.STRUCTURAL.getAlias());
