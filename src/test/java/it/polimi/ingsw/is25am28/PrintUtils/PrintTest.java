@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Ship.Ship;
+import it.polimi.ingsw.is25am28.TUI.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 import org.junit.jupiter.api.Assertions;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PrintTest {
@@ -169,6 +171,73 @@ public class PrintTest {
 
         // Generating the component sub-lists right after the ship is created
         ship.generateComponentSubLists();
+    }
+
+    Ship customLevel2Ship() {
+        Ship ship = new Ship(2);
+
+        List<Integer> connectors = new ArrayList<Integer>();
+
+        // Default connector is THREE_PIPES
+        for (int i = 0; i < 4; i++) {
+            connectors.add(THREE_PIPES.ordinal());
+        }
+
+        Battery tripleBattery1 = new Battery(connectors, 3);
+
+        Cannon singleCannon1 = new Cannon(connectors, 1);
+        Cannon singleCannon2 = new Cannon(connectors, 1);
+        Cannon singleCannon3 = new Cannon(connectors, 1);
+        Cannon doubleCannon1 = new Cannon(connectors, 2);
+        Cannon doubleCannon2 = new Cannon(connectors, 2);
+
+        Engine singleEngine1 = new Engine(connectors, 1);
+        Engine singleEngine2 = new Engine(connectors, 1);
+        Engine singleEngine3 = new Engine(connectors, 1);
+        Engine doubleEngine1 = new Engine(connectors, 2);
+
+        Cabin cabin1 = new Cabin(connectors, false);
+
+        Shield shield1 = new Shield(connectors);
+
+        Storage normalDoubleStorage1 = new Storage(connectors, 2, false);
+        Storage normalTripleStorage1 = new Storage(connectors, 3, false);
+        Storage specialSingleStorage1 = new Storage(connectors, 1, true);
+        Storage specialDoubleStorage1 = new Storage(connectors, 2, true);
+
+        Structural structural1 = new Structural(connectors);
+
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+
+        // Adding the components created above
+        ship.addComponent(doubleCannon1, 7, 3);
+        ship.addComponent(singleCannon3, 7, 9);
+        ship.addComponent(singleCannon1, 5, 5);
+        ship.addComponent(specialDoubleStorage1, 5, 6);
+        ship.addComponent(singleCannon2, 5, 7);
+        ship.addComponent(shield1, 6, 4);
+        ship.addComponent(normalTripleStorage1, 6, 5);
+        ship.addComponent(specialSingleStorage1, 6, 7);
+        ship.addComponent(doubleCannon2, 6, 8);
+        ship.addComponent(tripleBattery1, 7, 4);
+        ship.addComponent(normalDoubleStorage1, 7, 5);
+        ship.addComponent(purpleVital1, 7, 6);
+        ship.addComponent(cabin1, 7, 7);
+        ship.addComponent(brownVital1, 7, 8);
+        ship.addComponent(singleEngine1, 8, 4);
+        ship.addComponent(singleEngine2, 8, 5);
+        ship.addComponent(doubleEngine1, 8, 7);
+        ship.addComponent(singleEngine3, 8, 8);
+
+        // Generating the component sub-lists right after the ship is created
+        ship.generateComponentSubLists();
+
+        // Verifying that the ship is correctly built according to
+        // ship building rules and each component's positioning rules
+        assertTrue(ship.validateShip());
+
+        return ship;
     }
 
     @Test
@@ -480,6 +549,24 @@ public class PrintTest {
     }
 
     @Test
+    void printShipTest3() {
+        Ship ship = customLevel2Ship();
+        WidgetTUI shipWidget;
+
+        shipWidget = ship.generateWidget();
+        shipWidget.wrapScreenWithBorder();
+        shipWidget.printWidget();
+    }
+
+    @Test
+    void widget_actualWidthWithoutUnicodeCharacters() {
+        String noUnicode = "HELLO";
+        String yesUnicode = ANSIColors.GREEN + noUnicode + ANSIColors.RESET;
+
+        assertEquals(noUnicode.length(), PrintUtils.removeUnicodeFromString(yesUnicode).length());
+    }
+
+    @Test
     void widget_wrapUnwrapBorderTest() {
         System.out.println("======================== BORDER MULTIPLE LAYERING TEST ==========================");
 
@@ -568,24 +655,54 @@ public class PrintTest {
 
         WidgetTUI widgetTop = new WidgetTUI();
         WidgetTUI widgetBottom = new WidgetTUI();
+        WidgetTUI widget3 = new WidgetTUI();
+        WidgetTUI widget4 = new WidgetTUI();
+        WidgetTUI widget5 = new WidgetTUI();
         WidgetTUI composition;
 
         widgetTop.appendString("HELLO");
         widgetBottom.appendString("WORLD");
+        widget3.appendString("W1");
+        widget4.appendString("W2");
+        widget5.appendString("W3");
+
+        widget3.wrapScreenWithBorder();
+        widget3.wrapScreenWithBorder();
+        widget3.wrapScreenWithBorder();
+
+        widget4.wrapScreenWithBorder();
+        widget4.wrapScreenWithBorder();
+        widget4.wrapScreenWithBorder();
+        widget4.wrapScreenWithBorder();
+
+        widget5.wrapScreenWithBorder();
+        widget5.wrapScreenWithBorder();
+        widget5.wrapScreenWithBorder();
+        widget5.wrapScreenWithBorder();
+        widget5.wrapScreenWithBorder();
 
         widgetTop.wrapScreenWithBorder();
         widgetTop.wrapScreenWithBorder();
         widgetBottom.wrapScreenWithBorder();
 
-        List<WidgetTUI> widgetList = new ArrayList<>();
+        List<WidgetTUI> widgetList;
+
+        widgetList = new ArrayList<>();
         widgetList.add(widgetTop);
         widgetList.add(widgetBottom);
+        widgetList.add(widget3);
+        widgetList.add(widget4);
+        widgetList.add(widget5);
 
         composition = WidgetTUI.composeWidgetsHorizontally(widgetList);
         composition.wrapScreenWithBorder();
         composition.printWidget();
 
-        widgetList.remove(widgetTop);
+        widgetList = new ArrayList<>();
+        widgetList.add(widget5);
+        widgetList.add(widget4);
+        widgetList.add(widget3);
+        widgetList.add(widgetBottom);
         widgetList.add(widgetTop);
 
         composition = WidgetTUI.composeWidgetsHorizontally(widgetList);

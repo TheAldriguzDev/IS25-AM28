@@ -1240,7 +1240,7 @@ public class Ship implements WidgetTUIGenerator {
         // Generating the empty widget that will act as a spacer
         // when the current component at coords (i, j) is null
         for (int i = 0; i < scale; i++) {
-            //emptyWidget.appendString(PrintUtils.getSpace().repeat(3 * scale - 2));
+            // emptyWidget.appendString(PrintUtils.getSpace().repeat(3 * scale - 2));
             emptyWidget.appendString(".".repeat(3 * scale - 2));
         }
 

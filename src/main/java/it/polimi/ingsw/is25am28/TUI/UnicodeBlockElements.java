@@ -15,4 +15,10 @@ public class UnicodeBlockElements {
 
     // Shapes
     public static final String FULL_BLOCK = "\u2588";
+
+    // Arrows
+    public static final String SINGLE_TOP_ARROW = "\u2191";
+    public static final String SINGLE_RIGHT_ARROW = "\u2192";
+    public static final String SINGLE_BOTTOM_ARROW = "\u2193";
+    public static final String SINGLE_LEFT_ARROW = "\u2190";
 }

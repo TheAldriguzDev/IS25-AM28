@@ -24,7 +24,8 @@ public class PrintUtils {
      * @return The given string with all UNICODE strings removed
      */
     public static String removeUnicodeFromString(String string) {
-        return string.replaceAll("\\\\u[0-9A-Fa-f]{4}", "");
+        String regex = "\\\\u[0-9A-Fa-f]{4}|\\u001B\\[[0-9;]*[mK]";
+        return string.replaceAll(regex, "");
     }
 
     /**
@@ -80,12 +81,10 @@ public class PrintUtils {
                                     if (batteryLevel > 0) {
                                         paddedString.append(PrintUtils.addColor("\u2588", ANSIColors.GREEN));
                                         batteryLevel--;
-                                    }
-                                    else {
+                                    } else {
                                         paddedString.append("\u2588");
                                     }
-                                }
-                                else {
+                                } else {
                                     paddedString.append(SPACE);
                                 }
                             }
@@ -93,8 +92,7 @@ public class PrintUtils {
                             // Padding after the energy indicator
                             paddedString.append(SPACE.repeat(padding));
                             break;
-                        }
-                        else {
+                        } else {
                             paddedString.append(SPACE);
                         }
                     }

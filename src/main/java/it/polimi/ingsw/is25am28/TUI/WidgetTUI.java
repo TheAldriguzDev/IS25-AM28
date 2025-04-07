@@ -2,6 +2,9 @@ package it.polimi.ingsw.is25am28.TUI;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
 
 public class WidgetTUI {
     public static final List<String> defaultBorderCharacters = new ArrayList<String>();
@@ -99,7 +102,7 @@ public class WidgetTUI {
                         // Otherwise, since this widget's content has already been added to the
                         // composition, there will be placed instead an empty line of the same length
                         // of the widget's width
-                        composedLine.append(PrintUtils.getSpace().repeat(widgets.get(j).getWidth()));
+                        composedLine.append(getSpace().repeat(widgets.get(j).getWidth()));
                     }
                 }
 
@@ -128,7 +131,7 @@ public class WidgetTUI {
             WidgetTUI composedWidgets = new WidgetTUI();
 
             // Setting width of the composed widgets (NOTE: height is auto-set by appendScreen())
-            widgets.stream().mapToInt(WidgetTUI::getWidth).max().ifPresent(composedWidgets::setWidth);
+            widgets.stream().mapToInt(WidgetTUI::getWidthNoUnicode).max().ifPresent(composedWidgets::setWidth);
 
             for (WidgetTUI widget : widgets) {
                 composedWidgets.appendScreen(widget.getScreen());
@@ -162,7 +165,7 @@ public class WidgetTUI {
     }
 
     /**
-     * @return this widget's width
+     * @return This widget's width
      */
     public int getWidth() {
         return this.width;
@@ -173,6 +176,22 @@ public class WidgetTUI {
      */
     public int getLayerCount() {
         return this.layerCount;
+    }
+
+    /**
+     * @return This widget's actual width obtained by removing all UNICODE characters
+     */
+    public int getWidthNoUnicode() {
+        List<String> screenCopy = new ArrayList<String>(this.screen);
+        AtomicInteger actualWidth = new AtomicInteger();
+
+        screenCopy.stream()
+                .map(PrintUtils::removeUnicodeFromString)
+                .mapToInt(String::length)
+                .max()
+                .ifPresent(actualWidth::set);
+
+        return actualWidth.get();
     }
 
     /**
@@ -189,7 +208,11 @@ public class WidgetTUI {
 
             // Updating widget dimensions
             this.height++;
-            this.screen.stream().mapToInt(String::length).max().ifPresent(this::setWidth);
+            this.screen.stream()
+                    .map(PrintUtils::removeUnicodeFromString)
+                    .mapToInt(String::length)
+                    .max()
+                    .ifPresent(this::setWidth);
         }
     }
 
@@ -210,7 +233,11 @@ public class WidgetTUI {
 
             // Updating widget dimensions
             this.height += otherScreen.size();
-            this.screen.stream().mapToInt(String::length).max().ifPresent(this::setWidth);
+            this.screen.stream()
+                    .map(PrintUtils::removeUnicodeFromString)
+                    .mapToInt(String::length)
+                    .max()
+                    .ifPresent(this::setWidth);
 
             lines = this.screen.size();
 
@@ -218,47 +245,62 @@ public class WidgetTUI {
             for (int i = 0; i < lines; i++) {
                 paddedString = new StringBuilder(this.screen.get(i));
                 padding = this.width - paddedString.length();
-                paddedString.append(PrintUtils.getSpace().repeat(padding));
+
+                if (padding > 0) {
+                    paddedString.append(getSpace().repeat(padding));
+                }
+
                 this.screen.set(i, paddedString.toString());
             }
         }
     }
 
-    // TODO: Not reliable (see tests)
+    // TODO: Fix wrong behavior in some cases
     /**
-     * Centers this widget's screen contents by adding padding spaces
+     * Centers this widget's screen contents by adding padding
+     * spaces to both sides of each screen line
      */
     public void centerWidgetScreen() {
-        StringBuilder unpaddedString;
+        List<String> paddedScreen;
         StringBuilder paddedString;
-        int i, screenLen, strLen, padding;
+        AtomicInteger maxWidth;
+        int padding, strlen;
 
-        screenLen = this.screen.size();
+        paddedScreen = new ArrayList<String>();
+        maxWidth = new AtomicInteger(0);
 
-        for (i = 0; i < screenLen; i++) {
-            strLen = this.screen.get(i).length();
-            unpaddedString = new StringBuilder(this.screen.get(i).trim());
+        this.screen.stream()
+                .map(PrintUtils::removeUnicodeFromString)
+                .mapToInt(String::length)
+                .max()
+                .ifPresent(maxWidth::set);
 
-            // Calculating padding
-            padding = (this.width - unpaddedString.length() - 2 * this.layerCount) / 2;
-            if (strLen % 2 == 0) padding++;
+        // Adding right and left padding to each string in the screen
+        for (String s : this.screen) {
+            strlen = s.length();
+            paddedString = new StringBuilder();
+            padding = (this.width - strlen) / 2;
 
-            // If the string requires padding
             if (padding > 0) {
-                paddedString = new StringBuilder();
+                if (strlen % 2 == 0) {
+                    paddedString.append(getSpace().repeat(padding));
+                    paddedString.append(s);
+                    paddedString.append(getSpace().repeat(padding));
+                }
+                else {
+                    paddedString.append(getSpace().repeat(padding + 1));
+                    paddedString.append(s);
+                    paddedString.append(getSpace().repeat(padding));
+                }
 
-                // Adding left-side padding spaces
-                paddedString.append(PrintUtils.getSpace().repeat(padding));
-
-                paddedString.append(unpaddedString);
-
-                // Adding right-side padding spaces
-                paddedString.append(PrintUtils.getSpace().repeat(padding));
-
-                // Setting the padded string as the new value
-                this.screen.set(i, paddedString.toString());
+                paddedScreen.add(paddedString.toString());
+            }
+            else {
+                paddedScreen.add(s);
             }
         }
+
+        this.setScreen(paddedScreen);
     }
 
     /**
