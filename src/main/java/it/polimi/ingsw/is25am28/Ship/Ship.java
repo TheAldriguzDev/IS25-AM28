@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Ship;
 
 import it.polimi.ingsw.is25am28.Components.*;
+import it.polimi.ingsw.is25am28.Connector;
 import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
@@ -1226,23 +1227,36 @@ public class Ship implements WidgetTUIGenerator {
      *         as they are put inside this ship's grid
      */
     private WidgetTUI getShipGridWidget() {
-        List<WidgetTUI> widgetRowList;
-        List<WidgetTUI> mergedWidgetRowList;
         WidgetTUI shipGridWidget;
-        WidgetTUI emptyWidget;
+        WidgetTUI tmpComponentWidget;
+        List<String> emptyScreen;
+        List<List<String>> screenRowList;
+        List<List<String>> mergedWidgetRowList;
+        List<String> customBorderScheme;
 
         // Initializations
-        mergedWidgetRowList = new ArrayList<>();
         shipGridWidget = new WidgetTUI();
-        emptyWidget = new WidgetTUI();
-        int scale = 5;
+        tmpComponentWidget = new WidgetTUI();
+        emptyScreen = new ArrayList<String>();
+        mergedWidgetRowList = new ArrayList<>();
+
+        int scale = 3;
+        int height = scale;
+        int width = 3 * scale + 2;
+
+        tmpComponentWidget.setHeight(height);
+        tmpComponentWidget.setWidth(width);
 
         // Generating the empty widget that will act as a spacer
         // when the current component at coords (i, j) is null
-        for (int i = 0; i < scale; i++) {
+        for (int i = 0; i < height + 2; i++) {
             // emptyWidget.appendString(PrintUtils.getSpace().repeat(3 * scale - 2));
-            emptyWidget.appendString(UnicodeCharacters.BULLET_POINT.repeat(3 * scale - 2));
+            emptyScreen.add(UnicodeCharacters.BULLET_POINT.repeat(width + 2));
         }
+
+        // Creating the custom border character list that will be
+        // used by the wrapper to create the border
+        customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
 
         int shipRows= Ship.shipDimensions.get(this.difficultyLevel).getKey();
         int shipCols= Ship.shipDimensions.get(this.difficultyLevel).getValue();
@@ -1257,25 +1271,34 @@ public class Ship implements WidgetTUIGenerator {
         // horizontally first, and then compose each row horizontally, thus
         // creating the ship's grid screen
         for (int i = rowOffset; i < shipRowRange; i++) {
-            widgetRowList = new ArrayList<>();
+            screenRowList = new ArrayList<>();
 
             for (int j = colOffset; j < shipColRange; j++) {
                 Component component = this.components[i][j];
 
                 if (component != null) {
-                    // If the component is not null, then generate its widget
-                    widgetRowList.add(component.generateWidget());
-                } else {
-                    widgetRowList.add(emptyWidget);
+                    // Adding this component's connectors to the border scheme
+                    customBorderScheme.set(8, "" + this.components[i][j].getTopSide().ordinal());
+                    customBorderScheme.set(9, "" + this.components[i][j].getRightSide().ordinal());
+                    customBorderScheme.set(10, "" + this.components[i][j].getBottomSide().ordinal());
+                    customBorderScheme.set(11, "" + this.components[i][j].getLeftSide().ordinal());
+
+                    // If the component is not null, then generate its screen
+                    tmpComponentWidget.setScreen(this.components[i][j].getComponentScreen());
+                    tmpComponentWidget.wrapScreenWithBorder(customBorderScheme);
+                    screenRowList.add(tmpComponentWidget.getScreen());
+                }
+                else {
+                    screenRowList.add(emptyScreen);
                 }
             }
 
             // Appending the row widget's screen to the ship's grid screen
-            mergedWidgetRowList.add(WidgetTUI.composeWidgetsHorizontally(widgetRowList));
+            mergedWidgetRowList.add(WidgetTUI.composeScreensHorizontally(screenRowList));
         }
 
         // Merging all rows together into the final widget
-        shipGridWidget.appendScreen(WidgetTUI.composeWidgetsVertically(mergedWidgetRowList).getScreen());
+        shipGridWidget.setScreen(WidgetTUI.composeScreensVertically(mergedWidgetRowList));
 
         // Wrapping the ship's grid widget with the default border
         shipGridWidget.wrapScreenWithBorder();

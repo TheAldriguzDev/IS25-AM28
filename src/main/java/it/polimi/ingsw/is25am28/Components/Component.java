@@ -194,9 +194,9 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
       }
 
       /**
-       * @param componentWidget The component's widget to which the screen will be added to
+       * @return This component's screen
        */
-      protected abstract void setComponentScreen(WidgetTUI componentWidget) throws NullWidgetException;
+      public abstract List<String> getComponentScreen();
 
       /**
        * @return A TUI border-wrapped widget containing the component's text representation
@@ -206,13 +206,13 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
             WidgetTUI componentWidget = new WidgetTUI();
             List<String> customBorderScheme = new ArrayList<String>();
 
-            // TODO: Understand better these indexes
-            int scale = 3;
-            int height = scale;
-            int width = 3 * height + 2;
-
-            componentWidget.setHeight(height);
-            componentWidget.setWidth(width);
+//            // TODO: Understand better these indexes
+//            int scale = 3;
+//            int height = scale;
+//            int width = 3 * height + 2;
+//
+//            componentWidget.setHeight(height);
+//            componentWidget.setWidth(width);
 
             // Creating the custom border character list that will be
             // used by the wrapper to create the border
@@ -225,7 +225,7 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
                   customBorderScheme.add("" + connector.ordinal());
             }
 
-            this.setComponentScreen(componentWidget);
+            componentWidget.setScreen(this.getComponentScreen());
             componentWidget.wrapScreenWithBorder(customBorderScheme);
 
             return componentWidget;

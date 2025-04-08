@@ -86,13 +86,11 @@ public final class Storage extends Component {
     }
 
     @Override
-    protected void setComponentScreen(WidgetTUI componentWidget) throws NullWidgetException {
-        if (componentWidget == null) {
-            throw new NullWidgetException("ERROR: Given widget is null (Cannot add screen)");
-        }
-
-        int height = componentWidget.getHeight();
-        int width = componentWidget.getWidth();
+    public List<String> getComponentScreen() {
+        // TODO: Understand better these indexes
+        int scale = 3;
+        int height = scale;
+        int width = 3 * height + 2;
 
         int maxCapacity = this.getCapacity();
         int occupiedSlots = this.getStoredItems().size();
@@ -159,7 +157,6 @@ public final class Storage extends Component {
             screen.add(paddedString.toString());
         }
 
-        // Finally, setting the component's widget screen to this screen
-        componentWidget.setScreen(screen);
+        return screen;
     }
 }

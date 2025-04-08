@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Components;
 import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,13 +51,12 @@ public final class Engine extends Component {
     }
 
     @Override
-    protected void setComponentScreen(WidgetTUI componentWidget) throws NullWidgetException {
-        if (componentWidget == null) {
-            throw new NullWidgetException("ERROR: Given widget is null (Cannot add screen)");
-        }
+    public List<String> getComponentScreen() {
+        // TODO: Understand better these indexes
+        int scale = 3;
+        int height = scale;
+        int width = 3 * height + 2;
 
-        int height = componentWidget.getHeight();
-        int width = componentWidget.getWidth();
         int direction = this.getDirection();
         int padding;
 
@@ -139,7 +137,6 @@ public final class Engine extends Component {
             screen.add(paddedString.toString());
         }
 
-        // Finally, adding the screen to the component's widget
-        componentWidget.setScreen(screen);
+        return screen;
     }
 }

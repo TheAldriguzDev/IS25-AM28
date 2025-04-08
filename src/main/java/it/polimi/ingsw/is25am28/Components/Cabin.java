@@ -3,8 +3,6 @@ package it.polimi.ingsw.is25am28.Components;
 import it.polimi.ingsw.is25am28.Lifeform.*;
 import it.polimi.ingsw.is25am28.TUI.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
-import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,17 +84,16 @@ public final class Cabin extends Component {
     }
 
     @Override
-    protected void setComponentScreen(WidgetTUI componentWidget) throws NullWidgetException {
-        if (componentWidget == null) {
-            throw new NullWidgetException("ERROR: Given widget is null (Cannot add screen)");
-        }
-
-        int height = componentWidget.getHeight();
-        int width = componentWidget.getWidth();
+    public List<String> getComponentScreen() {
         int padding;
         StringBuilder paddedString, nameAlias;
         List<String> tmpScreen = new ArrayList<String>();
         String coreLabel = "(*)";
+
+        // TODO: Understand better these indexes
+        int scale = 3;
+        int height = scale;
+        int width = 3 * height + 2;
 
         nameAlias = new StringBuilder();
         String nameAliasRightPadding = getSpace().repeat(width - Cabin.alias.length() - 1);
@@ -201,11 +198,11 @@ public final class Cabin extends Component {
         }
 
         // Appending all the strings to the component widget's screen
-        List<String> finalScreen = new ArrayList<String>();
+        List<String> screen = new ArrayList<String>();
 
-        finalScreen.add(nameAlias.toString());
-        finalScreen.addAll(tmpScreen);
+        screen.add(nameAlias.toString());
+        screen.addAll(tmpScreen);
 
-        componentWidget.setScreen(finalScreen);
+        return screen;
     }
 }

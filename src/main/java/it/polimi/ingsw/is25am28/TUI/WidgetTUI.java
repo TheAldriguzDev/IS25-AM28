@@ -281,15 +281,15 @@ public class WidgetTUI {
             this.width = width;
         }
         else {
-            AtomicInteger minWidth = new AtomicInteger(this.width);
+            AtomicInteger maxWidth = new AtomicInteger(this.width);
 
             this.screen.stream()
                     .map(PrintUtils::removeUnicodeFromString)
                     .mapToInt(String::length)
                     .max()
-                    .ifPresent(minWidth::set);
+                    .ifPresent(maxWidth::set);
 
-            this.width = minWidth.get();
+            this.width = maxWidth.get();
         }
     }
 
@@ -357,6 +357,7 @@ public class WidgetTUI {
     }
 
     // TODO: Test this
+    // TODO: Modify so that it takes into account the borders of each widget (done by checking the value of layerCount)
     /**
      * Centers this widget's screen contents by adding padding
      * spaces to both sides of each screen line
@@ -402,6 +403,10 @@ public class WidgetTUI {
         if (screen != null) {
             // Setting the screen only with non-null lines from the given screen
             this.screen = new ArrayList<>(screen.stream().filter(Objects::nonNull).toList());
+
+            // Resetting the screen removes any borders inside, therefore
+            // the layer count will be zeroed
+            this.layerCount = 0;
 
             // Updating widget dimensions
             this.height = this.screen.size();

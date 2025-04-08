@@ -70,18 +70,16 @@ public final class Battery extends Component {
     }
 
     @Override
-    protected void setComponentScreen(WidgetTUI widgetComponent) throws NullWidgetException {
-        if (widgetComponent == null) {
-            throw new NullWidgetException("ERROR: Given widget is null (Cannot add screen)");
-        }
+    public List<String> getComponentScreen() {
+        // TODO: Understand better these indexes
+        int scale = 3;
+        int height = scale;
+        int width = 3 * height + 2;
 
         List<String> screen = new ArrayList<String>();
         String nameAlias = PrintUtils.getSpace() + Battery.alias;
         StringBuilder paddedString;
         int padding;
-
-        int height = widgetComponent.getHeight();
-        int width = widgetComponent.getWidth();
 
         int maxCapacity = this.getMaxAvailability();
         int batteryLevel = this.getAvailability();
@@ -124,6 +122,6 @@ public final class Battery extends Component {
             }
         }
 
-        widgetComponent.setScreen(screen);
+        return screen;
     }
 }
