@@ -421,7 +421,7 @@ public class PrintTest {
         }
 
         WidgetTUI widget = new WidgetTUI(finalScreen);
-        widget.wrapScreenWithBorder();
+        widget.wrapWidgetWithBorder();
         widget.printWidget();
     }
 
@@ -470,7 +470,7 @@ public class PrintTest {
         }
 
         WidgetTUI widget = new WidgetTUI(finalScreen);
-        widget.wrapScreenWithBorder();
+        widget.wrapWidgetWithBorder();
         widget.printWidget();
 
         widget.centerWidgetScreen();
@@ -528,7 +528,7 @@ public class PrintTest {
         ship.generateComponentSubLists();
 
         WidgetTUI shipWidget = ship.generateWidget();
-        shipWidget.wrapScreenWithBorder();
+        shipWidget.wrapWidgetWithBorder();
         shipWidget.printWidget();
     }
 
@@ -540,7 +540,7 @@ public class PrintTest {
         customShip2(ship);
 
         WidgetTUI shipWidget = ship.generateWidget();
-        shipWidget.wrapScreenWithBorder();
+        shipWidget.wrapWidgetWithBorder();
         shipWidget.printWidget();
     }
 
@@ -551,7 +551,7 @@ public class PrintTest {
         WidgetTUI shipWidget;
 
         shipWidget = ship.generateWidget();
-        shipWidget.wrapScreenWithBorder();
+        shipWidget.wrapWidgetWithBorder();
         shipWidget.printWidget();
     }
 
@@ -576,38 +576,38 @@ public class PrintTest {
 
         // (1) - One border wrapping and One unwrapping
         // First border wrapping
-        widget.wrapScreenWithBorder();
+        widget.wrapWidgetWithBorder();
         widget.printWidget();
         layerCount++;
         assertEquals(layerCount, widget.getLayerCount());
 
         // First border unwrapping
-        widget.unwrapScreenFromBorder();
+        widget.unwrapWidgetFromBorder();
         widget.printWidget();
         layerCount--;
         assertEquals(layerCount, widget.getLayerCount());
 
         // (2) - Two border wrapping and two unwrapping
         // First border wrapping
-        widget.wrapScreenWithBorder();
+        widget.wrapWidgetWithBorder();
         widget.printWidget();
         layerCount++;
         assertEquals(layerCount, widget.getLayerCount());
 
         // Second border wrapping
-        widget.wrapScreenWithBorder();
+        widget.wrapWidgetWithBorder();
         widget.printWidget();
         layerCount++;
         assertEquals(layerCount, widget.getLayerCount());
 
         // Second border unwrapping
-        widget.unwrapScreenFromBorder();
+        widget.unwrapWidgetFromBorder();
         widget.printWidget();
         layerCount--;
         assertEquals(layerCount, widget.getLayerCount());
 
         // First border unwrapping
-        widget.unwrapScreenFromBorder();
+        widget.unwrapWidgetFromBorder();
         widget.printWidget();
         layerCount--;
         assertEquals(layerCount, widget.getLayerCount());
@@ -624,9 +624,9 @@ public class PrintTest {
         widgetTop.appendString("HELLO");
         widgetBottom.appendString("WORLD");
 
-        widgetTop.wrapScreenWithBorder();
-        widgetTop.wrapScreenWithBorder();
-        widgetBottom.wrapScreenWithBorder();
+        widgetTop.wrapWidgetWithBorder();
+        widgetTop.wrapWidgetWithBorder();
+        widgetBottom.wrapWidgetWithBorder();
 
         List<WidgetTUI> widgetList = new ArrayList<>();
         widgetList.add(widgetTop);
@@ -634,7 +634,7 @@ public class PrintTest {
 
         composition = WidgetTUI.composeWidgetsVertically(widgetList);
         composition.centerWidgetScreen();
-        composition.wrapScreenWithBorder();
+        composition.wrapWidgetWithBorder();
         composition.printWidget();
 
         widgetList.remove(widgetTop);
@@ -642,7 +642,7 @@ public class PrintTest {
 
         composition = WidgetTUI.composeWidgetsVertically(widgetList);
         composition.centerWidgetScreen();
-        composition.wrapScreenWithBorder();
+        composition.wrapWidgetWithBorder();
         composition.printWidget();
     }
 
@@ -663,24 +663,24 @@ public class PrintTest {
         widget4.appendString("W2");
         widget5.appendString("W3");
 
-        widget3.wrapScreenWithBorder();
-        widget3.wrapScreenWithBorder();
-        widget3.wrapScreenWithBorder();
+        widget3.wrapWidgetWithBorder();
+        widget3.wrapWidgetWithBorder();
+        widget3.wrapWidgetWithBorder();
 
-        widget4.wrapScreenWithBorder();
-        widget4.wrapScreenWithBorder();
-        widget4.wrapScreenWithBorder();
-        widget4.wrapScreenWithBorder();
+        widget4.wrapWidgetWithBorder();
+        widget4.wrapWidgetWithBorder();
+        widget4.wrapWidgetWithBorder();
+        widget4.wrapWidgetWithBorder();
 
-        widget5.wrapScreenWithBorder();
-        widget5.wrapScreenWithBorder();
-        widget5.wrapScreenWithBorder();
-        widget5.wrapScreenWithBorder();
-        widget5.wrapScreenWithBorder();
+        widget5.wrapWidgetWithBorder();
+        widget5.wrapWidgetWithBorder();
+        widget5.wrapWidgetWithBorder();
+        widget5.wrapWidgetWithBorder();
+        widget5.wrapWidgetWithBorder();
 
-        widgetTop.wrapScreenWithBorder();
-        widgetTop.wrapScreenWithBorder();
-        widgetBottom.wrapScreenWithBorder();
+        widgetTop.wrapWidgetWithBorder();
+        widgetTop.wrapWidgetWithBorder();
+        widgetBottom.wrapWidgetWithBorder();
 
         List<WidgetTUI> widgetList;
 
@@ -692,7 +692,7 @@ public class PrintTest {
         widgetList.add(widget5);
 
         composition = WidgetTUI.composeWidgetsHorizontally(widgetList);
-        composition.wrapScreenWithBorder();
+        composition.wrapWidgetWithBorder();
         composition.printWidget();
 
         widgetList = new ArrayList<>();
@@ -703,7 +703,7 @@ public class PrintTest {
         widgetList.add(widgetTop);
 
         composition = WidgetTUI.composeWidgetsHorizontally(widgetList);
-        composition.wrapScreenWithBorder();
+        composition.wrapWidgetWithBorder();
         composition.printWidget();
     }
 
@@ -713,9 +713,9 @@ public class PrintTest {
 
         WidgetTUI widget = new WidgetTUI();
 
-        widget.wrapScreenWithBorder();
+        widget.wrapWidgetWithBorder();
         widget.printWidget();
-        widget.unwrapScreenFromBorder();
+        widget.unwrapWidgetFromBorder();
 
         widget.appendString("HELLO WORLD");
         widget.appendString("COMPUTER");
@@ -724,7 +724,7 @@ public class PrintTest {
         widget.setHeight(10);
         assertEquals(10, widget.getScreen().size());
 
-        widget.wrapScreenWithBorder();
+        widget.wrapWidgetWithBorder();
         widget.printWidget();
 
         assertEquals(12, widget.getScreen().size());
@@ -739,15 +739,15 @@ public class PrintTest {
 
         WidgetTUI widget = new WidgetTUI();
 
-        widget.wrapScreenWithBorder();
+        widget.wrapWidgetWithBorder();
         widget.printWidget();
-        widget.unwrapScreenFromBorder();
+        widget.unwrapWidgetFromBorder();
 
         widget.appendString("HELLO WORLD");
         widget.appendString("COMPUTER");
 
         widget.setWidth(3 * widget.getHeight());
-        widget.wrapScreenWithBorder();
+        widget.wrapWidgetWithBorder();
         widget.printWidget();
 
         assertEquals(4, widget.getScreen().size());

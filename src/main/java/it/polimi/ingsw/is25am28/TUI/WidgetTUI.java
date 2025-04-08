@@ -251,6 +251,149 @@ public class WidgetTUI {
     }
 
     /**
+     * Wraps this widget's screen with one layer of the default border
+     */
+    public static List<String> wrapScreenWithBorder(List<String> screen) {
+        return WidgetTUI.wrapScreenWithBorder(screen, null);
+    }
+
+    /**
+     * Wraps this widget's screen with one layer of given custom border (if it's formatted correctly)
+     *
+     * @param borderCharacters The custom border characters to use if you want to use
+     *                         something different that the default border characters<br>
+     *
+     *  (NOTE: For more information on the specific format, see the default border static attribute of this class)
+     */
+    public static List<String> wrapScreenWithBorder(List<String> screen, List<String> borderCharacters) {
+        StringBuilder tmpString;
+
+        // Instantiating the to-be-wrapped screen
+        List<String> wrappedScreen = new ArrayList<String>();
+
+        // Using defaultBorderCharacters if the given list does not have
+        // all 8 characters needed to draw the full border
+        if (borderCharacters == null || borderCharacters.size() < WidgetTUI.defaultBorderCharacters.size()) {
+            borderCharacters = WidgetTUI.defaultBorderCharacters;
+        }
+
+        // Calculating the max width of the given screen
+        AtomicInteger maxWidth = new AtomicInteger(0);
+
+        screen.stream()
+                .map(PrintUtils::removeUnicodeFromString)
+                .mapToInt(String::length)
+                .max()
+                .ifPresent(maxWidth::set);
+
+        int height = screen.size() + 2;
+        int width = maxWidth.get() + 2;
+
+        // Top Left Corner
+        tmpString = new StringBuilder(borderCharacters.get(0));
+
+        // Upper border
+        for (int i = 1; i < width - 1; i++) {
+            if (i == (width / 2)) {
+                tmpString.append(borderCharacters.get(8));
+            }
+            else {
+                tmpString.append(borderCharacters.get(4));
+            }
+        }
+
+        // Top Right Corner
+        tmpString.append(borderCharacters.get(1));
+        wrappedScreen.add(tmpString.toString());
+
+        // Middle
+        for (int i = 1; i < height - 1; i++) {
+            tmpString = new StringBuilder();
+
+            if (i == (height / 2)) {
+                // Left Side Center Special Symbol
+                tmpString.append(borderCharacters.get(11));
+            }
+            else {
+                // Left Side Special Symbol
+                tmpString.append(borderCharacters.get(7));
+            }
+
+            // Old unwrapped screen goes in the middle
+            String oldLine = screen.get(i - 1);
+            tmpString.append(oldLine);
+
+            int oldLineLen = PrintUtils.removeUnicodeFromString(oldLine).length();
+
+            // Adding right-side padding
+            if (oldLineLen < width - 2) {
+                tmpString.append(PrintUtils.getSpace().repeat(width - 2 - oldLineLen));
+            }
+
+            if (i == (height / 2)) {
+                // Right Side Center Special Symbol
+                tmpString.append(borderCharacters.get(9));
+            }
+            else {
+                // Right Side Special Symbol
+                tmpString.append(borderCharacters.get(5));
+            }
+
+            // Finally, add the wrapped line to the new screen
+            wrappedScreen.add(tmpString.toString());
+        }
+
+        // Bottom Left Corner
+        tmpString = new StringBuilder(borderCharacters.get(3));
+
+        // Lower border
+        for (int i = 1; i < width - 1; i++) {
+            if (i == (width / 2)) {
+                tmpString.append(borderCharacters.get(10));
+            }
+            else {
+                tmpString.append(borderCharacters.get(6));
+            }
+        }
+
+        // Bottom Right Corner
+        tmpString.append(borderCharacters.get(2));
+        wrappedScreen.add(tmpString.toString());
+
+        return wrappedScreen;
+    }
+
+    /**
+     * Removes one border layer from this screen
+     */
+    public static List<String> unwrapScreenFromBorder(List<String> screen) {
+        if (screen != null) {
+            List<String> unwrappedScreen = new ArrayList<String>();
+
+            // Calculating the max width of the given screen
+            AtomicInteger maxWidth = new AtomicInteger(0);
+
+            screen.stream()
+                    .map(PrintUtils::removeUnicodeFromString)
+                    .mapToInt(String::length)
+                    .max()
+                    .ifPresent(maxWidth::set);
+
+            int height = screen.size() + 2;
+            int width = maxWidth.get() + 2;
+
+            for (int i = 1; i < height; i++) {
+                String line = screen.get(i);
+                unwrappedScreen.add(line.substring(1, width - 1));
+            }
+
+            return unwrappedScreen;
+        }
+
+        return null;
+    }
+
+    /**
      * @param height The height to set this widget to. If the given height is smaller
      *               than the current height, then the height stays unchanged
      *               (because shrinking the widget would mean to lose some screen lines)
@@ -428,9 +571,9 @@ public class WidgetTUI {
     /**
      * Wraps this widget's screen with one layer of the default border
      */
-    public void wrapScreenWithBorder() {
+    public void wrapWidgetWithBorder() {
         // Invokes the overloaded method to use the default border characters
-        this.wrapScreenWithBorder(null);
+        this.wrapWidgetWithBorder(null);
     }
 
     /**
@@ -441,7 +584,7 @@ public class WidgetTUI {
      *
      *  (NOTE: For more information on the specific format, see the default border static attribute of this class)
      */
-    public void wrapScreenWithBorder(List<String> borderCharacters) {
+    public void wrapWidgetWithBorder(List<String> borderCharacters) {
         StringBuilder tmpString;
 
         // Storing the old screen and clearing the previous one
@@ -466,7 +609,6 @@ public class WidgetTUI {
         tmpString = new StringBuilder(borderCharacters.get(0));
 
         // Upper border
-        // tmpString.append(borderCharacters.get(4).repeat(width - 2));
         for (int i = 1; i < this.width - 1; i++) {
             if (i == (this.width / 2)) {
                 tmpString.append(borderCharacters.get(8));
@@ -521,7 +663,6 @@ public class WidgetTUI {
         tmpString = new StringBuilder(borderCharacters.get(3));
 
         // Lower border
-        // tmpString.append(borderCharacters.get(6).repeat(width - 2));
         for (int i = 1; i < this.width - 1; i++) {
             if (i == (this.width / 2)) {
                 tmpString.append(borderCharacters.get(10));
@@ -539,7 +680,7 @@ public class WidgetTUI {
     /**
      * Removes one border layer from this screen
      */
-    public void unwrapScreenFromBorder() {
+    public void unwrapWidgetFromBorder() {
         if (this.layerCount > 0) {
             List<String> unwrappedScreen = new ArrayList<String>();
             int screenLen = this.screen.size() - 1;

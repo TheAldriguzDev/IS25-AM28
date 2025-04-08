@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Ship;
 
 import it.polimi.ingsw.is25am28.Components.*;
-import it.polimi.ingsw.is25am28.Connector;
 import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
@@ -1232,7 +1231,6 @@ public class Ship implements WidgetTUIGenerator {
         List<String> emptyScreen;
         List<List<String>> screenRowList;
         List<List<String>> mergedWidgetRowList;
-        List<String> customBorderScheme;
 
         // Initializations
         shipGridWidget = new WidgetTUI();
@@ -1254,10 +1252,6 @@ public class Ship implements WidgetTUIGenerator {
             emptyScreen.add(UnicodeCharacters.BULLET_POINT.repeat(width + 2));
         }
 
-        // Creating the custom border character list that will be
-        // used by the wrapper to create the border
-        customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
-
         int shipRows= Ship.shipDimensions.get(this.difficultyLevel).getKey();
         int shipCols= Ship.shipDimensions.get(this.difficultyLevel).getValue();
 
@@ -1277,15 +1271,8 @@ public class Ship implements WidgetTUIGenerator {
                 Component component = this.components[i][j];
 
                 if (component != null) {
-                    // Adding this component's connectors to the border scheme
-                    customBorderScheme.set(8, "" + this.components[i][j].getTopSide().ordinal());
-                    customBorderScheme.set(9, "" + this.components[i][j].getRightSide().ordinal());
-                    customBorderScheme.set(10, "" + this.components[i][j].getBottomSide().ordinal());
-                    customBorderScheme.set(11, "" + this.components[i][j].getLeftSide().ordinal());
-
                     // If the component is not null, then generate its screen
                     tmpComponentWidget.setScreen(this.components[i][j].getComponentScreen());
-                    tmpComponentWidget.wrapScreenWithBorder(customBorderScheme);
                     screenRowList.add(tmpComponentWidget.getScreen());
                 }
                 else {
@@ -1301,7 +1288,7 @@ public class Ship implements WidgetTUIGenerator {
         shipGridWidget.setScreen(WidgetTUI.composeScreensVertically(mergedWidgetRowList));
 
         // Wrapping the ship's grid widget with the default border
-        shipGridWidget.wrapScreenWithBorder();
+        shipGridWidget.wrapWidgetWithBorder();
 
         return shipGridWidget;
     }
@@ -1316,7 +1303,7 @@ public class Ship implements WidgetTUIGenerator {
 
         WidgetTUI shipStatsTitle = new WidgetTUI();
         shipStatsTitle.appendString("SHIP STATS");
-        shipStatsTitle.wrapScreenWithBorder();
+        shipStatsTitle.wrapWidgetWithBorder();
         shipStatsWidget.setScreen(shipStatsTitle.getScreen());
 
         // Getting all the ship's stats
@@ -1326,7 +1313,7 @@ public class Ship implements WidgetTUIGenerator {
 
         shipStatsWidget.appendScreen(shipStatsScreen);
         // shipStatsWidget.centerWidgetScreen();
-        shipStatsWidget.wrapScreenWithBorder();
+        shipStatsWidget.wrapWidgetWithBorder();
 
         return shipStatsWidget;
     }

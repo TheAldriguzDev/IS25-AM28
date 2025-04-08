@@ -102,6 +102,16 @@ public final class Storage extends Component {
         StringBuilder paddedString;
         String nameAlias;
 
+        // Creating the custom border character list that will be
+        // used by the wrapper to create the border
+        List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
+
+        // Adding this component's connectors to the border scheme
+        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
+        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
+        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
+        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
+
         // Adding the name (if this is a special storage, it gets colored with RED)
         if (this.isSpecialStorage) {
             nameAlias = getSpace() + addColor(Storage.alias, ANSIColors.RED);
@@ -157,6 +167,6 @@ public final class Storage extends Component {
             screen.add(paddedString.toString());
         }
 
-        return screen;
+        return WidgetTUI.wrapScreenWithBorder(screen, customBorderScheme);
     }
 }

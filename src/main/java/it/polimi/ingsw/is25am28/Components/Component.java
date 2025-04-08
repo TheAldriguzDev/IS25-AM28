@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.Connector;
-import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUIGenerator;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
@@ -129,31 +128,55 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
             return this;
       }
 
-      public Component rotateLeft(){
+      public Component rotateLeft() {
             direction--;
             if (direction < 0) { direction = 3; }
             return this;
       }
 
-      public Component rotateRight(){
+      public Component rotateRight() {
             direction++;
             if (direction > 3) { direction = 0; }
             return this;
       }
 
+      // TODO: Modify these methods, since they keep returning where the SAME connectors
+      //       are after a rotation, NOT the actual connector after a rotation
+//      public Connector getLeftSide() {
+//            return sides[(direction + 3) % 4];
+//      }
+//
+//      public Connector getRightSide() {
+//            return sides[(direction + 1) % 4];
+//      }
+//
+//      public Connector getTopSide() {
+//            return sides[direction];
+//      }
+//      public Connector getBottomSide() {
+//            return sides[(direction + 2) % 4];
+//      }
+
       public Connector getLeftSide() {
-            return sides[(direction + 3) % 4];
+            int normalizedPos = 3 - direction;
+            if (normalizedPos < 0) normalizedPos += 4;
+            return sides[normalizedPos % 4];
       }
 
       public Connector getRightSide() {
-            return sides[(direction + 1) % 4];
+            int normalizedPos = 1 - direction;
+            if (normalizedPos < 0) normalizedPos += 4;
+            return sides[normalizedPos % 4];
       }
 
       public Connector getTopSide() {
-            return sides[direction];
+            int normalizedPos = 4 - direction;
+            return sides[normalizedPos % 4];
       }
       public Connector getBottomSide() {
-            return sides[(direction + 2) % 4];
+            int normalizedPos = 2 - direction;
+            if (normalizedPos < 0) normalizedPos += 4;
+            return sides[normalizedPos % 4];
       }
 
       /**
@@ -226,7 +249,7 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
             }
 
             componentWidget.setScreen(this.getComponentScreen());
-            componentWidget.wrapScreenWithBorder(customBorderScheme);
+            // componentWidget.wrapWidgetWithBorder(customBorderScheme);
 
             return componentWidget;
       }

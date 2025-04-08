@@ -1,9 +1,7 @@
 package it.polimi.ingsw.is25am28.Board;
 
 import it.polimi.ingsw.is25am28.ActionJSON.BoardJSON;
-import it.polimi.ingsw.is25am28.GameModel.GameModel;
 import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.TUI.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
@@ -275,29 +273,32 @@ public abstract class Board implements WidgetTUIGenerator {
             boardInfoWidget.appendString(placements.get(i) + " - " + coloredNickname);
         }
 
-        // Adding the final placement for all eliminated players
+        // Adding the final placement for all eliminated players (if there are any)
         playerCount = this.eliminatedPlayer.size();
 
-        // Adding a height spacer and heading for the eliminated players list
-        boardInfoWidget.appendString(" ");
-        boardInfoWidget.appendString("Eliminated Players:");
+        if (playerCount > 0) {
 
-        // Adding a big red X to symbolize that the player was eliminated
-        String redX = PrintUtils.addColor("(X)", ANSIColors.RED);
-        redX += PrintUtils.getSpace();
+            // Adding a height spacer and heading for the eliminated players list
+            boardInfoWidget.appendString(" ");
+            boardInfoWidget.appendString("Eliminated Players:");
 
-        // Adding all the eliminated players to the info widget's screen
-        for (int i = 0; i < playerCount; i++) {
-            coloredNickname = PrintUtils.addColor(
-                this.eliminatedPlayer.get(i).getNickname(),
-                this.eliminatedPlayer.get(i).getPlayerColor().getColorString()
-            );
+            // Adding a big red X to symbolize that the player was eliminated
+            String redX = PrintUtils.addColor("(X)", ANSIColors.RED);
+            redX += PrintUtils.getSpace();
 
-            boardInfoWidget.appendString(redX + placements.get(totalPlacements - 1 - i) + " - " + coloredNickname);
+            // Adding all the eliminated players to the info widget's screen
+            for (int i = 0; i < playerCount; i++) {
+                coloredNickname = PrintUtils.addColor(
+                        this.eliminatedPlayer.get(i).getNickname(),
+                        this.eliminatedPlayer.get(i).getPlayerColor().getColorString()
+                );
+
+                boardInfoWidget.appendString(redX + placements.get(totalPlacements - 1 - i) + " - " + coloredNickname);
+            }
         }
 
         // Finally, wrap the board info widget with the default border
-        boardInfoWidget.wrapScreenWithBorder();
+        boardInfoWidget.wrapWidgetWithBorder();
 
         return boardInfoWidget;
     }
@@ -323,14 +324,14 @@ public abstract class Board implements WidgetTUIGenerator {
 //            }
 
             boardWidget.appendString("WIP");
-            boardWidget.wrapScreenWithBorder();
+            boardWidget.wrapWidgetWithBorder();
 
             verticalWidgetList.add(this.getBoardTitleWidget());
             verticalWidgetList.add(boardWidget);
             verticalWidgetList.add(this.getBoardInfoWidget());
 
             boardWidget = WidgetTUI.composeWidgetsVertically(verticalWidgetList);
-            boardWidget.wrapScreenWithBorder();
+            boardWidget.wrapWidgetWithBorder();
 
             return boardWidget;
         }

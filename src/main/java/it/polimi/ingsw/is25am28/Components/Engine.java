@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Components;
 import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,16 @@ public final class Engine extends Component {
 
         List<String> screen = new ArrayList<String>();
         StringBuilder paddedString;
+
+        // Creating the custom border character list that will be
+        // used by the wrapper to create the border
+        List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
+
+        // Adding this component's connectors to the border scheme
+        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
+        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
+        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
+        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
 
         // Adding the component's name
         paddedString = new StringBuilder(getSpace() + Engine.alias);
@@ -137,6 +148,6 @@ public final class Engine extends Component {
             screen.add(paddedString.toString());
         }
 
-        return screen;
+        return WidgetTUI.wrapScreenWithBorder(screen, customBorderScheme);
     }
 }

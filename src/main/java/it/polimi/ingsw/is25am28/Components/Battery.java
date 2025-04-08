@@ -85,6 +85,16 @@ public final class Battery extends Component {
         int batteryLevel = this.getAvailability();
         int batteryStringLength = 2 * maxCapacity - 1;
 
+        // Creating the custom border character list that will be
+        // used by the wrapper to create the border
+        List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
+
+        // Adding this component's connectors to the border scheme
+        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
+        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
+        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
+        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
+
         // Adding the name
         screen.add(nameAlias + PrintUtils.getSpace().repeat(width - nameAlias.length()));
 
@@ -122,6 +132,6 @@ public final class Battery extends Component {
             }
         }
 
-        return screen;
+        return WidgetTUI.wrapScreenWithBorder(screen, customBorderScheme);
     }
 }
