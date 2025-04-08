@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.PrintUtils;
+package it.polimi.ingsw.is25am28.TUI;
 
 import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.Items.Item;
@@ -6,10 +6,7 @@ import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Ship.Ship;
-import it.polimi.ingsw.is25am28.TUI.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,64 +30,6 @@ public class PrintTest {
         connectors.add(2);
         connectors.add(3);
     }
-
-//    @Test
-//    void printTest() {
-//        List<String> screen = new ArrayList<>();
-//        // widht = 3*height - 2 | width =  height + i*4
-//        int scale = 3; // needs to be odd
-//
-//        int height = scale;
-//        int width = 3*height - 2;
-//        String tmpString;
-//
-//        // Upper border
-//        tmpString = "\u250C";
-//        for (int i = 1; i < width - 1; i++) {
-//            if (i == (width / 2)) {
-//                tmpString += THREE_PIPES.ordinal();
-//            } else {
-//                tmpString += "\u2500";
-//            }
-//        }
-//        tmpString += "\u2510";
-//        screen.add(tmpString);
-//
-//        // Middle
-//        for (int i = 1; i < height - 1; i++) {
-//            tmpString = "";
-//            for (int j = 0; j < width; j++) {
-//                if (j == 0 || j == width - 1) {
-//                    if (i == height / 2) {
-//                        tmpString += THREE_PIPES.ordinal();
-//                    } else {
-//                        tmpString += "\u2502";
-//                    }
-//                } else if (j == width / 2 && i == height / 2) {
-//                    tmpString += "X";
-//                } else {
-//                    tmpString += " ";
-//                }
-//            }
-//            screen.add(tmpString);
-//        }
-//
-//        // Lower border
-//        tmpString = "\u2514";
-//        for (int i = 1; i < width - 1; i++) {
-//            if (i == (width / 2)) {
-//                tmpString += THREE_PIPES.ordinal();
-//            } else {
-//                tmpString += "\u2500";
-//            }
-//        }
-//        tmpString += "\u2518";
-//        screen.add(tmpString);
-//
-//        for (String s : screen) {
-//            System.out.println(s);
-//        }
-//    }
 
     void customShip2(Ship ship) {
         /*
@@ -447,11 +386,47 @@ public class PrintTest {
     }
 
     @Test
-    void composeTest() {
-        System.out.println("======================== COMPOSE TEST ==========================");
+    void widgetScreen_composeScreenHorizontallyTest() {
+        System.out.println("======================== composeScreenHorizontally() TEST ==========================");
 
         List<List<String>> composedInfoInput = new ArrayList<>();
-        List<String> composedInfo;
+        List<String> finalScreen;
+
+        for (int i = 0; i < 10; i++) {
+            List<String> screenToAdd = new ArrayList<String>();
+
+            for (int j = 0; j < i; j++) {
+                screenToAdd.add("[LINE " + j + "]");
+            }
+
+            composedInfoInput.add(screenToAdd);
+        }
+
+        composedInfoInput.add(null);
+
+        finalScreen = WidgetTUI.composeScreensHorizontally(composedInfoInput);
+
+        for (String s : finalScreen) {
+            System.out.println(s);
+        }
+
+        finalScreen = WidgetTUI.composeScreensHorizontally(composedInfoInput.reversed());
+
+        for (String s : finalScreen) {
+            System.out.println(s);
+        }
+
+        WidgetTUI widget = new WidgetTUI(finalScreen);
+        widget.wrapScreenWithBorder();
+        widget.printWidget();
+    }
+
+    @Test
+    void widgetScreen_composeScreenVerticallyTest() {
+        System.out.println("======================== composeScreenVertically() TEST ==========================");
+
+        List<List<String>> composedInfoInput = new ArrayList<>();
+        List<String> finalScreen;
 
         // In this test we'll be composing shields along a line
         Shield shield_top_right = new Shield(connectors);
@@ -470,17 +445,32 @@ public class PrintTest {
         List<String> screenShield_bottom_right = shield_bottom_right.generateWidget().getScreen();
         List<String> screenShield_bottom_left = shield_bottom_left.generateWidget().getScreen();
         List<String> screenShield_top_left = shield_top_left.generateWidget().getScreen();
+        List<String> screen = new ArrayList<>();
+
+        screen.add("The quick brown fox jumps over the lazy dog");
+        screen.add("Lorem ipsum dolor si amet");
+        screen.add("The quick brown fox jumps over the lazy dog");
+        screen.add("The quick brown fox jumps over the lazy dog");
+        screen.add("Lorem ipsum dolor si amet");
 
         composedInfoInput.add(screenShield_top_right);
         composedInfoInput.add(screenShield_bottom_right);
         composedInfoInput.add(screenShield_bottom_left);
         composedInfoInput.add(screenShield_top_left);
+        composedInfoInput.add(screen);
 
-        composedInfo =  PrintUtils.composeComponents(composedInfoInput, width, height);
+        finalScreen = WidgetTUI.composeScreensVertically(composedInfoInput);
 
-        for (String s : composedInfo) {
+        for (String s : finalScreen) {
             System.out.println(s);
         }
+
+        WidgetTUI widget = new WidgetTUI(finalScreen);
+        widget.wrapScreenWithBorder();
+        widget.printWidget();
+
+        widget.centerWidgetScreen();
+        widget.printWidget();
     }
 
     @Test
@@ -531,6 +521,8 @@ public class PrintTest {
         cabin_3.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         ship.addComponent(cabin_3, 5, 5);
 
+        ship.generateComponentSubLists();
+
         WidgetTUI shipWidget = ship.generateWidget();
         shipWidget.wrapScreenWithBorder();
         shipWidget.printWidget();
@@ -550,6 +542,7 @@ public class PrintTest {
 
     @Test
     void printShipTest3() {
+        System.out.println("======================== PRINT SHIP TEST 3 ==========================");
         Ship ship = customLevel2Ship();
         WidgetTUI shipWidget;
 
@@ -708,5 +701,51 @@ public class PrintTest {
         composition = WidgetTUI.composeWidgetsHorizontally(widgetList);
         composition.wrapScreenWithBorder();
         composition.printWidget();
+    }
+
+    @Test
+    void widget_verticalExtensionTest() {
+        System.out.println("======================== WIDGET VERTICAL EXTENSION TEST ==========================");
+
+        WidgetTUI widget = new WidgetTUI();
+
+        widget.wrapScreenWithBorder();
+        widget.printWidget();
+        widget.unwrapScreenFromBorder();
+
+        widget.appendString("HELLO WORLD");
+        widget.appendString("COMPUTER");
+
+        widget.setWidth(10);
+        widget.setHeight(10);
+        assertEquals(10, widget.getScreen().size());
+
+        widget.wrapScreenWithBorder();
+        widget.printWidget();
+
+        assertEquals(12, widget.getScreen().size());
+
+        widget.centerWidgetScreen();
+        widget.printWidget();
+    }
+
+    @Test
+    void widget_horizontalExtensionTest() {
+        System.out.println("======================== WIDGET HORIZONTAL EXTENSION TEST ==========================");
+
+        WidgetTUI widget = new WidgetTUI();
+
+        widget.wrapScreenWithBorder();
+        widget.printWidget();
+        widget.unwrapScreenFromBorder();
+
+        widget.appendString("HELLO WORLD");
+        widget.appendString("COMPUTER");
+
+        widget.setWidth(3 * widget.getHeight());
+        widget.wrapScreenWithBorder();
+        widget.printWidget();
+
+        assertEquals(4, widget.getScreen().size());
     }
 }

@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public final class Battery extends Component {
+    public static final String alias = "BATTERY";
     private final int maxAvailability;
     private int available;
 
@@ -75,7 +76,7 @@ public final class Battery extends Component {
         }
 
         List<String> screen = new ArrayList<String>();
-        String nameAlias = PrintUtils.getSpace() + ComponentAlias.BATTERY.getAlias();
+        String nameAlias = PrintUtils.getSpace() + Battery.alias;
         StringBuilder paddedString;
         int padding;
 
@@ -102,11 +103,11 @@ public final class Battery extends Component {
                 for (int k = 0; k < batteryStringLength; k++) {
                     if (k % 2 == 0) {
                         if (batteryLevel > 0) {
-                            paddedString.append(PrintUtils.addColor(UnicodeBlockElements.FULL_BLOCK, ANSIColors.GREEN));
+                            paddedString.append(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.GREEN));
                             batteryLevel--;
                         }
                         else {
-                            paddedString.append(UnicodeBlockElements.FULL_BLOCK);
+                            paddedString.append(UnicodeCharacters.FULL_BLOCK);
                         }
                     }
                     else {

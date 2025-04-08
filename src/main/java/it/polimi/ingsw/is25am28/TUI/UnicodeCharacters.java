@@ -1,6 +1,6 @@
 package it.polimi.ingsw.is25am28.TUI;
 
-public class UnicodeBlockElements {
+public class UnicodeCharacters {
     // Single Lines
     public static final String HORIZONTAL_TOP_SINGLE_LINE = "\u2500";
     public static final String HORIZONTAL_BOTTOM_SINGLE_LINE = "\u2500";
@@ -15,10 +15,18 @@ public class UnicodeBlockElements {
 
     // Shapes
     public static final String FULL_BLOCK = "\u2588";
+    public static final String BULLET_POINT = "\u2022";
 
     // Arrows
     public static final String SINGLE_TOP_ARROW = "\u2191";
     public static final String SINGLE_RIGHT_ARROW = "\u2192";
     public static final String SINGLE_BOTTOM_ARROW = "\u2193";
     public static final String SINGLE_LEFT_ARROW = "\u2190";
+
+    // Meshes
+    public static final String BACKGROUND_MESH = "\u2591";
+
+    // Lifeforms Emojis
+    public static final String ALIEN_EMOJI = "\uD83D\uDC7D";
+    public static final String ASTRONAUT_EMOJI = "\uD83E\uDDD1\u200D\uD83D\uDE80";
 }

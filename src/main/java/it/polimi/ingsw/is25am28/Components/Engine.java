@@ -1,8 +1,6 @@
 package it.polimi.ingsw.is25am28.Components;
-import it.polimi.ingsw.is25am28.TUI.ComponentAlias;
 import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
-import it.polimi.ingsw.is25am28.TUI.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.UnicodeBlockElements;
+import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.util.ArrayList;
@@ -12,6 +10,7 @@ import java.util.Map;
 import static it.polimi.ingsw.is25am28.TUI.PrintUtils.getSpace;
 
 public final class Engine extends Component {
+    public static final String alias = "ENGINE";
     private final int speed;
 
     public Engine(List<Integer> connectors, int speed) {
@@ -67,7 +66,7 @@ public final class Engine extends Component {
         StringBuilder paddedString;
 
         // Adding the component's name
-        paddedString = new StringBuilder(getSpace() + ComponentAlias.ENGINE.getAlias());
+        paddedString = new StringBuilder(getSpace() + Engine.alias);
         screen.add(paddedString + getSpace().repeat(width - paddedString.length()));
 
         for (int i = 1; i < height; i++) {
@@ -80,13 +79,13 @@ public final class Engine extends Component {
                         if (this.getSpeed() == 2) {
                             padding = (width - 3) / 2;
                             paddedString.append(getSpace().repeat(padding));
-                            paddedString.append(UnicodeBlockElements.SINGLE_BOTTOM_ARROW);
+                            paddedString.append(UnicodeCharacters.SINGLE_BOTTOM_ARROW);
                             paddedString.append(getSpace());
                         } else {
                             padding = (width - 1) / 2;
                             paddedString.append(getSpace().repeat(padding));
                         }
-                        paddedString.append(UnicodeBlockElements.SINGLE_BOTTOM_ARROW);
+                        paddedString.append(UnicodeCharacters.SINGLE_BOTTOM_ARROW);
                         paddedString.append(getSpace().repeat(padding));
                     }
                     // 1 --> Engine is pointing to the left of the ship
@@ -94,13 +93,13 @@ public final class Engine extends Component {
                         if (this.getSpeed() == 2) {
                             padding = (width - 3) / 2;
                             paddedString.append(getSpace().repeat(padding));
-                            paddedString.append(UnicodeBlockElements.SINGLE_LEFT_ARROW);
+                            paddedString.append(UnicodeCharacters.SINGLE_LEFT_ARROW);
                             paddedString.append(getSpace());
                         } else {
                             padding = (width - 1) / 2;
                             paddedString.append(getSpace().repeat(padding));
                         }
-                        paddedString.append(UnicodeBlockElements.SINGLE_LEFT_ARROW);
+                        paddedString.append(UnicodeCharacters.SINGLE_LEFT_ARROW);
                         paddedString.append(getSpace().repeat(padding));
                     }
                     // 2 --> Engine is pointing to the top of the ship
@@ -108,13 +107,13 @@ public final class Engine extends Component {
                         if (this.getSpeed() == 2) {
                             padding = (width - 3) / 2;
                             paddedString.append(getSpace().repeat(padding));
-                            paddedString.append(UnicodeBlockElements.SINGLE_TOP_ARROW);
+                            paddedString.append(UnicodeCharacters.SINGLE_TOP_ARROW);
                             paddedString.append(getSpace());
                         } else {
                             padding = (width - 1) / 2;
                             paddedString.append(getSpace().repeat(padding));
                         }
-                        paddedString.append(UnicodeBlockElements.SINGLE_TOP_ARROW);
+                        paddedString.append(UnicodeCharacters.SINGLE_TOP_ARROW);
                         paddedString.append(getSpace().repeat(padding));
                     }
                     // 3 --> Engine is pointing to the right of the ship
@@ -122,13 +121,13 @@ public final class Engine extends Component {
                         if (this.getSpeed() == 2) {
                             padding = (width - 3) / 2;
                             paddedString.append(getSpace().repeat(padding));
-                            paddedString.append(UnicodeBlockElements.SINGLE_RIGHT_ARROW);
+                            paddedString.append(UnicodeCharacters.SINGLE_RIGHT_ARROW);
                             paddedString.append(getSpace());
                         } else {
                             padding = (width - 1) / 2;
                             paddedString.append(getSpace().repeat(padding));
                         }
-                        paddedString.append(UnicodeBlockElements.SINGLE_RIGHT_ARROW);
+                        paddedString.append(UnicodeCharacters.SINGLE_RIGHT_ARROW);
                         paddedString.append(getSpace().repeat(padding));
                     }
                 }

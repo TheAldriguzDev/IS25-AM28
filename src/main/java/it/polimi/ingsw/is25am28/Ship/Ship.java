@@ -6,7 +6,7 @@ import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.TUI.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUIGenerator;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 import javafx.util.Pair;
@@ -1241,7 +1241,7 @@ public class Ship implements WidgetTUIGenerator {
         // when the current component at coords (i, j) is null
         for (int i = 0; i < scale; i++) {
             // emptyWidget.appendString(PrintUtils.getSpace().repeat(3 * scale - 2));
-            emptyWidget.appendString(".".repeat(3 * scale - 2));
+            emptyWidget.appendString(UnicodeCharacters.BULLET_POINT.repeat(3 * scale - 2));
         }
 
         int shipRows= Ship.shipDimensions.get(this.difficultyLevel).getKey();
@@ -1302,7 +1302,7 @@ public class Ship implements WidgetTUIGenerator {
         shipStatsScreen.add("EnginePower: " + this.getEnginePower(0));
 
         shipStatsWidget.appendScreen(shipStatsScreen);
-        shipStatsWidget.centerWidgetScreen();
+        // shipStatsWidget.centerWidgetScreen();
         shipStatsWidget.wrapScreenWithBorder();
 
         return shipStatsWidget;

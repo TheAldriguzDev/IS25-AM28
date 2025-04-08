@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Components;
 
 
-import it.polimi.ingsw.is25am28.TUI.ComponentAlias;
 import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 import it.polimi.ingsw.is25am28.TUI.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
@@ -10,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class Structural extends Component {
+      public static final String alias = "STRUCT";
+
       public Structural(List<Integer> connectors) {
             super(connectors);
       }
@@ -24,7 +25,7 @@ public final class Structural extends Component {
             int width = componentWidget.getWidth();
 
             List<String> screen = new ArrayList<String>();
-            String nameAlias = PrintUtils.getSpace() + ComponentAlias.STRUCTURAL.getAlias();
+            String nameAlias = PrintUtils.getSpace() + Structural.alias;
 
             screen.add(nameAlias + PrintUtils.getSpace().repeat(width - nameAlias.length()));
 

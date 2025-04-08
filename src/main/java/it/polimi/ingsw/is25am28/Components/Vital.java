@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.TUI.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.ComponentAlias;
 import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
@@ -12,6 +11,7 @@ import java.util.Map;
 import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
 
 public final class Vital extends Component {
+    public static final String alias = "VITAL";
     private final VitalType vitalType;
 
     public Vital(List<Integer> connectors, int type) {
@@ -54,14 +54,14 @@ public final class Vital extends Component {
         List<String> screen = new ArrayList<String>();
         StringBuilder paddedString = new StringBuilder();
 
-        padding = width - ComponentAlias.VITAL.getAlias().length() - 1;
+        padding = width - Vital.alias.length() - 1;
 
         // Setting the name with the same color as the vital unit's color
         if (this.getVitalType() == VitalType.PURPLE_VITAL) {
-            paddedString.append(addColor(getSpace() + ComponentAlias.VITAL.getAlias(), ANSIColors.MAGENTA));
+            paddedString.append(addColor(getSpace() + Vital.alias, ANSIColors.MAGENTA));
         }
         else {
-            paddedString.append(addColor(getSpace() + ComponentAlias.VITAL.getAlias(), ANSIColors.BRIGHT_YELLOW));
+            paddedString.append(addColor(getSpace() + Vital.alias, ANSIColors.BRIGHT_YELLOW));
         }
 
         // Adding the colored name string to the screen

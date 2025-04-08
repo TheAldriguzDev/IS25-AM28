@@ -2,9 +2,8 @@ package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.Lifeform.*;
 import it.polimi.ingsw.is25am28.TUI.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.ComponentAlias;
 import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
-import it.polimi.ingsw.is25am28.TUI.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.util.ArrayList;
@@ -14,6 +13,7 @@ import java.util.Map;
 import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
 
 public final class Cabin extends Component {
+    public static final String alias = "CABIN";
     private final boolean isCore;
     private final ArrayList<Lifeform> inhabitants;
 
@@ -96,11 +96,10 @@ public final class Cabin extends Component {
         int padding;
         StringBuilder paddedString, nameAlias;
         List<String> tmpScreen = new ArrayList<String>();
-        String cabinAlias = ComponentAlias.CABIN.getAlias();
         String coreLabel = "(*)";
 
         nameAlias = new StringBuilder();
-        String nameAliasRightPadding = getSpace().repeat(width - cabinAlias.length() - 1);
+        String nameAliasRightPadding = getSpace().repeat(width - Cabin.alias.length() - 1);
 
         for (int i = 1; i < height; i++) {
             paddedString = new StringBuilder();
@@ -110,7 +109,7 @@ public final class Cabin extends Component {
                     // Case 0 - Empty cabin
                     padding = (width - 3) / 2;
                     nameAlias.append(getSpace());
-                    nameAlias.append(cabinAlias);
+                    nameAlias.append(Cabin.alias);
                     nameAlias.append(nameAliasRightPadding);
 
                     paddedString.append(getSpace().repeat(padding));
@@ -128,13 +127,13 @@ public final class Cabin extends Component {
 
                         // Creating the name
                         nameAlias.append(getSpace());
-                        nameAlias.append(addColor(cabinAlias, ANSIColors.WHITE));
+                        nameAlias.append(addColor(Cabin.alias, ANSIColors.WHITE));
 
                         // Adds a GOLDEN STAR as a tag to specify that the cabin is the core
                         if (this.isCore()) {
                             nameAlias.append(getSpace());
                             nameAlias.append(addColor(coreLabel, ANSIColors.BRIGHT_YELLOW));
-                            nameAlias.append(getSpace().repeat(width - coreLabel.length() - cabinAlias.length() - 2));
+                            nameAlias.append(getSpace().repeat(width - coreLabel.length() - Cabin.alias.length() - 2));
                         }
                         else {
                             // Otherwise just adds the remaining right padding spaces to the name alias string
@@ -147,11 +146,14 @@ public final class Cabin extends Component {
 
                         if (this.getInhabitants().size() > 1) {
                             paddedString.append(addColor(addColor("A", ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
+                            // paddedString.append(addColor(addColor(UnicodeCharacters.ASTRONAUT_EMOJI, ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
                             paddedString.append(getSpace());
                             paddedString.append(addColor(addColor("A", ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
+                            // paddedString.append(addColor(addColor(UnicodeCharacters.ASTRONAUT_EMOJI, ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
                         }
                         else {
                             paddedString.append(addColor(addColor("A", ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
+                            // paddedString.append(addColor(addColor(UnicodeCharacters.ASTRONAUT_EMOJI, ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
                             paddedString.append(getSpace());
                             paddedString.append(addColor(getSpace(), ANSIColors.BRIGHT_BACKGROUND_WHITE));
                         }
@@ -164,12 +166,13 @@ public final class Cabin extends Component {
 
                         // Creating the name
                         nameAlias.append(getSpace());
-                        nameAlias.append(addColor(ComponentAlias.CABIN.getAlias(), ANSIColors.MAGENTA));
+                        nameAlias.append(addColor(Cabin.alias, ANSIColors.MAGENTA));
                         nameAlias.append(nameAliasRightPadding);
 
                         padding = (width - 1) / 2;
                         paddedString.append(getSpace().repeat(padding));
                         paddedString.append(addColor(addColor("A", ANSIColors.BLACK), ANSIColors.BACKGROUND_MAGENTA));
+                        // paddedString.append(addColor(addColor(UnicodeCharacters.ALIEN_EMOJI, ANSIColors.BLACK), ANSIColors.BACKGROUND_MAGENTA));
                         paddedString.append(getSpace().repeat(padding));
                     }
                     else {
@@ -177,12 +180,13 @@ public final class Cabin extends Component {
 
                         // Creating the name
                         nameAlias.append(getSpace());
-                        nameAlias.append(addColor(cabinAlias, ANSIColors.YELLOW));
+                        nameAlias.append(addColor(Cabin.alias, ANSIColors.YELLOW));
                         nameAlias.append(nameAliasRightPadding);
 
                         padding = (width - 1) / 2;
                         paddedString.append(getSpace().repeat(padding));
                         paddedString.append(addColor(addColor("A", ANSIColors.BLACK), ANSIColors.BACKGROUND_YELLOW));
+                        // paddedString.append(addColor(addColor(UnicodeCharacters.ALIEN_EMOJI, ANSIColors.BLACK), ANSIColors.BACKGROUND_YELLOW));
                         paddedString.append(getSpace().repeat(padding));
                     }
                 }

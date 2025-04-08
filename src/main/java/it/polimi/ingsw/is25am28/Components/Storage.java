@@ -12,6 +12,7 @@ import java.util.Map;
 import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
 
 public final class Storage extends Component {
+    public static final String alias = "STORAGE";
     final int capacity;
     final boolean isSpecialStorage;
     final List<Item> storedItems;
@@ -105,13 +106,13 @@ public final class Storage extends Component {
 
         // Adding the name (if this is a special storage, it gets colored with RED)
         if (this.isSpecialStorage) {
-            nameAlias = getSpace() + addColor(ComponentAlias.STORAGE.getAlias(), ANSIColors.RED);
+            nameAlias = getSpace() + addColor(Storage.alias, ANSIColors.RED);
         }
         else {
-            nameAlias = getSpace() + ComponentAlias.STORAGE.getAlias();
+            nameAlias = getSpace() + Storage.alias;
         }
 
-        screen.add(nameAlias + getSpace().repeat(width - ComponentAlias.STORAGE.getAlias().length() - 1));
+        screen.add(nameAlias + getSpace().repeat(width - Storage.alias.length() - 1));
 
         // Adding the storage string and the padding
         for (int i = 1; i < height; i++) {
@@ -130,16 +131,16 @@ public final class Storage extends Component {
                         if (k % 2 == 0) {
                             if (occupiedSlots > 0) {
                                 switch (this.getStoredItems().get(currItemIndex).getColor()) {
-                                    case RED -> paddedString.append(PrintUtils.addColor(UnicodeBlockElements.FULL_BLOCK, ANSIColors.BRIGHT_RED));
-                                    case YELLOW -> paddedString.append(PrintUtils.addColor(UnicodeBlockElements.FULL_BLOCK, ANSIColors.BRIGHT_YELLOW));
-                                    case GREEN -> paddedString.append(PrintUtils.addColor(UnicodeBlockElements.FULL_BLOCK, ANSIColors.BRIGHT_GREEN));
-                                    case BLUE -> paddedString.append(PrintUtils.addColor(UnicodeBlockElements.FULL_BLOCK, ANSIColors.BRIGHT_BLUE));
+                                    case RED -> paddedString.append(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_RED));
+                                    case YELLOW -> paddedString.append(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_YELLOW));
+                                    case GREEN -> paddedString.append(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_GREEN));
+                                    case BLUE -> paddedString.append(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_BLUE));
                                 }
                                 occupiedSlots--;
                                 currItemIndex++;
                             }
                             else {
-                                paddedString.append(UnicodeBlockElements.FULL_BLOCK);
+                                paddedString.append(UnicodeCharacters.FULL_BLOCK);
                             }
                         }
                         else {

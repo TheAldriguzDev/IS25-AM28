@@ -1,8 +1,7 @@
 package it.polimi.ingsw.is25am28.Components;
 
-import it.polimi.ingsw.is25am28.TUI.ComponentAlias;
 import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
-import it.polimi.ingsw.is25am28.TUI.UnicodeBlockElements;
+import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.util.ArrayList;
@@ -12,6 +11,7 @@ import java.util.Map;
 import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
 
 public final class Cannon extends Component {
+    public static final String alias = "CANNON";
     private final int force;
 
     public Cannon(List<Integer> connectors, int force) {
@@ -74,7 +74,7 @@ public final class Cannon extends Component {
         StringBuilder paddedString;
 
         // Adding the component's name
-        paddedString = new StringBuilder(getSpace() + ComponentAlias.CANNON.getAlias());
+        paddedString = new StringBuilder(getSpace() + Cannon.alias);
         screen.add(paddedString + getSpace().repeat(width - paddedString.length()));
 
         for (int i = 1; i < height; i++) {
@@ -87,13 +87,13 @@ public final class Cannon extends Component {
                         if (this.getFirePower() == 2) {
                             padding = (width - 3) / 2;
                             paddedString.append(getSpace().repeat(padding));
-                            paddedString.append(UnicodeBlockElements.SINGLE_TOP_ARROW);
+                            paddedString.append(UnicodeCharacters.SINGLE_TOP_ARROW);
                             paddedString.append(getSpace());
                         } else {
                             padding = (width - 1) / 2;
                             paddedString.append(getSpace().repeat(padding));
                         }
-                        paddedString.append(UnicodeBlockElements.SINGLE_TOP_ARROW);
+                        paddedString.append(UnicodeCharacters.SINGLE_TOP_ARROW);
                         paddedString.append(getSpace().repeat(padding));
                     }
                     // 1 --> Cannon is pointing to the right of the ship
@@ -101,13 +101,13 @@ public final class Cannon extends Component {
                         if (this.getFirePower() == 1) {
                             padding = (width - 3) / 2;
                             paddedString.append(getSpace().repeat(padding));
-                            paddedString.append(UnicodeBlockElements.SINGLE_RIGHT_ARROW);
+                            paddedString.append(UnicodeCharacters.SINGLE_RIGHT_ARROW);
                             paddedString.append(getSpace());
                         } else {
                             padding = (width - 1) / 2;
                             paddedString.append(getSpace().repeat(padding));
                         }
-                        paddedString.append(UnicodeBlockElements.SINGLE_RIGHT_ARROW);
+                        paddedString.append(UnicodeCharacters.SINGLE_RIGHT_ARROW);
                         paddedString.append(getSpace().repeat(padding));
                     }
                     // 2 --> Cannon is pointing to the back of the ship
@@ -115,13 +115,13 @@ public final class Cannon extends Component {
                         if (this.getFirePower() == 1) {
                             padding = (width - 3) / 2;
                             paddedString.append(getSpace().repeat(padding));
-                            paddedString.append(UnicodeBlockElements.SINGLE_BOTTOM_ARROW);
+                            paddedString.append(UnicodeCharacters.SINGLE_BOTTOM_ARROW);
                             paddedString.append(getSpace());
                         } else {
                             padding = (width - 1) / 2;
                             paddedString.append(getSpace().repeat(padding));
                         }
-                        paddedString.append(UnicodeBlockElements.SINGLE_BOTTOM_ARROW);
+                        paddedString.append(UnicodeCharacters.SINGLE_BOTTOM_ARROW);
                         paddedString.append(getSpace().repeat(padding));
                     }
                     // 3 --> Cannon is pointing to the left of the ship
@@ -129,13 +129,13 @@ public final class Cannon extends Component {
                         if (this.getFirePower() == 1) {
                             padding = (width - 3) / 2;
                             paddedString.append(getSpace().repeat(padding));
-                            paddedString.append(UnicodeBlockElements.SINGLE_LEFT_ARROW);
+                            paddedString.append(UnicodeCharacters.SINGLE_LEFT_ARROW);
                             paddedString.append(getSpace());
                         } else {
                             padding = (width - 1) / 2;
                             paddedString.append(getSpace().repeat(padding));
                         }
-                        paddedString.append(UnicodeBlockElements.SINGLE_LEFT_ARROW);
+                        paddedString.append(UnicodeCharacters.SINGLE_LEFT_ARROW);
                         paddedString.append(getSpace().repeat(padding));
                     }
                 }
