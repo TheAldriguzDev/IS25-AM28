@@ -1,10 +1,19 @@
 package it.polimi.ingsw.is25am28.Player;
 
+import it.polimi.ingsw.is25am28.TUI.ANSIColors;
+
 public enum PlayerColor {
-    GREEN,
-    RED,
-    BLUE,
-    YELLOW;
+    GREEN(ANSIColors.GREEN),
+    RED(ANSIColors.RED),
+    BLUE(ANSIColors.BLUE),
+    YELLOW(ANSIColors.YELLOW);
+
+    // Each player color contains the corresponding ANSI color string
+    private String colorString;
+
+    PlayerColor(String colorString) {
+        this.colorString = colorString;
+    }
 
     public static PlayerColor fromInteger( int color ){
         
@@ -17,5 +26,12 @@ public enum PlayerColor {
         } 
 
         return YELLOW;
+    }
+
+    /**
+     * @return The corresponding ANSI color string of this player color
+     */
+    public String getColorString() {
+        return this.colorString;
     }
 }

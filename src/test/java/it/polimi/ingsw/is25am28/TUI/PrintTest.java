@@ -1,10 +1,14 @@
 package it.polimi.ingsw.is25am28.TUI;
 
+import it.polimi.ingsw.is25am28.Board.Board;
+import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.*;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Player.Player;
+import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -747,5 +751,52 @@ public class PrintTest {
         widget.printWidget();
 
         assertEquals(4, widget.getScreen().size());
+    }
+
+    @Test
+    void widget_boardWidgetTest() {
+        Board board = new BoardLevel2();
+        List<Player> players = new ArrayList<Player>();
+
+        board.buildBoard();
+
+        players.add(new Player("TheD3stroy3r", PlayerColor.RED, 2));
+        players.add(new Player("MasterChief1103", PlayerColor.GREEN, 2));
+        players.add(new Player("C4taclism__", PlayerColor.BLUE, 2));
+        players.add(new Player("ItzAlex_TTV", PlayerColor.YELLOW, 2));
+
+        for (Player player : players) {
+            board.newPlayer(player);
+            board.addPlayerToBoard(player);
+        }
+
+        WidgetTUI boardWidget;
+        boardWidget = board.generateWidget();
+        boardWidget.printWidget();
+    }
+
+    @Test
+    void widget_boardWidgetTestWithEliminatedPlayers() {
+        Board board = new BoardLevel2();
+        List<Player> players = new ArrayList<Player>();
+
+        board.buildBoard();
+
+        players.add(new Player("TheD3stroy3r", PlayerColor.RED, 2));
+        players.add(new Player("MasterChief1103", PlayerColor.GREEN, 2));
+        players.add(new Player("C4taclism__", PlayerColor.BLUE, 2));
+        players.add(new Player("ItzAlex_TTV", PlayerColor.YELLOW, 2));
+
+        for (Player player : players) {
+            board.newPlayer(player);
+            board.addPlayerToBoard(player);
+        }
+
+        board.eliminatePlayer(players.get(0));
+        board.eliminatePlayer(players.get(2));
+
+        WidgetTUI boardWidget;
+        boardWidget = board.generateWidget();
+        boardWidget.printWidget();
     }
 }

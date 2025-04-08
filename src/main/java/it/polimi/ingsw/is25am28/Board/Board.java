@@ -4,13 +4,14 @@ import it.polimi.ingsw.is25am28.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.GameModel.GameModel;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.TUI.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUIGenerator;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-public abstract class Board {
+public abstract class Board implements WidgetTUIGenerator {
     private int size;
     private Cell head;
     final ArrayList<Cell> initialCells = new ArrayList<>();
@@ -221,5 +222,119 @@ public abstract class Board {
 
     public BoardJSON generateState(){
         return BoardJSON.fromBoard(this);
+    }
+
+
+    /**
+     * @return A widget containing this board title (optional)
+     */
+    private WidgetTUI getBoardTitleWidget() {
+        WidgetTUI boardTitleWidget = new WidgetTUI();
+
+        boardTitleWidget.appendString(" ==== LEVEL " + this.level + " BOARD ==== ");
+
+        return boardTitleWidget;
+    }
+
+    /**
+     * @return A widget containing information about the current state of the board
+     */
+    private WidgetTUI getBoardInfoWidget() {
+        WidgetTUI boardInfoWidget;
+        List<String> placements;
+        List<Player> activePlayers;
+        String coloredNickname;
+        int playerCount, totalPlacements;
+
+        // Initializations
+        boardInfoWidget = new WidgetTUI();
+        placements = new ArrayList<String>();
+
+        // Getting only the currently playing players (aka: active players)
+        activePlayers = new ArrayList<Player>(this.players);
+        activePlayers.removeAll(this.eliminatedPlayer);
+
+        // Adding the placement strings
+        placements.add("1st");
+        placements.add("2nd");
+        placements.add("3rd");
+        placements.add("4th");
+        totalPlacements = placements.size();
+
+        // Adding the leaderboard
+        boardInfoWidget.appendString("Leaderboard:");
+        playerCount = activePlayers.size();
+
+        // Adding the placement for each active player
+        for (int i = 0; i < playerCount; i++) {
+            coloredNickname = PrintUtils.addColor(
+                activePlayers.get(i).getNickname(),
+                activePlayers.get(i).getPlayerColor().getColorString()
+            );
+
+            boardInfoWidget.appendString(placements.get(i) + " - " + coloredNickname);
+        }
+
+        // Adding the final placement for all eliminated players
+        playerCount = this.eliminatedPlayer.size();
+
+        // Adding a height spacer and heading for the eliminated players list
+        boardInfoWidget.appendString(" ");
+        boardInfoWidget.appendString("Eliminated Players:");
+
+        // Adding a big red X to symbolize that the player was eliminated
+        String redX = PrintUtils.addColor("(X)", ANSIColors.RED);
+        redX += PrintUtils.getSpace();
+
+        // Adding all the eliminated players to the info widget's screen
+        for (int i = 0; i < playerCount; i++) {
+            coloredNickname = PrintUtils.addColor(
+                this.eliminatedPlayer.get(i).getNickname(),
+                this.eliminatedPlayer.get(i).getPlayerColor().getColorString()
+            );
+
+            boardInfoWidget.appendString(redX + placements.get(totalPlacements - 1 - i) + " - " + coloredNickname);
+        }
+
+        // Finally, wrap the board info widget with the default border
+        boardInfoWidget.wrapScreenWithBorder();
+
+        return boardInfoWidget;
+    }
+
+    /**
+     * @return A TUI border-wrapped widget containing the board's text representation
+     *         as well as other information about itself
+     */
+    public WidgetTUI generateWidget() {
+        // Only create the widget if the board has been created
+        if (!initialCells.isEmpty()) {
+            WidgetTUI boardWidget = new WidgetTUI();
+            List<WidgetTUI> verticalWidgetList = new ArrayList<WidgetTUI>();
+
+            int height = this.size / 6;
+            int width = (this.size - height) / 2;
+
+//            if (((height * 2) + (width * 2)) != this.size) {
+//                throw new IllegalArgumentException(
+//                    "ERROR: Cannot draw board with dimensions (height=" + height + ", width=" + width + "). "
+//                    + "(Cell count doesn't match the actual size)"
+//                );
+//            }
+
+            boardWidget.appendString("WIP");
+            boardWidget.wrapScreenWithBorder();
+
+            verticalWidgetList.add(this.getBoardTitleWidget());
+            verticalWidgetList.add(boardWidget);
+            verticalWidgetList.add(this.getBoardInfoWidget());
+
+            boardWidget = WidgetTUI.composeWidgetsVertically(verticalWidgetList);
+            boardWidget.wrapScreenWithBorder();
+
+            return boardWidget;
+        }
+
+        return null;
     }
 }
