@@ -1245,10 +1245,9 @@ public class Ship implements WidgetTUIGenerator {
         tmpComponentWidget.setHeight(height);
         tmpComponentWidget.setWidth(width);
 
-        // Generating the empty widget that will act as a spacer
+        // Generating the empty screen that will act as a spacer
         // when the current component at coords (i, j) is null
         for (int i = 0; i < height + 2; i++) {
-            // emptyWidget.appendString(PrintUtils.getSpace().repeat(3 * scale - 2));
             emptyScreen.add(UnicodeCharacters.BULLET_POINT.repeat(width + 2));
         }
 

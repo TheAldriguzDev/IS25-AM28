@@ -29,4 +29,6 @@ public class UnicodeCharacters {
     // Lifeforms Emojis
     public static final String ALIEN_EMOJI = "\uD83D\uDC7D";
     public static final String ASTRONAUT_EMOJI = "\uD83E\uDDD1\u200D\uD83D\uDE80";
+
+    // Symbols for space background
 }
