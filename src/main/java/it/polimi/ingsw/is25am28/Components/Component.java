@@ -248,8 +248,8 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
                   customBorderScheme.add("" + connector.ordinal());
             }
 
+            // Finally, setting the screen of this component
             componentWidget.setScreen(this.getComponentScreen());
-            // componentWidget.wrapWidgetWithBorder(customBorderScheme);
 
             return componentWidget;
       }
