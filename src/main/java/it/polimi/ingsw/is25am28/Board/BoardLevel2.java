@@ -158,10 +158,10 @@ public class BoardLevel2 extends Board {
                 currCell = currCell.getNextCell();
             } while (currCell != this.getHead());
 
-            List<String> topSide = new ArrayList<>(allCells.subList(0, width - 1));
-            List<String> rightSide = new ArrayList<>(allCells.subList(width - 1, width + height - 3));
-            List<String> bottomSide = new ArrayList<>(allCells.subList(width + height - 3, (2 * width) + height - 4));
-            List<String> leftSide = new ArrayList<>(allCells.subList((2 * width) + height - 4, this.getSize() - 2));
+            List<String> topSide = new ArrayList<>(allCells.subList(0, width));
+            List<String> rightSide = new ArrayList<>(allCells.subList(width, width + height - 1));
+            List<String> bottomSide = new ArrayList<>(allCells.subList(width + height - 2, (2 * width) + height - 2));
+            List<String> leftSide = new ArrayList<>(allCells.subList((2 * width) + height - 2, this.getSize()));
 
             // Top line
             boardLine = new StringBuilder();
@@ -182,7 +182,7 @@ public class BoardLevel2 extends Board {
 
                 boardLine.append(PrintUtils.getSpace());
                 boardLine.append(leftSide.get(i));
-                boardLine.append(PrintUtils.getSpace().repeat(3 * (width - 2) - 1));
+                boardLine.append(PrintUtils.getSpace().repeat(3 * (width - 2) + 2));
                 boardLine.append(rightSide.get(i));
                 boardLine.append(PrintUtils.getSpace());
 
