@@ -102,15 +102,33 @@ public class WarZone extends EventCard {
                     this.initCardPlayers();
                     // Go to the next action
                     this.current_action++;
+
+                    // If the new player is not connected we skip it to grab the next one
+                    if ( !this.currentPlayer.get().isConnected() ) {
+                        this.currentPlayer = this.getNextPlayer();
+                    }
+
                     return this.currentPlayer;
                 }
             } else {
                 Player nextPlayer = players.get(currentIndex + 1);
-                currentPlayer = Optional.of(nextPlayer);
+                this.currentPlayer = Optional.of(nextPlayer);
+
+                // If the new player is not connected we skip it to grab the next one
+                if ( !this.currentPlayer.get().isConnected() ) {
+                    this.currentPlayer = this.getNextPlayer();
+                }
+
                 return currentPlayer;
             }
         } else {
-            currentPlayer = Optional.of(players.getFirst());
+            this.currentPlayer = Optional.of(players.getFirst());
+
+            // If the new player is not connected we skip it to grab the next one
+            if ( !this.currentPlayer.get().isConnected() ) {
+                this.currentPlayer = this.getNextPlayer();
+            }
+
             return currentPlayer;
         }
     }

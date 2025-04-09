@@ -54,7 +54,7 @@ public abstract class EventCard {
      * */
     protected Optional<Player> getNextPlayer() {
         if (players == null || players.isEmpty()) {
-            throw new Error("Players are not set, you must call startUsingCard method before");
+            throw new Error("Players are not set, you must call initCardPlayers method before");
         }
 
         if (currentPlayer.isPresent()) {
