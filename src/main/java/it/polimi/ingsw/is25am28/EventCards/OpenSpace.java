@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
+import it.polimi.ingsw.is25am28.Components.Battery;
 import it.polimi.ingsw.is25am28.Components.Engine;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Player.Player;
@@ -15,8 +16,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class OpenSpace extends EventCard {
-    private Map<Player, Integer> playerPowerResult;
-
+    private Map<String, Integer> playerPowerResult;
 
     // TODO: Implement the specific constructor to build the card with the necessary data
     public OpenSpace(String name, int level, Board board) {
@@ -102,6 +102,9 @@ public class OpenSpace extends EventCard {
                     .mapToInt( Lifeform::getPowerBoost )
                     .sum();
 
+            // Store the power result to notify the player with the choices of the previous players
+            this.playerPowerResult.put(playerNickname, totalPower);
+
             // Apply the effect to the player
             // if no power has been declared eliminate the player
             // otherwise move the player forward of the declared power
@@ -137,6 +140,22 @@ public class OpenSpace extends EventCard {
         cardState.setCardLevel(this.cardLevel);
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+        }
+
+        cardState.setPlayersEnginePower(this.playerPowerResult);
+
+        // If the card is finished we send all the effective changes:
+        // 1. The players updated available energies
+        // 2. The updated board with the new players positions
+        if (this.hasFinished()) {
+            Map<String, Integer> playersBatteries = new HashMap<>();
+
+            for (Player p : this.players) {
+                playersBatteries.put(p.getNickname(), p.getShip().getBatteryList().stream().mapToInt(Battery::getAvailability).sum());
+            }
+
+            cardState.setPlayersBatteries(playersBatteries);
+            cardState.setBoard(this.getBoard().generateState());
         }
 
         return cardState;

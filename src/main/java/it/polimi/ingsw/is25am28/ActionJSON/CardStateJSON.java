@@ -22,6 +22,21 @@ public class CardStateJSON extends ActionJSON {
     private int cardLevel;
     private boolean isCardUsable;
 
+    // ======== START MODEL INFORMATION ======== //
+
+    private BoardJSON board;
+
+    // ======== END MODEL INFORMATION ======== //
+
+    // ======== START PLAYER INFORMATION ======== //
+
+    private Map<String, Float> playersFirePower;
+    private Map<String, Integer> playersEnginePower;
+    private Map<String, Integer> playersBatteries;
+    private Map<String, List<Map<String, Object>>> playersShip;
+
+    // ======== END PLAYER INFORMATION ======== //
+
     private int requiredFirepower;
     private int givenCredits;
     private int movementSteps;
@@ -42,8 +57,6 @@ public class CardStateJSON extends ActionJSON {
     private String affectedPlayer;
     private int requiredResources;
     private Pair<Integer, Integer> currPlasmaShotDescriptor;
-    private Map<String, Float> playersFirePower;
-    private Map<String, Integer> playersEnginePower;
 
     // ======== VisitPlanets Card State Attributes ======== //
 
@@ -54,6 +67,60 @@ public class CardStateJSON extends ActionJSON {
     private int currMeteorIndex;
     private int diceThrowResult;
     private Pair<Integer, Integer> currMeteorDescriptor;
+
+
+    // ======== Model Information Methods ======== //
+
+    @JsonGetter("board")
+    public BoardJSON getBoard() {
+        return board;
+    }
+
+    @JsonSetter("board")
+    public void setBoard(BoardJSON board) {
+        this.board = board;
+    }
+
+    // ======== Player information methods ======== //
+    @JsonGetter("playersFirePower")
+    public Map<String, Float> getPlayersFirePower() {
+        return this.playersFirePower;
+    }
+
+    @JsonSetter("playersFirePower")
+    public void setPlayersFirePower(Map<String, Float> playersFirePower) {
+        this.playersFirePower = playersFirePower;
+    }
+
+    @JsonGetter("playersEnginePower")
+    public Map<String, Integer> getPlayersEnginePower() {
+        return this.playersEnginePower;
+    }
+
+    @JsonSetter("playersEnginePower")
+    public void setPlayersEnginePower(Map<String, Integer> playersEnginePower) {
+        this.playersEnginePower = playersEnginePower;
+    }
+
+    @JsonGetter("playersBatteries")
+    public Map<String, Integer> getPlayersBatteries() {
+        return this.playersBatteries;
+    }
+
+    @JsonSetter("playersBatteries")
+    public void setPlayersBatteries(Map<String, Integer> playersBatteries) {
+        this.playersBatteries = playersBatteries;
+    }
+
+    @JsonGetter("playersShip")
+    public Map<String, List<Map<String, Object>>> getPlayersShip() {
+        return playersShip;
+    }
+
+    @JsonSetter("playersShip")
+    public void setPlayersShip(Map<String, List<Map<String, Object>>> playersShip) {
+        this.playersShip = playersShip;
+    }
 
     // ======== Enemies Card State Attributes ========//
     @JsonSetter("requiredFirepower")
@@ -300,26 +367,6 @@ public class CardStateJSON extends ActionJSON {
     @JsonSetter("currPlasmaShotDescriptor")
     public void setCurrPlasmaShotDescriptor(Pair<Integer, Integer> currPlasmaShotDescriptor) {
         this.currPlasmaShotDescriptor = currPlasmaShotDescriptor;
-    }
-
-    @JsonGetter("playersFirePower")
-    public Map<String, Float> getPlayersFirePower() {
-        return this.playersFirePower;
-    }
-
-    @JsonSetter("playersFirePower")
-    public void setPlayersFirePower(Map<String, Float> playersFirePower) {
-        this.playersFirePower = playersFirePower;
-    }
-
-    @JsonGetter("playersEnginePower")
-    public Map<String, Integer> getPlayersEnginePower() {
-        return this.playersEnginePower;
-    }
-
-    @JsonSetter("playersEnginePower")
-    public void setPlayersEnginePower(Map<String, Integer> playersEnginePower) {
-        this.playersEnginePower = playersEnginePower;
     }
 
     // ======== VisitPlanets Card State Getters/Setters ======== //
