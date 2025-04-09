@@ -1225,7 +1225,7 @@ public class Ship implements WidgetTUIGenerator {
      * @return The widget containing all of this ship's component's widgets
      *         as they are put inside this ship's grid
      */
-    private WidgetTUI getShipGridWidget() {
+    public WidgetTUI getShipGridWidget() {
         WidgetTUI shipGridWidget;
         WidgetTUI tmpComponentWidget;
         List<String> emptyScreen;
@@ -1245,10 +1245,9 @@ public class Ship implements WidgetTUIGenerator {
         tmpComponentWidget.setHeight(height);
         tmpComponentWidget.setWidth(width);
 
-        // Generating the empty widget that will act as a spacer
+        // Generating the empty screen that will act as a spacer
         // when the current component at coords (i, j) is null
         for (int i = 0; i < height + 2; i++) {
-            // emptyWidget.appendString(PrintUtils.getSpace().repeat(3 * scale - 2));
             emptyScreen.add(UnicodeCharacters.BULLET_POINT.repeat(width + 2));
         }
 
@@ -1296,7 +1295,7 @@ public class Ship implements WidgetTUIGenerator {
     /**
      * @return The widget containing this ship's statistics
      */
-    private WidgetTUI getShipStatsWidget() {
+    public WidgetTUI getShipStatsWidget() {
         // Creating the ship's stats widget with the correct dimensions
         WidgetTUI shipStatsWidget = new WidgetTUI();
         List<String> shipStatsScreen = new ArrayList<String>();
@@ -1312,7 +1311,7 @@ public class Ship implements WidgetTUIGenerator {
         shipStatsScreen.add("EnginePower: " + this.getEnginePower(0));
 
         shipStatsWidget.appendScreen(shipStatsScreen);
-        // shipStatsWidget.centerWidgetScreen();
+        shipStatsWidget.centerWidgetScreen();
         shipStatsWidget.wrapWidgetWithBorder();
 
         return shipStatsWidget;

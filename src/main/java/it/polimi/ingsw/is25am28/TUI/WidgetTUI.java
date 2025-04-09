@@ -144,12 +144,6 @@ public class WidgetTUI {
                 composedWidgets.appendScreen(widget.getScreen());
             }
 
-            // Setting width of the composed widgets (NOTE: height is auto-set by appendScreen())
-            widgets.stream()
-                    .mapToInt(WidgetTUI::getWidthNoUnicode)
-                    .max()
-                    .ifPresent(composedWidgets::setWidth);
-
             return composedWidgets;
         }
 
@@ -421,18 +415,22 @@ public class WidgetTUI {
      */
     public void setWidth(int width) {
         if (this.width < width) {
+            String tmp;
+            int padding;
+
             this.width = width;
-        }
-        else {
-            AtomicInteger maxWidth = new AtomicInteger(this.width);
 
-            this.screen.stream()
-                    .map(PrintUtils::removeUnicodeFromString)
-                    .mapToInt(String::length)
-                    .max()
-                    .ifPresent(maxWidth::set);
+            // Adds the remaining padding to each line in the screen
+            // so that all lines now have the set width
+            for (int i = 0; i < this.height; i++) {
+                tmp = this.screen.get(i);
+                padding = this.width - tmp.length();
 
-            this.width = maxWidth.get();
+                if (padding > 0) {
+                    tmp += PrintUtils.getSpace().repeat(padding);
+                    this.screen.set(i, tmp);
+                }
+            }
         }
     }
 
@@ -441,22 +439,6 @@ public class WidgetTUI {
      */
     public int getWidth() {
         return this.width;
-    }
-
-    // TODO: Fix other stuff then deprecate this method
-    /**
-     * @return This widget's actual width obtained by removing all UNICODE characters
-     */
-    public int getWidthNoUnicode() {
-        AtomicInteger widthNoUnicode = new AtomicInteger();
-
-        this.screen.stream()
-                .map(PrintUtils::removeUnicodeFromString)
-                .mapToInt(String::length)
-                .max()
-                .ifPresent(widthNoUnicode::set);
-
-        return widthNoUnicode.get();
     }
 
     /**
@@ -469,7 +451,7 @@ public class WidgetTUI {
     /**
      * @param string The string to append to this widget's screen
      */
-    public void appendString(String string) {
+    public WidgetTUI appendString(String string) {
         if (string != null) {
             // Adding string
             this.screen.add(string);
@@ -478,12 +460,14 @@ public class WidgetTUI {
             this.height++;
             this.width = Math.max(PrintUtils.removeUnicodeFromString(string).length(), this.width);
         }
+
+        return this;
     }
 
     /**
      * @param otherScreen The screen to append after this widget's screen
      */
-    public void appendScreen(List<String> otherScreen) {
+    public WidgetTUI appendScreen(List<String> otherScreen) {
         if (otherScreen != null) {
             // Removes any null string inside otherScreen and
             // adds all the remaining strings to this screen
@@ -497,6 +481,8 @@ public class WidgetTUI {
                     .max()
                     .ifPresent(this::setWidth);
         }
+
+        return this;
     }
 
     // TODO: Test this
@@ -505,7 +491,7 @@ public class WidgetTUI {
      * Centers this widget's screen contents by adding padding
      * spaces to both sides of each screen line
      */
-    public void centerWidgetScreen() {
+    public WidgetTUI centerWidgetScreen() {
         List<String> paddedScreen;
         StringBuilder paddedString;
         String trimmed;
@@ -516,7 +502,7 @@ public class WidgetTUI {
         // Adding right and left padding to each string in the screen
         for (String s : this.screen) {
             trimmed = s.trim();
-            strlen = trimmed.length();
+            strlen = PrintUtils.removeUnicodeFromString(trimmed).length();
             paddedString = new StringBuilder();
             padding = ((this.width - strlen) / 2) - this.layerCount;
 
@@ -533,6 +519,8 @@ public class WidgetTUI {
         }
 
         this.setScreen(paddedScreen);
+
+        return this;
     }
 
     /**
@@ -542,7 +530,7 @@ public class WidgetTUI {
      *
      * @param screen The list of string that make up this widget's output screen
      */
-    public void setScreen(List<String> screen) {
+    public WidgetTUI setScreen(List<String> screen) {
         if (screen != null) {
             // Setting the screen only with non-null lines from the given screen
             this.screen = new ArrayList<>(screen.stream().filter(Objects::nonNull).toList());
@@ -559,6 +547,8 @@ public class WidgetTUI {
                     .max()
                     .ifPresent(this::setWidth);
         }
+
+        return this;
     }
 
     /**
@@ -571,9 +561,9 @@ public class WidgetTUI {
     /**
      * Wraps this widget's screen with one layer of the default border
      */
-    public void wrapWidgetWithBorder() {
+    public WidgetTUI wrapWidgetWithBorder() {
         // Invokes the overloaded method to use the default border characters
-        this.wrapWidgetWithBorder(null);
+       return this.wrapWidgetWithBorder(null);
     }
 
     /**
@@ -584,7 +574,7 @@ public class WidgetTUI {
      *
      *  (NOTE: For more information on the specific format, see the default border static attribute of this class)
      */
-    public void wrapWidgetWithBorder(List<String> borderCharacters) {
+    public WidgetTUI wrapWidgetWithBorder(List<String> borderCharacters) {
         StringBuilder tmpString;
 
         // Storing the old screen and clearing the previous one
@@ -675,12 +665,14 @@ public class WidgetTUI {
         // Bottom Right Corner
         tmpString.append(borderCharacters.get(2));
         this.screen.add(tmpString.toString());
+
+        return this;
     }
 
     /**
      * Removes one border layer from this screen
      */
-    public void unwrapWidgetFromBorder() {
+    public WidgetTUI unwrapWidgetFromBorder() {
         if (this.layerCount > 0) {
             List<String> unwrappedScreen = new ArrayList<String>();
             int screenLen = this.screen.size() - 1;
@@ -701,6 +693,8 @@ public class WidgetTUI {
             // Decrease the layer counter by one
             this.layerCount--;
         }
+
+        return this;
     }
 
     /**

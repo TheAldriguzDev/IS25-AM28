@@ -13,9 +13,12 @@ import it.polimi.ingsw.is25am28.Ship.Ship;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
 import static org.junit.jupiter.api.Assertions.*;
@@ -746,7 +749,7 @@ public class PrintTest {
         widget.appendString("HELLO WORLD");
         widget.appendString("COMPUTER");
 
-        widget.setWidth(3 * widget.getHeight());
+        widget.setWidth(50);
         widget.wrapWidgetWithBorder();
         widget.printWidget();
 
@@ -798,5 +801,133 @@ public class PrintTest {
         WidgetTUI boardWidget;
         boardWidget = board.generateWidget();
         boardWidget.printWidget();
+    }
+
+    @Test
+    void widget_boardWidgetTestWithIncrementalPlayerCount() {
+        WidgetTUI boardWidget;
+        Board board = new BoardLevel2();
+        List<Player> players = new ArrayList<Player>();
+
+        board.buildBoard();
+
+        players.add(new Player("TheD3stroy3r", PlayerColor.RED, 2));
+        players.add(new Player("MasterChief1103", PlayerColor.GREEN, 2));
+        players.add(new Player("C4taclism__", PlayerColor.BLUE, 2));
+        players.add(new Player("ItzAlex_TTV", PlayerColor.YELLOW, 2));
+
+        boardWidget = board.generateWidget();
+        boardWidget.printWidget();
+
+        board.newPlayer(players.get(0));
+        board.addPlayerToBoard(players.get(0));
+
+        boardWidget = board.generateWidget();
+        boardWidget.printWidget();
+
+        board.newPlayer(players.get(1));
+        board.addPlayerToBoard(players.get(1));
+
+        boardWidget = board.generateWidget();
+        boardWidget.printWidget();
+
+        board.newPlayer(players.get(2));
+        board.addPlayerToBoard(players.get(2));
+
+        boardWidget = board.generateWidget();
+        boardWidget.printWidget();
+
+        board.newPlayer(players.get(3));
+        board.addPlayerToBoard(players.get(3));
+
+        boardWidget = board.generateWidget();
+        boardWidget.printWidget();
+
+        board.eliminatePlayer(board.getPlayers().get(0));
+        board.eliminatePlayer(board.getPlayers().get(2));
+
+        boardWidget = board.generateWidget();
+        boardWidget.printWidget();
+    }
+
+    @Test
+    void widget_boardWidgetTestFullRotation() {
+        Board board = new BoardLevel2();
+        List<Player> players = new ArrayList<Player>();
+
+        board.buildBoard();
+
+        players.add(new Player("TheD3stroy3r", PlayerColor.RED, 2));
+        players.add(new Player("MasterChief1103", PlayerColor.GREEN, 2));
+        players.add(new Player("C4taclism__", PlayerColor.BLUE, 2));
+        players.add(new Player("ItzAlex_TTV", PlayerColor.YELLOW, 2));
+
+        for (Player player : players) {
+            board.newPlayer(player);
+            board.addPlayerToBoard(player);
+        }
+
+        WidgetTUI boardWidget;
+
+        for (int i = 0; i < board.getSize(); i++) {
+            boardWidget = board.generateWidget();
+            boardWidget.printWidget();
+            board.validatePlayersPosition();
+            board.movePlayerForward(board.getPlayers().getFirst(), 1);
+            board.validatePlayersPosition();
+
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+
+    @Test
+    void widget_boardAndShip() {
+        Ship ship = new Ship(2);
+        customShip2(ship);
+
+        Board board = new BoardLevel2();
+        List<Player> players = new ArrayList<Player>();
+
+        board.buildBoard();
+
+        players.add(new Player("TheD3stroy3r", PlayerColor.RED, 2));
+        players.add(new Player("MasterChief1103", PlayerColor.GREEN, 2));
+        players.add(new Player("C4taclism__", PlayerColor.BLUE, 2));
+        players.add(new Player("ItzAlex_TTV", PlayerColor.YELLOW, 2));
+
+        for (Player player : players) {
+            board.newPlayer(player);
+            board.addPlayerToBoard(player);
+        }
+
+        List<WidgetTUI> widgets = new ArrayList<>();
+        WidgetTUI composition, spacer;
+        spacer = new WidgetTUI();
+
+        widgets.add(ship.getShipStatsWidget());
+        spacer.setHeight(widgets.getFirst().getHeight());
+        spacer.setWidth(widgets.getFirst().getWidth());
+        widgets.add(spacer);
+
+        composition = WidgetTUI.composeWidgetsHorizontally(widgets);
+
+        widgets.clear();
+        widgets.add(composition.centerWidgetScreen());
+        widgets.add(board.generateWidget());
+
+        composition = WidgetTUI.composeWidgetsVertically(widgets);
+        composition.centerWidgetScreen().wrapWidgetWithBorder();
+
+        widgets.clear();
+        widgets.add(composition);
+        widgets.add(ship.getShipGridWidget());
+
+        composition = WidgetTUI.composeWidgetsHorizontally(widgets);
+        composition.wrapWidgetWithBorder();
+        composition.printWidget();
     }
 }
