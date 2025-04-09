@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Components.Component;
@@ -26,24 +27,25 @@ public class Epidemy extends EventCard {
         // Nothing
     }
 
-    @Override
-    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        return this;
+    /**
+     * Calls the useCard method but without passing an ActionJSON to it
+     * (since this card doesn't require user input to work)
+     */
+    public EventCard useCard() {
+        return this.useCard(null);
     }
 
-    public EventCard useCard() throws IllegalArgumentException {
+    @Override
+    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
         Set<Cabin> alreadyQuarantined;
         List<Cabin> cabinList;
         Component[] neighbours;
         Ship shipPtr;
 
-        // Finding all neighbouring cabins and putting them into quarantine
-        for (Player player : this.getBoard().getPlayers()) {
-            // Skips any player marked as disconnected during their turn
-            if (!player.isConnected()) continue;
-
+        // Skips any player marked as disconnected during their turn
+        if (this.currentPlayer.isPresent() && this.currentPlayer.get().isConnected()) {
             alreadyQuarantined = new HashSet<>();
-            shipPtr = player.getShip();
+            shipPtr = this.currentPlayer.get().getShip();
             cabinList = shipPtr.getCabinList();
 
             for (Cabin cabin : cabinList) {
@@ -75,8 +77,13 @@ public class Epidemy extends EventCard {
             }
         }
 
-        // Set this card as used
-        this.cardUsed();
+        // Getting the next player (in order of leaderboard placements)
+        this.currentPlayer = this.getNextPlayer();
+
+        // Set this card as used only if all players have used it
+        if (this.currentPlayer.isEmpty()) {
+            this.cardUsed();
+        }
 
         return this;
     }
@@ -84,19 +91,27 @@ public class Epidemy extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        Map<String, PlayerJSON> playerInfo;
 
         cardState.setCardName(this.getCardName());
         cardState.setCardLevel(this.cardLevel);
+        cardState.setCardIsUsable( !this.hasFinished());
 
         if (this.hasFinished()) {
+            // Generate the player info that also includes the ship
+            playerInfo = new HashMap<>();
 
+            for (Player player : this.players) {
+                playerInfo.put(player.getNickname(), PlayerJSON.fromPlayer(player, false));
+            }
+
+            cardState.setPlayersInfo(playerInfo);
         }
         else {
             if (this.getCurrentPlayer().isPresent()) {
                 cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
             }
         }
-
 
         return cardState;
     }

@@ -382,8 +382,6 @@ public class MeteorShower extends EventCard {
             // Generate the player info that also includes the ship
             playerInfo = new HashMap<>();
 
-
-
             for (Player player : this.players) {
                 playerInfo.put(player.getNickname(), PlayerJSON.fromPlayer(player, false));
             }
