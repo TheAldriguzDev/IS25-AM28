@@ -9,10 +9,7 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 public class AbandonedShip extends EventCard {
     private final int requiredCrew;
@@ -21,12 +18,15 @@ public class AbandonedShip extends EventCard {
 
     private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
 
+    private boolean hasBeenUsedByPlayer;
+
     public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits, Board board) {
         super(name, cardLevel, board);
         this.requiredCrew = requireCrew;
         this.movementStep = movementStep;
         this.givenCredits = givenCredits;
         this.lifeformsToBeRemoved = new ArrayList<>();
+        this.hasBeenUsedByPlayer = false;
     }
 
     /**
@@ -91,6 +91,7 @@ public class AbandonedShip extends EventCard {
 
                     // Apply the bonus effects --> give the credits
                     this.bonusEffect();
+                    this.hasBeenUsedByPlayer = true;
 
                     // Apply the malus effects --> move the player and remove the required crew members
                     this.malusEffect();
@@ -172,20 +173,32 @@ public class AbandonedShip extends EventCard {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
 
-        List<Player> playersThatCanUseTheCard = this.getBoard().getPlayers().stream()
-                .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
-                .toList();
+        if (this.hasFinished()) {
+            if (this.hasBeenUsedByPlayer) {
+                // Update the board
+                cardState.setBoard(this.getBoard().generateState());
 
-        // Set the card isUsable to true when the player has at least the required crew members
-        // --> since we filter them in advance should be always set to true
-        if (this.getCurrentPlayer().isPresent()) {
-            cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get()));
+                // Generate the player info that also includes the ship
+                Map<String, PlayerJSON> playerInfo = new HashMap<>();
+                playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
+                cardState.setPlayersInfo(playerInfo);
+            }
+        } else {
+            List<Player> playersThatCanUseTheCard = this.getBoard().getPlayers().stream()
+                    .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
+                    .toList();
+
+            // Set the card isUsable to true when the player has at least the required crew members
+            // --> since we filter them in advance should be always set to true
+            if (this.getCurrentPlayer().isPresent()) {
+                cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get()));
+            }
+
+            // Set the card information that are needed to play
+            cardState.setRequiredCrewMembers(this.requiredCrew);
+            cardState.setGivenCredits(this.givenCredits);
+            cardState.setMovementSteps(this.movementStep);
         }
-
-        // Set the card information that are needed to play
-        cardState.setRequiredCrewMembers(this.requiredCrew);
-        cardState.setGivenCredits(this.givenCredits);
-        cardState.setMovementSteps(this.movementStep);
 
         return cardState;
     }

@@ -10,12 +10,22 @@ public enum PlayerColor {
         
         if( color == GREEN.ordinal() ){
             return GREEN;
-        }else if( color == RED.ordinal() ){
+        } else if( color == RED.ordinal() ){
             return RED;
-        }else if( color == BLUE.ordinal() ){
+        } else if( color == BLUE.ordinal() ){
             return BLUE;
         } 
 
         return YELLOW;
+    }
+
+    @Override
+    public String toString() {
+        return switch (this) {
+            case GREEN -> "GREEN";
+            case RED -> "RED";
+            case BLUE -> "BLUE";
+            case YELLOW -> "YELLOW";
+        };
     }
 }

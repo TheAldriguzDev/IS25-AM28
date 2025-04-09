@@ -33,7 +33,7 @@ public class CardStateJSON extends ActionJSON {
     private Map<String, Float> playersFirePower;
     private Map<String, Integer> playersEnginePower;
     private Map<String, Integer> playersBatteries;
-    private Map<String, List<Map<String, Object>>> playersShip;
+    private Map<String, PlayerJSON> playersInfo;
 
     // ======== END PLAYER INFORMATION ======== //
 
@@ -112,14 +112,14 @@ public class CardStateJSON extends ActionJSON {
         this.playersBatteries = playersBatteries;
     }
 
-    @JsonGetter("playersShip")
-    public Map<String, List<Map<String, Object>>> getPlayersShip() {
-        return playersShip;
+    @JsonGetter("playersInfo")
+    public Map<String, PlayerJSON> getPlayersInfo() {
+        return playersInfo;
     }
 
-    @JsonSetter("playersShip")
-    public void setPlayersShip(Map<String, List<Map<String, Object>>> playersShip) {
-        this.playersShip = playersShip;
+    @JsonSetter("playersInfo")
+    public void setPlayersInfo(Map<String, PlayerJSON> playersInfo) {
+        this.playersInfo = playersInfo;
     }
 
     // ======== Enemies Card State Attributes ========//

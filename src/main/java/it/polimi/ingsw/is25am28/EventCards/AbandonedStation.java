@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-import it.polimi.ingsw.is25am28.ActionJSON.AbandonedStationJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
@@ -160,11 +157,10 @@ public class AbandonedStation extends EventCard {
                 // Update the board
                 cardState.setBoard(this.getBoard().generateState());
 
-                // Generate and set the ship for the player that used the card
-                Map<String, List<Map<String, Object>>> playersShip = new HashMap<>();
-                playersShip.put(this.currentPlayer.get().getNickname(), this.currentPlayer.get().getShip().generateState());
-
-                cardState.setPlayersShip(playersShip);
+                // Generate the player info that also includes the ship
+                Map<String, PlayerJSON> playerInfo = new HashMap<>();
+                playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
+                cardState.setPlayersInfo(playerInfo);
             }
         } else {
             List<Player> playersThatCanUseTheCard = this.getBoard().getPlayers().stream()
