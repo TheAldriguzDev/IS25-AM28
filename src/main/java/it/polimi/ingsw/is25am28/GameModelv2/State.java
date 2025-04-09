@@ -14,6 +14,10 @@ public abstract class State {
         throw new IllegalStateException("The 'gameConfig' command is not allowed in the " + this + " state");
     }
 
+    public void addNewPlayer(String playerNickname, PlayerColor playerColor) throws IllegalStateException {
+        throw new IllegalStateException("The 'addNewPlayer' command is not allowed in the " + this + " state");
+    }
+
     public abstract void onComplete();
 
 

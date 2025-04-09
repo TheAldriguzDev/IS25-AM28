@@ -101,29 +101,41 @@ public class GameModel {
         }
     }
 
-    public void gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) {
+    /**
+     * Initializes the game configuration as defined by the leader.
+     * Sets the game level, number of players, and creates the leader as the first player.
+     */
+    public StateJSON gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) {
         // Set the game configuration sent by the leader
         this.currentState.gameConfig(nickname, playerColor, level, numPlayers);
 
-        // Create the board based on the given level
-        switch (level) {
-            case 0:
-                this.board = new BoardTestFlight();
-                break;
-            case 2:
-                this.board = new BoardLevel2();
-                break;
-            default:
-                throw new IllegalStateException("The given game level (" + this.level + ") is not valid");
-        }
-
-        // Generate the match deck
-        this.generateDeck();
-
-        // TODO: generate the tiles
+        this.createBoard();
+        this.prepareGameMaterials();
 
         // If all the previous operations are validated we can make the state transaction
         this.currentState.onComplete();
+        return this.currentState.generateState();
+    }
+
+    private void createBoard() {
+        switch (this.level) {
+            case 0 -> this.board = new BoardTestFlight();
+            case 2 -> this.board = new BoardLevel2();
+            default -> throw new IllegalStateException("The given game level (" + this.level + ") is not valid");
+        };
+    }
+
+    private void prepareGameMaterials() {
+        this.generateDeck();
+
+        // TODO: Generate the tiles
+    }
+
+    public StateJSON addNewPlayer(String nickname, PlayerColor playerColor) {
+        this.currentState.addNewPlayer(nickname, playerColor);
+
+        this.currentState.onComplete();
+        return this.currentState.generateState();
     }
 
     // ========================================
@@ -191,8 +203,16 @@ public class GameModel {
      * @return if the game has the required numbers of players in the lobby
     */
     boolean addPlayer(String nickName, PlayerColor playerColor) throws IllegalArgumentException {
+        if (nickName == null || playerColor == null || nickName.isEmpty()) {
+            throw new IllegalArgumentException("Nickname cannot be null or empty");
+        }
+
         if (this.players.containsKey(nickName)) {
             throw new IllegalArgumentException("Nickname " + nickName + " is already used");
+        }
+
+        if (!getAvailableColors().contains(playerColor.toString())) {
+            throw new IllegalArgumentException("Color " + playerColor + " is already used");
         }
 
         Player p = new Player(nickName, playerColor, this.level);
