@@ -600,10 +600,13 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P4 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
+
+        // After P4, the returned state contains all the ships of each player
+        // and their contents, which shows the change in the stored items
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
 
         // Since P4 is the last player, the state should say that the card is not usable anymore
         assertFalse(cardStateJSON.getIsCardUsable());
@@ -924,8 +927,11 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P3 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
+
+        // After P3, the returned state contains all the ships of each player
+        // and their contents, which shows the change in the stored items
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
 
         // Verify that, since all planets have been chosen, P4 will not be able to choose, thus
         // he should be skipped and the card should be then marked as used
@@ -1223,8 +1229,11 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P3 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
+
+        // After P3, the returned state contains all the ships of each player
+        // and their contents, which shows the change in the stored items
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
 
         // Verify that, since all planets have been chosen, P4 will not be able to choose, thus
         // he should be skipped and the card should be then marked as used

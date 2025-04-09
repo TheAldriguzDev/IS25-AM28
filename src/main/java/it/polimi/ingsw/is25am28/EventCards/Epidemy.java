@@ -5,7 +5,6 @@ import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Cabin;
 import it.polimi.ingsw.is25am28.Components.Component;
-import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
@@ -89,9 +88,15 @@ public class Epidemy extends EventCard {
         cardState.setCardName(this.getCardName());
         cardState.setCardLevel(this.cardLevel);
 
-        if (this.getCurrentPlayer().isPresent()) {
-            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+        if (this.hasFinished()) {
+
         }
+        else {
+            if (this.getCurrentPlayer().isPresent()) {
+                cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+            }
+        }
+
 
         return cardState;
     }

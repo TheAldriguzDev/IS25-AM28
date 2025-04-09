@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Cannon;
 import it.polimi.ingsw.is25am28.Components.Component;
@@ -371,28 +372,48 @@ public class MeteorShower extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
-
-        // If the current player is present, then add it to the card state
-        this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
-
-        // The dice throw is performed by generateState only at the beginning
-        // since the card hasn't been used yet
-        if (this.diceThrowResult == -1) {
-            this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
-        }
+        Map<String, PlayerJSON> playerInfo;
 
         cardState.setCardName(this.getCardName());
         cardState.setCardLevel(this.cardLevel);
         cardState.setCardIsUsable(! this.hasFinished());
-        cardState.setCurrMeteorIndex(this.currMeteorIndex);
-        cardState.setDiceThrowResult(this.diceThrowResult);
 
-        cardState.setCurrMeteorDescriptor(
-            new Pair<Integer, Integer>(
-                this.meteorSequence.get(this.currMeteorIndex).getSize(),
-                this.meteorSequence.get(this.currMeteorIndex).getOrientation()
-            )
-        );
+        if (this.hasFinished()) {
+            // Generate the player info that also includes the ship
+            playerInfo = new HashMap<>();
+
+
+
+            for (Player player : this.players) {
+                playerInfo.put(player.getNickname(), PlayerJSON.fromPlayer(player, false));
+            }
+
+            cardState.setPlayersInfo(playerInfo);
+        }
+        else {
+            // If the current player is present, then add it to the card state
+            this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+
+            // The dice throw is performed by generateState only at the beginning
+            // since the card hasn't been used yet
+            if (this.diceThrowResult == -1) {
+                this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
+            }
+
+            cardState.setCurrMeteorIndex(this.currMeteorIndex);
+            cardState.setDiceThrowResult(this.diceThrowResult);
+
+            playerInfo = new HashMap<>();
+            playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.currentPlayer.get(), false));
+            cardState.setPlayersInfo(playerInfo);
+
+            cardState.setCurrMeteorDescriptor(
+                new Pair<Integer, Integer>(
+                    this.meteorSequence.get(this.currMeteorIndex).getSize(),
+                    this.meteorSequence.get(this.currMeteorIndex).getOrientation()
+                )
+            );
+        }
 
         return cardState;
     }

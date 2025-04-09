@@ -71,37 +71,6 @@ public class VisitPlanets extends EventCard {
             planetIndex++;
         }
 
-        // Parsing the incoming data and transforming the integer value
-        // found in the map into the corresponding color
-//        for (Integer planetIndex : itemsPerPlanet.keySet()) {
-//            Map<ItemColor, Integer> planetResourceDescriptor = new HashMap<>();
-//
-//            for (Integer itemColor : itemsPerPlanet.get(planetIndex).keySet()) {
-//                switch (itemColor) {
-//                    // Blue Item
-//                    case 1 -> {
-//                        planetResourceDescriptor.put(ItemColor.BLUE, itemsPerPlanet.get(planetIndex).get(1));
-//                    }
-//                    // Green Item
-//                    case 2 -> {
-//                        planetResourceDescriptor.put(ItemColor.GREEN, itemsPerPlanet.get(planetIndex).get(2));
-//                    }
-//                    // Yellow Item
-//                    case 3 -> {
-//                        planetResourceDescriptor.put(ItemColor.YELLOW, itemsPerPlanet.get(planetIndex).get(3));
-//                    }
-//                    // Red Item
-//                    case 4 -> {
-//                        planetResourceDescriptor.put(ItemColor.RED, itemsPerPlanet.get(planetIndex).get(4));
-//                    }
-//                    default -> throw new IllegalStateException("[VisitPlanets] ERROR: There cannon be more than 4 item colors");
-//                }
-//            }
-//
-//            // Putting the transformed entry into the itemsPerPlanet map
-//            this.itemsPerPlanet.put(planetIndex, planetResourceDescriptor);
-//        }
-
         // Map containing each player and its chosen planet to land on. If a player
         // is not present in this map, then it means that he didn't choose a planet to land on
         this.playersChosenPlanet = new HashMap<Integer, Player>();
@@ -311,21 +280,40 @@ public class VisitPlanets extends EventCard {
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
         Map<Integer, Map<ItemColor, Integer>> availablePlanets;
-
-        // Generating the map of all the remaining planets to choose from
-        availablePlanets = new HashMap<>(this.itemsPerPlanet);
-
-        for (Integer chosenPlanetIndex : this.playersChosenPlanet.keySet()) {
-            availablePlanets.remove(chosenPlanetIndex);
-        }
-
-        // If the current player is present, then add it to the card state
-        this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+        Map<String, PlayerJSON> playerInfo;
 
         cardState.setCardName(this.getCardName());
         cardState.setCardLevel(this.getCardLevel());
         cardState.setCardIsUsable( !this.hasFinished());
-        cardState.setAvailablePlanets(availablePlanets);
+
+        if (this.hasFinished()) {
+            // Update the board
+            cardState.setBoard(this.getBoard().generateState());
+
+            // Generate the player info that also includes the ship
+            playerInfo = new HashMap<>();
+
+            for (Map.Entry<Integer, Player> entry : this.playersChosenPlanet.entrySet()) {
+                Player player = entry.getValue();
+                playerInfo.put(player.getNickname(),  PlayerJSON.fromPlayer(player, true));
+            }
+
+            // Finally, store the info about which players chose which planets
+            cardState.setPlayersInfo(playerInfo);
+        }
+        else {
+            // Generating the map of all the remaining planets to choose from
+            availablePlanets = new HashMap<>(this.itemsPerPlanet);
+
+            for (Integer chosenPlanetIndex : this.playersChosenPlanet.keySet()) {
+                availablePlanets.remove(chosenPlanetIndex);
+            }
+
+            // If the current player is present, then add it to the card state
+            this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+
+            cardState.setAvailablePlanets(availablePlanets);
+        }
 
         return cardState;
     }
