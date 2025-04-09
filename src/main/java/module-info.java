@@ -37,4 +37,6 @@ module it.polimi.ingsw.is25am {
     opens it.polimi.ingsw.is25am28.GameModel.Session to javafx.fxml;
     exports it.polimi.ingsw.is25am28.GameModel.FileLoader;
     opens it.polimi.ingsw.is25am28.GameModel.FileLoader to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.ActionJSON.State;
+    opens it.polimi.ingsw.is25am28.ActionJSON.State to com.fasterxml.jackson.databind;
 }

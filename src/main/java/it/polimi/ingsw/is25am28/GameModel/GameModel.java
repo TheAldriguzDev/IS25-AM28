@@ -34,8 +34,6 @@ public class GameModel implements SessionSubscriber {
       private RoundSession roundHandler;
       private ShipConstructionSession construction;
 
-
-
       public GameModel( TimeEndedNotifier notifier ){
 
             this.resourceBank = new ResourceBank();

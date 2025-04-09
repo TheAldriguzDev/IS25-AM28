@@ -22,7 +22,7 @@ public class TimerObserver {
                         TimeUnit.MILLISECONDS.sleep(timeout);
                         finished = true;
                         if( subscribed.size() > 0 )
-                              subscribed.forEach( sub -> sub.onTimerEnd() );
+                              subscribed.forEach(TimeSubscriber::onTimerEnd);
 
                   }catch(InterruptedException e){
 
