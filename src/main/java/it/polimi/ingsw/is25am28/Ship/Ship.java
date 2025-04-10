@@ -1213,8 +1213,9 @@ public class Ship implements WidgetTUIGenerator {
 
         for (row = 0; row < this.grid_rows; row++) {
             for (col = 0; col < this.grid_cols; col++) {
-                if( components[row][col] != null )
+                if (components[row][col] != null) {
                     shipState.add(this.components[row][col].toMap());
+                }
             }
         }
 
