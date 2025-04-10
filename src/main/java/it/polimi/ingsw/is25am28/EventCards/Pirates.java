@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.EventCards;
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
@@ -10,10 +11,7 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import javafx.util.Pair;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class Pirates extends EventCard {
     private final int requiredFirepower;
@@ -286,7 +284,6 @@ public class Pirates extends EventCard {
 
     protected void malusEffect() {}
 
-    // TODO: fix pirates' generate state to include the individual shot data instead of the full sequence at once
 
     @Override
     public CardStateJSON generateState() {
@@ -302,18 +299,33 @@ public class Pirates extends EventCard {
             piratesStateJSON.setCardName(getCardName());
             piratesStateJSON.setCardLevel(getCardLevel());
             piratesStateJSON.setCardIsUsable(!hasFinished());
-            piratesStateJSON.setRequiredFirepower(this.requiredFirepower);
-            piratesStateJSON.setGivenCredits(this.givenCredits);
-            piratesStateJSON.setMovementSteps(this.movementSteps);
-            piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
-            piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
             piratesStateJSON.setFirstRound(this.firstRound);
-            if (!firstRound) {
-                ArrayList<String> defeatedPlayers = new ArrayList<>();
-                for (Player player : playersToHit) {
-                    defeatedPlayers.add(player.getNickname());
+
+            if(hasFinished()) {
+                // Update the board
+                piratesStateJSON.setBoard(this.getBoard().generateState());
+
+                // Generate the player info that also includes the ship
+                Map<String, PlayerJSON> playerInfo = new HashMap<>();
+                playerInfo.put(playerOptional.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
+                piratesStateJSON.setPlayersInfo(playerInfo);
+            } else {
+                // If the first round is not finished, send card information to the players
+                if (firstRound) {
+                    piratesStateJSON.setRequiredFirepower(this.requiredFirepower);
+                    piratesStateJSON.setGivenCredits(this.givenCredits);
+                    piratesStateJSON.setMovementSteps(this.movementSteps);
+                    piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
+                } else {
+                    // Send information on the players that are going to be hit, along with the plasmaShot's data and the dice result
+                    // TODO : Piuttosto che inviare la lista dei player sconfitti inviare un boolean (si decide se inviarlo in base a se il player è presente nella lista degli sconfitti)
+                    ArrayList<String> defeatedPlayers = new ArrayList<>();
+                    for (Player player : playersToHit) {
+                        defeatedPlayers.add(player.getNickname());
+                    }
+                    piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
+                    piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
                 }
-                piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
