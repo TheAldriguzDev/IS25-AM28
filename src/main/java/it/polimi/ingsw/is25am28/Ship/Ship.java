@@ -1345,16 +1345,19 @@ public class Ship implements WidgetTUIGenerator {
         colorPool.add(ANSIColors.YELLOW);
         colorPool.add(ANSIColors.CYAN);
 
-        // Indicates how much the stars should be spread apart (min value is 1)
-        int spreadFactor = 64;
-        int symbolPoolSize = UnicodeCharacters.SPACE_SYMBOLS.length + rand.nextInt(0, spreadFactor);
+        // Indicates how much the stars should be spread apart
+        int spreadFactor = 80;
+        int symbolPoolSize = UnicodeCharacters.SPACE_SYMBOLS.length + spreadFactor;
+
+        height += 2;
+        width += 2;
 
         // Generating the empty screen that will act as a spacer
         // when the current component at coords (i, j) is null
-        for (int i = 0; i < height + 2; i++) {
+        for (int i = 0; i < height; i++) {
             spaceString = new StringBuilder();
 
-            for (int j = 0; j < width + 2; j++) {
+            for (int j = 0; j < width; j++) {
                 randIndex = rand.nextInt(0, symbolPoolSize);
                 randColor = rand.nextInt(0, colorPool.size());
 

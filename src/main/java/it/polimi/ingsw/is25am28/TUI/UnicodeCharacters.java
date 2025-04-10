@@ -32,5 +32,5 @@ public class UnicodeCharacters {
 
     // Symbols for space background
     public static final String SMALL_STAR = "\u22C6";
-    public static final String[] SPACE_SYMBOLS = {UnicodeCharacters.SMALL_STAR, "+", "*", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " "};
+    public static final String[] SPACE_SYMBOLS = {UnicodeCharacters.SMALL_STAR, "+", "*"};
 }
