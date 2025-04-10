@@ -8,9 +8,9 @@ import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.State.FirstRoundState;
+import it.polimi.ingsw.is25am28.State.InitialState.FirstRoundState;
 
-public class RoundSession extends Session {
+public final class RoundSession extends Session {
 
     private List<EventCard> deck;
 
@@ -86,7 +86,7 @@ public class RoundSession extends Session {
      * make the game state to progress,
      * updating the card state with the player response
      */
-    public CardStateJSON playCard( Object response ){
+    public CardStateJSON playCard( ActionJSON response ){
         EventCard nextCard;
 
         useCard( response );

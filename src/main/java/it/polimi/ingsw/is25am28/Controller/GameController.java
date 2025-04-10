@@ -2,8 +2,6 @@ package it.polimi.ingsw.is25am28.Controller;
 
 import java.util.*;
 
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
-
 import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.GameModel.GameModel;
@@ -42,7 +40,7 @@ public class GameController {
             GameModel model = register.get( id );
             
             synchronized( model ){
-                  return model.selectTile( player, i, j );
+                  return model.select( player, i, j );
             }
       }
 
@@ -54,7 +52,7 @@ public class GameController {
             GameModel model = register.get( id );
             
             synchronized( model ){
-                  return model.deselectTile( player, i, j );
+                  return model.deselect( player, i, j );
             }
       }
 
@@ -66,7 +64,7 @@ public class GameController {
             GameModel model = register.get( id );
             
             synchronized( model ){
-                  return model.flipTimer( player );
+                  return model.flip( player );
             }
       }
 
@@ -79,10 +77,10 @@ public class GameController {
             
             synchronized( model ){
                   
-                  model.setPlayerEndedBuilding(player, shipProxy, discarded);
+                  model.setPlayerEnded(player, shipProxy, discarded);
 
-                  if( model.hasShipConstructionSessionEnded() ){
-                        return Optional.of(model.initControlSession());
+                  if( model.canGoToNextState() ){
+                        return Optional.of( (List<String>)model.goToNextState() );
                   }
 
                   return Optional.empty();
@@ -112,8 +110,8 @@ public class GameController {
                   
                   model.populateShip(nickname, ship);
 
-                  if( model.hasShipConstructionSessionEnded() ){
-                        return Optional.of(model.initRoundSession());
+                  if( model.canGoToNextState() ){
+                        return Optional.of( (FirstRoundState)model.goToNextState() );
                   }
 
                   return Optional.empty();
@@ -131,7 +129,7 @@ public class GameController {
                   
                   CardStateJSON state = model.playCard(action);
 
-                  if( model.hasRoundSessionEnded() ){
+                  if( model.canGoToNextState() ){
 
                         return Optional.empty();
                   }
@@ -158,7 +156,7 @@ public class GameController {
                   register.remove(id);
 
                   // send result
-                  return model.endGameRewards();
+                  return (Map<String,Map<String,Integer>>)model.goToNextState();
             }
       }
 }

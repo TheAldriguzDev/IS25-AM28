@@ -21,6 +21,7 @@ import it.polimi.ingsw.is25am28.GameModel.Session.ControlSession;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.State.InitialState.InitialControlState;
 
 
 public class ControlSessionTest extends GMTest {
@@ -41,10 +42,10 @@ public class ControlSessionTest extends GMTest {
       
       
                   c = new ControlSession( players );
-                  List<String> p = c.init();
+                  InitialControlState p = c.init();
                   
-                  assertEquals(1, p.size());
-                  assertTrue(p.contains("A"));
+                  assertEquals(1, p.getFix().size());
+                  assertTrue(p.getFix().contains("A"));
 
             }
       
@@ -165,9 +166,9 @@ public class ControlSessionTest extends GMTest {
       
       
                   c = new ControlSession( players );
-                  List<String> p = c.init();
+                  InitialControlState p = c.init();
 
-                  assertEquals(0, p.size());
+                  assertEquals(0, p.getFix().size());
             }
       
             /**

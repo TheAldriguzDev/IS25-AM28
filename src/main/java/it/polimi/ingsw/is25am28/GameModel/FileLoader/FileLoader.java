@@ -25,11 +25,9 @@ public abstract class FileLoader {
                   ObjectMapper mapper = new ObjectMapper();
 
                   json = mapper.readValue( file, Map.class );
-            }
-            catch(FileNotFoundException e){
+            }catch(FileNotFoundException e){
                   throw new Error("file not found with error: " + e.getMessage());
-            }
-            catch(IOException e){
+            }catch(IOException e){
                   throw new Error("file not found with error: " + e.getMessage());
             }
       }

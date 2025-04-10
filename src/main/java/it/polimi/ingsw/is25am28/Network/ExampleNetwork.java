@@ -3,7 +3,7 @@ package it.polimi.ingsw.is25am28.Network;
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Controller.*;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.State.ShipConstructionInitialState;
+import it.polimi.ingsw.is25am28.State.InitialState.InitialState;
 import it.polimi.ingsw.is25am28.TimeObserver.TimeEndedNotifier;
 
 import java.util.*;
@@ -23,7 +23,7 @@ public class ExampleNetwork implements TimeEndedNotifier {
             gameController = new GameController();
       }
 
-      private void sendInitialState( ShipConstructionInitialState state ){
+      private void sendInitialState( InitialState state ){
 
       }
 
@@ -47,7 +47,7 @@ public class ExampleNetwork implements TimeEndedNotifier {
       }
 
       public void onConfigArrived( Map<String,Integer> message  ){
-            Optional<ShipConstructionInitialState> state = queueController.addPlayerToGame( 
+            Optional<InitialState> state = queueController.addPlayerToGame( 
                   PlayerColor.fromInteger(message.get("color")), 
                   message.get("numOfPlayers"), 
                   message.get("lvl")

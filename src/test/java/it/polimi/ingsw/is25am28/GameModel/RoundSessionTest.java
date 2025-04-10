@@ -3,7 +3,7 @@ package it.polimi.ingsw.is25am28.GameModel;
 import org.junit.jupiter.api.Test;
 
 import it.polimi.ingsw.is25am28.GameModel.Session.RoundSession;
-import it.polimi.ingsw.is25am28.State.FirstRoundState;
+import it.polimi.ingsw.is25am28.State.InitialState.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;

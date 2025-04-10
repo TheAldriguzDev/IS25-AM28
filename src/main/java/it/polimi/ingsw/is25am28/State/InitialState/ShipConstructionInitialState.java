@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.State;
+package it.polimi.ingsw.is25am28.State.InitialState;
 
 import java.util.List;
 import java.util.Map;
@@ -7,7 +7,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
 
-public class ShipConstructionInitialState {
+public final class ShipConstructionInitialState extends InitialState {
 
       @JsonProperty("allTiles")
       private List<Map<String,Object>> allTiles;

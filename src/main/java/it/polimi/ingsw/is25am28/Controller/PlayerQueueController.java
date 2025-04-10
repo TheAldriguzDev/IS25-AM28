@@ -6,8 +6,8 @@ import java.util.Optional;
 
 import it.polimi.ingsw.is25am28.GameModel.GameModel;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.State.ShipConstructionInitialState;
 import it.polimi.ingsw.is25am28.TimeObserver.TimeEndedNotifier;
+import it.polimi.ingsw.is25am28.State.InitialState.*;
 
 public class PlayerQueueController {
       private final List<String> waitingQueue = new ArrayList<>();
@@ -45,7 +45,7 @@ public class PlayerQueueController {
        * add one player to the game, configuring it if the player is the leader.
        * returns the initial state of the game if all the players are connected
        */
-      public synchronized Optional<ShipConstructionInitialState> addPlayerToGame( PlayerColor color, int numOfPlayers, int lvl ){
+      public synchronized Optional<InitialState> addPlayerToGame( PlayerColor color, int numOfPlayers, int lvl ){
             String nickname = waitingQueue.getFirst();
 
             // the game model has not been initialized

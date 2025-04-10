@@ -1,31 +1,23 @@
 package it.polimi.ingsw.is25am28.GameModel.Session;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.TimeObserver.TimeSubscriber;
-import it.polimi.ingsw.is25am28.TimeObserver.TimerObserver;
+import it.polimi.ingsw.is25am28.TimeObserver.*;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.GameModel.FileLoader.TileLoader;
-import it.polimi.ingsw.is25am28.State.FlipActionState;
-import it.polimi.ingsw.is25am28.State.ShipConstructionInitialState;
-import it.polimi.ingsw.is25am28.State.State;
+import it.polimi.ingsw.is25am28.State.*;
+import it.polimi.ingsw.is25am28.State.InitialState.*;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Exceptions.TimerFlipException;
+import it.polimi.ingsw.is25am28.Exceptions.*;
 
 /**
  * class that implements the first part of the game, like construction of ships
  */
-public class ShipConstructionSession extends Session implements TimeSubscriber {
+public final class ShipConstructionSession extends Session implements TimeSubscriber {
       private final static int FLIP_TIMES_LV2 = 1;
       private final static int TWO_MIN = 2*1000*60;
       private final static int SHIP_GRID_SIZE = 12;
@@ -213,7 +205,7 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
        * create a state to send that contains all the components onto the board,
        * represented as their simpleClassName.
        */
-      public ShipConstructionInitialState init(){
+      public InitialState init(){
 
             if( level == 2 )
                   clock.flip();

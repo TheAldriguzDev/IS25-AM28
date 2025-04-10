@@ -3,36 +3,36 @@ package it.polimi.ingsw.is25am28.GameModel;
 
 import java.util.*;
 
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
-
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.State.*;
+import it.polimi.ingsw.is25am28.State.InitialState.InitialState;
 import it.polimi.ingsw.is25am28.TimeObserver.TimeEndedNotifier;
 import it.polimi.ingsw.is25am28.Player.*;
 import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Board.*;
+import it.polimi.ingsw.is25am28.Deck.Deck;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Exceptions.*;
-import it.polimi.ingsw.is25am28.GameModel.FileLoader.CardLoader;
-import it.polimi.ingsw.is25am28.GameModel.Session.*;
+import it.polimi.ingsw.is25am28.GameModel.Session.ControlSession;
+import it.polimi.ingsw.is25am28.GameModel.Session.EndGameSession;
+import it.polimi.ingsw.is25am28.GameModel.Session.RoundSession;
+import it.polimi.ingsw.is25am28.GameModel.Session.Session;
+import it.polimi.ingsw.is25am28.GameModel.Session.ShipConstructionSession;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.GameModel.Session.SessionSubscriber;
 
 public class GameModel implements SessionSubscriber {
 
-      // CONSTANTS
-      static private final int DECOY_DECK_SIZE = 2;
 
-      private final List<EventCard> deck;
       private final ResourceBank resourceBank;
       private final Map<String,Player> players = new HashMap<>();
       private final TimeEndedNotifier notifier;
 
       private int level;
       private Board board;
+      private Session session;
+      private Deck deck;
 
-      private ControlSession control;
-      private RoundSession roundHandler;
-      private ShipConstructionSession construction;
 
 
 
@@ -40,38 +40,6 @@ public class GameModel implements SessionSubscriber {
 
             this.resourceBank = new ResourceBank();
             this.notifier = notifier;
-            deck = new ArrayList<>();
-      }
-
-      private void isInShipConstructionSession(){
-            if( construction.hasFinished() )
-                  throw new IllegalSessionStateException();
-      }
-
-      private void isInControlSession(){
-            if( !construction.hasFinished() || control.hasFinished() )
-                  throw new IllegalSessionStateException();
-            
-      }
-
-      private void isInRoundSession(){
-            if( !construction.hasFinished() || !control.hasFinished() )
-                  throw new IllegalSessionStateException();
-      }
-
-      /**
-       * @return the deck used to play the actual game
-       * for level 2 game, the length of the list is 8;
-       */
-      private List<EventCard> generateDeck( int level ) {
-
-            List<EventCard> deck = CardLoader.get().read( board, this.resourceBank, level );
-
-            Collections.shuffle(deck);
-            // random sort
-            deck.sort((_,_) -> (int)( (Math.random() - Math.random())*1000 ) );
-
-            return deck;
       }
 
 
@@ -79,196 +47,74 @@ public class GameModel implements SessionSubscriber {
             notifier.sendTimeEndedNotification( getPlayersNickname() );
       }
 
-      public ShipConstructionInitialState start(){
-            deck.addAll( generateDeck( level ) );
+      public InitialState start(){
 
-            roundHandler = new RoundSession( 
-                  board,
-                  level, 
-                  deck.subList( 3 * DECOY_DECK_SIZE, deck.size() )
+            deck = new Deck(
+                  resourceBank, 
+                  board, 
+                  level
             );
 
-            control = new ControlSession( players );
+            RoundSession r = new RoundSession( 
+                  board,
+                  level, 
+                  deck.getPlayableDeck()
+            );
 
-            construction = new ShipConstructionSession( 
+            ControlSession c = new ControlSession( players );
+
+            ShipConstructionSession s = new ShipConstructionSession( 
                   board,
                   players, 
                   level, 
                   this,
-                  deck.subList(0, 3 * DECOY_DECK_SIZE )
+                  deck.getPreviewDeck()
             );
 
-            return construction.init();
-      }
-      
-      /**
-       * the id is the position in the array, also sent to client
-       */
-      public FlipActionState selectTile( String player, Integer i, Integer j ){
+            EndGameSession e = new EndGameSession(board, players);
 
-            isInShipConstructionSession();
+            s.setNextState( c );
+            c.setNextState( r );
+            r.setNextState( e );
 
-            return construction.select( player, i, j );
-      }
-
-      /**
-       * the id is the position in the array, also sent to client
-       */
-      public FlipActionState deselectTile( String player, Integer i, Integer j ){
-
-            isInShipConstructionSession();
-
-            return construction.deselect( player, i, j );
-      }
-
-      /**
-       * method used by the players to flip the clock and reduce times for other players
-       */
-      public Boolean flipTimer( String player ) throws TimerFlipException {
-
-            isInShipConstructionSession();
-
-            return construction.flip( player );
-      }
-
-      /**
-       * executed whenever player ended construction of its ship.
-       */
-      public GameModel setPlayerEndedBuilding( String playerNickname, List<ComponentJSON> shipProxy, int discarded ){
-
-            isInShipConstructionSession();
-
-            construction.setPlayerEnded( playerNickname, shipProxy,  discarded );
-
-            return this;
-      }
-
-      /**
-       * fix broken ship
-       */
-      public Boolean fixShip( String nickname, List<ComponentHelper<Integer>> ship ){
-
-            isInControlSession();
-
-            return control.fixShip( nickname, ship );
-      }
-
-      /**
-       * populate a ship with lifeforms
-       */
-      public GameModel populateShip( String nickname, List<ComponentHelper<LifeformType>> ship ){
-
-            isInControlSession();
-
-            control.populateShip( nickname, ship );
-
-            return this;
-      }
-
-      /**
-       * method used to play a card
-       */
-      public CardStateJSON playCard( ActionJSON action ){
+            session = s;
             
-            isInRoundSession();
-
-            return roundHandler.playCard(action);
+            return s.init();
       }
 
-      /**
-       * add credits to each player, based on the
-       * number of rewards obtained at the end of the game
-       */
-      public Map<String,Map<String,Integer>> endGameRewards(){
-            List<Player> players = board.getPlayers();
+      public InitialState start( List<EventCard> mockDeck ){
 
-            // add credits based on position
-            for( int i = 0; i < players.size(); i++ ){
-                  players.get(i).addCredits( 4 - i );
-            }
+            deck = new Deck(
+                  resourceBank, 
+                  board, 
+                  level
+            );
 
+            RoundSession r = new RoundSession( 
+                  board,
+                  level, 
+                  mockDeck
+            );
 
+            ControlSession c = new ControlSession( players );
 
-            HashSet<Player> withTheBestShip = new HashSet<>();
-            Map<String,Map<String,Integer>> map = new HashMap<>();
-            int min = 0; // used only if no player win
+            ShipConstructionSession s = new ShipConstructionSession( 
+                  board,
+                  players, 
+                  level, 
+                  this,
+                  deck.getPreviewDeck()
+            );
 
-            if( players.size() > 0 ){
-                  min = players.get(0).getShip().getExposedConnectorAmount();
-                  withTheBestShip.add(players.get(0));
+            EndGameSession e = new EndGameSession(board, players);
 
-            }
+            s.setNextState( c );
+            c.setNextState( r );
+            r.setNextState( e );
 
-            for( int i = 0; i < players.size(); i++ ){
-                  Player player = players.get(i);
-                  int curr = player.getShip().getExposedConnectorAmount();
-
-                  if( curr < min ){
-                        withTheBestShip.clear();
-                        withTheBestShip.add(player);
-                        curr = min;
-                  }else if( curr == min ){
-                        withTheBestShip.add(player);
-                  }
-            }
-
-            // add 2 credits to all the players with the best ship
-            withTheBestShip.forEach(player -> player.addCredits(2));
-
-            players = this.players.values().stream().toList();
-
-            // add credits for storage
-            players.forEach( player -> {
-                  int value = player.getShip().getAllItemValue();
-                  player.addCredits( player.isEliminated() ? (int)(value + 1)/2 : value );
-            });
-
-            this.players.forEach( (k,player) -> {
-                  Map<String,Integer> descriptor = new HashMap<>();
-                  
-                  descriptor.put("credits", player.getCredits() );
-
-                  if( board.getEliminatedPlayers().contains(player) ){
-                        descriptor.put("position", -1 );
-                  }else{
-                        descriptor.put("position", board.getPlayers().indexOf(player) + 1 );
-                  }
-                  
-                  map.put( k, descriptor );
-            });
-
-            return map;
-      }
-
-      public boolean hasControlSessionEnded(){
-            return control.hasFinished();
-      }
-
-      public boolean hasRoundSessionEnded(){
-            return roundHandler.hasFinished();
-      }
-
-      public boolean hasShipConstructionSessionEnded(){
-            return construction.hasFinished();
-      }
-
-      /**
-       * initialize the control state. Must be called at the end of construction session
-       */
-      public List<String> initControlSession(){
-
-            isInControlSession();
+            session = s;
             
-            return control.init();
-      }
-      /**
-       * initialize the round. Must be called at the end of control session
-       */
-      public FirstRoundState initRoundSession(){
-
-            isInRoundSession();
-
-            return roundHandler.init();
+            return s.init();
       }
 
       /**
@@ -336,14 +182,6 @@ public class GameModel implements SessionSubscriber {
             return board;
       }
 
-      /**
-       * debug only
-       */
-      public GameModel setDeck( List<EventCard> deck ){
-            roundHandler.setDeck(deck);
-            return this;
-      }
-
       public GameModel setLevel( int level ){
             this.level = level;
 
@@ -356,4 +194,64 @@ public class GameModel implements SessionSubscriber {
 
             return this;
       }
+
+      /**
+       * the id is the position in the array, also sent to client
+       */
+      public FlipActionState select( String player, Integer i, Integer j ){
+            return session.select(player, i, j);
+      }
+
+      /**
+       * the id is the position in the array, also sent to client
+       */
+      public FlipActionState deselect( String player, Integer i, Integer j ){
+            return session.deselect(player, i, j);
+      }
+
+      /**
+       * method used by the players to flip the clock and reduce times for other players
+       */
+      public Boolean flip( String player ) throws TimerFlipException {
+            return session.flip(player);
+      }
+
+      /**
+       * executed whenever player ended construction of its ship.
+       */
+      public Session setPlayerEnded( String playerNickname, List<ComponentJSON> shipProxy, int discarded ){
+            return session.setPlayerEnded(playerNickname, shipProxy, discarded);
+      }
+
+      /**
+       * fix broken ship
+       */
+      public Boolean fixShip( String nickname, List<ComponentHelper<Integer>> ship ){
+            return session.fixShip(nickname, ship);
+      }
+
+      /**
+       * populate a ship with lifeforms
+       */
+      public Session populateShip( String nickname, List<ComponentHelper<LifeformType>> ship ){
+            return session.populateShip(nickname, ship);
+      }
+
+      /**
+       * method used to play a card
+       */
+      public CardStateJSON playCard( ActionJSON action ){
+            return session.playCard(action);
+      }
+
+      public boolean canGoToNextState(){
+            return session.hasFinished();
+      }
+
+      public Object goToNextState(){
+            session = session.getNextState();
+
+            return session.init();
+      }
+
 }

@@ -8,13 +8,14 @@ import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
 
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Ship.Ship;
+import it.polimi.ingsw.is25am28.State.InitialState.InitialControlState;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
 import it.polimi.ingsw.is25am28.Exceptions.*;
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 
 
-public class ControlSession extends Session {
+public final class ControlSession extends Session {
       
       private final Map<String,Player> players;
       private final HashSet<String> toFix = new HashSet<>();
@@ -24,7 +25,7 @@ public class ControlSession extends Session {
             this.players = players;
       }
 
-      public List<String> init(){
+      public InitialControlState init(){
 
             for( Player player : players.values() ) {
 
@@ -33,7 +34,11 @@ public class ControlSession extends Session {
                   }
             }
 
-            return toFix.stream().toList();
+            InitialControlState state = new InitialControlState();
+
+            state.setFix(toFix.stream().toList());
+
+            return state;
       }
 
       /**
