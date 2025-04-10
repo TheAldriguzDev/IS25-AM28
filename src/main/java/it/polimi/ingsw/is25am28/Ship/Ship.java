@@ -1330,13 +1330,20 @@ public class Ship implements WidgetTUIGenerator {
      */
     private List<String> generateEmptySpaceScreen() {
         List<String> emptySpaceScreen = new ArrayList<>();
+        List<String> colorPool = new ArrayList<>();
         Random rand = new Random();
         StringBuilder spaceString;
-        String tmpSymbol;
+        int randIndex, randColor;
 
         int scale = 3;
         int height = scale;
         int width = 3 * scale + 2;
+
+        // Aggregates all the possible colors that the space symbols can have
+        colorPool.add(ANSIColors.MAGENTA);
+        colorPool.add(ANSIColors.RED);
+        colorPool.add(ANSIColors.YELLOW);
+        colorPool.add(ANSIColors.CYAN);
 
         // Indicates how much the stars should be spread apart (min value is 1)
         int spreadFactor = 64;
@@ -1348,25 +1355,16 @@ public class Ship implements WidgetTUIGenerator {
             spaceString = new StringBuilder();
 
             for (int j = 0; j < width + 2; j++) {
-                int randIdx = rand.nextInt(0, symbolPoolSize);
+                randIndex = rand.nextInt(0, symbolPoolSize);
+                randColor = rand.nextInt(0, colorPool.size());
 
-                if (randIdx < UnicodeCharacters.SPACE_SYMBOLS.length) {
-                    tmpSymbol = UnicodeCharacters.SPACE_SYMBOLS[randIdx];
-
-                    switch (rand.nextInt(3)) {
-                        case 0 -> {
-                            tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.MAGENTA);
-                        }
-                        case 1 -> {
-                            tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.RED);
-                        }
-                        case 2 -> {
-                            tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.YELLOW);
-                        }
-                    }
-
-                    tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.MAGENTA);
-                    spaceString.append(tmpSymbol);
+                if (randIndex < UnicodeCharacters.SPACE_SYMBOLS.length) {
+                    spaceString.append(
+                        PrintUtils.addColor(
+                            UnicodeCharacters.SPACE_SYMBOLS[randIndex],
+                            colorPool.get(randColor)
+                        )
+                    );
                 }
                 else {
                     spaceString.append(SPACE);
