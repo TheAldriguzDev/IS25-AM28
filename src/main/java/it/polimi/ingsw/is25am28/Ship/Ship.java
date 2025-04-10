@@ -1361,8 +1361,6 @@ public class Ship implements WidgetTUIGenerator {
                         case 2 -> {
                             tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.YELLOW);
                         }
-
-
                     }
 
                     tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.MAGENTA);

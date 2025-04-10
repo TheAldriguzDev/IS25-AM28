@@ -49,7 +49,8 @@ public final class Shield extends Component {
 
         // Creating the custom border character list that will be
         // used by the wrapper to create the border
-        List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
+        // List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
+        List<String> customBorderScheme = generateComponentCustomBorder();
 
 //        customBorderScheme.set(0, "╔");
 //        customBorderScheme.set(1, "╗");
@@ -62,10 +63,10 @@ public final class Shield extends Component {
 //        customBorderScheme.set(7, "║");
 
         //Adding this component's connectors to the border scheme
-        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
-        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
-        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
-        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
+//        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
+//        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
+//        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
+//        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
 
         switch (this.getDirection()) {
             // 0 --> Shield is covering top and right sides

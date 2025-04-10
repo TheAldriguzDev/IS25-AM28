@@ -310,7 +310,6 @@ public class WidgetTUI {
                 tmpString.append(borderCharacters.get(11));
             }
             else {
-                // Left Side Special Symbol
                 tmpString.append(borderCharacters.get(7));
             }
 

@@ -237,8 +237,8 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
             return componentWidget;
       }
 
-      private List<String> generateComponentCustomBorder() {
-            List<String> customBorderScheme = WidgetTUI.defaultBorderCharacters;
+      protected List<String> generateComponentCustomBorder() {
+            List<String> customBorderScheme = new ArrayList<>(WidgetTUI.defaultBorderCharacters);
 
             customBorderScheme.set(0, "╔");
             customBorderScheme.set(1, "╗");
