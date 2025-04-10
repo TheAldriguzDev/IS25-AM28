@@ -72,7 +72,6 @@ public class WidgetTUI {
 
         defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_LEFT_SINGLE_LINE);
         defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_LEFT_SINGLE_LINE);
-
     }
 
     // Creates a no-content widget
@@ -142,7 +141,7 @@ public class WidgetTUI {
                         // Otherwise, since this widget's content has already been added to the
                         // composition, there will be placed instead an empty line of the same length
                         // of the widget's width
-                        composedLine.append(getSpace().repeat(widgets.get(j).getWidth()));
+                        composedLine.append(SPACE.repeat(widgets.get(j).getWidth()));
                     }
                 }
 
@@ -237,7 +236,7 @@ public class WidgetTUI {
                             // string (of length given by the current screen's max width) that fills the
                             // gap that would have been filled by the current screen if it hadn't been all
                             // concatenated already in the previous iterations.
-                            composedLine.append(PrintUtils.getSpace().repeat(allScreensMaxWidths.get(j)));
+                            composedLine.append(SPACE.repeat(allScreensMaxWidths.get(j)));
                         }
                     }
                 }
@@ -325,9 +324,11 @@ public class WidgetTUI {
             if (i == (width / 2)) {
                 // Upper Side Center Special Symbol
                 tmpString.append(borderCharacters.get(8));
-            } else if (i == (width / 2) - 2) {
+            }
+            else if (i == (width / 2) - 2) {
                 tmpString.append(borderCharacters.get(12));
-            } else if (i == (width / 2) + 2) {
+            }
+            else if (i == (width / 2) + 2) {
                 tmpString.append(borderCharacters.get(13));
             }
             else {
@@ -346,9 +347,11 @@ public class WidgetTUI {
             if (i == (height / 2)) {
                 // Left Side Center Special Symbol
                 tmpString.append(borderCharacters.get(11));
-            } else if (i == (height / 2) - 1) {
+            }
+            else if (i == (height / 2) - 1) {
                 tmpString.append(borderCharacters.get(18));
-            } else if (i == (height / 2) + 1) {
+            }
+            else if (i == (height / 2) + 1) {
                 tmpString.append(borderCharacters.get(19));
             }
             else {
@@ -363,15 +366,17 @@ public class WidgetTUI {
 
             // Adding right-side padding
             if (oldLineLen < width - 2) {
-                tmpString.append(PrintUtils.getSpace().repeat(width - 2 - oldLineLen));
+                tmpString.append(SPACE.repeat(width - 2 - oldLineLen));
             }
 
             if (i == (height / 2)) {
                 // Right Side Center Special Symbol
                 tmpString.append(borderCharacters.get(9));
-            } else if (i == (height / 2) - 1) {
+            }
+            else if (i == (height / 2) - 1) {
                 tmpString.append(borderCharacters.get(14));
-            } else if (i == (height / 2) + 1) {
+            }
+            else if (i == (height / 2) + 1) {
                 tmpString.append(borderCharacters.get(15));
             }
             else {
@@ -391,9 +396,11 @@ public class WidgetTUI {
             if (i == (width / 2)) {
                 // Bottom Side Center Special Symbol
                 tmpString.append(borderCharacters.get(10));
-            } else if (i == (width / 2) - 2) {
+            }
+            else if (i == (width / 2) - 2) {
                 tmpString.append(borderCharacters.get(16));
-            } else if (i == (width / 2) + 2) {
+            }
+            else if (i == (width / 2) + 2) {
                 tmpString.append(borderCharacters.get(17));
             }
             else {
@@ -410,6 +417,9 @@ public class WidgetTUI {
 
     /**
      * Removes one border layer from this screen
+     * (NOTE: Since the passed object is not a widget, there's no way to know if
+     *        the screen was wrapped in the past, therefore this method should be
+     *        used with care as it can delete parts of the screen if used incorrectly)
      */
     public static List<String> unwrapScreenFromBorder(List<String> screen) {
         if (screen != null) {
@@ -446,7 +456,7 @@ public class WidgetTUI {
     public void setHeight(int height) {
         // Extends the screen to fit the new height
         while (this.screen.size() < height) {
-            this.screen.add(getSpace().repeat(this.width));
+            this.screen.add(SPACE.repeat(this.width));
         }
 
         this.height = height;
@@ -478,7 +488,7 @@ public class WidgetTUI {
                 padding = this.width - tmp.length();
 
                 if (padding > 0) {
-                    tmp += PrintUtils.getSpace().repeat(padding);
+                    tmp += SPACE.repeat(padding);
                     this.screen.set(i, tmp);
                 }
             }
@@ -538,7 +548,7 @@ public class WidgetTUI {
 
     /**
      * Centers this widget's screen contents by adding padding
-     * spaces to both sides of each screen line
+     * spaces to both sides of each screen line, in equal amount
      */
     public WidgetTUI centerWidgetScreen() {
         List<String> paddedScreen;
@@ -556,9 +566,9 @@ public class WidgetTUI {
             padding = ((this.width - strlen) / 2) - this.layerCount;
 
             if (padding > 0) {
-                paddedString.append(getSpace().repeat(padding));
+                paddedString.append(SPACE.repeat(padding));
                 paddedString.append(trimmed);
-                paddedString.append(getSpace().repeat(padding));
+                paddedString.append(SPACE.repeat(padding));
 
                 paddedScreen.add(paddedString.toString());
             }
@@ -607,6 +617,16 @@ public class WidgetTUI {
         return this.screen;
     }
 
+    /**
+     * Adds the given amount of padding spaces for each side.
+     * The idea is to follow the HTML box model, thus this method works just like
+     * adding padding pixels in CSS to an HTML tag
+     *
+     * @param top The amount of padding to add to the top of this widget's screen
+     * @param right The amount of padding to add to the right of this widget's screen
+     * @param bottom The amount of padding to add to the bottom of this widget's screen
+     * @param left The amount of padding to add to the left of this widget's scren
+     */
     public WidgetTUI addPadding(int top, int right, int bottom, int left) {
         List<String> screen;
         String line;
@@ -615,7 +635,7 @@ public class WidgetTUI {
         // Adding top padding to this widget's screen
         if (top > 0) {
             screen = new ArrayList<>();
-            line = PrintUtils.getSpace().repeat(this.getWidth());
+            line = SPACE.repeat(this.getWidth());
             this.height += top;
 
             while (top > 0) {
@@ -636,7 +656,7 @@ public class WidgetTUI {
         // Adding left padding to this widget's screen
         if (left > 0) {
             screenLen = this.getHeight();
-            line = PrintUtils.getSpace().repeat(left);
+            line = SPACE.repeat(left);
 
             for (int i = 0; i < screenLen; i++) {
                 this.screen.set(i, line + this.screen.get(i));
@@ -723,7 +743,7 @@ public class WidgetTUI {
 
             // Adding right-side padding
             if (oldLineLen < this.width - 2) {
-                tmpString.append(PrintUtils.getSpace().repeat(this.width - 2 - oldLineLen));
+                tmpString.append(SPACE.repeat(this.width - 2 - oldLineLen));
             }
 
             if (i == (this.height / 2)) {

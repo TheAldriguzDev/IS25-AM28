@@ -3,7 +3,6 @@ package it.polimi.ingsw.is25am28.Components;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.*;
-import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,24 +103,17 @@ public final class Storage extends Component {
 
         // Creating the custom border character list that will be
         // used by the wrapper to create the border
-        //List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
         List<String> customBorderScheme = generateComponentCustomBorder();
-
-        // Adding this component's connectors to the border scheme
-//        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
-//        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
-//        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
-//        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
 
         // Adding the name (if this is a special storage, it gets colored with RED)
         if (this.isSpecialStorage) {
-            nameAlias = getSpace() + addColor(Storage.alias, ANSIColors.RED);
+            nameAlias = SPACE + addColor(Storage.alias, ANSIColors.RED);
         }
         else {
-            nameAlias = getSpace() + Storage.alias;
+            nameAlias = SPACE + Storage.alias;
         }
 
-        screen.add(nameAlias + getSpace().repeat(width - Storage.alias.length() - 1));
+        screen.add(nameAlias + SPACE.repeat(width - Storage.alias.length() - 1));
 
         // Adding the storage string and the padding
         for (int i = 1; i < height; i++) {
@@ -133,7 +125,7 @@ public final class Storage extends Component {
                     paddedString = new StringBuilder();
 
                     // Padding before the storage indicator
-                    paddedString.append(getSpace().repeat(padding));
+                    paddedString.append(SPACE.repeat(padding));
 
                     // Adding alternated storage indicators
                     for (int k = 0; k < storageStringLength; k++) {
@@ -153,16 +145,16 @@ public final class Storage extends Component {
                             }
                         }
                         else {
-                            paddedString.append(getSpace());
+                            paddedString.append(SPACE);
                         }
                     }
 
                     // Padding after the storage indicator
-                    paddedString.append(getSpace().repeat(padding));
+                    paddedString.append(SPACE.repeat(padding));
                     break;
                 }
                 else {
-                    paddedString.append(getSpace());
+                    paddedString.append(SPACE);
                 }
             }
             screen.add(paddedString.toString());

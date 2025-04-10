@@ -2,7 +2,6 @@ package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.Lifeform.*;
 import it.polimi.ingsw.is25am28.TUI.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.util.ArrayList;
@@ -98,17 +97,10 @@ public final class Cabin extends Component {
 
         // Creating the custom border character list that will be
         // used by the wrapper to create the border
-        //List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding this component's connectors to the border scheme
-//        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
-//        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
-//        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
-//        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
-
         nameAlias = new StringBuilder();
-        String nameAliasRightPadding = getSpace().repeat(width - Cabin.alias.length() - 1);
+        String nameAliasRightPadding = SPACE.repeat(width - Cabin.alias.length() - 1);
 
         for (int i = 1; i < height; i++) {
             paddedString = new StringBuilder();
@@ -117,15 +109,15 @@ public final class Cabin extends Component {
                 if (this.getInhabitants().isEmpty()) {
                     // Case 0 - Empty cabin
                     padding = (width - 3) / 2;
-                    nameAlias.append(getSpace());
+                    nameAlias.append(SPACE);
                     nameAlias.append(Cabin.alias);
                     nameAlias.append(nameAliasRightPadding);
 
-                    paddedString.append(getSpace().repeat(padding));
-                    paddedString.append(addColor(getSpace(), ANSIColors.BRIGHT_BACKGROUND_WHITE));
-                    paddedString.append(getSpace());
-                    paddedString.append(addColor(getSpace(), ANSIColors.BRIGHT_BACKGROUND_WHITE));
-                    paddedString.append(getSpace().repeat(padding));
+                    paddedString.append(SPACE.repeat(padding));
+                    paddedString.append(addColor(SPACE, ANSIColors.BRIGHT_BACKGROUND_WHITE));
+                    paddedString.append(SPACE);
+                    paddedString.append(addColor(SPACE, ANSIColors.BRIGHT_BACKGROUND_WHITE));
+                    paddedString.append(SPACE.repeat(padding));
                 }
                 else {
                     LifeformType storedLifeformType = this.getInhabitants().getFirst().getLifeformType();
@@ -135,14 +127,14 @@ public final class Cabin extends Component {
                         padding = (width - 3) / 2;
 
                         // Creating the name
-                        nameAlias.append(getSpace());
+                        nameAlias.append(SPACE);
                         nameAlias.append(addColor(Cabin.alias, ANSIColors.WHITE));
 
                         // Adds a GOLDEN STAR as a tag to specify that the cabin is the core
                         if (this.isCore()) {
-                            nameAlias.append(getSpace());
+                            nameAlias.append(SPACE);
                             nameAlias.append(addColor(coreLabel, ANSIColors.BRIGHT_YELLOW));
-                            nameAlias.append(getSpace().repeat(width - coreLabel.length() - Cabin.alias.length() - 2));
+                            nameAlias.append(SPACE.repeat(width - coreLabel.length() - Cabin.alias.length() - 2));
                         }
                         else {
                             // Otherwise just adds the remaining right padding spaces to the name alias string
@@ -151,52 +143,52 @@ public final class Cabin extends Component {
 
                         // Creating the housing string
                         // Left padding
-                        paddedString.append(getSpace().repeat(padding));
+                        paddedString.append(SPACE.repeat(padding));
 
                         if (this.getInhabitants().size() > 1) {
                             paddedString.append(addColor(addColor("A", ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
                             // paddedString.append(addColor(addColor(UnicodeCharacters.ASTRONAUT_EMOJI, ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
-                            paddedString.append(getSpace());
+                            paddedString.append(SPACE);
                             paddedString.append(addColor(addColor("A", ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
                             // paddedString.append(addColor(addColor(UnicodeCharacters.ASTRONAUT_EMOJI, ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
                         }
                         else {
                             paddedString.append(addColor(addColor("A", ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
                             // paddedString.append(addColor(addColor(UnicodeCharacters.ASTRONAUT_EMOJI, ANSIColors.BLACK), ANSIColors.BRIGHT_BACKGROUND_WHITE));
-                            paddedString.append(getSpace());
-                            paddedString.append(addColor(getSpace(), ANSIColors.BRIGHT_BACKGROUND_WHITE));
+                            paddedString.append(SPACE);
+                            paddedString.append(addColor(SPACE, ANSIColors.BRIGHT_BACKGROUND_WHITE));
                         }
 
                         // Right padding
-                        paddedString.append(getSpace().repeat(padding));
+                        paddedString.append(SPACE.repeat(padding));
                     }
                     else if (storedLifeformType == LifeformType.PURPLE_ALIEN) {
                         // Case 2 - Cabin has a PURPLE ALIEN
 
                         // Creating the name
-                        nameAlias.append(getSpace());
+                        nameAlias.append(SPACE);
                         nameAlias.append(addColor(Cabin.alias, ANSIColors.MAGENTA));
                         nameAlias.append(nameAliasRightPadding);
 
                         padding = (width - 1) / 2;
-                        paddedString.append(getSpace().repeat(padding));
+                        paddedString.append(SPACE.repeat(padding));
                         paddedString.append(addColor(addColor("A", ANSIColors.BLACK), ANSIColors.BACKGROUND_MAGENTA));
                         // paddedString.append(addColor(addColor(UnicodeCharacters.ALIEN_EMOJI, ANSIColors.BLACK), ANSIColors.BACKGROUND_MAGENTA));
-                        paddedString.append(getSpace().repeat(padding));
+                        paddedString.append(SPACE.repeat(padding));
                     }
                     else {
                         // Case 3 - Cabin has a BROWN ALIEN
 
                         // Creating the name
-                        nameAlias.append(getSpace());
+                        nameAlias.append(SPACE);
                         nameAlias.append(addColor(Cabin.alias, ANSIColors.YELLOW));
                         nameAlias.append(nameAliasRightPadding);
 
                         padding = (width - 1) / 2;
-                        paddedString.append(getSpace().repeat(padding));
+                        paddedString.append(SPACE.repeat(padding));
                         paddedString.append(addColor(addColor("A", ANSIColors.BLACK), ANSIColors.BACKGROUND_YELLOW));
                         // paddedString.append(addColor(addColor(UnicodeCharacters.ALIEN_EMOJI, ANSIColors.BLACK), ANSIColors.BACKGROUND_YELLOW));
-                        paddedString.append(getSpace().repeat(padding));
+                        paddedString.append(SPACE.repeat(padding));
                     }
                 }
 
@@ -205,7 +197,7 @@ public final class Cabin extends Component {
             }
             else {
                 // Adding a line full of spaces
-                tmpScreen.add(getSpace().repeat(width));
+                tmpScreen.add(SPACE.repeat(width));
             }
         }
 

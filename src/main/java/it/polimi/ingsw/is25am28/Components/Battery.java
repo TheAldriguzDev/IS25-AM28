@@ -1,11 +1,12 @@
 package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.TUI.*;
-import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
 
 public final class Battery extends Component {
     public static final String alias = "BATTERY";
@@ -77,7 +78,7 @@ public final class Battery extends Component {
         int width = 3 * height + 2;
 
         List<String> screen = new ArrayList<String>();
-        String nameAlias = PrintUtils.getSpace() + Battery.alias;
+        String nameAlias = SPACE + Battery.alias;
         StringBuilder paddedString;
         int padding;
 
@@ -87,17 +88,10 @@ public final class Battery extends Component {
 
         // Creating the custom border character list that will be
         // used by the wrapper to create the border
-        //List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding this component's connectors to the border scheme
-//        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
-//        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
-//        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
-//        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
-
         // Adding the name
-        screen.add(nameAlias + PrintUtils.getSpace().repeat(width - nameAlias.length()));
+        screen.add(nameAlias + SPACE.repeat(width - nameAlias.length()));
 
         // Adding the battery indicator and all the padding spaces
         for (int i = 1; i < height; i++) {
@@ -106,7 +100,7 @@ public final class Battery extends Component {
                 padding = (width - batteryStringLength) / 2;
 
                 // Padding before the energy indicator
-                paddedString.append(PrintUtils.getSpace().repeat(padding));
+                paddedString.append(SPACE.repeat(padding));
 
                 // Adding alternated battery indicators
                 for (int k = 0; k < batteryStringLength; k++) {
@@ -120,16 +114,16 @@ public final class Battery extends Component {
                         }
                     }
                     else {
-                        paddedString.append(PrintUtils.getSpace());
+                        paddedString.append(SPACE);
                     }
                 }
 
                 // Padding after the energy indicator
-                paddedString.append(PrintUtils.getSpace().repeat(padding));
+                paddedString.append(SPACE.repeat(padding));
                 screen.add(paddedString.toString());
             }
             else {
-                screen.add(PrintUtils.getSpace().repeat(width));
+                screen.add(SPACE.repeat(width));
             }
         }
 

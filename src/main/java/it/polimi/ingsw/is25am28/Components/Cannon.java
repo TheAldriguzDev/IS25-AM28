@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Components;
 
-import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
@@ -74,18 +73,11 @@ public final class Cannon extends Component {
 
         // Creating the custom border character list that will be
         // used by the wrapper to create the border
-        //List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding this component's connectors to the border scheme
-//        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
-//        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
-//        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
-//        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
-
         // Adding the component's name
-        paddedString = new StringBuilder(getSpace() + Cannon.alias);
-        screen.add(paddedString + getSpace().repeat(width - paddedString.length()));
+        paddedString = new StringBuilder(SPACE + Cannon.alias);
+        screen.add(paddedString + SPACE.repeat(width - paddedString.length()));
 
         for (int i = 1; i < height; i++) {
             paddedString = new StringBuilder();
@@ -96,62 +88,62 @@ public final class Cannon extends Component {
                     case 0 -> {
                         if (this.getFirePower() == 2) {
                             padding = (width - 3) / 2;
-                            paddedString.append(getSpace().repeat(padding));
+                            paddedString.append(SPACE.repeat(padding));
                             paddedString.append(UnicodeCharacters.SINGLE_TOP_ARROW);
-                            paddedString.append(getSpace());
+                            paddedString.append(SPACE);
                         } else {
                             padding = (width - 1) / 2;
-                            paddedString.append(getSpace().repeat(padding));
+                            paddedString.append(SPACE.repeat(padding));
                         }
                         paddedString.append(UnicodeCharacters.SINGLE_TOP_ARROW);
-                        paddedString.append(getSpace().repeat(padding));
+                        paddedString.append(SPACE.repeat(padding));
                     }
                     // 1 --> Cannon is pointing to the right of the ship
                     case 1 -> {
                         if (this.getFirePower() == 1) {
                             padding = (width - 3) / 2;
-                            paddedString.append(getSpace().repeat(padding));
+                            paddedString.append(SPACE.repeat(padding));
                             paddedString.append(UnicodeCharacters.SINGLE_RIGHT_ARROW);
-                            paddedString.append(getSpace());
+                            paddedString.append(SPACE);
                         } else {
                             padding = (width - 1) / 2;
-                            paddedString.append(getSpace().repeat(padding));
+                            paddedString.append(SPACE.repeat(padding));
                         }
                         paddedString.append(UnicodeCharacters.SINGLE_RIGHT_ARROW);
-                        paddedString.append(getSpace().repeat(padding));
+                        paddedString.append(SPACE.repeat(padding));
                     }
                     // 2 --> Cannon is pointing to the back of the ship
                     case 2 -> {
                         if (this.getFirePower() == 1) {
                             padding = (width - 3) / 2;
-                            paddedString.append(getSpace().repeat(padding));
+                            paddedString.append(SPACE.repeat(padding));
                             paddedString.append(UnicodeCharacters.SINGLE_BOTTOM_ARROW);
-                            paddedString.append(getSpace());
+                            paddedString.append(SPACE);
                         } else {
                             padding = (width - 1) / 2;
-                            paddedString.append(getSpace().repeat(padding));
+                            paddedString.append(SPACE.repeat(padding));
                         }
                         paddedString.append(UnicodeCharacters.SINGLE_BOTTOM_ARROW);
-                        paddedString.append(getSpace().repeat(padding));
+                        paddedString.append(SPACE.repeat(padding));
                     }
                     // 3 --> Cannon is pointing to the left of the ship
                     case 3 -> {
                         if (this.getFirePower() == 1) {
                             padding = (width - 3) / 2;
-                            paddedString.append(getSpace().repeat(padding));
+                            paddedString.append(SPACE.repeat(padding));
                             paddedString.append(UnicodeCharacters.SINGLE_LEFT_ARROW);
-                            paddedString.append(getSpace());
+                            paddedString.append(SPACE);
                         } else {
                             padding = (width - 1) / 2;
-                            paddedString.append(getSpace().repeat(padding));
+                            paddedString.append(SPACE.repeat(padding));
                         }
                         paddedString.append(UnicodeCharacters.SINGLE_LEFT_ARROW);
-                        paddedString.append(getSpace().repeat(padding));
+                        paddedString.append(SPACE.repeat(padding));
                     }
                 }
             }
             else {
-                paddedString.append(getSpace().repeat(width));
+                paddedString.append(SPACE.repeat(width));
             }
 
             screen.add(paddedString.toString());

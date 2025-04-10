@@ -1,12 +1,12 @@
 package it.polimi.ingsw.is25am28.Components;
 
-
-import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
-import it.polimi.ingsw.is25am28.TUI.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
 
 public final class Structural extends Component {
       public static final String alias = "STRUCT";
@@ -24,22 +24,15 @@ public final class Structural extends Component {
 
             // Creating the custom border character list that will be
             // used by the wrapper to create the border
-            //List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
             List<String> customBorderScheme = generateComponentCustomBorder();
 
-            // Adding this component's connectors to the border scheme
-//            customBorderScheme.set(8, "" + this.getTopSide().ordinal());
-//            customBorderScheme.set(9, "" + this.getRightSide().ordinal());
-//            customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
-//            customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
-
             List<String> screen = new ArrayList<String>();
-            String nameAlias = PrintUtils.getSpace() + Structural.alias;
+            String nameAlias = SPACE + Structural.alias;
 
-            screen.add(nameAlias + PrintUtils.getSpace().repeat(width - nameAlias.length()));
+            screen.add(nameAlias + SPACE.repeat(width - nameAlias.length()));
 
             for (int i = 1; i < height; i++) {
-                  screen.add(PrintUtils.getSpace() + "\u2591".repeat(width - 2) + PrintUtils.getSpace());
+                  screen.add(SPACE + UnicodeCharacters.BACKGROUND_MESH.repeat(width - 2) + SPACE);
             }
 
             return WidgetTUI.wrapScreenWithBorder(screen, customBorderScheme);

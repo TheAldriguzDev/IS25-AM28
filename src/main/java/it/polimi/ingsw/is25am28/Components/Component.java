@@ -237,31 +237,14 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
             return componentWidget;
       }
 
+      /**
+       * @return A custom border made specifically to show the actual
+       *         connector pipes on each side of the ship's components
+       */
       protected List<String> generateComponentCustomBorder() {
             List<String> customBorderScheme = new ArrayList<>(WidgetTUI.defaultBorderCharacters);
 
-//            customBorderScheme.set(0, "╔");
-//            customBorderScheme.set(1, "╗");
-//            customBorderScheme.set(2, "╝");
-//            customBorderScheme.set(3, "╚");
-//
-//            customBorderScheme.set(4, "═");
-//            customBorderScheme.set(5, "║");
-//            customBorderScheme.set(6, "═");
-//            customBorderScheme.set(7, "║");
-
-            customBorderScheme.set(0, "┌");
-            customBorderScheme.set(1, "┐");
-            customBorderScheme.set(2, "┘");
-            customBorderScheme.set(3, "└");
-
-            customBorderScheme.set(4, "─");
-            customBorderScheme.set(5, "│");
-            customBorderScheme.set(6, "─");
-            customBorderScheme.set(7, "│");
-
-            //Adding this component's connectors to the border scheme
-
+            // Adding this component's connectors to the border scheme
             switch (getTopSide().ordinal()) {
                   case 0 -> {
                         customBorderScheme.set(12, "─");
@@ -353,25 +336,6 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
                         customBorderScheme.set(19, "╡");
                   }
             }
-
-
-
-//            customBorderScheme.set(8, "╨");
-//            customBorderScheme.set(9, "╞");
-//            customBorderScheme.set(10, "╥");
-//            customBorderScheme.set(11, "╡");
-
-//            customBorderScheme.set(12, "╜");
-//            customBorderScheme.set(13, "╙");
-
-//            customBorderScheme.set(14, "╞");
-//            customBorderScheme.set(15, "╞");
-
-//            customBorderScheme.set(16, "╖");
-//            customBorderScheme.set(17, "╓");
-
-//            customBorderScheme.set(18, "╡");
-//            customBorderScheme.set(19, "╡");
 
             return customBorderScheme;
       }

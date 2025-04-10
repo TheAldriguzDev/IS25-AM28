@@ -758,6 +758,7 @@ public class PrintTest {
 
     @Test
     void widget_boardWidgetTest() {
+        System.out.println("======================== BOARD WIDGETS TEST ==========================");
         Board board = new BoardLevel2();
         List<Player> players = new ArrayList<Player>();
 
@@ -780,6 +781,7 @@ public class PrintTest {
 
     @Test
     void widget_boardWidgetTestWithEliminatedPlayers() {
+        System.out.println("======================== BOARD WIDGETS TEST ==========================");
         Board board = new BoardLevel2();
         List<Player> players = new ArrayList<Player>();
 
@@ -805,6 +807,7 @@ public class PrintTest {
 
     @Test
     void widget_boardWidgetTestWithIncrementalPlayerCount() {
+        System.out.println("======================== BOARD WIDGETS TEST ==========================");
         WidgetTUI boardWidget;
         Board board = new BoardLevel2();
         List<Player> players = new ArrayList<Player>();
@@ -852,6 +855,8 @@ public class PrintTest {
 
     @Test
     void widget_boardWidgetTestFullRotation() {
+        System.out.println("======================== BOARD WIDGETS TEST ==========================");
+
         Board board = new BoardLevel2();
         List<Player> players = new ArrayList<Player>();
 
@@ -875,17 +880,13 @@ public class PrintTest {
             board.validatePlayersPosition();
             board.movePlayerForward(board.getPlayers().getFirst(), 1);
             board.validatePlayersPosition();
-
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                System.out.println(e.getMessage());
-            }
         }
     }
 
     @Test
     void widget_boardAndShip() {
+        System.out.println("======================== BOARD & SHIP WIDGETS TEST ==========================");
+
         Ship ship = new Ship(2);
         customShip2(ship);
 
@@ -957,6 +958,7 @@ public class PrintTest {
 
     @Test
     void unicode_width_test() {
+        System.out.println("======================== UNICODE WIDTH TEST ==========================");
         System.out.println("|✦|✦|✦|✦|✦|✦|✦|✦|✦|");
         System.out.println("| | | | | | | | | |");
         System.out.println("|✧|✧|✧|✧|✧|✧|✧|✧|✧|");

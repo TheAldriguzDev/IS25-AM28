@@ -1,20 +1,13 @@
 package it.polimi.ingsw.is25am28.TUI;
 
 public class PrintUtils {
-    private static final String SPACE = " ";
-
-    /**
-     * @return A single SPACE character
-     */
-    public static String getSpace() {
-        return PrintUtils.SPACE;
-    }
+    public static final String SPACE = " ";
 
     /**
      * Applies a REGEX to remove UNICODE strings, needed in cases where we want
      * to calculate the real string length
      *
-     * @param string
+     * @param string A string to filter
      * @return The given string with all UNICODE strings removed
      */
     public static String removeUnicodeFromString(String string) {

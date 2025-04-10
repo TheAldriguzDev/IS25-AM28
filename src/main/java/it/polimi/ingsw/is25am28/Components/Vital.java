@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.TUI.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Exceptions.NullWidgetException;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.util.ArrayList;
@@ -54,33 +53,25 @@ public final class Vital extends Component {
 
         // Creating the custom border character list that will be
         // used by the wrapper to create the border
-        //List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
         List<String> customBorderScheme = generateComponentCustomBorder();
-
-        // Adding this component's connectors to the border scheme
-//        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
-//        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
-//        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
-//        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
-
         padding = width - Vital.alias.length() - 1;
 
         // Setting the name with the same color as the vital unit's color
         if (this.getVitalType() == VitalType.PURPLE_VITAL) {
-            paddedString.append(addColor(getSpace() + Vital.alias, ANSIColors.MAGENTA));
+            paddedString.append(addColor(SPACE + Vital.alias, ANSIColors.MAGENTA));
         }
         else {
-            paddedString.append(addColor(getSpace() + Vital.alias, ANSIColors.BRIGHT_YELLOW));
+            paddedString.append(addColor(SPACE + Vital.alias, ANSIColors.BRIGHT_YELLOW));
         }
 
         // Adding the colored name string to the screen
-        paddedString.append(getSpace().repeat(padding));
+        paddedString.append(SPACE.repeat(padding));
         screen.add(paddedString.toString());
 
         // Filling the rest of the space with padding
         for (int i = 1; i < height; i++) {
             paddedString = new StringBuilder();
-            paddedString.append(getSpace().repeat(width));
+            paddedString.append(SPACE.repeat(width));
             screen.add(paddedString.toString());
         }
 

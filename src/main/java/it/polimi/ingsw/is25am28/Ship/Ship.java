@@ -16,6 +16,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.is25am28.Connector.*;
+import static it.polimi.ingsw.is25am28.TUI.PrintUtils.SPACE;
 
 public class Ship implements WidgetTUIGenerator {
     private final static Map<Integer, int[][]> shipProfiles = new HashMap<>();
@@ -777,10 +778,7 @@ public class Ship implements WidgetTUIGenerator {
         }
 
         row = new Component[this.grid_cols];
-
-        for (int i = 0; i < this.grid_cols; i++) {
-            row[i] = this.components[index][i];
-        }
+        System.arraycopy(this.components[index], 0, row, 0, this.grid_cols);
 
         return row;
     }
@@ -899,12 +897,12 @@ public class Ship implements WidgetTUIGenerator {
                 // by populating it with the neighbours of each component in
                 // found in the currLayer list, except the ones that are already there
                 // (avoids overlapping) or were already checked (avoids backtracking)
-                for (int i = 0; i < neighbours.length; i++) {
+                for (Component neighbour : neighbours) {
                     //      !nextLayer.contains(neighbours[i]) ==> Avoids overlapping
                     // !alreadyChecked.contains(neighbours[i]) ==> Avoids backtracking
-                    if (neighbours[i] != null) {
-                        if (!nextLayer.contains(neighbours[i]) && !alreadyChecked.contains(neighbours[i])) {
-                            nextLayer.add(neighbours[i]);
+                    if (neighbour != null) {
+                        if (!nextLayer.contains(neighbour) && !alreadyChecked.contains(neighbour)) {
+                            nextLayer.add(neighbour);
                             borderReached = false;
                         }
                     }
@@ -1227,11 +1225,8 @@ public class Ship implements WidgetTUIGenerator {
     public WidgetTUI getShipGridWidget() {
         WidgetTUI shipGridWidget;
         WidgetTUI tmpComponentWidget;
-        List<String> emptyScreen;
         List<List<String>> screenRowList;
         List<List<String>> mergedWidgetRowList;
-
-
 
         // Initializations
         shipGridWidget = new WidgetTUI();
@@ -1244,8 +1239,6 @@ public class Ship implements WidgetTUIGenerator {
 
         tmpComponentWidget.setHeight(height);
         tmpComponentWidget.setWidth(width);
-
-        /*Once upon a time this was the place where the emptyScreen rested*/
 
         int shipRows= Ship.shipDimensions.get(this.difficultyLevel).getKey();
         int shipCols= Ship.shipDimensions.get(this.difficultyLevel).getValue();
@@ -1271,7 +1264,7 @@ public class Ship implements WidgetTUIGenerator {
                     screenRowList.add(tmpComponentWidget.getScreen());
                 }
                 else {
-                    screenRowList.add(newEmptyScreen()); // Performance hit with style
+                    screenRowList.add(generateEmptySpaceScreen()); // Performance hit with style
                 }
             }
 
@@ -1330,27 +1323,36 @@ public class Ship implements WidgetTUIGenerator {
         return WidgetTUI.composeWidgetsHorizontally(shipWidgets);
     }
 
-    private List<String> newEmptyScreen() {
-        List<String> emptyScreen = new ArrayList<>();
+    /**
+     * @return A screen containing a randomly selected star pattern
+     *         which come in a few colors, that will make the ship look
+     *         like it is actually traversing an actual cosmic scenario
+     */
+    private List<String> generateEmptySpaceScreen() {
+        List<String> emptySpaceScreen = new ArrayList<>();
         Random rand = new Random();
         StringBuilder spaceString;
         String tmpSymbol;
-        int colorSel;
 
         int scale = 3;
         int height = scale;
         int width = 3 * scale + 2;
 
+        // Indicates how much the stars should be spread apart (min value is 1)
+        int spaceSymbolSpreadingFactor = 64;
+        int symbolPoolSize = UnicodeCharacters.SPACE_SYMBOLS.length + rand.nextInt(0, spaceSymbolSpreadingFactor);
+
         // Generating the empty screen that will act as a spacer
         // when the current component at coords (i, j) is null
         for (int i = 0; i < height + 2; i++) {
-            //emptyScreen.add(UnicodeCharacters.BULLET_POINT.repeat(width + 2));
-            //emptyScreen.add(UnicodeCharacters.SMALL_STAR.repeat(width + 2));
-            //emptyScreen.add(UnicodeCharacters.spaceSymbols[rand.nextInt(10)].repeat(width + 2));
             spaceString = new StringBuilder();
+
             for (int j = 0; j < width + 2; j++) {
-                tmpSymbol = UnicodeCharacters.SPACE_SYMBOLS[rand.nextInt(UnicodeCharacters.SPACE_SYMBOLS.length)];
-                if (!tmpSymbol.equals(" ")) {
+                int randIdx = rand.nextInt(0, symbolPoolSize);
+
+                if (randIdx < UnicodeCharacters.SPACE_SYMBOLS.length) {
+                    tmpSymbol = UnicodeCharacters.SPACE_SYMBOLS[randIdx];
+
                     switch (rand.nextInt(3)) {
                         case 0 -> {
                             tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.MAGENTA);
@@ -1364,12 +1366,16 @@ public class Ship implements WidgetTUIGenerator {
                     }
 
                     tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.MAGENTA);
+                    spaceString.append(tmpSymbol);
                 }
-                spaceString.append(tmpSymbol);
-
+                else {
+                    spaceString.append(SPACE);
+                }
             }
-            emptyScreen.add(spaceString.toString());
+
+            emptySpaceScreen.add(spaceString.toString());
         }
-        return emptyScreen;
+
+        return emptySpaceScreen;
     }
 }

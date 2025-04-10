@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
+
 public class BoardLevel2 extends Board {
 
     public BoardLevel2() {
@@ -96,7 +98,7 @@ public class BoardLevel2 extends Board {
 
             // Adding a big red X to symbolize that the player was eliminated
             String redX = PrintUtils.addColor("(X)", ANSIColors.RED);
-            redX += PrintUtils.getSpace();
+            redX += SPACE;
 
             // Adding all the eliminated players to the info widget's screen
             for (int i = 0; i < playerCount; i++) {
@@ -167,9 +169,9 @@ public class BoardLevel2 extends Board {
             boardLine = new StringBuilder();
 
             for (String s : topSide) {
-                boardLine.append(PrintUtils.getSpace());
+                boardLine.append(SPACE);
                 boardLine.append(s);
-                boardLine.append(PrintUtils.getSpace());
+                boardLine.append(SPACE);
             }
 
             // Adding the top side
@@ -180,11 +182,11 @@ public class BoardLevel2 extends Board {
             for (int i = 0; i < height - 2; i++) {
                 boardLine = new StringBuilder();
 
-                boardLine.append(PrintUtils.getSpace());
+                boardLine.append(SPACE);
                 boardLine.append(leftSide.get(i));
-                boardLine.append(PrintUtils.getSpace().repeat(3 * (width - 2) + 2));
+                boardLine.append(SPACE.repeat(3 * (width - 2) + 2));
                 boardLine.append(rightSide.get(i));
-                boardLine.append(PrintUtils.getSpace());
+                boardLine.append(SPACE);
 
                 boardWidget.appendString(boardLine.toString());
             }
@@ -194,9 +196,9 @@ public class BoardLevel2 extends Board {
             bottomSide = bottomSide.reversed();
 
             for (String s : bottomSide) {
-                boardLine.append(PrintUtils.getSpace());
+                boardLine.append(SPACE);
                 boardLine.append(s);
-                boardLine.append(PrintUtils.getSpace());
+                boardLine.append(SPACE);
             }
 
             // Adding the bottom side
