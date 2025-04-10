@@ -1339,8 +1339,8 @@ public class Ship implements WidgetTUIGenerator {
         int width = 3 * scale + 2;
 
         // Indicates how much the stars should be spread apart (min value is 1)
-        int spaceSymbolSpreadingFactor = 64;
-        int symbolPoolSize = UnicodeCharacters.SPACE_SYMBOLS.length + rand.nextInt(0, spaceSymbolSpreadingFactor);
+        int spreadFactor = 64;
+        int symbolPoolSize = UnicodeCharacters.SPACE_SYMBOLS.length + rand.nextInt(0, spreadFactor);
 
         // Generating the empty screen that will act as a spacer
         // when the current component at coords (i, j) is null
