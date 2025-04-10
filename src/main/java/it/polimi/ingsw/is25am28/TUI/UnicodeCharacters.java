@@ -31,4 +31,6 @@ public class UnicodeCharacters {
     public static final String ASTRONAUT_EMOJI = "\uD83E\uDDD1\u200D\uD83D\uDE80";
 
     // Symbols for space background
+    public static final String SMALL_STAR = "\u22C6";
+    public static final String[] SPACE_SYMBOLS = {"\u22C6", "+", "*", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ", " ",};
 }

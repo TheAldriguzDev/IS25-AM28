@@ -6,9 +6,7 @@ import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUIGenerator;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.*;
 import javafx.util.Pair;
 
 import java.util.*;
@@ -1233,10 +1231,11 @@ public class Ship implements WidgetTUIGenerator {
         List<List<String>> screenRowList;
         List<List<String>> mergedWidgetRowList;
 
+
+
         // Initializations
         shipGridWidget = new WidgetTUI();
         tmpComponentWidget = new WidgetTUI();
-        emptyScreen = new ArrayList<String>();
         mergedWidgetRowList = new ArrayList<>();
 
         int scale = 3;
@@ -1246,11 +1245,7 @@ public class Ship implements WidgetTUIGenerator {
         tmpComponentWidget.setHeight(height);
         tmpComponentWidget.setWidth(width);
 
-        // Generating the empty screen that will act as a spacer
-        // when the current component at coords (i, j) is null
-        for (int i = 0; i < height + 2; i++) {
-            emptyScreen.add(UnicodeCharacters.BULLET_POINT.repeat(width + 2));
-        }
+        /*Once upon a time this was the place where the emptyScreen rested*/
 
         int shipRows= Ship.shipDimensions.get(this.difficultyLevel).getKey();
         int shipCols= Ship.shipDimensions.get(this.difficultyLevel).getValue();
@@ -1276,7 +1271,7 @@ public class Ship implements WidgetTUIGenerator {
                     screenRowList.add(tmpComponentWidget.getScreen());
                 }
                 else {
-                    screenRowList.add(emptyScreen);
+                    screenRowList.add(newEmptyScreen()); // Performance hit with style
                 }
             }
 
@@ -1333,5 +1328,50 @@ public class Ship implements WidgetTUIGenerator {
 
         // Ship's stats on the left, ship's grid on the right
         return WidgetTUI.composeWidgetsHorizontally(shipWidgets);
+    }
+
+    private List<String> newEmptyScreen() {
+        List<String> emptyScreen = new ArrayList<>();
+        Random rand = new Random();
+        StringBuilder spaceString;
+        String tmpSymbol;
+        int colorSel;
+
+        int scale = 3;
+        int height = scale;
+        int width = 3 * scale + 2;
+
+        // Generating the empty screen that will act as a spacer
+        // when the current component at coords (i, j) is null
+        for (int i = 0; i < height + 2; i++) {
+            //emptyScreen.add(UnicodeCharacters.BULLET_POINT.repeat(width + 2));
+            //emptyScreen.add(UnicodeCharacters.SMALL_STAR.repeat(width + 2));
+            //emptyScreen.add(UnicodeCharacters.spaceSymbols[rand.nextInt(10)].repeat(width + 2));
+            spaceString = new StringBuilder();
+            for (int j = 0; j < width + 2; j++) {
+                tmpSymbol = UnicodeCharacters.SPACE_SYMBOLS[rand.nextInt(UnicodeCharacters.SPACE_SYMBOLS.length)];
+                if (!tmpSymbol.equals(" ")) {
+                    switch (rand.nextInt(3)) {
+                        case 0 -> {
+                            tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.MAGENTA);
+                        }
+                        case 1 -> {
+                            tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.RED);
+                        }
+                        case 2 -> {
+                            tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.YELLOW);
+                        }
+
+
+                    }
+
+                    tmpSymbol = PrintUtils.addColor(tmpSymbol, ANSIColors.MAGENTA);
+                }
+                spaceString.append(tmpSymbol);
+
+            }
+            emptyScreen.add(spaceString.toString());
+        }
+        return emptyScreen;
     }
 }

@@ -954,4 +954,18 @@ public class PrintTest {
         widget.addPadding(1, 1, 1, 1).wrapWidgetWithBorder().printWidget();
         widget.unwrapWidgetFromBorder(); 
     }
+
+    @Test
+    void unicode_width_test() {
+        System.out.println("|✦|✦|✦|✦|✦|✦|✦|✦|✦|");
+        System.out.println("| | | | | | | | | |");
+        System.out.println("|✧|✧|✧|✧|✧|✧|✧|✧|✧|");
+        System.out.println("| | | | | | | | | |");
+        System.out.println("|\u2321|\u2321|\u2321|\u2321|\u2321|\u2321|\u2321|\u2321|\u2321|");
+        System.out.println("| | | | | | | | | |");
+        System.out.println("| | | | | | | | | |");
+        System.out.println("| | | | | | | | | |");
+        System.out.println("| | | | | | | | | |");
+        System.out.println("| | | | | | | | | |");
+    }
 }

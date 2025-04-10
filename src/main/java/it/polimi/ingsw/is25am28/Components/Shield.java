@@ -51,7 +51,17 @@ public final class Shield extends Component {
         // used by the wrapper to create the border
         List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
 
-        // Adding this component's connectors to the border scheme
+//        customBorderScheme.set(0, "╔");
+//        customBorderScheme.set(1, "╗");
+//        customBorderScheme.set(2, "╝");
+//        customBorderScheme.set(3, "╚");
+//
+//        customBorderScheme.set(4, "═");
+//        customBorderScheme.set(5, "║");
+//        customBorderScheme.set(6, "═");
+//        customBorderScheme.set(7, "║");
+
+        //Adding this component's connectors to the border scheme
         customBorderScheme.set(8, "" + this.getTopSide().ordinal());
         customBorderScheme.set(9, "" + this.getRightSide().ordinal());
         customBorderScheme.set(10, "" + this.getBottomSide().ordinal());

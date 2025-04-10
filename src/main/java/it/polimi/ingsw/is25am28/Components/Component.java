@@ -236,4 +236,26 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
 
             return componentWidget;
       }
+
+      private List<String> generateComponentCustomBorder() {
+            List<String> customBorderScheme = WidgetTUI.defaultBorderCharacters;
+
+            customBorderScheme.set(0, "╔");
+            customBorderScheme.set(1, "╗");
+            customBorderScheme.set(2, "╝");
+            customBorderScheme.set(3, "╚");
+
+            customBorderScheme.set(4, "═");
+            customBorderScheme.set(5, "║");
+            customBorderScheme.set(6, "═");
+            customBorderScheme.set(7, "║");
+
+            //Adding this component's connectors to the border scheme
+            customBorderScheme.set(8, "" + this.getTopSide().ordinal());
+            customBorderScheme.set(9, "" + this.getRightSide().ordinal());
+            customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
+            customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
+
+            return customBorderScheme;
+      }
 }

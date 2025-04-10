@@ -289,6 +289,7 @@ public class WidgetTUI {
         // Upper border
         for (int i = 1; i < width - 1; i++) {
             if (i == (width / 2)) {
+                // Upper Side Center Special Symbol
                 tmpString.append(borderCharacters.get(8));
             }
             else {
@@ -343,6 +344,7 @@ public class WidgetTUI {
         // Lower border
         for (int i = 1; i < width - 1; i++) {
             if (i == (width / 2)) {
+                // Bottom Side Center Special Symbol
                 tmpString.append(borderCharacters.get(10));
             }
             else {
