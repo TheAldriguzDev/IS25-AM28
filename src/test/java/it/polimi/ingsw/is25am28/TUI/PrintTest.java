@@ -930,4 +930,28 @@ public class PrintTest {
         composition.wrapWidgetWithBorder();
         composition.printWidget();
     }
+
+    @Test
+    void widget_testPaddingAddition() {
+        WidgetTUI widget = new WidgetTUI();
+
+        widget.appendString("HELLO WORLD");
+        widget.wrapWidgetWithBorder().printWidget();
+        widget.unwrapWidgetFromBorder();
+
+        widget.addPadding(1, 0, 0, 0).wrapWidgetWithBorder().printWidget();
+        widget.unwrapWidgetFromBorder();
+
+        widget.addPadding(0, 1, 0, 0).wrapWidgetWithBorder().printWidget();
+        widget.unwrapWidgetFromBorder();
+
+        widget.addPadding(0, 0, 1, 0).wrapWidgetWithBorder().printWidget();
+        widget.unwrapWidgetFromBorder();
+
+        widget.addPadding(0, 0, 0, 1).wrapWidgetWithBorder().printWidget();
+        widget.unwrapWidgetFromBorder();
+
+        widget.addPadding(1, 1, 1, 1).wrapWidgetWithBorder().printWidget();
+        widget.unwrapWidgetFromBorder(); 
+    }
 }

@@ -140,23 +140,6 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
             return this;
       }
 
-      // TODO: Modify these methods, since they keep returning where the SAME connectors
-      //       are after a rotation, NOT the actual connector after a rotation
-//      public Connector getLeftSide() {
-//            return sides[(direction + 3) % 4];
-//      }
-//
-//      public Connector getRightSide() {
-//            return sides[(direction + 1) % 4];
-//      }
-//
-//      public Connector getTopSide() {
-//            return sides[direction];
-//      }
-//      public Connector getBottomSide() {
-//            return sides[(direction + 2) % 4];
-//      }
-
       public Connector getLeftSide() {
             int normalizedPos = 3 - direction;
             if (normalizedPos < 0) normalizedPos += 4;

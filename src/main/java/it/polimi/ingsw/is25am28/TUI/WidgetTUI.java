@@ -485,8 +485,6 @@ public class WidgetTUI {
         return this;
     }
 
-    // TODO: Test this
-    // TODO: Modify so that it takes into account the borders of each widget (done by checking the value of layerCount)
     /**
      * Centers this widget's screen contents by adding padding
      * spaces to both sides of each screen line
@@ -556,6 +554,47 @@ public class WidgetTUI {
      */
     public List<String> getScreen() {
         return this.screen;
+    }
+
+    public WidgetTUI addPadding(int top, int right, int bottom, int left) {
+        List<String> screen;
+        String line;
+        int screenLen;
+
+        // Adding top padding to this widget's screen
+        if (top > 0) {
+            screen = new ArrayList<>();
+            line = PrintUtils.getSpace().repeat(this.getWidth());
+            this.height += top;
+
+            while (top > 0) {
+                screen.add(line);
+                top--;
+            }
+
+            screen.addAll(this.getScreen());
+            this.screen = screen;
+        }
+
+        // Adding right padding to this widget's screen
+        this.setWidth(this.width + right);
+
+        // Adding bottom padding to this widget's screen
+        this.setHeight(this.height + bottom);
+
+        // Adding left padding to this widget's screen
+        if (left > 0) {
+            screenLen = this.getHeight();
+            line = PrintUtils.getSpace().repeat(left);
+
+            for (int i = 0; i < screenLen; i++) {
+                this.screen.set(i, line + this.screen.get(i));
+            }
+
+            this.width += left;
+        }
+
+        return this;
     }
 
     /**
