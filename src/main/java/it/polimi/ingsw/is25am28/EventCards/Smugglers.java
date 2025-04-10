@@ -1,16 +1,15 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Board.Board;
-import it.polimi.ingsw.is25am28.ActionJSON.SmugglersJSON;
 import it.polimi.ingsw.is25am28.Items.*;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class Smugglers extends EventCard {
@@ -186,23 +185,38 @@ public class Smugglers extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON smugglersStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
+
             smugglersStateJSON.setPlayerNickname(playerOptional.get().getNickname());
             smugglersStateJSON.setCardName(getCardName());
             smugglersStateJSON.setCardLevel(getCardLevel());
             smugglersStateJSON.setCardIsUsable(!hasFinished());
-            smugglersStateJSON.setRequiredFirepower(requiredFirepower);
-            smugglersStateJSON.setMovementSteps(movementSteps);
-            smugglersStateJSON.setTakenItems(takenItems);
-            smugglersStateJSON.setRedItems(redItems);
-            smugglersStateJSON.setYellowItems(yellowItems);
-            smugglersStateJSON.setBlueItems(blueItems);
-            smugglersStateJSON.setGreenItems(greenItems);
-            if (!firstRound) {
-                ArrayList<String> defeatedPlayers = new ArrayList<>();
-                for (Player player : playersToTakeItemsFrom) {
-                    defeatedPlayers.add(player.getNickname());
+            smugglersStateJSON.setFirstRound(firstRound);
+
+            if(hasFinished()) {
+                // Update the board
+                smugglersStateJSON.setBoard(this.getBoard().generateState());
+
+                // Generate the player info that also includes the ship
+                Map<String, PlayerJSON> playerInfo = new HashMap<>();
+                playerInfo.put(playerOptional.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
+                smugglersStateJSON.setPlayersInfo(playerInfo);
+            } else {
+                if (firstRound) {
+                    smugglersStateJSON.setRequiredFirepower(requiredFirepower);
+                    smugglersStateJSON.setMovementSteps(movementSteps);
+                    // TODO : Resorucebank question about number of items (referring to how it's done in abandonedStation)
+                    smugglersStateJSON.setTakenItems(takenItems);
+                    smugglersStateJSON.setRedItems(redItems);
+                    smugglersStateJSON.setYellowItems(yellowItems);
+                    smugglersStateJSON.setBlueItems(blueItems);
+                    smugglersStateJSON.setGreenItems(greenItems);
+                } else {
+                    ArrayList<String> defeatedPlayers = new ArrayList<>();
+                    for (Player player : playersToTakeItemsFrom) {
+                        defeatedPlayers.add(player.getNickname());
+                    }
+                    smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
                 }
-                smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
         } else {
             throw new IllegalArgumentException("There is no player playing in this moment");
