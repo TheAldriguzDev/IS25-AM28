@@ -29,6 +29,23 @@ public class WidgetTUI {
         //  9 - Right Side Center Symbol
         //  10 - Bottom Side Center Symbol
         //  11 - Left Side Center Symbol
+
+            // SECTION RELEVANT ONLY FOR STATIC VERSION (used for components)
+
+        //  12 - Top Side Center Symbol - 1
+        //  13 - Top Side Center Symbol + 1
+
+        //  14 - Right Side Center Symbol - 1
+        //  15 - Right Side Center Symbol + 1
+
+        //  16 - Bottom Side Center Symbol - 1
+        //  17 - Bottom Side Center Symbol + 1
+
+        //  18 - Left Side Center Symbol - 1
+        //  19 - Left Side Center Symbol + 1
+
+
+
         defaultBorderCharacters.add(UnicodeCharacters.SINGLE_LINE_TL_CORNER);
         defaultBorderCharacters.add(UnicodeCharacters.SINGLE_LINE_TR_CORNER);
         defaultBorderCharacters.add(UnicodeCharacters.SINGLE_LINE_BR_CORNER);
@@ -41,6 +58,21 @@ public class WidgetTUI {
         defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE);
         defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_BOTTOM_SINGLE_LINE);
         defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_LEFT_SINGLE_LINE);
+
+            // SECTION RELEVANT ONLY FOR STATIC VERSION (used for components)
+
+        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE);
+        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE);
+
+        defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE);
+        defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE);
+
+        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_BOTTOM_SINGLE_LINE);
+        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_BOTTOM_SINGLE_LINE);
+
+        defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_LEFT_SINGLE_LINE);
+        defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_LEFT_SINGLE_LINE);
+
     }
 
     // Creates a no-content widget
@@ -267,6 +299,8 @@ public class WidgetTUI {
 
         // Using defaultBorderCharacters if the given list does not have
         // all 8 characters needed to draw the full border
+
+        // TODO : Modify defaultBorderCharacters accordingly to changes
         if (borderCharacters == null || borderCharacters.size() < WidgetTUI.defaultBorderCharacters.size()) {
             borderCharacters = WidgetTUI.defaultBorderCharacters;
         }
@@ -291,6 +325,10 @@ public class WidgetTUI {
             if (i == (width / 2)) {
                 // Upper Side Center Special Symbol
                 tmpString.append(borderCharacters.get(8));
+            } else if (i == (width / 2) - 2) {
+                tmpString.append(borderCharacters.get(12));
+            } else if (i == (width / 2) + 2) {
+                tmpString.append(borderCharacters.get(13));
             }
             else {
                 tmpString.append(borderCharacters.get(4));
@@ -308,6 +346,10 @@ public class WidgetTUI {
             if (i == (height / 2)) {
                 // Left Side Center Special Symbol
                 tmpString.append(borderCharacters.get(11));
+            } else if (i == (height / 2) - 1) {
+                tmpString.append(borderCharacters.get(18));
+            } else if (i == (height / 2) + 1) {
+                tmpString.append(borderCharacters.get(19));
             }
             else {
                 tmpString.append(borderCharacters.get(7));
@@ -327,6 +369,10 @@ public class WidgetTUI {
             if (i == (height / 2)) {
                 // Right Side Center Special Symbol
                 tmpString.append(borderCharacters.get(9));
+            } else if (i == (height / 2) - 1) {
+                tmpString.append(borderCharacters.get(14));
+            } else if (i == (height / 2) + 1) {
+                tmpString.append(borderCharacters.get(15));
             }
             else {
                 // Right Side Special Symbol
@@ -345,6 +391,10 @@ public class WidgetTUI {
             if (i == (width / 2)) {
                 // Bottom Side Center Special Symbol
                 tmpString.append(borderCharacters.get(10));
+            } else if (i == (width / 2) - 2) {
+                tmpString.append(borderCharacters.get(16));
+            } else if (i == (width / 2) + 2) {
+                tmpString.append(borderCharacters.get(17));
             }
             else {
                 tmpString.append(borderCharacters.get(6));

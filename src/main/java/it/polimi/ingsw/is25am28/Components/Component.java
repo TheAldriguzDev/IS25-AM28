@@ -240,21 +240,138 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
       protected List<String> generateComponentCustomBorder() {
             List<String> customBorderScheme = new ArrayList<>(WidgetTUI.defaultBorderCharacters);
 
-            customBorderScheme.set(0, "╔");
-            customBorderScheme.set(1, "╗");
-            customBorderScheme.set(2, "╝");
-            customBorderScheme.set(3, "╚");
+//            customBorderScheme.set(0, "╔");
+//            customBorderScheme.set(1, "╗");
+//            customBorderScheme.set(2, "╝");
+//            customBorderScheme.set(3, "╚");
+//
+//            customBorderScheme.set(4, "═");
+//            customBorderScheme.set(5, "║");
+//            customBorderScheme.set(6, "═");
+//            customBorderScheme.set(7, "║");
 
-            customBorderScheme.set(4, "═");
-            customBorderScheme.set(5, "║");
-            customBorderScheme.set(6, "═");
-            customBorderScheme.set(7, "║");
+            customBorderScheme.set(0, "┌");
+            customBorderScheme.set(1, "┐");
+            customBorderScheme.set(2, "┘");
+            customBorderScheme.set(3, "└");
+
+            customBorderScheme.set(4, "─");
+            customBorderScheme.set(5, "│");
+            customBorderScheme.set(6, "─");
+            customBorderScheme.set(7, "│");
 
             //Adding this component's connectors to the border scheme
-            customBorderScheme.set(8, "" + this.getTopSide().ordinal());
-            customBorderScheme.set(9, "" + this.getRightSide().ordinal());
-            customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
-            customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
+
+            switch (getTopSide().ordinal()) {
+                  case 0 -> {
+                        customBorderScheme.set(12, "─");
+                        customBorderScheme.set(8, "─");
+                        customBorderScheme.set(13, "─");
+                  }
+                  case 1 -> {
+                        customBorderScheme.set(12, "─");
+                        customBorderScheme.set(8, "╨");
+                        customBorderScheme.set(13, "─");
+                  }
+                  case 2 -> {
+                        customBorderScheme.set(12, "╜");
+                        customBorderScheme.set(8, "─");
+                        customBorderScheme.set(13, "╙");
+                  }
+                  case 3 -> {
+                        customBorderScheme.set(12, "╜");
+                        customBorderScheme.set(8, "╨");
+                        customBorderScheme.set(13, "╙");
+                  }
+            }
+
+            switch (getRightSide().ordinal()) {
+                  case 0 -> {
+                        customBorderScheme.set(14, "│");
+                        customBorderScheme.set(9, "│");
+                        customBorderScheme.set(15, "│");
+                  }
+                  case 1 -> {
+                        customBorderScheme.set(14, "│");
+                        customBorderScheme.set(9, "╞");
+                        customBorderScheme.set(15, "│");
+                  }
+                  case 2 -> {
+                        customBorderScheme.set(14, "╞");
+                        customBorderScheme.set(9, "│");
+                        customBorderScheme.set(15, "╞");
+                  }
+                  case 3 -> {
+                        customBorderScheme.set(14, "╞");
+                        customBorderScheme.set(9, "╞");
+                        customBorderScheme.set(15, "╞");
+                  }
+            }
+
+            switch (getBottomSide().ordinal()) {
+                  case 0 -> {
+                        customBorderScheme.set(16, "─");
+                        customBorderScheme.set(10, "─");
+                        customBorderScheme.set(17, "─");
+                  }
+                  case 1 -> {
+                        customBorderScheme.set(16, "─");
+                        customBorderScheme.set(10, "╥");
+                        customBorderScheme.set(17, "─");
+                  }
+                  case 2 -> {
+                        customBorderScheme.set(16, "╖");
+                        customBorderScheme.set(10, "─");
+                        customBorderScheme.set(17, "╓");
+                  }
+                  case 3 -> {
+                        customBorderScheme.set(16, "╖");
+                        customBorderScheme.set(10, "╥");
+                        customBorderScheme.set(17, "╓");
+                  }
+            }
+
+            switch (getLeftSide().ordinal()) {
+                  case 0 -> {
+                        customBorderScheme.set(18, "│");
+                        customBorderScheme.set(11, "│");
+                        customBorderScheme.set(19, "│");
+                  }
+                  case 1 -> {
+                        customBorderScheme.set(18, "│");
+                        customBorderScheme.set(11, "╡");
+                        customBorderScheme.set(19, "│");
+                  }
+                  case 2 -> {
+                        customBorderScheme.set(18, "╡");
+                        customBorderScheme.set(11, "│");
+                        customBorderScheme.set(19, "╡");
+                  }
+                  case 3 -> {
+                        customBorderScheme.set(18, "╡");
+                        customBorderScheme.set(11, "╡");
+                        customBorderScheme.set(19, "╡");
+                  }
+            }
+
+
+
+//            customBorderScheme.set(8, "╨");
+//            customBorderScheme.set(9, "╞");
+//            customBorderScheme.set(10, "╥");
+//            customBorderScheme.set(11, "╡");
+
+//            customBorderScheme.set(12, "╜");
+//            customBorderScheme.set(13, "╙");
+
+//            customBorderScheme.set(14, "╞");
+//            customBorderScheme.set(15, "╞");
+
+//            customBorderScheme.set(16, "╖");
+//            customBorderScheme.set(17, "╓");
+
+//            customBorderScheme.set(18, "╡");
+//            customBorderScheme.set(19, "╡");
 
             return customBorderScheme;
       }

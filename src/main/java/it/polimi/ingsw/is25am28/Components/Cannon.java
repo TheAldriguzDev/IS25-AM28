@@ -74,13 +74,14 @@ public final class Cannon extends Component {
 
         // Creating the custom border character list that will be
         // used by the wrapper to create the border
-        List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
+        //List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
+        List<String> customBorderScheme = generateComponentCustomBorder();
 
         // Adding this component's connectors to the border scheme
-        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
-        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
-        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
-        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
+//        customBorderScheme.set(8, "" + this.getTopSide().ordinal());
+//        customBorderScheme.set(9, "" + this.getRightSide().ordinal());
+//        customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
+//        customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
 
         // Adding the component's name
         paddedString = new StringBuilder(getSpace() + Cannon.alias);

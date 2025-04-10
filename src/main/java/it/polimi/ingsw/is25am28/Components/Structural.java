@@ -24,13 +24,14 @@ public final class Structural extends Component {
 
             // Creating the custom border character list that will be
             // used by the wrapper to create the border
-            List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
+            //List<String> customBorderScheme = new ArrayList<String>(WidgetTUI.defaultBorderCharacters);
+            List<String> customBorderScheme = generateComponentCustomBorder();
 
             // Adding this component's connectors to the border scheme
-            customBorderScheme.set(8, "" + this.getTopSide().ordinal());
-            customBorderScheme.set(9, "" + this.getRightSide().ordinal());
-            customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
-            customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
+//            customBorderScheme.set(8, "" + this.getTopSide().ordinal());
+//            customBorderScheme.set(9, "" + this.getRightSide().ordinal());
+//            customBorderScheme.set(10, "" + this.getBottomSide().ordinal());
+//            customBorderScheme.set(11, "" + this.getLeftSide().ordinal());
 
             List<String> screen = new ArrayList<String>();
             String nameAlias = PrintUtils.getSpace() + Structural.alias;
@@ -38,7 +39,7 @@ public final class Structural extends Component {
             screen.add(nameAlias + PrintUtils.getSpace().repeat(width - nameAlias.length()));
 
             for (int i = 1; i < height; i++) {
-                  screen.add(PrintUtils.getSpace().repeat(width));
+                  screen.add(PrintUtils.getSpace() + "\u2591".repeat(width - 2) + PrintUtils.getSpace());
             }
 
             return WidgetTUI.wrapScreenWithBorder(screen, customBorderScheme);
