@@ -970,4 +970,15 @@ public class PrintTest {
         System.out.println("| | | | | | | | | |");
         System.out.println("| | | | | | | | | |");
     }
+
+    @Test
+    void test() {
+        WidgetTUI widgetTUI = new WidgetTUI();
+
+        widgetTUI.appendString("HELLO WORLD");
+        widgetTUI.addPadding(1, 1, 1, 1);
+        widgetTUI.wrapWidgetWithBorder();
+
+        widgetTUI.printWidget();
+    }
 }

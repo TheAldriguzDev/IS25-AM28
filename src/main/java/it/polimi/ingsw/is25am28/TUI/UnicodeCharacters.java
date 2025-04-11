@@ -13,6 +13,23 @@ public class UnicodeCharacters {
     public static final String SINGLE_LINE_BR_CORNER = "\u2518";
     public static final String SINGLE_LINE_BL_CORNER = "\u2514";
 
+    // Component Connector Symbols (for each of the 4 sides)
+    public static final String CONNECTOR_TOP_CENTER_LEFT = "╜";
+    public static final String CONNECTOR_TOP_CENTER = "╨";
+    public static final String CONNECTOR_TOP_CENTER_RIGHT = "╙";
+
+    public static final String CONNECTOR_RIGHT_CENTER_TOP = "╞";
+    public static final String CONNECTOR_RIGHT_CENTER = "╞";
+    public static final String CONNECTOR_RIGHT_CENTER_BOTTOM = "╞";
+
+    public static final String CONNECTOR_BOTTOM_CENTER_RIGHT = "╓";
+    public static final String CONNECTOR_BOTTOM_CENTER = "╥";
+    public static final String CONNECTOR_BOTTOM_CENTER_LEFT = "╖";
+
+    public static final String CONNECTOR_LEFT_CENTER_TOP = "╡";
+    public static final String CONNECTOR_LEFT_CENTER = "╡";
+    public static final String CONNECTOR_LEFT_CENTER_BOTTOM = "╡";
+
     // Shapes
     public static final String FULL_BLOCK = "\u2588";
     public static final String BULLET_POINT = "\u2022";
@@ -26,11 +43,6 @@ public class UnicodeCharacters {
     // Meshes
     public static final String BACKGROUND_MESH = "\u2591";
 
-    // Lifeforms Emojis
-    public static final String ALIEN_EMOJI = "\uD83D\uDC7D";
-    public static final String ASTRONAUT_EMOJI = "\uD83E\uDDD1\u200D\uD83D\uDE80";
-
-    // Symbols for space background
-    public static final String SMALL_STAR = "\u22C6";
-    public static final String[] SPACE_SYMBOLS = {UnicodeCharacters.SMALL_STAR, "+", "*"};
+    // Space Background Symbols
+    public static final String[] SPACE_SYMBOLS = {"\u22C6", "+", "*"};
 }

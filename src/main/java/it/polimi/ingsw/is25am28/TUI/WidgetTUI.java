@@ -15,61 +15,64 @@ public class WidgetTUI {
     static {
         // NOTE: This is also the ordering that each custom borderCharacter list must follow
         //       to be interpreted and used correctly when drawing the custom border
+        //       (i.e.: a custom border pattern is applied iff all symbols are specified)
 
         // These are the default characters, indexed in the following (Clockwise Indexing):
         //  0 - Top Left Corner
         //  1 - Top Right Corner
         //  2 - Bottom Right Corner
         //  3 - Bottom Left Corner
+
         //  4 - Top Side
         //  5 - Right Side
         //  6 - Bottom Side
         //  7 - Left Side
-        //  8 - Top Side Center Symbol
-        //  9 - Right Side Center Symbol
-        //  10 - Bottom Side Center Symbol
-        //  11 - Left Side Center Symbol
 
-            // SECTION RELEVANT ONLY FOR STATIC VERSION (used for components)
+        //  8 - Top Side Center Left Symbol
+        //  9 - Top Side Center Symbol
+        //  10 - Top Side Center Right Symbol
 
-        //  12 - Top Side Center Symbol - 1
-        //  13 - Top Side Center Symbol + 1
+        //  11 - Right Side Center Top Symbol
+        //  12 - Right Side Center Symbol
+        //  13 - Right Side Center Bottom Symbol
 
-        //  14 - Right Side Center Symbol - 1
-        //  15 - Right Side Center Symbol + 1
+        //  14 - Bottom Side Center Right Symbol
+        //  15 - Bottom Side Center Symbol
+        //  16 - Bottom Side Center Left Symbol
 
-        //  16 - Bottom Side Center Symbol - 1
-        //  17 - Bottom Side Center Symbol + 1
+        //  17 - Left Side Center Bottom Symbol
+        //  18 - Left Side Center Symbol
+        //  19 - Left Side Center Top Symbol
 
-        //  18 - Left Side Center Symbol - 1
-        //  19 - Left Side Center Symbol + 1
-
-
-
+        // Symbols 0, 1, 2, 3
         defaultBorderCharacters.add(UnicodeCharacters.SINGLE_LINE_TL_CORNER);
         defaultBorderCharacters.add(UnicodeCharacters.SINGLE_LINE_TR_CORNER);
         defaultBorderCharacters.add(UnicodeCharacters.SINGLE_LINE_BR_CORNER);
         defaultBorderCharacters.add(UnicodeCharacters.SINGLE_LINE_BL_CORNER);
+
+        // Symbols 4, 5, 6, 7
         defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE);
         defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE);
         defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_BOTTOM_SINGLE_LINE);
         defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_LEFT_SINGLE_LINE);
+
+        // Symbols 8, 9, 10
         defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE);
+        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE);
+        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE);
+
+        // Symbols 11, 12, 13
         defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE);
+        defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE);
+        defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE);
+
+        // Symbols 14, 15, 16
         defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_BOTTOM_SINGLE_LINE);
+        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_BOTTOM_SINGLE_LINE);
+        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_BOTTOM_SINGLE_LINE);
+
+        // Symbols 17, 18, 19
         defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_LEFT_SINGLE_LINE);
-
-            // SECTION RELEVANT ONLY FOR STATIC VERSION (used for components)
-
-        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE);
-        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE);
-
-        defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE);
-        defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE);
-
-        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_BOTTOM_SINGLE_LINE);
-        defaultBorderCharacters.add(UnicodeCharacters.HORIZONTAL_BOTTOM_SINGLE_LINE);
-
         defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_LEFT_SINGLE_LINE);
         defaultBorderCharacters.add(UnicodeCharacters.VERTICAL_LEFT_SINGLE_LINE);
     }
@@ -296,10 +299,8 @@ public class WidgetTUI {
         // Instantiating the to-be-wrapped screen
         List<String> wrappedScreen = new ArrayList<String>();
 
-        // Using defaultBorderCharacters if the given list does not have
-        // all 8 characters needed to draw the full border
-
-        // TODO : Modify defaultBorderCharacters accordingly to changes
+        // Using defaultBorderCharacters if the given list
+        // does not have all the symbols specified
         if (borderCharacters == null || borderCharacters.size() < WidgetTUI.defaultBorderCharacters.size()) {
             borderCharacters = WidgetTUI.defaultBorderCharacters;
         }
@@ -321,17 +322,20 @@ public class WidgetTUI {
 
         // Upper border
         for (int i = 1; i < width - 1; i++) {
-            if (i == (width / 2)) {
-                // Upper Side Center Special Symbol
+            if (i == (width / 2) - 2) {
+                // Top Side Center Left Symbol
                 tmpString.append(borderCharacters.get(8));
             }
-            else if (i == (width / 2) - 2) {
-                tmpString.append(borderCharacters.get(12));
+            else if (i == (width / 2)) {
+                // Top Side Center Symbol
+                tmpString.append(borderCharacters.get(9));
             }
             else if (i == (width / 2) + 2) {
-                tmpString.append(borderCharacters.get(13));
+                // Top Side Center Right Symbol
+                tmpString.append(borderCharacters.get(10));
             }
             else {
+                // Top Side
                 tmpString.append(borderCharacters.get(4));
             }
         }
@@ -344,17 +348,21 @@ public class WidgetTUI {
         for (int i = 1; i < height - 1; i++) {
             tmpString = new StringBuilder();
 
-            if (i == (height / 2)) {
-                // Left Side Center Special Symbol
-                tmpString.append(borderCharacters.get(11));
+            // Middle Left Side
+            if (i == (height / 2) - 1) {
+                // Left Side Center Top Symbol
+                tmpString.append(borderCharacters.get(19));
             }
-            else if (i == (height / 2) - 1) {
+            else if (i == (height / 2)) {
+                // Left Side Center Symbol
                 tmpString.append(borderCharacters.get(18));
             }
             else if (i == (height / 2) + 1) {
-                tmpString.append(borderCharacters.get(19));
+                // Left Side Center Bottom Symbol
+                tmpString.append(borderCharacters.get(17));
             }
             else {
+                // Left Side
                 tmpString.append(borderCharacters.get(7));
             }
 
@@ -369,18 +377,21 @@ public class WidgetTUI {
                 tmpString.append(SPACE.repeat(width - 2 - oldLineLen));
             }
 
-            if (i == (height / 2)) {
-                // Right Side Center Special Symbol
-                tmpString.append(borderCharacters.get(9));
+            // Middle Right Side
+            if (i == (height / 2) - 1) {
+                // Right Side Center Top Symbol
+                tmpString.append(borderCharacters.get(11));
             }
-            else if (i == (height / 2) - 1) {
-                tmpString.append(borderCharacters.get(14));
+            else if (i == (height / 2)) {
+                // Right Side Center Symbol
+                tmpString.append(borderCharacters.get(12));
             }
             else if (i == (height / 2) + 1) {
-                tmpString.append(borderCharacters.get(15));
+                // Right Side Center Bottom Symbol
+                tmpString.append(borderCharacters.get(13));
             }
             else {
-                // Right Side Special Symbol
+                // Right Side
                 tmpString.append(borderCharacters.get(5));
             }
 
@@ -393,17 +404,20 @@ public class WidgetTUI {
 
         // Lower border
         for (int i = 1; i < width - 1; i++) {
-            if (i == (width / 2)) {
-                // Bottom Side Center Special Symbol
-                tmpString.append(borderCharacters.get(10));
+            if (i == (width / 2) + 2) {
+                // Bottom Side Center Right Symbol
+                tmpString.append(borderCharacters.get(14));
+            }
+            else if (i == (width / 2)) {
+                // Bottom Side Center Symbol
+                tmpString.append(borderCharacters.get(15));
             }
             else if (i == (width / 2) - 2) {
+                // Bottom Side Center Left Symbol
                 tmpString.append(borderCharacters.get(16));
             }
-            else if (i == (width / 2) + 2) {
-                tmpString.append(borderCharacters.get(17));
-            }
             else {
+                // Bottom Side
                 tmpString.append(borderCharacters.get(6));
             }
         }
@@ -710,10 +724,20 @@ public class WidgetTUI {
 
         // Upper border
         for (int i = 1; i < this.width - 1; i++) {
-            if (i == (this.width / 2)) {
+            if (i == (this.width / 2) - 2) {
+                // Top Side Center Left Symbol
                 tmpString.append(borderCharacters.get(8));
             }
+            else if (i == (this.width / 2)) {
+                // Top Side Center Symbol
+                tmpString.append(borderCharacters.get(9));
+            }
+            else if (i == (this.width / 2) + 2) {
+                // Top Side Center Right Symbol
+                tmpString.append(borderCharacters.get(10));
+            }
             else {
+                // Top Side
                 tmpString.append(borderCharacters.get(4));
             }
         }
@@ -726,19 +750,28 @@ public class WidgetTUI {
         for (int i = 1; i < this.height - 1; i++) {
             tmpString = new StringBuilder();
 
-            if (i == (this.height / 2)) {
-                // Left Side Center Special Symbol
-                tmpString.append(borderCharacters.get(11));
+            // Middle Left Side
+            if (i == (this.height / 2) - 1) {
+                // Left Side Center Top Symbol
+                tmpString.append(borderCharacters.get(19));
+            }
+            else if (i == (this.height / 2)) {
+                // Left Side Center Symbol
+                tmpString.append(borderCharacters.get(18));
+            }
+            else if (i == (this.height / 2) + 1) {
+                // Left Side Center Bottom Symbol
+                tmpString.append(borderCharacters.get(17));
             }
             else {
-                // Left Side Special Symbol
+                // Left Side
                 tmpString.append(borderCharacters.get(7));
             }
 
             // Old unwrapped screen goes in the middle
-            tmpString.append(unwrappedScreen.get(i - 1));
-
             String oldLine = unwrappedScreen.get(i - 1);
+            tmpString.append(oldLine);
+
             int oldLineLen = PrintUtils.removeUnicodeFromString(oldLine).length();
 
             // Adding right-side padding
@@ -746,12 +779,21 @@ public class WidgetTUI {
                 tmpString.append(SPACE.repeat(this.width - 2 - oldLineLen));
             }
 
-            if (i == (this.height / 2)) {
-                // Right Side Center Special Symbol
-                tmpString.append(borderCharacters.get(9));
+            // Middle Right Side
+            if (i == (this.height / 2) - 1) {
+                // Right Side Center Top Symbol
+                tmpString.append(borderCharacters.get(11));
+            }
+            else if (i == (this.height / 2)) {
+                // Right Side Center Symbol
+                tmpString.append(borderCharacters.get(12));
+            }
+            else if (i == (this.height / 2) + 1) {
+                // Right Side Center Bottom Symbol
+                tmpString.append(borderCharacters.get(13));
             }
             else {
-                // Right Side Special Symbol
+                // Right Side
                 tmpString.append(borderCharacters.get(5));
             }
 
@@ -764,10 +806,20 @@ public class WidgetTUI {
 
         // Lower border
         for (int i = 1; i < this.width - 1; i++) {
-            if (i == (this.width / 2)) {
-                tmpString.append(borderCharacters.get(10));
+            if (i == (this.width / 2) + 2) {
+                // Bottom Side Center Right Symbol
+                tmpString.append(borderCharacters.get(14));
+            }
+            else if (i == (this.width / 2)) {
+                // Bottom Side Center Symbol
+                tmpString.append(borderCharacters.get(15));
+            }
+            else if (i == (this.width / 2) - 2) {
+                // Bottom Side Center Left Symbol
+                tmpString.append(borderCharacters.get(16));
             }
             else {
+                // Bottom Side
                 tmpString.append(borderCharacters.get(6));
             }
         }
