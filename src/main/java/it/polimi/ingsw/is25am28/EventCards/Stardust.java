@@ -83,8 +83,6 @@ public class Stardust extends EventCard {
             stardustStateJSON.setCardName(getCardName());
             stardustStateJSON.setCardLevel(getCardLevel());
             stardustStateJSON.setCardIsUsable(!hasFinished());
-        } else {
-            throw new IllegalArgumentException("There is no player playing in this moment");
         }
         return stardustStateJSON;
     }

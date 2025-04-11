@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -25,9 +26,10 @@ public class ActionJSON {
     /**
      * Returns the player Nickname
      * */
+    @JsonGetter("playerNickname")
     public String getPlayerNickname() throws IllegalStateException {
         if (this.playerNickname == null || this.playerNickname.isEmpty()) {
-            throw new IllegalStateException("Key 'playerNickname' is missing in JSON data");
+            return null;
         }
 
         return this.playerNickname;

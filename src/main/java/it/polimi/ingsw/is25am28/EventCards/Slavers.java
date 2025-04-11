@@ -194,9 +194,8 @@ public class Slavers extends EventCard {
                 }
                 slaversStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
-        } else {
-            throw new IllegalArgumentException("There is no player playing in this moment");
         }
+
         return slaversStateJSON;
     }
 }

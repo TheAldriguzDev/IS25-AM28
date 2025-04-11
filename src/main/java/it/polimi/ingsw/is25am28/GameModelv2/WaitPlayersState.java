@@ -4,7 +4,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.State.StateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.State.WaitPlayersStateJSON;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 
-public class WaitPlayersState extends State {
+public final class WaitPlayersState extends State {
     public WaitPlayersState(GameModel model) {
         super(model);
     }
@@ -19,8 +19,6 @@ public class WaitPlayersState extends State {
         if (model.getPlayers().size() == model.getNumPlayers()) {
             model.setCurrentState(new ShipContructionState(model));
         }
-
-        // TODO: Generate the tiles in the new state --> the player will be able to use them to build their ship
     }
 
     @Override

@@ -44,7 +44,7 @@ public class CardLoader extends FileLoader {
 
             json.get("abandonedShip" ).forEach( map -> {
                   deck.add(new AbandonedShip(
-                        "Nave Abbandonata",
+                        "Abandoned Ship",
                         (Integer)map.get("level"),
                         (Integer)map.get("people"),
                         (Integer)map.get("days"),
@@ -82,7 +82,7 @@ public class CardLoader extends FileLoader {
                   }
 
                   deck.add(new AbandonedStation(
-                        "Stazione Abbandonata",
+                        "Abandoned Station",
                         (Integer)map.get("level"),
                         (Integer)map.get("people"),
                         (Integer)map.get("days"),
@@ -94,7 +94,7 @@ public class CardLoader extends FileLoader {
 
             json.get("meteors" ).forEach( map -> {
                   deck.add(new MeteorShower(
-                        "Meteore",
+                        "Meteor Shower",
                         (Integer)map.get("level"),
                         ((List<List<Integer>>)map.get("meteors")),
                         board
@@ -103,7 +103,7 @@ public class CardLoader extends FileLoader {
 
             json.get("pirates" ).forEach( map -> {
                   deck.add(new Pirates(
-                        "Pirati",
+                        "Pirates",
                         (Integer)map.get("level"),
                         (Integer)map.get("firepower"),
                         (Integer)map.get("credits"),
@@ -115,7 +115,7 @@ public class CardLoader extends FileLoader {
 
             json.get("planets" ).forEach( map -> {
                   deck.add(new VisitPlanets(
-                        "Pianeti",
+                        "Planets",
                         (Integer)map.get("level"),
                         (Integer)map.get("days"),
                         (List<Map<String,Integer>>)map.get("planets"),
@@ -126,7 +126,7 @@ public class CardLoader extends FileLoader {
 
             json.get("space" ).forEach( map -> {
                   deck.add(new OpenSpace(
-                          "Spazio aperto",
+                          "Open Space",
                           (Integer)map.get("level"),
                           board
                   ));
@@ -134,7 +134,7 @@ public class CardLoader extends FileLoader {
 
             json.get("epidemic" ).forEach( map -> {
                   deck.add(new Epidemy(
-                        "Epidemia",
+                        "Epidemy",
                         (Integer)map.get("level"),
                         board
                   ));
@@ -142,7 +142,7 @@ public class CardLoader extends FileLoader {
 
             json.get("smugglers" ).forEach( map -> {
                   deck.add(new Smugglers(
-                        "Contrabbandieri",
+                        "Smugglers",
                         (Integer)map.get("level"),
                         (Integer)map.get("days"),
                         (Integer)map.get("cannons"),
@@ -158,7 +158,7 @@ public class CardLoader extends FileLoader {
 
             json.get("slavers" ).forEach( map -> {
                   deck.add(new Slavers(
-                        "Schiavisti",
+                        "Slavers",
                         (Integer)map.get("level"),
                         (Integer)map.get("cannons"),
                         (Integer)map.get("days"),
@@ -170,7 +170,7 @@ public class CardLoader extends FileLoader {
 
             json.get("stardust" ).forEach( map -> {
                   deck.add(new Stardust(
-                          "Polvere Stellare",
+                          "Stardust",
                           (Integer)map.get("level"),
                           board
                   ));
@@ -191,7 +191,7 @@ public class CardLoader extends FileLoader {
                   .toList();                  
 
                   deck.add(new WarZone(
-                        "Zona di Guerra",
+                        "WarZone",
                         (Integer)map.get("level"),
                         board,
                         bank,

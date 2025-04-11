@@ -21,10 +21,10 @@ public class TimerObserver {
                   try {
                         TimeUnit.MILLISECONDS.sleep(timeout);
                         finished = true;
-                        if( subscribed.size() > 0 )
+                        if(!subscribed.isEmpty())
                               subscribed.forEach(TimeSubscriber::onTimerEnd);
 
-                  }catch(InterruptedException e){
+                  } catch(InterruptedException e) {
 
                   }
             });

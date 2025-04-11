@@ -274,8 +274,8 @@ public class CardStateJSON extends ActionJSON {
      * Set the cardLevel to the given data
      * */
     public void setCardLevel(int cardLevel) throws IllegalStateException {
-        if (cardLevel <= 0) {
-            throw new IllegalStateException("cardLevel cannot be zero or negative");
+        if (cardLevel < 0) {
+            throw new IllegalStateException("cardLevel cannot be negative");
         }
 
         this.cardLevel = cardLevel;

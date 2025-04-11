@@ -797,14 +797,28 @@ public class Ship {
      */
     public boolean validateShip() {
         AtomicBoolean isShipValid = new AtomicBoolean(true);
+        AtomicInteger foundComponents = new AtomicInteger(0);
+        int placedComponents = 0;
 
         traverse(
             (Component c) -> {
+                foundComponents.incrementAndGet();
                 if (isShipValid.get() && !c.check(getNearestComponents(c))) {
                     isShipValid.set(false);
+                    System.out.println(c.getClass().getSimpleName());
                 }
             }
         );
+
+        for (int i = 0; i < this.grid_rows; i++) {
+            for (int j = 0; j < this.grid_cols; j++) {
+                if (this.components[i][j] != null) placedComponents++;
+            }
+        }
+
+        if (placedComponents != foundComponents.get()) {
+            isShipValid.set(false);
+        }
 
         return isShipValid.get();
     }

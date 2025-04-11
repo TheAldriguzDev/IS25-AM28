@@ -204,9 +204,8 @@ public class Smugglers extends EventCard {
                 }
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
-        } else {
-            throw new IllegalArgumentException("There is no player playing in this moment");
         }
+
         return smugglersStateJSON;
     }
 }

@@ -292,7 +292,7 @@ public class Pirates extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON piratesStateJSON = new CardStateJSON();
-        if(playerOptional.isPresent()) {
+        if (playerOptional.isPresent()) {
             // The dice throw is performed by generateState only at the beginning
             // since the card hasn't been used yet
             if (this.diceThrowResult == -1) {
@@ -315,9 +315,8 @@ public class Pirates extends EventCard {
                 }
                 piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
-        } else {
-            throw new IllegalArgumentException("There is no player playing in this moment");
         }
+
         return piratesStateJSON;
     }
 

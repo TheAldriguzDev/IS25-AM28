@@ -7,7 +7,7 @@ import it.polimi.ingsw.is25am28.Player.PlayerColor;
 
 import java.util.ArrayList;
 
-public class CreateGameState extends State {
+public final class CreateGameState extends State {
 
     public CreateGameState(GameModel model) {
         super(model);

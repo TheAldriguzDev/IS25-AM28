@@ -57,8 +57,6 @@ public class ShipConstructionSession extends Session implements TimeSubscriber {
 
       private int flippedTimes = 0;
 
-      
-
 
       public ShipConstructionSession( 
             Board board,

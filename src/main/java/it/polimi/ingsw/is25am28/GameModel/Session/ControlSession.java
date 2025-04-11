@@ -24,7 +24,7 @@ public class ControlSession extends Session {
             this.players = players;
       }
 
-      public List<String> init(){
+      public List<String> init() {
 
             for( Player player : players.values() ) {
 

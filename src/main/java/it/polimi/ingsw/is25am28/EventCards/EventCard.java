@@ -28,6 +28,7 @@ public abstract class EventCard {
         this.cardLevel = cardLevel;
         this.board = board;
         this.hasBeenUsed = false;
+        this.currentPlayer = Optional.empty();
     }
 
     /**

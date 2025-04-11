@@ -1,11 +1,21 @@
 package it.polimi.ingsw.is25am28.GameModelv2;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.ActionJSON.State.FixShipDTO;
+import it.polimi.ingsw.is25am28.ActionJSON.State.PopulateShipDTO;
+import it.polimi.ingsw.is25am28.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
+import it.polimi.ingsw.is25am28.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
+import it.polimi.ingsw.is25am28.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.ActionJSON.State.StateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Board.BoardTestFlight;
 import it.polimi.ingsw.is25am28.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Exceptions.FixNotRequiredError;
+import it.polimi.ingsw.is25am28.Exceptions.SelectedConcurrencyException;
+import it.polimi.ingsw.is25am28.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.GameModel.FileLoader.CardLoader;
+import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
@@ -40,7 +50,7 @@ public class GameModel {
     }
 
     /**
-     * Set the currentState of the game, needed to make the state transaction
+     * Set the currentState of the game, needed to make the state transition
      * */
     public void setCurrentState(State currentState) {
         this.currentState = currentState;
@@ -82,16 +92,16 @@ public class GameModel {
             case 2:
                 // For the level 2 we have a deck made of 4 sub-decks that contains two lvl two cards and one lvl card
                 for (int i = 0; i < 4; i++) {
-                    this.deck.add(levelTwoDeck.remove(random.nextInt(levelOneDeck.size())));
-                    this.deck.add(levelTwoDeck.remove(random.nextInt(levelOneDeck.size())));
+                    this.deck.add(levelTwoDeck.remove(random.nextInt(levelTwoDeck.size())));
+                    this.deck.add(levelTwoDeck.remove(random.nextInt(levelTwoDeck.size())));
                     this.deck.add(levelOneDeck.remove(random.nextInt(levelOneDeck.size())));
                 }
                 break;
             case 3:
                 // For the level 3 we have a deck made of 4 sub-decks that contains two lvl three, a lvl two and a lvl one card
                 for (int i = 0; i < 4; i++) {
-                    this.deck.add(levelThreeDeck.remove(random.nextInt(levelOneDeck.size())));
-                    this.deck.add(levelThreeDeck.remove(random.nextInt(levelOneDeck.size())));
+                    this.deck.add(levelThreeDeck.remove(random.nextInt(levelThreeDeck.size())));
+                    this.deck.add(levelThreeDeck.remove(random.nextInt(levelThreeDeck.size())));
                     this.deck.add(levelTwoDeck.remove(random.nextInt(levelOneDeck.size())));
                     this.deck.add(levelOneDeck.remove(random.nextInt(levelOneDeck.size())));
                 }
@@ -99,6 +109,8 @@ public class GameModel {
             default:
                 throw new IllegalStateException("The given game level (" + this.level + ") is not valid");
         }
+
+        Collections.shuffle(this.deck);
     }
 
     /**
@@ -110,9 +122,9 @@ public class GameModel {
         this.currentState.gameConfig(nickname, playerColor, level, numPlayers);
 
         this.createBoard();
-        this.prepareGameMaterials();
+        this.generateDeck();
 
-        // If all the previous operations are validated we can make the state transaction
+        // If all the previous operations are validated we can make the state transition
         this.currentState.onComplete();
         return this.currentState.generateState();
     }
@@ -123,20 +135,132 @@ public class GameModel {
             case 2 -> this.board = new BoardLevel2();
             default -> throw new IllegalStateException("The given game level (" + this.level + ") is not valid");
         };
+
+        this.board.buildBoard();
     }
 
-    private void prepareGameMaterials() {
-        this.generateDeck();
+    /**
+     * Add a new player to the game.
+     * @return a List of states that represent:
+     * 1. The response of the action of the command
+     * 2. If all the players have joined it will also include the nextState information
+     * */
+    public List<StateJSON> addNewPlayer(String nickname, PlayerColor playerColor) {
+        List<StateJSON> states = new ArrayList<>();
 
-        // TODO: Generate the tiles
-    }
-
-    public StateJSON addNewPlayer(String nickname, PlayerColor playerColor) {
         this.currentState.addNewPlayer(nickname, playerColor);
 
+        states.add(this.currentState.generateState());
+
+        State prev = this.currentState;
         this.currentState.onComplete();
-        return this.currentState.generateState();
+
+        if (!prev.equals(this.currentState)) {
+            states.add(this.currentState.generateState());
+        }
+        return states;
     }
+
+    /**
+     * Execute the command to select a tile
+     * @return the ConstructionComponentDTO that represent the selectedTile. The behavior of the communication sendTo / sendToAll
+     * is left to the controller
+     * */
+    public ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws SelectedConcurrencyException {
+        return currentState.selectTile(player, i, j);
+    }
+
+    /**
+     * Execute the command to deselect a tile
+     * @return the ConstructionComponentDTO that represent the selectedTile. The behavior of the communication sendTo / sendToAll
+     * is left to the controller
+     * */
+    public ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws SelectedConcurrencyException {
+        return currentState.deselectTile(player, i, j);
+    }
+
+    /**
+     * Command used when a player finish his ship or the time has ended to send the created ship
+     * @return the list of states that are required to update the client:
+     * 1. The result of the command executed by the client
+     * 2. If all the players has sent the ship it will return the new state. This could be: FixShip if some player has an
+     * invalid ship or populateShip if all the players have a valid ship
+     * */
+    public List<StateJSON> playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles) {
+        List<StateJSON> states = new ArrayList<>();
+
+        // Execute the command
+        StateJSON tmpState = this.currentState.playerEndedSendShip(player, playerShip, reservedTiles);
+        if (tmpState != null) {
+            states.add(tmpState);
+        }
+
+        State prev = this.currentState;
+        this.currentState.onComplete();
+        if (!this.currentState.equals(prev)) {
+            states.add(this.currentState.generateState());
+        }
+
+        return states;
+    }
+
+    /**
+     * Command used to flip the timer
+     * @return TimerDTO that has:
+     * - hasBennFlipped --> if the clock has been flipped
+     * - canBeenFlipped --> if the clock can be flipped at least another time
+     * */
+    public TimerDTO flipTimer(String player) {
+        return this.currentState.flipTimer(player);
+    }
+
+    /**
+     * Command executed by the client to fix his ship
+     * @return a list of state that are required to update the client:
+     * 1. Contains the response of the executed command
+     * 2. If all the players have fixed their ship, it contains the PopulateShipState information
+     * */
+    public List<StateJSON> fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove) throws IllegalArgumentException, FixNotRequiredError {
+        List<StateJSON> states = new ArrayList<>();
+
+        StateJSON tmpState = this.currentState.fixShip(player, componentsToRemove);
+        if (tmpState != null) {
+            states.add(tmpState);
+        }
+
+        State prev = this.currentState;
+        this.currentState.onComplete();
+        if (!this.currentState.equals(prev)) {
+            states.add(this.currentState.generateState());
+        }
+
+        return states;
+    }
+
+    /**
+     * Command executed by the client to populate his ship
+     * @return a list of state that are required to update the client:
+     * 1. Contains the response of the executed command
+     * 2. If all the players has populated their ship, it contains the CardRoundState information
+     * */
+    public List<StateJSON> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException {
+        List<StateJSON> states = new ArrayList<>();
+
+        StateJSON tmpState = this.currentState.populateShip(player, lifeFormToAdd);
+        if (tmpState != null) {
+            states.add(tmpState);
+        }
+
+        State prev = this.currentState;
+        this.currentState.onComplete();
+        if (!this.currentState.equals(prev)) {
+            states.add(this.currentState.generateState());
+        }
+
+        return states;
+    }
+
+    // TODO: playCard
 
     // ========================================
     // PACKAGE PRIVATE METHODS --> used by the states
@@ -221,4 +345,12 @@ public class GameModel {
         return this.players.size() == this.numPlayers;
     }
 
+    void addPlayerToBoard(String player) throws IllegalArgumentException {
+        this.board.newPlayer(this.players.get(player));
+        this.board.addPlayerToBoard(this.players.get(player));
+    }
+
+    Board getBoard() {
+        return this.board;
+    }
 }
