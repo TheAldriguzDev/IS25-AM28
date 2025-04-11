@@ -706,7 +706,7 @@ public class WarZone extends EventCard {
         cardState.setPlayersFirePower(playersFirePowerMap);
         cardState.setPlayersEnginePower(playersEnginePowerMap);
 
-        return null;
+        return cardState;
     }
 
     //Only for testing purposes

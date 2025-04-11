@@ -21,14 +21,16 @@ public class AbandonedStation extends EventCard {
     private List<ComponentHelper<ItemColor>> resourceToTake;
     private boolean hasBeenUsedByPlayer;
 
+    private List<String> playersThatCanUseTheCard;
+
     public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> givenItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
         this.requiredCrew = requiredCrew;
         this.movementStep = movementStep;
         this.givenItems = givenItems;
         this.resourceBank = resourceBank;
-
         this.hasBeenUsedByPlayer = false;
+        this.playersThatCanUseTheCard = new ArrayList<>();
     }
 
     /**
@@ -39,17 +41,14 @@ public class AbandonedStation extends EventCard {
         if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
         } else {
-            this.players = this.getBoard().getPlayers().stream()
+            // Set the players that can use the card
+            this.playersThatCanUseTheCard = this.getBoard().getPlayers().stream()
                     .filter( p -> p.getShip().getAllLifeforms().size() >= this.requiredCrew )
+                    .map(Player::getNickname)
                     .toList();
 
-            // if there are no players we do not have to continue, since no one can use the card
-            if (this.players.isEmpty()) {
-                this.cardUsed();
-                this.currentPlayer = Optional.empty();
-            } else {
-                this.currentPlayer = Optional.of(players.getFirst());
-            }
+            this.players = new ArrayList<>(this.getBoard().getPlayers());
+            currentPlayer = Optional.of(players.getFirst());
         }
     }
 
@@ -140,12 +139,29 @@ public class AbandonedStation extends EventCard {
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
 
-        // Set the card name
+        // Card information that are needed to play
         cardState.setCardName(this.getCardName());
-        // Set the card level
         cardState.setCardLevel(this.cardLevel);
+        cardState.setRequiredCrewMembers(this.requiredCrew);
+        cardState.setMovementSteps(this.movementStep);
 
-        // If present set the current player (the one that needs to play the game)
+        // Filter the resources to the only available in the bank.
+        // The numbers of the resources will be set as the min between the given by the card and the available in the bank
+        Map<ItemColor, Integer> givenItemByTypeCount = givenItems.stream()
+                .collect(Collectors.groupingBy(
+                        Item::getColor,
+                        Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
+                ));
+
+        givenItemByTypeCount.replaceAll((c, _) -> Math.min(givenItemByTypeCount.get(c), this.resourceBank.getResourceAvailabilityFromColor(c)));
+
+        List<ItemColor> itemList = givenItemByTypeCount.entrySet().stream()
+                .flatMap(entry -> Collections.nCopies(entry.getValue(), entry.getKey()).stream())
+                .toList();
+
+        cardState.setStationResources(itemList);
+
+        // If there is a currentPlayer set it in the DTO
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
@@ -163,35 +179,11 @@ public class AbandonedStation extends EventCard {
                 cardState.setPlayersInfo(playerInfo);
             }
         } else {
-            List<Player> playersThatCanUseTheCard = this.getBoard().getPlayers().stream()
-                    .filter( p -> p.getShip().getAllLifeforms().size() > this.requiredCrew )
-                    .toList();
-
-            // Set the card isUsable to true when the player has at least the required crew members
-            // --> since we filter them in advance should be always set to true
-            if (this.getCurrentPlayer().isPresent()) {
-                cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get()));
+            // If the player can use the card the flag will be set to true, otherwise if it doesn't have the card requirement it
+            // will be set to false
+            if (this.currentPlayer.isPresent()) {
+                cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             }
-
-            // Set the card information that are needed to play
-            cardState.setRequiredCrewMembers(this.requiredCrew);
-            cardState.setMovementSteps(this.movementStep);
-
-            // Filter the resources to the only available in the bank.
-            // The numbers of the resources will be set as the min between the given by the card and the available in the bank
-            Map<ItemColor, Integer> givenItemByTypeCount = givenItems.stream()
-                    .collect(Collectors.groupingBy(
-                            Item::getColor,
-                            Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
-                    ));
-
-            givenItemByTypeCount.replaceAll((c, _) -> Math.min(givenItemByTypeCount.get(c), this.resourceBank.getResourceAvailabilityFromColor(c)));
-
-            List<ItemColor> itemList = givenItemByTypeCount.entrySet().stream()
-                    .flatMap(entry -> Collections.nCopies(entry.getValue(), entry.getKey()).stream())
-                    .toList();
-
-            cardState.setStationResources(itemList);
         }
 
         return cardState;
