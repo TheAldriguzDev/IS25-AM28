@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.TUI.*;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -11,6 +11,9 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -968,8 +971,36 @@ public class PrintTest {
         System.out.println("| | | | | | | | | |");
     }
 
-    @Test
-    void inputWidget_commandSelectionTest() {
+    List<WidgetTUI> generateMockupShipWidgets() {
+        Ship ship = customLevel2Ship();
+
+        List<WidgetTUI> shipWidgets = new ArrayList<>();
+        shipWidgets.add(ship.getShipGridWidget());
+        shipWidgets.add(ship.getShipStatsWidget());
+
+        return shipWidgets;
+    }
+
+    WidgetTUI generateMockupBoardWidget() {
+        Board board = new BoardLevel2();
+        List<Player> players = new ArrayList<Player>();
+
+        board.buildBoard();
+
+        players.add(new Player("TheD3stroy3r", PlayerColor.RED, 2));
+        players.add(new Player("MasterChief1103", PlayerColor.GREEN, 2));
+        players.add(new Player("C4taclism__", PlayerColor.BLUE, 2));
+        players.add(new Player("ItzAlex_TTV", PlayerColor.YELLOW, 2));
+
+        for (Player player : players) {
+            board.newPlayer(player);
+            board.addPlayerToBoard(player);
+        }
+
+        return board.generateWidget();
+    }
+
+    InputWidgetTUI generateMockupInputWidget() {
         InputWidgetTUI inputWidget = new InputWidgetTUI();
 
         CommandWidgetTUI command1 = new CommandWidgetTUI("1", null);
@@ -982,27 +1013,27 @@ public class PrintTest {
         CommandWidgetTUI command8 = new CommandWidgetTUI("8", null);
 
         command1.setCommand(
-            () -> {
-                System.out.println("\nSelected command with ID=" + command1.getCommandId());
-            }
+                () -> {
+                    System.out.println("\nSelected command with ID=" + command1.getCommandId());
+                }
         );
 
         command2.setCommand(
-            () -> {
-                System.out.println("\nSelected command with ID=" + command2.getCommandId());
-            }
+                () -> {
+                    System.out.println("\nSelected command with ID=" + command2.getCommandId());
+                }
         );
 
         command3.setCommand(
-            () -> {
-                System.out.println("\nSelected command with ID=" + command3.getCommandId());
-            }
+                () -> {
+                    System.out.println("\nSelected command with ID=" + command3.getCommandId());
+                }
         );
 
         command4.setCommand(
-            () -> {
-                System.out.println("\nSelected command with ID=" + command4.getCommandId());
-            }
+                () -> {
+                    System.out.println("\nSelected command with ID=" + command4.getCommandId());
+                }
         );
 
         command5.setCommand(
@@ -1049,6 +1080,14 @@ public class PrintTest {
         inputWidget.addCommand(command7);
         inputWidget.addCommand(command8);
 
+        return inputWidget;
+    }
+
+
+    @Test
+    void inputWidget_commandSelectionTest() {
+        InputWidgetTUI inputWidget = this.generateMockupInputWidget();
+
         String content = "2";
         InputStream stream = new ByteArrayInputStream(content.getBytes());
         inputWidget.setNewScanner(stream);
@@ -1090,5 +1129,65 @@ public class PrintTest {
 
         WidgetTUI.composeTwoWidgetsVertically(widget1, widget2).wrapWidgetWithBorder().printWidget();
         WidgetTUI.composeTwoWidgetsVertically(widget2, widget1).wrapWidgetWithBorder().printWidget();
+    }
+
+    @Test
+    void TUI_mockup() {
+        WidgetTUI tui;
+        WidgetTUI shipGridWidget, shipStatsWidget;
+        WidgetTUI boardWidget, cardWidget, consoleWidget;
+        InputWidgetTUI inputWidget;
+        String input = "1";
+
+        List<WidgetTUI> shipWidgets = this.generateMockupShipWidgets();
+        shipGridWidget = shipWidgets.get(0);
+        shipStatsWidget = shipWidgets.get(1);
+
+        boardWidget = this.generateMockupBoardWidget();
+        inputWidget = this.generateMockupInputWidget();
+        inputWidget.setNewScanner(new ByteArrayInputStream(input.getBytes()));
+        inputWidget.setColumnGroupingAmount(1);
+
+        cardWidget = new WidgetTUI();
+        cardWidget.appendString("CARD WIDGET");
+        cardWidget.addPadding(7, 8, 8, 9);
+        // Card proportions should be --> width = 2 * height;
+        // cardWidget.setWidth(2 * 9);
+        // cardWidget.setHeight(9);
+        cardWidget.wrapWidgetWithBorder();
+
+        consoleWidget = new WidgetTUI();
+        consoleWidget.appendString("CONSOLE LOG WIDGET").addPadding(2, 11, 3, 11);
+        consoleWidget.wrapWidgetWithBorder();
+
+//        shipGridWidget.printWidget();
+//        shipStatsWidget.printWidget();
+//        boardWidget.printWidget();
+//        cardWidget.printWidget();
+//        consoleWidget.printWidget();
+//        inputWidget.printWidget();
+
+        tui = WidgetTUI.composeTwoWidgetsHorizontally(
+                WidgetTUI.fillScreenWithSpaces(
+                        WidgetTUI.composeTwoWidgetsVertically(
+                                WidgetTUI.fillScreenWithSpaces(
+                                        WidgetTUI.composeTwoWidgetsHorizontally(
+                                                boardWidget.addPadding(0, 1, 0, 1),
+                                                cardWidget.addPadding(0, 1, 0, 1)
+                                        )
+                                ),
+                                WidgetTUI.fillScreenWithSpaces(
+                                        WidgetTUI.composeTwoWidgetsHorizontally(
+                                                consoleWidget.addPadding(0, 1, 0, 1),
+                                                shipStatsWidget.addPadding(0, 1, 0, 1)
+                                        )
+                                ).addPadding(1, 0, 0, 0)
+                        )
+                ),
+                shipGridWidget
+        ).wrapWidgetWithBorder();
+
+        tui.printWidget();
+        inputWidget.selectCommand("[SELECT_COMMAND] ID=");
     }
 }

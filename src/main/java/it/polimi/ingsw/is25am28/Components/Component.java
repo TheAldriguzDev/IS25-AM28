@@ -2,8 +2,8 @@ package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.Connector;
 import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUIGenerator;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.HashMap;

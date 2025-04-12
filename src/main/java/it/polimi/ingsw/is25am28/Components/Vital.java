@@ -1,7 +1,7 @@
 package it.polimi.ingsw.is25am28.Components;
 
 import it.polimi.ingsw.is25am28.TUI.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;

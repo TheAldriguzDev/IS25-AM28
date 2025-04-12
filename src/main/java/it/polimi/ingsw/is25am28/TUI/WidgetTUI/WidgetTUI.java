@@ -1,4 +1,7 @@
-package it.polimi.ingsw.is25am28.TUI;
+package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+
+import it.polimi.ingsw.is25am28.TUI.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -331,7 +334,7 @@ public class WidgetTUI {
 
         for (int i = 0; i < screenLen; i++) {
             line = widget.getScreen().get(i);
-            widget.getScreen().set(i, line + SPACE.repeat(maxWidth - line.length()));
+            widget.getScreen().set(i, line + SPACE.repeat(maxWidth - PrintUtils.removeUnicodeFromString(line).length()));
         }
 
         return widget;
@@ -721,7 +724,6 @@ public class WidgetTUI {
     public WidgetTUI addPadding(int top, int right, int bottom, int left) {
         List<String> screen;
         String line;
-        int screenLen;
 
         // Adding top padding to this widget's screen
         if (top > 0) {
@@ -734,7 +736,7 @@ public class WidgetTUI {
                 top--;
             }
 
-            screen.addAll(this.getScreen());
+            screen.addAll(this.screen);
             this.screen = screen;
         }
 
@@ -746,10 +748,9 @@ public class WidgetTUI {
 
         // Adding left padding to this widget's screen
         if (left > 0) {
-            screenLen = this.getHeight();
             line = SPACE.repeat(left);
 
-            for (int i = 0; i < screenLen; i++) {
+            for (int i = 0; i < this.height; i++) {
                 this.screen.set(i, line + this.screen.get(i));
             }
 

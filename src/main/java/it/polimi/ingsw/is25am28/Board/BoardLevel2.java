@@ -4,7 +4,7 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;

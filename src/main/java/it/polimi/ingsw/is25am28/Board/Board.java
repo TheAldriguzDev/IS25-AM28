@@ -2,7 +2,7 @@ package it.polimi.ingsw.is25am28.Board;
 
 import it.polimi.ingsw.is25am28.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
 import java.util.*;
 

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.TUI;
+package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
 import java.io.InputStream;
 
@@ -55,6 +55,13 @@ public class InputWidgetTUI extends WidgetTUI {
                 this.commands.put(commandIdentifier, command);
             }
         }
+    }
+
+    /**
+     * @return This input widget's command map
+     */
+    public Map<String, CommandWidgetTUI> getCommandMap() {
+        return this.commands;
     }
 
     /**
