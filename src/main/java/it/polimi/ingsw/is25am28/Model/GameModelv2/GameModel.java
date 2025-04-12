@@ -115,7 +115,7 @@ public class GameModel {
      * Initializes the game configuration as defined by the leader.
      * Sets the game level, number of players, and creates the leader as the first player.
      */
-    public StateJSON gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) {
+    public StateJSON gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws IllegalStateException {
         // Set the game configuration sent by the leader
         this.currentState.gameConfig(nickname, playerColor, level, numPlayers);
 

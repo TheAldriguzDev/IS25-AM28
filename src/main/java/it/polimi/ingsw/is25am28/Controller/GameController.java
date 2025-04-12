@@ -7,25 +7,55 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateJSON;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
+import it.polimi.ingsw.is25am28.Model.GameModelv2.CreateGameState;
 import it.polimi.ingsw.is25am28.Model.GameModelv2.GameModel;
+import it.polimi.ingsw.is25am28.Model.GameModelv2.WaitPlayersState;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.util.List;
 
-public class Controller {
+public class GameController {
     private final GameModel model;
 
+    // Number of connected clients, will be used to understand if a new connection is from a leader or a command player
+    // and to prevent connections when a game is already full
+    private int connectedClients;
 
-    public Controller() {
+
+    public GameController() {
         this.model = new GameModel();
+        this.connectedClients = 0;
     }
 
     // TODO: Method that accepts clients connection. In this state we need to generate the state and send it back to the client. If the gameIsReady for newPlayer
     //  we need to notify the new clients with the current model state, otherwise we need to send a temp state that indicates that the game is still in configuration
     public StateJSON onClientConnection() {
+        StateJSON state;
 
+        this.connectedClients++;
 
+        // When the leader tries to connect, we need to send the state that identifies the game configuration state
+        if (this.connectedClients == 1) {
+            return this.model.generateState();
+        }
+
+        if (this.connectedClients > 1) {
+            switch (this.model.getCurrentState()) {
+                case CreateGameState ignored -> {
+                    state = new StateJSON();
+                    state.setStateName("WaitingForConfiguration");
+
+                    return state;
+                }
+                case WaitPlayersState currState -> {
+                    return currState.generateState();
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + this.model.getCurrentState());
+            }
+        }
+
+        throw new IllegalStateException("Unexpected connection in invalid state: " + this.model.getCurrentState());
     }
 
     public StateJSON gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) {

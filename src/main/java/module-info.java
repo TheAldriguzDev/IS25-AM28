@@ -12,6 +12,7 @@ module it.polimi.ingsw.is25am {
     requires java.smartcardio;
     requires java.desktop;
     requires junit;
+    requires java.rmi;
 
     opens it.polimi.ingsw.is25am28 to javafx.fxml;
     exports it.polimi.ingsw.is25am28.Model;
@@ -42,4 +43,5 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction;
     opens it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction to com.fasterxml.jackson.databind;
     opens it.polimi.ingsw.is25am28.Model to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.RMI.Client;
 }

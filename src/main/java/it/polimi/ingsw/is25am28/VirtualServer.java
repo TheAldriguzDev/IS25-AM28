@@ -17,21 +17,21 @@ import java.util.List;
  * */
 public interface VirtualServer {
 
-    public StateJSON gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers);
+    public StateJSON gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws Exception;
 
-    public List<StateJSON> addNewPlayer(String nickname, PlayerColor playerColor);
+    public List<StateJSON> addNewPlayer(String nickname, PlayerColor playerColor) throws Exception;
 
-    public ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws SelectedConcurrencyException;
+    public ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws Exception;
 
-    public ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws SelectedConcurrencyException;
+    public ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws Exception;
 
-    public List<StateJSON> playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles);
+    public List<StateJSON> playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles) throws Exception;
 
-    public TimerDTO flipTimer(String player);
+    public TimerDTO flipTimer(String player) throws Exception;
 
-    public List<StateJSON> fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove) throws IllegalArgumentException, FixNotRequiredError;
+    public List<StateJSON> fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove) throws Exception;
 
-    public List<StateJSON> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException;
+    public List<StateJSON> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws Exception;
 
-    public List<StateJSON> playCard(ActionJSON action) throws IllegalArgumentException;
+    public List<StateJSON> playCard(ActionJSON action) throws Exception;
 }
