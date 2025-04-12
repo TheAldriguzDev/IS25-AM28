@@ -6,20 +6,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
-import it.polimi.ingsw.is25am28.Board.Board;
-import it.polimi.ingsw.is25am28.Board.BoardLevel2;
-import it.polimi.ingsw.is25am28.Components.Cabin;
-import it.polimi.ingsw.is25am28.Components.Structural;
-import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.EventCards.MeteorShower;
-import it.polimi.ingsw.is25am28.EventCards.VisitPlanets;
-import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
-import it.polimi.ingsw.is25am28.Ship.Ship;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentJSON;
+import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
+import it.polimi.ingsw.is25am28.Model.Components.Cabin;
+import it.polimi.ingsw.is25am28.Model.Components.Structural;
+import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Model.EventCards.MeteorShower;
+import it.polimi.ingsw.is25am28.Model.EventCards.VisitPlanets;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
 
 public abstract class GMTest {

@@ -1,27 +1,27 @@
 package it.polimi.ingsw.is25am28.GameModel;
 
-import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
+import static it.polimi.ingsw.is25am28.Model.Connector.THREE_PIPES;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.VisitPlanetsJSON;
-import it.polimi.ingsw.is25am28.Components.Storage;
-import it.polimi.ingsw.is25am28.Exceptions.IllegalSessionStateException;
-import it.polimi.ingsw.is25am28.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Exceptions.ShipPopulationFailException;
-import it.polimi.ingsw.is25am28.Items.Item;
-import it.polimi.ingsw.is25am28.Items.ItemColor;
-import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.State.FlipActionState;
-import it.polimi.ingsw.is25am28.TimeObserver.TimeEndedNotifier;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.VisitPlanetsJSON;
+import it.polimi.ingsw.is25am28.Model.Components.Storage;
+import it.polimi.ingsw.is25am28.Model.Exceptions.IllegalSessionStateException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
+import it.polimi.ingsw.is25am28.Model.Items.Item;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Model.State.FlipActionState;
+import it.polimi.ingsw.is25am28.Model.TimeObserver.TimeEndedNotifier;
 
 public class GameModelTest extends GMTest {
 

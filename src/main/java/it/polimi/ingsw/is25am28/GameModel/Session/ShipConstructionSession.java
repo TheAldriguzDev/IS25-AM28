@@ -2,25 +2,23 @@ package it.polimi.ingsw.is25am28.GameModel.Session;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.TimeObserver.TimeSubscriber;
-import it.polimi.ingsw.is25am28.TimeObserver.TimerObserver;
-import it.polimi.ingsw.is25am28.Board.Board;
-import it.polimi.ingsw.is25am28.Components.Component;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.TimeObserver.TimeSubscriber;
+import it.polimi.ingsw.is25am28.Model.TimeObserver.TimerObserver;
+import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.GameModel.FileLoader.TileLoader;
-import it.polimi.ingsw.is25am28.State.FlipActionState;
-import it.polimi.ingsw.is25am28.State.ShipConstructionInitialState;
-import it.polimi.ingsw.is25am28.State.State;
-import it.polimi.ingsw.is25am28.Ship.Ship;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
-import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Exceptions.TimerFlipException;
+import it.polimi.ingsw.is25am28.Model.State.FlipActionState;
+import it.polimi.ingsw.is25am28.Model.State.ShipConstructionInitialState;
+import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentJSON;
+import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 
 /**
  * class that implements the first part of the game, like construction of ships

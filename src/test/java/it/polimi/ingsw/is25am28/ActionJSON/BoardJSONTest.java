@@ -1,19 +1,16 @@
 package it.polimi.ingsw.is25am28.ActionJSON;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.is25am28.Board.Board;
-import it.polimi.ingsw.is25am28.Board.BoardLevel2;
-import it.polimi.ingsw.is25am28.Components.*;
-import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
-import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BoardJSONTest {

@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Board.Board;
-import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.State.FirstRoundState;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Model.State.FirstRoundState;
 
 public class RoundSession extends Session {
 

@@ -4,14 +4,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
-
-import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Ship.Ship;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
-import it.polimi.ingsw.is25am28.Exceptions.*;
-import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Exceptions.*;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
 
 public class ControlSession extends Session {

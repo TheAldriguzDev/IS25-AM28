@@ -1,14 +1,15 @@
 package it.polimi.ingsw.is25am28.ActionJSON;// Updated AbandonedStationJSONTest.java
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedStationJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import it.polimi.ingsw.is25am28.ActionJSON.AbandonedStationJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Items.ItemColor;
+
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 public class AbandonedStationJSONTest {
 
     @Test

@@ -1,0 +1,81 @@
+package it.polimi.ingsw.is25am28.Model.Components;
+
+import it.polimi.ingsw.is25am28.Model.Items.Item;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public final class Storage extends Component {
+      final int capacity;
+      final boolean isSpecialStorage;
+      final List<Item> storedItems;
+
+      public Storage(List<Integer> connectors, int capacity, boolean isSpecialStorage) {
+            super(connectors);
+            this.capacity = capacity;
+            this.isSpecialStorage = isSpecialStorage;
+            storedItems = new ArrayList<>();
+      }
+
+      public int getCapacity() {
+            return capacity;
+      }
+
+      public boolean isSpecialStorage() {
+            return isSpecialStorage;
+      }
+
+      public List<Item> getStoredItems() {
+            return storedItems;
+      }
+
+      /**
+       * @param item The item to store inside this Storage component
+       * @throws IllegalArgumentException If the storage is full or if someone tries to put
+       *         a RED item into a non-special storage component
+       */
+      public void storeItem(Item item) throws IllegalArgumentException{
+            if (!isSpecialStorage && item.getColor() == ItemColor.RED) {
+                  throw new IllegalArgumentException("You can't store a special item in a normal storage unit!");
+            }
+
+            if (this.capacity == storedItems.size()) {
+                  throw new IllegalArgumentException("You can't store more than " + this.capacity + " items!");
+            }
+
+            // Store the items in order of value
+            int idx = 0;
+            while (idx < storedItems.size() && item.getValue() < storedItems.get(idx).getValue()) {
+                  idx++;
+            }
+
+            storedItems.add(idx, item);
+      }
+
+      /**
+       * @param item The item to remove from this storage component
+       */
+      public void removeItem(Item item) {
+            storedItems.remove(item);
+      }
+
+      /**
+       * @return The units of space that are currently free
+       */
+      public int availableSpace() {
+            return capacity - storedItems.size();
+      }
+
+      @Override
+      public Map<String,Object> toMap() {
+            Map<String,Object> map = super.toMap();
+
+            map.put("capacity", capacity );
+            map.put("special", isSpecialStorage );
+            map.put("storedItems", storedItems.stream().map( item -> item.getValue() ).toList() );
+
+            return map;
+      }
+}

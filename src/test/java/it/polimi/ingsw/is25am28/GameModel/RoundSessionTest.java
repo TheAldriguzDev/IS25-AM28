@@ -3,17 +3,17 @@ package it.polimi.ingsw.is25am28.GameModel;
 import org.junit.jupiter.api.Test;
 
 import it.polimi.ingsw.is25am28.GameModel.Session.RoundSession;
-import it.polimi.ingsw.is25am28.State.FirstRoundState;
+import it.polimi.ingsw.is25am28.Model.State.FirstRoundState;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.HashMap;
-import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.MeteorShowerJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.VisitPlanetsJSON;
-import it.polimi.ingsw.is25am28.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.VisitPlanetsJSON;
+import it.polimi.ingsw.is25am28.Model.Board.Board;
 import org.junit.jupiter.api.BeforeEach;
 
 public class RoundSessionTest extends GMTest {

@@ -13,14 +13,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Exceptions.FixNotRequiredError;
-import it.polimi.ingsw.is25am28.Exceptions.ShipPopulationFailException;
-import it.polimi.ingsw.is25am28.Exceptions.UncompletedShipException;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
+import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.UncompletedShipException;
 import it.polimi.ingsw.is25am28.GameModel.Session.ControlSession;
-import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 
 public class ControlSessionTest extends GMTest {

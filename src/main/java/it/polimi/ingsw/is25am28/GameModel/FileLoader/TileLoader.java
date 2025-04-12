@@ -1,22 +1,19 @@
 package it.polimi.ingsw.is25am28.GameModel.FileLoader;
 
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import it.polimi.ingsw.is25am28.Components.Battery;
-import it.polimi.ingsw.is25am28.Components.Cabin;
-import it.polimi.ingsw.is25am28.Components.Cannon;
-import it.polimi.ingsw.is25am28.Components.Component;
-import it.polimi.ingsw.is25am28.Components.Engine;
-import it.polimi.ingsw.is25am28.Components.Shield;
-import it.polimi.ingsw.is25am28.Components.Storage;
-import it.polimi.ingsw.is25am28.Components.Structural;
-import it.polimi.ingsw.is25am28.Components.Vital;
+import it.polimi.ingsw.is25am28.Model.Components.Battery;
+import it.polimi.ingsw.is25am28.Model.Components.Cabin;
+import it.polimi.ingsw.is25am28.Model.Components.Cannon;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
+import it.polimi.ingsw.is25am28.Model.Components.Engine;
+import it.polimi.ingsw.is25am28.Model.Components.Shield;
+import it.polimi.ingsw.is25am28.Model.Components.Storage;
+import it.polimi.ingsw.is25am28.Model.Components.Structural;
+import it.polimi.ingsw.is25am28.Model.Components.Vital;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import java.util.Arrays;
 
 public class TileLoader extends FileLoader {
       static private TileLoader instance;

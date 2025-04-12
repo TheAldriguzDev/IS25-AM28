@@ -13,16 +13,16 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
-import it.polimi.ingsw.is25am28.Board.BoardLevel2;
-import it.polimi.ingsw.is25am28.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Exceptions.TimerFlipException;
+import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
+import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.GameModel.Session.SessionSubscriber;
 import it.polimi.ingsw.is25am28.GameModel.Session.ShipConstructionSession;
-import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.State.FlipActionState;
-import it.polimi.ingsw.is25am28.ActionJSON.ComponentJSON;
-import it.polimi.ingsw.is25am28.Components.Cabin;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Model.State.FlipActionState;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentJSON;
+import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

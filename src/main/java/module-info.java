@@ -1,6 +1,6 @@
 module it.polimi.ingsw.is25am {
     requires com.fasterxml.jackson.databind;
-    opens it.polimi.ingsw.is25am28.ActionJSON to com.fasterxml.jackson.databind;
+    opens it.polimi.ingsw.is25am28.Model.ActionJSON to com.fasterxml.jackson.databind;
     requires com.fasterxml.jackson.datatype.jdk8;
     requires com.fasterxml.jackson.core;
 
@@ -14,31 +14,32 @@ module it.polimi.ingsw.is25am {
     requires junit;
 
     opens it.polimi.ingsw.is25am28 to javafx.fxml;
-    exports it.polimi.ingsw.is25am28;
-    exports it.polimi.ingsw.is25am28.Board;
-    exports it.polimi.ingsw.is25am28.Components;
-    exports it.polimi.ingsw.is25am28.Player;
-    exports it.polimi.ingsw.is25am28.Ship;
-    exports it.polimi.ingsw.is25am28.Exceptions;
-    exports it.polimi.ingsw.is25am28.Lifeform;
-    exports it.polimi.ingsw.is25am28.EventCards;
+    exports it.polimi.ingsw.is25am28.Model;
+    exports it.polimi.ingsw.is25am28.Model.Board;
+    exports it.polimi.ingsw.is25am28.Model.Components;
+    exports it.polimi.ingsw.is25am28.Model.Player;
+    exports it.polimi.ingsw.is25am28.Model.Ship;
+    exports it.polimi.ingsw.is25am28.Model.Exceptions;
+    exports it.polimi.ingsw.is25am28.Model.Lifeform;
+    exports it.polimi.ingsw.is25am28.Model.EventCards;
     exports it.polimi.ingsw.is25am28.GameModel;
-    exports it.polimi.ingsw.is25am28.Items;
-    exports it.polimi.ingsw.is25am28.TimeObserver;
-    exports it.polimi.ingsw.is25am28.ActionJSON;
-    exports it.polimi.ingsw.is25am28.ResourceBank;
-    exports it.polimi.ingsw.is25am28.EventCards.HazardEntities;
-    opens it.polimi.ingsw.is25am28.Exceptions to javafx.fxml;
-    opens it.polimi.ingsw.is25am28.Ship to javafx.fxml;
-    opens it.polimi.ingsw.is25am28.Player to javafx.fxml;
-    opens it.polimi.ingsw.is25am28.TimeObserver to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.Model.Items;
+    exports it.polimi.ingsw.is25am28.Model.TimeObserver;
+    exports it.polimi.ingsw.is25am28.Model.ActionJSON;
+    exports it.polimi.ingsw.is25am28.Model.ResourceBank;
+    exports it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities;
+    opens it.polimi.ingsw.is25am28.Model.Exceptions to javafx.fxml;
+    opens it.polimi.ingsw.is25am28.Model.Ship to javafx.fxml;
+    opens it.polimi.ingsw.is25am28.Model.Player to javafx.fxml;
+    opens it.polimi.ingsw.is25am28.Model.TimeObserver to javafx.fxml;
     opens it.polimi.ingsw.is25am28.GameModel to javafx.fxml;
     exports it.polimi.ingsw.is25am28.GameModel.Session;
     opens it.polimi.ingsw.is25am28.GameModel.Session to javafx.fxml;
     exports it.polimi.ingsw.is25am28.GameModel.FileLoader;
     opens it.polimi.ingsw.is25am28.GameModel.FileLoader to javafx.fxml;
-    exports it.polimi.ingsw.is25am28.ActionJSON.State;
-    opens it.polimi.ingsw.is25am28.ActionJSON.State to com.fasterxml.jackson.databind;
-    exports it.polimi.ingsw.is25am28.ActionJSON.State.ShipConstruction;
-    opens it.polimi.ingsw.is25am28.ActionJSON.State.ShipConstruction to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.is25am28.Model.ActionJSON.State;
+    opens it.polimi.ingsw.is25am28.Model.ActionJSON.State to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction;
+    opens it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction to com.fasterxml.jackson.databind;
+    opens it.polimi.ingsw.is25am28.Model to javafx.fxml;
 }

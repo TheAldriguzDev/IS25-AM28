@@ -1,0 +1,87 @@
+package it.polimi.ingsw.is25am28.Model.Network;
+
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ControllerAndrea.GameController;
+import it.polimi.ingsw.is25am28.ControllerAndrea.PlayerQueueController;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Model.State.ShipConstructionInitialState;
+import it.polimi.ingsw.is25am28.Model.TimeObserver.TimeEndedNotifier;
+
+import java.util.*;
+
+/**
+ * Class used to show how controller workflow works.
+ * for simplicity all messages will be represented as strings
+ * THIS CLASS IS AN ABSTRACTION, MEANT <B>ONLY TO SHOW WORKFLOW</B>
+ */
+public class ExampleNetwork implements TimeEndedNotifier {
+
+      private final PlayerQueueController queueController;
+      private final GameController gameController;
+
+      public ExampleNetwork(){
+            queueController = new PlayerQueueController( this );
+            gameController = new GameController();
+      }
+
+      private void sendInitialState( ShipConstructionInitialState state ){
+
+      }
+
+      private void sendConfigRequest(){
+            // to add connection handling
+
+            Map<String,Object> messageToSend = new HashMap<>();
+
+            messageToSend.put("availableColors", queueController.getAvailableColors() );
+            messageToSend.put("player", queueController.getNextPlayerToContact().get() );
+            messageToSend.put( "isLeader", queueController.isWaitingForNewLeader() );
+
+      }
+
+      public void onConnectionOpened( Map<String,String> message ){
+            //...message conversion or stuffs
+
+            if( queueController.connectPlayer( message.get("nickname") ) ){
+                  sendConfigRequest();
+            }
+      }
+
+      public void onConfigArrived( Map<String,Integer> message  ){
+            Optional<ShipConstructionInitialState> state = queueController.addPlayerToGame( 
+                  PlayerColor.fromInteger(message.get("color")), 
+                  message.get("numOfPlayers"), 
+                  message.get("lvl")
+            );
+
+            if( state.isPresent() ){
+                  gameController.registerNewGame( queueController.getCurrentGame() );
+                  sendInitialState( state.get() );
+            }
+
+            if( queueController.isWaitingForSomeone() ){
+                  sendConfigRequest();
+            }
+      }
+
+      public void sendTimeEndedNotification(List<String> players) {
+            // send notification to all players that timer ended
+      }
+
+      
+
+      // ... handle messages that regards game itself (ex. select, deselect ...)
+
+      public void playCard( ActionJSON json ){
+            var state = gameController.playCard(json);
+
+            if( state.isPresent() ){
+                  // send state of the card
+                  return;
+            }
+
+            // send the following state as is
+            gameController.endGameRewards(json);
+
+      }
+}

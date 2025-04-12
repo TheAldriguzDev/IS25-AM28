@@ -3,19 +3,28 @@ package it.polimi.ingsw.is25am28.GameModel;
 
 import java.util.*;
 
-import com.fasterxml.jackson.databind.introspect.TypeResolutionContext.Empty;
-
-import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
-import it.polimi.ingsw.is25am28.State.*;
-import it.polimi.ingsw.is25am28.TimeObserver.TimeEndedNotifier;
-import it.polimi.ingsw.is25am28.Player.*;
-import it.polimi.ingsw.is25am28.ActionJSON.*;
-import it.polimi.ingsw.is25am28.Board.*;
-import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.Exceptions.*;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentJSON;
+import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
+import it.polimi.ingsw.is25am28.Model.Exceptions.IllegalSessionStateException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
+import it.polimi.ingsw.is25am28.GameModel.Session.ControlSession;
+import it.polimi.ingsw.is25am28.GameModel.Session.RoundSession;
+import it.polimi.ingsw.is25am28.GameModel.Session.SessionSubscriber;
+import it.polimi.ingsw.is25am28.GameModel.Session.ShipConstructionSession;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.Model.State.FirstRoundState;
+import it.polimi.ingsw.is25am28.Model.State.FlipActionState;
+import it.polimi.ingsw.is25am28.Model.State.ShipConstructionInitialState;
+import it.polimi.ingsw.is25am28.Model.TimeObserver.TimeEndedNotifier;
+import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.GameModel.FileLoader.CardLoader;
-import it.polimi.ingsw.is25am28.GameModel.Session.*;
-import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
 public class GameModel implements SessionSubscriber {
 
@@ -24,7 +33,7 @@ public class GameModel implements SessionSubscriber {
 
       private final List<EventCard> deck;
       private final ResourceBank resourceBank;
-      private final Map<String,Player> players = new HashMap<>();
+      private final Map<String, Player> players = new HashMap<>();
       private final TimeEndedNotifier notifier;
 
       private int level;
@@ -102,7 +111,7 @@ public class GameModel implements SessionSubscriber {
       /**
        * the id is the position in the array, also sent to client
        */
-      public FlipActionState selectTile( String player, Integer i, Integer j ){
+      public FlipActionState selectTile(String player, Integer i, Integer j ){
 
             isInShipConstructionSession();
 
@@ -132,7 +141,7 @@ public class GameModel implements SessionSubscriber {
       /**
        * executed whenever player ended construction of its ship.
        */
-      public GameModel setPlayerEndedBuilding( String playerNickname, List<ComponentJSON> shipProxy, int discarded ){
+      public GameModel setPlayerEndedBuilding(String playerNickname, List<ComponentJSON> shipProxy, int discarded ){
 
             isInShipConstructionSession();
 
@@ -166,7 +175,7 @@ public class GameModel implements SessionSubscriber {
       /**
        * method used to play a card
        */
-      public CardStateJSON playCard( ActionJSON action ){
+      public CardStateJSON playCard(ActionJSON action ){
             
             isInRoundSession();
 
