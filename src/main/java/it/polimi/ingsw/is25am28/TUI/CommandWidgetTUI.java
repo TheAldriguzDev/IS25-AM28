@@ -29,8 +29,8 @@ public class CommandWidgetTUI extends WidgetTUI {
      * Runs this widget's command (if present)
      */
     public void runCommand() {
-        if (command != null) {
-            command.run();
+        if (this.command != null) {
+            this.command.run();
         }
     }
 }
