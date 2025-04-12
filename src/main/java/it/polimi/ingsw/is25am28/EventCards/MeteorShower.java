@@ -337,10 +337,15 @@ public class MeteorShower extends EventCard {
             // that was hit from the current player's ship
             if (toHit != null && !threatDestroyed) {
                 try {
-                    shipPtr.removeComponent(
+                    int removedComponents = shipPtr.removeComponent(
                             toHit.getPosition()[0],
                             toHit.getPosition()[1]
-                    );
+                    ).size();
+
+                    // Storing the amount of removed components that are
+                    // needed to calculate the credit deficit to attribute
+                    // to the current player
+                    this.currentPlayer.get().addLostPieces(removedComponents);
                 } catch (CoreDeletionAttemptException e) {
                     this.getBoard().eliminatePlayer(this.currentPlayer.get());
                 }

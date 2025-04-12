@@ -22,53 +22,53 @@ class MeteorShowerTest {
     Board board = new BoardLevel2();
     MeteorShower meteorShower;
 
-//    /**
-//     * Outputs the given ship to terminal
-//     * @param ship The ship to print to terminal
-//     */
-//    void printShipGrid(Ship ship) {
-//        if (ship != null) {
-//            List<Component> components = new ArrayList<>();
-//            Component c;
-//            int rows = ship.getGridDimensions().getKey();
-//            int cols = ship.getGridDimensions().getValue();
-//            int i, j, k;
-//
-//            System.out.print("\n\\");
-//            for (i = 0; i < cols; i++) {
-//                System.out.print("\t" + i);
-//            }
-//            System.out.print("\n");
-//
-//            k = 0;
-//
-//            for (i = 0; i < rows; i++) {
-//                System.out.print(i + "\t");
-//                for (j = 0; j < cols; j++) {
-//                    c = ship.getComponent(i, j);
-//                    if (c == null) {
-//                        System.out.print("." + "\t");
-//                    }
-//                    else {
-//                        System.out.print(k++ + "\t");
-//                        components.add(c);
-//                    }
-//                }
-//                System.out.print("\n");
-//            }
-//
-//            int size = components.size();
-//
-//            System.out.println("\nFound these components:");
-//
-//            for (i = 0; i < size; i++) {
-//                System.out.println(i + " - " + components.get(i));
-//            }
-//        }
-//        else {
-//            System.out.println("ERROR: Given ship is null");
-//        }
-//    }
+    /**
+     * Outputs the given ship to terminal
+     * @param ship The ship to print to terminal
+     */
+    void printShipGrid(Ship ship) {
+        if (ship != null) {
+            List<Component> components = new ArrayList<>();
+            Component c;
+            int rows = ship.getGridDimensions().getKey();
+            int cols = ship.getGridDimensions().getValue();
+            int i, j, k;
+
+            System.out.print("\n\\");
+            for (i = 0; i < cols; i++) {
+                System.out.print("\t" + i);
+            }
+            System.out.print("\n");
+
+            k = 0;
+
+            for (i = 0; i < rows; i++) {
+                System.out.print(i + "\t");
+                for (j = 0; j < cols; j++) {
+                    c = ship.getComponent(i, j);
+                    if (c == null) {
+                        System.out.print("." + "\t");
+                    }
+                    else {
+                        System.out.print(k++ + "\t");
+                        components.add(c);
+                    }
+                }
+                System.out.print("\n");
+            }
+
+            int size = components.size();
+
+            System.out.println("\nFound these components:");
+
+            for (i = 0; i < size; i++) {
+                System.out.println(i + " - " + components.get(i));
+            }
+        }
+        else {
+            System.out.println("ERROR: Given ship is null");
+        }
+    }
 
     void initCustomShip(Player player) {
         Ship ship = player.getShip();
@@ -302,6 +302,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(1, playerList.get(0).getLostPieces());
 
         // Player 1 energy check
         if (!playerList.get(0).getShip().getBatteryList().isEmpty()) {
@@ -352,6 +353,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(1, playerList.get(1).getLostPieces());
 
         // Player 2 energy check
         if (!playerList.get(1).getShip().getBatteryList().isEmpty()) {
@@ -416,6 +418,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(2, playerList.get(0).getLostPieces());
 
         // Player 1 energy check
         if (!playerList.get(0).getShip().getBatteryList().isEmpty()) {
@@ -465,6 +468,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(2, playerList.get(1).getLostPieces());
 
         // Player 2 energy check
         if (!playerList.get(1).getShip().getBatteryList().isEmpty()) {
@@ -529,6 +533,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(2, playerList.get(0).getLostPieces());
 
         // Player 1 energy check
         if (!playerList.get(0).getShip().getBatteryList().isEmpty()) {
@@ -580,6 +585,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(3, playerList.get(1).getLostPieces());
 
         // Player 2 energy check
         if (!playerList.get(1).getShip().getBatteryList().isEmpty()) {
@@ -592,7 +598,7 @@ class MeteorShowerTest {
             assertEquals(energyP2, playerList.get(1).getShip().getAvailableEnergy());
         }
 
-        // Player2 - Meteor 3 aftermath --> Meteor hits and takes away 2 components
+        // Player2 - Meteor 3 aftermath --> Meteor hits and takes away 1 components
 //        System.out.println("\n\t ==== SHIP Player2 after Meteor 3 ====");
 //        printShipGrid(playerList.get(1).getShip());
 
@@ -644,6 +650,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(2, playerList.get(0).getLostPieces());
 
         // Player 1 energy check
         if (!playerList.get(0).getShip().getBatteryList().isEmpty()) {
@@ -694,6 +701,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(3, playerList.get(1).getLostPieces());
 
         // Player 2 energy check
         if (!playerList.get(1).getShip().getBatteryList().isEmpty()) {
@@ -759,6 +767,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(3, playerList.get(0).getLostPieces());
 
         // Player 1 energy check
         if (!playerList.get(0).getShip().getBatteryList().isEmpty()) {
@@ -808,6 +817,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(8, playerList.get(1).getLostPieces());
 
         // Player 2 energy check
         if (!playerList.get(1).getShip().getBatteryList().isEmpty()) {
@@ -876,6 +886,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(4, playerList.get(0).getLostPieces());
 
         // Player 1 energy check
         if (!playerList.get(0).getShip().getBatteryList().isEmpty()) {
@@ -925,6 +936,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(9, playerList.get(1).getLostPieces());
 
         // Player 2 energy check
         if (!playerList.get(1).getShip().getBatteryList().isEmpty()) {
@@ -989,6 +1001,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(5, playerList.get(0).getLostPieces());
 
         // Player 1 energy check
         if (energyP1 > 0 && !playerList.get(0).getShip().getBatteryList().isEmpty()) {
@@ -1039,6 +1052,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(10, playerList.get(1).getLostPieces());
 
         // Player 2 energy check
         if (energyP2 > 0 && !playerList.get(1).getShip().getBatteryList().isEmpty() && playerList.get(1).getShip().getAvailableEnergy() > 0) {
@@ -1103,6 +1117,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(6, playerList.get(0).getLostPieces());
 
         // Player 1 energy check
         if (energyP1 > 0 && !playerList.get(0).getShip().getBatteryList().isEmpty()) {
@@ -1156,6 +1171,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(11, playerList.get(1).getLostPieces());
 
         // Player 2 energy check
         if (energyP2 > 0 && !playerList.get(1).getShip().getBatteryList().isEmpty() && playerList.get(1).getShip().getAvailableEnergy() > 0) {
@@ -1221,6 +1237,7 @@ class MeteorShowerTest {
         assertFalse(meteorShower.hasFinished());
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(6, playerList.get(0).getLostPieces());
 
         // Player 1 energy check
         if (energyP1 > 0 && !playerList.get(0).getShip().getBatteryList().isEmpty()) {
@@ -1269,6 +1286,7 @@ class MeteorShowerTest {
         assertTrue(meteorShower.hasFinished()); // Finally the last state is generated and the card is completed
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         assertEquals(currMeteorIndex, meteorShowerStateJSON.getCurrMeteorIndex());
+        assertEquals(11, playerList.get(1).getLostPieces());
 
         // Player 2 energy check
         if (energyP2 > 0 && !playerList.get(1).getShip().getBatteryList().isEmpty()) {
