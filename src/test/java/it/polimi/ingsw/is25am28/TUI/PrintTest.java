@@ -13,12 +13,10 @@ import it.polimi.ingsw.is25am28.Ship.Ship;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Timeout;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
 import static org.junit.jupiter.api.Assertions.*;
@@ -887,8 +885,7 @@ public class PrintTest {
     void widget_boardAndShip() {
         System.out.println("======================== BOARD & SHIP WIDGETS TEST ==========================");
 
-        Ship ship = new Ship(2);
-        customShip2(ship);
+        Ship ship = customLevel2Ship();
 
         Board board = new BoardLevel2();
         List<Player> players = new ArrayList<Player>();
@@ -972,13 +969,126 @@ public class PrintTest {
     }
 
     @Test
-    void test() {
-        WidgetTUI widgetTUI = new WidgetTUI();
+    void inputWidget_commandSelectionTest() {
+        InputWidgetTUI inputWidget = new InputWidgetTUI();
 
-        widgetTUI.appendString("HELLO WORLD");
-        widgetTUI.addPadding(1, 1, 1, 1);
-        widgetTUI.wrapWidgetWithBorder();
+        CommandWidgetTUI command1 = new CommandWidgetTUI("1", null);
+        CommandWidgetTUI command2 = new CommandWidgetTUI("2", null);
+        CommandWidgetTUI command3 = new CommandWidgetTUI("3", null);
+        CommandWidgetTUI command4 = new CommandWidgetTUI("4", null);
+        CommandWidgetTUI command5 = new CommandWidgetTUI("5", null);
+        CommandWidgetTUI command6 = new CommandWidgetTUI("6", null);
+        CommandWidgetTUI command7 = new CommandWidgetTUI("7", null);
+        CommandWidgetTUI command8 = new CommandWidgetTUI("8", null);
 
-        widgetTUI.printWidget();
+        command1.setCommand(
+            () -> {
+                System.out.println("\nSelected command with ID=" + command1.getCommandId());
+            }
+        );
+
+        command2.setCommand(
+            () -> {
+                System.out.println("\nSelected command with ID=" + command2.getCommandId());
+            }
+        );
+
+        command3.setCommand(
+            () -> {
+                System.out.println("\nSelected command with ID=" + command3.getCommandId());
+            }
+        );
+
+        command4.setCommand(
+            () -> {
+                System.out.println("\nSelected command with ID=" + command4.getCommandId());
+            }
+        );
+
+        command5.setCommand(
+                () -> {
+                    System.out.println("\nSelected command with ID=" + command5.getCommandId());
+                }
+        );
+
+        command6.setCommand(
+                () -> {
+                    System.out.println("\nSelected command with ID=" + command6.getCommandId());
+                }
+        );
+
+        command7.setCommand(
+                () -> {
+                    System.out.println("\nSelected command with ID=" + command7.getCommandId());
+                }
+        );
+
+        command8.setCommand(
+                () -> {
+                    System.out.println("\nSelected command with ID=" + command8.getCommandId());
+                }
+        );
+
+        command1.appendString("(" + command1.getCommandId() + ") command1").addPadding(0, 1, 0, 1);
+        command2.appendString("(" + command2.getCommandId() + ") command2").addPadding(0, 1, 0, 1);
+        command3.appendString("(" + command3.getCommandId() + ") command3").addPadding(0, 1, 0, 1);
+        command4.appendString("(" + command4.getCommandId() + ") command4").addPadding(0, 1, 0, 1);
+        command5.appendString("(" + command5.getCommandId() + ") command5").addPadding(0, 1, 0, 1);
+        command6.appendString("(" + command6.getCommandId() + ") command6").addPadding(0, 1, 0, 1);
+        command7.appendString("(" + command7.getCommandId() + ") command7").addPadding(0, 1, 0, 1);
+        command8.appendString("(" + command8.getCommandId() + ") command8").addPadding(0, 1, 0, 1);
+
+        inputWidget.setColumnGroupingAmount(2);
+
+        inputWidget.addCommand(command1);
+        inputWidget.addCommand(command2);
+        inputWidget.addCommand(command3);
+        inputWidget.addCommand(command4);
+        inputWidget.addCommand(command5);
+        inputWidget.addCommand(command6);
+        inputWidget.addCommand(command7);
+        inputWidget.addCommand(command8);
+
+        String content = "2";
+        InputStream stream = new ByteArrayInputStream(content.getBytes());
+        inputWidget.setNewScanner(stream);
+
+        assertTrue(inputWidget.selectCommand("Select a command: "));
+
+        content = "-1";
+        stream = new ByteArrayInputStream(content.getBytes());
+        inputWidget.setNewScanner(stream);
+
+        assertFalse(inputWidget.selectCommand("Select a command: "));
+    }
+
+    @Test
+    void widget_boardAndShipAndCommandsTest() {
+        widget_boardAndShip();
+        inputWidget_commandSelectionTest();
+    }
+
+    @Test
+    void composeTwoWidgetsHorizontally() {
+        WidgetTUI widget1 = new WidgetTUI();
+        WidgetTUI widget2 = new WidgetTUI();
+
+        widget1.appendString("HELLO").addPadding(0, 1, 0, 1).wrapWidgetWithBorder();
+        widget2.appendString("WORLD").addPadding(0, 1, 0, 1).wrapWidgetWithBorder();
+
+        WidgetTUI.composeTwoWidgetsHorizontally(widget1, widget2).wrapWidgetWithBorder().printWidget();
+        WidgetTUI.composeTwoWidgetsHorizontally(widget2, widget1).wrapWidgetWithBorder().printWidget();
+    }
+
+    @Test
+    void composeTwoWidgetsVertically() {
+        WidgetTUI widget1 = new WidgetTUI();
+        WidgetTUI widget2 = new WidgetTUI();
+
+        widget1.appendString("HELLO").addPadding(0, 1, 0, 1).wrapWidgetWithBorder();
+        widget2.appendString("WORLD").addPadding(0, 1, 0, 1).wrapWidgetWithBorder();
+
+        WidgetTUI.composeTwoWidgetsVertically(widget1, widget2).wrapWidgetWithBorder().printWidget();
+        WidgetTUI.composeTwoWidgetsVertically(widget2, widget1).wrapWidgetWithBorder().printWidget();
     }
 }

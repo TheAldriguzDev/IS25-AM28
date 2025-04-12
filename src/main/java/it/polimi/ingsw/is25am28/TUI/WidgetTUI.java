@@ -7,10 +7,10 @@ import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
 
 public class WidgetTUI {
     public static final List<String> defaultBorderCharacters = new ArrayList<String>();
-    private List<String> screen;
-    private int height;
-    private int width;
-    private int layerCount;
+    protected List<String> screen;
+    protected int height;
+    protected int width;
+    protected int layerCount;
 
     static {
         // NOTE: This is also the ordering that each custom borderCharacter list must follow
@@ -93,6 +93,25 @@ public class WidgetTUI {
     }
 
     /**
+     * Composes two widgets horizontally by returning the main widget with its screen
+     * replaced with the horizontal composition of the given widgets' screens.
+     *
+     * @param mainWidget The main widget onto which the composition result will be placed on
+     * @param donorWidget The donor widget whose screen will be put inside the main widget
+     *
+     * @return The widget resulting from the composition of the two given widgets
+     */
+    public static WidgetTUI composeTwoWidgetsHorizontally(WidgetTUI mainWidget, WidgetTUI donorWidget) {
+        List<WidgetTUI> widgets = new ArrayList<>();
+
+        widgets.add(mainWidget);
+        widgets.add(donorWidget);
+        mainWidget = WidgetTUI.composeWidgetsHorizontally(widgets);
+
+        return mainWidget;
+    }
+
+    /**
      * @param widgets The widgets that will be composed horizontally into one
      * (NOTE: The given widgets will be composed IN THE GIVEN ORDER)
      *
@@ -101,7 +120,7 @@ public class WidgetTUI {
      */
     public static WidgetTUI composeWidgetsHorizontally(List<WidgetTUI> widgets) {
         // Return the composition result only if there are widgets to compose
-        if (widgets != null) {
+        if (widgets != null && !widgets.isEmpty()) {
             WidgetTUI composedWidgets = new WidgetTUI();
             List<Integer> widgetHeights = new ArrayList<Integer>();
             int maxDepth, widgetAmount;
@@ -159,6 +178,25 @@ public class WidgetTUI {
     }
 
     /**
+     * Composes two widgets vertically by returning the main widget with its screen
+     * replaced with the vertical composition of the given widgets' screens.
+     *
+     * @param mainWidget The main widget onto which the composition result will be placed on
+     * @param donorWidget The donor widget whose screen will be put inside the main widget
+     *
+     * @return The widget resulting from the composition of the two given widgets
+     */
+    public static WidgetTUI composeTwoWidgetsVertically(WidgetTUI mainWidget, WidgetTUI donorWidget) {
+        List<WidgetTUI> widgets = new ArrayList<>();
+
+        widgets.add(mainWidget);
+        widgets.add(donorWidget);
+        mainWidget = WidgetTUI.composeWidgetsVertically(widgets);
+
+        return mainWidget;
+    }
+
+    /**
      * @param widgets The widgets that will be composed vertically into one<br>
      * (NOTE: The given widgets will be composed IN THE GIVEN ORDER)
      *
@@ -168,7 +206,7 @@ public class WidgetTUI {
      */
     public static WidgetTUI composeWidgetsVertically(List<WidgetTUI> widgets) {
         // Return the composition result only if there are widgets to compose
-        if (widgets != null) {
+        if (widgets != null && !widgets.isEmpty()) {
             WidgetTUI composedWidgets = new WidgetTUI();
 
             // Removes any null widget inside the widgets list
@@ -199,7 +237,7 @@ public class WidgetTUI {
         AtomicInteger maxHeight;
         int screenAmount;
 
-        if (screens != null) {
+        if (screens != null && !screens.isEmpty()) {
             // Removes any null lists inside the screens list
             screens = screens.stream().filter(Objects::nonNull).toList();
 
@@ -261,7 +299,7 @@ public class WidgetTUI {
     public static List<String> composeScreensVertically(List<List<String>> screens) {
         List<String> composedScreens;
 
-        if (screens != null) {
+        if (screens != null && !screens.isEmpty()) {
             composedScreens = new ArrayList<String>();
 
             // Removes any null lists inside the screens list
@@ -276,6 +314,27 @@ public class WidgetTUI {
         }
 
         return null;
+    }
+
+    /**
+     * Adds the remaining spaces to the given screen so that all lines
+     * are of the same length as the longest one found inside it
+     *
+     * It's equivalent to performing wrapWithBorder and unwrapBorder right after
+     */
+    public static WidgetTUI fillScreenWithSpaces(WidgetTUI widget) {
+        String line;
+        int screenLen, maxWidth;
+
+        maxWidth = widget.getWidth();
+        screenLen = widget.getHeight();
+
+        for (int i = 0; i < screenLen; i++) {
+            line = widget.getScreen().get(i);
+            widget.getScreen().set(i, line + SPACE.repeat(maxWidth - line.length()));
+        }
+
+        return widget;
     }
 
     /**
@@ -467,13 +526,17 @@ public class WidgetTUI {
      *               than the current height, then the height stays unchanged
      *               (because shrinking the widget would mean to lose some screen lines)
      */
-    public void setHeight(int height) {
+    public WidgetTUI setHeight(int height) {
         // Extends the screen to fit the new height
-        while (this.screen.size() < height) {
-            this.screen.add(SPACE.repeat(this.width));
+        if (this.height < height) {
+            while (this.screen.size() < height) {
+                this.screen.add(SPACE.repeat(this.width));
+            }
+
+            this.height = height;
         }
 
-        this.height = height;
+        return this;
     }
 
     /**
@@ -488,7 +551,7 @@ public class WidgetTUI {
      *              than the current width, then the width stays unchanged
      *              (because shrinking the widget would mean to lose some screen lines)
      */
-    public void setWidth(int width) {
+    public WidgetTUI setWidth(int width) {
         if (this.width < width) {
             String tmp;
             int padding;
@@ -507,6 +570,8 @@ public class WidgetTUI {
                 }
             }
         }
+
+        return this;
     }
 
     /**
@@ -629,6 +694,18 @@ public class WidgetTUI {
      */
     public List<String> getScreen() {
         return this.screen;
+    }
+
+    /**
+     * Resets the screen by eliminating its content and
+     * also sets width and height back to 0
+     */
+    public WidgetTUI resetScreenAndDimensions() {
+        this.screen = new ArrayList<>();
+        this.height = 0;
+        this.width = 0;
+
+        return this;
     }
 
     /**

@@ -12,7 +12,12 @@ public class PrintUtils {
      */
     public static String removeUnicodeFromString(String string) {
         String regex = "\\\\u[0-9A-Fa-f]{4}|\\u001B\\[[0-9;]*[mK]";
-        return string.replaceAll(regex, "");
+
+        if (string != null) {
+            return string.replaceAll(regex, "");
+        }
+
+        return null;
     }
 
     /**
