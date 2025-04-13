@@ -986,7 +986,32 @@ public class PrintTest {
         widget.unwrapWidgetFromBorder();
 
         widget.addPadding(1, 1, 1, 1).wrapWidgetWithBorder().printWidget();
-        widget.unwrapWidgetFromBorder(); 
+        widget.unwrapWidgetFromBorder();
+
+        WidgetTUI w1 = new WidgetTUI();
+        WidgetTUI w2 = new WidgetTUI();
+        WidgetTUI w3 = new WidgetTUI();
+        WidgetTUI w4 = new WidgetTUI();
+
+        w1.appendString(PrintUtils.addColor("HELLO", ANSIColors.RED)).wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+        w2.appendString(PrintUtils.addColor("HELLO", ANSIColors.GREEN)).wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+        w3.appendString(PrintUtils.addColor("HELLO", ANSIColors.BLUE)).wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+        w4.appendString(PrintUtils.addColor("HELLO", ANSIColors.YELLOW)).wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+
+//        w1.appendString(PrintUtils.addColor("HELLO", ANSIColors.RED)).wrapWidgetWithBorder();
+//        w2.appendString(PrintUtils.addColor("HELLO", ANSIColors.GREEN)).wrapWidgetWithBorder();
+//        w3.appendString(PrintUtils.addColor("HELLO", ANSIColors.BLUE)).wrapWidgetWithBorder();
+//        w4.appendString(PrintUtils.addColor("HELLO", ANSIColors.YELLOW)).wrapWidgetWithBorder();
+
+//        w1.appendString("HELLO").wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+//        w2.appendString("HELLO").wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+//        w3.appendString("HELLO").wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+//        w4.appendString("HELLO").wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+
+        WidgetTUI.composeTwoWidgetsHorizontally(
+            WidgetTUI.composeTwoWidgetsHorizontally(w1, w2),
+            WidgetTUI.composeTwoWidgetsHorizontally(w3, w4)
+        ).printWidget();
     }
 
     @Test
@@ -1223,6 +1248,4 @@ public class PrintTest {
         tui.printWidget();
         inputWidget.selectCommand("[SELECT_COMMAND] ID=");
     }
-
-
 }

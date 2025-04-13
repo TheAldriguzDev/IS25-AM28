@@ -675,7 +675,7 @@ public class WidgetTUI {
             // so that all lines now have the set width
             for (int i = 0; i < this.height; i++) {
                 tmp = this.screen.get(i);
-                padding = this.width - tmp.length();
+                padding = this.width - PrintUtils.removeUnicodeFromString(tmp).length();
 
                 if (padding > 0) {
                     tmp += SPACE.repeat(padding);
