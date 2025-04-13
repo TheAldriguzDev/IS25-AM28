@@ -4,7 +4,6 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class TUI {
@@ -17,11 +16,6 @@ public class TUI {
         [W6,         W7, W8]
 
         Map<String, WidgetTUI> map;
-
-        public void updateComponent(JSON) {
-            map.get("component").generateWidget(JSON);
-            tui.compose().printWidget();
-        }
 
      */
 
@@ -58,19 +52,5 @@ public class TUI {
 
         // TODO: Add all the widgets to the map and the TUI widget sublist
 
-
-
     }
-
-    /**
-     * Recursive method that updates this widget map by
-     */
-    private void compileWidgetMap() {
-        for (List<WidgetTUI> widgetRow : this.tuiWidget.getAllWidgetComponents()) {
-            for (WidgetTUI widget : widgetRow) {
-                this.widgetMap.put(widget.getWidgetId() , widget);
-            }
-        }
-    }
-
 }

@@ -1,12 +1,8 @@
 package it.polimi.ingsw.is25am28.TUI;
 
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.*;
-import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.EventCards.Slavers;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
@@ -613,45 +609,45 @@ public class PrintTest {
 
         widget.appendString("==HELLO WORLD==");
         widget.printWidget();
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // (1) - One border wrapping and One unwrapping
         // First border wrapping
         widget.wrapWidgetWithBorder();
         widget.printWidget();
         layerCount++;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // First border unwrapping
         widget.unwrapWidgetFromBorder();
         widget.printWidget();
         layerCount--;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // (2) - Two border wrapping and two unwrapping
         // First border wrapping
         widget.wrapWidgetWithBorder();
         widget.printWidget();
         layerCount++;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // Second border wrapping
         widget.wrapWidgetWithBorder();
         widget.printWidget();
         layerCount++;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // Second border unwrapping
         widget.unwrapWidgetFromBorder();
         widget.printWidget();
         layerCount--;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // First border unwrapping
         widget.unwrapWidgetFromBorder();
         widget.printWidget();
         layerCount--;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
     }
 
     @Test
