@@ -1,8 +1,12 @@
 package it.polimi.ingsw.is25am28.TUI;
 
+import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.*;
+import it.polimi.ingsw.is25am28.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.EventCards.Slavers;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
@@ -29,6 +33,11 @@ public class PrintTest {
     int scale = 5;
     int height = scale;
     int width = 3 * height - 2;
+    Board board;
+    Player p1;
+    Player p2;
+    Player p3;
+    Player p4;
 
     @BeforeEach
     void init() {
@@ -37,6 +46,32 @@ public class PrintTest {
         connectors.add(1);
         connectors.add(2);
         connectors.add(3);
+
+        board = new BoardLevel2();
+
+        List<Player> players = new ArrayList<Player>();
+
+        players.add(new Player("Player 1", PlayerColor.RED, 2));
+        players.add(new Player("Player 2", PlayerColor.BLUE, 2));
+        players.add(new Player("Player 3", PlayerColor.GREEN, 2));
+        players.add(new Player("Player 4", PlayerColor.YELLOW, 2));
+
+        for (Player player : players) {
+            this.board.newPlayer(player);
+        }
+
+        players = board.getPlayers();
+        p1 = players.get(0);
+        p2 = players.get(1);
+        p3 = players.get(2);
+        p4 = players.get(3);
+
+//        customShip2(p1.getShip());
+//        customShip2(p2.getShip());
+//        customShip2(p3.getShip());
+//        customShip2(p4.getShip());
+
+
     }
 
     void customShip2(Ship ship) {
@@ -1190,4 +1225,6 @@ public class PrintTest {
         tui.printWidget();
         inputWidget.selectCommand("[SELECT_COMMAND] ID=");
     }
+
+
 }

@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Player.Player;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import javafx.util.Pair;
 
 
@@ -324,5 +325,15 @@ public class Pirates extends EventCard {
     // Only for testing
     void setDiceThrowResult(int diceThrowResult) {
         this.diceThrowResult = diceThrowResult;
+    }
+
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON piratesStateJSON) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }

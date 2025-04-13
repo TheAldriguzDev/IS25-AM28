@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Connector;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Components.Component;
 import it.polimi.ingsw.is25am28.Ship.Ship;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -87,5 +88,14 @@ public class Stardust extends EventCard {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
         return stardustStateJSON;
+    }
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON cardState) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }

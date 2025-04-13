@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.ActionJSON.SlaversJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
@@ -36,6 +37,8 @@ class SlaversTest {
     ActionJSON actionJSON2;
     ActionJSON actionJSON3;
     ActionJSON actionJSON4;
+
+    CardStateJSON cardState;
 
     Slavers slavers;
 
@@ -101,6 +104,9 @@ class SlaversTest {
 
     @Test
     public void test_first_player_loses_crew_second_player_eliminated_third_player_defeats_slavers_and_takes_loot_fourth_player_does_not_use_the_card() {
+        System.out.println("======================== SLAVERS PRINT AND FUNCTION (1) TEST ==========================");
+
+
         slavers = new Slavers("Slavers", 2, 4, 2, 4, 6, board);
 
         ArrayList<Pair<Integer, Integer>> doubleCannonActivated = new ArrayList<>();
@@ -141,23 +147,51 @@ class SlaversTest {
 
         slavers.initCardPlayers();
 
+        // =======================================================================
+        cardState = slavers.generateState();
+        slavers.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         // Input gathering phase
         if (!slavers.hasFinished()) {
             slavers.useCard(new SlaversJSON("Player 1", false, new ArrayList<>(), new ArrayList<>()));
         }
+
+        // =======================================================================
+        cardState = slavers.generateState();
+        slavers.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
             slavers.useCard(new SlaversJSON("Player 2", false, new ArrayList<>(), new ArrayList<>()));
         }
+
+        // =======================================================================
+        cardState = slavers.generateState();
+        slavers.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
             slavers.useCard(new SlaversJSON("Player 3", true, new ArrayList<>(), doubleCannonActivated));
         }
+
+        // =======================================================================
+        cardState = slavers.generateState();
+        slavers.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
             slavers.useCard(new SlaversJSON("Player 4", false, new ArrayList<>(), new ArrayList<>()));
         }
         assertFalse(slavers.hasFinished());
+
+        // =======================================================================
+        cardState = slavers.generateState();
+        slavers.generateWidget(cardState).printWidget();
+        // =======================================================================
 
             // Phase in which the defeated players need to send the crew members they want to remove form the ship
             if (!slavers.hasFinished()) {
@@ -165,10 +199,16 @@ class SlaversTest {
             }
             assertFalse(slavers.hasFinished());
 
+        // =======================================================================
+        cardState = slavers.generateState();
+        slavers.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         if (!slavers.hasFinished()) {
             slavers.useCard(new SlaversJSON("Player 2", false, crewToRemove2, new ArrayList<>()));
         }
         assertTrue(slavers.hasFinished());
+
 
 
 
@@ -240,6 +280,19 @@ class SlaversTest {
         assertEquals(0, p2.getCredits());
         assertEquals(0, p3.getCredits());
         assertEquals(4, p4.getCredits());
+
+
+    }
+
+    @Test
+    void cardWidget_test() {
+
+
+
+
+
+
+
 
 
     }

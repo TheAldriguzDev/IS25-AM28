@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.ActionJSON.SmugglersJSON;
 import it.polimi.ingsw.is25am28.Items.*;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
@@ -208,6 +209,16 @@ public class Smugglers extends EventCard {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
         return smugglersStateJSON;
+    }
+
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON smugglersStateJSON) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }
 

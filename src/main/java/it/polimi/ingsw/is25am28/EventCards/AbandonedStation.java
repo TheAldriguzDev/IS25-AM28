@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import org.json.simple.JSONObject;
 
 import java.util.*;
@@ -181,6 +182,16 @@ public class AbandonedStation extends EventCard {
         cardState.setStationResources(itemList);
 
         return cardState;
+    }
+
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON cardState) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }
 
