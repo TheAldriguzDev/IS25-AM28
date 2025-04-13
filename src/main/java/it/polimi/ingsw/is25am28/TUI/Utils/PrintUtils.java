@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.TUI;
+package it.polimi.ingsw.is25am28.TUI.Utils;
 
 public class PrintUtils {
     public static final String SPACE = " ";

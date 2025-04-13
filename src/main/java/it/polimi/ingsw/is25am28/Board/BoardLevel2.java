@@ -1,16 +1,16 @@
 package it.polimi.ingsw.is25am28.Board;
 
 import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.TUI.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.*;
 
 public class BoardLevel2 extends Board {
 

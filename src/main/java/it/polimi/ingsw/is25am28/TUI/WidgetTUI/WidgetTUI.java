@@ -1,15 +1,16 @@
 package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
-import it.polimi.ingsw.is25am28.TUI.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.*;
 
 public class WidgetTUI {
     public static final List<String> defaultBorderCharacters = new ArrayList<String>();
+    protected List<List<WidgetTUI>> components;
     protected List<String> screen;
     protected int height;
     protected int width;
@@ -82,15 +83,16 @@ public class WidgetTUI {
 
     // Creates a no-content widget
     public WidgetTUI() {
+        this.components = new ArrayList<>();
+        this.screen = new ArrayList<String>();
         this.height = 0;
         this.width = 0;
-        this.screen = new ArrayList<String>();
         this.layerCount = 0;
     }
 
     // Auto adjusts the widget's dimension based on the given screen
     public WidgetTUI(List<String> screen) {
-        this.screen = new ArrayList<String>();
+        this.components = new ArrayList<>();
         this.setScreen(screen);
         this.layerCount = 0;
     }
@@ -320,6 +322,28 @@ public class WidgetTUI {
     }
 
     /**
+     * Composes all the stored widgets into a single widget and
+     * saves the composition result into this widget's screen
+     */
+    public void composeStoredWidgets() {
+        if (this.components != null) {
+            // Removing all the null lists
+            this.components = this.components.stream().filter(Objects::nonNull).toList();
+
+            // Composing all widgets of each row into a single widget
+            List<WidgetTUI> composedRows = new ArrayList<>();
+
+            for (List<WidgetTUI> rowToCompose : this.components) {
+                composedRows.add(WidgetTUI.composeWidgetsHorizontally(rowToCompose));
+            }
+
+            // Finally, composing the previous widget rows into a single
+            // widget and storing the result into this widget's screen
+            this.setScreen(WidgetTUI.composeWidgetsVertically(composedRows).getScreen());
+        }
+    }
+
+    /**
      * Adds the remaining spaces to the given screen so that all lines
      * are of the same length as the longest one found inside it
      *
@@ -491,38 +515,38 @@ public class WidgetTUI {
         return wrappedScreen;
     }
 
-    /**
-     * Removes one border layer from this screen
-     * (NOTE: Since the passed object is not a widget, there's no way to know if
-     *        the screen was wrapped in the past, therefore this method should be
-     *        used with care as it can delete parts of the screen if used incorrectly)
-     */
-    public static List<String> unwrapScreenFromBorder(List<String> screen) {
-        if (screen != null) {
-            List<String> unwrappedScreen = new ArrayList<String>();
-
-            // Calculating the max width of the given screen
-            AtomicInteger maxWidth = new AtomicInteger(0);
-
-            screen.stream()
-                    .map(PrintUtils::removeUnicodeFromString)
-                    .mapToInt(String::length)
-                    .max()
-                    .ifPresent(maxWidth::set);
-
-            int height = screen.size() + 2;
-            int width = maxWidth.get() + 2;
-
-            for (int i = 1; i < height; i++) {
-                String line = screen.get(i);
-                unwrappedScreen.add(line.substring(1, width - 1));
-            }
-
-            return unwrappedScreen;
-        }
-
-        return null;
-    }
+//    /**
+//     * Removes one border layer from this screen
+//     * (NOTE: Since the passed object is not a widget, there's no way to know if
+//     *        the screen was wrapped in the past, therefore this method should be
+//     *        used with care as it can delete parts of the screen if used incorrectly)
+//     */
+//    public static List<String> unwrapScreenFromBorder(List<String> screen) {
+//        if (screen != null) {
+//            List<String> unwrappedScreen = new ArrayList<String>();
+//
+//            // Calculating the max width of the given screen
+//            AtomicInteger maxWidth = new AtomicInteger(0);
+//
+//            screen.stream()
+//                    .map(PrintUtils::removeUnicodeFromString)
+//                    .mapToInt(String::length)
+//                    .max()
+//                    .ifPresent(maxWidth::set);
+//
+//            int height = screen.size() + 2;
+//            int width = maxWidth.get() + 2;
+//
+//            for (int i = 1; i < height; i++) {
+//                String line = screen.get(i);
+//                unwrappedScreen.add(line.substring(1, width - 1));
+//            }
+//
+//            return unwrappedScreen;
+//        }
+//
+//        return null;
+//    }
 
     /**
      * @param height The height to set this widget to. If the given height is smaller
@@ -674,7 +698,7 @@ public class WidgetTUI {
     public WidgetTUI setScreen(List<String> screen) {
         if (screen != null) {
             // Setting the screen only with non-null lines from the given screen
-            this.screen = new ArrayList<>(screen.stream().filter(Objects::nonNull).toList());
+            this.screen = new ArrayList<String>(screen.stream().filter(Objects::nonNull).toList());
 
             // Resetting the screen removes any borders inside, therefore
             // the layer count will be zeroed

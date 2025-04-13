@@ -1,13 +1,15 @@
 package it.polimi.ingsw.is25am28.Components;
 
-import it.polimi.ingsw.is25am28.TUI.*;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.*;
 
 public final class Battery extends Component {
     public static final String alias = "BATTERY";
