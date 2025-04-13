@@ -15,6 +15,8 @@ public class WidgetTUI {
     protected int height;
     protected int width;
     protected int layerCount;
+    protected String widgetId;
+    protected WidgetTUI parent;
 
     static {
         // NOTE: This is also the ordering that each custom borderCharacter list must follow
@@ -83,18 +85,22 @@ public class WidgetTUI {
 
     // Creates a no-content widget
     public WidgetTUI() {
-        this.components = new ArrayList<>();
+        this.components = null;
         this.screen = new ArrayList<String>();
         this.height = 0;
         this.width = 0;
         this.layerCount = 0;
+        this.widgetId = "DEFAULT_ID";
+        this.parent = null;
     }
 
     // Auto adjusts the widget's dimension based on the given screen
     public WidgetTUI(List<String> screen) {
-        this.components = new ArrayList<>();
+        this.components = null;
         this.setScreen(screen);
         this.layerCount = 0;
+        this.widgetId = "DEFAULT_ID";
+        this.parent = null;
     }
 
     /**
@@ -321,25 +327,44 @@ public class WidgetTUI {
         return null;
     }
 
+    // TODO: Test this
+    // TODO: Finish this
+    // TODO: Create the "opposite" version that recomposes the tree by going upwards from a single node
+    // TODO: Add the parent initialization
     /**
      * Composes all the stored widgets into a single widget and
      * saves the composition result into this widget's screen
      */
-    public void composeStoredWidgets() {
+    public void composeAllStoredWidgets() {
         if (this.components != null) {
+            for (List<WidgetTUI> widgetRow : this.components) {
+                for (WidgetTUI widget : widgetRow) {
+                    if (widget != null) {
+                        widget.parent = this;
+                        widget.composeAllStoredWidgets();
+                    }
+                }
+            }
+        }
+        else {
             // Removing all the null lists
-            this.components = this.components.stream().filter(Objects::nonNull).toList();
+            this.parent.components = this.parent.components.stream().filter(Objects::nonNull).toList();
 
             // Composing all widgets of each row into a single widget
             List<WidgetTUI> composedRows = new ArrayList<>();
 
-            for (List<WidgetTUI> rowToCompose : this.components) {
+            // Null checking of each widget inside each row is done
+            // inside the composeWidgetsHorizontally method
+            for (List<WidgetTUI> rowToCompose : this.parent.components) {
                 composedRows.add(WidgetTUI.composeWidgetsHorizontally(rowToCompose));
             }
 
+            // Removing null rows from the list
+            composedRows = composedRows.stream().filter(Objects::nonNull).toList();
+
             // Finally, composing the previous widget rows into a single
             // widget and storing the result into this widget's screen
-            this.setScreen(WidgetTUI.composeWidgetsVertically(composedRows).getScreen());
+            this.parent.setScreen(WidgetTUI.composeWidgetsVertically(composedRows).getScreen());
         }
     }
 
@@ -547,6 +572,98 @@ public class WidgetTUI {
 //
 //        return null;
 //    }
+
+    // TODO: Test this
+    /**
+     * Adds a component to this widget's component list.
+     * If <code>this.components</code> is not extended to the given coordinates
+     * (i.e.: there hasn't been an initialization that reached that far), then
+     * the method puts nulls until it reaches the row and column where the widget
+     * needs to be placed
+     */
+    public void setWidgetComponentAtCoordinates(WidgetTUI widget, int rowIndex, int colIndex) {
+        if (widget != null) {
+            if (this.components == null) {
+                this.components = new ArrayList<>();
+            }
+
+            // Extending the amount of rows until the given
+            // widget can be placed at the given row
+            while (this.components.size() < rowIndex) {
+                this.components.add(null);
+            }
+            this.components.add(new ArrayList<>());
+
+            // Extending the current row until the given
+            // widget can be placed at the given column
+            List<WidgetTUI> currRow = this.components.get(rowIndex);
+
+            while (currRow.size() <= colIndex) {
+                currRow.add(null);
+            }
+
+            currRow.set(colIndex, widget);
+
+            this.components.set(colIndex, currRow);
+        }
+    }
+
+    // TODO: Test this
+    /**
+     * Returns the widget stored in this widget's component list of lists by
+     * querying if there's a component at the given coordinates (rowIndex, colIndex)
+     *
+     * @param rowIndex The row index of the component to return (if present)
+     * @param colIndex The column index of the component to retunr (if present)
+     *
+     * @return The component at coordinates (rowIndex, colIndex) found inside <code>this.components</code>.
+     *
+     * @throws NullPointerException If <code>this.components</code> is null
+     * @throws IndexOutOfBoundsException If either rowIndex or colIndex are out of bounds
+     */
+    public WidgetTUI getWidgetComponentAtCoordinates(int rowIndex, int colIndex) throws NullPointerException, IndexOutOfBoundsException {
+        if (this.components != null) {
+            if (this.components.size() > rowIndex) {
+                List<WidgetTUI> currRow = this.components.get(rowIndex);
+
+                if (currRow.size() > colIndex) {
+                    return currRow.get(colIndex);
+                }
+                else {
+                    throw new IndexOutOfBoundsException("ERROR: colIndex=" + colIndex + " is out of bounds");
+                }
+            }
+            else {
+                throw new IndexOutOfBoundsException("ERROR: rowIndex=" + rowIndex + " is out of bounds");
+            }
+        }
+        else {
+            throw new NullPointerException("ERROR: \"this.components\" list is null");
+        }
+    }
+
+    /**
+     * @return The list of lists of WidgetTUI that compose this widget
+     */
+    public List<List<WidgetTUI>> getAllWidgetComponents() {
+        return this.components;
+    }
+
+    /**
+     * @param widgetId The ID to give to this widget
+     */
+    public void setWidgetId(String widgetId) {
+        if (widgetId != null && !widgetId.isEmpty()) {
+            this.widgetId = widgetId;
+        }
+    }
+
+    /**
+     * @return This widget's ID
+     */
+    public String getWidgetId() {
+        return this.widgetId;
+    }
 
     /**
      * @param height The height to set this widget to. If the given height is smaller

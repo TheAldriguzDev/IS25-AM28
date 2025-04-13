@@ -3,80 +3,74 @@ package it.polimi.ingsw.is25am28.TUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class TUI {
-    private ExecutorService threadPool;
-    private WidgetTUI tui;
+    private Map<String, WidgetTUI> widgetMap;
+    private WidgetTUI tuiWidget;
     private InputWidgetTUI inputWidget;
-    private boolean recompose;
 
-    // TODO: Setup virtual view and relative commands and transform them into CommandWidgetTUI instances
-    // private VirtualView virtualView;
+    /*
+        [W1[W4, W5], W2, W3]
+        [W6,         W7, W8]
+
+        Map<String, WidgetTUI> map;
+
+        public void updateComponent(JSON) {
+            map.get("component").generateWidget(JSON);
+            tui.compose().printWidget();
+        }
+
+     */
+
+    /*
+        TUI  or  GUI
+         |        |
+         ViewUpdater               ...
+             |                      |
+           QUEUE                  QUEUE
+             |                      |
+          Network -------------- Network
+
+       ==============
+
+           TUI---MAP
+            |
+        ---------
+        |   |   |   ...
+        W1  W2  W3  ...
+     */
+
 
     // Constructor
     public TUI() {
-        this.tui = new WidgetTUI();
+        this.tuiWidget = new WidgetTUI();
         this.inputWidget = new InputWidgetTUI();
+        this.widgetMap = new HashMap<>();
 
         // Setting the input widget's scanner to scan the stdin input stream
         this.inputWidget.setNewScanner(System.in);
 
-        // TODO: Setup virtual view and relative commands and transform them into CommandWidgetTUI instances
-        // this.inputWidget.addCommand(new CommandWidgetTUI(commandId, command));
+        // TODO: Add inputWidget commands
+        // this.inputWidget.addCommand(new CommandWidgetTUI(...));
+
+        // TODO: Add all the widgets to the map and the TUI widget sublist
+
+
+
     }
 
     /**
-     * Sets up a new fixed thread pool with 2 threads (one each for I/O operations)
+     * Recursive method that updates this widget map by
      */
-    public void createIOThreadPool() {
-        this.threadPool = Executors.newFixedThreadPool(2);
-    }
-
-    /**
-     * Removes the currently stored thread pool (if present)
-     */
-    public void closeExecutorService() {
-        if (this.threadPool != null) {
-            this.threadPool.close();
+    private void compileWidgetMap() {
+        for (List<WidgetTUI> widgetRow : this.tuiWidget.getAllWidgetComponents()) {
+            for (WidgetTUI widget : widgetRow) {
+                this.widgetMap.put(widget.getWidgetId() , widget);
+            }
         }
     }
 
-    /**
-     * Prints the TUI to terminal
-     */
-    public void printTUI() {
-        // The TUI is updated and printed by a thread
-        this.threadPool.submit(
-            () -> {
-                // Only recomposes all the stored widgets if
-                // there was an update to the view, flagged by
-                // the recompose flag upon receiving an update
-                if (this.recompose) {
-                    this.tui.composeStoredWidgets();
-                    this.recompose = false;
-                }
-
-                this.tui.printWidget();
-            }
-        );
-    }
-
-    /**
-     * Prints to terminal the command widget and opens
-     * an input field to acquire a correct user input
-     * (i.e.: the user input is correct iff a command with such input
-     *        as a command identifier exists in the available commands)
-     */
-    public void getUserInput(String prefixMessage) {
-        // The command widget and input field is printed by a thread
-        this.threadPool.submit(
-            () -> {
-                while (! this.inputWidget.selectCommand(prefixMessage)) {
-                    System.err.println("ERROR: Command not found");
-                }
-            }
-        );
-    }
 }
