@@ -1,8 +1,8 @@
 package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.RMI.Client.RMIClient;
-import it.polimi.ingsw.is25am28.VirtualView;
+import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.Scanner;
 import java.util.UUID;
@@ -10,8 +10,6 @@ import java.util.UUID;
 public class Client {
 
     private StateDTO currentState;
-
-
 
 
     public static void main(String[] args) throws Exception {

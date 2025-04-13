@@ -2,9 +2,8 @@ package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
-import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.VirtualView;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.Scanner;
 
@@ -107,12 +106,14 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(WaitPlayersStateDTO state) throws Exception {
         if (!this.playerName.isEmpty()) {
-            System.out.println("Waiting for more players to connect...");
-            return;
+            if (state.getUsedNicknames().contains(this.playerName)) {
+                System.out.println("Players in the game: " + state.getUsedNicknames());
+                System.out.println("Waiting for more players to connect...");
+                return;
+            }
         }
 
-
-        System.out.println("Game has been configured! Please choose your nickname and color:");
+        System.out.println("Game is ready to start! Please choose your nickname and color:");
         System.out.println("The available colors are: " + state.getAvailableColors());
 
         String playerName;
@@ -123,6 +124,7 @@ public class ViewUpdater implements StateVisitor {
                 System.err.println("Invalid input: name cannot be empty.");
             }
         } while (playerName.isEmpty());
+        this.playerName = playerName;
 
         String color;
         do {
@@ -133,8 +135,9 @@ public class ViewUpdater implements StateVisitor {
                 color = "";
             }
         } while (color.isEmpty());
+        this.playerColor = PlayerColor.fromString(color);
 
-        this.client.newPlayer(playerName, PlayerColor.fromString(color));
+        this.client.newPlayer(this.playerName, this.playerColor);
     }
 
     @Override

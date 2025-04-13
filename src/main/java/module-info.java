@@ -4,7 +4,7 @@ module it.polimi.ingsw.is25am {
     requires com.fasterxml.jackson.datatype.jdk8;
     requires com.fasterxml.jackson.core;
 
-    exports it.polimi.ingsw.is25am28 to java.rmi;
+    exports it.polimi.ingsw.is25am28.Network to java.rmi;
 
     requires javafx.controls;
     requires javafx.fxml;
@@ -45,9 +45,10 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction;
     opens it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction to com.fasterxml.jackson.databind;
     opens it.polimi.ingsw.is25am28.Model to javafx.fxml;
-    exports it.polimi.ingsw.is25am28.RMI.Client;
-    exports it.polimi.ingsw.is25am28.RMI.Server;
+    exports it.polimi.ingsw.is25am28.Network.RMI.Client;
+    exports it.polimi.ingsw.is25am28.Network.RMI.Server;
     exports it.polimi.ingsw.is25am28.Client to java.rmi;
     opens it.polimi.ingsw.is25am28.Client to javafx.fxml;
+    opens it.polimi.ingsw.is25am28.Network to javafx.fxml;
 
 }

@@ -1,14 +1,12 @@
-package it.polimi.ingsw.is25am28.RMI.Client;
+package it.polimi.ingsw.is25am28.Network.RMI.Client;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.RMI.Server.VirtualViewRMI;
-import it.polimi.ingsw.is25am28.VirtualServer;
+import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
+import it.polimi.ingsw.is25am28.Network.VirtualServer;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

@@ -19,9 +19,17 @@ public final class CreateGameState extends State {
             PlayerColor playerColor,
             int level,
             int numPlayers ) throws IllegalStateException, IllegalArgumentException {
+
+        if (level != 0 && level != 2) {
+            throw new IllegalArgumentException("The given level is not supported: " + level);
+        }
+        if (numPlayers < 2 || numPlayers > 4) {
+            throw new IllegalArgumentException("The given totalPlayer is not valid: " + numPlayers);
+        }
+
+        model.addPlayer(playerNickname, playerColor);
         model.setGameLevel(level);
         model.setGamePlayersNumber(numPlayers);
-        model.addPlayer(playerNickname, playerColor);
     }
 
     @Override

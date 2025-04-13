@@ -1,15 +1,14 @@
-package it.polimi.ingsw.is25am28.RMI.Server;
+package it.polimi.ingsw.is25am28.Network.RMI.Server;
 
 import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.RMI.Client.VirtualServerRMI;
-import it.polimi.ingsw.is25am28.VirtualView;
+import it.polimi.ingsw.is25am28.Network.Queue.Queue;
+import it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -23,6 +22,7 @@ import java.util.*;
 
 public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     final GameController controller;
+    final Queue queueHandler;
 
     // Ref of the all the clients that are interested in receiving updates
     final Map<UUID, VirtualViewRMI> clients;
@@ -31,6 +31,10 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         super();
         this.clients = new HashMap<UUID, VirtualViewRMI>();
         this.controller = new GameController();
+
+        // Create the queue handler to process in a thread the communication with the clients
+        this.queueHandler = new Queue();
+        new Thread(queueHandler).start();
     }
 
     // TODO: Understand if we need to create a dedicate class to startup the server
@@ -71,7 +75,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             state = this.controller.gameConfig(nickname, playerColor, level, numPlayers);
         } catch (IllegalArgumentException | IllegalStateException e) {
-            clients.get(uuid).reportError(e.getMessage());
+            this.reportCommandError(clients.get(uuid), e.getMessage(), this.controller.getCurrentState());
             return;
         }
 
@@ -133,5 +137,15 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     @Override
     public void playCard(ActionJSON action, UUID uuid) throws RemoteException {
 
+    }
+
+    private void reportCommandError(VirtualViewRMI client, String msg, StateDTO state) {
+        queueHandler.enqueue(() -> {
+            try {
+                client.reportError(msg, state);
+            } catch (RemoteException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

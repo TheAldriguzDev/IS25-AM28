@@ -1,10 +1,7 @@
-package it.polimi.ingsw.is25am28;
+package it.polimi.ingsw.is25am28.Network;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-
-import java.rmi.RemoteException;
-import java.util.List;
 
 /**
  * Interface that defines the methods that the controller calls to update the content on the clients
@@ -22,5 +19,5 @@ public interface VirtualView {
 
     public void updateState(StateDTO state) throws Exception;
 
-    public void reportError(String details) throws Exception;
+    public void reportError(String details, StateDTO state) throws Exception;
 }
