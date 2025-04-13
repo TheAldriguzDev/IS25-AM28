@@ -9,7 +9,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.EventCards.AbandonedShip;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
@@ -89,7 +89,7 @@ class GameModelTest {
 
         // 2.1. The leader execute the command to configure the game
         int gameLevel = 0;
-        StateJSON state = model.gameConfig("Player 1", PlayerColor.RED, gameLevel, 4);
+        StateDTO state = model.gameConfig("Player 1", PlayerColor.RED, gameLevel, 4);
 
         assertEquals(gameLevel, model.getGameLevel());
         assertEquals(4, model.getNumPlayers());
@@ -120,7 +120,7 @@ class GameModelTest {
         );
 
         // Add three player to the game --> the state should change to the ship construction session
-        List<StateJSON> states = model.addNewPlayer("Player 2", PlayerColor.YELLOW);
+        List<StateDTO> states = model.addNewPlayer("Player 2", PlayerColor.YELLOW);
         assertEquals(1, states.size());
 
         json = mapper.writeValueAsString(states.getFirst());
@@ -194,7 +194,7 @@ class GameModelTest {
                 new ComponentHelper<ConstructionComponentDTO>(4, 10)
                         .addItem(new ConstructionComponentDTO().setI(6).setJ(7).setRotation(0)));
 
-        List<StateJSON> playerEndedShipStates = model.playerEndedSendShip("Player 1", playerShipComponents, 2);
+        List<StateDTO> playerEndedShipStates = model.playerEndedSendShip("Player 1", playerShipComponents, 2);
         assertEquals(1, playerEndedShipStates.size());
 
         // Try to send another time the ship --> should throw an error
@@ -255,7 +255,7 @@ class GameModelTest {
         );
 
         // The player 3 tries to fix his ship, but he fails :(
-        List<StateJSON> fixShipStates = model.fixShip("Player 3", p3FixedComponents);
+        List<StateDTO> fixShipStates = model.fixShip("Player 3", p3FixedComponents);
         assertEquals(1, fixShipStates.size()); // There is no state transaction
 
         // Check the new state of players that needs to fix the ship
@@ -294,7 +294,7 @@ class GameModelTest {
         List<ComponentHelper<LifeformType>> addBrownAlien = new ArrayList<>();
         addBrownAlien.add(new ComponentHelper<LifeformType>(6, 7).addItem(LifeformType.BROWN_ALIEN));
 
-        List<StateJSON> populateStates = model.populateShip("Player 1", addAstronauts);
+        List<StateDTO> populateStates = model.populateShip("Player 1", addAstronauts);
         PopulateShipDTO populateShipDTO = (PopulateShipDTO) populateStates.getFirst();
         assertEquals(1, populateShipDTO.getPlayersReady().size());
         assertEquals(1, populateStates.size());
@@ -319,7 +319,7 @@ class GameModelTest {
         // ========================================
         assertInstanceOf(CardRoundState.class, model.getCurrentState());
 
-        StateJSON firstRoundState = new StateJSON();
+        StateDTO firstRoundState = new StateDTO();
 
         switch (model.getCurrentState()) {
             case CardRoundState cardState -> {
@@ -335,7 +335,7 @@ class GameModelTest {
         CardRoundDTO cardRoundDTO = (CardRoundDTO) firstRoundState;
         assertEquals("Player 1", cardRoundDTO.getCardInfo().getPlayerNickname(), "Player 1 should be the leader");
 
-        List<StateJSON> cardRoundStates = new ArrayList<>();
+        List<StateDTO> cardRoundStates = new ArrayList<>();
 
         // In this test the first 4 cards are playable, the others one are not since the players does not have the requirements
 

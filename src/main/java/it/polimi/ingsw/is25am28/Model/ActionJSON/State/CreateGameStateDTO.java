@@ -8,13 +8,13 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class CreateGameStateJSON extends StateJSON {
+public final class CreateGameStateDTO extends StateDTO {
     List<String> availableColors;
     List<String> usedNicknames;
 
-    public CreateGameStateJSON() {}
+    public CreateGameStateDTO() {}
 
-    public CreateGameStateJSON(
+    public CreateGameStateDTO(
             @JsonProperty("availableColors") List<String> availableColors,
             @JsonProperty("usedNicknames") List<String> usedNicknames) {
         this.availableColors = availableColors;
@@ -39,5 +39,10 @@ public final class CreateGameStateJSON extends StateJSON {
     @JsonSetter("usedNicknames")
     public void setUsedNicknames(List<String> usedNicknames) {
         this.usedNicknames = usedNicknames;
+    }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
     }
 }

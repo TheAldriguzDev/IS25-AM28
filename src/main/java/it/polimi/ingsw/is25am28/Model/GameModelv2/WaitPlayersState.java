@@ -1,7 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 public final class WaitPlayersState extends State {
@@ -10,7 +10,7 @@ public final class WaitPlayersState extends State {
     }
 
     @Override
-    public void addNewPlayer(String playerNickname, PlayerColor playerColor) throws IllegalStateException {
+    public void addNewPlayer(String playerNickname, PlayerColor playerColor) throws IllegalStateException, IllegalArgumentException {
         model.addPlayer(playerNickname, playerColor);
     }
 
@@ -22,8 +22,8 @@ public final class WaitPlayersState extends State {
     }
 
     @Override
-    public StateJSON generateState() {
-        WaitPlayersStateJSON state = new WaitPlayersStateJSON();
+    public StateDTO generateState() {
+        WaitPlayersStateDTO state = new WaitPlayersStateDTO();
 
         // Set the information needed for the state
         // 1. StateName

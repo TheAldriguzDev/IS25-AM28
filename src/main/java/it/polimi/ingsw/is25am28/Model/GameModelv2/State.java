@@ -8,7 +8,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
@@ -24,11 +24,11 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
         this.model = model;
     }
 
-    public void gameConfig(String playerNickname, PlayerColor playerColor, int level, int numPlayers) throws IllegalStateException {
+    public void gameConfig(String playerNickname, PlayerColor playerColor, int level, int numPlayers) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The 'gameConfig' command is not allowed in the " + this + " state");
     }
 
-    public void addNewPlayer(String playerNickname, PlayerColor playerColor) throws IllegalStateException {
+    public void addNewPlayer(String playerNickname, PlayerColor playerColor) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The 'addNewPlayer' command is not allowed in the " + this + " state");
     }
 
@@ -63,8 +63,8 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
     public abstract void onComplete();
 
     // State generation
-    public StateJSON generateState() {
-        StateJSON state = new StateJSON();
+    public StateDTO generateState() {
+        StateDTO state = new StateDTO();
 
         state.setStateName(this.toString());
 

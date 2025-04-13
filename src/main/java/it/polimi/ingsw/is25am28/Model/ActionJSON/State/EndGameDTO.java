@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class EndGameDTO extends StateJSON {
+public final class EndGameDTO extends StateDTO {
     private Map<String, Integer> playersCredits;
     private Map<String, Integer> playersPositionResult;
 

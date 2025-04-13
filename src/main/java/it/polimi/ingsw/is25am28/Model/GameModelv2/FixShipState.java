@@ -2,7 +2,7 @@ package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
@@ -52,7 +52,7 @@ public final class FixShipState extends State {
     }
 
     @Override
-    public StateJSON generateState() {
+    public StateDTO generateState() {
         FixShipDTO state = new FixShipDTO()
                 .setPlayerWithInvalidShip(playersWithInvalidShip);
 

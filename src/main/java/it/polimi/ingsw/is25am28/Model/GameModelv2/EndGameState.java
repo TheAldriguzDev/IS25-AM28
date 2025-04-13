@@ -1,7 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
@@ -83,7 +83,7 @@ public final class EndGameState extends State {
     }
 
     @Override
-    public StateJSON generateState() {
+    public StateDTO generateState() {
         return new EndGameDTO()
                 .setPlayersCredits(this.playersResult)
                 .setPlayersPositionResult(this.playersPositionResult);

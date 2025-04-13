@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.io.Serializable;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class FixShipDTO extends StateJSON {
+public final class FixShipDTO extends StateDTO implements Serializable  {
     private List<String> playerWithInvalidShip;
 
     public FixShipDTO() {}

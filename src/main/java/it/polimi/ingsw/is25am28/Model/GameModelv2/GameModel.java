@@ -5,7 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Model.Board.BoardTestFlight;
@@ -54,7 +54,7 @@ public class GameModel {
         this.currentState = currentState;
     }
 
-    public StateJSON generateState() {
+    public StateDTO generateState() {
         return this.currentState.generateState();
     }
 
@@ -115,7 +115,7 @@ public class GameModel {
      * Initializes the game configuration as defined by the leader.
      * Sets the game level, number of players, and creates the leader as the first player.
      */
-    public StateJSON gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws IllegalStateException {
+    public StateDTO gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws IllegalStateException, IllegalArgumentException {
         // Set the game configuration sent by the leader
         this.currentState.gameConfig(nickname, playerColor, level, numPlayers);
 
@@ -131,7 +131,7 @@ public class GameModel {
         switch (this.level) {
             case 0 -> this.board = new BoardTestFlight();
             case 2 -> this.board = new BoardLevel2();
-            default -> throw new IllegalStateException("The given game level (" + this.level + ") is not valid");
+            default -> throw new IllegalStateException("The given game level (" + this.level + ") is not supported");
         };
 
         this.board.buildBoard();
@@ -143,8 +143,8 @@ public class GameModel {
      * 1. The response of the action of the command
      * 2. If all the players have joined it will also include the nextState information
      * */
-    public List<StateJSON> addNewPlayer(String nickname, PlayerColor playerColor) {
-        List<StateJSON> states = new ArrayList<>();
+    public List<StateDTO> addNewPlayer(String nickname, PlayerColor playerColor) throws IllegalStateException, IllegalArgumentException {
+        List<StateDTO> states = new ArrayList<>();
 
         this.currentState.addNewPlayer(nickname, playerColor);
 
@@ -184,11 +184,11 @@ public class GameModel {
      * 2. If all the players has sent the ship it will return the new state. This could be: FixShip if some player has an
      * invalid ship or populateShip if all the players have a valid ship
      * */
-    public List<StateJSON> playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles) {
-        List<StateJSON> states = new ArrayList<>();
+    public List<StateDTO> playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles) {
+        List<StateDTO> states = new ArrayList<>();
 
         // Execute the command
-        StateJSON tmpState = this.currentState.playerEndedSendShip(player, playerShip, reservedTiles);
+        StateDTO tmpState = this.currentState.playerEndedSendShip(player, playerShip, reservedTiles);
         if (tmpState != null) {
             states.add(tmpState);
         }
@@ -218,10 +218,10 @@ public class GameModel {
      * 1. Contains the response of the executed command
      * 2. If all the players have fixed their ship, it contains the PopulateShipState information
      * */
-    public List<StateJSON> fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove) throws IllegalArgumentException, FixNotRequiredError {
-        List<StateJSON> states = new ArrayList<>();
+    public List<StateDTO> fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove) throws IllegalArgumentException, FixNotRequiredError {
+        List<StateDTO> states = new ArrayList<>();
 
-        StateJSON tmpState = this.currentState.fixShip(player, componentsToRemove);
+        StateDTO tmpState = this.currentState.fixShip(player, componentsToRemove);
         if (tmpState != null) {
             states.add(tmpState);
         }
@@ -241,10 +241,10 @@ public class GameModel {
      * 1. Contains the response of the executed command
      * 2. If all the players has populated their ship, it contains the CardRoundState information
      * */
-    public List<StateJSON> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException {
-        List<StateJSON> states = new ArrayList<>();
+    public List<StateDTO> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException {
+        List<StateDTO> states = new ArrayList<>();
 
-        StateJSON tmpState = this.currentState.populateShip(player, lifeFormToAdd);
+        StateDTO tmpState = this.currentState.populateShip(player, lifeFormToAdd);
         if (tmpState != null) {
             states.add(tmpState);
         }
@@ -264,8 +264,8 @@ public class GameModel {
      * 1. Contains the response of the command
      * 2. If all the cards are finished it will also include the nextState or rather EndGameState
      * */
-    public List<StateJSON> playCard(ActionJSON action) throws IllegalArgumentException {
-        List<StateJSON> states = new ArrayList<>();
+    public List<StateDTO> playCard(ActionJSON action) throws IllegalArgumentException {
+        List<StateDTO> states = new ArrayList<>();
 
         List<CardRoundDTO> tmpState = this.currentState.playCard(action);
         if (tmpState != null) {

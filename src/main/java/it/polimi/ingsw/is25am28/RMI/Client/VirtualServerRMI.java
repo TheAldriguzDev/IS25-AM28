@@ -4,18 +4,16 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateJSON;
-import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
-import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.RMI.Server.VirtualViewRMI;
 import it.polimi.ingsw.is25am28.VirtualServer;
-import it.polimi.ingsw.is25am28.VirtualView;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.UUID;
 
 
 /**
@@ -27,24 +25,23 @@ public interface VirtualServerRMI extends Remote, VirtualServer {
      * Method used to connect the clients to the server.
      * @param client is needed to know which clients needs to be notified when there are the updates
      * */
-    void connectClient(VirtualViewRMI client) throws RemoteException;
+    void connectClient(VirtualViewRMI client, UUID uuid) throws Exception;
 
-    @Override
-    public StateJSON gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws RemoteException;
+    public void gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, UUID uuid) throws Exception;
 
-    public List<StateJSON> addNewPlayer(String nickname, PlayerColor playerColor) throws RemoteException;
+    public void addNewPlayer(String nickname, PlayerColor playerColor, UUID uuid) throws Exception;
 
-    public ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws RemoteException;
+    public void selectTile(String player, Integer i, Integer j, UUID uuid) throws RemoteException;
 
-    public ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws RemoteException;
+    public void deselectTile(String player, Integer i, Integer j, UUID uuid) throws RemoteException;
 
-    public List<StateJSON> playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles) throws RemoteException;
+    public void playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles, UUID uuid) throws RemoteException;
 
-    public TimerDTO flipTimer(String player) throws RemoteException;
+    public void flipTimer(String player, UUID uuid) throws RemoteException;
 
-    public List<StateJSON> fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove) throws RemoteException;
+    public void fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove, UUID uuid) throws RemoteException;
 
-    public List<StateJSON> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws RemoteException;
+    public void populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd, UUID uuid) throws RemoteException;
 
-    public List<StateJSON> playCard(ActionJSON action) throws RemoteException;
+    public void playCard(ActionJSON action, UUID uuid) throws RemoteException;
 }

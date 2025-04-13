@@ -1,16 +1,26 @@
 package it.polimi.ingsw.is25am28;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+
+import java.rmi.RemoteException;
+import java.util.List;
+
 /**
  * Interface that defines the methods that the controller calls to update the content on the clients
  * */
 
 public interface VirtualView {
 
-    // TODO: make overload of showUpdate to match the different states of the model
-    void updateView() throws Exception;
+    // TODO: Think again about this implementation, i'm not sure it's correct --> it should be better to use the cmd pattern
+    // TODO: Change in cmd pattern to have only one method execute(Command cmd)
+    public void configureGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers) throws Exception;
 
-    // TODO: make overload of updateState to match the different states of the model
-    void updateState() throws Exception;
+    public void newPlayer(String playerNickname, PlayerColor playerColor) throws Exception;
 
-    void reportError(String details) throws Exception;
+    public void updateView(StateDTO state) throws Exception;
+
+    public void updateState(StateDTO state) throws Exception;
+
+    public void reportError(String details) throws Exception;
 }

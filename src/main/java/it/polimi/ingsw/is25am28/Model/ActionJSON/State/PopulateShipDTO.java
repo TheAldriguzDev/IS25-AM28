@@ -5,10 +5,11 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.io.Serializable;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class PopulateShipDTO extends StateJSON {
+public final class PopulateShipDTO extends StateDTO implements Serializable  {
     private List<String> playersReady;
 
     public PopulateShipDTO() {}
@@ -27,5 +28,10 @@ public final class PopulateShipDTO extends StateJSON {
         this.playersReady = playersReady;
 
         return this;
+    }
+
+    @Override
+    public void accept(StateVisitor visitor) {
+        visitor.visit(this);
     }
 }

@@ -7,13 +7,19 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO;
 
+import java.io.Serial;
+import java.io.Serializable;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public sealed class StateJSON permits CardRoundDTO, CreateGameStateJSON, EndGameDTO, FixShipDTO, PopulateShipDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateJSON {
+public sealed class StateDTO implements Serializable permits CardRoundDTO, CreateGameStateDTO, EndGameDTO, FixShipDTO, PopulateShipDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateDTO, WaitingForGameConfigurationDTO {
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     private String stateName;
 
-    public StateJSON() {}
+    public StateDTO() {}
 
-    public StateJSON(@JsonProperty("stateName") String stateName) {
+    public StateDTO(@JsonProperty("stateName") String stateName) {
         this.stateName = stateName;
     }
 
@@ -25,5 +31,12 @@ public sealed class StateJSON permits CardRoundDTO, CreateGameStateJSON, EndGame
     @JsonSetter("stateName")
     public void setStateName(String stateName) {
         this.stateName = stateName;
+    }
+
+    /**
+     * Accept the visitor to visit the state
+     * */
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
     }
 }

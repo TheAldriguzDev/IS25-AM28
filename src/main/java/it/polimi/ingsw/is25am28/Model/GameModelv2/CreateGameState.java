@@ -1,8 +1,8 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CreateGameStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CreateGameStateDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public final class CreateGameState extends State {
             String playerNickname,
             PlayerColor playerColor,
             int level,
-            int numPlayers ) throws IllegalStateException {
+            int numPlayers ) throws IllegalStateException, IllegalArgumentException {
         model.setGameLevel(level);
         model.setGamePlayersNumber(numPlayers);
         model.addPlayer(playerNickname, playerColor);
@@ -30,8 +30,8 @@ public final class CreateGameState extends State {
     }
 
     @Override
-    public StateJSON generateState() {
-        CreateGameStateJSON state = new CreateGameStateJSON();
+    public StateDTO generateState() {
+        CreateGameStateDTO state = new CreateGameStateDTO();
 
         state.setStateName(this.toString());
         state.setAvailableColors(model.getAvailableColors());

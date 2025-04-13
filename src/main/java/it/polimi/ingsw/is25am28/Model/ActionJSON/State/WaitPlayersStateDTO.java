@@ -5,18 +5,19 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.io.Serializable;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class WaitPlayersStateJSON extends StateJSON {
+public final class WaitPlayersStateDTO extends StateDTO implements Serializable {
     List<String> availableColors;
     List<String> usedNicknames;
     int lobbyTotalSpot;
     int availableSpots;
 
-    public WaitPlayersStateJSON() {}
+    public WaitPlayersStateDTO() {}
 
-    public WaitPlayersStateJSON(
+    public WaitPlayersStateDTO(
                 @JsonProperty("availableColors") List<String> availableColors,
                 @JsonProperty("usedNicknames") List<String> usedNicknames,
                 @JsonProperty("lobbyTotalSpot") int lobbyTotalSpot,
@@ -66,5 +67,10 @@ public final class WaitPlayersStateJSON extends StateJSON {
     @JsonSetter("availableSpots")
     public void setAvailableSpots(int availableSpots) {
         this.availableSpots = availableSpots;
+    }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
     }
 }

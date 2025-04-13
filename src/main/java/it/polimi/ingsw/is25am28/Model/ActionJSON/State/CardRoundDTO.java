@@ -11,7 +11,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public final class CardRoundDTO extends StateJSON {
+public final class CardRoundDTO extends StateDTO {
     private int round;
     private BoardJSON board;
     private Map<String, PlayerJSON> playersInfo;

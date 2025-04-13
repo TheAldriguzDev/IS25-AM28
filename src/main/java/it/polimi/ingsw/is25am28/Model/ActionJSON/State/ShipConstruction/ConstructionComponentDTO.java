@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public non-sealed class ConstructionComponentDTO extends ShipConstructionEventDTO {

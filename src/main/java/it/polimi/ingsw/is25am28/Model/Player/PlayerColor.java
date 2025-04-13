@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.Player;
 
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
+
 public enum PlayerColor {
     GREEN,
     RED,
@@ -17,6 +19,16 @@ public enum PlayerColor {
         } 
 
         return YELLOW;
+    }
+
+    public static PlayerColor fromString(String color) {
+        return switch (color) {
+            case "RED" -> PlayerColor.RED;
+            case "YELLOW" -> PlayerColor.YELLOW;
+            case "GREEN" -> PlayerColor.GREEN;
+            case "BLUE" -> PlayerColor.BLUE;
+            default -> null;
+        };
     }
 
     @Override
