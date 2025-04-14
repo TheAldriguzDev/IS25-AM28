@@ -6,7 +6,9 @@ import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
 
 import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.TUI.*;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 import javafx.util.Pair;
@@ -18,7 +20,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.is25am28.Connector.*;
-import static it.polimi.ingsw.is25am28.TUI.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class Ship implements WidgetTUIGenerator {
     private final static Map<Integer, int[][]> shipProfiles = new HashMap<>();

@@ -1,19 +1,22 @@
 package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
-import it.polimi.ingsw.is25am28.TUI.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.*;
 
 public class WidgetTUI {
     public static final List<String> defaultBorderCharacters = new ArrayList<String>();
+    // protected List<List<WidgetTUI>> components;
     protected List<String> screen;
     protected int height;
     protected int width;
-    protected int layerCount;
+    protected int borderCount;
+    protected String widgetId;
+    // protected WidgetTUI parent;
 
     static {
         // NOTE: This is also the ordering that each custom borderCharacter list must follow
@@ -82,17 +85,22 @@ public class WidgetTUI {
 
     // Creates a no-content widget
     public WidgetTUI() {
+        // this.components = null;
+        this.screen = new ArrayList<String>();
         this.height = 0;
         this.width = 0;
-        this.screen = new ArrayList<String>();
-        this.layerCount = 0;
+        this.borderCount = 0;
+        this.widgetId = "DEFAULT_ID";
+        // this.parent = null;
     }
 
     // Auto adjusts the widget's dimension based on the given screen
     public WidgetTUI(List<String> screen) {
-        this.screen = new ArrayList<String>();
+        // this.components = null;
         this.setScreen(screen);
-        this.layerCount = 0;
+        this.borderCount = 0;
+        this.widgetId = "DEFAULT_ID";
+        // this.parent = null;
     }
 
     /**
@@ -319,6 +327,17 @@ public class WidgetTUI {
         return null;
     }
 
+//    // TODO: Test this
+//    // TODO: Finish this
+//    // TODO: Create the "opposite" version that recomposes the tree by going upwards from a single node
+//    /**
+//     * Composes all the stored widgets into a single widget and
+//     * saves the composition result into this widget's screen
+//     */
+//    public void composeAllStoredWidgets() {
+//
+//    }
+
     /**
      * Adds the remaining spaces to the given screen so that all lines
      * are of the same length as the longest one found inside it
@@ -491,37 +510,128 @@ public class WidgetTUI {
         return wrappedScreen;
     }
 
+//    /**
+//     * Removes one border layer from this screen
+//     * (NOTE: Since the passed object is not a widget, there's no way to know if
+//     *        the screen was wrapped in the past, therefore this method should be
+//     *        used with care as it can delete parts of the screen if used incorrectly)
+//     */
+//    public static List<String> unwrapScreenFromBorder(List<String> screen) {
+//        if (screen != null) {
+//            List<String> unwrappedScreen = new ArrayList<String>();
+//
+//            // Calculating the max width of the given screen
+//            AtomicInteger maxWidth = new AtomicInteger(0);
+//
+//            screen.stream()
+//                    .map(PrintUtils::removeUnicodeFromString)
+//                    .mapToInt(String::length)
+//                    .max()
+//                    .ifPresent(maxWidth::set);
+//
+//            int height = screen.size() + 2;
+//            int width = maxWidth.get() + 2;
+//
+//            for (int i = 1; i < height; i++) {
+//                String line = screen.get(i);
+//                unwrappedScreen.add(line.substring(1, width - 1));
+//            }
+//
+//            return unwrappedScreen;
+//        }
+//
+//        return null;
+//    }
+
+//    // TODO: Test this
+//    /**
+//     * Adds a component to this widget's component list.
+//     * If <code>this.components</code> is not extended to the given coordinates
+//     * (i.e.: there hasn't been an initialization that reached that far), then
+//     * the method puts nulls until it reaches the row and column where the widget
+//     * needs to be placed
+//     */
+//    public void setWidgetComponentAtCoordinates(WidgetTUI widget, int rowIndex, int colIndex) {
+//        if (widget != null) {
+//            if (this.components == null) {
+//                this.components = new ArrayList<>();
+//            }
+//
+//            // Extending the amount of rows until the given
+//            // widget can be placed at the given row
+//            while (this.components.size() < rowIndex) {
+//                this.components.add(null);
+//            }
+//            this.components.add(new ArrayList<>());
+//
+//            // Extending the current row until the given
+//            // widget can be placed at the given column
+//            List<WidgetTUI> currRow = this.components.get(rowIndex);
+//
+//            while (currRow.size() <= colIndex) {
+//                currRow.add(null);
+//            }
+//            currRow.set(colIndex, widget);
+//
+//            this.components.set(colIndex, currRow);
+//        }
+//    }
+//
+//    // TODO: Test this
+//    /**
+//     * Returns the widget stored in this widget's component list of lists by
+//     * querying if there's a component at the given coordinates (rowIndex, colIndex)
+//     *
+//     * @param rowIndex The row index of the component to return (if present)
+//     * @param colIndex The column index of the component to retunr (if present)
+//     *
+//     * @return The component at coordinates (rowIndex, colIndex) found inside <code>this.components</code>.
+//     *
+//     * @throws NullPointerException If <code>this.components</code> is null
+//     * @throws IndexOutOfBoundsException If either rowIndex or colIndex are out of bounds
+//     */
+//    public WidgetTUI getWidgetComponentAtCoordinates(int rowIndex, int colIndex) throws NullPointerException, IndexOutOfBoundsException {
+//        if (this.components != null) {
+//            if (this.components.size() > rowIndex) {
+//                List<WidgetTUI> currRow = this.components.get(rowIndex);
+//
+//                if (currRow.size() > colIndex) {
+//                    return currRow.get(colIndex);
+//                }
+//                else {
+//                    throw new IndexOutOfBoundsException("ERROR: colIndex=" + colIndex + " is out of bounds");
+//                }
+//            }
+//            else {
+//                throw new IndexOutOfBoundsException("ERROR: rowIndex=" + rowIndex + " is out of bounds");
+//            }
+//        }
+//        else {
+//            throw new NullPointerException("ERROR: \"this.components\" list is null");
+//        }
+//    }
+
+//    /**
+//     * @return The list of lists of WidgetTUI that compose this widget
+//     */
+//    public List<List<WidgetTUI>> getAllWidgetComponents() {
+//        return this.components;
+//    }
+
     /**
-     * Removes one border layer from this screen
-     * (NOTE: Since the passed object is not a widget, there's no way to know if
-     *        the screen was wrapped in the past, therefore this method should be
-     *        used with care as it can delete parts of the screen if used incorrectly)
+     * @param widgetId The ID to give to this widget
      */
-    public static List<String> unwrapScreenFromBorder(List<String> screen) {
-        if (screen != null) {
-            List<String> unwrappedScreen = new ArrayList<String>();
-
-            // Calculating the max width of the given screen
-            AtomicInteger maxWidth = new AtomicInteger(0);
-
-            screen.stream()
-                    .map(PrintUtils::removeUnicodeFromString)
-                    .mapToInt(String::length)
-                    .max()
-                    .ifPresent(maxWidth::set);
-
-            int height = screen.size() + 2;
-            int width = maxWidth.get() + 2;
-
-            for (int i = 1; i < height; i++) {
-                String line = screen.get(i);
-                unwrappedScreen.add(line.substring(1, width - 1));
-            }
-
-            return unwrappedScreen;
+    public void setWidgetId(String widgetId) {
+        if (widgetId != null && !widgetId.isEmpty()) {
+            this.widgetId = widgetId;
         }
+    }
 
-        return null;
+    /**
+     * @return This widget's ID
+     */
+    public String getWidgetId() {
+        return this.widgetId;
     }
 
     /**
@@ -565,7 +675,7 @@ public class WidgetTUI {
             // so that all lines now have the set width
             for (int i = 0; i < this.height; i++) {
                 tmp = this.screen.get(i);
-                padding = this.width - tmp.length();
+                padding = this.width - PrintUtils.removeUnicodeFromString(tmp).length();
 
                 if (padding > 0) {
                     tmp += SPACE.repeat(padding);
@@ -585,10 +695,10 @@ public class WidgetTUI {
     }
 
     /**
-     * @return This widget's border layer count before reaching its screen
+     * @return This widget's border count before reaching its screen
      */
-    public int getLayerCount() {
-        return this.layerCount;
+    public int getBorderCount() {
+        return this.borderCount;
     }
 
     /**
@@ -645,7 +755,7 @@ public class WidgetTUI {
             trimmed = s.trim();
             strlen = PrintUtils.removeUnicodeFromString(trimmed).length();
             paddedString = new StringBuilder();
-            padding = ((this.width - strlen) / 2) - this.layerCount;
+            padding = ((this.width - strlen) / 2) - this.borderCount;
 
             if (padding > 0) {
                 paddedString.append(SPACE.repeat(padding));
@@ -674,11 +784,11 @@ public class WidgetTUI {
     public WidgetTUI setScreen(List<String> screen) {
         if (screen != null) {
             // Setting the screen only with non-null lines from the given screen
-            this.screen = new ArrayList<>(screen.stream().filter(Objects::nonNull).toList());
+            this.screen = new ArrayList<String>(screen.stream().filter(Objects::nonNull).toList());
 
             // Resetting the screen removes any borders inside, therefore
-            // the layer count will be zeroed
-            this.layerCount = 0;
+            // the border count will be zeroed
+            this.borderCount = 0;
 
             // Updating widget dimensions
             this.height = this.screen.size();
@@ -794,8 +904,8 @@ public class WidgetTUI {
         this.height += 2;
         this.width += 2;
 
-        // Increase the layer counter by one
-        this.layerCount++;
+        // Increase the border counter by one
+        this.borderCount++;
 
         // Top Left Corner
         tmpString = new StringBuilder(borderCharacters.get(0));
@@ -913,7 +1023,7 @@ public class WidgetTUI {
      * Removes one border layer from this screen
      */
     public WidgetTUI unwrapWidgetFromBorder() {
-        if (this.layerCount > 0) {
+        if (this.borderCount > 0) {
             List<String> unwrappedScreen = new ArrayList<String>();
             int screenLen = this.screen.size() - 1;
 
@@ -930,8 +1040,8 @@ public class WidgetTUI {
             this.height -= 2;
             this.width -= 2;
 
-            // Decrease the layer counter by one
-            this.layerCount--;
+            // Decrease the border counter by one
+            this.borderCount--;
         }
 
         return this;

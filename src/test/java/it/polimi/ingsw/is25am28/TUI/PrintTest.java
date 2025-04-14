@@ -1,12 +1,8 @@
 package it.polimi.ingsw.is25am28.TUI;
 
-import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Components.*;
-import it.polimi.ingsw.is25am28.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.EventCards.Slavers;
 import it.polimi.ingsw.is25am28.Items.Item;
 import it.polimi.ingsw.is25am28.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
@@ -15,6 +11,8 @@ import it.polimi.ingsw.is25am28.Player.Player;
 import it.polimi.ingsw.is25am28.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Ship.Ship;
 
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -611,45 +609,45 @@ public class PrintTest {
 
         widget.appendString("==HELLO WORLD==");
         widget.printWidget();
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // (1) - One border wrapping and One unwrapping
         // First border wrapping
         widget.wrapWidgetWithBorder();
         widget.printWidget();
         layerCount++;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // First border unwrapping
         widget.unwrapWidgetFromBorder();
         widget.printWidget();
         layerCount--;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // (2) - Two border wrapping and two unwrapping
         // First border wrapping
         widget.wrapWidgetWithBorder();
         widget.printWidget();
         layerCount++;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // Second border wrapping
         widget.wrapWidgetWithBorder();
         widget.printWidget();
         layerCount++;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // Second border unwrapping
         widget.unwrapWidgetFromBorder();
         widget.printWidget();
         layerCount--;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
 
         // First border unwrapping
         widget.unwrapWidgetFromBorder();
         widget.printWidget();
         layerCount--;
-        assertEquals(layerCount, widget.getLayerCount());
+        assertEquals(layerCount, widget.getBorderCount());
     }
 
     @Test
@@ -988,7 +986,32 @@ public class PrintTest {
         widget.unwrapWidgetFromBorder();
 
         widget.addPadding(1, 1, 1, 1).wrapWidgetWithBorder().printWidget();
-        widget.unwrapWidgetFromBorder(); 
+        widget.unwrapWidgetFromBorder();
+
+        WidgetTUI w1 = new WidgetTUI();
+        WidgetTUI w2 = new WidgetTUI();
+        WidgetTUI w3 = new WidgetTUI();
+        WidgetTUI w4 = new WidgetTUI();
+
+        w1.appendString(PrintUtils.addColor("HELLO", ANSIColors.RED)).wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+        w2.appendString(PrintUtils.addColor("HELLO", ANSIColors.GREEN)).wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+        w3.appendString(PrintUtils.addColor("HELLO", ANSIColors.BLUE)).wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+        w4.appendString(PrintUtils.addColor("HELLO", ANSIColors.YELLOW)).wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+
+//        w1.appendString(PrintUtils.addColor("HELLO", ANSIColors.RED)).wrapWidgetWithBorder();
+//        w2.appendString(PrintUtils.addColor("HELLO", ANSIColors.GREEN)).wrapWidgetWithBorder();
+//        w3.appendString(PrintUtils.addColor("HELLO", ANSIColors.BLUE)).wrapWidgetWithBorder();
+//        w4.appendString(PrintUtils.addColor("HELLO", ANSIColors.YELLOW)).wrapWidgetWithBorder();
+
+//        w1.appendString("HELLO").wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+//        w2.appendString("HELLO").wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+//        w3.appendString("HELLO").wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+//        w4.appendString("HELLO").wrapWidgetWithBorder().addPadding(0, 1, 0, 1);
+
+        WidgetTUI.composeTwoWidgetsHorizontally(
+            WidgetTUI.composeTwoWidgetsHorizontally(w1, w2),
+            WidgetTUI.composeTwoWidgetsHorizontally(w3, w4)
+        ).printWidget();
     }
 
     @Test
@@ -1225,6 +1248,4 @@ public class PrintTest {
         tui.printWidget();
         inputWidget.selectCommand("[SELECT_COMMAND] ID=");
     }
-
-
 }

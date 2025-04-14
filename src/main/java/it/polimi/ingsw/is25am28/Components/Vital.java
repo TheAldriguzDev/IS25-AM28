@@ -1,13 +1,13 @@
 package it.polimi.ingsw.is25am28.Components;
 
-import it.polimi.ingsw.is25am28.TUI.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.ingsw.is25am28.TUI.PrintUtils.*;
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.*;
 
 public final class Vital extends Component {
     public static final String alias = "VITAL";
