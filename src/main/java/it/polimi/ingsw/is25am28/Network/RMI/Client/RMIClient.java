@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Network.RMI.Client;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 
@@ -80,26 +81,39 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         });
     }
 
-    // TODO: Change in cmd pattern to have only one method execute(Command cmd)
-    public void configureGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers) throws Exception {
+    /**
+     * Method used to send Messages to the client
+     * */
+    public void sendMessage(Message message) throws Exception {
         queueHandler.enqueue(() -> {
             try {
-                server.gameConfig(playerNickname, playerColor, gameLevel, totalPlayers, this.uuid);
+                server.sendMessage(message, this.uuid);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         });
     }
 
-    public void newPlayer(String playerNickname, PlayerColor playerColor) throws Exception {
-        queueHandler.enqueue(() -> {
-            try {
-                server.addNewPlayer(playerNickname, playerColor, this.uuid);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
+//    // TODO: Change in cmd pattern to have only one method execute(Command cmd)
+//    public void configureGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers) throws Exception {
+//        queueHandler.enqueue(() -> {
+//            try {
+//                server.gameConfig(playerNickname, playerColor, gameLevel, totalPlayers, this.uuid);
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+//    }
+//
+//    public void newPlayer(String playerNickname, PlayerColor playerColor) throws Exception {
+//        queueHandler.enqueue(() -> {
+//            try {
+//                server.addNewPlayer(playerNickname, playerColor, this.uuid);
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+//    }
 
     /**
      * Method used to update the client view (display the new content)

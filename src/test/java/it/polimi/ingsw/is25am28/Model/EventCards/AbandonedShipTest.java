@@ -448,7 +448,4 @@ class AbandonedShipTest {
         // No one has been eliminated from the game
         assertTrue(board.getPlayers().containsAll(playerList));
     }
-
-
-
 }

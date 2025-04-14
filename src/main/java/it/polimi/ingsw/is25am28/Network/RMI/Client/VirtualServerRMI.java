@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 import it.polimi.ingsw.is25am28.Network.VirtualServer;
 
@@ -21,25 +22,10 @@ public interface VirtualServerRMI extends Remote, VirtualServer {
 
     /**
      * Method used to connect the clients to the server.
+     *
      * @param client is needed to know which clients needs to be notified when there are the updates
-     * */
+     */
     void connectClient(VirtualViewRMI client, UUID uuid) throws Exception;
 
-    public void gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, UUID uuid) throws Exception;
-
-    public void addNewPlayer(String nickname, PlayerColor playerColor, UUID uuid) throws Exception;
-
-    public void selectTile(String player, Integer i, Integer j, UUID uuid) throws RemoteException;
-
-    public void deselectTile(String player, Integer i, Integer j, UUID uuid) throws RemoteException;
-
-    public void playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles, UUID uuid) throws RemoteException;
-
-    public void flipTimer(String player, UUID uuid) throws RemoteException;
-
-    public void fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove, UUID uuid) throws RemoteException;
-
-    public void populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd, UUID uuid) throws RemoteException;
-
-    public void playCard(ActionJSON action, UUID uuid) throws RemoteException;
+    public void sendMessage(Message message, UUID uuid) throws Exception;
 }

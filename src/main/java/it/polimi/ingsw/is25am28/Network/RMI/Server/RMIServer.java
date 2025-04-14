@@ -7,6 +7,9 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.Construc
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
+import it.polimi.ingsw.is25am28.Network.Messages.Message;
+import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI;
 
@@ -62,15 +65,34 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
-    // TODO: Add the messages that we need to send into a queue to separate the handling of the communication
-
     @Override
-    public void gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, UUID uuid) throws Exception {
+    public void sendMessage(Message message, UUID uuid) throws Exception {
+        System.out.println("Received a message from the client");
+
+        switch (message) {
+            case ConfigGame data -> {
+                this.gameConfig(data.getPlayerNickname(), data.getPlayerColor(), data.getGameLevel(), data.getTotalPlayers(), uuid);
+            }
+            case NewPlayer data -> {
+                this.addNewPlayer(data.getPlayerNickname(), data.getPlayerColor(), uuid);
+            }
+            default -> {
+                throw new Exception("The given Message is not supported");
+            }
+        }
+
+        System.out.println(message.getClass());
+    }
+
+    private void gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, UUID uuid) throws Exception {
         StateDTO state = null;
         try {
             state = this.controller.gameConfig(nickname, playerColor, level, numPlayers);
         } catch (IllegalArgumentException | IllegalStateException e) {
-            this.reportCommandError(clients.get(uuid), e.getMessage(), this.controller.getCurrentState());
+            queueHandler.enqueue(() -> {
+                this.reportCommandError(clients.get(uuid), e.getMessage(), this.controller.getCurrentState());
+            });
+
             return;
         }
 
@@ -78,59 +100,77 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         if (state != null) {
             synchronized (this.clients) {
                 for (VirtualViewRMI client : this.clients.values()) {
-                    client.updateState(state);
+                    StateDTO finalState = state;
+                    this.queueHandler.enqueue(() -> {
+                        try {
+                            client.updateState(finalState);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 }
             }
         }
     }
 
-    @Override
-    public void addNewPlayer(String nickname, PlayerColor playerColor, UUID uuid) throws Exception {
+    private void addNewPlayer(String nickname, PlayerColor playerColor, UUID uuid) throws Exception {
         List<StateDTO> states = this.controller.addNewPlayer(nickname, playerColor);
 
         synchronized (this.clients) {
             for (VirtualViewRMI client : this.clients.values()) {
-                client.updateView(states.getFirst());
+                this.queueHandler.enqueue(() -> {
+                    try {
+                        client.updateView(states.getFirst());
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
                 if (states.size() == 2) {
-                    client.updateState(states.getLast());
+                    this.queueHandler.enqueue(() -> {
+                        try {
+                            client.updateState(states.getLast());
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 }
             }
         }
     }
 
-    @Override
-    public void selectTile(String player, Integer i, Integer j, UUID uuid) throws RemoteException {
+
+    private void selectTile(String player, Integer i, Integer j, UUID uuid) throws RemoteException {
 
     }
 
-    @Override
-    public void deselectTile(String player, Integer i, Integer j, UUID uuid) throws RemoteException {
+
+    private void deselectTile(String player, Integer i, Integer j, UUID uuid) throws RemoteException {
 
     }
 
-    @Override
-    public void playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles, UUID uuid) throws RemoteException {
+
+    private void playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles, UUID uuid) throws RemoteException {
 
     }
 
-    @Override
-    public void flipTimer(String player, UUID uuid) throws RemoteException {
+
+    private void flipTimer(String player, UUID uuid) throws RemoteException {
 
     }
 
-    @Override
-    public void fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove, UUID uuid) throws RemoteException {
+
+    private void fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove, UUID uuid) throws RemoteException {
 
     }
 
-    @Override
-    public void populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd, UUID uuid) throws RemoteException {
+
+    private void populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd, UUID uuid) throws RemoteException {
 
     }
 
-    @Override
-    public void playCard(ActionJSON action, UUID uuid) throws RemoteException {
+
+    private void playCard(ActionJSON action, UUID uuid) throws RemoteException {
 
     }
 

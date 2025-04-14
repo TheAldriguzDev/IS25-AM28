@@ -1,9 +1,13 @@
 package it.polimi.ingsw.is25am28.Network.Socket.Client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
+import it.polimi.ingsw.is25am28.Network.Messages.Message;
+import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 import it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket;
 
 import java.io.*;
@@ -18,6 +22,8 @@ public class TCPClient implements VirtualViewSocket {
 
     // Used to respond to msg from the Server
     private final ViewUpdater viewUpdater;
+
+    private final ObjectMapper mapper = new ObjectMapper();
 
     /**
      * Constructor used to create the TCPClient and starts it
@@ -65,40 +71,44 @@ public class TCPClient implements VirtualViewSocket {
      *
      * We need to implement the deserialization protocol
      * */
-    private void runVirtualServer() throws IOException {
+    private void runVirtualServer() throws Exception {
         String line; // This will contain a JSON serialized object
+
         while ((line = this.input.readLine()) != null) {
 
-            // Here we need to parse the messages from the server, that could be both State / Errors
-            // show update...
-            // show error...
+            StateDTO state = mapper.readValue(line, StateDTO.class);
+            state.accept(viewUpdater);
+
+            // TODO:
+            //  Here we need to parse the messages from the server, that could be both State / Errors
+            //  show update...
+            //  show error...
         }
     }
 
+    // This will be the method used in the communication
     @Override
-    public void configureGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers) throws Exception {
+    public void sendMessage(Message message) throws Exception {
 
+        this.output.sendMessage(message); // This will invoke the SocketServerHandler
     }
 
-    @Override
-    public void newPlayer(String playerNickname, PlayerColor playerColor) throws Exception {
 
-    }
 
     // TODO: This methods are always the same --> Maybe it could be useful to also have a middleware that handles all
     //  this identical methods --> we avoid duplicated code
     @Override
     public void updateView(StateDTO state) throws JsonProcessingException {
-
+        System.out.println("Update view client called");
     }
 
     @Override
     public void updateState(StateDTO state) throws JsonProcessingException {
-
+        System.out.println("Update state client called");
     }
 
     @Override
     public void reportError(String details, StateDTO state) throws JsonProcessingException {
-
+        System.out.println("Report error client called");
     }
 }

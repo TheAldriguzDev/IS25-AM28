@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
+import it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.Scanner;
@@ -9,8 +10,7 @@ import java.util.UUID;
 
 public class Client {
 
-    private StateDTO currentState;
-
+    // TODO: Understand where we need to store the information about the Game
 
     public static void main(String[] args) throws Exception {
         // Will store the specific network implementation (RMI / Socket)
@@ -25,7 +25,7 @@ public class Client {
         do {
             System.out.println("Choose a connection type: ");
             System.out.println("1 --> RMI");
-            System.out.println("2 --> Socket (Coming soon)");
+            System.out.println("2 --> Socket");
             connectionType = scanner.nextInt();
 
             if (connectionType == -1) {
@@ -49,8 +49,10 @@ public class Client {
         System.out.flush();
 
         if (connectionType == 1) {
-            // Create the client with an unique UUID as identifier. This will be used server side for sendTo communication
+            // Create the client with a unique UUID as identifier. This will be used server side for sendTo communication
             client = new RMIClient(args[0], 7777, UUID.randomUUID());
+        } else {
+            client = new TCPClient("127.0.0.1", 8888);
         }
     }
 }

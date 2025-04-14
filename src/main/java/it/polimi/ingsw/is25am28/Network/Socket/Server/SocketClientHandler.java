@@ -5,10 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
+import it.polimi.ingsw.is25am28.Network.Messages.Message;
+import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
+import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * SocketClientHandler is needed to handle correctly each client socket to execute the command with the Controller
@@ -26,13 +33,21 @@ public class SocketClientHandler implements VirtualViewSocket {
     // Mapper used to serialize and deserialize JSON used in the communication
     private final ObjectMapper mapper;
 
-    public SocketClientHandler(GameController gameController, TCPServer tcpServer, BufferedReader input, PrintWriter output) {
+    public SocketClientHandler(GameController gameController, TCPServer tcpServer, BufferedReader input, PrintWriter output) throws JsonProcessingException {
         this.gameController = gameController;
         this.tcpServer = tcpServer;
         this.input = input;
         this.output = output;
 
         this.mapper = new ObjectMapper();
+
+        this.onClientConnection();
+    }
+
+    private void onClientConnection() throws JsonProcessingException {
+        StateDTO state = this.gameController.onClientConnection();
+
+        this.updateState(state);
     }
 
     /**
@@ -40,23 +55,66 @@ public class SocketClientHandler implements VirtualViewSocket {
      *
      * We need to implement the deserialization protocol
      * */
-    public void run() throws IOException {
+    public void run() throws IOException, Exception {
         String line;
 
         while ((line = input.readLine()) != null) {
-
-            // Reflection
-            // Deserialization protocol
+            Message message = mapper.readValue(line, Message.class);
+            switch (message) {
+                case ConfigGame data -> {
+                    this.gameConfig(data.getPlayerNickname(), data.getPlayerColor(), data.getGameLevel(), data.getTotalPlayers());
+                }
+                case NewPlayer data -> {
+                    this.newPlayer(data.getPlayerNickname(), data.getPlayerColor());
+                }
+                default -> {
+                    throw new Exception("The given Message is not supported");
+                }
+            }
         }
     }
 
-    @Override
-    public void configureGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers) throws Exception {
+    /**
+     * Method used to configure the game, if an error is caught we notify the specific client, otherwise the new state will be
+     * sent to each client
+     * */
+    private void gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws Exception {
+        StateDTO state = null;
+        try {
+            state = this.gameController.gameConfig(nickname, playerColor, level, numPlayers);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            this.reportError("Some details", this.gameController.getCurrentState());
+            return;
+        }
 
+        // If the state is not null, then we can update the clients
+        if (state != null) {
+            this.tcpServer.broadCastUpdateState(state);
+        }
     }
 
+    private void newPlayer(String playerNickname, PlayerColor playerColor) throws Exception {
+        List<StateDTO> states = new ArrayList<>();
+
+        try {
+            states = this.gameController.addNewPlayer(playerNickname, playerColor);
+        } catch (IllegalArgumentException | IllegalStateException e) {
+            this.reportError("Some details", this.gameController.getCurrentState());
+            return;
+        }
+
+        if (!states.isEmpty()) {
+            this.tcpServer.broadCastUpdateView(states.getFirst());
+        }
+
+        if (states.size() == 2) {
+            this.tcpServer.broadCastUpdateView(states.getLast());
+        }
+    }
+
+    // TODO: Capisci come togliere sto metodo da qui
     @Override
-    public void newPlayer(String playerNickname, PlayerColor playerColor) throws Exception {
+    public void sendMessage(Message message) throws Exception {
 
     }
 

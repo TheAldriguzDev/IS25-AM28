@@ -3,6 +3,9 @@ package it.polimi.ingsw.is25am28.Client;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
+import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
+import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.Scanner;
@@ -95,7 +98,9 @@ public class ViewUpdater implements StateVisitor {
         } while (totalPlayers == -1);
         this.totalGamePlayers = totalPlayers;
 
-        client.configureGame(this.playerName, this.playerColor, this.gameLevel, this.totalGamePlayers);
+        client.sendMessage(new ConfigGame(this.playerName, this.playerColor, this.gameLevel, this.totalGamePlayers));
+
+        // client.configureGame(this.playerName, this.playerColor, this.gameLevel, this.totalGamePlayers);
     }
 
     @Override
@@ -137,7 +142,7 @@ public class ViewUpdater implements StateVisitor {
         } while (color.isEmpty());
         this.playerColor = PlayerColor.fromString(color);
 
-        this.client.newPlayer(this.playerName, this.playerColor);
+        client.sendMessage(new NewPlayer(this.playerName, this.playerColor));
     }
 
     @Override

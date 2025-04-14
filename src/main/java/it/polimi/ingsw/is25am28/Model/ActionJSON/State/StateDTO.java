@@ -1,14 +1,22 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO;
+import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
+import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 
 import java.io.Serial;
 import java.io.Serializable;
+
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = StateDTO.class, name = "StateDTO"),
+        @JsonSubTypes.Type(value = CreateGameStateDTO.class, name = "CreateGameStateDTO"),
+        @JsonSubTypes.Type(value = WaitPlayersStateDTO.class, name = "WaitPlayersStateDTO"),
+        @JsonSubTypes.Type(value = WaitingForGameConfigurationDTO.class, name = "WaitingForGameConfigurationDTO")
+})
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public sealed class StateDTO implements Serializable permits CardRoundDTO, CreateGameStateDTO, EndGameDTO, FixShipDTO, PopulateShipDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateDTO, WaitingForGameConfigurationDTO {
