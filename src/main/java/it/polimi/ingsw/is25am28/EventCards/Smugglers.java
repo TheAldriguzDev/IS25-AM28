@@ -231,6 +231,9 @@ public class Smugglers extends EventCard {
         } else {
             cardInfoWidget.appendString("Player: " + smugglersStateJSON.getPlayerNickname() + " has to drop " + smugglersStateJSON.getTakenItems() + " items");
         }
+        cardInfoWidget.wrapWidgetWithBorder();
+
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
     @Override

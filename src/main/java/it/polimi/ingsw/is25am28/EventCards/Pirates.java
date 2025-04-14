@@ -328,8 +328,26 @@ public class Pirates extends EventCard {
     }
 
     @Override
-    public WidgetTUI generateWidget(CardStateJSON piratesStateJSON) {
-        return null;
+    public WidgetTUI generateWidget(CardStateJSON piratesState) {
+        WidgetTUI cardWidget = new WidgetTUI();
+        WidgetTUI cardInfoWidget = new WidgetTUI();
+
+        cardWidget.appendString("====" + piratesState.getCardName().toUpperCase() + "====");
+
+        if (this.firstRound) {
+            cardInfoWidget.appendString("Level: " + piratesState.getCardLevel());
+            cardInfoWidget.appendString("Given credits: " + piratesState.getGivenCredits());
+            cardInfoWidget.appendString("Days: " + piratesState.getMovementSteps());
+            // TODO : does the shootingSequence need to be shown to the clients as a whole?
+            cardInfoWidget.appendString(" Required Firepower: " + piratesState.getRequiredFirepower());
+        } else {
+            cardInfoWidget.appendString("Current PlasmaShot size: " + piratesState.getCurrPlasmaShotDescriptor().getKey());
+            cardInfoWidget.appendString("Current PlasmaShot direction" + piratesState.getCurrPlasmaShotDescriptor().getValue());
+            // TODO : when does the dice throw need to be shown to the client?
+        }
+        cardInfoWidget.wrapWidgetWithBorder();
+
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.EventCards;
 
 import it.polimi.ingsw.is25am28.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.ActionJSON.PiratesJSON;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Board.BoardLevel2;
@@ -37,6 +38,7 @@ class PiratesTest {
     ActionJSON actionJSON2;
     ActionJSON actionJSON3;
     ActionJSON actionJSON4;
+    CardStateJSON cardState;
 
     Pirates pirates;
 
@@ -130,6 +132,11 @@ class PiratesTest {
 
         pirates.initCardPlayers();
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         Player eliminatedPlayer = p1;
         ShieldsToActivate = new ArrayList<>();
         // First round
@@ -137,13 +144,28 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 2
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         actionJSON3 = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
         pirates.useCard(actionJSON3);
         assertFalse(pirates.hasFinished());
+
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
 
         actionJSON4 = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
         pirates.useCard(actionJSON4);
@@ -154,21 +176,40 @@ class PiratesTest {
         // First shot : big from above on column 7
         pirates.setDiceThrowResult(7);
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
+
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {5, 7}); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
@@ -181,10 +222,20 @@ class PiratesTest {
 
         // First player should be no more
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
+
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {8, 5}); // Non lo proteggerà
@@ -192,11 +243,21 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {8, 5}); // Lo proteggerà
         actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
+
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {8, 5});
@@ -204,13 +265,28 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
+
         // Third shot : small from above on column 6
         pirates.setDiceThrowResult(6);
+
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
+
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {8, 5});
@@ -218,6 +294,10 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {8, 5});
@@ -225,6 +305,10 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
+        // =======================================================================
+        cardState = pirates.generateState();
+        pirates.generateWidget(cardState).printWidget();
+        // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>());
