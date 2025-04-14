@@ -243,24 +243,30 @@ class AbandonedStationTest {
                     abandonedStationJSON.setWantToVisitStation(false);
                 } else {
                     abandonedStationJSON.setPlayerNickname(currPlayer.getNickname());
-                    abandonedStationJSON.setWantToVisitStation(true);
 
-                    // Set the items that needs to be dropped
-                    List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>();
-                    abandonedStationJSON.setItemsToBeRemoved( itemsToBeRemoved );
+                    // If the player can use the card, then we can set setWantToVisitStation as true, otherwise we must set to false
+                    if (abandonedStationCard.generateState().getIsCardUsable()) {
+                        abandonedStationJSON.setWantToVisitStation(true);
 
-                    // Set the items that needs to be stored
-                    List<ComponentHelper<ItemColor>> itemsToBeTaken = new ArrayList<>();
+                        // Set the items that needs to be dropped
+                        List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>();
+                        abandonedStationJSON.setItemsToBeRemoved( itemsToBeRemoved );
 
-                    ComponentHelper<ItemColor> specialStorageComponent =  new ComponentHelper<ItemColor>(6, 3); // special storage for the red item
-                    specialStorageComponent.addItem(ItemColor.RED);
-                    itemsToBeTaken.add( specialStorageComponent );
+                        // Set the items that needs to be stored
+                        List<ComponentHelper<ItemColor>> itemsToBeTaken = new ArrayList<>();
 
-                    ComponentHelper<ItemColor> normalStorageComponent =  new ComponentHelper<ItemColor>(8, 7); // normal storage for the yellow item
-                    normalStorageComponent.addItem(ItemColor.YELLOW);
-                    itemsToBeTaken.add( normalStorageComponent );
+                        ComponentHelper<ItemColor> specialStorageComponent =  new ComponentHelper<ItemColor>(6, 3); // special storage for the red item
+                        specialStorageComponent.addItem(ItemColor.RED);
+                        itemsToBeTaken.add( specialStorageComponent );
 
-                    abandonedStationJSON.setItemsToBeTaken( itemsToBeTaken );
+                        ComponentHelper<ItemColor> normalStorageComponent =  new ComponentHelper<ItemColor>(8, 7); // normal storage for the yellow item
+                        normalStorageComponent.addItem(ItemColor.YELLOW);
+                        itemsToBeTaken.add( normalStorageComponent );
+
+                        abandonedStationJSON.setItemsToBeTaken( itemsToBeTaken );
+                    } else {
+                        abandonedStationJSON.setWantToVisitStation(false);
+                    }
                 }
 
                 // Use the card
@@ -276,9 +282,9 @@ class AbandonedStationTest {
         // 3rd --> Use the card --> One step back, but since the previous cell is not empty this action will result in 2 steps backwards
         // 4th --> Didn't use the card since the 3rd player already used it
 
-        assertEquals( 6, playerList.get(0).getCursor() );
-        assertEquals( initialCursors.get(0), playerList.get(1).getCursor() );
-        assertEquals( initialCursors.get(1) - 2, playerList.get(2).getCursor() );
+        assertEquals( initialCursors.get(0), playerList.get(0).getCursor() );
+        assertEquals( initialCursors.get(1), playerList.get(1).getCursor() );
+        assertEquals( initialCursors.get(2) - 2, playerList.get(2).getCursor() );
         assertEquals( 0, playerList.get(3).getCursor() );
 
         // Check if the given components have stored the correct qty and type of elements
@@ -350,22 +356,27 @@ class AbandonedStationTest {
                     abandonedStationJSON.setWantToVisitStation(false);
                 } else {
                     abandonedStationJSON.setPlayerNickname(currPlayer.getNickname());
-                    abandonedStationJSON.setWantToVisitStation(true);
+                    // If the player can use the card, then we can set setWantToVisitStation as true, otherwise we must set to false
+                    if (abandonedStationCard.generateState().getIsCardUsable()) {
+                        abandonedStationJSON.setWantToVisitStation(true);
 
-                    // Set the items that needs to be dropped
-                    List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>();
-                    itemsToBeRemoved.add( new ComponentHelper<ItemColor>(6, 3).addItem(ItemColor.BLUE) );
+                        // Set the items that needs to be dropped
+                        List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>();
+                        itemsToBeRemoved.add( new ComponentHelper<ItemColor>(6, 3).addItem(ItemColor.BLUE) );
 
-                    abandonedStationJSON.setItemsToBeRemoved( itemsToBeRemoved );
+                        abandonedStationJSON.setItemsToBeRemoved( itemsToBeRemoved );
 
-                    // Set the items that needs to be stored
-                    List<ComponentHelper<ItemColor>> itemsToBeTaken = new ArrayList<>();
+                        // Set the items that needs to be stored
+                        List<ComponentHelper<ItemColor>> itemsToBeTaken = new ArrayList<>();
 
-                    itemsToBeTaken.add( new ComponentHelper<ItemColor>(6, 3).addItem(ItemColor.RED) );
-                    itemsToBeTaken.add( new ComponentHelper<ItemColor>(8, 7).addItem(ItemColor.YELLOW) );
-                    itemsToBeTaken.add( new ComponentHelper<ItemColor>(8, 8).addItem(ItemColor.BLUE) ); // Re add the resource that we have took from the player to change its position
+                        itemsToBeTaken.add( new ComponentHelper<ItemColor>(6, 3).addItem(ItemColor.RED) );
+                        itemsToBeTaken.add( new ComponentHelper<ItemColor>(8, 7).addItem(ItemColor.YELLOW) );
+                        itemsToBeTaken.add( new ComponentHelper<ItemColor>(8, 8).addItem(ItemColor.BLUE) ); // Re add the resource that we have took from the player to change its position
 
-                    abandonedStationJSON.setItemsToBeTaken( itemsToBeTaken );
+                        abandonedStationJSON.setItemsToBeTaken( itemsToBeTaken );
+                    } else {
+                        abandonedStationJSON.setWantToVisitStation(false);
+                    }
                 }
 
                 // Use the card
@@ -381,9 +392,9 @@ class AbandonedStationTest {
         // 3rd --> Use the card --> One step back, but since the previous cell is not empty this action will result in 2 steps backwards
         // 4th --> Didn't use the card since the 3rd player already used it
 
-        assertEquals( 6, playerList.get(0).getCursor() );
-        assertEquals( initialCursors.get(0), playerList.get(1).getCursor() );
-        assertEquals( initialCursors.get(1) - 2, playerList.get(2).getCursor() );
+        assertEquals( initialCursors.get(0), playerList.get(0).getCursor() );
+        assertEquals( initialCursors.get(1), playerList.get(1).getCursor() );
+        assertEquals( initialCursors.get(2) - 2, playerList.get(2).getCursor() );
         assertEquals( 0, playerList.get(3).getCursor() );
 
         // Check if the given components have stored the correct qty and type of elements
@@ -462,22 +473,27 @@ class AbandonedStationTest {
                     abandonedStationJSON.setWantToVisitStation(false);
                 } else {
                     abandonedStationJSON.setPlayerNickname(currPlayer.getNickname());
-                    abandonedStationJSON.setWantToVisitStation(true);
+                    // If the player can use the card, then we can set setWantToVisitStation as true, otherwise we must set to false
+                    if (abandonedStationCard.generateState().getIsCardUsable()) {
+                        abandonedStationJSON.setWantToVisitStation(true);
 
-                    // Set the items that needs to be dropped
-                    List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>();
-                    itemsToBeRemoved.add( new ComponentHelper<ItemColor>(6, 3).addItem(ItemColor.BLUE) );
+                        // Set the items that needs to be dropped
+                        List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>();
+                        itemsToBeRemoved.add( new ComponentHelper<ItemColor>(6, 3).addItem(ItemColor.BLUE) );
 
-                    abandonedStationJSON.setItemsToBeRemoved( itemsToBeRemoved );
+                        abandonedStationJSON.setItemsToBeRemoved( itemsToBeRemoved );
 
-                    // Set the items that needs to be stored
-                    List<ComponentHelper<ItemColor>> itemsToBeTaken = new ArrayList<>();
+                        // Set the items that needs to be stored
+                        List<ComponentHelper<ItemColor>> itemsToBeTaken = new ArrayList<>();
 
-                    itemsToBeTaken.add( new ComponentHelper<ItemColor>(6, 3).addItem(ItemColor.RED) );
-                    itemsToBeTaken.add( new ComponentHelper<ItemColor>(8, 7).addItem(ItemColor.YELLOW) );
-                    itemsToBeTaken.add( new ComponentHelper<ItemColor>(8, 8).addItem(ItemColor.BLUE) ); // Re add the resource that we have took from the player to change its position
+                        itemsToBeTaken.add( new ComponentHelper<ItemColor>(6, 3).addItem(ItemColor.RED) );
+                        itemsToBeTaken.add( new ComponentHelper<ItemColor>(8, 7).addItem(ItemColor.YELLOW) );
+                        itemsToBeTaken.add( new ComponentHelper<ItemColor>(8, 8).addItem(ItemColor.BLUE) ); // Re add the resource that we have took from the player to change its position
 
-                    abandonedStationJSON.setItemsToBeTaken( itemsToBeTaken );
+                        abandonedStationJSON.setItemsToBeTaken( itemsToBeTaken );
+                    } else {
+                        abandonedStationJSON.setWantToVisitStation(false);
+                    }
                 }
 
                 // Use the card
@@ -493,9 +509,9 @@ class AbandonedStationTest {
         // 3rd --> Use the card --> One step back, but since the previous cell is not empty this action will result in 2 steps backwards
         // 4th --> Didn't use the card since the 3rd player already used it
 
-        assertEquals( 6, playerList.get(0).getCursor() );
-        assertEquals( initialCursors.get(0), playerList.get(1).getCursor() );
-        assertEquals( initialCursors.get(1) - 2, playerList.get(2).getCursor() );
+        assertEquals( initialCursors.get(0), playerList.get(0).getCursor() );
+        assertEquals( initialCursors.get(1), playerList.get(1).getCursor() );
+        assertEquals( initialCursors.get(2) - 2, playerList.get(2).getCursor() );
         assertEquals( 0, playerList.get(3).getCursor() );
 
         // Check if the given components have stored the correct qty and type of elements

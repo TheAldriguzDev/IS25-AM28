@@ -226,7 +226,7 @@ class AbandonedShipTest {
 
                 // HP: The first two players don't want to use the card
                 // The third and the 4th player wants to use the card --> Only the 3rd one will be able to use the card, so the 4th will be skipped
-                if (currPlayer.getNickname().equals("Player 1") || currPlayer.getNickname().equals("Player 2")) {
+                if (currPlayer.getNickname().equals("Player 1") || currPlayer.getNickname().equals("Player 2") || !abandonedShipCard.generateState().getIsCardUsable()) {
                     abandonedShipJSON.setPlayerNickname(currPlayer.getNickname());
                     abandonedShipJSON.setWantToVisitShip(false);
                 } else {
@@ -270,11 +270,11 @@ class AbandonedShipTest {
         // 4th --> Didn't use the card since it has already been used
 
         // 1st
-        assertEquals(6, playerList.get(0).getCursor());
+        assertEquals(initialCursors.get(0), playerList.get(0).getCursor());
         // 2nd
-        assertEquals(initialCursors.get(0), playerList.get(1).getCursor());
+        assertEquals(initialCursors.get(1), playerList.get(1).getCursor());
         // 3rd
-        assertEquals(initialCursors.get(1) - 2, playerList.get(2).getCursor());
+        assertEquals(initialCursors.get(2) - 2, playerList.get(2).getCursor());
         // 4th
         assertEquals(0, playerList.get(3).getCursor());
 
@@ -319,7 +319,7 @@ class AbandonedShipTest {
 
                 // HP: The first two players don't want to use the card
                 // The third and the 4th player wants to use the card --> Only the 3rd one will be able to use the card, so the 4th will be skipped
-                if (currPlayer.getNickname().equals("Player 1") || currPlayer.getNickname().equals("Player 2")) {
+                if (currPlayer.getNickname().equals("Player 1") || currPlayer.getNickname().equals("Player 2") || !abandonedShipCard.generateState().getIsCardUsable()) {
                     abandonedShipJSON.setPlayerNickname(currPlayer.getNickname());
                     abandonedShipJSON.setWantToVisitShip(false);
                 } else {
@@ -367,9 +367,9 @@ class AbandonedShipTest {
         // 4th --> Didn't use the card since it has already been used
 
         // 1st
-        assertEquals(6, playerList.get(0).getCursor());
+        assertEquals(initialCursors.get(0), playerList.get(0).getCursor());
         // 2nd
-        assertEquals(initialCursors.get(0), playerList.get(1).getCursor());
+        assertEquals(initialCursors.get(1), playerList.get(1).getCursor());
         // 4th
         assertEquals(0, playerList.get(3).getCursor());
 
@@ -430,13 +430,13 @@ class AbandonedShipTest {
         // For the first player we cannot see the initial position in the array since he doesn't have the required crew members
 
         // 1st
-        assertEquals(6, playerList.get(0).getCursor());
+        assertEquals(initialCursors.get(0), playerList.get(0).getCursor());
         // 2nd
-        assertEquals(initialCursors.get(0), playerList.get(1).getCursor());
+        assertEquals(initialCursors.get(1), playerList.get(1).getCursor());
         // 3rd
-        assertEquals(initialCursors.get(1), playerList.get(2).getCursor());
+        assertEquals(initialCursors.get(2), playerList.get(2).getCursor());
         // 4th
-        assertEquals(initialCursors.get(2), playerList.get(3).getCursor());
+        assertEquals(initialCursors.get(3), playerList.get(3).getCursor());
 
         // Check that no one has received the credits
         // Check that the player that used the card has received the credits and has lost the crew members specified
