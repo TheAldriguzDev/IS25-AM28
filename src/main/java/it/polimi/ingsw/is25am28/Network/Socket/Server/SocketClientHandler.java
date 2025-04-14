@@ -104,11 +104,11 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
 
         if (!states.isEmpty()) {
-            this.tcpServer.broadCastUpdateView(states.getFirst());
+            this.tcpServer.broadCastUpdateState(states.getFirst());
         }
 
         if (states.size() == 2) {
-            this.tcpServer.broadCastUpdateView(states.getLast());
+            this.tcpServer.broadCastUpdateState(states.getLast());
         }
     }
 

@@ -15,7 +15,8 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = StateDTO.class, name = "StateDTO"),
         @JsonSubTypes.Type(value = CreateGameStateDTO.class, name = "CreateGameStateDTO"),
         @JsonSubTypes.Type(value = WaitPlayersStateDTO.class, name = "WaitPlayersStateDTO"),
-        @JsonSubTypes.Type(value = WaitingForGameConfigurationDTO.class, name = "WaitingForGameConfigurationDTO")
+        @JsonSubTypes.Type(value = WaitingForGameConfigurationDTO.class, name = "WaitingForGameConfigurationDTO"),
+        @JsonSubTypes.Type(value = ShipConstructionDTO.class, name = "ShipConstructionDTO")
 })
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

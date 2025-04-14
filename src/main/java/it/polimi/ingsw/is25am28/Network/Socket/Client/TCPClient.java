@@ -89,7 +89,6 @@ public class TCPClient implements VirtualViewSocket {
     // This will be the method used in the communication
     @Override
     public void sendMessage(Message message) throws Exception {
-
         this.output.sendMessage(message); // This will invoke the SocketServerHandler
     }
 
