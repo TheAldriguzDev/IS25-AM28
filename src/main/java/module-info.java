@@ -50,5 +50,6 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Client to java.rmi;
     opens it.polimi.ingsw.is25am28.Client to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Network to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.Controller;
 
 }

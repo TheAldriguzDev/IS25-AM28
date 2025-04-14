@@ -27,29 +27,24 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     // Ref of the all the clients that are interested in receiving updates
     final Map<UUID, VirtualViewRMI> clients;
 
-    public RMIServer() throws RemoteException {
+    /**
+     * Constructor used to create a new RMI Server
+     * */
+    public RMIServer(String serverName, int serverPort, GameController controller) throws RemoteException {
         super();
         this.clients = new HashMap<UUID, VirtualViewRMI>();
-        this.controller = new GameController();
+        this.controller = controller;
+
+        // Create and start the actual server
+        Registry registry = LocateRegistry.createRegistry(serverPort);
+        registry.rebind(serverName, this);
 
         // Create the queue handler to process in a thread the communication with the clients
         this.queueHandler = new Queue();
         new Thread(queueHandler).start();
+
+        System.out.println("RMI server listening on port " + serverPort);
     }
-
-    // TODO: Understand if we need to create a dedicate class to startup the server
-    public static void main(String[] args) throws RemoteException {
-        final String serverName = "GameRMIServer";
-
-        VirtualServerRMI server = new RMIServer();
-
-
-        Registry registry = LocateRegistry.createRegistry(7777);
-        registry.rebind(serverName, server); // Bind of the remote object to the given port
-
-        System.out.println("RMI Server online");
-    }
-
 
     /**
      * This method will be used to connect a client to the server --> it will be added since we need

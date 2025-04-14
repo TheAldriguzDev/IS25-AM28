@@ -20,6 +20,9 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
     private final UUID uuid;
 
+    /**
+     * Constructor used to create the RMIClient and starts it
+     * */
     public RMIClient(String ipAddress, int port, UUID uuid) throws Exception, RemoteException {
         super();
 
