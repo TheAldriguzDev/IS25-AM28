@@ -213,7 +213,7 @@ public class Slavers extends EventCard {
         if (this.firstRound) {
             cardInfoWidget.appendString("Level: " + slaversState.getCardLevel());
             cardInfoWidget.appendString("Given Credits: " + slaversState.getGivenCredits());
-            cardInfoWidget.appendString("MovementSteps: " + slaversState.getMovementSteps());
+            cardInfoWidget.appendString("Days: " + slaversState.getMovementSteps());
             cardInfoWidget.appendString("Required Firepower: " + slaversState.getRequiredFirepower());
             cardInfoWidget.appendString("Taken Crew: " + slaversState.getTakenCrew());
         } else {
@@ -228,4 +228,6 @@ public class Slavers extends EventCard {
     public WidgetTUI generateWidget() {
         return null;
     }
+
+    
 }

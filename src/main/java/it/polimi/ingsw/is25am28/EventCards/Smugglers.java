@@ -213,7 +213,24 @@ public class Smugglers extends EventCard {
 
     @Override
     public WidgetTUI generateWidget(CardStateJSON smugglersStateJSON) {
-        return null;
+        WidgetTUI cardWidget = new WidgetTUI();
+        WidgetTUI cardInfoWidget = new WidgetTUI();
+
+        cardWidget.appendString("====" + smugglersStateJSON.getCardName().toUpperCase() + "====");
+
+        if (firstRound) {
+            cardInfoWidget.appendString("Level: " + smugglersStateJSON.getCardLevel());
+            cardInfoWidget.appendString("Given credits: " + smugglersStateJSON.getGivenCredits());
+            cardInfoWidget.appendString("Days: " + smugglersStateJSON.getMovementSteps());
+            cardInfoWidget.appendString("Require Firepower: " + smugglersStateJSON.getRequiredFirepower());
+            cardInfoWidget.appendString("Red items: " + smugglersStateJSON.getRedItems());
+            cardInfoWidget.appendString("Yellow items: " + smugglersStateJSON.getYellowItems());
+            cardInfoWidget.appendString("Blue items: " + smugglersStateJSON.getBlueItems());
+            cardInfoWidget.appendString("Green items: " + smugglersStateJSON.getGreenItems());
+            cardInfoWidget.appendString("Taken items: " + smugglersStateJSON.getTakenItems());
+        } else {
+            cardInfoWidget.appendString("Player: " + smugglersStateJSON.getPlayerNickname() + " has to drop " + smugglersStateJSON.getTakenItems() + " items");
+        }
     }
 
     @Override
