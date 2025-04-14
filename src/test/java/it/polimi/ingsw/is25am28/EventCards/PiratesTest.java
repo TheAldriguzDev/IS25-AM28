@@ -273,11 +273,6 @@ class PiratesTest {
         // Third shot : small from above on column 6
         pirates.setDiceThrowResult(6);
 
-        // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
-
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);

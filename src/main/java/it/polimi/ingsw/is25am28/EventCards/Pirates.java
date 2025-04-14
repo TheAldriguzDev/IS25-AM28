@@ -26,6 +26,8 @@ public class Pirates extends EventCard {
     private int diceThrowResult;
     private int plasmashotIndex;
     Pair<Integer, Integer> currentPlasmaShot;
+    private int shotSize;
+    private int shotDirection;
 
     private boolean firstRound;
     List<Player> playersToHit;
@@ -127,6 +129,10 @@ public class Pirates extends EventCard {
                         // flag to make sure  players do not get rewards or have to use cannons twice
                         if (firstRound) {
                             firstRound = false;
+                            // Necessary for the first round of shots (without this the descriptor would not be included in the state generated)
+                            shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
+                            shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
+                            currentPlasmaShot = new Pair<>(shotSize, shotDirection);
                             // If there are no defeated players at the end of the first round the card is set as used
                             if (playersToHit.isEmpty()) {
                                 cardUsed();
@@ -171,9 +177,10 @@ public class Pirates extends EventCard {
 
                     //player.getShip().consumeEnergy(piratesData.getShieldsActivatedCoordinates().size()); // Il controllo sulle batterie disponibili è fatto dal client
 
-                    int shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
-                    int shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
-                    Pair<Integer, Integer> currentPlasmaShot = new Pair<>(shotSize, shotDirection);
+                    // Moved to the bottom
+//                    int shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
+//                    int shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
+//                    Pair<Integer, Integer> currentPlasmaShot = new Pair<>(shotSize, shotDirection);
 
                     // Impostazione dei lati protetti della ship
                     for (int[] coordinates : piratesData.getShieldsActivatedCoordinates()) {
@@ -279,10 +286,12 @@ public class Pirates extends EventCard {
                             }
                         }
                     }
-
-
+                    shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
+                    shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
+                    currentPlasmaShot = new Pair<>(shotSize, shotDirection);
                 }
         );
+
     }
 
     protected void malusEffect() {}
@@ -327,6 +336,7 @@ public class Pirates extends EventCard {
         this.diceThrowResult = diceThrowResult;
     }
 
+    // TODO : Currently does not work, a merge with yìthe mai dev tree is necessary to fix the generateState
     @Override
     public WidgetTUI generateWidget(CardStateJSON piratesState) {
         WidgetTUI cardWidget = new WidgetTUI();
@@ -339,10 +349,11 @@ public class Pirates extends EventCard {
             cardInfoWidget.appendString("Given credits: " + piratesState.getGivenCredits());
             cardInfoWidget.appendString("Days: " + piratesState.getMovementSteps());
             // TODO : does the shootingSequence need to be shown to the clients as a whole?
-            cardInfoWidget.appendString(" Required Firepower: " + piratesState.getRequiredFirepower());
+            cardInfoWidget.appendString("Required Firepower: " + piratesState.getRequiredFirepower());
         } else {
+            cardInfoWidget.appendString("Target player is: " + piratesState.getPlayerNickname());
             cardInfoWidget.appendString("Current PlasmaShot size: " + piratesState.getCurrPlasmaShotDescriptor().getKey());
-            cardInfoWidget.appendString("Current PlasmaShot direction" + piratesState.getCurrPlasmaShotDescriptor().getValue());
+            cardInfoWidget.appendString("Current PlasmaShot direction: " + piratesState.getCurrPlasmaShotDescriptor().getValue());
             // TODO : when does the dice throw need to be shown to the client?
         }
         cardInfoWidget.wrapWidgetWithBorder();
