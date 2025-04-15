@@ -48,7 +48,7 @@
                   "red": 2,
                   "days": 1,
                   "people": 6,
-                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_II_IT_0118.jpg"
+                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_I_IT_0120.jpg"
             },
             {
                   "level": 2,
@@ -58,7 +58,7 @@
                   "red": 1,
                   "days": 1,
                   "people": 7,
-                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_II_IT_0118.jpg"
+                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_II_IT_0119.jpg"
             },
             {
                   "level": 2,
@@ -68,7 +68,7 @@
                   "red": 0,
                   "days": 2,
                   "people": 8,
-                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_II_IT_0118.jpg"
+                  "path": "galaxy_trucker_imgs/cards/abandonedShip/GT-cards_II_IT_0120.jpg"
             }
       ],
       "meteors" : [
@@ -226,7 +226,7 @@
                               "red": 1
                         }
                   ],
-                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_I_IT_0114.jpg"     
+                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_I_IT_0114.jpg"
             },
             {
                   "level": 1,
@@ -249,31 +249,6 @@
                               "green": 2,
                               "yellow": 0,
                               "red": 0
-                        }
-                  ],
-                  "path": "galaxy_trucker_imgs/cards/planets/GT-cards_I_IT_0115.jpg"     
-            },
-            {
-                  "level": 2,
-                  "days": 4,
-                  "planets": [
-                        {
-                              "blue": 4,
-                              "green": 0,
-                              "yellow": 0,
-                              "red": 1
-                        },
-                        {
-                              "blue": 0,
-                              "green": 2,
-                              "yellow": 0,
-                              "red": 2
-                        },
-                        {
-                              "blue": 0,
-                              "green": 0,
-                              "yellow": 1,
-                              "red": 3
                         }
                   ],
                   "path": "galaxy_trucker_imgs/cards/planets/GT-cards_I_IT_0115.jpg"     
@@ -386,27 +361,27 @@
             },
             {
                   "level": 1,
-                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_016.jpg"
             },
             {
                   "level": 1,
-                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_017.jpg"
             },
             {
                   "level": 1,
-                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_018.jpg"
             },
             {
                   "level": 2,
-                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_II_IT_016.jpg"
             },
             {
                   "level": 2,
-                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_II_IT_017.jpg"
             },
             {
                   "level": 2,
-                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_I_IT_015.jpg"
+                  "path": "galaxy_trucker_imgs/cards/space/GT-cards_II_IT_018.jpg"
             }
       ],
       "epidemic": [
@@ -470,7 +445,7 @@
             },
             {
                   "level": 2,
-                  "path": "galaxy_trucker_imgs/cards/stardust/GT-cards_I_IT_014.jpg"
+                  "path": "galaxy_trucker_imgs/cards/stardust/GT-cards_II_IT_014.jpg"
             }
       ],
       "warzone": [

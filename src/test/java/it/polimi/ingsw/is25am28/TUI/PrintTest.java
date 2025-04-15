@@ -1141,7 +1141,6 @@ public class PrintTest {
         return inputWidget;
     }
 
-
     @Test
     void inputWidget_commandSelectionTest() {
         InputWidgetTUI inputWidget = this.generateMockupInputWidget();
@@ -1248,4 +1247,241 @@ public class PrintTest {
         tui.printWidget();
         inputWidget.selectCommand("[SELECT_COMMAND] ID=");
     }
+
+    @Test
+    void plasmaShot_print_test() {
+        int shotSize = 1;
+        int shotDirection = 0;
+
+        WidgetTUI plasmaShotWidget = new WidgetTUI();
+
+        System.out.println("GENERAL TESTING");
+
+        plasmaShotWidget.appendString("Plasma Shot");
+        plasmaShotWidget.appendString("   ┌───────┐");
+        plasmaShotWidget.appendString("┌──┘       └──┐");
+        plasmaShotWidget.appendString("│             │");
+        plasmaShotWidget.appendString("│             │");
+        plasmaShotWidget.appendString("└──┐       ┌──┘");
+        plasmaShotWidget.appendString("   └───────┘");
+
+        plasmaShotWidget.appendString("Plasma Shot");
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌──────┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("┌─┘      └─┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│          │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("└─┐      ┌─┘", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  └──────┘", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("Plasma Shot");
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌──────┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("┌─┘ ░░░░ └─┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("└─┐ ░░░░ ┌─┘", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  └──────┘", ANSIColors.RED));
+
+
+        // SQUARED
+        plasmaShotWidget.appendString("SQUARED");
+        plasmaShotWidget.appendString(PrintUtils.addColor("    ┌──┐   ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌┘  └┐    ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌┘ ░░ └┐  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor(" ┌┘ ░░░░ └┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("┌┘ ░░░░░░ └┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("└─┐ ░░░░ ┌─┘", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  └──────┘", ANSIColors.RED));
+
+
+        // HYBRID
+        plasmaShotWidget.appendString("HYBRID");
+        plasmaShotWidget.appendString(PrintUtils.addColor("    ┌──┐   ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌╯  ╰┐    ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌╯ ░░ ╰┐  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor(" ┌╯ ░░░░ ╰┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("┌╯ ░░░░░░ ╰┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░░ ┌─╯", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╰──────╯", ANSIColors.RED));
+
+        // ROUND
+        plasmaShotWidget.appendString("ROUND");
+        plasmaShotWidget.appendString(PrintUtils.addColor("    ╭──╮   ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   ╭╯  ╰╮    ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╭╯ ░░ ╰╮  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor(" ╭╯ ░░░░ ╰╮", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╭╯ ░░░░░░ ╰╮", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╰─╮ ░░░░ ╭─╯", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╰──────╯", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("\n\nCHOSEN SHAPES: ");
+
+        plasmaShotWidget.appendString("\nSMALL DOWNWARDS SHOT");
+
+        plasmaShotWidget.appendString(PrintUtils.addColor("    ┌─┐    ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌╯ ╰┐   ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌╯ ░ ╰┐  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor(" ┌╯ ░░░ ╰┐ ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("┌╯ ░░░░░ ╰┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░ ┌─╯", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╰─────╯  ", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("\nJUMBO DOWNWARDS SHOT");
+
+        plasmaShotWidget.appendString(PrintUtils.addColor("    ┌──┐    ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌╯  ╰┐   ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌╯ ░░ ╰┐  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor(" ┌╯ ░░░░ ╰┐ ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("┌╯ ░░░░░░ ╰┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░░ ┌─╯", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╰──────╯  ", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("\nSMALL UPWARDS SHOT");
+
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╭─────╮  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╭─┘ ░░░ └─╮", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("└╮ ░░░░░ ╭┘", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor(" └╮ ░░░ ╭┘ ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  └╮ ░ ╭┘  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   └╮ ╭┘  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("    └─┘   ", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("\nBIG UPWARDS SHOT");
+
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╭──────╮  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╭─┘ ░░░░ └─╮", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("└╮ ░░░░░░ ╭┘", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor(" └╮ ░░░░ ╭┘ ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  └╮ ░░ ╭┘  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   └╮  ╭┘   ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("    └──┘    ", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("\nSMALL RIGHT SHOT");
+
+//        plasmaShotWidget.appendString(PrintUtils.addColor("       ┌──────╮  ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("    ┌──╯ ░░░░ └─╮ ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌─╯ ░░░░░░░░░ │  ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("  └─╮ ░░░░░░░░░ │  ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("    └──╮ ░░░░ ┌─╯ ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("       └──────╯   ", ANSIColors.RED));
+
+//        plasmaShotWidget.appendString(PrintUtils.addColor("       ┌──────╮  ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌───╯ ░░░░ └─╮", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor(" ┌─╯ ░░░░░░░░░░ │", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor(" └─╮ ░░░░░░░░░░ │", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("   └───╮ ░░░░ ┌─╯", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("       └──────╯  ", ANSIColors.RED));
+
+        plasmaShotWidget.appendString(PrintUtils.addColor("       ┌──────╮  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌───╯ ░░░░ └─╮", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("┌──╯ ░░░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("└──╮ ░░░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   └───╮ ░░░░ ┌─╯", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("       └──────╯  ", ANSIColors.RED));
+
+//        plasmaShotWidget.appendString(PrintUtils.addColor("        ┌─────╮  ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌────╯ ░░░ └─╮", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("   │ ░░░░░░░░░░ │", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("   └────╮ ░░░ ┌─╯", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("        └─────╯  ", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("\nBIG RIGHT SHOT");
+
+        plasmaShotWidget.appendString(PrintUtils.addColor("         ┌───────╮  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("    ┌────╯ ░░░░░ └─╮", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("┌───╯ ░░░░░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("└───╮ ░░░░░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("    └────╮ ░░░░░ ┌─╯", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("         └───────╯  ", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("\nSMALL LEFT SHOT");
+
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╭──────┐      ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╭─┘ ░░░░ ╰───┐  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░░░ ╰─┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░░░ ╭─┘", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░░ ╭───┘  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╰──────┘      ", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("\nSMALL RIGHT SHOT");
+
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╭───────┐        ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╭─┘ ░░░░░ ╰────┐   ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░░░░░ ╰───┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░░░░░ ╭───┘", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░░░ ╭────┘   ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╰───────┘        ", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("COLOR TEST");
+
+        plasmaShotWidget.appendString(PrintUtils.addColor("    ┌──┐    ", ANSIColors.MAGENTA));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌╯  ╰┐   ", ANSIColors.MAGENTA));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌╯ ░░ ╰┐  ", ANSIColors.MAGENTA));
+        plasmaShotWidget.appendString(PrintUtils.addColor(" ┌╯ ░░░░ ╰┐ ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("┌╯ ░░░░░░ ╰┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.YELLOW));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░░ ┌─╯", ANSIColors.YELLOW));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╰──────╯  ", ANSIColors.YELLOW));
+
+        plasmaShotWidget.appendString(PrintUtils.addColor("    ┌──┐    ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌╯  ╰┐   ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌╯ ░░ ╰┐  ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor(" ┌╯ ░░░░ ╰┐ ", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("┌╯ ░░░░░░ ╰┐", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░░ │", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░░ ┌─╯", ANSIColors.RED));
+        plasmaShotWidget.appendString(PrintUtils.addColor("  ╰──────╯  ", ANSIColors.RED));
+
+
+
+
+
+
+
+
+
+        plasmaShotWidget.printWidget();
+
+
+
+    }
+
+    @Test
+    void plasmaShot_border_test() {
+        WidgetTUI small_upwards_plasmaShotWidget = new WidgetTUI();
+        WidgetTUI big_upwards_plasmaShotWidget = new WidgetTUI();
+
+        WidgetTUI small_downwards_plasmaShotWidget = new WidgetTUI();
+        WidgetTUI big_downwards_plasmaShotWidget = new WidgetTUI();
+
+        WidgetTUI small_right_plasmaShotWidget = new WidgetTUI();
+        WidgetTUI big_right_plasmaShotWidget = new WidgetTUI();
+
+        WidgetTUI small_left_plasmaShotWidget = new WidgetTUI();
+        WidgetTUI big_left_plasmaShotWidget = new WidgetTUI();
+
+        System.out.println("\nSMALL DOWNWARDS SHOT");
+
+        small_downwards_plasmaShotWidget.appendString(PrintUtils.addColor("    ┌─┐    ", ANSIColors.RED));
+        small_downwards_plasmaShotWidget.appendString(PrintUtils.addColor("   ┌╯ ╰┐   ", ANSIColors.RED));
+        small_downwards_plasmaShotWidget.appendString(PrintUtils.addColor("  ┌╯ ░ ╰┐  ", ANSIColors.RED));
+        small_downwards_plasmaShotWidget.appendString(PrintUtils.addColor(" ┌╯ ░░░ ╰┐ ", ANSIColors.RED));
+        small_downwards_plasmaShotWidget.appendString(PrintUtils.addColor("┌╯ ░░░░░ ╰┐", ANSIColors.RED));
+        small_downwards_plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░ │", ANSIColors.RED));
+        small_downwards_plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░ ┌─╯", ANSIColors.RED));
+        small_downwards_plasmaShotWidget.appendString(PrintUtils.addColor("  ╰─────╯  ", ANSIColors.RED));
+
+        small_downwards_plasmaShotWidget.setWidth(20).setHeight(20).centerWidgetScreen().wrapWidgetWithBorder().printWidget();
+    }
 }
+
