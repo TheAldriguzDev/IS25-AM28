@@ -12,7 +12,7 @@ public class HourGlass extends TimerObservable {
     private long remainingFlips;
     private long durationInMillis;
     private long remainingDurationInMillis;
-    public Thread timerThread;
+    private Thread timerThread;
 
     // Constructor to create a custom duration hourglass
     public HourGlass(long remainingFlips, long durationInMillis) {
