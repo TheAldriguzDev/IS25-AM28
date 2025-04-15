@@ -40,6 +40,8 @@ class HourGlassTest {
         // REMOVED FOR WHEN ALL TESTS ARE RUN, BELOW THERE'S STILL
         // THE SAME TEST BUT WITH A MUCH SHORTER DURATION (2s (test below) vs. 1m 37.5s (this test))
         /*
+        long durationInMillis = HourGlass.DEFAULT_DURATION_IN_MILLIS;
+
         HourGlass hourGlass = new HourGlass(2);
         HourGlassSubscriber subscriber1 = new HourGlassSubscriber();
         HourGlassSubscriber subscriber2 = new HourGlassSubscriber();
@@ -69,12 +71,12 @@ class HourGlassTest {
 
         deltaTime = endTime - startTime;
 
-        System.out.println("START: " + startTime + " | END: " + endTime + " | ACTUAL_DELTA: " + deltaTime + ", IDEAL_DELTA: " + HourGlass.DEFAULT_DURATION_IN_MILLIS);
+        System.out.println("START: " + startTime + " | END: " + endTime + " | ACTUAL_DELTA: " + deltaTime + ", IDEAL_DELTA: " + durationInMillis);
 
         // Printing the time in millis when each subscriber got called by the hourglass onTimeEnd method
-        System.out.println("Sub1: " + subscriber1.getInvocationTime());
-        System.out.println("Sub2: " + subscriber2.getInvocationTime());
-        System.out.println("Sub3: " + subscriber3.getInvocationTime());
+        System.out.println("Sub1 updated after: " + (subscriber1.getInvocationTime() - startTime) + "ms");
+        System.out.println("Sub2 updated after: " + (subscriber2.getInvocationTime() - startTime) + "ms");
+        System.out.println("Sub3 updated after: " + (subscriber3.getInvocationTime() - startTime) + "ms");
 
         assertNotEquals(Long.MIN_VALUE, subscriber1.getInvocationTime());
         assertNotEquals(Long.MIN_VALUE, subscriber2.getInvocationTime());
@@ -84,7 +86,7 @@ class HourGlassTest {
 
     @Test
     void testHourGlassCustomDuration() {
-        long durationInMillis = 2 * Timer.ONE_SECOND;
+        long durationInMillis = Timer.ONE_SECOND;
 
         HourGlass hourGlass = new HourGlass(1, durationInMillis);
         HourGlassSubscriber subscriber1 = new HourGlassSubscriber();
@@ -110,7 +112,7 @@ class HourGlassTest {
             endTime = System.currentTimeMillis();
         }
         catch (InterruptedException e) {
-            fail("INTERRUPTED TEST THREAD");
+            fail("ERROR: INTERRUPTED TEST THREAD");
         }
 
         deltaTime = endTime - startTime;
