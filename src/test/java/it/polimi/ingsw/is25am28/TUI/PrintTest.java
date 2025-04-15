@@ -792,13 +792,11 @@ public class PrintTest {
 
     @Test
     void widget_centerWidgetScreenTest() {
-        /*
         WidgetTUI widget = new WidgetTUI();
 
         widget.appendString(PrintUtils.addColor("HELLO WORLD", ANSIColors.RED));
 
         widget.setWidth(20).setHeight(5).centerWidgetScreen().wrapWidgetWithBorder().printWidget();
-        */
     }
 
     @Test

@@ -16,6 +16,7 @@ public class TUI {
     // Constructor
     public TUI() {
         // TODO: Init all the other widgets
+        //       !!! requires the client to be built first !!!
         this.shipGridWidget = new WidgetTUI().wrapWidgetWithBorder();
         this.shipStatsWidget = new WidgetTUI().wrapWidgetWithBorder();
         this.boardWidget = new WidgetTUI().wrapWidgetWithBorder();
