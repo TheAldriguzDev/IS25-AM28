@@ -2,18 +2,18 @@ package it.polimi.ingsw.is25am28.Controller;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitingForGameConfigurationDTO;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Model.GameModelv2.CreateGameState;
-import it.polimi.ingsw.is25am28.Model.GameModelv2.GameModel;
-import it.polimi.ingsw.is25am28.Model.GameModelv2.WaitPlayersState;
+import it.polimi.ingsw.is25am28.Model.GameModelv2.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
@@ -40,6 +40,16 @@ public class GameController {
         StateDTO state;
 
         this.connectedClients++;
+
+        // TODO: Pensa a come poter dire ai client che ci sono dei player disconnessi
+//        synchronized (this.model) {
+//            List<String> disconnectedPlayers = this.model.getDisconnectedPlayers();
+//            if (this.connectedClients > 4 && disconnectedPlayers.isEmpty()) {
+//                throw new IllegalStateException("The game cannot accept more players");
+//            } else {
+//                state = new DisconnectedPlayerDTO(disconnectedPlayers);
+//            }
+//        }
 
         if (this.connectedClients > 4) {
             throw new IllegalStateException("The lobby cannot accept more players");
@@ -68,6 +78,19 @@ public class GameController {
         }
 
         throw new IllegalStateException("Unexpected connection in invalid state: " + this.model.getCurrentState());
+    }
+
+    public boolean disconnectClient(String nickname) {
+        synchronized (this.model) {
+            return this.model.disconnectClient(nickname);
+        }
+    }
+
+    // TODO: THIS METHOD SHOULD RETURN THE STATE THAT THE CLIENT NEEDS TO CONFIGURE THE GAME SINCE HE LEFT IT
+    public boolean reconnectClient(String nickname) {
+        synchronized (this.model) {
+            return this.model.reconnectClient(nickname);
+        }
     }
 
     public StateDTO gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws IllegalStateException, IllegalArgumentException {

@@ -10,6 +10,7 @@ import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
+import it.polimi.ingsw.is25am28.Network.Messages.Ping;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI;
 
@@ -24,11 +25,35 @@ import java.util.*;
  * */
 
 public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
+
+    class ClientStatus {
+        protected UUID uuid; // Client uuid
+        protected String nickName;
+        protected int failedPings = 0;
+        protected boolean isConnected;
+
+        protected ClientStatus(UUID uuid) {
+            this.uuid = uuid;
+            this.nickName = "";
+            this.isConnected = true;
+        }
+
+        protected void setNickName(String nickName) {
+            this.nickName = nickName;
+        }
+
+        protected void resetPings() {
+            this.failedPings = 0;
+            this.isConnected = true;
+        }
+    }
+
     final GameController controller;
     final Queue queueHandler;
 
     // Ref of the all the clients that are interested in receiving updates
     final Map<UUID, VirtualViewRMI> clients;
+    final Map<UUID, ClientStatus> clientsStatus = new HashMap<>();
 
     /**
      * Constructor used to create a new RMI Server
@@ -47,6 +72,38 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         new Thread(queueHandler).start();
 
         System.out.println("RMI server listening on port " + serverPort);
+
+        this.runPingHandler();
+    }
+
+    /**
+     * Method that spawn a Thread to check if any clients is disconnected
+     * TODO: Esiste un modo migliore che evita di fare busy-waiting?
+     * */
+    private void runPingHandler() {
+        new Thread(() -> {
+            while (true) {
+                synchronized (this.clientsStatus) {
+                    for (ClientStatus clientStatus : this.clientsStatus.values()) {
+                        clientStatus.failedPings++;
+
+                        System.out.println("Controllo napoletano" + clientStatus.nickName);
+
+                        // If the client already registered himself with his nickname, then we can start to check his ping
+                        if (clientStatus.failedPings >= 3 && clientStatus.nickName != null && !clientStatus.nickName.isEmpty() && clientStatus.isConnected) {
+                            clientStatus.isConnected = false;
+
+                            this.controller.disconnectClient(clientStatus.nickName);
+                        }
+                    }
+                }
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }).start();
     }
 
     /**
@@ -63,12 +120,15 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             StateDTO state = this.controller.onClientConnection();
             client.updateState(state);
         }
+
+        // Add the client to the ping handler data structure
+        synchronized (this.clientsStatus) {
+            this.clientsStatus.put(clientUUID, new ClientStatus(clientUUID));
+        }
     }
 
     @Override
     public void sendMessage(Message message, UUID uuid) throws Exception {
-        System.out.println("Received a message from the client");
-
         switch (message) {
             case ConfigGame data -> {
                 this.gameConfig(data.getPlayerNickname(), data.getPlayerColor(), data.getGameLevel(), data.getTotalPlayers(), uuid);
@@ -76,12 +136,26 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             case NewPlayer data -> {
                 this.addNewPlayer(data.getPlayerNickname(), data.getPlayerColor(), uuid);
             }
+            case Ping ignored -> {
+                this.ping(uuid);
+            }
             default -> {
                 throw new Exception("The given Message is not supported");
             }
         }
+    }
 
-        System.out.println(message.getClass());
+    /**
+     * Method used by the client to ping the server. It will reset the ping counter
+     * */
+    private void ping(UUID uuid) {
+        synchronized (this.clientsStatus) {
+            this.clientsStatus.get(uuid).resetPings();
+        }
+    }
+
+    private void reconnectClient(String nickName, UUID uuid) {
+        
     }
 
     private void gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, UUID uuid) throws Exception {
@@ -111,6 +185,10 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
                 }
             }
         }
+
+        synchronized (this.clientsStatus) {
+            this.clientsStatus.get(uuid).setNickName(nickname);
+        }
     }
 
     private void addNewPlayer(String nickname, PlayerColor playerColor, UUID uuid) throws Exception {
@@ -136,6 +214,11 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
                     });
                 }
             }
+        }
+
+        // Add the client nickname to the server
+        synchronized (this.clientsStatus) {
+            this.clientsStatus.get(uuid).setNickName(nickname);
         }
     }
 

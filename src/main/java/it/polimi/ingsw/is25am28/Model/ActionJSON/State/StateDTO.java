@@ -20,7 +20,7 @@ import java.io.Serializable;
 })
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public sealed class StateDTO implements Serializable permits CardRoundDTO, CreateGameStateDTO, EndGameDTO, FixShipDTO, PopulateShipDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateDTO, WaitingForGameConfigurationDTO {
+public sealed class StateDTO implements Serializable permits CardRoundDTO, CreateGameStateDTO, DisconnectedPlayerDTO, EndGameDTO, FixShipDTO, PopulateShipDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateDTO, WaitingForGameConfigurationDTO {
     @Serial
     private static final long serialVersionUID = 1L;
 

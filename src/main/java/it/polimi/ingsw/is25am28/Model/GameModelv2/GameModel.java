@@ -59,6 +59,47 @@ public class GameModel {
     }
 
     /**
+     * @return true if the given player exist. It will set the player connection set to false
+     * */
+    public boolean disconnectClient(String nickname) {
+        Player p = this.players.get(nickname);
+        if (p == null) {
+            return false;
+        }
+
+        p.setConnected(false);
+
+        return true;
+    }
+
+    /**
+     * @return the list of disconnected players. It
+     * */
+    public List<String> getDisconnectedPlayers() {
+        return this.players.values()
+                .stream()
+                .filter(p -> !p.isConnected())
+                .map(Player::getNickname).toList();
+    }
+
+    /**
+     * @return true if a disconnected player returns in the game
+     * */
+    public boolean reconnectClient(String nickname) {
+        if (!this.getDisconnectedPlayers().contains(nickname)) {
+            return false;
+        }
+
+        Player p = this.players.get(nickname);
+        if (p == null) {
+            return false;
+        }
+
+        p.setConnected(true);
+        return true;
+    }
+
+    /**
      * generateDeck() set the game deck by extracting the correct amount of cards. For each level the deck will be of:
      * Test flight --> The 8 cards that are used for every test flight
      * Level 1 --> 8 level 1 cards
