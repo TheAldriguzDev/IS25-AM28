@@ -13,6 +13,7 @@ import it.polimi.ingsw.is25am28.Ship.Ship;
 
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -771,6 +772,83 @@ public class PrintTest {
     }
 
     @Test
+    void ASCII_ART_plasmaShot() {
+        WidgetTUI plasmaShotTitle = new WidgetTUI();
+        WidgetTUI plasmaShotArt = new WidgetTUI();
+        WidgetTUI plasmaShotInfo = new WidgetTUI();
+        WidgetTUI plasmaShotFinal;
+
+        plasmaShotTitle.appendString(" ==== CARD TITLE ====");
+
+        plasmaShotArt.appendString("                 █                ");
+        plasmaShotArt.appendString("                ███               ");
+        plasmaShotArt.appendString("               █████              ");
+        plasmaShotArt.appendString("               █████              ");
+        plasmaShotArt.appendString("              ███████             ");
+        plasmaShotArt.appendString("       █    ███████████    █      ");
+        plasmaShotArt.appendString("       ██  █████████████  ██      ");
+        plasmaShotArt.appendString("  ██    ███████████████████    ██ ");
+        plasmaShotArt.appendString("  ███    █████████████████    ███ ");
+        plasmaShotArt.appendString("   ████ ███████████████████ ████  ");
+        plasmaShotArt.appendString("     █████████████████████████    ");
+        plasmaShotArt.appendString("      ███████████████████████     ");
+        plasmaShotArt.appendString("         █████████████████        ");
+        plasmaShotArt.appendString("            ███████████           ");
+        plasmaShotArt.wrapWidgetWithBorder();
+
+        plasmaShotInfo.appendString("==== CURRENT METEOR INFO ====");
+        plasmaShotInfo.appendString("Inbound Direction: LEFT");
+        plasmaShotInfo.appendString("Dice Throw Result: 7");
+        plasmaShotInfo.appendString("Size: BIG METEOR");
+        plasmaShotInfo.appendString("Current Player: " + PrintUtils.addColor("MasterChief216", ANSIColors.RED));
+
+        plasmaShotFinal = WidgetTUI.composeTwoWidgetsVertically(
+            WidgetTUI.composeTwoWidgetsVertically(plasmaShotTitle, plasmaShotArt),
+            plasmaShotInfo
+        );
+
+        plasmaShotFinal.centerWidgetScreen();
+        plasmaShotFinal.wrapWidgetWithBorder().printWidget();
+    }
+
+    @Test
+    void ASCII_ART_meteor() {
+        WidgetTUI meteor1Title = new WidgetTUI();
+        WidgetTUI meteor1 = new WidgetTUI();
+        WidgetTUI meteor1Info = new WidgetTUI();
+        WidgetTUI meteor1Final;
+
+        meteor1Title.appendString(" ==== METEOR SHOWER ====");
+
+        meteor1.appendString(ANSIColors.RED + " ██████                        " + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.RED + "  █████████                   " + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.RED + "   ████████████               " + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.RED + "    █████████████            " + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.RED + "     █████" + ANSIColors.BRIGHT_YELLOW + "████" + ANSIColors.RED + "███████          " + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.RED + "      █████" + ANSIColors.BRIGHT_YELLOW + "███████" + ANSIColors.RED + "█████       " + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.RED + "       █████" + ANSIColors.BRIGHT_YELLOW + "██████████" + ANSIColors.RED + "████    " + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.RED + "        ███" + ANSIColors.BRIGHT_YELLOW + "████████████████   " + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.RED + "          ██" + ANSIColors.BRIGHT_YELLOW + "██████" + ANSIColors.RESET + "███████" + ANSIColors.BRIGHT_YELLOW + "█████ " + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.BRIGHT_YELLOW + "           █████" + ANSIColors.RESET + "███████████" + ANSIColors.BRIGHT_YELLOW + "███" + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.BRIGHT_YELLOW + "             █████" + ANSIColors.RESET + "███████" + ANSIColors.BRIGHT_YELLOW + "████ " + ANSIColors.RESET);
+        meteor1.appendString(ANSIColors.BRIGHT_YELLOW + "                ███████████  " + ANSIColors.RESET);
+        meteor1.wrapWidgetWithBorder();
+
+        meteor1Info.appendString("==== CURRENT METEOR INFO ====");
+        meteor1Info.appendString("Inbound Direction: LEFT");
+        meteor1Info.appendString("Dice Throw Result: 7");
+        meteor1Info.appendString("Size: BIG METEOR");
+        meteor1Info.appendString("Current Player: " + PrintUtils.addColor("MasterChief216", ANSIColors.RED));
+
+        meteor1Final = WidgetTUI.composeTwoWidgetsVertically(
+                WidgetTUI.composeTwoWidgetsVertically(meteor1Title, meteor1),
+                meteor1Info
+        );
+        meteor1Final.centerWidgetScreen();
+        meteor1Final.wrapWidgetWithBorder().printWidget();
+    }
+
+    @Test
     void widget_horizontalExtensionTest() {
         System.out.println("======================== WIDGET HORIZONTAL EXTENSION TEST ==========================");
 
@@ -788,6 +866,15 @@ public class PrintTest {
         widget.printWidget();
 
         assertEquals(4, widget.getScreen().size());
+    }
+
+    @Test
+    void widget_centerWidgetScreenTest() {
+        WidgetTUI widget = new WidgetTUI();
+
+        widget.appendString(PrintUtils.addColor("HELLO WORLD", ANSIColors.RED));
+
+        widget.setWidth(20).setHeight(5).centerWidgetScreen().wrapWidgetWithBorder().printWidget();
     }
 
     @Test

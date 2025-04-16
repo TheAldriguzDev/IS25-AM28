@@ -752,7 +752,7 @@ public class WidgetTUI {
 
         // Adding right and left padding to each string in the screen
         for (String s : this.screen) {
-            trimmed = s.trim();
+            trimmed = s.strip();
             strlen = PrintUtils.removeUnicodeFromString(trimmed).length();
             paddedString = new StringBuilder();
             padding = ((this.width - strlen) / 2) - this.borderCount;
