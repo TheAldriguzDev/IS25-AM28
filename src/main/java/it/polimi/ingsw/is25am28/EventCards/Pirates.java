@@ -7,6 +7,8 @@ import it.polimi.ingsw.is25am28.Components.Shield;
 import it.polimi.ingsw.is25am28.Board.Board;
 import it.polimi.ingsw.is25am28.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Player.Player;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import javafx.util.Pair;
 
@@ -336,7 +338,6 @@ public class Pirates extends EventCard {
         this.diceThrowResult = diceThrowResult;
     }
 
-    // TODO : Currently does not work, a merge with yìthe mai dev tree is necessary to fix the generateState
     @Override
     public WidgetTUI generateWidget(CardStateJSON piratesState) {
         WidgetTUI cardWidget = new WidgetTUI();
@@ -351,12 +352,46 @@ public class Pirates extends EventCard {
             // TODO : does the shootingSequence need to be shown to the clients as a whole?
             cardInfoWidget.appendString("Required Firepower: " + piratesState.getRequiredFirepower());
         } else {
-            cardInfoWidget.appendString("Target player is: " + piratesState.getPlayerNickname());
-            cardInfoWidget.appendString("Current PlasmaShot size: " + piratesState.getCurrPlasmaShotDescriptor().getKey());
-            cardInfoWidget.appendString("Current PlasmaShot direction: " + piratesState.getCurrPlasmaShotDescriptor().getValue());
+//            cardInfoWidget.appendString("Target player is: " + piratesState.getPlayerNickname());
+//            cardInfoWidget.appendString("Current PlasmaShot size: " + piratesState.getCurrPlasmaShotDescriptor().getKey());
+//            cardInfoWidget.appendString("Current PlasmaShot direction: " + piratesState.getCurrPlasmaShotDescriptor().getValue());
+            switch (piratesState.getCurrPlasmaShotDescriptor().getValue()) {
+                case 0 -> {
+                    if(piratesState.getCurrPlasmaShotDescriptor().getKey() == 1) {
+                        cardInfoWidget = getSmallDownwardsShotWidget();
+                    } else {
+                        cardInfoWidget = getBigDownwardsShotWidget();
+                    }
+                }
+                case 1 -> {
+                    if(piratesState.getCurrPlasmaShotDescriptor().getKey() == 1) {
+                        cardInfoWidget = getSmallShotUpwardsWidget();
+                    } else {
+                        cardInfoWidget = getBigShotUpwardsWidget();
+                    }
+                }
+                case 2 -> {
+                    if (piratesState.getCurrPlasmaShotDescriptor().getKey() == 1) {
+                        cardInfoWidget = getSmallRightShotWidget();
+                    } else {
+                        cardInfoWidget = getBigRightShotWidget();
+                    }
+                }
+                case 3 -> {
+                    if (piratesState.getCurrPlasmaShotDescriptor().getKey() == 1) {
+                        cardInfoWidget = getSmallLeftShotWidget();
+                    } else {
+                        cardInfoWidget = getBigLeftShotWidget();
+                    }
+                }
+            }
+
+
             // TODO : when does the dice throw need to be shown to the client?
         }
         cardInfoWidget.wrapWidgetWithBorder();
+
+
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
@@ -364,5 +399,98 @@ public class Pirates extends EventCard {
     @Override
     public WidgetTUI generateWidget() {
         return null;
+    }
+
+    private WidgetTUI getSmallDownwardsShotWidget() {
+        WidgetTUI plasmaShotWidget = new WidgetTUI();
+
+        // TODO : swap to colored version once the centerScreen is fixed to work with colored widgets
+
+//        plasmaShotWidget.appendString(PrintUtils.addColor("    ┌─┐    ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌╯ ╰┐   ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌╯ ░ ╰┐  ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor(" ┌╯ ░░░ ╰┐ ", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("┌╯ ░░░░░ ╰┐", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░ │", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░ ┌─╯", ANSIColors.RED));
+//        plasmaShotWidget.appendString(PrintUtils.addColor("  ╰─────╯  ", ANSIColors.RED));
+
+        plasmaShotWidget.appendString("SMALL PLASMASHOT");
+        plasmaShotWidget.appendString("    ┌─┐    ");
+        plasmaShotWidget.appendString("   ┌╯ ╰┐   ");
+        plasmaShotWidget.appendString("  ┌╯ ░ ╰┐  ");
+        plasmaShotWidget.appendString(" ┌╯ ░░░ ╰┐ ");
+        plasmaShotWidget.appendString("┌╯ ░░░░░ ╰┐");
+        plasmaShotWidget.appendString("│ ░░░░░░░ │");
+        plasmaShotWidget.appendString("╰─┐ ░░░ ┌─╯");
+        plasmaShotWidget.appendString("  ╰─────╯  ");
+        plasmaShotWidget.appendString("COMING FROM ABOVE");
+
+        return plasmaShotWidget.centerWidgetScreen();
+    }
+
+    private WidgetTUI getBigDownwardsShotWidget() {
+        WidgetTUI plasmaShotWidget = new WidgetTUI();
+
+        plasmaShotWidget.appendString("BIG PLASMASHOT");
+        plasmaShotWidget.appendString("    ┌──┐    ");
+        plasmaShotWidget.appendString("   ┌╯  ╰┐   ");
+        plasmaShotWidget.appendString("  ┌╯ ░░ ╰┐  ");
+        plasmaShotWidget.appendString(" ┌╯ ░░░░ ╰┐ ");
+        plasmaShotWidget.appendString("┌╯ ░░░░░░ ╰┐");
+        plasmaShotWidget.appendString("│ ░░░░░░░░ │");
+        plasmaShotWidget.appendString("│ ░░░░░░░░ │");
+        plasmaShotWidget.appendString("╰─┐ ░░░░ ┌─╯");
+        plasmaShotWidget.appendString("  ╰──────╯  ");
+        plasmaShotWidget.appendString("COMING FROM ABOVE");
+
+        return plasmaShotWidget.centerWidgetScreen();
+    }
+
+    private WidgetTUI getSmallShotUpwardsWidget() {
+        return null;
+    }
+
+    private WidgetTUI getBigShotUpwardsWidget() {
+        return null;
+    }
+
+    private WidgetTUI getSmallRightShotWidget() {
+        return null;
+    }
+
+    private WidgetTUI getBigRightShotWidget() {
+        return null;
+    }
+
+    private WidgetTUI getSmallLeftShotWidget() {
+        WidgetTUI plasmaShotWidget = new WidgetTUI();
+
+        plasmaShotWidget.appendString("SMALL PLASMASHOT ");
+        plasmaShotWidget.appendString("       ┌──────╮  ");
+        plasmaShotWidget.appendString("   ┌───╯ ░░░░ └─╮");
+        plasmaShotWidget.appendString("┌──╯ ░░░░░░░░░░ │");
+        plasmaShotWidget.appendString("└──╮ ░░░░░░░░░░ │");
+        plasmaShotWidget.appendString("   └───╮ ░░░░ ┌─╯");
+        plasmaShotWidget.appendString("       └──────╯  ");
+        plasmaShotWidget.appendString("COMING FOR THE LEFT");
+
+        return plasmaShotWidget.addPadding(0,0,0, 1);
+    }
+
+    private WidgetTUI getBigLeftShotWidget() {
+        WidgetTUI plasmaShotWidget = new WidgetTUI();
+
+        plasmaShotWidget.appendString("BIG PLASMASHOT");
+        plasmaShotWidget.appendString("         ┌───────╮  ");
+        plasmaShotWidget.appendString("    ┌────╯ ░░░░░ └─╮");
+        plasmaShotWidget.appendString("┌───╯ ░░░░░░░░░░░░ │");
+        plasmaShotWidget.appendString("│ ░░░░░░░░░░░░░░░░ │");
+        plasmaShotWidget.appendString("└───╮ ░░░░░░░░░░░░ │");
+        plasmaShotWidget.appendString("    └────╮ ░░░░░ ┌─╯");
+        plasmaShotWidget.appendString("         └───────╯  ");
+        plasmaShotWidget.appendString("COMING FOR THE LEFT");
+
+        return plasmaShotWidget;
     }
 }
