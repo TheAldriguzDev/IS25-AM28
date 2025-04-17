@@ -25,15 +25,21 @@ The players can play from a Textual User Interface, best known as TUI, or from a
 In the project we implemented all the requirements plus we decide to develop three advanced features.
 
 | Feature                      | Implemented |
-|:-----------------------------|:----------:|
-| Complete rules               |      ✅     |
-| TUI                          |      ❌     |
-| GUI                          |      ❌     |
-| Socket                       |      ❌     |
-| RMI                          |      ❌     |
-| Persitency                   |      ❌     |
-| Resilience to disconnections |      ❌     |
-| Test flight                  |      ❌      |
+|:-----------------------------|:-----------:|
+| Complete rules               |      🟢       |
+| TUI                          |      🟡      |
+| GUI                          |      🔴      |
+| Socket                       |      🟢      |
+| RMI                          |      🟢      |
+| Multiple games               |      🟢      |
+| Persitency                   |      🔴      |
+| Resilience to disconnections |      🟡      |
+| Test flight                  |      🟢      |
+
+Legend: 
+- 🔴 Not implemented
+- 🟡 Implementing 
+- 🟢 Implemented
 
 ### Used Tools
 

@@ -1,9 +1,8 @@
 package it.polimi.ingsw.is25am28.Network.Socket.Server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Network.Server;
+import it.polimi.ingsw.is25am28.Network.Server.Server;
 
 import java.io.*;
 import java.net.ServerSocket;

@@ -2,28 +2,25 @@ package it.polimi.ingsw.is25am28.Network.Socket.Server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
-import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
-import it.polimi.ingsw.is25am28.Network.Server;
+import it.polimi.ingsw.is25am28.Network.Server.Server;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 /**
  * SocketClientHandler is needed to handle correctly each client socket to execute the command with the Controller
  * */
 
 public class SocketClientHandler implements VirtualViewSocket {
-    private final Server gameController;
+    private final Server controller;
     private final TCPServer tcpServer;
 
     // Channel used to read from the socket
@@ -34,21 +31,25 @@ public class SocketClientHandler implements VirtualViewSocket {
     // Mapper used to serialize and deserialize JSON used in the communication
     private final ObjectMapper mapper;
 
+    private String playerNickname;
+
     public SocketClientHandler(Server gameController, TCPServer tcpServer, BufferedReader input, PrintWriter output) throws JsonProcessingException {
-        this.gameController = gameController;
+        this.controller = gameController;
         this.tcpServer = tcpServer;
         this.input = input;
         this.output = output;
 
         this.mapper = new ObjectMapper();
 
-        this.onClientConnection();
+        try {
+            this.onClientConnection();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private void onClientConnection() throws JsonProcessingException {
-        StateDTO state = this.gameController.onClientConnection();
-
-        this.updateState(state);
+    private void onClientConnection() throws Exception {
+        this.controller.onClientConnection(this);
     }
 
     /**
@@ -63,10 +64,10 @@ public class SocketClientHandler implements VirtualViewSocket {
             Message message = mapper.readValue(line, Message.class);
             switch (message) {
                 case ConfigGame data -> {
-                    this.gameConfig(data.getPlayerNickname(), data.getPlayerColor(), data.getGameLevel(), data.getTotalPlayers());
+                    this.createNewGame(data.getPlayerNickname(), data.getPlayerColor(), data.getGameLevel(), data.getTotalPlayers());
                 }
                 case NewPlayer data -> {
-                    this.newPlayer(data.getPlayerNickname(), data.getPlayerColor());
+                    this.joinGame(data.getPlayerNickname(), data.getPlayerColor(), data.getGameID());
                 }
                 default -> {
                     throw new Exception("The given Message is not supported");
@@ -75,37 +76,29 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
-    /**
-     * Method used to configure the game, if an error is caught we notify the specific client, otherwise the new state will be
-     * sent to each client
-     * */
-    private void gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws Exception {
+    public void createNewGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers) throws Exception {
+        this.playerNickname = playerNickname;
+
         try {
-            this.gameController.configGame(nickname, playerColor, level, numPlayers);
+            this.controller.createNewGame(playerNickname, playerColor, gameLevel, totalPlayers, this);
         } catch (Exception e) {
-            // TODO: Handle exeception
-            throw new Exception("[gameConfig] An error occurred: " + e.getMessage());
+            // TODO: FIX THE reportError method
+            this.reportError(e.getMessage(), null);
         }
     }
 
-    private void newPlayer(String playerNickname, PlayerColor playerColor) throws Exception {
-//        List<StateDTO> states = new ArrayList<>();
-//
-//        try {
-//            states = this.gameController.addNewPlayer(playerNickname, playerColor);
-//        } catch (IllegalArgumentException | IllegalStateException e) {
-//            this.reportError("Some details", this.gameController.getCurrentState());
-//            return;
-//        }
-//
-//        if (!states.isEmpty()) {
-//            this.tcpServer.broadCastUpdateState(states.getFirst());
-//        }
-//
-//        if (states.size() == 2) {
-//            this.tcpServer.broadCastUpdateState(states.getLast());
-//        }
+    public void joinGame(String playerNickname, PlayerColor playerColor, int gameID) throws Exception {
+        this.playerNickname = playerNickname;
+
+        try {
+            this.controller.joinGame(playerNickname, playerColor, gameID, this);
+        } catch (Exception e) {
+            // TODO: FIX THE reportError method
+            this.reportError(e.getMessage(), null);
+        }
     }
+
+    // TODO: WE NEED TO IMPLEMENT THE CONTROLLER INTERFACE TO EXPOSE ALL THE METHODS
 
     // TODO: Capisci come togliere sto metodo da qui
     @Override

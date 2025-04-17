@@ -373,7 +373,7 @@ public class GameModel {
         this.numPlayers = numPlayers;
     }
 
-    List<String> getAvailableColors() {
+    public List<String> getAvailableColors() {
         Set<PlayerColor> used = players.values().stream()
                 .map(Player::getPlayerColor)
                 .collect(Collectors.toSet());

@@ -42,4 +42,9 @@ public final class EndGameDTO extends StateDTO {
         this.playersPositionResult = playersPositionResult;
         return this;
     }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
+    }
 }

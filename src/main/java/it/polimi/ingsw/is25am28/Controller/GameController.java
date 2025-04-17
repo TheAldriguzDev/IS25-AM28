@@ -34,6 +34,12 @@ public class GameController {
         }
     }
 
+    public List<String> getAvailableColors() {
+        synchronized (this.model) {
+            return this.model.getAvailableColors();
+        }
+    }
+
     // TODO: Method that accepts clients connection. In this state we need to generate the state and send it back to the client. If the gameIsReady for newPlayer
     //  we need to notify the new clients with the current model state, otherwise we need to send a temp state that indicates that the game is still in configuration
     public StateDTO onClientConnection() {

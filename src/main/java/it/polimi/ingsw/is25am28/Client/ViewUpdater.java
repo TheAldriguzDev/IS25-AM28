@@ -8,6 +8,8 @@ import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -38,6 +40,173 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(StateDTO state) {
         System.out.println(state.getStateName());
+    }
+
+    @Override
+    public void visit(AvailableGamesDTO state) throws Exception {
+//        System.out.println("""
+//                 ██████╗  █████╗ ██╗      █████╗ ██╗  ██╗██╗   ██╗    ████████╗██████╗ ██╗   ██╗ ██████╗██╗  ██╗███████╗██████╗\s
+//                ██╔════╝ ██╔══██╗██║     ██╔══██╗╚██╗██╔╝╚██╗ ██╔╝    ╚══██╔══╝██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗
+//                ██║  ███╗███████║██║     ███████║ ╚███╔╝  ╚████╔╝        ██║   ██████╔╝██║   ██║██║     █████╔╝ █████╗  ██████╔╝
+//                ██║   ██║██╔══██║██║     ██╔══██║ ██╔██╗   ╚██╔╝         ██║   ██╔══██╗██║   ██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗
+//                ╚██████╔╝██║  ██║███████╗██║  ██║██╔╝ ██╗   ██║          ██║   ██║  ██║╚██████╔╝╚██████╗██║  ██╗███████╗██║  ██║
+//                 ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝          ╚═╝   ╚═╝  ╚═╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝\s
+//                """);
+        System.out.println("Welcome to GALAXY TRUCKER");
+
+        List<GameInfoDTO> availableGames = state.getAvailableGames();
+
+        // Build the list of possibles options
+        List<String> options = new ArrayList<>();
+
+        // If present, add the available games
+        for (GameInfoDTO game : availableGames) {
+            options.add("Join the game with the ID: " + game.getId() +
+                    " (Required players: " + game.getTotalPlayers() +
+                    ", Level: " + game.getLevel() + ")");
+        }
+
+        // Extra options
+        options.add("Create a new game");
+        options.add("Reconnect to an existing game");
+
+        // Display the options
+        for (int i = 0; i < options.size(); i++) {
+            System.out.println((i + 1) + ". " + options.get(i));
+        }
+
+        int choice = -1;
+        while (choice < 1 || choice > options.size()) {
+            System.out.print("Choose an option: ");
+            if (scanner.hasNextInt()) {
+                choice = scanner.nextInt();
+            } else {
+                scanner.next(); // Consuma input non valido
+            }
+        }
+
+        Scanner scanner = new Scanner(System.in);
+
+        // Evaluate the correct command
+        if (choice <= availableGames.size()) {
+            GameInfoDTO selectedGame = availableGames.get(choice - 1);
+            System.out.println("Joining the game " + selectedGame.getId() + " ...");
+
+            // Ask for nickname
+            String playerName;
+            do {
+                System.out.print("Your name: ");
+                playerName = scanner.nextLine().trim();
+                if (playerName.isEmpty() || state.getUsedNicknames().contains(playerName)) {
+                    System.err.println("Invalid input: name already used or empty.");
+                }
+            } while (playerName.isEmpty());
+            this.playerName = playerName;
+
+            // Ask for color
+            PlayerColor playerColor = null;
+            do {
+                System.out.print("Choose a color " + selectedGame.getAvailableColors());
+                String colorInput = scanner.nextLine().trim();
+                if (colorInput.isEmpty()) {
+                    System.err.println("Invalid input: color cannot be empty.");
+                    continue;
+                }
+                try {
+                    playerColor = PlayerColor.valueOf(colorInput.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Invalid input: unknown color.");
+                }
+            } while (playerColor == null);
+            this.playerColor = playerColor;
+
+            client.sendMessage( new NewPlayer(this.playerName, this.playerColor, selectedGame.getId()));
+
+        } else if (choice == availableGames.size() + 1) {
+            System.out.println("Creating a new game...");
+
+            // Ask for nickname
+            String playerName;
+            do {
+                System.out.print("Your name: ");
+                playerName = scanner.nextLine().trim();
+                if (playerName.isEmpty()) {
+                    System.err.println("Invalid input: name cannot be empty.");
+                }
+            } while (playerName.isEmpty());
+            this.playerName = playerName;
+
+            // Ask for color
+            PlayerColor playerColor = null;
+            do {
+                System.out.print("Choose a color (e.g., BLUE, GREEN, RED, YELLOW): ");
+                String colorInput = scanner.nextLine().trim();
+                if (colorInput.isEmpty()) {
+                    System.err.println("Invalid input: color cannot be empty.");
+                    continue;
+                }
+                try {
+                    playerColor = PlayerColor.valueOf(colorInput.toUpperCase());
+                } catch (IllegalArgumentException e) {
+                    System.err.println("Invalid input: unknown color.");
+                }
+            } while (playerColor == null);
+            this.playerColor = playerColor;
+
+            // Ask for game level
+            int gameLevel = -1;
+            do {
+                System.out.print("Select game level (0 --> Test Flight, 2 = Level 2 Flight): ");
+                if (scanner.hasNextInt()) {
+                    gameLevel = scanner.nextInt();
+                } else {
+                    System.err.println("Invalid input: please enter a number.");
+                    scanner.next(); // Consume invalid input
+                    continue;
+                }
+                if (gameLevel != 0 && gameLevel != 2) {
+                    System.err.println("Game level must be 0 or 2.");
+                }
+            } while (gameLevel != 0 && gameLevel != 2);
+            scanner.nextLine(); // Consume leftover newline
+
+            // Ask for total number of players
+            int totalPlayers = -1;
+            do {
+                System.out.print("Enter total number of players (2 to 4): ");
+                if (scanner.hasNextInt()) {
+                    totalPlayers = scanner.nextInt();
+                } else {
+                    System.err.println("Invalid input: please enter a number.");
+                    scanner.next(); // Consume invalid input
+                    continue;
+                }
+                if (totalPlayers < 2 || totalPlayers > 4) {
+                    System.err.println("Number of players must be between 2 and 4.");
+                }
+            } while (totalPlayers < 2 || totalPlayers > 4);
+            scanner.nextLine(); // Consume leftover newline
+
+            System.out.println("Sending");
+            this.client.sendMessage( new ConfigGame(this.playerName, this.playerColor, gameLevel, totalPlayers) );
+            System.out.println("Sent");
+
+        } else {
+            System.out.println("Reconnecting to an existing game...");
+
+            // Ask for nickname
+            String playerName;
+            do {
+                System.out.print("Your name: ");
+                playerName = scanner.nextLine().trim();
+                if (playerName.isEmpty()) {
+                    System.err.println("Invalid input: name cannot be empty.");
+                }
+            } while (playerName.isEmpty());
+
+            // TODO: reconnectToGame(playerName);
+        }
+
     }
 
     @Override
@@ -142,7 +311,7 @@ public class ViewUpdater implements StateVisitor {
         } while (color.isEmpty());
         this.playerColor = PlayerColor.fromString(color);
 
-        client.sendMessage(new NewPlayer(this.playerName, this.playerColor));
+        // client.sendMessage(new NewPlayer(this.playerName, this.playerColor));
     }
 
     @Override

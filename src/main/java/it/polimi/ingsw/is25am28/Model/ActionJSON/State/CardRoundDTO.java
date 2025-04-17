@@ -73,4 +73,9 @@ public final class CardRoundDTO extends StateDTO {
         this.cardInfo = cardInfo;
         return this;
     }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
+    }
 }

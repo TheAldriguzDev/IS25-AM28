@@ -30,4 +30,9 @@ public final class DisconnectedPlayerDTO extends StateDTO implements Serializabl
     public void setDisconnectedPlayers(List<String> disconnectedPlayers) {
         this.disconnectedPlayers = disconnectedPlayers;
     }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
+    }
 }

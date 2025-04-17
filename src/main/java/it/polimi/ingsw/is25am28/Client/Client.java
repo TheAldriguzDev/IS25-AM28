@@ -10,6 +10,8 @@ import java.util.UUID;
 
 public class Client {
 
+    // TODO: Attributes that are needed to handle the information that we need to store client-side for the game
+
     // TODO: Understand where we need to store the information about the Game
 
     public static void main(String[] args) throws Exception {

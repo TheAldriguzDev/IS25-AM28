@@ -12,14 +12,17 @@ import java.util.List;
 public final class NewPlayer implements Message {
     private final String playerNickname;
     private final PlayerColor playerColor;
+    private final int gameID;
 
     @JsonCreator
     public NewPlayer(
             @JsonProperty("playerNickname") String playerNickname,
-            @JsonProperty("playerColor") PlayerColor playerColor
+            @JsonProperty("playerColor") PlayerColor playerColor,
+            @JsonProperty("gameID") int gameID
     ) {
         this.playerNickname = playerNickname;
         this.playerColor = playerColor;
+        this.gameID = gameID;
     }
 
     public String getPlayerNickname() {
@@ -28,6 +31,10 @@ public final class NewPlayer implements Message {
 
     public PlayerColor getPlayerColor() {
         return playerColor;
+    }
+
+    public int getGameID() {
+        return gameID;
     }
 
     @Override

@@ -29,4 +29,9 @@ public final class FixShipDTO extends StateDTO implements Serializable  {
         this.playerWithInvalidShip = playerWithInvalidShip;
         return this;
     }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
+    }
 }
