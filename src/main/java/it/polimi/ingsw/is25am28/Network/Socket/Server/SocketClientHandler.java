@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
+import it.polimi.ingsw.is25am28.Network.Server;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,7 +23,7 @@ import java.util.List;
  * */
 
 public class SocketClientHandler implements VirtualViewSocket {
-    private final GameController gameController;
+    private final Server gameController;
     private final TCPServer tcpServer;
 
     // Channel used to read from the socket
@@ -33,7 +34,7 @@ public class SocketClientHandler implements VirtualViewSocket {
     // Mapper used to serialize and deserialize JSON used in the communication
     private final ObjectMapper mapper;
 
-    public SocketClientHandler(GameController gameController, TCPServer tcpServer, BufferedReader input, PrintWriter output) throws JsonProcessingException {
+    public SocketClientHandler(Server gameController, TCPServer tcpServer, BufferedReader input, PrintWriter output) throws JsonProcessingException {
         this.gameController = gameController;
         this.tcpServer = tcpServer;
         this.input = input;
@@ -79,37 +80,31 @@ public class SocketClientHandler implements VirtualViewSocket {
      * sent to each client
      * */
     private void gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws Exception {
-        StateDTO state = null;
         try {
-            state = this.gameController.gameConfig(nickname, playerColor, level, numPlayers);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            this.reportError("Some details", this.gameController.getCurrentState());
-            return;
-        }
-
-        // If the state is not null, then we can update the clients
-        if (state != null) {
-            this.tcpServer.broadCastUpdateState(state);
+            this.gameController.configGame(nickname, playerColor, level, numPlayers);
+        } catch (Exception e) {
+            // TODO: Handle exeception
+            throw new Exception("[gameConfig] An error occurred: " + e.getMessage());
         }
     }
 
     private void newPlayer(String playerNickname, PlayerColor playerColor) throws Exception {
-        List<StateDTO> states = new ArrayList<>();
-
-        try {
-            states = this.gameController.addNewPlayer(playerNickname, playerColor);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            this.reportError("Some details", this.gameController.getCurrentState());
-            return;
-        }
-
-        if (!states.isEmpty()) {
-            this.tcpServer.broadCastUpdateState(states.getFirst());
-        }
-
-        if (states.size() == 2) {
-            this.tcpServer.broadCastUpdateState(states.getLast());
-        }
+//        List<StateDTO> states = new ArrayList<>();
+//
+//        try {
+//            states = this.gameController.addNewPlayer(playerNickname, playerColor);
+//        } catch (IllegalArgumentException | IllegalStateException e) {
+//            this.reportError("Some details", this.gameController.getCurrentState());
+//            return;
+//        }
+//
+//        if (!states.isEmpty()) {
+//            this.tcpServer.broadCastUpdateState(states.getFirst());
+//        }
+//
+//        if (states.size() == 2) {
+//            this.tcpServer.broadCastUpdateState(states.getLast());
+//        }
     }
 
     // TODO: Capisci come togliere sto metodo da qui

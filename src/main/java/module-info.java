@@ -25,7 +25,6 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Model.Exceptions;
     exports it.polimi.ingsw.is25am28.Model.Lifeform;
     exports it.polimi.ingsw.is25am28.Model.EventCards;
-    exports it.polimi.ingsw.is25am28.GameModel;
     exports it.polimi.ingsw.is25am28.Model.Items;
     exports it.polimi.ingsw.is25am28.Model.TimeObserver;
     exports it.polimi.ingsw.is25am28.Model.ActionJSON;
@@ -35,11 +34,8 @@ module it.polimi.ingsw.is25am {
     opens it.polimi.ingsw.is25am28.Model.Ship to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Model.Player to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Model.TimeObserver to javafx.fxml;
-    opens it.polimi.ingsw.is25am28.GameModel to javafx.fxml;
-    exports it.polimi.ingsw.is25am28.GameModel.Session;
-    opens it.polimi.ingsw.is25am28.GameModel.Session to javafx.fxml;
-    exports it.polimi.ingsw.is25am28.GameModel.FileLoader;
-    opens it.polimi.ingsw.is25am28.GameModel.FileLoader to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.FileLoader;
+    opens it.polimi.ingsw.is25am28.FileLoader to javafx.fxml;
     exports it.polimi.ingsw.is25am28.Model.ActionJSON.State;
     opens it.polimi.ingsw.is25am28.Model.ActionJSON.State to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction;

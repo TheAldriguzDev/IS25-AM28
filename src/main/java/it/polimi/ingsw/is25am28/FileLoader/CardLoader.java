@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.GameModel.FileLoader;
+package it.polimi.ingsw.is25am28.FileLoader;
 
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;

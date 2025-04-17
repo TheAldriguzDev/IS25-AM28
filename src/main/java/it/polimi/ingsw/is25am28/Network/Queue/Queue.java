@@ -14,9 +14,7 @@ public class Queue implements Runnable {
      * Append the lambda function to the end of queue
      * */
     public void enqueue(Runnable r) {
-        synchronized (this.queue) {
             this.queue.offer(r);
-        }
     }
 
     /**

@@ -20,12 +20,13 @@ import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Model.Connector.ZERO_PIPES;
 
+
 public class MeteorShower extends EventCard {
     private final List<Meteor> meteorSequence;
     private int currMeteorIndex;
     private int diceThrowResult;
     private final Random random;
-    
+
     public MeteorShower(
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
@@ -42,10 +43,10 @@ public class MeteorShower extends EventCard {
         try {
             for (List<Integer> meteorDescriptor : meteorSequence) {
                 this.meteorSequence.add(
-                    new Meteor(
-                        meteorDescriptor.get(0),  // Meteor size
-                        meteorDescriptor.get(1) // Meteor orientation
-                    )
+                        new Meteor(
+                                meteorDescriptor.get(0),  // Meteor size
+                                meteorDescriptor.get(1) // Meteor orientation
+                        )
                 );
             }
         }
@@ -387,10 +388,10 @@ public class MeteorShower extends EventCard {
         cardState.setDiceThrowResult(this.diceThrowResult);
 
         cardState.setCurrMeteorDescriptor(
-            new Pair<Integer, Integer>(
-                this.meteorSequence.get(this.currMeteorIndex).getSize(),
-                this.meteorSequence.get(this.currMeteorIndex).getOrientation()
-            )
+                new Pair<Integer, Integer>(
+                        this.meteorSequence.get(this.currMeteorIndex).getSize(),
+                        this.meteorSequence.get(this.currMeteorIndex).getOrientation()
+                )
         );
 
         return cardState;

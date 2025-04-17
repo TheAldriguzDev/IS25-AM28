@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.GameModel.FileLoader;
+package it.polimi.ingsw.is25am28.FileLoader;
 
 import java.util.Map;
 

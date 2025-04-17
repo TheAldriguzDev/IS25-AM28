@@ -45,7 +45,7 @@ class GameModelTest {
 
         // Check if the output of the game is about the game configuration
         String json = mapper.writeValueAsString(model.generateState());
-        String expectedState = "{\"availableColors\":[\"GREEN\",\"RED\",\"BLUE\",\"YELLOW\"],\"usedNicknames\":[],\"stateName\":\"CreateGameState\"}";
+        String expectedState = "{\"type\":\"CreateGameStateDTO\",\"availableColors\":[\"GREEN\",\"RED\",\"BLUE\",\"YELLOW\"],\"usedNicknames\":[],\"stateName\":\"CreateGameState\"}";
         assertEquals(expectedState, json);
 
         // ========================================
@@ -103,7 +103,8 @@ class GameModelTest {
 
         // Check if the output of the match is about the waiting for players state
         json = mapper.writeValueAsString(state);
-        expectedState = "{\"availableColors\":[\"GREEN\",\"BLUE\",\"YELLOW\"],\"usedNicknames\":[\"Player 1\"],\"lobbyTotalSpot\":4,\"availableSpots\":3,\"stateName\":\"WaitPlayersState\"}";
+
+        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\",\"BLUE\",\"YELLOW\"],\"usedNicknames\":[\"Player 1\"],\"lobbyTotalSpot\":4,\"availableSpots\":3,\"stateName\":\"WaitPlayersState\"}";
         assertEquals(expectedState, json);
 
         // 3.1 Test invalid newPlayerInput
@@ -124,14 +125,14 @@ class GameModelTest {
         assertEquals(1, states.size());
 
         json = mapper.writeValueAsString(states.getFirst());
-        expectedState = "{\"availableColors\":[\"GREEN\",\"BLUE\"],\"usedNicknames\":[\"Player 2\",\"Player 1\"],\"lobbyTotalSpot\":4,\"availableSpots\":2,\"stateName\":\"WaitPlayersState\"}";
+        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\",\"BLUE\"],\"usedNicknames\":[\"Player 2\",\"Player 1\"],\"lobbyTotalSpot\":4,\"availableSpots\":2,\"stateName\":\"WaitPlayersState\"}";
         assertEquals(expectedState, json);
 
         states = model.addNewPlayer("Player 3", PlayerColor.BLUE);
         assertEquals(1, states.size());
 
         json = mapper.writeValueAsString(states.getFirst());
-        expectedState = "{\"availableColors\":[\"GREEN\"],\"usedNicknames\":[\"Player 3\",\"Player 2\",\"Player 1\"],\"lobbyTotalSpot\":4,\"availableSpots\":1,\"stateName\":\"WaitPlayersState\"}";
+        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\"],\"usedNicknames\":[\"Player 3\",\"Player 2\",\"Player 1\"],\"lobbyTotalSpot\":4,\"availableSpots\":1,\"stateName\":\"WaitPlayersState\"}";
         assertEquals(expectedState, json);
 
         states = model.addNewPlayer("Player 4", PlayerColor.GREEN);
@@ -228,7 +229,7 @@ class GameModelTest {
         // ========================================
         // FIX SHIP STATE --> THE PLAYERS WITH A WRONG SHIP NEEDS TO CORRECT THEM
         // ========================================
-        String expectedWrongInitialShipState = "{\"playerWithInvalidShip\":[\"Player 4\",\"Player 3\"],\"stateName\":\"FixShipState\"}";
+        String expectedWrongInitialShipState = "{\"type\":\"FixShipDTO\",\"playerWithInvalidShip\":[\"Player 4\",\"Player 3\"],\"stateName\":\"FixShipState\"}";
         json = mapper.writeValueAsString(playerEndedShipStates.getLast());
         assertEquals(expectedWrongInitialShipState, json);
 
@@ -280,7 +281,7 @@ class GameModelTest {
         // ========================================
         assertInstanceOf(PopulateShipState.class, model.getCurrentState());
 
-        String expectedPopulateJJSON = "{\"playersReady\":[],\"stateName\":\"PopulateShipState\"}";
+        String expectedPopulateJJSON = "{\"type\":\"PopulateShipDTO\",\"playersReady\":[],\"stateName\":\"PopulateShipState\"}";
         json = mapper.writeValueAsString(this.model.generateState());
         assertEquals(expectedPopulateJJSON, json);
 

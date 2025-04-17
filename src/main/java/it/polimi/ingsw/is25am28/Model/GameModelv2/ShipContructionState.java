@@ -6,7 +6,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
-import it.polimi.ingsw.is25am28.GameModel.FileLoader.TileLoader;
+import it.polimi.ingsw.is25am28.FileLoader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.TimeObserver.TimeSubscriber;
 import it.polimi.ingsw.is25am28.Model.TimeObserver.TimerObserver;

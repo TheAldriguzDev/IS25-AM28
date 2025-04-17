@@ -13,6 +13,7 @@ import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 import it.polimi.ingsw.is25am28.Network.Messages.Ping;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI;
+import it.polimi.ingsw.is25am28.Network.Server;
 
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -48,7 +49,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
-    final GameController controller;
+    final Server controller;
     final Queue queueHandler;
 
     // Ref of the all the clients that are interested in receiving updates
@@ -58,7 +59,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     /**
      * Constructor used to create a new RMI Server
      * */
-    public RMIServer(String serverName, int serverPort, GameController controller) throws RemoteException {
+    public RMIServer(String serverName, int serverPort, Server controller) throws RemoteException {
         super();
         this.clients = new HashMap<UUID, VirtualViewRMI>();
         this.controller = controller;
@@ -93,7 +94,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
                         if (clientStatus.failedPings >= 3 && clientStatus.nickName != null && !clientStatus.nickName.isEmpty() && clientStatus.isConnected) {
                             clientStatus.isConnected = false;
 
-                            this.controller.disconnectClient(clientStatus.nickName);
+                            // this.controller.disconnectClient(clientStatus.nickName);
                         }
                     }
                 }
@@ -155,65 +156,29 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     }
 
     private void reconnectClient(String nickName, UUID uuid) {
-        
+
     }
 
     private void gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, UUID uuid) throws Exception {
-        StateDTO state = null;
         try {
-            state = this.controller.gameConfig(nickname, playerColor, level, numPlayers);
-        } catch (IllegalArgumentException | IllegalStateException e) {
-            queueHandler.enqueue(() -> {
-                this.reportCommandError(clients.get(uuid), e.getMessage(), this.controller.getCurrentState());
-            });
-
+            this.controller.configGame(nickname, playerColor, level, numPlayers);
+        } catch (Exception e) {
+            this.reportCommandError(this.clients.get(uuid), e.getMessage(), this.controller.getCurrentState());
             return;
         }
 
-        // If the state is not null, then we can update the clients
-        if (state != null) {
-            synchronized (this.clients) {
-                for (VirtualViewRMI client : this.clients.values()) {
-                    StateDTO finalState = state;
-                    this.queueHandler.enqueue(() -> {
-                        try {
-                            client.updateState(finalState);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                }
-            }
-        }
-
+        // TODO: I think that it's better to handle the lobby in the "Server" class to avoid duplicated code in all the network
+        //  used
         synchronized (this.clientsStatus) {
             this.clientsStatus.get(uuid).setNickName(nickname);
         }
     }
 
     private void addNewPlayer(String nickname, PlayerColor playerColor, UUID uuid) throws Exception {
-        List<StateDTO> states = this.controller.addNewPlayer(nickname, playerColor);
-
-        synchronized (this.clients) {
-            for (VirtualViewRMI client : this.clients.values()) {
-                this.queueHandler.enqueue(() -> {
-                    try {
-                        client.updateView(states.getFirst());
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
-                if (states.size() == 2) {
-                    this.queueHandler.enqueue(() -> {
-                        try {
-                            client.updateState(states.getLast());
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                }
-            }
+        try {
+            this.controller.addNewPlayer(nickname, playerColor);
+        } catch (Exception e) {
+            this.reportCommandError(this.clients.get(uuid), e.getMessage(), this.controller.getCurrentState());
         }
 
         // Add the client nickname to the server
@@ -222,26 +187,21 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
-
     private void selectTile(String player, Integer i, Integer j, UUID uuid) throws RemoteException {
 
     }
-
 
     private void deselectTile(String player, Integer i, Integer j, UUID uuid) throws RemoteException {
 
     }
 
-
     private void playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles, UUID uuid) throws RemoteException {
 
     }
 
-
     private void flipTimer(String player, UUID uuid) throws RemoteException {
 
     }
-
 
     private void fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove, UUID uuid) throws RemoteException {
 
@@ -255,6 +215,23 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
 
     private void playCard(ActionJSON action, UUID uuid) throws RemoteException {
 
+    }
+
+    /**
+     * Broadcast a stateUpdate to all the clients
+     * */
+    public void broadCastUpdateState(StateDTO state) {
+        synchronized (this.clients) {
+            for (VirtualViewRMI client : this.clients.values()) {
+                this.queueHandler.enqueue(() -> {
+                    try {
+                        client.updateView(state);
+                    } catch (RemoteException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+            }
+        }
     }
 
     private void reportCommandError(VirtualViewRMI client, String msg, StateDTO state) {
