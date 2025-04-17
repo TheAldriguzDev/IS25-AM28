@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PrintTest {
@@ -773,6 +774,7 @@ public class PrintTest {
 
     @Test
     void ASCII_ART_plasmaShot() {
+        System.out.println("======================== ASCII PALSMASHOT TEST ==========================");
         WidgetTUI plasmaShotTitle = new WidgetTUI();
         WidgetTUI plasmaShotArt = new WidgetTUI();
         WidgetTUI plasmaShotInfo = new WidgetTUI();
@@ -799,7 +801,7 @@ public class PrintTest {
         plasmaShotInfo.appendString("==== CURRENT METEOR INFO ====");
         plasmaShotInfo.appendString("Inbound Direction: LEFT");
         plasmaShotInfo.appendString("Dice Throw Result: 7");
-        plasmaShotInfo.appendString("Size: BIG METEOR");
+        plasmaShotInfo.appendString("Size: BIG PLASMASHOT");
         plasmaShotInfo.appendString("Current Player: " + PrintUtils.addColor("MasterChief216", ANSIColors.RED));
 
         plasmaShotFinal = WidgetTUI.composeTwoWidgetsVertically(
@@ -813,6 +815,7 @@ public class PrintTest {
 
     @Test
     void ASCII_ART_meteor() {
+        System.out.println("======================== ASCII METEOR TEST ==========================");
         WidgetTUI meteor1Title = new WidgetTUI();
         WidgetTUI meteor1 = new WidgetTUI();
         WidgetTUI meteor1Info = new WidgetTUI();
@@ -844,8 +847,342 @@ public class PrintTest {
                 WidgetTUI.composeTwoWidgetsVertically(meteor1Title, meteor1),
                 meteor1Info
         );
+
         meteor1Final.centerWidgetScreen();
         meteor1Final.wrapWidgetWithBorder().printWidget();
+    }
+
+    @Test
+    void ASCII_ART_slavers_chains() {
+        System.out.println("======================== ASCII SLAVERS CHAINS TEST ==========================");
+        WidgetTUI chainsInfo = new WidgetTUI();
+        WidgetTUI slaver1Title = new WidgetTUI();
+
+        slaver1Title.appendString(" ==== SLAVERS ====");
+
+//        @@    @@         @@
+//        @@    @@       @@@@@@
+//         @@@@@@       @@    @@
+//           @@         @@    @@
+//         @@@@@        @@    @@
+//        @@    @@       @@@@@@@
+//        @@    @@        @@@@
+//        @@    @@        @@@@
+//        @@    @@       @@@@@@@
+//         @@@@@        @@    @@
+//           @@         @@    @@
+//         @@@@@@       @@    @@
+//        @@    @@       @@@@@@
+//        @@    @@         @@
+
+        chainsInfo.appendString(ANSIColors.WHITE + "      ██    ██        ██        " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "         ██        ██    ██     " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "      ██    ██       ████       " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "      ██    ██       ████       " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "         ██        ██    ██     " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
+        chainsInfo.appendString(ANSIColors.WHITE + "      ██    ██        ██        " + ANSIColors.RESET);
+        chainsInfo.wrapWidgetWithBorder();
+
+//        chainsInfo.appendString("==== SLAVERS CARD INFO ====");
+//        chainsInfo.appendString("");
+//
+//
+//        chainsInfo.appendString("Current Player: " + PrintUtils.addColor("MasterChief216", ANSIColors.RED));
+
+
+
+        chainsInfo.printWidget();
+
+
+
+
+
+    }
+
+    @Test
+    void ASCII_ART_STARDUST_AND_OPENSPACE() {
+        WidgetTUI twinkling_space = new WidgetTUI();
+
+        List<String> colorPool = new ArrayList<>();
+        Random rand = new Random();
+        StringBuilder spaceString;
+        int randIndex, randColor;
+
+//        int scale = 3;
+//        int height = scale;
+//        int width = 3 * scale + 2;
+        int height = 12;
+        int width = 31;
+
+        // Aggregates all the possible colors that the space symbols can have
+        colorPool.add(ANSIColors.MAGENTA);
+        colorPool.add(ANSIColors.RED);
+        colorPool.add(ANSIColors.YELLOW);
+        colorPool.add(ANSIColors.CYAN);
+
+        // Indicates how much the stars should be spread apart
+        int spreadFactor = 60;
+        int symbolPoolSize = UnicodeCharacters.SPACE_SYMBOLS.length + spreadFactor;
+
+//        height += 2;
+//        width += 2;
+
+        for (int i = 0; i < height; i++) {
+            spaceString = new StringBuilder();
+
+            for (int j = 0; j < width; j++) {
+                randIndex = rand.nextInt(0, symbolPoolSize);
+                randColor = rand.nextInt(0, colorPool.size());
+
+                if (randIndex < UnicodeCharacters.SPACE_SYMBOLS.length) {
+                    spaceString.append(
+                            PrintUtils.addColor(
+                                    UnicodeCharacters.SPACE_SYMBOLS[randIndex],
+                                    colorPool.get(randColor)
+                            )
+                    );
+                }
+                else {
+                    spaceString.append(SPACE);
+                }
+            }
+            twinkling_space.appendString(spaceString.toString());
+        }
+        twinkling_space.wrapWidgetWithBorder().printWidget();
+    }
+
+    @Test
+    void ASCII_ART_SMUGGLERS() {
+        WidgetTUI avaiable_cargo = new WidgetTUI();
+
+
+//          *************
+//       *******************
+//     ******           ******
+//    *******              ****
+//   **********             ****
+//  ****    ****             ****
+//  ***      *****            ***
+// ****        *****          ****
+// ****          *****        ****
+//  ***            *****      ***
+//  ****             ****    ****
+//   ****      .      **********
+//    ****              *******
+//     ******           ******
+//       *******************
+//          *************
+
+        avaiable_cargo.appendString("          ████████████        ");
+        avaiable_cargo.appendString("       ███████████████████     ");
+        avaiable_cargo.appendString("    ███████              ████  ");
+        avaiable_cargo.appendString("   ██████████             ████ ");
+        avaiable_cargo.appendString("  ████    ████             ████");
+        avaiable_cargo.appendString(" ████        █████          ████");
+        avaiable_cargo.appendString(" ████          █████        ████");
+        avaiable_cargo.appendString("  ████             ████    ████ ");
+        avaiable_cargo.appendString("   ████             ██████████  ");
+        avaiable_cargo.appendString("    ████              ███████   ");
+        avaiable_cargo.appendString("       ███████████████████      ");
+        avaiable_cargo.appendString("          █████████████         ");
+
+        avaiable_cargo.appendString("");
+
+        avaiable_cargo.appendString("         ████████████          ");
+        avaiable_cargo.appendString("      ███████████████████      ");
+        avaiable_cargo.appendString("   ███████              ████   ");
+        avaiable_cargo.appendString("  ██████████             ████  ");
+        avaiable_cargo.appendString(" ████    ████             ████ ");
+        avaiable_cargo.appendString("████                       ████");
+        avaiable_cargo.appendString("████                       ████");
+        avaiable_cargo.appendString(" ████             ████    ████ ");
+        avaiable_cargo.appendString("  ████             ██████████  ");
+        avaiable_cargo.appendString("   ████              ███████   ");
+        avaiable_cargo.appendString("      ███████████████████      ");
+        avaiable_cargo.appendString("         █████████████         ");
+
+        avaiable_cargo.appendString("");
+
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("          ███████████          ");
+        avaiable_cargo.appendString("          █      █  █          ");
+        avaiable_cargo.appendString("          █    █    █          ");
+        avaiable_cargo.appendString("          █  █      █          ");
+        avaiable_cargo.appendString("          ███████████          ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+
+        avaiable_cargo.appendString("");
+
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("          ███████████          ");
+        avaiable_cargo.appendString("          █     ██  █          ");
+        avaiable_cargo.appendString("          █  ██     █          ");
+        avaiable_cargo.appendString("          ███████████          ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("                               ");
+
+        avaiable_cargo.appendString("");
+
+        avaiable_cargo.appendString(ANSIColors.RED + "         ████████████          " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED +"      ███████████████████      " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + "   ███████              ████   " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + "  ██████████             ████  " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + " ████    █" +ANSIColors.WHITE + "███████████" + ANSIColors.RED +"     ████ " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + "████      " + ANSIColors.WHITE + "█     ██  █" + ANSIColors.RED + "      ████" + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + "████      " + ANSIColors.WHITE + "█  ██     █" + ANSIColors.RED + "      ████" + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + " ████     " + ANSIColors.WHITE + "███████████" + ANSIColors.RED + "█    ████ " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + "  ████             ██████████  " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + "   ████              ███████   " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + "      ███████████████████      " + ANSIColors.RESET);
+        avaiable_cargo.appendString( ANSIColors.RED +"         █████████████         " + ANSIColors.RESET);
+
+        avaiable_cargo.appendString("");
+
+        avaiable_cargo.appendString("                               ");
+        avaiable_cargo.appendString("   ███                    ███  ");
+        avaiable_cargo.appendString("     ███                ███    ");
+        avaiable_cargo.appendString("      ████          █████      ");
+        avaiable_cargo.appendString("       █ ██████████████ █      ");
+        avaiable_cargo.appendString("         █       ███  █        ");
+        avaiable_cargo.appendString("         █    ████    █        ");
+        avaiable_cargo.appendString("         █  ███       █        ");
+        avaiable_cargo.appendString("       █ ██████████████ █      ");
+        avaiable_cargo.appendString("      █████          █████     ");
+        avaiable_cargo.appendString("     ███                ███    ");
+        avaiable_cargo.appendString("   ███                    ███  ");
+        avaiable_cargo.appendString("                               ");
+
+        avaiable_cargo.appendString("");
+
+        avaiable_cargo.appendString("████                       ████");
+        avaiable_cargo.appendString("  ████                   ████  ");
+        avaiable_cargo.appendString("    ████               ████    ");
+        avaiable_cargo.appendString("      █████         █████      ");
+        avaiable_cargo.appendString("       █ █████████████ █       ");
+        avaiable_cargo.appendString("         █      ███  █         ");
+        avaiable_cargo.appendString("         █    ███    █         ");
+        avaiable_cargo.appendString("         █  ███      █         ");
+        avaiable_cargo.appendString("       █ █████████████ █       ");
+        avaiable_cargo.appendString("      █████         █████      ");
+        avaiable_cargo.appendString("    ████               ████    ");
+        avaiable_cargo.appendString("  ████                   ████  ");
+        avaiable_cargo.appendString("████                       ████");
+
+        avaiable_cargo.appendString("");
+
+        avaiable_cargo.appendString(ANSIColors.RED + "████                       ████" + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + "  ████                   ████  " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED + "    ████               ████    " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED +"      █████         █████      " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED +"       █ " + ANSIColors.WHITE + "█████████████" + ANSIColors.RED + " █       " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.WHITE + "         █      ███  █         " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.WHITE + "         █    ███    █         " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.WHITE + "         █  ███      █         " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED +"       █ " + ANSIColors.WHITE + "█████████████" + ANSIColors.RED + " █       " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED +"      █████         █████      " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED +"    ████               ████    " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED +"  ████                   ████  " + ANSIColors.RESET);
+        avaiable_cargo.appendString(ANSIColors.RED +"████                       ████" + ANSIColors.RESET);
+
+
+
+
+
+
+
+
+
+
+
+        avaiable_cargo.wrapWidgetWithBorder().printWidget();
+    }
+
+    @Test
+    void ASCII_ART_PIRATED() {
+        System.out.println("======================== ASCII PIRATES' SKULL TEST ==========================");
+
+        WidgetTUI skull = new WidgetTUI();
+
+//    ........................................
+//    ...............%%%%%%%%%%...............
+//    .............%%%%%%%%%%%%%%.............
+//    ............%%%%%%%%%%%%%%%%............
+//    ...........%%%%%%%%%%%%%%%%%+::..:.::..:
+//    ...........%%%.....%%....:%%@:::::::::::
+//    ...........%%%....-%%..:::%%@:::::::::::
+//    ...........%%%%%%%%%%%%%%%%%@:::::::::::
+//    .........+.%%%%%%%%::%%%%%%%*:*:::::::::
+//    .......+%%#..:.%%%%%%%%%%::::@@@::::::::
+//    ......%%%%%%@:::%%%%%%%%:::@@@@@@@::::::
+//    ......%%%:%%%%%%*::::::@@@@@@@:@@@::::::
+//    ..........::::%%%%%%%@@@@@::::::::::::::
+//    .........::::::+%@@@@@@@-::::-:--:::::::
+//    ........:@%%%@@@@@:::=@@@@@@@@@------:::
+//    .......:::@@@@:::::::::-:-@@@@-----=..:-
+//    .....:::::@@@::::::::::::-#@@*-----:::
+//    ....:.::::::::::::::::::----------:
+
+        skull.appendString("████                       ████");
+        skull.appendString("█████                     █████");
+        skull.appendString("  ████     █████████     ███   ");
+        skull.appendString("    ███ ███████████████ ███    ");
+        skull.appendString("     █ █████████████████ █     ");
+        skull.appendString("      ███      █      ███      ");
+        skull.appendString("      ███      █      ███      ");
+        skull.appendString("     █ █████████████████ █     ");
+        skull.appendString("    ███   ███████████   ███    ");
+        skull.appendString("  ████   █ █ █ █ █ █ █   ████  ");
+        skull.appendString("█████     █ █ █ █ █ █     █████");
+        skull.appendString("████      ███████████      ████");
+
+        skull.appendString("");
+
+        skull.appendString(ANSIColors.WHITE + "████                       ████" + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "█████                     █████" + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "  ████     " + ANSIColors.RESET + "█████████" + ANSIColors.WHITE +"     ███   " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "    ███ " + ANSIColors.RESET + "███████████████" + ANSIColors.WHITE +" ███    " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "     █ " + ANSIColors.RESET + "█████████████████" + ANSIColors.WHITE + " █     " + ANSIColors.RESET);
+        skull.appendString("      ███      █      ███      " + ANSIColors.RESET);
+        skull.appendString("      ███      █      ███      " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "     █ " + ANSIColors.RESET + "█████████████████" + ANSIColors.WHITE +" █    " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "    ███   " + ANSIColors.RESET + "███████████" + ANSIColors.WHITE +"   ███    " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "  ████   " + ANSIColors.RESET + "█ █ █ █ █ █ █" + ANSIColors.WHITE +"   ████  " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "█████     " + ANSIColors.RESET + "█ █ █ █ █ █" + ANSIColors.WHITE +"     █████" + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "████      " + ANSIColors.RESET + "███████████" + ANSIColors.WHITE +"      ████" + ANSIColors.RESET);
+
+        skull.appendString("");
+
+        skull.appendString(ANSIColors.WHITE + "████                       ████" + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "█████                     █████" + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "  ████     " + ANSIColors.RESET + "█████████" + ANSIColors.WHITE +"     ███   " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "    ███ " + ANSIColors.RESET + "███████████████" + ANSIColors.WHITE +" ███    " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "     █ " + ANSIColors.RESET + "█████████████████" + ANSIColors.WHITE + " █     " + ANSIColors.RESET);
+        skull.appendString("      ███      █      ███      " + ANSIColors.RESET);
+        skull.appendString("      ███   " + ANSIColors.RED + "█" + ANSIColors.RESET + "  █  " + ANSIColors.RED +"█" + ANSIColors.RESET + "   ███      " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "     █ " + ANSIColors.RESET + "█████████████████" + ANSIColors.WHITE +" █    " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "    ███   " + ANSIColors.RESET + "███████████" + ANSIColors.WHITE +"   ███    " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "  ████   " + ANSIColors.RESET + "█ █ █ █ █ █ █" + ANSIColors.WHITE +"   ████  " + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "█████     " + ANSIColors.RESET + "█ █ █ █ █ █" + ANSIColors.WHITE +"     █████" + ANSIColors.RESET);
+        skull.appendString(ANSIColors.WHITE + "████      " + ANSIColors.RESET + "███████████" + ANSIColors.WHITE +"      ████" + ANSIColors.RESET);
+
+        skull.wrapWidgetWithBorder().printWidget();
+
     }
 
     @Test
