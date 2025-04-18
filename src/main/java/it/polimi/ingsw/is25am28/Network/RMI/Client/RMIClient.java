@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Network.RMI.Client;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -25,7 +27,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
     /**
      * Constructor used to create the RMIClient and starts it
      * */
-    public RMIClient(String ipAddress, int port, UUID uuid) throws Exception, RemoteException {
+    public RMIClient(String ipAddress, int port, UUID uuid, ClientUI ui, ClientModel model) throws Exception, RemoteException {
         super();
 
         // Args validation
@@ -48,7 +50,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         }
 
         // Init the viewUpdater
-        this.viewUpdater = new ViewUpdater(this);
+        this.viewUpdater = new ViewUpdater(ui, model);
 
         // Create the queue handler to process in a thread the communication with the server
         this.queueHandler = new Queue();
@@ -148,13 +150,6 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
     @Override
     public void reportError(String details, StateDTO state) throws RemoteException {
-        System.err.println("ERROR: " + details);
-        new Thread(() -> {
-            try {
-                state.accept(viewUpdater);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
+        viewUpdater.reportError(details);
     }
 }

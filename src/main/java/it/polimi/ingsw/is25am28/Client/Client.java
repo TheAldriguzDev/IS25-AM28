@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Client;
 
+import it.polimi.ingsw.is25am28.Client.UI.ClientTUI;
+import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
 import it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient;
@@ -50,11 +52,24 @@ public class Client {
         System.out.print("\033[H\033[2J");
         System.out.flush();
 
-        if (connectionType == 1) {
-            // Create the client with a unique UUID as identifier. This will be used server side for sendTo communication
-            client = new RMIClient(args[0], 7777, UUID.randomUUID());
+        // ================= CREATE THE CLIENT ================= //
+        ClientUI clientUI;
+        VirtualView virtualClient;
+
+        ClientModel model = new ClientModel();
+
+        if (uiType == 1) {
+            clientUI = new ClientTUI(new ClientModel());
         } else {
-            client = new TCPClient("127.0.0.1", 8888);
+            throw new RuntimeException("UI Type not yet supported");
         }
+
+        if (connectionType == 1) {
+            virtualClient = new RMIClient(args[0], 7777, UUID.randomUUID(), clientUI, model);
+        } else {
+            virtualClient = new TCPClient("127.0.0.1", 8888, clientUI, model);
+        }
+
+        clientUI.setVirtualClient(virtualClient);
     }
 }

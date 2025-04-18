@@ -51,4 +51,6 @@ module it.polimi.ingsw.is25am {
     opens it.polimi.ingsw.is25am28.Network.Messages to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.is25am28.Network.Server to java.rmi;
     opens it.polimi.ingsw.is25am28.Network.Server to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.Client.UI to java.rmi;
+    opens it.polimi.ingsw.is25am28.Client.UI to javafx.fxml;
 }

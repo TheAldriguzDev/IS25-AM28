@@ -2,6 +2,8 @@ package it.polimi.ingsw.is25am28.Network.Socket.Client;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.is25am28.Client.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -28,7 +30,7 @@ public class TCPClient implements VirtualViewSocket {
     /**
      * Constructor used to create the TCPClient and starts it
      * */
-    public TCPClient(String ipAddress, int port) throws IOException {
+    public TCPClient(String ipAddress, int port, ClientUI ui, ClientModel model) throws IOException {
         // Args validation
         if (ipAddress == null || ipAddress.isEmpty()) {
             throw new IllegalArgumentException("IP address cannot be null or empty");
@@ -47,7 +49,7 @@ public class TCPClient implements VirtualViewSocket {
         // This will be a thread that will listen to the messages coming from the server
         this.output = new SocketServerHandler(new BufferedWriter(socketOutputWriter));
 
-        this.viewUpdater = new ViewUpdater(this);
+        this.viewUpdater = new ViewUpdater(ui, model);
 
         // Run the client TCPClient
         this.run();

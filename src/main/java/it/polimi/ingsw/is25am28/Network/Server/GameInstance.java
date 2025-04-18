@@ -2,12 +2,9 @@ package it.polimi.ingsw.is25am28.Network.Server;
 
 import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.Network.ClientStatus;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +24,9 @@ public class GameInstance {
     // This flag will indicate if the game accept new clients connection
     private boolean canBeJoined;
 
-    private int totalPlayers;
-    private int level;
+    private final int totalPlayers;
+    private final int level;
+    private int currentPlayers;
 
     public GameInstance(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers, VirtualView virtualClient) throws Exception {
         this.controller = new GameController();
@@ -37,6 +35,7 @@ public class GameInstance {
         this.canBeJoined = false;
         this.totalPlayers = totalPlayers;
         this.level = gameLevel;
+        this.currentPlayers = 0;
 
         this.gameConfig(playerNickname, playerColor, gameLevel, totalPlayers, virtualClient);
     }
@@ -67,6 +66,10 @@ public class GameInstance {
         return this.controller.getAvailableColors();
     }
 
+    public int getCurrentPlayers() {
+        return this.currentPlayers;
+    }
+
     /**
      * gameConfig(...) will execute the command on the GameModel. Once it has been configured it will update
      * the connected clients (the leader) and it will open the lobby to wait for more players.
@@ -86,6 +89,7 @@ public class GameInstance {
         // Set the game as accepting new connection
         this.hasBeenConfigured = true;
         this.canBeJoined = true;
+        this.currentPlayers++;
     }
 
     /**
@@ -110,5 +114,6 @@ public class GameInstance {
                 }
             }
         }
+        this.currentPlayers++;
     }
 }

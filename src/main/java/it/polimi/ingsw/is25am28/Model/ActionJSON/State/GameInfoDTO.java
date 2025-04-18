@@ -11,6 +11,7 @@ public class GameInfoDTO implements Serializable {
     private int id;
     private int level;
     private int totalPlayers;
+    private int actualPlayers;
     private List<String> availableColors;
 
     public GameInfoDTO() {}
@@ -19,6 +20,7 @@ public class GameInfoDTO implements Serializable {
             @JsonProperty("id") int id,
             @JsonProperty("level") int level,
             @JsonProperty("totalPlayers") int totalPlayers,
+            @JsonProperty("actualPlayers") int actualPlayers,
             @JsonProperty("availableColors") List<String> availableColors) {
         this.id = id;
         this.level = level;
@@ -56,6 +58,17 @@ public class GameInfoDTO implements Serializable {
     @JsonSetter("totalPlayers")
     public GameInfoDTO setTotalPlayers(int totalPlayers) {
         this.totalPlayers = totalPlayers;
+        return this;
+    }
+
+    @JsonGetter("actualPlayers")
+    public int getActualPlayers() {
+        return actualPlayers;
+    }
+
+    @JsonSetter("actualPlayers")
+    public GameInfoDTO setActualPlayers(int actualPlayers) {
+        this.actualPlayers = actualPlayers;
         return this;
     }
 

@@ -1,0 +1,18 @@
+package it.polimi.ingsw.is25am28.Client.UI;
+
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ErrorDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
+
+public interface ClientUI {
+    public void setVirtualClient(VirtualView client);
+
+    // TODO: Add more methods to display all the relevant information to play the game
+    void showLobbies(AvailableGamesDTO availableGames) throws Exception;
+    void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers);
+    void showShipConstruction(ShipConstructionDTO shipConstruction);
+
+    void showError(ErrorDTO error);
+}

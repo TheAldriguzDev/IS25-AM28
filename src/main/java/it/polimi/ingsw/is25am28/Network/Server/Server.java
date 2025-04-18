@@ -75,6 +75,7 @@ public class Server {
                             .setLevel(entry.getValue().getLevel())
                             .setTotalPlayers(entry.getValue().getTotalPlayers())
                             .setAvailableColors(entry.getValue().getAvailableColors())
+                            .setActualPlayers(entry.getValue().getCurrentPlayers())
             );
         }
 

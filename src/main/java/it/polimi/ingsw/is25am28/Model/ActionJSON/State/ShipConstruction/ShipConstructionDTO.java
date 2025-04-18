@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
 import java.util.List;
 import java.util.Map;
@@ -57,5 +58,10 @@ public final class ShipConstructionDTO extends StateDTO {
     public ShipConstructionDTO setSelectedComponents(List<Integer> selected_components) {
         this.selected_components = selected_components;
         return this;
+    }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
     }
 }
