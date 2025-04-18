@@ -2,6 +2,8 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent;
 
 import it.polimi.ingsw.is25am28.Model.Connector;
 
+import java.util.List;
+
 public sealed abstract class ClientComponent permits ClientBattery, ClientCabin, ClientCannon, ClientEngine, ClientShield, ClientStorage, ClientStructural, ClientVital {
     // The id represent the coordinate of the component in the shipConstructionPhase. It's calculated with (19 * i) + j
     private int id;
@@ -17,9 +19,13 @@ public sealed abstract class ClientComponent permits ClientBattery, ClientCabin,
     // when is set to true we will render an invisible component
     private boolean isVisible;
 
-    public ClientComponent(int id, Connector[] sides) {
+    public ClientComponent(int id, List<Integer> connectors) {
         this.id = id;
-        this.sides = sides;
+
+        sides = new Connector[4];
+        for (int i = 0; i < sides.length; i++) {
+            sides[i] = Connector.fromOrdinal(connectors.get(i));
+        }
     }
 
     /**
