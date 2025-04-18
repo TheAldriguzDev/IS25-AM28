@@ -2,7 +2,8 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent;
 
 import it.polimi.ingsw.is25am28.Model.Connector;
 
-public class ClientComponent {
+public sealed abstract class ClientComponent permits ClientBattery, ClientCabin, ClientCannon, ClientEngine, ClientShield, ClientStorage, ClientStructural, ClientVital {
+    // The id represent the coordinate of the component in the shipConstructionPhase. It's calculated with (19 * i) + j
     private int id;
 
     protected Connector[] sides;
@@ -10,7 +11,16 @@ public class ClientComponent {
     private int row;
     private int col;
 
+    // isFlipped is used to decide if the tile needs to be shown in the shipConstructionState phase
     private boolean isFlipped;
+    // isVisible is used to decide if the tile is "present" on the table where the user can decide which tile to select
+    // when is set to true we will render an invisible component
+    private boolean isVisible;
+
+    public ClientComponent(int id, Connector[] sides) {
+        this.id = id;
+        this.sides = sides;
+    }
 
     /**
      * @return The direction that this component is currently facing
