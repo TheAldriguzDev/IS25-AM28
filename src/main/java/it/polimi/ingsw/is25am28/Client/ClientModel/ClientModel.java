@@ -1,8 +1,7 @@
-package it.polimi.ingsw.is25am28.Client;
+package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Model.GameModelv2.State;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 
 /**
@@ -13,12 +12,10 @@ public class ClientModel {
     private String nickname;
     private PlayerColor playerColor;
 
-    // private VirtualView client;
+    // TODO: ClientBoard - ClientShip - ClientComponent --> For ships and playerColor i would store them inside Maps to identify each user data
 
     // Represent the currentState of the game --> it matches the state of the server model
     private State currentState;
-
-    // TODO: Board, otherPlayers, ship
 
     public String getNickname() {
         return nickname;

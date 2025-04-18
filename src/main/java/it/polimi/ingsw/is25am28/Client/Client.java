@@ -1,8 +1,8 @@
 package it.polimi.ingsw.is25am28.Client;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
 import it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient;
 import it.polimi.ingsw.is25am28.Network.VirtualView;

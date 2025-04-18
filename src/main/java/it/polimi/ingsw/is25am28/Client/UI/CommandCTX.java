@@ -24,7 +24,7 @@ public class CommandCTX {
      * Method used to run the onError Runnable and print the given Error
      * */
     public void handleError(String error) {
-        System.err.println(error);
+        System.out.println(error);
         this.onError.run();
     }
 

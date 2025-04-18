@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.ClientStatus;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.RMIServer;
 import it.polimi.ingsw.is25am28.Network.Socket.Server.TCPServer;
@@ -85,7 +86,10 @@ public class Server {
                 .setAvailableGames(gameInfo);
         state.setStateName("AvailableGamesDTO");
 
-        clientVirtualView.updateState(state);
+        Answer answer = new Answer()
+                .setState(state);
+
+        clientVirtualView.updateState(answer);
     }
 
     // TODO: Method to refresh the available games

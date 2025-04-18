@@ -1,9 +1,9 @@
 package it.polimi.ingsw.is25am28.Client.UI;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ErrorDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
+import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 public interface ClientUI {
@@ -14,5 +14,7 @@ public interface ClientUI {
     void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers);
     void showShipConstruction(ShipConstructionDTO shipConstruction);
 
-    void showError(ErrorDTO error);
+
+    void commitCommand(String playerNickname);
+    void showError(ErrorAnswer error);
 }

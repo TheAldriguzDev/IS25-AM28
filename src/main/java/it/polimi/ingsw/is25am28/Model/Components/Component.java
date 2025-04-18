@@ -29,14 +29,14 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
        */
       public int getTypeId(){
             switch (this){
-                  case Cannon _:    return 0;
-                  case Cabin _:     return 1;
-                  case Storage _:   return 2;
-                  case Vital _:     return 3;
-                  case Engine _:    return 4;
-                  case Battery _:   return 5;
-                  case Shield _:    return 6;
-                  case Structural _:return 7;
+                  case Cannon _:     return 0;
+                  case Cabin _:      return 1;
+                  case Storage _:    return 2;
+                  case Vital _:      return 3;
+                  case Engine _:     return 4;
+                  case Battery _:    return 5;
+                  case Shield _:     return 6;
+                  case Structural _: return 7;
             }
       }
 
@@ -181,9 +181,9 @@ public abstract sealed class Component permits Cannon, Cabin, Storage, Vital, En
                   connectors.add(sides[i].ordinal());
             }
 
-            map.put("id", getId() );
+            map.put("id", getId());
             map.put("tid", getTypeId());
-            map.put("connectors", connectors );
+            map.put("connectors", connectors);
             map.put( "row", row );
             map.put( "col", col );
 

@@ -1,7 +1,8 @@
 package it.polimi.ingsw.is25am28.Network;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Answer.Answer;
+import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 
 /**
@@ -14,7 +15,7 @@ public interface VirtualView {
 
     public void updateView(StateDTO state) throws Exception;
 
-    public void updateState(StateDTO state) throws Exception;
+    public void updateState(Answer answer) throws Exception;
 
-    public void reportError(String details, StateDTO state) throws Exception;
+    public void reportError(ErrorAnswer error) throws Exception;
 }

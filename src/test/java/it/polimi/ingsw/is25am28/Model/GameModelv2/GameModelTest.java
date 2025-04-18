@@ -142,6 +142,8 @@ class GameModelTest {
         // SHIP CONSTRUCTION STATE --> THE PLAYERS WILL BE ABLE TO CREATE THEIR SHIP
         // ========================================
         assertInstanceOf(ShipContructionState.class, model.getCurrentState());
+        json = mapper.writeValueAsString(model.getCurrentState().generateState());
+        System.out.println(json);
 
         // Select the tile
         ConstructionComponentDTO tileState = model.selectTile("Player 1", 1, 7);

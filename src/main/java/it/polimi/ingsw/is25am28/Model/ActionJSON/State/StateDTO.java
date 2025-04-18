@@ -3,12 +3,9 @@ package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO;
-import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
-import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 
 import java.io.Serial;
 import java.io.Serializable;
-
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
@@ -21,7 +18,7 @@ import java.io.Serializable;
 })
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public sealed class StateDTO implements Serializable permits AvailableGamesDTO, CardRoundDTO, CreateGameStateDTO, DisconnectedPlayerDTO, EndGameDTO, ErrorDTO, FixShipDTO, PopulateShipDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateDTO, WaitingForGameConfigurationDTO {
+public sealed class StateDTO implements Serializable permits AvailableGamesDTO, CardRoundDTO, CreateGameStateDTO, DisconnectedPlayerDTO, EndGameDTO, FixShipDTO, PopulateShipDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateDTO, WaitingForGameConfigurationDTO {
     @Serial
     private static final long serialVersionUID = 1L;
 

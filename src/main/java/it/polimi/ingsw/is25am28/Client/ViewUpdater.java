@@ -1,17 +1,10 @@
 package it.polimi.ingsw.is25am28.Client;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
-import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
-import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
-import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
-import it.polimi.ingsw.is25am28.Network.VirtualView;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 
 /**
  * This class use the VisitorPattern to save useful information of each state and then show this information in
@@ -83,6 +76,10 @@ public class ViewUpdater implements StateVisitor {
 
     // TODO Change from String message to ErrorDTO
     public void reportError(String message) {
-        this.ui.showError(new ErrorDTO(message));
+        this.ui.showError(new ErrorAnswer(message));
+    }
+
+    public void commitCommand(String playerNickname) {
+        this.ui.commitCommand(playerNickname);
     }
 }

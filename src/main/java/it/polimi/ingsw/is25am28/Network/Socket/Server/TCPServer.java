@@ -73,29 +73,4 @@ public class TCPServer {
             }).start();
         }
     }
-
-    // TODO: Implements this utility method to update all the clients --> will be triggered in the specific thread of each user
-    public void broadCastUpdateView(StateDTO state) throws JsonProcessingException {
-        synchronized (this.clients) {
-            for (SocketClientHandler clientHandler : this.clients) {
-                clientHandler.updateView(state);
-            }
-        }
-    }
-
-    public void broadCastUpdateState(StateDTO state) throws JsonProcessingException {
-        synchronized (this.clients) {
-            for (SocketClientHandler clientHandler : this.clients) {
-                clientHandler.updateState(state);
-            }
-        }
-    }
-
-    public void reportError(String details, StateDTO state) throws JsonProcessingException {
-        synchronized (this.clients) {
-            for (SocketClientHandler clientHandler : this.clients) {
-                clientHandler.reportError(details, state);
-            }
-        }
-    }
 }

@@ -1,10 +1,11 @@
 package it.polimi.ingsw.is25am28.Network.RMI.Client;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Answer.Answer;
+import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.Messages.Ping;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
@@ -16,13 +17,17 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
     private VirtualServerRMI server;
     private final ViewUpdater viewUpdater;
     private final Queue queueHandler;
+    private final ExecutorService updateThread;
 
     private final UUID uuid;
+
 
     /**
      * Constructor used to create the RMIClient and starts it
@@ -55,6 +60,8 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         // Create the queue handler to process in a thread the communication with the server
         this.queueHandler = new Queue();
         new Thread(queueHandler).start();
+
+        this.updateThread = Executors.newSingleThreadExecutor();
 
         this.run();
         this.startPing();
@@ -123,33 +130,50 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
     /**
      * Method used to update the client view (display the new content)
-     * TODO: make a lock to prevent data race between user input and server updates
-     * TODO: think about the best way to print out the content given by the server --> overload or what else?
      * */
     @Override
     public void updateView(StateDTO state) throws RemoteException {
-        new Thread(() -> {
+        this.updateThread.submit(() -> {
             try {
                 state.accept(viewUpdater);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
-        }).start();
+        });
     }
 
     @Override
-    public void updateState(StateDTO state) throws Exception {
-        new Thread(() -> {
-            try {
-                state.accept(viewUpdater);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        }).start();
+    public void updateState(Answer answer) throws Exception {
+        // Try to commit the command execution to the client
+        if (answer.getPlayerNickname() != null) {
+            viewUpdater.commitCommand(answer.getPlayerNickname());
+        }
+
+        // Update all the clients with the first state (response to the executed command)
+        if (answer.getState() != null) {
+            this.updateThread.submit(() -> {
+                try {
+                    answer.getState().accept(viewUpdater);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
+
+        // Update all the clients with the secondo state (new game state)
+        if (answer.getNextState() != null) {
+            this.updateThread.submit(() -> {
+                try {
+                    answer.getNextState().accept(viewUpdater);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }
     }
 
     @Override
-    public void reportError(String details, StateDTO state) throws RemoteException {
-        viewUpdater.reportError(details);
+    public void reportError(ErrorAnswer error) throws RemoteException {
+        viewUpdater.reportError(error.getError());
     }
 }

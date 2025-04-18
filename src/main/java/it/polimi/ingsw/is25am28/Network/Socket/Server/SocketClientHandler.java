@@ -4,16 +4,16 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Answer.Answer;
+import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
-import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.UUID;
 
 /**
  * SocketClientHandler is needed to handle correctly each client socket to execute the command with the Controller
@@ -82,8 +82,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         try {
             this.controller.createNewGame(playerNickname, playerColor, gameLevel, totalPlayers, this);
         } catch (Exception e) {
-            // TODO: FIX THE reportError method
-            this.reportError(e.getMessage(), null);
+            this.reportError(new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -93,8 +92,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         try {
             this.controller.joinGame(playerNickname, playerColor, gameID, this);
         } catch (Exception e) {
-            // TODO: FIX THE reportError method
-            this.reportError(e.getMessage(), null);
+            this.reportError(new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -115,20 +113,17 @@ public class SocketClientHandler implements VirtualViewSocket {
     }
 
     @Override
-    public void updateState(StateDTO state) throws JsonProcessingException {
-        String stateString = this.mapper.writeValueAsString(state);;
+    public void updateState(Answer answer) throws JsonProcessingException {
+        String stateString = this.mapper.writeValueAsString(answer);;
 
         this.output.println(stateString);
         this.output.flush();
     }
 
-    // TODO: Rework this method, should be better to have a DTO to report the error and if needed that it also
-    //  includes the StateDTO in it
     @Override
-    public void reportError(String details, StateDTO state) throws JsonProcessingException {
-        String stateString = this.mapper.writeValueAsString(state);;
+    public void reportError(ErrorAnswer error) throws JsonProcessingException {
+        String stateString = this.mapper.writeValueAsString(error);;
 
-        this.output.println(details);
         this.output.println(stateString);
         this.output.flush();
     }

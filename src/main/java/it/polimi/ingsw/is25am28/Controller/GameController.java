@@ -19,13 +19,8 @@ import java.util.List;
 public class GameController {
     private final GameModel model;
 
-    // Number of connected clients, will be used to understand if a new connection is from a leader or a command player
-    // and to prevent connections when a game is already full
-    private int connectedClients;
-
     public GameController() {
         this.model = new GameModel();
-        this.connectedClients = 0;
     }
 
     public StateDTO getCurrentState() {
@@ -38,52 +33,6 @@ public class GameController {
         synchronized (this.model) {
             return this.model.getAvailableColors();
         }
-    }
-
-    // TODO: Method that accepts clients connection. In this state we need to generate the state and send it back to the client. If the gameIsReady for newPlayer
-    //  we need to notify the new clients with the current model state, otherwise we need to send a temp state that indicates that the game is still in configuration
-    public StateDTO onClientConnection() {
-        StateDTO state;
-
-        this.connectedClients++;
-
-        // TODO: Pensa a come poter dire ai client che ci sono dei player disconnessi
-//        synchronized (this.model) {
-//            List<String> disconnectedPlayers = this.model.getDisconnectedPlayers();
-//            if (this.connectedClients > 4 && disconnectedPlayers.isEmpty()) {
-//                throw new IllegalStateException("The game cannot accept more players");
-//            } else {
-//                state = new DisconnectedPlayerDTO(disconnectedPlayers);
-//            }
-//        }
-
-        if (this.connectedClients > 4) {
-            throw new IllegalStateException("The lobby cannot accept more players");
-        }
-
-        // When the leader tries to connect, we need to send the state that identifies the game configuration state
-        if (this.connectedClients == 1) {
-            return this.model.generateState(); // The state will be CreateGameStateDTO
-        }
-
-        if (this.connectedClients > 1) {
-            switch (this.model.getCurrentState()) {
-                // If the game is in configState
-                case CreateGameState ignored -> {
-                    state = new WaitingForGameConfigurationDTO();
-                    state.setStateName("WaitingForGameConfiguration"); // The state will be WaitingForGameConfigurationDTO
-
-                    return state;
-                }
-                // If the game is waiting for player to join the lobby
-                case WaitPlayersState currState -> {
-                    return currState.generateState(); // The state will be WaitingForPlayersDTO
-                }
-                default -> throw new IllegalStateException("Unexpected value: " + this.model.getCurrentState());
-            }
-        }
-
-        throw new IllegalStateException("Unexpected connection in invalid state: " + this.model.getCurrentState());
     }
 
     public boolean disconnectClient(String nickname) {

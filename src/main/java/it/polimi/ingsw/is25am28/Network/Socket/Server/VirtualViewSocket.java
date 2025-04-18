@@ -2,9 +2,9 @@ package it.polimi.ingsw.is25am28.Network.Socket.Server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
+import it.polimi.ingsw.is25am28.Network.Answer.Answer;
+import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
-
-import java.rmi.RemoteException;
 
 /**
  * This interface specializes the VirtualView interface for the Socket technology. This is needed to make the
@@ -16,8 +16,8 @@ public interface VirtualViewSocket extends VirtualView {
     public void updateView(StateDTO state) throws JsonProcessingException;
 
     @Override
-    public void updateState(StateDTO state) throws JsonProcessingException;
+    public void updateState(Answer answer) throws JsonProcessingException;
 
     @Override
-    public void reportError(String details, StateDTO state) throws JsonProcessingException;
+    public void reportError(ErrorAnswer error) throws JsonProcessingException;
 }

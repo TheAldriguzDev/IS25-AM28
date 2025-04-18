@@ -1,11 +1,7 @@
 package it.polimi.ingsw.is25am28.Network.RMI.Server;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
@@ -91,8 +87,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.createNewGame(playerNickname, playerColor, gameLevel, totalPlayers, client);
         } catch (Exception e) {
-            // TODO: FIX THE reportError method
-            client.reportError(e.getMessage(), null);
+            client.reportError(new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -102,37 +97,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.joinGame(playerNickname, playerColor, gameID, client);
         } catch (Exception e) {
-            // TODO: FIX THE reportError method
-            client.reportError(e.getMessage(), null);
+            client.reportError(new ErrorAnswer(e.getMessage()));
         }
-    }
-
-    // TODO: INSTEAD OF MESSAGES IMPLEMENT THE CONTROLLER INTERFACE
-
-    /**
-     * Broadcast a stateUpdate to all the clients
-     * */
-    public void broadCastUpdateState(StateDTO state) {
-        synchronized (this.clients) {
-            for (VirtualViewRMI client : this.clients.values()) {
-                this.queueHandler.enqueue(() -> {
-                    try {
-                        client.updateView(state);
-                    } catch (RemoteException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-            }
-        }
-    }
-
-    private void reportCommandError(VirtualViewRMI client, String msg, StateDTO state) {
-        queueHandler.enqueue(() -> {
-            try {
-                client.reportError(msg, state);
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
-        });
     }
 }
