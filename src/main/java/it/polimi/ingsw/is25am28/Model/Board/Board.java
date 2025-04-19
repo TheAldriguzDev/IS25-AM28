@@ -3,10 +3,12 @@ package it.polimi.ingsw.is25am28.Model.Board;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class Board {
+public abstract class Board implements WidgetTUIGenerator {
     private int size;
     private Cell head;
     final ArrayList<Cell> initialCells = new ArrayList<>();

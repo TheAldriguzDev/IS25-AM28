@@ -5,11 +5,14 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class EventCard {
+public abstract class EventCard implements WidgetTUIGenerator {
     protected String name;
     protected int cardLevel;
     protected List<Player> players;
@@ -136,4 +139,8 @@ public abstract class EventCard {
      * - cardData (e.g. planets list with all the related resources)
      * */
     public abstract CardStateJSON generateState();
+
+    public abstract WidgetTUI generateWidget(CardStateJSON cardState);
 }
+
+

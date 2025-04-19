@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.SmugglersJSON;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -206,6 +207,36 @@ public class Smugglers extends EventCard {
         }
 
         return smugglersStateJSON;
+    }
+
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON smugglersStateJSON) {
+        WidgetTUI cardWidget = new WidgetTUI();
+        WidgetTUI cardInfoWidget = new WidgetTUI();
+
+        cardWidget.appendString("====" + smugglersStateJSON.getCardName().toUpperCase() + "====");
+
+        if (firstRound) {
+            cardInfoWidget.appendString("Level: " + smugglersStateJSON.getCardLevel());
+            cardInfoWidget.appendString("Given credits: " + smugglersStateJSON.getGivenCredits());
+            cardInfoWidget.appendString("Days: " + smugglersStateJSON.getMovementSteps());
+            cardInfoWidget.appendString("Require Firepower: " + smugglersStateJSON.getRequiredFirepower());
+            cardInfoWidget.appendString("Red items: " + smugglersStateJSON.getRedItems());
+            cardInfoWidget.appendString("Yellow items: " + smugglersStateJSON.getYellowItems());
+            cardInfoWidget.appendString("Blue items: " + smugglersStateJSON.getBlueItems());
+            cardInfoWidget.appendString("Green items: " + smugglersStateJSON.getGreenItems());
+            cardInfoWidget.appendString("Taken items: " + smugglersStateJSON.getTakenItems());
+        } else {
+            cardInfoWidget.appendString("Player: " + smugglersStateJSON.getPlayerNickname() + " has to drop " + smugglersStateJSON.getTakenItems() + " items");
+        }
+        cardInfoWidget.wrapWidgetWithBorder();
+
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }
 
