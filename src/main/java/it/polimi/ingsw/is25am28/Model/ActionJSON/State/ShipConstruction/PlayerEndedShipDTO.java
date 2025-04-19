@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
 import java.util.List;
 
@@ -26,5 +27,10 @@ public non-sealed class PlayerEndedShipDTO extends ShipConstructionEventDTO {
     public PlayerEndedShipDTO setPlayerNicknames(List<String> playerNicknames) {
         this.playerNicknames = playerNicknames;
         return this;
+    }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
     }
 }

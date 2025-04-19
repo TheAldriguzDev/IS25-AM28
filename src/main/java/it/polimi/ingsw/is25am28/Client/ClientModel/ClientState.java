@@ -1,6 +1,9 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+
+import java.util.List;
 
 public class ClientState {
     protected ClientModel model;
@@ -9,24 +12,32 @@ public class ClientState {
         this.model = model;
     }
 
+    public List<ClientComponent> getConstructionShipComponents() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'getConstructionShipComponents' is not supported in the " + this + " state");
+    }
+
+    public List<ClientComponent> getReservedComponents() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'getReservedComponents' is not supported in the " + this + " state");
+    }
+
     /**
      * Command used by the player when he wants to select a Tile from the table in the ShipConstructionState
      * */
-    public void selectTile(int i, int j) throws UnsupportedOperationException {
+    public ClientComponent selectTile(int i, int j) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'selectTile' is not supported in the " + this + " state");
     }
 
     /**
      * Command used by the player when he wants to deselect a Tile from the table in the ShipConstructionState
      * */
-    public void deselectTile(int i, int j) throws UnsupportedOperationException {
+    public void deselectTile(ClientComponent component, int i, int j) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'deselectTile' is not supported in the " + this + " state");
     }
 
     /**
      * Command used by the player when he wants to place a Tile to build his Ship
      * */
-    public void placeTile(int i, int j) throws UnsupportedOperationException {
+    public void placeTile(ClientComponent component, int i, int j) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'placeTile' is not supported in the " + this + " state");
     }
 

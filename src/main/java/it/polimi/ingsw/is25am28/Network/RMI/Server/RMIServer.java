@@ -2,10 +2,7 @@ package it.polimi.ingsw.is25am28.Network.RMI.Server;
 
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
-import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
-import it.polimi.ingsw.is25am28.Network.Messages.Message;
-import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
-import it.polimi.ingsw.is25am28.Network.Messages.Ping;
+import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
@@ -75,6 +72,9 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             case Ping ignored -> {
                 // this.ping(uuid);
             }
+            case SelectTile data -> {
+                this.selectTile(data.getPlayerNickname(), data.getI(), data.getJ(), uuid);
+            }
             default -> {
                 throw new Exception("The given Message is not supported");
             }
@@ -96,6 +96,16 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
 
         try {
             this.controller.joinGame(playerNickname, playerColor, gameID, client);
+        } catch (Exception e) {
+            client.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void selectTile(String playerNickname, int i, int j, UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.selectTile(playerNickname, i, j);
         } catch (Exception e) {
             client.reportError(new ErrorAnswer(e.getMessage()));
         }

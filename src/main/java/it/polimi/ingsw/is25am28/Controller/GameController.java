@@ -9,6 +9,8 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitingForGameConfigurationDTO;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.Model.GameModelv2.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -78,7 +80,7 @@ public class GameController {
         }
     }
 
-    public TimerDTO flipTimer(String player) {
+    public TimerDTO flipTimer(String player) throws TimerFlipException {
         synchronized (this.model) {
             return this.model.flipTimer(player);
         }
@@ -90,7 +92,7 @@ public class GameController {
         }
     }
 
-    public List<StateDTO> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException {
+    public List<StateDTO> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException, ShipPopulationFailException {
         synchronized (this.model) {
             return this.model.populateShip(player, lifeFormToAdd);
         }

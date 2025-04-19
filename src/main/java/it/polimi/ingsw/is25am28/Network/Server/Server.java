@@ -114,15 +114,15 @@ public class Server {
      * It also the playerNickname and information to the
      * */
     public void createNewGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers, VirtualView clientView) throws Exception {
-
-
         synchronized (this.gameInstances) {
             if (this.connectedClients.containsKey(playerNickname)) {
                 throw new Exception("The selected nickname is already being used");
             }
 
             // Create the new game --> it will be already be configured
-            this.gameInstances.put(this.gameInstances.size(), new GameInstance(playerNickname, playerColor, gameLevel, totalPlayers, clientView));
+            int gameID = this.gameInstances.size();
+            this.gameInstances.put(gameID, new GameInstance(playerNickname, playerColor, gameLevel, totalPlayers, clientView));
+            this.clientToGame.put(playerNickname, gameID);
         }
 
         // Add the client to the connectedClients Map
@@ -142,11 +142,22 @@ public class Server {
 
             GameInstance game = this.gameInstances.get(gameID);
             game.addNewPlayer(playerNickname, playerColor, clientView);
+            this.clientToGame.put(playerNickname, gameID);
         }
 
         // Add the client to the connectedClients Map
         synchronized (this.connectedClients) {
             this.connectedClients.put(playerNickname, clientView);
+        }
+    }
+
+    public void selectTile(String playerNickname, int i, int j) throws Exception {
+        synchronized (this.gameInstances) {
+            // Get the game where the player is playing
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.selectTile(playerNickname, i, j);
         }
     }
 

@@ -132,7 +132,7 @@ public final class ShipContructionState extends State implements TimeSubscriber 
     /**
      * @return the list of players that have ended their ship
      * */
-    public synchronized PlayerEndedShipDTO playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles) throws IllegalStateException, SelectedConcurrencyException {
+    public synchronized PlayerEndedShipDTO playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles) throws IllegalStateException {
         if (this.players_done.contains(player)) {
             throw new IllegalArgumentException("The player " + player + " has already sent the ship");
         }

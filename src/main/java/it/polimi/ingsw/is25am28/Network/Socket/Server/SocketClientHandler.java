@@ -9,11 +9,14 @@ import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
+import it.polimi.ingsw.is25am28.Network.Messages.SelectTile;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.UUID;
 
 /**
  * SocketClientHandler is needed to handle correctly each client socket to execute the command with the Controller
@@ -69,6 +72,9 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case NewPlayer data -> {
                     this.joinGame(data.getPlayerNickname(), data.getPlayerColor(), data.getGameID());
                 }
+                case SelectTile data -> {
+                    this.selectTile(data.getPlayerNickname(), data.getI(), data.getJ());
+                }
                 default -> {
                     throw new Exception("The given Message is not supported");
                 }
@@ -91,6 +97,14 @@ public class SocketClientHandler implements VirtualViewSocket {
 
         try {
             this.controller.joinGame(playerNickname, playerColor, gameID, this);
+        } catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void selectTile(String playerNickname, int i, int j) throws Exception {
+        try {
+            this.controller.selectTile(playerNickname, i, j);
         } catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }

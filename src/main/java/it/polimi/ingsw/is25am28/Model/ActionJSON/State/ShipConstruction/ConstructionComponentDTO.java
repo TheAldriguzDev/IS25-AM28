@@ -82,4 +82,9 @@ public non-sealed class ConstructionComponentDTO extends ShipConstructionEventDT
         this.isSelected = isSelected;
         return this;
     }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
+    }
 }

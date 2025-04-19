@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent;
 
 import it.polimi.ingsw.is25am28.Model.Connector;
 
+import java.util.Collections;
 import java.util.List;
 
 public sealed abstract class ClientComponent permits ClientBattery, ClientCabin, ClientCannon, ClientEngine, ClientShield, ClientStorage, ClientStructural, ClientVital {
@@ -38,15 +39,31 @@ public sealed abstract class ClientComponent permits ClientBattery, ClientCabin,
     }
 
     /**
-     * @return A coordinate pair [row, col] describing this component's position in the ship's grid
-     */
-    public int[] getPosition() {
-        int[] position = new int[2];
+     * Sets the component 'i' coordinate
+     * */
+    public void setI(int i) {
+        this.row = i;
+    }
 
-        position[0] = row;
-        position[1] = col;
+    /**
+     * @return the 'i' coordinate of the component
+     * */
+    public int getI() {
+        return this.row;
+    }
 
-        return position;
+    /**
+     * @return the 'j' coordinate of the component
+     * */
+    public int getJ() {
+        return this.col;
+    }
+
+    /**
+     * Sets the component 'j' coordinate
+     * */
+    public void setJ(int j) {
+        this.col = j;
     }
 
     /**
@@ -101,5 +118,9 @@ public sealed abstract class ClientComponent permits ClientBattery, ClientCabin,
      * */
     public void setIsVisible(boolean isVisible) {
         this.isVisible = isVisible;
+    }
+
+    public int getID() {
+        return this.id;
     }
 }

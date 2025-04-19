@@ -13,6 +13,8 @@ import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.FileLoader.CardLoader;
+import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -249,7 +251,7 @@ public class GameModel {
      * - hasBennFlipped --> if the clock has been flipped
      * - canBeenFlipped --> if the clock can be flipped at least another time
      * */
-    public TimerDTO flipTimer(String player) {
+    public TimerDTO flipTimer(String player) throws TimerFlipException {
         return this.currentState.flipTimer(player);
     }
 
@@ -282,7 +284,7 @@ public class GameModel {
      * 1. Contains the response of the executed command
      * 2. If all the players has populated their ship, it contains the CardRoundState information
      * */
-    public List<StateDTO> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException {
+    public List<StateDTO> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException, ShipPopulationFailException {
         List<StateDTO> states = new ArrayList<>();
 
         StateDTO tmpState = this.currentState.populateShip(player, lifeFormToAdd);

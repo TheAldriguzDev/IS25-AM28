@@ -59,7 +59,7 @@ public class Client {
         ClientModel model = new ClientModel();
 
         if (uiType == 1) {
-            clientUI = new ClientTUI(new ClientModel());
+            clientUI = new ClientTUI(model);
         } else {
             throw new RuntimeException("UI Type not yet supported");
         }

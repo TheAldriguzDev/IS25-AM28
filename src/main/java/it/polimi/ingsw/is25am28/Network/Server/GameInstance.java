@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Network.Server;
 
 import it.polimi.ingsw.is25am28.Controller.GameController;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
@@ -47,13 +48,6 @@ public class GameInstance {
 
     public int getLevel() {
         return level;
-    }
-
-    /**
-     * @return true if the game has been configured
-     * */
-    public boolean hasBeenConfigured() {
-        return this.hasBeenConfigured;
     }
 
     /**
@@ -123,5 +117,24 @@ public class GameInstance {
             }
         }
         this.currentPlayers++;
+    }
+
+    public void selectTile(String playerNickname, int i, int j) throws Exception {
+        ConstructionComponentDTO state = this.controller.selectTile(playerNickname, i, j);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(playerNickname)
+                .setState(state);
+
+        this.broadCastUpdate(answer);
+    }
+
+    private void broadCastUpdate(Answer answer) throws Exception {
+        synchronized (this.connectedClients) {
+            // Broadcast the state to the clients
+            for (VirtualView client : this.connectedClients.values()) {
+                client.updateState(answer);
+            }
+        }
     }
 }

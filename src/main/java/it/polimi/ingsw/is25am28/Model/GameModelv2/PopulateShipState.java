@@ -22,7 +22,7 @@ public final class PopulateShipState extends State {
         playersReady = new ArrayList<>();
     }
 
-    public PopulateShipDTO populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException {
+    public PopulateShipDTO populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException, ShipPopulationFailException {
         if (playersReady.contains(player)) {
             throw new IllegalArgumentException("The given player has already populated the ship");
         }

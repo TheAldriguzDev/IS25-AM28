@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.UI;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
@@ -9,20 +10,23 @@ import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
 import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
+import it.polimi.ingsw.is25am28.Network.Messages.SelectTile;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class ClientTUI implements ClientUI {
     private final ClientModel model;
     private VirtualView client;
     private final Object ioLock;
+    private final Random random;
 
     private final BufferedReader scanner;
 
@@ -35,9 +39,17 @@ public class ClientTUI implements ClientUI {
         this.ioLock = new Object();
         this.scanner = new BufferedReader(new InputStreamReader(System.in));
         this.currCommand = null;
+        this.random = new Random();
     }
 
-    private static List<String> getGamesOptions(List<GameInfoDTO> availableGames) {
+    /**
+     * @return the possible options available in the game lobby
+     * 1. Available games
+     * 2. Create a new game
+     * 3. Reconnect to an existing game
+     * 4. Refresh available games
+     * */
+    private static List<String> getLobbiesOptions(List<GameInfoDTO> availableGames) {
         List<String> options = new ArrayList<>();
 
         // If present, add the available games
@@ -52,7 +64,26 @@ public class ClientTUI implements ClientUI {
         // Extra options
         options.add("Create a new game");
         options.add("Reconnect to an existing game");
-        options.add("Refresh games");
+        options.add("Refresh available games");
+        return options;
+    }
+
+    /**
+     * @return the options available when the player can select a tile in the shipConstructionState
+     * */
+    private static List<String> getShipConstructionBaseOptions(List<ClientComponent> reservedComponents) {
+        List<String> options = new ArrayList<>();
+
+        // If present, add the available games
+        for (ClientComponent comp : reservedComponents) {
+            options.add(
+                    "Select reserved tile - " + comp.getClass().getSimpleName()
+            );
+        }
+
+        // Extra options
+        options.add("Select a new tile");
+        options.add("Show deck");
         return options;
     }
 
@@ -88,12 +119,10 @@ public class ClientTUI implements ClientUI {
         synchronized (ioLock) {
             printTitle();
 
-            BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
             List<GameInfoDTO> availableGames = state.getAvailableGames();
 
             // Build the list of available games
-            List<String> options = getGamesOptions(availableGames);
+            List<String> options = getLobbiesOptions(availableGames);
 
             // Display the options
             for (int i = 0; i < options.size(); i++) {
@@ -103,7 +132,7 @@ public class ClientTUI implements ClientUI {
             int choice = -1;
             do {
                 System.out.print("Choose an option: ");
-                String line = reader.readLine().trim();
+                String line = this.scanner.readLine().trim();
                 try {
                     choice = Integer.parseInt(line);
                     if (choice < 1 || choice > options.size()) {
@@ -282,8 +311,7 @@ public class ClientTUI implements ClientUI {
 
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
-        System.out.println("WaitingForPlayer lock");
-        synchronized (this.model) {
+        synchronized (ioLock) {
             if (this.model.getNickname() != null) {
                 int connected = waitingForPlayers.getLobbyTotalSpot() - waitingForPlayers.getAvailableSpots();
                 int total = waitingForPlayers.getLobbyTotalSpot();
@@ -302,10 +330,178 @@ public class ClientTUI implements ClientUI {
         }
     }
 
-
     @Override
-    public void showShipConstruction(ShipConstructionDTO shipConstruction) {
-        System.out.println("Ship construction state");
+    public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
+        synchronized (this.ioLock) {
+            this.displayShipConstructionComponents();
+        }
+    }
+
+    private void displayShipConstructionComponents() throws Exception {
+        List<ClientComponent> reservedComponents = List.of();
+        try {
+            reservedComponents = this.model.getState().getReservedComponents();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        // Build the list of available games
+        List<String> options = getShipConstructionBaseOptions(reservedComponents);
+
+        // Display the options
+        for (int i = 0; i < options.size(); i++) {
+            System.out.println((i + 1) + ". " + options.get(i));
+        }
+
+        int choice = -1;
+        do {
+            System.out.print("Choose an option: ");
+            String line = this.scanner.readLine().trim();
+            try {
+                choice = Integer.parseInt(line);
+                if (choice < 1 || choice > options.size()) {
+                    System.out.println("Invalid choice: please select a number between 1 and " + options.size() + ".");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid input: please enter a number.");
+            }
+        } while (choice < 1 || choice > options.size());
+
+        // Evaluate the correct command
+        if (choice <= reservedComponents.size()) {
+            ClientComponent reservedComp = reservedComponents.get(choice - 1);
+            this.selectReservedComponent(reservedComp);
+
+        } else if (choice == reservedComponents.size() + 1) {
+            this.selectNewTile();
+            // TODO: Invoke the method to handle the selected comp --> flag that does not comes from reserved comp --> can be deselected and can be reserved
+        } else if (choice == reservedComponents.size() + 2) {
+            // TODO: Invoke the show deck
+        }
+    }
+
+    /**
+     * Once a reserved component is selected, we can only:
+     * 1. Place it in the ship
+     * 2. Drop it again in the reserved components
+     * */
+    private void selectReservedComponent(ClientComponent reservedComponent) throws Exception {
+        System.out.println("1. Place at (x, y) (e.g., 1 6 7)");
+        System.out.println("2. Drop selected component to the reserved component list");
+
+        int choice = -1;
+        int x = -1, y = -1;
+
+        do {
+            System.out.print("Choose an option: ");
+            String line = this.scanner.readLine().trim();
+            String[] parts = line.split("\\s+");
+
+            if (parts.length == 1) {
+                try {
+                    choice = Integer.parseInt(parts[0]);
+                    if (choice != 2) {
+                        System.out.println("Invalid choice: please select a valid option (1 or 2).");
+                        choice = -1;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input: please enter a number.");
+                }
+            } else if (parts.length == 3) {
+                try {
+                    choice = Integer.parseInt(parts[0]);
+                    if (choice == 1) {
+                        x = Integer.parseInt(parts[1]);
+                        y = Integer.parseInt(parts[2]);
+                    } else {
+                        System.out.println("Invalid choice: please select a valid option (1 or 2).");
+                        choice = -1;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input: please enter numbers.");
+                    choice = -1;
+                }
+            } else {
+                System.out.println("Invalid input: use '1 x y' or '2'.");
+            }
+        } while (choice == -1);
+
+        // If the user decides to drop the reserved component to the reservedComponent list we simply skip this clause
+        // since the component is already reserved. Otherwise, we execute the command to place the tile in the player ship.
+        // This command is executed locally since we send the client ship once its finished
+        if (choice == 1) {
+            this.model.getState().placeTile(reservedComponent, x, y);
+        }
+
+        // Return to the shipConstructionComponents menu
+        this.displayShipConstructionComponents();
+    }
+
+    private void selectNewTile() throws Exception {
+        String input;
+        int idx = -1;
+
+        do {
+            System.out.print("Enter tile index (0-151) or 'r' for random: ");
+            input = this.scanner.readLine().trim();
+            idx = -1;
+
+            if (input.equalsIgnoreCase("r")) {
+                idx = random.nextInt(152);
+            } else {
+                try {
+                    int tmpIndex = Integer.parseInt(input);
+                    if (tmpIndex < 0 || tmpIndex > 151) {
+                        System.out.println("Invalid index: must be between 0 and 151.");
+                    } else {
+                        idx = tmpIndex;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input: enter a number 0–151 or 'r'.");
+                }
+            }
+
+            if (idx >= 0 && !this.model.getState().getConstructionShipComponents().get(idx).isVisible()) {
+                System.out.println("Invalid index: the given component is already selected by someone else.");
+                idx = -1; // reset to retry
+            }
+        } while (idx < 0);
+
+        // We have the index of the tile that we want to use --> we need to send the command to the server and if the tile
+        // is selectable we can execute the correct command to continue the player input
+
+        int finalIdx = idx;
+        this.currCommand = new CommandCTX(
+                "selectTile",
+                () -> {
+                    // If the selection was successful we jump to the method that handles the operations
+                    try {
+                        this.handleSelectedTile(this.model.getState().getConstructionShipComponents().get(finalIdx));
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                },
+                () -> {
+                    // If an error occurred we re-execute the command
+                    try {
+                        this.selectNewTile();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        );
+
+        int construction_i = idx / 19;
+        int construction_j = idx % 19;
+
+        this.client.sendMessage(new SelectTile(this.playerNickname, construction_i, construction_j));
+    }
+
+    /**
+     * Method used to handle the selected component by the client
+     * */
+    private void handleSelectedTile(ClientComponent selectedComponent) throws IOException {
+        System.out.println("Perfect, we can handle the selected tile! HURRAAAAA");
     }
 
 
