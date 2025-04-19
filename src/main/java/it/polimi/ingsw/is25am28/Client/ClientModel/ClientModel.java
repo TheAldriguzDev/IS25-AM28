@@ -11,11 +11,23 @@ import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 public class ClientModel {
     private String nickname;
     private PlayerColor playerColor;
-
     // TODO: ClientBoard - ClientShip - ClientComponent --> For ships and playerColor i would store them inside Maps to identify each user data
 
-    // Represent the currentState of the game --> it matches the state of the server model
-    private State currentState;
+    private ClientState currState;
+
+    /**
+     * @return the current client state
+     * */
+    public ClientState getState() {
+        return this.currState;
+    }
+
+    /**
+     * Sets the current state of the model
+     * */
+    public void setState(ClientState state) {
+        this.currState = state;
+    }
 
     public String getNickname() {
         return nickname;

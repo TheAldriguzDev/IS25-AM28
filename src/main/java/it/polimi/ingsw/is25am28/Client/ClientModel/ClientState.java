@@ -1,0 +1,74 @@
+package it.polimi.ingsw.is25am28.Client.ClientModel;
+
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+
+public class ClientState {
+    protected ClientModel model;
+
+    public ClientState(ClientModel model) {
+        this.model = model;
+    }
+
+    /**
+     * Command used by the player when he wants to select a Tile from the table in the ShipConstructionState
+     * */
+    public void selectTile(int i, int j) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'selectTile' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used by the player when he wants to deselect a Tile from the table in the ShipConstructionState
+     * */
+    public void deselectTile(int i, int j) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'deselectTile' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used by the player when he wants to place a Tile to build his Ship
+     * */
+    public void placeTile(int i, int j) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'placeTile' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used by the player when he wants to flip the timer
+     * */
+    public void flipTimer() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'flipTimer' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used by the player when he wants to send the created Ship to the server
+     * */
+    public void confirmShip() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'confirmShip' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used by the player when he wants to remove a component in the FixShipState
+     * */
+    public void removeComponentFromShip(int i, int j) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'removeComponentFromShip' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used by the player when he wants to send to the server the removed components in the FixShipState
+     * */
+    public void confirmFix() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'confirmShip' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used by the player when he wants to add a LifeForm in the given component
+     * */
+    public void addLifeFormToShip(int i, int j, LifeformType lifeform) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'deselectTile' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used by the player when he wants to send to the server the added LifeForm in the PopulateShipState
+     * */
+    public void confirmPopulation() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'confirmPopulation' is not supported in the " + this + " state");
+    }
+}

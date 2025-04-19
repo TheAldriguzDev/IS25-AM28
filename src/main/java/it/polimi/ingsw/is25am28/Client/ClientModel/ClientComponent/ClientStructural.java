@@ -6,23 +6,7 @@ import it.polimi.ingsw.is25am28.Model.Connector;
 import java.util.List;
 
 public final class ClientStructural extends ClientComponent {
-    private final VitalType vitalType;
-
-    public ClientStructural(int id, List<Integer> sides, int type) {
+    public ClientStructural(int id, List<Integer> sides) {
         super(id, sides);
-
-        if (type == VitalType.BROWN_VITAL.ordinal()) {
-            this.vitalType = VitalType.BROWN_VITAL;
-        }
-        else if (type == VitalType.PURPLE_VITAL.ordinal()) {
-            this.vitalType = VitalType.PURPLE_VITAL;
-        }
-        else {
-            throw new IllegalArgumentException("ERROR: Given vital type is not recognized");
-        }
-    }
-
-    public VitalType getVitalType() {
-        return this.vitalType;
     }
 }

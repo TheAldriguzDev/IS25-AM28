@@ -26,6 +26,8 @@ public sealed abstract class ClientComponent permits ClientBattery, ClientCabin,
         for (int i = 0; i < sides.length; i++) {
             sides[i] = Connector.fromOrdinal(connectors.get(i));
         }
+        this.isFlipped = false;
+        this.isVisible = true;
     }
 
     /**
@@ -67,5 +69,37 @@ public sealed abstract class ClientComponent permits ClientBattery, ClientCabin,
         direction++;
         if (direction > 3) { direction = 0; }
         return this;
+    }
+
+
+    /**
+     * @return true if a component is flipped on the board. The player will be able to see the component data
+     * */
+    protected boolean isFlipped() {
+        return isFlipped;
+    }
+
+    /**
+     * This method will be used when a component has been deselected from any player.
+     * In this way the component data will be visible in the board
+     * */
+    public void setAsFlipped() {
+        this.isFlipped = true;
+    }
+
+    /**
+     * @return true if the component is not selected from any other player, otherwise it returns false.
+     * When its true the component can be displayed to the player in order to select from the player.
+     * */
+    public boolean isVisible() {
+        return isVisible;
+    }
+
+    /**
+     * This method will be used in response to TILE_EVENT to set the tile as visible (a player deselects it) or not visible
+     * when a player selects it.
+     * */
+    public void setIsVisible(boolean isVisible) {
+        this.isVisible = isVisible;
     }
 }

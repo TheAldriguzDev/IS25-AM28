@@ -1,10 +1,13 @@
 package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
+
+import java.util.Map;
 
 /**
  * This class use the VisitorPattern to save useful information of each state and then show this information in
@@ -51,6 +54,11 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(ShipConstructionDTO state) {
+        // Set the model state to the ShipConstructionState that will initialize all the components
+        synchronized (this.model) {
+            this.model.setState(new ClientShipConstructionState(this.model, state.getAllComponents()));
+        }
+
         this.ui.showShipConstruction(state);
     }
 

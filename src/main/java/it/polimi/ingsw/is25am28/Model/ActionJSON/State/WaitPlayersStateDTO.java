@@ -4,22 +4,24 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class WaitPlayersStateDTO extends StateDTO implements Serializable {
-    List<String> availableColors;
-    List<String> usedNicknames;
-    int lobbyTotalSpot;
-    int availableSpots;
+    private List<String> availableColors;
+    private Map<String, PlayerColor> usedNicknames;
+    private int lobbyTotalSpot;
+    private int availableSpots;
 
     public WaitPlayersStateDTO() {}
 
     public WaitPlayersStateDTO(
                 @JsonProperty("availableColors") List<String> availableColors,
-                @JsonProperty("usedNicknames") List<String> usedNicknames,
+                @JsonProperty("usedNicknames") Map<String, PlayerColor> usedNicknames,
                 @JsonProperty("lobbyTotalSpot") int lobbyTotalSpot,
                 @JsonProperty("availableSpots") int availableSpots
             ) {
@@ -40,12 +42,12 @@ public final class WaitPlayersStateDTO extends StateDTO implements Serializable 
     }
 
     @JsonGetter("usedNicknames")
-    public List<String> getUsedNicknames() {
+    public Map<String, PlayerColor> getUsedNicknames() {
         return this.usedNicknames;
     }
 
     @JsonSetter("usedNicknames")
-    public void setUsedNicknames(List<String> usedNicknames) {
+    public void setUsedNicknames(Map<String, PlayerColor> usedNicknames) {
         this.usedNicknames = usedNicknames;
     }
 

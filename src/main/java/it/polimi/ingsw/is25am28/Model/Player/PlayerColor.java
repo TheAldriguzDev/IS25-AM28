@@ -40,4 +40,14 @@ public enum PlayerColor {
             case YELLOW -> "YELLOW";
         };
     }
+
+    public String formatColor(String text) {
+        return switch (this) {
+            case RED -> "\u001B[31m" + text + "\u001B[0m";
+            case GREEN -> "\u001B[32m" + text + "\u001B[0m";
+            case BLUE -> "\u001B[34m" + text + "\u001B[0m";
+            case YELLOW -> "\u001B[33m" + text + "\u001B[0m";
+        };
+    }
+
 }

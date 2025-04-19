@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ClientTUI implements ClientUI {
     private final ClientModel model;
@@ -281,136 +282,30 @@ public class ClientTUI implements ClientUI {
 
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
+        System.out.println("WaitingForPlayer lock");
         synchronized (this.model) {
             if (this.model.getNickname() != null) {
                 int connected = waitingForPlayers.getLobbyTotalSpot() - waitingForPlayers.getAvailableSpots();
                 int total = waitingForPlayers.getLobbyTotalSpot();
-                List<String> nicknames = waitingForPlayers.getUsedNicknames();
+                Map<String, PlayerColor> nicknamesAndColor = waitingForPlayers.getUsedNicknames();
 
                 System.out.printf("Waiting for more players to join the game [%d/%d]...%n", connected, total);
 
-                if (!nicknames.isEmpty()) {
-                    System.out.println("Connected players: " + nicknames);
+                if (!nicknamesAndColor.isEmpty()) {
+                    System.out.print("Connected players: ");
+                    String formattedNames = nicknamesAndColor.entrySet().stream()
+                            .map(entry -> entry.getValue().formatColor(entry.getKey()))
+                            .collect(Collectors.joining(", "));
+                    System.out.println(formattedNames);
                 }
             }
         }
     }
+
 
     @Override
     public void showShipConstruction(ShipConstructionDTO shipConstruction) {
-        printTileList(shipConstruction.getAllComponents());
-    }
-
-    public static void printTileList(List<Map<String, Object>> tileMaps) {
-        int index = 1;
-        for (Map<String, Object> map : tileMaps) {
-            int id = (int) map.get("id");
-            int typeId = (int) map.get("tid");
-            int row = (int) map.get("row");
-            int col = (int) map.get("col");
-
-            // Verifica che "connectors" sia effettivamente una List<Integer>
-            Object connectorsObj = map.get("connectors");
-            List<Integer> connectorOrdinals = null;
-            if (connectorsObj instanceof List<?>) {
-                // Verifica che ogni elemento della lista sia un Integer
-                connectorOrdinals = new ArrayList<>();
-                for (Object obj : (List<?>) connectorsObj) {
-                    if (obj instanceof Integer) {
-                        connectorOrdinals.add((Integer) obj);
-                    } else {
-                        // Gestisci errore se un elemento non è un Integer
-                        System.err.println("Warning: Invalid type in connectors list.");
-                    }
-                }
-            }
-
-            System.out.printf("🔹 Tile #%d%n", index++);
-            System.out.printf("   ID       : %d%n", id);
-            System.out.printf("   Type ID  : %d%n", typeId);
-            System.out.printf("   Position : (%d, %d)%n", row, col);
-
-            if (connectorOrdinals != null) {
-                System.out.printf("   Sides    : %s%n", connectorOrdinals);
-            } else {
-                System.out.println("   Sides    : Invalid data.");
-            }
-
-            printComponentDetails(map, typeId);
-
-            System.out.println();
-        }
-    }
-
-    public static void printComponentDetails(Map<String, Object> componentData, int typeId) {
-        String indent = "  ";
-
-        switch (typeId) {
-            case 0: // Cannon
-                System.out.println("🔫 Cannon:");
-                System.out.println(indent + "Force : " + componentData.get("force"));
-                break;
-
-            case 1: // Cabin
-                System.out.println("🏠 Cabin:");
-                List<String> inhabitants = toStringList(componentData.get("inhabitants"));
-                System.out.println(indent + "Inhabitants: " + inhabitants);
-                break;
-
-            case 2: // Storage
-                System.out.println("📦 Storage:");
-                System.out.println(indent + "Capacity   : " + componentData.get("capacity"));
-                System.out.println(indent + "Special    : " + componentData.get("special"));
-                List<String> storedItems = toStringList(componentData.get("storedItems"));
-                System.out.println(indent + "StoredItems: " + storedItems);
-                break;
-
-            case 3: // Vital
-                System.out.println("❤️ Vital:");
-                System.out.println(indent + "Type       : " + componentData.get("type"));
-                break;
-
-            case 4: // Engine
-                System.out.println("🚀 Engine:");
-                System.out.println(indent + "Speed      : " + componentData.get("speed"));
-                break;
-
-            case 5: // Battery
-                System.out.println("🔋 Battery:");
-                System.out.println(indent + "Capacity   : " + componentData.get("capacity"));
-                System.out.println(indent + "Available  : " + componentData.get("available"));
-                break;
-
-            case 6: // Shield
-                System.out.println("🛡️ Shield:");
-                // eventuali proprietà specifiche
-                break;
-
-            case 7: // Structural
-                System.out.println("🧱 Structural:");
-                // eventuali proprietà specifiche
-                break;
-
-            default:
-                System.out.println("❓ Unknown component type: " + typeId);
-        }
-
-        System.out.println();  // separatore
-    }
-
-    /**
-     * Converte in List<String> una proprietà che dovrebbe essere List<?>.
-     * Se l'oggetto non è una lista, restituisce lista vuota.
-     */
-    private static List<String> toStringList(Object obj) {
-        if (!(obj instanceof List<?>)) {
-            return Collections.emptyList();
-        }
-        List<String> result = new ArrayList<>();
-        for (Object item : (List<?>) obj) {
-            result.add(String.valueOf(item));
-        }
-        return result;
+        System.out.println("Ship construction state");
     }
 
 
