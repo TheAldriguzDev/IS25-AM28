@@ -54,6 +54,7 @@ public class Server {
 
     public static void main(String[] args) throws Exception {
         Server server = new Server();
+
     }
 
     /**
@@ -123,6 +124,8 @@ public class Server {
             int gameID = this.gameInstances.size();
             this.gameInstances.put(gameID, new GameInstance(playerNickname, playerColor, gameLevel, totalPlayers, clientView));
             this.clientToGame.put(playerNickname, gameID);
+
+            ServerLogger.info("ROUTER", );
         }
 
         // Add the client to the connectedClients Map
@@ -161,16 +164,18 @@ public class Server {
         }
     }
 
+    public void deselectTile(String playerNickname, int i, int j) throws Exception {
+        synchronized (this.gameInstances) {
+            // Get the game where the player is playing
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.deselectTile(playerNickname, i, j);
+        }
+    }
+
     // TODO: For all the interaction with the user we need to pass his nickname to get the associated game and then route the
     //  request
-
-    /**
-     * @return the current model state
-     * */
-//    public StateDTO getCurrentState() {
-//        return this.controller.getCurrentState();
-//    }
-
 
     // TODO: Implements the ping utility methods --> we will only have one thread pinging the clients
     //  and one thread checking the ping data results

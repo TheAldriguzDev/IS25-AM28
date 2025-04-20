@@ -10,9 +10,12 @@ import java.util.List;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ConfigGame.class, name = "ConfigGame"),
         @JsonSubTypes.Type(value = NewPlayer.class, name = "NewPlayer"),
+        @JsonSubTypes.Type(value = SelectTile.class, name = "SelectTile"),
+        @JsonSubTypes.Type(value = DeselectTile.class, name = "DeselectTile"),
         @JsonSubTypes.Type(value = Ping.class, name = "Ping")
 })
-public sealed interface Message extends Serializable permits ConfigGame, NewPlayer, Ping, RefreshGames, SelectTile {
+
+public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, NewPlayer, Ping, RefreshGames, SelectTile {
 
     /**
      * @return true if the message it's correct, otherwise it will return false
