@@ -72,7 +72,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
                 this.joinGame(data.getPlayerNickname(), data.getPlayerColor(), data.getGameID(), uuid);
             }
             case Ping ignored -> {
-                // this.ping(uuid);
+                this.ping(uuid);
             }
             case SelectTile data -> {
                 this.selectTile(data.getPlayerNickname(), data.getI(), data.getJ(), uuid);
@@ -124,5 +124,13 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         } catch (Exception e) {
             client.reportError(new ErrorAnswer(e.getMessage()));
         }
+    }
+
+
+    // ========== PING METHOD ========== //
+    private void ping(UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        this.controller.clientPing(client);
     }
 }

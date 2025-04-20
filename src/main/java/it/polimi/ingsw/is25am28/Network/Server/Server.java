@@ -13,6 +13,9 @@ import it.polimi.ingsw.is25am28.Network.Socket.Server.TCPServer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 
@@ -36,11 +39,16 @@ public class Server {
     // This map stores the id of the game with its instance
     private final Map<Integer, GameInstance> gameInstances;
 
-    // This map stores the players nickname and their network connection
+    // This map stores the players nickname and their network connection (nickname --> virtualView)
     private final Map<String, VirtualView> connectedClients;
+    // This map will store the virtualView of each client with the pingHelper utility data
+    private final Map<VirtualView, PingHelper> viewToPingHelper;
 
     // This map stores the client nickname with the associated game
     private final Map<String, Integer> clientToGame;
+
+    // Ping scheduler thread that will check for client disconnections
+    private final ScheduledExecutorService pingScheduler;
 
     public Server() throws Exception {
         // Create the RMIServer and the TCPServer
@@ -50,11 +58,15 @@ public class Server {
         this.gameInstances = new HashMap<>();
         this.connectedClients = new HashMap<>();
         this.clientToGame = new HashMap<>();
+        this.viewToPingHelper = new HashMap<>();
+        this.pingScheduler = new ScheduledThreadPoolExecutor(1);
+
+        // Starts to check for client disconnections
+        this.checkClientsConnection();
     }
 
     public static void main(String[] args) throws Exception {
         Server server = new Server();
-
     }
 
     /**
@@ -117,20 +129,27 @@ public class Server {
     public void createNewGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers, VirtualView clientView) throws Exception {
         synchronized (this.gameInstances) {
             if (this.connectedClients.containsKey(playerNickname)) {
+                ServerLogger.error("ROUTER", "The selected nickname is already being used");
                 throw new Exception("The selected nickname is already being used");
             }
 
             // Create the new game --> it will be already be configured
             int gameID = this.gameInstances.size();
+            ServerLogger.info("ROUTER", String.valueOf(gameID), "New game has been created");
             this.gameInstances.put(gameID, new GameInstance(playerNickname, playerColor, gameLevel, totalPlayers, clientView));
             this.clientToGame.put(playerNickname, gameID);
 
-            ServerLogger.info("ROUTER", );
+            ServerLogger.info("ROUTER", String.valueOf(gameID), "Added " + playerNickname + " to the game");
         }
 
         // Add the client to the connectedClients Map
         synchronized (this.connectedClients) {
             this.connectedClients.put(playerNickname, clientView);
+        }
+
+        // Add the virtualView of the client with his pingHelper utility data
+        synchronized (this.viewToPingHelper) {
+            this.viewToPingHelper.put(clientView, new PingHelper(playerNickname));
         }
     }
 
@@ -140,17 +159,24 @@ public class Server {
     public void joinGame(String playerNickname, PlayerColor playerColor, int gameID, VirtualView clientView) throws Exception {
         synchronized (this.gameInstances) {
             if (this.connectedClients.containsKey(playerNickname)) {
+                ServerLogger.error("ROUTER", "The selected nickname is already being used");
                 throw new Exception("The selected nickname is already being used");
             }
 
             GameInstance game = this.gameInstances.get(gameID);
             game.addNewPlayer(playerNickname, playerColor, clientView);
             this.clientToGame.put(playerNickname, gameID);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), "Added " + playerNickname + " to the game");
         }
 
         // Add the client to the connectedClients Map
         synchronized (this.connectedClients) {
             this.connectedClients.put(playerNickname, clientView);
+        }
+
+        // Add the virtualView of the client with his pingHelper utility data
+        synchronized (this.viewToPingHelper) {
+            this.viewToPingHelper.put(clientView, new PingHelper(playerNickname));
         }
     }
 
@@ -161,6 +187,7 @@ public class Server {
             GameInstance game = this.gameInstances.get(gameID);
 
             game.selectTile(playerNickname, i, j);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " selected the (" + i + "," + j + ") tile");
         }
     }
 
@@ -171,6 +198,7 @@ public class Server {
             GameInstance game = this.gameInstances.get(gameID);
 
             game.deselectTile(playerNickname, i, j);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " deselected the (" + i + "," + j + ") tile");
         }
     }
 
@@ -179,4 +207,52 @@ public class Server {
 
     // TODO: Implements the ping utility methods --> we will only have one thread pinging the clients
     //  and one thread checking the ping data results
+    // ========== PING METHOD ========== //
+
+    /**
+     * Method invoked by the client when they send a successful ping to the server
+     * */
+    public void clientPing(VirtualView clientView) throws Exception {
+        synchronized (this.viewToPingHelper) {
+            PingHelper pingHelper = viewToPingHelper.get(clientView);
+            if (pingHelper != null) {
+                pingHelper.resetPings();
+            }
+        }
+    }
+
+    private void checkClientsConnection() {
+        this.pingScheduler.scheduleAtFixedRate(() -> {
+            synchronized (this.viewToPingHelper) {
+                for (Map.Entry<VirtualView, PingHelper> entry : this.viewToPingHelper.entrySet()) {
+                    PingHelper pingHelper = entry.getValue();
+
+                    // If the player is connected evaluate the controls
+                    if (pingHelper.isConnected()) {
+                        pingHelper.incrementPing();
+
+                        // Check if the client is disconnected
+                        if (pingHelper.getFailedPings() > 3) {
+                            // Get the game id
+                            int gameID;
+                            synchronized (this.clientToGame) {
+                                gameID = this.clientToGame.get(pingHelper.getNickname());
+                            }
+                            // Get the actual game
+                            GameInstance game;
+                            synchronized (this.gameInstances) {
+                                game = this.gameInstances.get(gameID);
+                            }
+
+                            if (game != null) {
+                                pingHelper.setConnected(false);
+                                // TODO: game.setPlayerDisconnection(pingHelper.getNickname());
+                                ServerLogger.warn("ROUTER", String.valueOf(gameID), "Client " + pingHelper.getNickname() + " has been disconnected");
+                            }
+                        }
+                    }
+                }
+            }
+        }, 5000, 5000, TimeUnit.MILLISECONDS);
+    }
 }

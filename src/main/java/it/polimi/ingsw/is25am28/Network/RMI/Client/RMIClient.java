@@ -20,6 +20,8 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
@@ -29,6 +31,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
     private final ExecutorService inputThread;
     private final ExecutorService updateThread;
+    private final ScheduledExecutorService pingScheduler;
 
     private final UUID uuid;
 
@@ -67,9 +70,12 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
         this.inputThread = Executors.newSingleThreadExecutor();
         this.updateThread = Executors.newSingleThreadExecutor();
+        this.pingScheduler = Executors.newSingleThreadScheduledExecutor();
 
         this.run();
-        this.startPing();
+
+        // Method used by the client to ping the server
+        this.pingServer();
     }
 
     private VirtualServerRMI lookUpForServer(String ipAddress, int port, String serverName) {
@@ -100,24 +106,16 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
     /**
      * This method will ping every 5 seconds the server
      * */
-    private void startPing() throws Exception, RemoteException {
-        new Thread(() -> {
-            while (true) {
-                queueHandler.enqueue(() -> {
-                    try {
-                        this.server.sendMessage(new Ping(), this.uuid);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
+    private void pingServer() {
+        this.pingScheduler.scheduleAtFixedRate(() -> {
+            queueHandler.enqueue(() -> {
                 try {
-                    Thread.sleep(5000);
-                } catch (InterruptedException e) {
+                    this.server.sendMessage(new Ping(), this.uuid);
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            }
-        }).start();
+            });
+        }, 5000, 5000, TimeUnit.MILLISECONDS);
     }
 
     /**

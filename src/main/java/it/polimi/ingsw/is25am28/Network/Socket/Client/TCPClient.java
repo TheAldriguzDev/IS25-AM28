@@ -10,6 +10,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
+import it.polimi.ingsw.is25am28.Network.Messages.Ping;
 import it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket;
 
 import java.io.*;
@@ -17,6 +18,8 @@ import java.net.Socket;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
 public class TCPClient implements VirtualViewSocket {
@@ -33,6 +36,7 @@ public class TCPClient implements VirtualViewSocket {
 
     private final ExecutorService inputThread;
     private final ExecutorService updateThread;
+    private final ScheduledExecutorService pingScheduler;
 
     /**
      * Constructor used to create the TCPClient and starts it
@@ -60,9 +64,11 @@ public class TCPClient implements VirtualViewSocket {
 
         this.inputThread = Executors.newSingleThreadExecutor();
         this.updateThread = Executors.newSingleThreadExecutor();
+        this.pingScheduler = Executors.newSingleThreadScheduledExecutor();
 
         // Run the client TCPClient
         this.run();
+        this.pingServer();
     }
 
     /**
@@ -104,7 +110,18 @@ public class TCPClient implements VirtualViewSocket {
         this.output.sendMessage(message); // This will invoke the SocketServerHandler
     }
 
-
+    /**
+     * This method will ping every 5 seconds the server
+     * */
+    private void pingServer() {
+        this.pingScheduler.scheduleAtFixedRate(() -> {
+            try {
+                this.output.sendMessage(new Ping());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }, 5000, 5000, TimeUnit.MILLISECONDS);
+    }
 
     // TODO: This methods are always the same --> Maybe it could be useful to also have a middleware that handles all
     //  this identical methods --> we avoid duplicated code

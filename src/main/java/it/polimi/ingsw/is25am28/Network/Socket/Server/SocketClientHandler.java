@@ -75,6 +75,9 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case DeselectTile data -> {
                     this.deselectTile(data.getPlayerNickname(), data.getI(), data.getJ());
                 }
+                case Ping ignored -> {
+                    this.ping();
+                }
                 default -> {
                     throw new Exception("The given Message is not supported");
                 }
@@ -116,6 +119,10 @@ public class SocketClientHandler implements VirtualViewSocket {
         } catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }
+    }
+
+    private void ping() throws Exception {
+        this.controller.clientPing(this);
     }
 
     // TODO: WE NEED TO IMPLEMENT THE CONTROLLER INTERFACE TO EXPOSE ALL THE METHODS
