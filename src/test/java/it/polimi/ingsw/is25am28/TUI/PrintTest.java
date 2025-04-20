@@ -1867,18 +1867,7 @@ public class PrintTest {
         plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░░ ┌─╯", ANSIColors.RED));
         plasmaShotWidget.appendString(PrintUtils.addColor("  ╰──────╯  ", ANSIColors.RED));
 
-
-
-
-
-
-
-
-
         plasmaShotWidget.printWidget();
-
-
-
     }
 
     @Test
@@ -1926,9 +1915,9 @@ public class PrintTest {
 
         // No timestamps + testing removal of old console logs when new messages arrive
         console.disableTimestamps();
-        console.appendString("This is a filler msg w/o timestamp");
+        console.appendString("This is a filler msg w/o timestamp").printWidget();
         console.appendString("Testing old log removal").printWidget();
         console.appendString("Testing old log removal of multiple lines when adding long messages").printWidget();
-        console.appendString("TestColorUnicodeBetweenLines........." + ANSIColors.RED + "a" + ANSIColors.BLUE + "b" + ANSIColors.RESET).printWidget();
+        console.appendString("TestColorUnicodeBetweenLines............." + ANSIColors.RED + "a" + ANSIColors.BLUE + "b" + ANSIColors.RESET).printWidget();
     }
 }

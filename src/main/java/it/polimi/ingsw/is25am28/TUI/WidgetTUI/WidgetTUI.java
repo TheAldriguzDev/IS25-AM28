@@ -1029,7 +1029,8 @@ public class WidgetTUI {
 
             for (int i = 1; i < screenLen; i++) {
                 String line = this.screen.get(i);
-                unwrappedScreen.add(line.substring(1, this.width - 1));
+                // unwrappedScreen.add(line.substring(1, this.width - 1));
+                unwrappedScreen.add(line.substring(1, line.length() - 1));
             }
 
             // Setting the new screen
