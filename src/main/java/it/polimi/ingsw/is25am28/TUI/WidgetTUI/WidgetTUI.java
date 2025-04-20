@@ -15,7 +15,7 @@ public class WidgetTUI {
     protected int height;
     protected int width;
     protected int borderCount;
-    protected String widgetId;
+    // protected String widgetId;
     // protected WidgetTUI parent;
 
     static {
@@ -90,7 +90,7 @@ public class WidgetTUI {
         this.height = 0;
         this.width = 0;
         this.borderCount = 0;
-        this.widgetId = "DEFAULT_ID";
+        // this.widgetId = "DEFAULT_ID";
         // this.parent = null;
     }
 
@@ -99,7 +99,7 @@ public class WidgetTUI {
         // this.components = null;
         this.setScreen(screen);
         this.borderCount = 0;
-        this.widgetId = "DEFAULT_ID";
+        // this.widgetId = "DEFAULT_ID";
         // this.parent = null;
     }
 
@@ -618,21 +618,21 @@ public class WidgetTUI {
 //        return this.components;
 //    }
 
-    /**
-     * @param widgetId The ID to give to this widget
-     */
-    public void setWidgetId(String widgetId) {
-        if (widgetId != null && !widgetId.isEmpty()) {
-            this.widgetId = widgetId;
-        }
-    }
+//    /**
+//     * @param widgetId The ID to give to this widget
+//     */
+//    public void setWidgetId(String widgetId) {
+//        if (widgetId != null && !widgetId.isEmpty()) {
+//            this.widgetId = widgetId;
+//        }
+//    }
 
-    /**
-     * @return This widget's ID
-     */
-    public String getWidgetId() {
-        return this.widgetId;
-    }
+//    /**
+//     * @return This widget's ID
+//     */
+//    public String getWidgetId() {
+//        return this.widgetId;
+//    }
 
     /**
      * @param height The height to set this widget to. If the given height is smaller

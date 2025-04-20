@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.Board;
 
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+
 import java.util.ArrayList;
 
 public class BoardTestFlight extends Board {
@@ -25,5 +27,10 @@ public class BoardTestFlight extends Board {
         }
 
         this.setInitialCells(initialCells);
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }

@@ -15,6 +15,7 @@ import it.polimi.ingsw.is25am28.Model.EventCards.AbandonedShip;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +38,7 @@ class GameModelTest {
     }
 
     @Test
-    public void test_game_model_valid_complete_flow() throws JsonProcessingException {
+    public void test_game_model_valid_complete_flow() throws JsonProcessingException, SelectedConcurrencyException, ShipPopulationFailException, FixNotRequiredError {
         // ========================================
         // NEW GAME HAS BEEN CREATED
         // ========================================
@@ -104,7 +105,7 @@ class GameModelTest {
         // Check if the output of the match is about the waiting for players state
         json = mapper.writeValueAsString(state);
 
-        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\",\"BLUE\",\"YELLOW\"],\"usedNicknames\":[\"Player 1\"],\"lobbyTotalSpot\":4,\"availableSpots\":3,\"stateName\":\"WaitPlayersState\"}";
+        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\",\"BLUE\",\"YELLOW\"],\"usedNicknames\":{\"Player 1\":\"RED\"},\"lobbyTotalSpot\":4,\"availableSpots\":3,\"stateName\":\"WaitPlayersState\"}";
         assertEquals(expectedState, json);
 
         // 3.1 Test invalid newPlayerInput
@@ -125,14 +126,14 @@ class GameModelTest {
         assertEquals(1, states.size());
 
         json = mapper.writeValueAsString(states.getFirst());
-        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\",\"BLUE\"],\"usedNicknames\":[\"Player 2\",\"Player 1\"],\"lobbyTotalSpot\":4,\"availableSpots\":2,\"stateName\":\"WaitPlayersState\"}";
+        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\",\"BLUE\"],\"usedNicknames\":{\"Player 2\":\"YELLOW\",\"Player 1\":\"RED\"},\"lobbyTotalSpot\":4,\"availableSpots\":2,\"stateName\":\"WaitPlayersState\"}";
         assertEquals(expectedState, json);
 
         states = model.addNewPlayer("Player 3", PlayerColor.BLUE);
         assertEquals(1, states.size());
 
         json = mapper.writeValueAsString(states.getFirst());
-        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\"],\"usedNicknames\":[\"Player 3\",\"Player 2\",\"Player 1\"],\"lobbyTotalSpot\":4,\"availableSpots\":1,\"stateName\":\"WaitPlayersState\"}";
+        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\"],\"usedNicknames\":{\"Player 3\":\"BLUE\",\"Player 2\":\"YELLOW\",\"Player 1\":\"RED\"},\"lobbyTotalSpot\":4,\"availableSpots\":1,\"stateName\":\"WaitPlayersState\"}";
         assertEquals(expectedState, json);
 
         states = model.addNewPlayer("Player 4", PlayerColor.GREEN);

@@ -1,6 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.Board;
 
-import it.polimi.ingsw.is25am28.Player.Player;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;

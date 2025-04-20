@@ -1,20 +1,21 @@
 package it.polimi.ingsw.is25am28.TUI;
 
-import it.polimi.ingsw.is25am28.Board.Board;
-import it.polimi.ingsw.is25am28.Board.BoardLevel2;
-import it.polimi.ingsw.is25am28.Components.*;
-import it.polimi.ingsw.is25am28.Items.Item;
-import it.polimi.ingsw.is25am28.Items.ItemColor;
-import it.polimi.ingsw.is25am28.Lifeform.Lifeform;
-import it.polimi.ingsw.is25am28.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Player.Player;
-import it.polimi.ingsw.is25am28.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.Ship.Ship;
+import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
+import it.polimi.ingsw.is25am28.Model.Components.*;
+import it.polimi.ingsw.is25am28.Model.Items.Item;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
+import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.ConsoleWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +25,7 @@ import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.*;
 
-import static it.polimi.ingsw.is25am28.Connector.THREE_PIPES;
+import static it.polimi.ingsw.is25am28.Model.Connector.THREE_PIPES;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -1907,5 +1908,27 @@ public class PrintTest {
 
         small_downwards_plasmaShotWidget.setWidth(20).setHeight(20).centerWidgetScreen().wrapWidgetWithBorder().printWidget();
     }
-}
 
+    @Test
+    void consoleWidgetTest() {
+        // Width and height taken from the TUI_mockup
+        ConsoleWidgetTUI console = new ConsoleWidgetTUI(6, 40);
+
+        // No timestamps + testing forced newline break
+        console.wrapWidgetWithBorder().printWidget();
+        console.appendString("This fits").printWidget();
+        console.appendString("This should still fit the max width").printWidget();
+
+        // Yes timestamps + testing forced newline break
+        console.enableTimestamps();
+        console.appendString("Hey").printWidget();
+        console.appendString("This shouldn't fit, mainly due to the timestamp").printWidget();
+
+        // No timestamps + testing removal of old console logs when new messages arrive
+        console.disableTimestamps();
+        console.appendString("This is a filler msg w/o timestamp");
+        console.appendString("Testing old log removal").printWidget();
+        console.appendString("Testing old log removal of multiple lines when adding long messages").printWidget();
+        console.appendString("TestColorUnicodeBetweenLines........." + ANSIColors.RED + "a" + ANSIColors.BLUE + "b" + ANSIColors.RESET).printWidget();
+    }
+}
