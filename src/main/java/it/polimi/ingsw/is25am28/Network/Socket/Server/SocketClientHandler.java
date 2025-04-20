@@ -6,10 +6,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
-import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
-import it.polimi.ingsw.is25am28.Network.Messages.Message;
-import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
-import it.polimi.ingsw.is25am28.Network.Messages.SelectTile;
+import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
@@ -75,6 +72,9 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case SelectTile data -> {
                     this.selectTile(data.getPlayerNickname(), data.getI(), data.getJ());
                 }
+                case DeselectTile data -> {
+                    this.deselectTile(data.getPlayerNickname(), data.getI(), data.getJ());
+                }
                 default -> {
                     throw new Exception("The given Message is not supported");
                 }
@@ -105,6 +105,14 @@ public class SocketClientHandler implements VirtualViewSocket {
     public void selectTile(String playerNickname, int i, int j) throws Exception {
         try {
             this.controller.selectTile(playerNickname, i, j);
+        } catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void deselectTile(String playerNickname, int i, int j) throws Exception {
+        try {
+            this.controller.deselectTile(playerNickname, i, j);
         } catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }

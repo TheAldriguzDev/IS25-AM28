@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Network.Socket.Server;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
+import it.polimi.ingsw.is25am28.Network.Server.ServerLogger;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -30,7 +31,8 @@ public class TCPServer {
         this.gameController = controller;
         this.clients = new ArrayList<>();
 
-        System.out.println("Server socket listening on port: " + port);
+        ServerLogger.info("SERVER SOCKET", "Server socket listening on port: " + port);
+        //System.out.println("Server socket listening on port: " + port);
 
         new Thread(() -> {
             try {
@@ -47,7 +49,7 @@ public class TCPServer {
     private void runServer() throws IOException {
         Socket clientSocket = null;
         while ((clientSocket = listenSocket.accept()) != null) {
-            System.out.println("New socket client connected");
+            ServerLogger.info("SERVER SOCKET", "New client connected");
 
             InputStreamReader socketInputReader = new InputStreamReader(clientSocket.getInputStream());
             OutputStreamWriter socketOutputWriter = new OutputStreamWriter(clientSocket.getOutputStream());

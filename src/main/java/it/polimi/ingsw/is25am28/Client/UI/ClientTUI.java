@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
+import it.polimi.ingsw.is25am28.Network.Messages.DeselectTile;
 import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 import it.polimi.ingsw.is25am28.Network.Messages.SelectTile;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class ClientTUI implements ClientUI {
@@ -348,35 +351,37 @@ public class ClientTUI implements ClientUI {
         // Build the list of available games
         List<String> options = getShipConstructionBaseOptions(reservedComponents);
 
-        // Display the options
-        for (int i = 0; i < options.size(); i++) {
-            System.out.println((i + 1) + ". " + options.get(i));
-        }
-
-        int choice = -1;
-        do {
-            System.out.print("Choose an option: ");
-            String line = this.scanner.readLine().trim();
-            try {
-                choice = Integer.parseInt(line);
-                if (choice < 1 || choice > options.size()) {
-                    System.out.println("Invalid choice: please select a number between 1 and " + options.size() + ".");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input: please enter a number.");
+        synchronized (this.ioLock) {
+            // Display the options
+            for (int i = 0; i < options.size(); i++) {
+                System.out.println((i + 1) + ". " + options.get(i));
             }
-        } while (choice < 1 || choice > options.size());
 
-        // Evaluate the correct command
-        if (choice <= reservedComponents.size()) {
-            ClientComponent reservedComp = reservedComponents.get(choice - 1);
-            this.selectReservedComponent(reservedComp);
+            int choice = -1;
+            do {
+                System.out.print("Choose an option: ");
+                String line = this.scanner.readLine().trim();
+                try {
+                    choice = Integer.parseInt(line);
+                    if (choice < 1 || choice > options.size()) {
+                        System.out.println("Invalid choice: please select a number between 1 and " + options.size() + ".");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input: please enter a number.");
+                }
+            } while (choice < 1 || choice > options.size());
 
-        } else if (choice == reservedComponents.size() + 1) {
-            this.selectNewTile();
-            // TODO: Invoke the method to handle the selected comp --> flag that does not comes from reserved comp --> can be deselected and can be reserved
-        } else if (choice == reservedComponents.size() + 2) {
-            // TODO: Invoke the show deck
+            // Evaluate the correct command
+            if (choice <= reservedComponents.size()) {
+                ClientComponent reservedComp = reservedComponents.get(choice - 1);
+                this.selectReservedComponent(reservedComp);
+
+            } else if (choice == reservedComponents.size() + 1) {
+                this.selectNewTile();
+                // TODO: Invoke the method to handle the selected comp --> flag that does not comes from reserved comp --> can be deselected and can be reserved
+            } else if (choice == reservedComponents.size() + 2) {
+                // TODO: Invoke the show deck
+            }
         }
     }
 
@@ -477,7 +482,7 @@ public class ClientTUI implements ClientUI {
                     // If the selection was successful we jump to the method that handles the operations
                     try {
                         this.handleSelectedTile(this.model.getState().getConstructionShipComponents().get(finalIdx));
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 },
@@ -498,10 +503,109 @@ public class ClientTUI implements ClientUI {
     }
 
     /**
-     * Method used to handle the selected component by the client
+     * Method used to handle the selected component by the client. We can:
+     * 1. Rotate the component
+     * 2. Place the component in the ship
+     * 3. Reserve the component
+     * 4. Deselect the component
      * */
-    private void handleSelectedTile(ClientComponent selectedComponent) throws IOException {
-        System.out.println("Perfect, we can handle the selected tile! HURRAAAAA");
+    private void handleSelectedTile(ClientComponent selectedComponent) throws Exception {
+        String input;
+        int selectedCommand = -1, x = -1, y = -1;;
+
+        List<String> options = new ArrayList<>();
+        options.add("Rotate (right)");
+        options.add("Rotate (left)");
+        options.add("Place at (x, y) (e.g. 4 x y)");
+        options.add("Deselect");
+        if (this.model.getState().getReservedComponents().size() < 2) {
+            options.add("Reserve");
+        }
+
+        for (int i = 0; i < options.size(); i++) {
+            System.out.println(i + 1 + ". " + options.get(i));
+        }
+
+        do {
+            System.out.print("Select an action: ");
+            input = this.scanner.readLine().trim();
+
+            String[] tokens = input.split("\\s+");
+
+            try {
+                 selectedCommand = Integer.parseInt(tokens[0]);
+                 if (selectedCommand < 1 || selectedCommand > options.size()) {
+                     System.out.println("Invalid command: the given command is not valid.");
+                 }
+            } catch (NumberFormatException _) {
+                System.out.println("Invalid command: the given command is not a number.");
+            }
+
+            if (selectedCommand == 5) {
+                if (tokens.length != 3) {
+                    System.out.println("Invalid input. Usage: 4 x y");
+                    continue;
+                }
+                try {
+                    x = Integer.parseInt(tokens[1]);
+                    y = Integer.parseInt(tokens[2]);
+                } catch (NumberFormatException e) {
+                    System.out.println("Invalid input. x and y must be numbers");
+                }
+            }
+        } while (selectedCommand < 1 || selectedCommand > options.size());
+
+        switch (selectedCommand) {
+            // Rotate right
+            case 1 -> {
+                selectedComponent.rotateRight();
+                this.handleSelectedTile(selectedComponent);
+            }
+            // Rotate left
+            case 2 -> {
+                selectedComponent.rotateLeft();
+                this.handleSelectedTile(selectedComponent);
+            }
+            // Place tile
+            case 3 -> {
+                this.model.getState().placeTile(selectedComponent, x, y);
+            }
+            // Deselect the tile
+            case 4 -> {
+                this.currCommand = new CommandCTX(
+                        "deselectTile",
+                        () -> {
+                            // Once we have deselected the tile we can return to the shipConstruction menu
+                            try {
+                                this.displayShipConstructionComponents();
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        },
+                        () -> {
+                            // If an error occurred we re-execute the command
+                            try {
+                                this.handleSelectedTile(selectedComponent);
+                            } catch (Exception e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                );
+
+                int id = selectedComponent.getID();
+                int construction_i = id / 19;
+                int construction_j = id % 19;
+
+                this.client.sendMessage(new DeselectTile(this.playerNickname, construction_i, construction_j));
+            }
+            // Reserve the tile
+            case 5 -> {
+                this.model.getState().reserveTile(selectedComponent);
+            }
+            default -> {
+                System.out.println("Invalid input: please select a valid command.");
+            }
+        }
     }
 
 

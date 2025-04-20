@@ -35,6 +35,13 @@ public class ClientState {
     }
 
     /**
+     * Command used by the player when he wants to reserve a Tile to build his Ship
+     * */
+    public void reserveTile(ClientComponent component) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'reserveTile' is not supported in the " + this + " state");
+    }
+
+    /**
      * Command used by the player when he wants to place a Tile to build his Ship
      * */
     public void placeTile(ClientComponent component, int i, int j) throws UnsupportedOperationException {

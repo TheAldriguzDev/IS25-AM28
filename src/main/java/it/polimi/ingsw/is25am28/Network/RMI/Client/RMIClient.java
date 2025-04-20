@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Network.RMI.Client;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -19,11 +20,14 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
     private VirtualServerRMI server;
     private final ViewUpdater viewUpdater;
     private final Queue queueHandler;
+
+    private final ExecutorService inputThread;
     private final ExecutorService updateThread;
 
     private final UUID uuid;
@@ -61,7 +65,8 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         this.queueHandler = new Queue();
         new Thread(queueHandler).start();
 
-        this.updateThread = Executors.newFixedThreadPool(8);
+        this.inputThread = Executors.newSingleThreadExecutor();
+        this.updateThread = Executors.newSingleThreadExecutor();
 
         this.run();
         this.startPing();
@@ -144,33 +149,41 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
     @Override
     public void updateState(Answer answer) throws Exception {
-        // Try to commit the command execution to the client
+        // Commit the executed command --> could trigger some input so we execute it in the input thread
         if (answer.getPlayerNickname() != null) {
-            viewUpdater.commitCommand(answer.getPlayerNickname());
-        }
-
-        // Update all the clients with the first state (response to the executed command)
-        if (answer.getState() != null) {
-            this.updateThread.submit(() -> {
+            inputThread.submit(() -> {
                 try {
-                    answer.getState().accept(viewUpdater);
+                    viewUpdater.commitCommand(answer.getPlayerNickname());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             });
         }
 
-        // Update all the clients with the secondo state (new game state)
-        if (answer.getNextState() != null) {
-            this.updateThread.submit(() -> {
+        // Lambda function to handle the states
+        Consumer<StateDTO> handleState = state -> {
+            if (state == null) return;
+
+            Runnable task = () -> {
                 try {
-                    answer.getNextState().accept(viewUpdater);
+                    state.accept(viewUpdater);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            });
-        }
+            };
+
+            // TODO: Add in the state a boolean: couldRequireInput --> In this way we can switch much easier
+            if (state instanceof ConstructionComponentDTO) {
+                updateThread.submit(task);
+            } else {
+                inputThread.submit(task);
+            }
+        };
+
+        handleState.accept(answer.getState());
+        handleState.accept(answer.getNextState());
     }
+
 
     @Override
     public void reportError(ErrorAnswer error) throws RemoteException {

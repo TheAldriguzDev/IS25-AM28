@@ -120,6 +120,7 @@ public class GameInstance {
     }
 
     public void selectTile(String playerNickname, int i, int j) throws Exception {
+        System.out.println("Selecting a tile");
         ConstructionComponentDTO state = this.controller.selectTile(playerNickname, i, j);
 
         Answer answer = new Answer()
@@ -127,6 +128,19 @@ public class GameInstance {
                 .setState(state);
 
         this.broadCastUpdate(answer);
+        System.out.println("Tile selected sent to clients");
+    }
+
+    public void deselectTile(String playerNickname, int i, int j) throws Exception {
+        System.out.println("Deselecting a tile");
+        ConstructionComponentDTO state = this.controller.deselectTile(playerNickname, i, j);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(playerNickname)
+                .setState(state);
+
+        this.broadCastUpdate(answer);
+        System.out.println("Tile deselected sent to clients");
     }
 
     private void broadCastUpdate(Answer answer) throws Exception {

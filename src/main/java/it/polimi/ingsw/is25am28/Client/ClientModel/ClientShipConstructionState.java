@@ -128,6 +128,16 @@ public class ClientShipConstructionState extends ClientState {
     }
 
     /**
+     * Command used by the player when he wants to reserve a Tile to build his Ship
+     * */
+    @Override
+    public void reserveTile(ClientComponent component) throws UnsupportedOperationException {
+        if (this.reservedComponents.size() < 2) {
+            this.reservedComponents.add(component);
+        }
+    }
+
+    /**
      * Command used by the player when he wants to place a Tile to build his Ship
      * */
     @Override
