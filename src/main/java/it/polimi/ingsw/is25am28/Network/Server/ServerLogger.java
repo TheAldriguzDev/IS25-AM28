@@ -15,8 +15,8 @@ public class ServerLogger {
     }
 
     private static String format(String level, String color, String tag, String gameId, String message) {
-        String gameLabel = gameId != null ? BLUE + "[Game " + gameId + "]" + RESET + " " : "";
-        return String.format("%s %s%-5s%s %s%-10s%s %s%s",
+        String gameLabel = (gameId != null) ? BLUE + "[Game " + gameId + "]" + RESET + " " : "";
+        return String.format("%s %s%s%s %s%s%s %s%s",
                 timestamp(),
                 color, level, RESET,
                 MAGENTA, tag, RESET,

@@ -27,7 +27,9 @@ public class SocketServerHandler implements VirtualServerSocket {
     @Override
     public void sendMessage(Message message) throws Exception {
         String json = mapper.writeValueAsString(message);
-        output.println(json);
-        output.flush();
+        synchronized (this.output) {
+            output.println(json);
+            output.flush();
+        }
     }
 }
