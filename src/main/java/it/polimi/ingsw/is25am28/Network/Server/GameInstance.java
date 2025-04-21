@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Network.Server;
 
 import it.polimi.ingsw.is25am28.Controller.GameController;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -20,9 +21,6 @@ public class GameInstance {
 
     private final Map<String, VirtualView> connectedClients;
 
-    // This flag will indicate if the game has been configured by the leader and is open to new clients connections
-    private boolean hasBeenConfigured;
-
     // This flag will indicate if the game accept new clients connection
     private boolean canBeJoined;
 
@@ -33,7 +31,6 @@ public class GameInstance {
     public GameInstance(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers, VirtualView virtualClient) throws Exception {
         this.controller = new GameController();
         this.connectedClients = new HashMap<>();
-        this.hasBeenConfigured = false;
         this.canBeJoined = false;
         this.totalPlayers = totalPlayers;
         this.level = gameLevel;
@@ -86,7 +83,6 @@ public class GameInstance {
         }
 
         // Set the game as accepting new connection
-        this.hasBeenConfigured = true;
         this.canBeJoined = true;
         this.currentPlayers++;
     }
@@ -120,7 +116,6 @@ public class GameInstance {
     }
 
     public void selectTile(String playerNickname, int i, int j) throws Exception {
-        System.out.println("Selecting a tile");
         ConstructionComponentDTO state = this.controller.selectTile(playerNickname, i, j);
 
         Answer answer = new Answer()
@@ -128,11 +123,9 @@ public class GameInstance {
                 .setState(state);
 
         this.broadCastUpdate(answer);
-        System.out.println("Tile selected sent to clients");
     }
 
     public void deselectTile(String playerNickname, int i, int j) throws Exception {
-        System.out.println("Deselecting a tile");
         ConstructionComponentDTO state = this.controller.deselectTile(playerNickname, i, j);
 
         Answer answer = new Answer()
@@ -140,9 +133,11 @@ public class GameInstance {
                 .setState(state);
 
         this.broadCastUpdate(answer);
-        System.out.println("Tile deselected sent to clients");
     }
 
+    /**
+     * Method used to broadcast any server Answer to the clients
+     * */
     private void broadCastUpdate(Answer answer) throws Exception {
         synchronized (this.connectedClients) {
             // Broadcast the state to the clients
@@ -150,5 +145,32 @@ public class GameInstance {
                 client.updateState(answer);
             }
         }
+    }
+
+    // ========== PING UTILITY ========== //
+    /**
+     * @return the nicknames list of the disconnected client for this gameInstance
+     * */
+    public List<String> getOfflineClients() {
+        return this.controller.getDisconnectedPlayers();
+    }
+
+    public void disconnectClient(String playerNickname) {
+        this.controller.disconnectClient(playerNickname);
+    }
+
+    public void reconnectClient(String playerNickname, VirtualView virtualClient) throws Exception {
+        // Update the client VirtualView
+        synchronized (this.connectedClients) {
+            this.connectedClients.put(playerNickname, virtualClient);
+        }
+
+        // Update the client with the state to resume the game
+        ReconnectDTO reconnectState = this.controller.reconnectClient(playerNickname);
+        Answer answer = new Answer()
+                .setPlayerNickname(playerNickname)
+                .setState(reconnectState);
+
+        virtualClient.updateState(answer);
     }
 }

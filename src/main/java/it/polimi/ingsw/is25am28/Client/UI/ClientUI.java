@@ -12,7 +12,7 @@ public interface ClientUI {
     public void setVirtualClient(VirtualView client);
 
     // TODO: Add more methods to display all the relevant information to play the game
-    void showLobbies(AvailableGamesDTO availableGames) throws Exception;
+    void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws Exception;
     void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers);
     void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception;
 

@@ -110,7 +110,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         this.pingScheduler.scheduleAtFixedRate(() -> {
             queueHandler.enqueue(() -> {
                 try {
-                    this.server.sendMessage(new Ping(), this.uuid);
+                    this.sendMessage(new Ping());
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -125,6 +125,9 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         queueHandler.enqueue(() -> {
             try {
                 server.sendMessage(message, this.uuid);
+            } catch (RemoteException e) {
+                System.out.println("\n[Server offline] The connection with the server has been lost");
+                System.exit(1);
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -181,7 +184,6 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         handleState.accept(answer.getState());
         handleState.accept(answer.getNextState());
     }
-
 
     @Override
     public void reportError(ErrorAnswer error) throws RemoteException {

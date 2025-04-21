@@ -80,9 +80,25 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             case DeselectTile data -> {
                 this.deselectTile(data.getPlayerNickname(), data.getI(), data.getJ(), uuid);
             }
+            case Reconnect data -> {
+                this.reconnectClient(data.getNickname(), uuid);
+            }
+            case RefreshGames ignored -> {
+                this.refreshGames(uuid);
+            }
             default -> {
                 throw new Exception("The given Message is not supported");
             }
+        }
+    }
+
+    public void refreshGames(UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.onClientConnection(client);
+        } catch (Exception e) {
+            client.reportError(new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -126,11 +142,20 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
-
     // ========== PING METHOD ========== //
     private void ping(UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
         this.controller.clientPing(client);
+    }
+
+    private void reconnectClient(String nickname, UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.reconnectClient(nickname, client);
+        } catch (Exception e) {
+            client.reportError(new ErrorAnswer(e.getMessage()));
+        }
     }
 }

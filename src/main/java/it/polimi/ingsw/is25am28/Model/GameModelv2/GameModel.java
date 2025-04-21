@@ -2,7 +2,9 @@ package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
@@ -87,18 +89,33 @@ public class GameModel {
     /**
      * @return true if a disconnected player returns in the game
      * */
-    public boolean reconnectClient(String nickname) {
+    public ReconnectDTO reconnectClient(String nickname) throws Exception {
         if (!this.getDisconnectedPlayers().contains(nickname)) {
-            return false;
+            throw new IllegalArgumentException("The given nickname does not exist in the disconnected players");
         }
 
         Player p = this.players.get(nickname);
         if (p == null) {
-            return false;
+            throw new IllegalArgumentException("The given nickname does not exist");
         }
 
         p.setConnected(true);
-        return true;
+
+        // Get the current information that the client needs to resume the game
+        ReconnectDTO state = new ReconnectDTO();
+
+        // Board information
+        state.setBoard(this.board.generateState());
+
+        // Player information
+        List<PlayerJSON> playerInfo = new ArrayList<>();
+        for (Player player : this.players.values()) {
+            playerInfo.add(PlayerJSON.fromPlayer(player, true));
+        }
+        state.setPlayers(playerInfo);
+        state.setCurrentState(this.currentState.generateState());
+
+        return state;
     }
 
     /**

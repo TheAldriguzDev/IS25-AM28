@@ -7,11 +7,12 @@ import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.Cell;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BoardJSON {
+public class BoardJSON implements Serializable {
     private int size;
     private int level;
     private List<String> playersNickname;
