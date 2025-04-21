@@ -3,10 +3,11 @@ package it.polimi.ingsw.is25am28.Model.ActionJSON;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class PlayerJSON {
+public class PlayerJSON implements Serializable {
     private String nickname;
     private String color;
     private int cursor;
@@ -47,10 +48,10 @@ public class PlayerJSON {
 
     /**
      * PlayerJSON builder that creates the data that needs to be sent to the client.
-     * If the withBoard is true the player ship will be added, otherwise the PlayerJSON will include only the player information.
+     * If the withShip is true the player ship will be added, otherwise the PlayerJSON will include only the player information.
      */
-    public static PlayerJSON fromPlayer(Player player, boolean withBoard) {
-        if (withBoard) {
+    public static PlayerJSON fromPlayer(Player player, boolean withShip) {
+        if (withShip) {
             return new PlayerJSON(
                     player.getNickname(),
                     player.getColor(),

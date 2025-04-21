@@ -7,7 +7,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class ActionJSON {
+import java.io.Serializable;
+
+public class ActionJSON implements Serializable {
     protected String playerNickname;
 
     /**

@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Controller;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.DisconnectedPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
@@ -25,26 +26,44 @@ public class GameController {
         this.model = new GameModel();
     }
 
+    /**
+     * @return the current gameModel state
+     * */
     public StateDTO getCurrentState() {
         synchronized (this.model) {
             return this.model.getCurrentState().generateState();
         }
     }
 
+    /**
+     * @return the available colors in the game
+     * */
     public List<String> getAvailableColors() {
         synchronized (this.model) {
             return this.model.getAvailableColors();
         }
     }
 
-    public boolean disconnectClient(String nickname) {
+    /**
+     * @return the nickname list of the disconnected players
+     * */
+    public List<String> getDisconnectedPlayers() {
         synchronized (this.model) {
-            return this.model.disconnectClient(nickname);
+            return this.model.getDisconnectedPlayers();
+        }
+    }
+
+    /**
+     * Marks the given player as not connected
+     * */
+    public void disconnectClient(String nickname) {
+        synchronized (this.model) {
+            this.model.disconnectClient(nickname);
         }
     }
 
     // TODO: THIS METHOD SHOULD RETURN THE STATE THAT THE CLIENT NEEDS TO CONFIGURE THE GAME SINCE HE LEFT IT
-    public boolean reconnectClient(String nickname) {
+    public ReconnectDTO reconnectClient(String nickname) throws Exception {
         synchronized (this.model) {
             return this.model.reconnectClient(nickname);
         }

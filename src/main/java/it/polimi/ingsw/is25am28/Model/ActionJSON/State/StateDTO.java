@@ -14,13 +14,14 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = AvailableGamesDTO.class, name = "AvailableGamesDTO"),
         @JsonSubTypes.Type(value = CreateGameStateDTO.class, name = "CreateGameStateDTO"),
         @JsonSubTypes.Type(value = WaitPlayersStateDTO.class, name = "WaitPlayersStateDTO"),
+        @JsonSubTypes.Type(value = ReconnectDTO.class, name = "ReconnectDTO"),
         @JsonSubTypes.Type(value = WaitingForGameConfigurationDTO.class, name = "WaitingForGameConfigurationDTO"),
         @JsonSubTypes.Type(value = ShipConstructionDTO.class, name = "ShipConstructionDTO"),
         @JsonSubTypes.Type(value = ConstructionComponentDTO.class, name = "ConstructionComponentDTO")
 })
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public sealed class StateDTO implements Serializable permits AvailableGamesDTO, CardRoundDTO, CreateGameStateDTO, DisconnectedPlayerDTO, EndGameDTO, FixShipDTO, PopulateShipDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateDTO, WaitingForGameConfigurationDTO {
+public sealed class StateDTO implements Serializable permits AvailableGamesDTO, CardRoundDTO, CreateGameStateDTO, DisconnectedPlayerDTO, EndGameDTO, FixShipDTO, PopulateShipDTO, ReconnectDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateDTO, WaitingForGameConfigurationDTO {
     @Serial
     private static final long serialVersionUID = 1L;
 

@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
+import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.ClientStatus;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.RMIServer;
 import it.polimi.ingsw.is25am28.Network.Socket.Server.TCPServer;
@@ -122,6 +123,10 @@ public class Server {
         }
     }
 
+    public void refreshGames() {
+
+    }
+
     /**
      * This method will be used to create a new game when a Player request it.
      * It also the playerNickname and information to the
@@ -210,6 +215,21 @@ public class Server {
     // ========== PING METHOD ========== //
 
     /**
+     * @return the list of offline clients from all the games
+     * */
+    private List<String> getOfflineClients() {
+        List<String> offlineClients = new ArrayList<>();
+        synchronized (this.gameInstances) {
+            offlineClients = this.gameInstances.values()
+                    .stream()
+                    .flatMap(g -> g.getOfflineClients().stream())
+                    .toList();
+        }
+
+        return offlineClients;
+    }
+
+    /**
      * Method invoked by the client when they send a successful ping to the server
      * */
     public void clientPing(VirtualView clientView) throws Exception {
@@ -221,6 +241,10 @@ public class Server {
         }
     }
 
+    /**
+     * This method will check every 5 seconds if the clients are still connected. Otherwise, it will disconnect them from
+     * the game where they are playing.
+     * */
     private void checkClientsConnection() {
         this.pingScheduler.scheduleAtFixedRate(() -> {
             synchronized (this.viewToPingHelper) {
@@ -244,9 +268,10 @@ public class Server {
                                 game = this.gameInstances.get(gameID);
                             }
 
+                            // Disconnect the player from the game
                             if (game != null) {
                                 pingHelper.setConnected(false);
-                                // TODO: game.setPlayerDisconnection(pingHelper.getNickname());
+                                game.disconnectClient(pingHelper.getNickname());
                                 ServerLogger.warn("ROUTER", String.valueOf(gameID), "Client " + pingHelper.getNickname() + " has been disconnected");
                             }
                         }
@@ -254,5 +279,55 @@ public class Server {
                 }
             }
         }, 5000, 5000, TimeUnit.MILLISECONDS);
+    }
+
+    /**
+     * This method is used to reconnect the given client to his game. It will also modify all the needed values to continue the game
+     * */
+    public void reconnectClient(String nickname, VirtualView clientView) throws Exception {
+        if (!this.getOfflineClients().contains(nickname)) {
+            clientView.reportError(new ErrorAnswer("The given nickname does not appear in the disconnected clients list"));
+            return;
+        }
+
+        int gameID = -1;
+        synchronized (this.clientToGame) {
+            gameID = this.clientToGame.get(nickname);
+        }
+
+        if (gameID == -1) {
+            clientView.reportError(new ErrorAnswer("The given nickname is not playing any game at the moment"));
+            return;
+        }
+
+        GameInstance game;
+        synchronized (this.gameInstances) {
+            game = this.gameInstances.get(gameID);
+        }
+
+        if (game == null) {
+            clientView.reportError(new ErrorAnswer("No games were found!"));
+            return;
+        }
+
+        game.reconnectClient(nickname, clientView);
+
+        // Get the old VirtualView to update the values
+        VirtualView oldView = null;
+
+        // Update the connectedClient virtualView
+        synchronized (this.connectedClients) {
+            oldView = this.connectedClients.get(nickname);
+            this.connectedClients.put(nickname, clientView);
+        }
+
+        // Update the clientView associated with it's pingHelper
+        synchronized (this.viewToPingHelper) {
+            PingHelper pingHelper = viewToPingHelper.get(oldView);
+            pingHelper.resetPings(); // Reset the pings
+
+            this.viewToPingHelper.remove(oldView);
+            this.viewToPingHelper.put(clientView, pingHelper);
+        }
     }
 }

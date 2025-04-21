@@ -85,15 +85,12 @@ public class TCPClient implements VirtualViewSocket {
     }
 
     /**
-     * This method will listen for Serialized Messages from the server
-     *
-     * We need to implement the deserialization protocol
+     * This method will listen for server messages to the client
      * */
-    private void runVirtualServer() throws Exception {
-        String line; // This will contain a JSON serialized object
+    private void runVirtualServer() throws IOException {
+        String line;
 
         while ((line = this.input.readLine()) != null) {
-
             Answer state = mapper.readValue(line, Answer.class);
 
             if (Objects.requireNonNull(state) instanceof ErrorAnswer error) {
@@ -102,6 +99,10 @@ public class TCPClient implements VirtualViewSocket {
                 this.updateState(state);
             }
         }
+
+        // Once the loop has been exited means that the server is offline
+        System.out.println("\n[Server offline] The connection with the server has been lost");
+        System.exit(1);
     }
 
     // This will be the method used in the communication
@@ -116,7 +117,7 @@ public class TCPClient implements VirtualViewSocket {
     private void pingServer() {
         this.pingScheduler.scheduleAtFixedRate(() -> {
             try {
-                this.output.sendMessage(new Ping());
+                this.sendMessage(new Ping());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }

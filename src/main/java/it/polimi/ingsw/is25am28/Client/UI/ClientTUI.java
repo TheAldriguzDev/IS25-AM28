@@ -8,10 +8,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipCons
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
-import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
-import it.polimi.ingsw.is25am28.Network.Messages.DeselectTile;
-import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
-import it.polimi.ingsw.is25am28.Network.Messages.SelectTile;
+import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.io.BufferedReader;
@@ -66,6 +63,8 @@ public class ClientTUI implements ClientUI {
 
         // Extra options
         options.add("Create a new game");
+
+        // If there is at least one game show the reconnect option
         options.add("Reconnect to an existing game");
         options.add("Refresh available games");
         return options;
@@ -118,9 +117,11 @@ public class ClientTUI implements ClientUI {
      * 4. Refresh the lobbies
      * */
     @Override
-    public void showLobbies(AvailableGamesDTO state) throws Exception {
+    public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
         synchronized (ioLock) {
-            printTitle();
+            if (isFirstAccess) {
+                printTitle();
+            }
 
             List<GameInfoDTO> availableGames = state.getAvailableGames();
 
@@ -153,9 +154,9 @@ public class ClientTUI implements ClientUI {
             } else if (choice == availableGames.size() + 1) {
                 this.createGameInput();
             } else if (choice == availableGames.size() + 2) {
-                // TODO: Invoke the reconnecting to game
+                this.reconnectToGameInput(state, state.getUsedNicknames());
             } else {
-                // TODO: Invoke the refresh games command
+                this.refreshGames();
             }
         }
     }
@@ -166,13 +167,11 @@ public class ClientTUI implements ClientUI {
     private void joinGameInput(GameInfoDTO game, List<String> usedNicknames) throws Exception {
         System.out.println("Joining the game with id " + game.getId() + " ...");
 
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
         // Ask for nickname
         String playerName;
         do {
             System.out.print("Enter your name: ");
-            playerName = reader.readLine().trim();
+            playerName = this.scanner.readLine().trim();
             if (playerName.isEmpty() || usedNicknames.contains(playerName)) {
                 System.out.println("Invalid input: name already used or empty.");
             }
@@ -183,7 +182,7 @@ public class ClientTUI implements ClientUI {
         PlayerColor playerColor = null;
         do {
             System.out.print("Choose a color " + game.getAvailableColors() + ": ");
-            String colorInput = reader.readLine().trim();
+            String colorInput = this.scanner.readLine().trim();
             if (colorInput.isEmpty()) {
                 System.out.println("Invalid input: color cannot be empty.");
                 continue;
@@ -307,9 +306,30 @@ public class ClientTUI implements ClientUI {
         this.client.sendMessage(new ConfigGame(playerName, playerColor, gameLevel, totalPlayers));
     }
 
-    // TODO
-    private void reconnectToGameInput() {
+    private void reconnectToGameInput(AvailableGamesDTO availableGames, List<String> usedNicknames) throws Exception {
+        if (usedNicknames.isEmpty()) {
+            this.showLobbies(availableGames, false);
+            return;
+        }
 
+        System.out.println("Trying to reconnect you to the game...");
+
+        // Ask for nickname
+        String playerName;
+        do {
+            System.out.print("Enter your name: ");
+            playerName = this.scanner.readLine().trim();
+            if (playerName.isEmpty() && !usedNicknames.contains(playerName)) {
+                System.out.println("Invalid input: name cannot be empty or different from an existing one.");
+            }
+        } while (playerName.isEmpty() && !usedNicknames.contains(playerName));
+        this.playerNickname = playerName;
+
+        this.client.sendMessage(new Reconnect(playerName));
+    }
+
+    private void refreshGames() throws Exception {
+        this.client.sendMessage(new RefreshGames());
     }
 
     @Override
@@ -620,7 +640,11 @@ public class ClientTUI implements ClientUI {
     public void showError(ErrorAnswer error) {
         synchronized (this.ioLock) {
             clearTerminal();
-            this.currCommand.handleError(error.getError());
+            if (this.currCommand != null) {
+                this.currCommand.handleError(error.getError());
+            } else {
+                System.out.println(error.getError());
+            }
         }
     }
 }

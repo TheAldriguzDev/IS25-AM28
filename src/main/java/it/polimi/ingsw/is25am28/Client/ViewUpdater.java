@@ -20,6 +20,8 @@ public class ViewUpdater implements StateVisitor {
     private final ClientUI ui;
     private final ClientModel model;
 
+    private boolean isFirstAccess = true;
+
     // TODO: In this class we need to update the model before invoking the ui show methods
 
     public ViewUpdater(ClientUI ui, ClientModel model) {
@@ -35,7 +37,11 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(AvailableGamesDTO state) throws Exception {
-        this.ui.showLobbies(state);
+        this.ui.showLobbies(state, isFirstAccess);
+
+        if (this.isFirstAccess) {
+            this.isFirstAccess = false;
+        }
     }
 
     // TODO: Remove this method since it's not used anymore
@@ -53,6 +59,13 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(WaitPlayersStateDTO state) throws Exception {
         this.ui.showWaitingForPlayers(state);
+    }
+
+    @Override
+    public void visit(ReconnectDTO state) throws Exception {
+        System.out.println("Reconnect player to the game lessgooooo");
+        // TODO: --> Recreate the board | Set the players with their information and resume the state
+        state.getCurrentState().accept(this);
     }
 
     @Override

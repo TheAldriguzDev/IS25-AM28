@@ -13,6 +13,7 @@ public interface StateVisitor {
     void visit (CreateGameStateDTO state) throws Exception;
     void visit (WaitingForGameConfigurationDTO state);
     void visit (WaitPlayersStateDTO state) throws Exception;
+    void visit (ReconnectDTO state) throws Exception;
     void visit (ShipConstructionDTO state) throws Exception;
     void visit (ConstructionComponentDTO state) throws Exception;
     void visit (PlayerEndedShipDTO state) throws Exception;

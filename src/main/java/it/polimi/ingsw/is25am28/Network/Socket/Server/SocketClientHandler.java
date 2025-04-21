@@ -78,10 +78,24 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case Ping ignored -> {
                     this.ping();
                 }
+                case Reconnect data -> {
+                    this.reconnectClient(data.getNickname());
+                }
+                case RefreshGames ignored -> {
+                    this.refreshGames();
+                }
                 default -> {
                     throw new Exception("The given Message is not supported");
                 }
             }
+        }
+    }
+
+    public void refreshGames() throws Exception {
+        try {
+            this.controller.onClientConnection(this);
+        } catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -123,6 +137,14 @@ public class SocketClientHandler implements VirtualViewSocket {
 
     private void ping() throws Exception {
         this.controller.clientPing(this);
+    }
+
+    private void reconnectClient(String nickname) throws Exception {
+        try {
+            this.controller.reconnectClient(nickname, this);
+        } catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
     }
 
     // TODO: WE NEED TO IMPLEMENT THE CONTROLLER INTERFACE TO EXPOSE ALL THE METHODS
