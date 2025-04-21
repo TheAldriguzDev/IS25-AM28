@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 
@@ -93,5 +94,15 @@ public class Epidemy extends EventCard {
         }
 
         return cardState;
+    }
+
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON cardState) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }

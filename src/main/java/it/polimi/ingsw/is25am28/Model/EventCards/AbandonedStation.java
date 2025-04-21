@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -28,8 +29,6 @@ public class AbandonedStation extends EventCard {
         this.movementStep = movementStep;
         this.givenItems = givenItems;
         this.resourceBank = resourceBank;
-        this.hasBeenUsedByPlayer = false;
-        this.playersThatCanUseTheCard = new ArrayList<>();
     }
 
     /**
@@ -186,6 +185,16 @@ public class AbandonedStation extends EventCard {
         }
 
         return cardState;
+    }
+
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON cardState) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }
 

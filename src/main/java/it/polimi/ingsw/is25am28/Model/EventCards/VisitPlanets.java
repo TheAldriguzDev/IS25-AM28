@@ -12,6 +12,7 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 
@@ -329,5 +330,14 @@ public class VisitPlanets extends EventCard {
         cardState.setAvailablePlanets(availablePlanets);
 
         return cardState;
+    }
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON cardState) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }

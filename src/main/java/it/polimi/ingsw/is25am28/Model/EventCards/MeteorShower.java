@@ -14,12 +14,12 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.InsufficientEnergyException;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import javafx.util.Pair;
 
 import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Model.Connector.ZERO_PIPES;
-
 
 public class MeteorShower extends EventCard {
     private final List<Meteor> meteorSequence;
@@ -43,15 +43,15 @@ public class MeteorShower extends EventCard {
         try {
             for (List<Integer> meteorDescriptor : meteorSequence) {
                 this.meteorSequence.add(
-                        new Meteor(
-                                meteorDescriptor.get(0),  // Meteor size
-                                meteorDescriptor.get(1) // Meteor orientation
-                        )
+                    new Meteor(
+                        meteorDescriptor.get(0),    // Meteor size
+                        meteorDescriptor.get(1)     // Meteor orientation
+                    )
                 );
             }
         }
         catch (Exception e) {
-            throw new IllegalArgumentException("ERROR: JSON parsing error in MeteorShower constructor " + e.getMessage() );
+            throw new IllegalArgumentException("ERROR: JSON parsing error in MeteorShower constructor -> " + e.getMessage() );
         }
     }
 
@@ -291,13 +291,38 @@ public class MeteorShower extends EventCard {
                                                 switch (inboundDirection) {
                                                     // Case 1 - Cannon must be aligned to the COLUMN from which the currMeteor is coming from
                                                     //          in order to be able to shoot it (if it was enabled)
-                                                    case 0, 2 -> {
+                                                    case 0 -> {
+                                                        // The front cannons can only destroy the meteor if it is directly on the same column
                                                         threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
                                                     }
+                                                    case 2 -> {
+                                                        // For higher levels (>2), a meteor COMING FROM THE BOTTOM can also be destroyed
+                                                        // if it's traveling on a COLUMN adjacent to the one where this cannon is places
+                                                        if (this.getBoard().getLevel() > 2) {
+                                                            threatDestroyed =
+                                                                    (cannon.getPosition()[1] == this.diceThrowResult - 2)
+                                                                             || (cannon.getPosition()[1] == this.diceThrowResult - 1)
+                                                                             || (cannon.getPosition()[1] == this.diceThrowResult);
+                                                        }
+                                                        else {
+                                                            threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
+                                                        }
+                                                    }
+
                                                     // Case 2 - Cannon must be aligned to the ROW from which the currMeteor is coming from
                                                     //          in order to be able to shoot it (if it was enabled)
                                                     case 1, 3 -> {
-                                                        threatDestroyed = (cannon.getPosition()[0] == this.diceThrowResult - 1);
+                                                        // For higher levels (>1), a meteor COMING FROM THE SIDES can also be destroyed
+                                                        // if it's traveling on a ROW adjacent to the one where this cannon is places
+                                                        if (this.getBoard().getLevel() > 1) {
+                                                            threatDestroyed =
+                                                                    (cannon.getPosition()[0] == this.diceThrowResult - 2)
+                                                                             || (cannon.getPosition()[0] == this.diceThrowResult - 1)
+                                                                             || (cannon.getPosition()[0] == this.diceThrowResult);
+                                                        }
+                                                        else {
+                                                            threatDestroyed = (cannon.getPosition()[0] == this.diceThrowResult - 1);
+                                                        }
                                                     }
                                                     default -> throw new IllegalStateException("ERROR: inboundDirection must be between 0 and 3 (extremes included)");
                                                 }
@@ -313,13 +338,38 @@ public class MeteorShower extends EventCard {
                                         switch (inboundDirection) {
                                             // Case 1 - Cannon must be aligned to the COLUMN from which the currMeteor is coming from
                                             //          in order to be able to shoot it (if it was enabled)
-                                            case 0, 2 -> {
+                                            case 0 -> {
+                                                // The front cannons can only destroy the meteor if it is directly on the same column
                                                 threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
                                             }
+                                            case 2 -> {
+                                                // For higher levels (>2), a meteor COMING FROM THE BOTTOM can also be destroyed
+                                                // if it's traveling on a COLUMN adjacent to the one where this cannon is places
+                                                if (this.getBoard().getLevel() > 2) {
+                                                    threatDestroyed =
+                                                            (cannon.getPosition()[1] == this.diceThrowResult - 2)
+                                                                    || (cannon.getPosition()[1] == this.diceThrowResult - 1)
+                                                                    || (cannon.getPosition()[1] == this.diceThrowResult);
+                                                }
+                                                else {
+                                                    threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
+                                                }
+                                            }
+
                                             // Case 2 - Cannon must be aligned to the ROW from which the currMeteor is coming from
                                             //          in order to be able to shoot it (if it was enabled)
                                             case 1, 3 -> {
-                                                threatDestroyed = (cannon.getPosition()[0] == this.diceThrowResult - 1);
+                                                // For higher levels (>1), a meteor COMING FROM THE SIDES can also be destroyed
+                                                // if it's traveling on a ROW adjacent to the one where this cannon is places
+                                                if (this.getBoard().getLevel() > 1) {
+                                                    threatDestroyed =
+                                                            (cannon.getPosition()[0] == this.diceThrowResult - 2)
+                                                                    || (cannon.getPosition()[0] == this.diceThrowResult - 1)
+                                                                    || (cannon.getPosition()[0] == this.diceThrowResult);
+                                                }
+                                                else {
+                                                    threatDestroyed = (cannon.getPosition()[0] == this.diceThrowResult - 1);
+                                                }
                                             }
                                             default -> throw new IllegalStateException("ERROR: inboundDirection must be between 0 and 3 (extremes included)");
                                         }
@@ -388,12 +438,22 @@ public class MeteorShower extends EventCard {
         cardState.setDiceThrowResult(this.diceThrowResult);
 
         cardState.setCurrMeteorDescriptor(
-                new Pair<Integer, Integer>(
-                        this.meteorSequence.get(this.currMeteorIndex).getSize(),
-                        this.meteorSequence.get(this.currMeteorIndex).getOrientation()
-                )
+            new Pair<Integer, Integer>(
+                this.meteorSequence.get(this.currMeteorIndex).getSize(),
+                this.meteorSequence.get(this.currMeteorIndex).getOrientation()
+            )
         );
 
         return cardState;
+    }
+
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON cardState) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }

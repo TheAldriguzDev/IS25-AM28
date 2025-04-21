@@ -16,6 +16,8 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+
 import javafx.util.Pair;
 
 import java.util.*;
@@ -705,6 +707,16 @@ public class WarZone extends EventCard {
         cardState.setPlayersEnginePower(playersEnginePowerMap);
 
         return cardState;
+    }
+
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON cardState) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 
     //Only for testing purposes

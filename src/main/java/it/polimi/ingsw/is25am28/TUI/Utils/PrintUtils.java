@@ -1,0 +1,31 @@
+package it.polimi.ingsw.is25am28.TUI.Utils;
+
+public class PrintUtils {
+    public static final String SPACE = " ";
+
+    /**
+     * Applies a REGEX to remove UNICODE strings, needed in cases where we want
+     * to calculate the real string length
+     *
+     * @param string A string to filter
+     * @return The given string with all UNICODE strings removed
+     */
+    public static String removeUnicodeFromString(String string) {
+        String regex = "\\\\u[0-9A-Fa-f]{4}|\\u001B\\[[0-9;]*[mK]";
+
+        if (string != null) {
+            return string.replaceAll(regex, "");
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string The string to color
+     * @param unicodeColorString The color to add to the string
+     * @return The colored string
+     */
+    public static String addColor(String string, String unicodeColorString) {
+        return unicodeColorString + string + ANSIColors.RESET;
+    }
+}

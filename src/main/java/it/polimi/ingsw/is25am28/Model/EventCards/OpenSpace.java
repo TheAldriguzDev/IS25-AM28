@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Model.Components.Engine;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -157,5 +158,15 @@ public class OpenSpace extends EventCard {
         }
 
         return cardState;
+    }
+
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON cardState) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }

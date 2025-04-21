@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -81,5 +82,14 @@ public class Stardust extends EventCard {
             stardustStateJSON.setCardIsUsable(!hasFinished());
         }
         return stardustStateJSON;
+    }
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON cardState) {
+        return null;
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }

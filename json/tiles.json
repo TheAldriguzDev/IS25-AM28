@@ -15,6 +15,26 @@
                   "connectors": [
                         0,
                         0,
+                        1,
+                        0
+                  ],
+                  "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web102.jpg"
+            },
+            {
+                  "force": 1,
+                  "connectors": [
+                        0,
+                        0,
+                        2,
+                        0
+                  ],
+                  "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web103.jpg"
+            },
+            {
+                  "force": 1,
+                  "connectors": [
+                        0,
+                        0,
                         2,
                         0
                   ],
@@ -499,6 +519,17 @@
             },
             {
                   "capacity": 2,
+
+                  "connectors": [
+                        0,
+                        0,
+                        0,
+                        3
+                  ],
+                  "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web9.jpg"
+            },
+            {
+                  "capacity": 2,
                   "connectors": [
                         0,
                         3,
@@ -747,12 +778,32 @@
             {
                   "speed": 1,
                   "connectors": [
+                        0,
+                        3,
+                        0,
+                        0
+                  ],
+                  "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web72.jpg"
+            },
+            {
+                  "speed": 1,
+                  "connectors": [
                         1,
                         0,
                         0,
                         0
                   ],
                   "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web73.jpg"
+            },
+            {
+                  "speed": 1,
+                  "connectors": [
+                        1,
+                        0,
+                        0,
+                        0
+                  ],
+                  "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web74.jpg"
             },
             {
                   "speed": 1,
@@ -773,6 +824,16 @@
                         0
                   ],
                   "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web76.jpg"
+            },
+            {
+                  "speed": 1,
+                  "connectors": [
+                        2,
+                        0,
+                        0,
+                        0
+                  ],
+                  "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web77.jpg"
             },
             {
                   "speed": 1,
@@ -883,6 +944,16 @@
                         3
                   ],
                   "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web88.jpg"
+            },
+            {
+                  "speed": 1,
+                  "connectors": [
+                        0,
+                        0,
+                        0,
+                        3
+                  ],
+                  "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web89.jpg"
             },
             {
                   "speed": 1,
@@ -1039,6 +1110,17 @@
                         3
                   ],
                   "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web21.jpg"
+            },
+            {
+                  "capacity": 2,
+                  "special": false,
+                  "connectors": [
+                        0,
+                        0,
+                        0,
+                        3
+                  ],
+                  "path": "galaxy_trucker_imgs/tiles/GT-new_tiles_16_for web22.jpg"
             },
             {
                   "capacity": 2,

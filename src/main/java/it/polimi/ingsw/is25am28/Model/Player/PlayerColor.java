@@ -1,53 +1,53 @@
 package it.polimi.ingsw.is25am28.Model.Player;
 
-import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 
 public enum PlayerColor {
-    GREEN,
-    RED,
-    BLUE,
-    YELLOW;
+    GREEN(ANSIColors.GREEN),
+    RED(ANSIColors.RED),
+    BLUE(ANSIColors.BLUE),
+    YELLOW(ANSIColors.YELLOW);
 
-    public static PlayerColor fromInteger( int color ){
-        
-        if( color == GREEN.ordinal() ){
+    // Each player color contains the corresponding ANSI color string
+    private String colorString;
+
+    PlayerColor(String colorString) {
+        this.colorString = colorString;
+    }
+
+    public static PlayerColor fromInteger(int color) {
+        if (color == GREEN.ordinal()) {
             return GREEN;
-        } else if( color == RED.ordinal() ){
+        }
+        else if (color == RED.ordinal()) {
             return RED;
-        } else if( color == BLUE.ordinal() ){
+        }
+        else if (color == BLUE.ordinal()) {
             return BLUE;
-        } 
+        }
 
         return YELLOW;
     }
 
-    public static PlayerColor fromString(String color) {
-        return switch (color) {
-            case "RED" -> PlayerColor.RED;
-            case "YELLOW" -> PlayerColor.YELLOW;
-            case "GREEN" -> PlayerColor.GREEN;
-            case "BLUE" -> PlayerColor.BLUE;
-            default -> null;
-        };
-    }
-
     @Override
     public String toString() {
-        return switch (this) {
-            case GREEN -> "GREEN";
-            case RED -> "RED";
-            case BLUE -> "BLUE";
-            case YELLOW -> "YELLOW";
-        };
+        return this.name();
     }
 
     public String formatColor(String text) {
         return switch (this) {
-            case RED -> "\u001B[31m" + text + "\u001B[0m";
-            case GREEN -> "\u001B[32m" + text + "\u001B[0m";
-            case BLUE -> "\u001B[34m" + text + "\u001B[0m";
-            case YELLOW -> "\u001B[33m" + text + "\u001B[0m";
+            case RED -> PrintUtils.addColor(text, ANSIColors.RED);
+            case GREEN -> PrintUtils.addColor(text, ANSIColors.GREEN);
+            case BLUE -> PrintUtils.addColor(text, ANSIColors.BLUE);
+            case YELLOW -> PrintUtils.addColor(text, ANSIColors.YELLOW);
         };
     }
 
+    /**
+     * @return The corresponding ANSI color string of this player color
+     */
+    public String getColorString() {
+        return this.colorString;
+    }
 }

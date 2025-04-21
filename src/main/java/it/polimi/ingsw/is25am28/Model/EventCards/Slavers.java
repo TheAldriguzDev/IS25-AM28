@@ -9,8 +9,11 @@ import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -197,4 +200,32 @@ public class Slavers extends EventCard {
 
         return slaversStateJSON;
     }
+
+    @Override
+    public WidgetTUI generateWidget(CardStateJSON slaversState) {
+        WidgetTUI cardWidget = new WidgetTUI();
+        WidgetTUI cardInfoWidget = new WidgetTUI();
+
+        cardWidget.appendString("====" + slaversState.getCardName().toUpperCase() + "====");
+
+        if (this.firstRound) {
+            cardInfoWidget.appendString("Level: " + slaversState.getCardLevel());
+            cardInfoWidget.appendString("Given Credits: " + slaversState.getGivenCredits());
+            cardInfoWidget.appendString("Days: " + slaversState.getMovementSteps());
+            cardInfoWidget.appendString("Required Firepower: " + slaversState.getRequiredFirepower());
+            cardInfoWidget.appendString("Taken Crew: " + slaversState.getTakenCrew());
+        } else {
+            cardInfoWidget.appendString("Player: " + slaversState.getPlayerNickname() + " has to give up " + slaversState.getTakenCrew() + " crew members");
+        }
+        cardInfoWidget.wrapWidgetWithBorder();
+
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public WidgetTUI generateWidget() {
+        return null;
+    }
+
+
 }
