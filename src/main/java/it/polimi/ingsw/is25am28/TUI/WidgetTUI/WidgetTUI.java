@@ -339,24 +339,55 @@ public class WidgetTUI {
 //    }
 
     /**
-     * Adds the remaining spaces to the given screen so that all lines
+     * Adds the remaining spaces to the given widget's screen so that all lines
      * are of the same length as the longest one found inside it
      *
      * It's equivalent to performing wrapWithBorder and unwrapBorder right after
      */
     public static WidgetTUI fillScreenWithSpaces(WidgetTUI widget) {
-        String line;
-        int screenLen, maxWidth;
+        if (widget != null) {
+            String line;
+            int screenLen, maxWidth;
 
-        maxWidth = widget.getWidth();
-        screenLen = widget.getHeight();
+            maxWidth = widget.getWidth();
+            screenLen = widget.getHeight();
 
-        for (int i = 0; i < screenLen; i++) {
-            line = widget.getScreen().get(i);
-            widget.getScreen().set(i, line + SPACE.repeat(maxWidth - PrintUtils.removeUnicodeFromString(line).length()));
+            for (int i = 0; i < screenLen; i++) {
+                line = widget.getScreen().get(i);
+                widget.getScreen().set(i, line + SPACE.repeat(maxWidth - PrintUtils.removeUnicodeFromString(line).length()));
+            }
         }
 
         return widget;
+    }
+
+    /**
+     * Adds the remaining spaces to the given screen so that all lines
+     * are of the same length as the longest one found inside it
+     *
+     * It's equivalent to performing wrapWithBorder and unwrapBorder right after
+     */
+    public static List<String> fillScreenWithSpaces(List<String> screen) {
+        if (screen != null) {
+            String line;
+            int screenLen;
+            AtomicInteger maxWidth = new AtomicInteger(0);
+
+            screen.stream()
+                    .map(PrintUtils::removeUnicodeFromString)
+                    .mapToInt(String::length)
+                    .max()
+                    .ifPresent(maxWidth::set);
+
+            screenLen = screen.size();
+
+            for (int i = 0; i < screenLen; i++) {
+                line = screen.get(i);
+                screen.set(i, line + SPACE.repeat(maxWidth.get() - PrintUtils.removeUnicodeFromString(line).length()));
+            }
+        }
+
+        return screen;
     }
 
     /**

@@ -1,65 +1,72 @@
 package it.polimi.ingsw.is25am28.TUI;
 
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
+import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-public class TUI {
-    // TUI single components
-    private WidgetTUI shipGridWidget;
-    private WidgetTUI shipStatsWidget;
-    private WidgetTUI boardWidget;
-    private WidgetTUI cardWidget;
-    private WidgetTUI consoleWidget;
-    private WidgetTUI tui;
-    private InputWidgetTUI inputWidget;
+public abstract class TUI {
+    protected static final String UNKNOWN_COMMAND_ERROR = PrintUtils.addColor("ERROR: Selected command does not exist",ANSIColors.RED);
+    protected static final String DEFAULT_INPUT_PREFIX = "Select an option: ";
+
+    protected WidgetTUI tui;
+
+    protected final ClientModel model;
+    protected VirtualView client;
+    protected final Object ioLock;
+    protected CommandCTX currCommand;
+    protected String playerNickname;
 
     // Constructor
-    public TUI() {
-        // TODO: Init all the other widgets
-        //       !!! requires the client to be built first !!!
-        this.shipGridWidget = new WidgetTUI().wrapWidgetWithBorder();
-        this.shipStatsWidget = new WidgetTUI().wrapWidgetWithBorder();
-        this.boardWidget = new WidgetTUI().wrapWidgetWithBorder();
-        this.cardWidget = new WidgetTUI().wrapWidgetWithBorder();
-        this.consoleWidget = new WidgetTUI().wrapWidgetWithBorder();
-        this.inputWidget = new InputWidgetTUI();
-
-        // Composing the TUI for the first time
-        this.tui = this.composeTUI();
+    public TUI(ClientModel model) {
+        this.model = model;
+        this.ioLock = new Object();
     }
 
     /**
-     * Defines how the final TUI widget will result graphically
-     * through many composition steps.
-     *
-     * @return The final TUI widget, ready to print the TUI
-     *         (NOTE: not the inputWidget, only the TUI)
+     * Prints the name of the game
      */
-    public WidgetTUI composeTUI() {
-        this.tui = WidgetTUI.composeTwoWidgetsHorizontally(
-            WidgetTUI.fillScreenWithSpaces(
-                WidgetTUI.composeTwoWidgetsVertically(
-                    WidgetTUI.fillScreenWithSpaces(
-                        WidgetTUI.composeTwoWidgetsHorizontally(
-                            boardWidget.addPadding(0, 1, 0, 1),
-                            cardWidget.addPadding(0, 1, 0, 1)
-                        )
-                    ),
-                    WidgetTUI.fillScreenWithSpaces(
-                        WidgetTUI.composeTwoWidgetsHorizontally(
-                            consoleWidget.addPadding(0, 1, 0, 1),
-                            shipStatsWidget.addPadding(0, 1, 0, 1)
-                        )
-                    ).addPadding(1, 0, 0, 0)
-                )
-            ),
-            shipGridWidget
-        ).wrapWidgetWithBorder();
-
-        return tui;
+    protected static void printTitle() {
+        System.out.println("""
+         ██████╗  █████╗ ██╗      █████╗ ██╗  ██╗██╗   ██╗    ████████╗██████╗ ██╗   ██╗ ██████╗██╗  ██╗███████╗██████╗\s
+        ██╔════╝ ██╔══██╗██║     ██╔══██╗╚██╗██╔╝╚██╗ ██╔╝    ╚══██╔══╝██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗
+        ██║  ███╗███████║██║     ███████║ ╚███╔╝  ╚████╔╝        ██║   ██████╔╝██║   ██║██║     █████╔╝ █████╗  ██████╔╝
+        ██║   ██║██╔══██║██║     ██╔══██║ ██╔██╗   ╚██╔╝         ██║   ██╔══██╗██║   ██║██║     ██╔═██╗ ██╔══╝  ██╔══██╗
+        ╚██████╔╝██║  ██║███████╗██║  ██║██╔╝ ██╗   ██║          ██║   ██║  ██║╚██████╔╝╚██████╗██║  ██╗███████╗██║  ██║
+         ╚═════╝ ╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═╝  ╚═╝   ╚═╝          ╚═╝   ╚═╝  ╚═╝ ╚═════╝  ╚═════╝╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝\s
+        """);
     }
 
-    public void printTUI() {
+    /**
+     * Clears the terminal from previous input
+     */
+    protected static void clearTerminal() {
+        System.out.print("\033[H\033[2J");
+    }
 
+    /**
+     * Shows the current TUI to terminal
+     */
+    public abstract void showTUI();
+
+    /**
+     * Prints to terminal the current error and also
+     * runs the onError command
+     */
+    public void showError(ErrorAnswer error) {
+        synchronized (this.ioLock) {
+            TUI.clearTerminal();
+            this.currCommand.handleError(error.getError());
+        }
+    }
+
+    /**
+     * @param client The virtual client to set this to
+     */
+    public void setVirtualClient(VirtualView client) {
+        this.client = client;
     }
 }

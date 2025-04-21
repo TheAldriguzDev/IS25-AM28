@@ -9,8 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class ConsoleWidgetTUI extends WidgetTUI {
-    private static final String TIMESTAMP_FORMAT = "MMM dd, HH:mm:ss";
-    private static final String LINE_START_SYMBOL = ">" + PrintUtils.SPACE;
+    public static final String TIMESTAMP_FORMAT = "MMM dd, HH:mm:ss";
+    public static final String LINE_START_SYMBOL = ">" + PrintUtils.SPACE;
     private final int maxHeight;
     private final int maxWidth;
     private boolean areTimestampsEnabled;

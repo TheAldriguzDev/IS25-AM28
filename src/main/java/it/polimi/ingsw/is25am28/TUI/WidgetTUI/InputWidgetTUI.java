@@ -137,7 +137,7 @@ public class InputWidgetTUI extends WidgetTUI {
                 commandsColumns.add(
                     WidgetTUI.fillScreenWithSpaces(
                         WidgetTUI.composeWidgetsVertically(commandsToCompose)
-                    )
+                    ).addPadding(0, 1, 0, 1)
                 );
             }
 

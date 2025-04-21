@@ -1543,14 +1543,14 @@ public class PrintTest {
                 }
         );
 
-        command1.appendString("(" + command1.getCommandId() + ") command1").addPadding(0, 1, 0, 1);
-        command2.appendString("(" + command2.getCommandId() + ") command2").addPadding(0, 1, 0, 1);
-        command3.appendString("(" + command3.getCommandId() + ") command3").addPadding(0, 1, 0, 1);
-        command4.appendString("(" + command4.getCommandId() + ") command4").addPadding(0, 1, 0, 1);
-        command5.appendString("(" + command5.getCommandId() + ") command5").addPadding(0, 1, 0, 1);
-        command6.appendString("(" + command6.getCommandId() + ") command6").addPadding(0, 1, 0, 1);
-        command7.appendString("(" + command7.getCommandId() + ") command7").addPadding(0, 1, 0, 1);
-        command8.appendString("(" + command8.getCommandId() + ") command8").addPadding(0, 1, 0, 1);
+        command1.appendString("command1");
+        command2.appendString("command2");
+        command3.appendString("command3");
+        command4.appendString("command4");
+        command5.appendString("command5");
+        command6.appendString("command6");
+        command7.appendString("command7");
+        command8.appendString("command8");
 
         inputWidget.setColumnGroupingAmount(2);
 

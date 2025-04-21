@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent;
 
 import it.polimi.ingsw.is25am28.Model.Connector;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.Collections;
 import java.util.List;
@@ -92,7 +93,7 @@ public sealed abstract class ClientComponent permits ClientBattery, ClientCabin,
     /**
      * @return true if a component is flipped on the board. The player will be able to see the component data
      * */
-    protected boolean isFlipped() {
+    public boolean isFlipped() {
         return isFlipped;
     }
 
@@ -122,5 +123,9 @@ public sealed abstract class ClientComponent permits ClientBattery, ClientCabin,
 
     public int getID() {
         return this.id;
+    }
+
+    public WidgetTUI generateWidget() {
+        return null;
     }
 }
