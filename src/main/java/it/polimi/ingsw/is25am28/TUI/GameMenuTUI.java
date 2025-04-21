@@ -1,7 +1,10 @@
 package it.polimi.ingsw.is25am28.TUI;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
@@ -9,15 +12,15 @@ import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class GameMenuTUI extends TUI {
     // Testing
     public static void main(String[] args) {
-        GameMenuTUI gameMenuTUI = new GameMenuTUI();
+        GameMenuTUI gameMenuTUI = new GameMenuTUI(null);
 
         List<GameInfoDTO> availableGames = new ArrayList<>();
 
@@ -45,23 +48,31 @@ public class GameMenuTUI extends TUI {
         gameInfoDTO = new GameInfoDTO(2, 2, 4, 3, availableColors);
         availableGames.add(gameInfoDTO);
 
-        gameMenuTUI.setAvailableGames(availableGames);
-        gameMenuTUI.showTUI();
+        // Creating the DTO
+        AvailableGamesDTO availableGamesDTO = new AvailableGamesDTO();
+        availableGamesDTO.setAvailableGames(availableGames);
+
+        // Showing the GameMenuTUI to let the player interact
+        gameMenuTUI.showLobbies(availableGamesDTO);
     }
 
+    // Command grouping values for the input widgets below
     public static final int LOBBY_COMMANDS_PER_COLUMN = 1;
     public static final int AVAILABLE_GAMES_PER_COLUMN = 16;
 
-    private InputWidgetTUI menuCommandsWidget;
-    private InputWidgetTUI gameListInputWidget;
+    // All input widgets
+    // All input widgets
+    private final InputWidgetTUI menuCommandsWidget;
+    private final InputWidgetTUI gameListInputWidget;
+
+    // DTO containing the available games from which the player can choose from
+    private AvailableGamesDTO availableGamesDTO;
 
     private int selectedGameId = -1;
-    private List<GameInfoDTO> availableGames;
 
     // Constructor
-    public GameMenuTUI() {
-        // TODO:
-        super(null);
+    public GameMenuTUI(ClientModel model) {
+        super(model);
 
         // Initializing menuCommandsWidget
         this.menuCommandsWidget = new InputWidgetTUI();
@@ -90,30 +101,7 @@ public class GameMenuTUI extends TUI {
             // (1) - List available games
             menuCommand = new CommandWidgetTUI(
                 "l",
-                () -> {
-                    boolean existingCommandSelected;
-
-                    synchronized (this.ioLock) {
-                        do {
-                            System.out.println();
-                            System.out.println("Currently Available Games:");
-
-                            // First refresh all available games, then list them and
-                            // finally ask the user to select one of the available options
-                            this.updateGameListWidget();
-
-                            // Clearing the terminal before showing all the available games
-                            TUI.clearTerminal();
-
-                            existingCommandSelected = this.gameListInputWidget.selectCommand(DEFAULT_INPUT_PREFIX);
-
-                            if (!existingCommandSelected) {
-                                System.out.println(UNKNOWN_COMMAND_ERROR);
-                            }
-                        }
-                        while (!existingCommandSelected);
-                    }
-                }
+                this::getGameListCommand
             );
             menuCommand.appendString("List available games");
             this.menuCommandsWidget.addCommand(menuCommand);
@@ -140,30 +128,7 @@ public class GameMenuTUI extends TUI {
             // (3) - Reconnect to an existing game
             menuCommand = new CommandWidgetTUI(
                 "r",
-                () -> {
-                    boolean existingCommandSelected;
-
-                    synchronized (this.ioLock) {
-                        do {
-                            System.out.println();
-                            System.out.println("Currently Available Games:");
-
-                            // First refresh all available games, then list them and
-                            // finally ask the user to select one of the available options
-                            this.updateGameListWidget();
-
-                            // Clearing the terminal before showing all the available games
-                            TUI.clearTerminal();
-
-                            existingCommandSelected = this.gameListInputWidget.selectCommand(DEFAULT_INPUT_PREFIX);
-
-                            if (!existingCommandSelected) {
-                                System.out.println(UNKNOWN_COMMAND_ERROR);
-                            }
-                        }
-                        while (!existingCommandSelected);
-                    }
-                }
+                this::getGameListCommand
             );
             menuCommand.appendString("Reconnect to an existing game");
             this.menuCommandsWidget.addCommand(menuCommand);
@@ -190,18 +155,22 @@ public class GameMenuTUI extends TUI {
     private void updateGameListWidget() {
         CommandWidgetTUI gameListCommand;
 
+        // Resetting the game list input widget commands
+        if (this.gameListInputWidget.getCommandMap() != null) {
+            this.gameListInputWidget.getCommandMap().clear();
+        }
+
         // Setting the "go back to menu" command
-        gameListCommand = new CommandWidgetTUI("-1", this::getLobbyCommand);
+        gameListCommand = new CommandWidgetTUI("-1", this::getMenuCommand);
         gameListCommand.appendString("Go back to the menu");
         this.gameListInputWidget.addCommand(gameListCommand);
 
         // Setting all the other commands as all the currently available games
-        for (GameInfoDTO game : this.availableGames) {
+        for (GameInfoDTO game : this.availableGamesDTO.getAvailableGames()) {
             gameListCommand = new CommandWidgetTUI(
                 "" + game.getId(),
                 () -> {
                     this.selectedGameId = game.getId();
-
                     System.out.println("SELECTED: " + this.selectedGameId);
                 }
             );
@@ -213,87 +182,34 @@ public class GameMenuTUI extends TUI {
     }
 
     /**
-     * Sets the list of currently available games
-     */
-    public void setAvailableGames(List<GameInfoDTO> availableGames) {
-        this.availableGames = availableGames;
-    }
-
-    /**
      * Method used to ask for nickname, color, gameLevel and totalGamePlayer, and then it will create a new Game
      */
     private void createGameInput() throws Exception {
-        System.out.println("Creating a new game ...");
+        System.out.println("Creating a new game...");
 
-        // Use BufferedReader to avoid Scanner newline issues
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        // Ask the user for:
+        //  1) His nickname
+        //  2) His preferred color
+        //  3) The game difficulty level he wants to play at
+        //  4) The amount of players he wants to play with
 
-        // Ask for nickname
-        String playerName;
-        do {
-            System.out.print("Your name: ");
-            playerName = reader.readLine().trim();
-            if (playerName.isEmpty()) {
-                System.out.println("Invalid input: name cannot be empty.");
-            }
-        } while (playerName.isEmpty());
-        this.playerNickname = playerName;
+        // 1)
+        this.playerNickname = this.getPlayerChosenNickname();
+        // 2)
+        PlayerColor playerColor = this.getPlayerChosenColor();
+        // 3)
+        int gameLevel = this.getPlayerChosenLevel();
+        // 4)
+        int totalPlayers = this.getPlayerChosenTotalPlayers();
 
-        // Ask for color
-        PlayerColor playerColor = null;
-        do {
-            System.out.print("Choose a color (e.g., BLUE, GREEN, RED, YELLOW): ");
-            String colorInput = reader.readLine().trim();
-            if (colorInput.isEmpty()) {
-                System.out.println("Invalid input: color cannot be empty.");
-                continue;
-            }
-            try {
-                playerColor = PlayerColor.valueOf(colorInput.toUpperCase());
-            } catch (IllegalArgumentException e) {
-                System.out.println("Invalid input: unknown color.");
-            }
-        } while (playerColor == null);
-
-        // Ask for game level
-        int gameLevel = -1;
-        do {
-            System.out.print("Select game level (0 --> Test Flight, 2 = Level 2 Flight): ");
-            String line = reader.readLine().trim();
-            try {
-                gameLevel = Integer.parseInt(line);
-                if (gameLevel != 0 && gameLevel != 2) {
-                    System.out.println("Game level must be 0 or 2.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input: please enter a number.");
-            }
-        } while (gameLevel != 0 && gameLevel != 2);
-
-        // Ask for total number of players
-        int totalPlayers = -1;
-        do {
-            System.out.print("Enter total number of players (2 to 4): ");
-            String line = reader.readLine().trim();
-            try {
-                totalPlayers = Integer.parseInt(line);
-                if (totalPlayers < 2 || totalPlayers > 4) {
-                    System.out.println("Number of players must be between 2 and 4.");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input: please enter a number.");
-            }
-        } while (totalPlayers < 2 || totalPlayers > 4);
-
-        String finalPlayerName = playerName;
-        PlayerColor finalPlayerColor = playerColor;
-
+        // Creating the command context to handle the actions to
+        // take either onSuccess or onError, depending on the server's response
         this.currCommand = new CommandCTX(
             "createGame",
             () -> {
                 synchronized (this.model) {
-                    this.model.setNickname(finalPlayerName);
-                    this.model.setPlayerColor(finalPlayerColor);
+                    this.model.setNickname(this.playerNickname);
+                    this.model.setPlayerColor(playerColor);
                     this.currCommand = null;
                 }
             },
@@ -307,7 +223,9 @@ public class GameMenuTUI extends TUI {
             }
         );
 
-        this.client.sendMessage(new ConfigGame(playerName, playerColor, gameLevel, totalPlayers));
+        // Finally, sending the message to the server through
+        // the selected  virtual client
+        this.client.sendMessage(new ConfigGame(this.playerNickname, playerColor, gameLevel, totalPlayers));
     }
 
     // TODO: Wait that Matteo implements it
@@ -315,10 +233,109 @@ public class GameMenuTUI extends TUI {
 
     }
 
+
     /**
-     * Stays in the menu until a valid command was given
+     * @return The current player's chosen nickname
      */
-    public void getLobbyCommand() {
+    public String getPlayerChosenNickname() {
+        String playerNickname;
+
+        do {
+            System.out.print("Insert your nickname: ");
+            playerNickname = scanner.nextLine().trim();
+
+            if (playerNickname.isEmpty()) {
+                System.out.println(PrintUtils.addColor("ERROR: Name cannot be empty. Please insert a nickname", ANSIColors.RED));
+            }
+        }
+        while (playerNickname.isEmpty());
+
+        return playerNickname;
+    }
+
+    /**
+     * @return The current player's chosen color
+     */
+    public PlayerColor getPlayerChosenColor() {
+        PlayerColor playerColor = null;
+
+        do {
+            System.out.print("Choose a color (e.g.: BLUE, GREEN, RED, YELLOW): ");
+            String colorInput = scanner.nextLine().trim();
+
+            if (colorInput.isEmpty()) {
+                System.out.println(PrintUtils.addColor("ERROR: Color cannot be empty. Please insert a color", ANSIColors.RED));
+                continue;
+            }
+
+            try {
+                playerColor = PlayerColor.valueOf(colorInput.toUpperCase());
+            }
+            catch (IllegalArgumentException e) {
+                System.out.println(PrintUtils.addColor("ERROR: Unknown color. Please insert an available color", ANSIColors.RED));
+            }
+        }
+        while (playerColor == null);
+
+        return playerColor;
+    }
+
+    /**
+     * @return The current player's chosen difficulty level
+     */
+    public int getPlayerChosenLevel() {
+        int gameLevel = -1;
+
+        do {
+            System.out.print("Select game difficulty level: (0 -> Test flight, 2 -> Level 2 Flight): ");
+            String line = scanner.nextLine().trim();
+
+            try {
+                gameLevel = Integer.parseInt(line);
+
+                if (gameLevel != 0 && gameLevel != 2) {
+                    System.out.println(PrintUtils.addColor("ERROR: Game difficulty level must be 0 or 2.", ANSIColors.RED));
+                }
+            }
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please insert a number.", ANSIColors.RED));
+            }
+        }
+        while (gameLevel != 0 && gameLevel != 2);
+
+        return gameLevel;
+    }
+
+    /**
+     * @return The current player's chosen total players amount for a game
+     */
+    public int getPlayerChosenTotalPlayers() {
+        int totalPlayers = -1;
+
+        do {
+            System.out.print("Insert the total number of players (min=2, max=4): ");
+            String line = scanner.nextLine().trim();
+
+            try {
+                totalPlayers = Integer.parseInt(line);
+
+                if (totalPlayers < 2 || totalPlayers > 4) {
+                    System.out.println(PrintUtils.addColor("ERROR: Number of players must be between 2 and 4.", ANSIColors.RED));
+                }
+            }
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please enter a number", ANSIColors.RED));
+            }
+        }
+        while (totalPlayers < 2 || totalPlayers > 4);
+
+        return totalPlayers;
+    }
+
+    /**
+     * Stays in the menu widget until a valid command is given
+     */
+    public void getMenuCommand() {
         boolean existingCommandSelected;
 
         synchronized (this.ioLock) {
@@ -336,10 +353,79 @@ public class GameMenuTUI extends TUI {
         }
     }
 
+    /**
+     * Stays in the game list input widget until a valid command is given
+     */
+    public void getGameListCommand() {
+        boolean existingCommandSelected;
+
+        synchronized (this.ioLock) {
+            do {
+                System.out.println();
+                System.out.println("Currently Available Games:");
+
+                // Clearing the terminal before showing all the available games
+                TUI.clearTerminal();
+
+                existingCommandSelected = this.gameListInputWidget.selectCommand(DEFAULT_INPUT_PREFIX);
+
+                if (!existingCommandSelected) {
+                    System.out.println(UNKNOWN_COMMAND_ERROR);
+                }
+            }
+            while (!existingCommandSelected);
+        }
+    }
+
+    /**
+     * @param availableGamesDTO The DTO containing all currently available games that a player can choose from
+     */
     @Override
-    public void showTUI() {
+    public void showLobbies(AvailableGamesDTO availableGamesDTO) {
+        // Storing the available games to later show them, thus
+        // storing the update for later
+        this.availableGamesDTO = availableGamesDTO;
+
+        // Refresh all available games by recreating all the
+        // game selection commands inside this gameListInputWidget
+        this.updateGameListWidget();
+
+        // TODO: Discuss the case where a player keeps observing the available games list
+        //       and an update arrives. In that case, the TUI must be reprinted again!! (threads required)
+        //       ACTIONS: Updated AvailableGamesDTO Arrives, then:
+        //                  1 --> Save current user input (force ENTER)
+        //                  2 --> Reprint everything
+        //                  3 --> Put player back to where he was writing (with the previous input as well)
+        //      In this way, updates are asynchronous and can happen at any time
+
+        // Finally, show the GameMenuTUI to the player
         System.out.println("Welcome to...");
         TUI.printTitle();
-        this.getLobbyCommand();
+        this.getMenuCommand();
+    }
+
+    /**
+     * @param waitingForPlayers The DTO containing the current game status where all connected
+     *                          players are waiting for other players to join before starting
+     */
+    @Override
+    public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
+        synchronized (this.ioLock) {
+            if (this.model.getNickname() != null) {
+                int connected = waitingForPlayers.getLobbyTotalSpot() - waitingForPlayers.getAvailableSpots();
+                int total = waitingForPlayers.getLobbyTotalSpot();
+                Map<String, PlayerColor> nicknamesAndColor = waitingForPlayers.getUsedNicknames();
+
+                System.out.printf("Waiting for more players to join the game [%d/%d]...%n", connected, total);
+
+                if (!nicknamesAndColor.isEmpty()) {
+                    System.out.print("Connected players: ");
+                    String formattedNames = nicknamesAndColor.entrySet().stream()
+                            .map(entry -> entry.getValue().formatColor(entry.getKey()))
+                            .collect(Collectors.joining(", "));
+                    System.out.println(formattedNames);
+                }
+            }
+        }
     }
 }

@@ -175,7 +175,7 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
     /**
      * NEVER CALL THIS METHOD. USED TO NOT BREAK ANYTHING
      */
-    public Component setId( int id ){
+    public Component setId(int id) {
         this.id = id;
         return this;
     }
