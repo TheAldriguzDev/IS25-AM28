@@ -147,7 +147,7 @@ class GameModelTest {
         System.out.println(json);
 
         // Select the tile
-        ConstructionComponentDTO tileState = model.selectTile("Player 1", 1, 7);
+        ConstructionComponentDTO tileState = model.selectTile("Player 1", 1, 9);
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 1");
@@ -156,19 +156,19 @@ class GameModelTest {
         // Try to select the tile while is already selected by another player --> should throw an error
         assertThrows(
                 SelectedConcurrencyException.class,
-                () -> model.selectTile("Player 2", 1, 7),
+                () -> model.selectTile("Player 2", 1, 9),
                 "The selected tile should not be available for a select"
         );
 
         // Deselect the tile
-        tileState = model.deselectTile("Player 1", 1, 7);
+        tileState = model.deselectTile("Player 1", 1, 9);
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 1");
         assertFalse(tileState.isSelected());
 
         // Select again the tile
-        tileState = model.selectTile("Player 2", 1, 7);
+        tileState = model.selectTile("Player 2", 1, 9);
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 2");
@@ -185,17 +185,17 @@ class GameModelTest {
 
         // Cannon level one over the core cabin
         playerShipComponents.add(
-                new ComponentHelper<ConstructionComponentDTO>(1, 7) // Represent the index of the selected component from the view
+                new ComponentHelper<ConstructionComponentDTO>(1, 9) // Represent the index of the selected component from the view
                         .addItem(new ConstructionComponentDTO().setI(5).setJ(6).setRotation(0))); // Represent the i and j of the position where the component has been placed on the ship
 
         // Brown vital on the right of the cannon
         playerShipComponents.add(
-                new ComponentHelper<ConstructionComponentDTO>(9, 2)
+                new ComponentHelper<ConstructionComponentDTO>(9, 9)
                         .addItem(new ConstructionComponentDTO().setI(5).setJ(7).setRotation(2)));
 
         // Cabin on the right of the core
         playerShipComponents.add(
-                new ComponentHelper<ConstructionComponentDTO>(4, 10)
+                new ComponentHelper<ConstructionComponentDTO>(4, 12)
                         .addItem(new ConstructionComponentDTO().setI(6).setJ(7).setRotation(0)));
 
         List<StateDTO> playerEndedShipStates = model.playerEndedSendShip("Player 1", playerShipComponents, 2);
@@ -210,7 +210,7 @@ class GameModelTest {
 
         // Engine under the core cabin
         playerShipComponents.add(
-                new ComponentHelper<ConstructionComponentDTO>(5, 8)
+                new ComponentHelper<ConstructionComponentDTO>(5, 11)
                         .addItem(new ConstructionComponentDTO().setI(7).setJ(6).setRotation(0)));
 
         playerEndedShipStates = model.playerEndedSendShip("Player 2", playerShipComponents, 0);
@@ -218,7 +218,7 @@ class GameModelTest {
 
         // Invalid ship for the player 3 and 4
         playerShipComponents.add(
-                new ComponentHelper<ConstructionComponentDTO>(2, 8)
+                new ComponentHelper<ConstructionComponentDTO>(2, 10)
                         .addItem(new ConstructionComponentDTO().setI(6).setJ(4).setRotation(0)));
 
         playerEndedShipStates = model.playerEndedSendShip("Player 3", playerShipComponents, 1);

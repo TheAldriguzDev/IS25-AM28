@@ -830,14 +830,16 @@ public class Ship implements WidgetTUIGenerator {
             }
         );
 
-        for (int i = 0; i < this.grid_rows; i++) {
-            for (int j = 0; j < this.grid_cols; j++) {
-                if (this.components[i][j] != null) placedComponents++;
+        if (isShipValid.get()) {
+            for (int i = 0; i < this.grid_rows; i++) {
+                for (int j = 0; j < this.grid_cols; j++) {
+                    if (this.components[i][j] != null) placedComponents++;
+                }
             }
-        }
 
-        if (placedComponents != foundComponents.get()) {
-            isShipValid.set(false);
+            if (placedComponents != foundComponents.get()) {
+                isShipValid.set(false);
+            }
         }
 
         return isShipValid.get();
