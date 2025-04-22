@@ -56,5 +56,8 @@ public class ClientPirates extends ClientEventCard {
         } else {
             cardInfoWidget.appendString("Dice result: " + this.diceThrowResult);
         }
+        cardInfoWidget.wrapWidgetWithBorder();
+
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 }

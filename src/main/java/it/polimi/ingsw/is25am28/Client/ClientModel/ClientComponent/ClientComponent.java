@@ -1,9 +1,11 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent;
 
 import it.polimi.ingsw.is25am28.Model.Connector;
+import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,6 +92,29 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
         return this;
     }
 
+    public Connector getLeftSide() {
+        int normalizedPos = 3 - direction;
+        if (normalizedPos < 0) normalizedPos += 4;
+        return sides[normalizedPos % 4];
+    }
+
+    public Connector getRightSide() {
+        int normalizedPos = 1 - direction;
+        if (normalizedPos < 0) normalizedPos += 4;
+        return sides[normalizedPos % 4];
+    }
+
+    public Connector getTopSide() {
+        int normalizedPos = 4 - direction;
+        return sides[normalizedPos % 4];
+    }
+
+    public Connector getBottomSide() {
+        int normalizedPos = 2 - direction;
+        if (normalizedPos < 0) normalizedPos += 4;
+        return sides[normalizedPos % 4];
+    }
+
 
     /**
      * @return true if a component is flipped on the board. The player will be able to see the component data
@@ -129,4 +154,85 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
     public WidgetTUI generateWidget() {
         return null;
     }
+
+    /**
+     * @return This component's screen
+     */
+    public abstract List<String> getComponentScreen();
+
+    /**
+     * @return A custom border made specifically to show the actual
+     *         connector pipes on each side of the ship's components
+     */
+    protected List<String> generateComponentCustomBorder() {
+        List<String> customBorderScheme = new ArrayList<>(WidgetTUI.defaultBorderCharacters);
+
+        // Adding this component's connectors to the border scheme
+        // Top Connector
+        switch (this.getTopSide().ordinal()) {
+            case 1 -> {
+                customBorderScheme.set(9, UnicodeCharacters.CONNECTOR_TOP_CENTER);
+            }
+            case 2 -> {
+                customBorderScheme.set(8, UnicodeCharacters.CONNECTOR_TOP_CENTER_LEFT);
+                customBorderScheme.set(10, UnicodeCharacters.CONNECTOR_TOP_CENTER_RIGHT);
+            }
+            case 3 -> {
+                customBorderScheme.set(8, UnicodeCharacters.CONNECTOR_TOP_CENTER_LEFT);
+                customBorderScheme.set(9, UnicodeCharacters.CONNECTOR_TOP_CENTER);
+                customBorderScheme.set(10, UnicodeCharacters.CONNECTOR_TOP_CENTER_RIGHT);
+            }
+        }
+
+        // Right Connector
+        switch (this.getRightSide().ordinal()) {
+            case 1 -> {
+                customBorderScheme.set(12, UnicodeCharacters.CONNECTOR_RIGHT_CENTER);
+            }
+            case 2 -> {
+                customBorderScheme.set(11, UnicodeCharacters.CONNECTOR_RIGHT_CENTER_TOP);
+                customBorderScheme.set(13, UnicodeCharacters.CONNECTOR_RIGHT_CENTER_BOTTOM);
+            }
+            case 3 -> {
+                customBorderScheme.set(11, UnicodeCharacters.CONNECTOR_RIGHT_CENTER_TOP);
+                customBorderScheme.set(12, UnicodeCharacters.CONNECTOR_RIGHT_CENTER);
+                customBorderScheme.set(13, UnicodeCharacters.CONNECTOR_RIGHT_CENTER_BOTTOM);
+            }
+        }
+
+        // Bottom Connector
+        switch (this.getBottomSide().ordinal()) {
+            case 1 -> {
+                customBorderScheme.set(15, UnicodeCharacters.CONNECTOR_BOTTOM_CENTER);
+            }
+            case 2 -> {
+                customBorderScheme.set(14, UnicodeCharacters.CONNECTOR_BOTTOM_CENTER_RIGHT);
+                customBorderScheme.set(16, UnicodeCharacters.CONNECTOR_BOTTOM_CENTER_LEFT);
+            }
+            case 3 -> {
+                customBorderScheme.set(14, UnicodeCharacters.CONNECTOR_BOTTOM_CENTER_RIGHT);
+                customBorderScheme.set(15, UnicodeCharacters.CONNECTOR_BOTTOM_CENTER);
+                customBorderScheme.set(16, UnicodeCharacters.CONNECTOR_BOTTOM_CENTER_LEFT);
+            }
+        }
+
+        // Left Connector
+        switch (this.getLeftSide().ordinal()) {
+            case 1 -> {
+                customBorderScheme.set(18, UnicodeCharacters.CONNECTOR_LEFT_CENTER);
+            }
+            case 2 -> {
+                customBorderScheme.set(17, UnicodeCharacters.CONNECTOR_LEFT_CENTER_BOTTOM);
+                customBorderScheme.set(19, UnicodeCharacters.CONNECTOR_LEFT_CENTER_TOP);
+            }
+            case 3 -> {
+                customBorderScheme.set(17, UnicodeCharacters.CONNECTOR_LEFT_CENTER_BOTTOM);
+                customBorderScheme.set(18, UnicodeCharacters.CONNECTOR_LEFT_CENTER);
+                customBorderScheme.set(19, UnicodeCharacters.CONNECTOR_LEFT_CENTER_TOP);
+            }
+        }
+
+        return customBorderScheme;
+    }
 }
+
