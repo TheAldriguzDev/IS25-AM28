@@ -199,8 +199,7 @@ public class Slavers extends EventCard {
         return slaversStateJSON;
     }
 
-    @Override
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON slaversState) {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
@@ -219,11 +218,4 @@ public class Slavers extends EventCard {
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
-
-    @Override
-    public WidgetTUI generateWidget() {
-        return null;
-    }
-
-
 }

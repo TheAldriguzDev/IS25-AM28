@@ -332,7 +332,7 @@ public class VisitPlanets extends EventCard {
         return cardState;
     }
 
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON visitPlanetsJSON) {
         return null;
     }
 }

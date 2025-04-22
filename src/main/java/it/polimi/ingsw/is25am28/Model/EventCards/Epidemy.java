@@ -123,7 +123,7 @@ public class Epidemy extends EventCard {
     /**
      * @return The card's widget
      */
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON epidemyStateJSON) {
         return null;
     }
 }

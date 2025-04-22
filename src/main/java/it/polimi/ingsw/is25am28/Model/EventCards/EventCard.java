@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class EventCard implements WidgetTUIGenerator {
+public abstract class EventCard {
     protected String name;
     protected int cardLevel;
     protected List<Player> players;
@@ -142,7 +142,7 @@ public abstract class EventCard implements WidgetTUIGenerator {
     /**
      * @return This card's widget
      */
-    public abstract WidgetTUI generateWidget();
+    public abstract WidgetTUI generateWidget(CardStateJSON cardStateJSON);
 }
 
 

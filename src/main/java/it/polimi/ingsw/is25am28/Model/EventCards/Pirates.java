@@ -334,8 +334,7 @@ public class Pirates extends EventCard {
         this.diceThrowResult = diceThrowResult;
     }
 
-    @Override
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON piratesState) {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
@@ -390,11 +389,6 @@ public class Pirates extends EventCard {
 
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
-    }
-
-    @Override
-    public WidgetTUI generateWidget() {
-        return null;
     }
 
     private WidgetTUI getSmallDownwardsShotWidget() {

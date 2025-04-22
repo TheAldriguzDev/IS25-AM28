@@ -20,6 +20,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import javafx.util.Pair;
 
+import javax.smartcardio.Card;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -709,13 +710,7 @@ public class WarZone extends EventCard {
         return cardState;
     }
 
-    @Override
-    public WidgetTUI generateWidget() {
-        return null;
-    }
-
-    @Override
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON warZoneJSON) {
         return null;
     }
 

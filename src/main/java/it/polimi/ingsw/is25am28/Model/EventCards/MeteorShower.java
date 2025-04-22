@@ -447,13 +447,7 @@ public class MeteorShower extends EventCard {
         return cardState;
     }
 
-    @Override
-    public WidgetTUI generateWidget() {
-        return null;
-    }
-
-    @Override
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON meteorShowerJSON) {
         return null;
     }
 }

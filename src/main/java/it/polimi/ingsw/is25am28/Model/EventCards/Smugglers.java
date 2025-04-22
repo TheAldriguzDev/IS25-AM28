@@ -209,8 +209,7 @@ public class Smugglers extends EventCard {
         return smugglersStateJSON;
     }
 
-    @Override
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON smugglersStateJSON) {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
@@ -226,17 +225,13 @@ public class Smugglers extends EventCard {
             cardInfoWidget.appendString("Blue items: " + smugglersStateJSON.getBlueItems());
             cardInfoWidget.appendString("Green items: " + smugglersStateJSON.getGreenItems());
             cardInfoWidget.appendString("Taken items: " + smugglersStateJSON.getTakenItems());
-        } else {
+        }
+        else {
             cardInfoWidget.appendString("Player: " + smugglersStateJSON.getPlayerNickname() + " has to drop " + smugglersStateJSON.getTakenItems() + " items");
         }
         cardInfoWidget.wrapWidgetWithBorder();
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
-    }
-
-    @Override
-    public WidgetTUI generateWidget() {
-        return null;
     }
 }
 

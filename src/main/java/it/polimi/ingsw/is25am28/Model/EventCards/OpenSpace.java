@@ -11,6 +11,7 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import javax.smartcardio.Card;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -161,12 +162,7 @@ public class OpenSpace extends EventCard {
     }
 
     @Override
-    public WidgetTUI generateWidget() {
-        return null;
-    }
-
-    @Override
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON openSpaceJSON) {
         return null;
     }
 }
