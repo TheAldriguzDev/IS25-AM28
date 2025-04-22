@@ -210,7 +210,7 @@ public class Smugglers extends EventCard {
     }
 
     @Override
-    public WidgetTUI generateWidget(CardStateJSON smugglersStateJSON) {
+    public WidgetTUI generateWidget() {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 

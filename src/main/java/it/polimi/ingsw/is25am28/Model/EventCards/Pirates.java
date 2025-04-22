@@ -7,8 +7,6 @@ import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import javafx.util.Pair;
@@ -337,7 +335,7 @@ public class Pirates extends EventCard {
     }
 
     @Override
-    public WidgetTUI generateWidget(CardStateJSON piratesState) {
+    public WidgetTUI generateWidget() {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 

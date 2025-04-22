@@ -199,7 +199,7 @@ public class AbandonedShip extends EventCard {
     }
 
     @Override
-    public WidgetTUI generateWidget(CardStateJSON cardState) {
+    public WidgetTUI generateWidget() {
         return null;
     }
 

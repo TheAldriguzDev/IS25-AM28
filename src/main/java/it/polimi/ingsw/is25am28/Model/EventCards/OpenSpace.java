@@ -161,7 +161,7 @@ public class OpenSpace extends EventCard {
     }
 
     @Override
-    public WidgetTUI generateWidget(CardStateJSON cardState) {
+    public WidgetTUI generateWidget() {
         return null;
     }
 

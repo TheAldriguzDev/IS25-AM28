@@ -10,10 +10,8 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -202,7 +200,7 @@ public class Slavers extends EventCard {
     }
 
     @Override
-    public WidgetTUI generateWidget(CardStateJSON slaversState) {
+    public WidgetTUI generateWidget() {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 

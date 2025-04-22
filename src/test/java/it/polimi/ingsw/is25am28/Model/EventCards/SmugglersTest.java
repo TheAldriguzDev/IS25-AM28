@@ -144,7 +144,7 @@ class SmugglersTest {
 
         // =======================================================================
         cardState = smugglers.generateState();
-        smugglers.generateWidget(cardState).printWidget();
+        smugglers.generateWidget().printWidget();
         // =======================================================================
 
         //Input gathering phase
@@ -153,7 +153,7 @@ class SmugglersTest {
 
         // =======================================================================
         cardState = smugglers.generateState();
-        smugglers.generateWidget(cardState).printWidget();
+        smugglers.generateWidget().printWidget();
         // =======================================================================
 
         smugglers.useCard(new SmugglersJSON("Player 2", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
@@ -161,7 +161,7 @@ class SmugglersTest {
 
         // =======================================================================
         cardState = smugglers.generateState();
-        smugglers.generateWidget(cardState).printWidget();
+        smugglers.generateWidget().printWidget();
         // =======================================================================
 
         smugglers.useCard(new SmugglersJSON("Player 3", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
@@ -169,7 +169,7 @@ class SmugglersTest {
 
         // =======================================================================
         cardState = smugglers.generateState();
-        smugglers.generateWidget(cardState).printWidget();
+        smugglers.generateWidget().printWidget();
         // =======================================================================
 
         smugglers.useCard(new SmugglersJSON("Player 4", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
@@ -177,7 +177,7 @@ class SmugglersTest {
 
         // =======================================================================
         cardState = smugglers.generateState();
-        smugglers.generateWidget(cardState).printWidget();
+        smugglers.generateWidget().printWidget();
         // =======================================================================
 
             // The defeated players now need to specify what resources to get rid of
@@ -186,7 +186,7 @@ class SmugglersTest {
 
             // =======================================================================
             cardState = smugglers.generateState();
-            smugglers.generateWidget(cardState).printWidget();
+            smugglers.generateWidget().printWidget();
             // =======================================================================
 
             smugglers.useCard(actionJSON2);
@@ -194,7 +194,7 @@ class SmugglersTest {
 
             // =======================================================================
             cardState = smugglers.generateState();
-            smugglers.generateWidget(cardState).printWidget();
+            smugglers.generateWidget().printWidget();
             // =======================================================================
 
             smugglers.useCard(actionJSON3);
@@ -202,7 +202,7 @@ class SmugglersTest {
 
             // =======================================================================
             cardState = smugglers.generateState();
-            smugglers.generateWidget(cardState).printWidget();
+            smugglers.generateWidget().printWidget();
             // =======================================================================
 
             smugglers.useCard(actionJSON4);

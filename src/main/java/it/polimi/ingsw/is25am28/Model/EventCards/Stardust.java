@@ -84,7 +84,7 @@ public class Stardust extends EventCard {
         return stardustStateJSON;
     }
     @Override
-    public WidgetTUI generateWidget(CardStateJSON cardState) {
+    public WidgetTUI generateWidget() {
         return null;
     }
 
