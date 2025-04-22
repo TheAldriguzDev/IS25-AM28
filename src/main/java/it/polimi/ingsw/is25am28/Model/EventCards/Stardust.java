@@ -77,10 +77,10 @@ public class Stardust extends EventCard {
         CardStateJSON stardustStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
             stardustStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+        }
             stardustStateJSON.setCardName(getCardName());
             stardustStateJSON.setCardLevel(getCardLevel());
             stardustStateJSON.setCardIsUsable(!hasFinished());
-        }
         return stardustStateJSON;
     }
 
