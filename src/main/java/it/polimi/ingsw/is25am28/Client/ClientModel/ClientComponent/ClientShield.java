@@ -1,8 +1,16 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent;
 
+import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.Connector;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.addColor;
 
 public final class ClientShield extends ClientComponent {
     public ClientShield(int id, List<Integer> sides) {
@@ -25,5 +33,136 @@ public final class ClientShield extends ClientComponent {
         }
 
         return covered;
+    }
+
+    @Override
+    public List<String> getComponentScreen() {
+        // TODO: Understand better these indexes
+        int scale = 3;
+        int height = scale;
+        int width = 3 * height + 2;
+
+        int padding;
+
+        List<String> screen = new ArrayList<String>();
+        String nameAlias = Shield.alias;
+        StringBuilder paddedString;
+
+        // Creating the custom border character list that will be
+        // used by the wrapper to create the border
+        List<String> customBorderScheme = generateComponentCustomBorder();
+
+        switch (this.getDirection()) {
+            // 0 --> Shield is covering top and right sides
+            case 0 -> {
+                paddedString = new StringBuilder();
+                paddedString.append(SPACE);
+                paddedString.append(addColor(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE, ANSIColors.GREEN).repeat(width - 3));
+                paddedString.append(addColor(UnicodeCharacters.SINGLE_LINE_TR_CORNER, ANSIColors.GREEN));
+                paddedString.append(SPACE);
+                screen.add(paddedString.toString());
+
+                for (int i = 1; i < height; i++) {
+                    paddedString = new StringBuilder();
+
+                    if (i == (height / 2)) {
+                        padding = (width - nameAlias.length()) / 2;
+                        paddedString.append(SPACE.repeat(padding));
+                        paddedString.append(addColor(nameAlias, ANSIColors.GREEN));
+                        paddedString.append(SPACE.repeat(padding - 1));
+                    }
+                    else {
+                        paddedString.append(SPACE.repeat(width - 2));
+                    }
+                    paddedString.append(addColor(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE, ANSIColors.GREEN));
+                    paddedString.append(SPACE);
+
+                    screen.add(paddedString.toString());
+                }
+            }
+            // 1 --> Shield is covering right and bottom sides
+            case 1 -> {
+                for (int i = 1; i < height; i++) {
+                    paddedString = new StringBuilder();
+
+                    if (i == (height / 2) + 1) {
+                        padding = (width - nameAlias.length()) / 2;
+                        paddedString.append(SPACE.repeat(padding));
+                        paddedString.append(addColor(nameAlias, ANSIColors.GREEN));
+                        paddedString.append(SPACE.repeat(padding - 1));
+                    }
+                    else {
+                        paddedString.append(SPACE.repeat(width - 2));
+                    }
+                    paddedString.append(addColor(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE, ANSIColors.GREEN));
+                    paddedString.append(SPACE);
+
+                    screen.add(paddedString.toString());
+                }
+
+                paddedString = new StringBuilder();
+                paddedString.append(SPACE);
+                paddedString.append(addColor(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE, ANSIColors.GREEN).repeat(width - 3));
+                paddedString.append(addColor(UnicodeCharacters.SINGLE_LINE_BR_CORNER, ANSIColors.GREEN));
+                paddedString.append(SPACE);
+                screen.add(paddedString.toString());
+            }
+            // 2 --> Shield is covering bottom and left sides
+            case 2 -> {
+                for (int i = 1; i < height; i++) {
+                    paddedString = new StringBuilder();
+                    paddedString.append(SPACE);
+                    paddedString.append(addColor(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE, ANSIColors.GREEN));
+
+                    if (i == (height / 2) + 1) {
+                        padding = (width - nameAlias.length()) / 2;
+                        paddedString.append(SPACE.repeat(padding - 1));
+                        paddedString.append(addColor(nameAlias, ANSIColors.GREEN));
+                        paddedString.append(SPACE.repeat(padding));
+                    }
+                    else {
+                        paddedString.append(SPACE.repeat(width - 2));
+                    }
+
+                    screen.add(paddedString.toString());
+                }
+
+                paddedString = new StringBuilder();
+                paddedString.append(SPACE);
+                paddedString.append(addColor(UnicodeCharacters.SINGLE_LINE_BL_CORNER, ANSIColors.GREEN));
+                paddedString.append(addColor(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE, ANSIColors.GREEN).repeat(width - 3));
+                paddedString.append(SPACE);
+                screen.add(paddedString.toString());
+            }
+            // 3 --> Shield is covering left and top sides
+            case 3 -> {
+                paddedString = new StringBuilder();
+                paddedString.append(SPACE);
+                paddedString.append(addColor(UnicodeCharacters.SINGLE_LINE_TL_CORNER, ANSIColors.GREEN));
+                paddedString.append(addColor(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE, ANSIColors.GREEN).repeat(width - 3));
+                paddedString.append(SPACE);
+                screen.add(paddedString.toString());
+
+                for (int i = 1; i < height; i++) {
+                    paddedString = new StringBuilder();
+                    paddedString.append(SPACE);
+                    paddedString.append(addColor(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE, ANSIColors.GREEN));
+
+                    if (i == (height / 2)) {
+                        padding = (width - nameAlias.length()) / 2;
+                        paddedString.append(SPACE.repeat(padding - 1));
+                        paddedString.append(addColor(nameAlias, ANSIColors.GREEN));
+                        paddedString.append(SPACE.repeat(padding));
+                    }
+                    else {
+                        paddedString.append(SPACE.repeat(width - 2));
+                    }
+
+                    screen.add(paddedString.toString());
+                }
+            }
+        }
+
+        return WidgetTUI.wrapScreenWithBorder(screen, customBorderScheme);
     }
 }
