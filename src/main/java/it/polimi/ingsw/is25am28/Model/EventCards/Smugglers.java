@@ -229,7 +229,6 @@ public class Smugglers extends EventCard {
 
         if (firstRound) {
             cardInfoWidget.appendString("Level: " + smugglersStateJSON.getCardLevel());
-            cardInfoWidget.appendString("Given credits: " + smugglersStateJSON.getGivenCredits());
             cardInfoWidget.appendString("Days: " + smugglersStateJSON.getMovementSteps());
             cardInfoWidget.appendString("Require Firepower: " + smugglersStateJSON.getRequiredFirepower());
             cardInfoWidget.appendString("Red items: " + smugglersStateJSON.getRedItems());
