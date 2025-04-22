@@ -1,19 +1,14 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.SlaversJSON;
 import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-import java.util.ArrayList;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 public class Slavers extends EventCard {
     private final int requiredFirepower;
@@ -179,15 +174,28 @@ public class Slavers extends EventCard {
         CardStateJSON slaversStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
             slaversStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-            slaversStateJSON.setCardName(this.getCardName());
-            slaversStateJSON.setCardLevel(this.getCardLevel());
-            slaversStateJSON.setCardIsUsable(!hasFinished());
-            slaversStateJSON.setRequiredFirepower(requiredFirepower);
-            slaversStateJSON.setGivenCredits(this.givenCredits);
-            slaversStateJSON.setMovementSteps(this.movementSteps);
-            slaversStateJSON.setTakenCrew(this.takenCrew);
-            slaversStateJSON.setFirstRound(this.firstRound);
-            if (!firstRound) {
+        }
+        slaversStateJSON.setCardName(this.getCardName());
+        slaversStateJSON.setCardLevel(this.getCardLevel());
+        slaversStateJSON.setCardIsUsable(!hasFinished());
+        slaversStateJSON.setFirstRound(this.firstRound);
+
+        if(hasFinished()) {
+            // Update the board
+            slaversStateJSON.setBoard(this.getBoard().generateState());
+
+            // Generate the player info that also includes the ship
+            Map<String, PlayerJSON> playerInfo = new HashMap<>();
+            playerInfo.put(playerOptional.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
+            slaversStateJSON.setPlayersInfo(playerInfo);
+        } else {
+            if (firstRound) {
+                slaversStateJSON.setRequiredFirepower(requiredFirepower);
+                slaversStateJSON.setGivenCredits(this.givenCredits);
+                slaversStateJSON.setMovementSteps(this.movementSteps);
+                slaversStateJSON.setTakenCrew(this.takenCrew);
+            } else {
+                // TODO : see todo in pirates
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToTakeCrewFrom) {
                     defeatedPlayers.add(player.getNickname());
@@ -195,9 +203,9 @@ public class Slavers extends EventCard {
                 slaversStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
         }
-
         return slaversStateJSON;
     }
+
 
     public WidgetTUI generateWidget(CardStateJSON slaversState) {
         WidgetTUI cardWidget = new WidgetTUI();
