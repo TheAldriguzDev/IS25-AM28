@@ -11,7 +11,7 @@ public class ClientSlavers extends ClientEventCard {
     private final int movementSteps;
     private final int givenCredits;
     private final int takenCrew;
-    private final boolean firstRound;
+    private boolean firstRound;
 
     private List<String> defeatedPlayers;
 

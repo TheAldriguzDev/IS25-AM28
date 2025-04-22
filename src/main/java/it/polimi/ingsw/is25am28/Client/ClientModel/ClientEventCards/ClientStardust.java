@@ -17,6 +17,13 @@ public class ClientStardust extends ClientEventCard {
 
     @Override
     public WidgetTUI generateWidget() {
-        return null;
+        WidgetTUI cardWidget = new WidgetTUI();
+        WidgetTUI cardInfoWidget = new WidgetTUI();
+
+        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+
+
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+
     }
 }
