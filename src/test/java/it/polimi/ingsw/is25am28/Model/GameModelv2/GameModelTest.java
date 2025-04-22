@@ -423,7 +423,6 @@ class GameModelTest {
         json = mapper.writeValueAsString(this.model.generateState());
         // System.out.println(json);
 
-
         // TODO: try to execute some command with errors
     }
 
