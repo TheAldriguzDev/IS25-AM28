@@ -26,10 +26,12 @@ public class ClientSlavers extends ClientEventCard {
         this.defeatedPlayers = null;
     }
 
+    @Override
     public void useCard() {
 
     }
 
+    @Override
     public void updateCard(CardStateJSON slaversCardState) {
         if (slaversCardState.getFirstRound()) {
             hasBeenUsed = slaversCardState.getIsCardUsable();
@@ -44,6 +46,8 @@ public class ClientSlavers extends ClientEventCard {
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
         cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+
+        // TODO: Modify to print the symbol (located in printTest)
 
         if (this.firstRound) {
             cardInfoWidget.appendString("Level: " + this.cardLevel);

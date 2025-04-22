@@ -87,7 +87,7 @@ public class Slavers extends EventCard {
                         }
                     }
                     if (!firstRound) {
-                        if (playersToTakeCrewFrom.contains(player)) {
+                        if (playersToTakeCrewFrom.contains(player)) { // REdundant, since only affected players will send the data
                             malusEffect(slaversData);
                         }
                     }
