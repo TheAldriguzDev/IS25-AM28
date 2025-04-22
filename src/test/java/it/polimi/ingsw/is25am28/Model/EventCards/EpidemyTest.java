@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Model.Components.*;
@@ -8,6 +9,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -234,134 +236,139 @@ class EpidemyTest {
 
         // Adding all humans to player1's ship
         shipPlayer1.getCabinList().forEach(
-            (Cabin c) -> {
-                shipPlayer1.addLifeformToCabin(c.getPosition()[0], c.getPosition()[1], ASTRONAUT);
-                shipPlayer1.addLifeformToCabin(c.getPosition()[0], c.getPosition()[1], ASTRONAUT);
-            }
+                (Cabin c) -> {
+                    shipPlayer1.addLifeformToCabin(c.getPosition()[0], c.getPosition()[1], ASTRONAUT);
+                    shipPlayer1.addLifeformToCabin(c.getPosition()[0], c.getPosition()[1], ASTRONAUT);
+                }
         );
 
         // Adding all humans and an alien to player2's ship (ofc where eligible)
         // (Just for testing & simplicity) The type of alien added is based on the first vital unit found connected to a cabin
         shipPlayer2.getCabinList().forEach(
-            (Cabin c) -> {
-                if (c != shipPlayer2.getCore()) {
-                    Component[] neighbours = shipPlayer2.getNearestComponents(c);
-                    boolean alienPlaced = false;
+                (Cabin c) -> {
+                    if (c != shipPlayer2.getCore()) {
+                        Component[] neighbours = shipPlayer2.getNearestComponents(c);
+                        boolean alienPlaced = false;
 
-                    for (Component neighbour : neighbours) {
-                        switch (neighbour) {
-                            case Vital vital -> {
-                                if (vital.getVitalType() == VitalType.BROWN_VITAL) {
-                                    if (shipPlayer2.getBrownAlienPosition() == null) {
-                                        shipPlayer2.addLifeformToCabin(
-                                                c.getPosition()[0],
-                                                c.getPosition()[1],
-                                                BROWN_ALIEN
-                                        );
-                                        alienPlaced = true;
+                        for (Component neighbour : neighbours) {
+                            switch (neighbour) {
+                                case Vital vital -> {
+                                    if (vital.getVitalType() == VitalType.BROWN_VITAL) {
+                                        if (shipPlayer2.getBrownAlienPosition() == null) {
+                                            shipPlayer2.addLifeformToCabin(
+                                                    c.getPosition()[0],
+                                                    c.getPosition()[1],
+                                                    BROWN_ALIEN
+                                            );
+                                            alienPlaced = true;
+                                        }
+                                        else {
+                                            System.out.println("BROWN ALIEN already there!!!");
+                                        }
+                                    }
+                                    else if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
+                                        if (shipPlayer2.getPurpleAlienPosition() == null) {
+                                            shipPlayer2.addLifeformToCabin(
+                                                    c.getPosition()[0],
+                                                    c.getPosition()[1],
+                                                    PURPLE_ALIEN
+                                            );
+                                            alienPlaced = true;
+                                        }
+                                        else {
+                                            System.out.println("PURPLE ALIEN already there!!!");
+                                        }
                                     }
                                     else {
-                                        System.out.println("BROWN ALIEN already there!!!");
+                                        throw new IllegalArgumentException("ERROR: Vital type not recognized");
                                     }
                                 }
-                                else if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
-                                    if (shipPlayer2.getPurpleAlienPosition() == null) {
-                                        shipPlayer2.addLifeformToCabin(
-                                                c.getPosition()[0],
-                                                c.getPosition()[1],
-                                                PURPLE_ALIEN
-                                        );
-                                        alienPlaced = true;
-                                    }
-                                    else {
-                                        System.out.println("PURPLE ALIEN already there!!!");
-                                    }
-                                }
-                                else {
-                                    throw new IllegalArgumentException("ERROR: Vital type not recognized");
-                                }
+                                case null, default -> {}
                             }
-                            case null, default -> {}
+                        }
+
+                        if (!alienPlaced) {
+                            shipPlayer2.addLifeformToCabin(
+                                    c.getPosition()[0],
+                                    c.getPosition()[1],
+                                    ASTRONAUT
+                            );
+                            shipPlayer2.addLifeformToCabin(
+                                    c.getPosition()[0],
+                                    c.getPosition()[1],
+                                    ASTRONAUT
+                            );
                         }
                     }
-
-                    if (!alienPlaced) {
-                        shipPlayer2.addLifeformToCabin(
-                                c.getPosition()[0],
-                                c.getPosition()[1],
-                                ASTRONAUT
-                        );
-                        shipPlayer2.addLifeformToCabin(
-                                c.getPosition()[0],
-                                c.getPosition()[1],
-                                ASTRONAUT
-                        );
-                    }
                 }
-            }
         );
 
         // Adding all humans and an alien to player3's ship (ofc where eligible)
         // (Just for testing & simplicity) The type of alien added is based on the first vital unit found connected to a cabin
         shipPlayer3.getCabinList().forEach(
-            (Cabin c) -> {
-                if (c != shipPlayer3.getCore()) {
+                (Cabin c) -> {
+                    if (c != shipPlayer3.getCore()) {
 
-                    Component[] neighbours = shipPlayer3.getNearestComponents(c);
-                    boolean alienPlaced = false;
+                        Component[] neighbours = shipPlayer3.getNearestComponents(c);
+                        boolean alienPlaced = false;
 
-                    for (Component neighbour : neighbours) {
-                        switch (neighbour) {
-                            case Vital vital -> {
-                                if (vital.getVitalType() == VitalType.BROWN_VITAL) {
-                                    if (shipPlayer3.getBrownAlienPosition() == null) {
-                                        shipPlayer3.addLifeformToCabin(
-                                                c.getPosition()[0],
-                                                c.getPosition()[1],
-                                                BROWN_ALIEN
-                                        );
-                                        alienPlaced = true;
+                        for (Component neighbour : neighbours) {
+                            switch (neighbour) {
+                                case Vital vital -> {
+                                    if (vital.getVitalType() == VitalType.BROWN_VITAL) {
+                                        if (shipPlayer3.getBrownAlienPosition() == null) {
+                                            shipPlayer3.addLifeformToCabin(
+                                                    c.getPosition()[0],
+                                                    c.getPosition()[1],
+                                                    BROWN_ALIEN
+                                            );
+                                            alienPlaced = true;
+                                        }
+                                        else {
+                                            System.out.println("BROWN ALIEN already there!!!");
+                                        }
+                                    }
+                                    else if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
+                                        if (shipPlayer3.getPurpleAlienPosition() == null) {
+                                            shipPlayer3.addLifeformToCabin(
+                                                    c.getPosition()[0],
+                                                    c.getPosition()[1],
+                                                    PURPLE_ALIEN
+                                            );
+                                            alienPlaced = true;
+                                        }
+                                        else {
+                                            System.out.println("PURPLE ALIEN already there!!!");
+                                        }
                                     }
                                     else {
-                                        System.out.println("BROWN ALIEN already there!!!");
+                                        throw new IllegalArgumentException("ERROR: Vital type not recognized");
                                     }
                                 }
-                                else if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
-                                    if (shipPlayer3.getPurpleAlienPosition() == null) {
-                                        shipPlayer3.addLifeformToCabin(
-                                                c.getPosition()[0],
-                                                c.getPosition()[1],
-                                                PURPLE_ALIEN
-                                        );
-                                        alienPlaced = true;
-                                    }
-                                    else {
-                                        System.out.println("PURPLE ALIEN already there!!!");
-                                    }
-                                }
-                                else {
-                                    throw new IllegalArgumentException("ERROR: Vital type not recognized");
-                                }
+                                case null, default -> {}
                             }
-                            case null, default -> {}
+                        }
+
+                        if (!alienPlaced) {
+                            shipPlayer3.addLifeformToCabin(
+                                    c.getPosition()[0],
+                                    c.getPosition()[1],
+                                    ASTRONAUT
+                            );
+                            shipPlayer3.addLifeformToCabin(
+                                    c.getPosition()[0],
+                                    c.getPosition()[1],
+                                    ASTRONAUT
+                            );
                         }
                     }
-
-                    if (!alienPlaced) {
-                        shipPlayer3.addLifeformToCabin(
-                                c.getPosition()[0],
-                                c.getPosition()[1],
-                                ASTRONAUT
-                        );
-                        shipPlayer3.addLifeformToCabin(
-                                c.getPosition()[0],
-                                c.getPosition()[1],
-                                ASTRONAUT
-                        );
-                    }
                 }
-            }
         );
+
+        List<LifeformType> expectedPlayer1Lifeforms;
+        List<LifeformType> expectedPlayer2Lifeforms;
+        List<LifeformType> expectedPlayer3Lifeforms;
+        CardStateJSON state;
 
         Epidemy epidemy = new Epidemy(
                 "Epidemy",
@@ -374,11 +381,77 @@ class EpidemyTest {
         assertEquals(5, shipPlayer3.getAllLifeforms().size());
 
         epidemy.initCardPlayers();
+
+        // (1.1) - P1 uses the card
         epidemy.useCard();
 
-        List<LifeformType> expectedPlayer1Lifeforms = new ArrayList<>();
-        List<LifeformType> expectedPlayer2Lifeforms = new ArrayList<>();
-        List<LifeformType> expectedPlayer3Lifeforms = new ArrayList<>();
+        expectedPlayer1Lifeforms = new ArrayList<>();
+        expectedPlayer2Lifeforms = new ArrayList<>();
+        expectedPlayer3Lifeforms = new ArrayList<>();
+
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.BROWN_ALIEN);
+
+        expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer3Lifeforms.add(LifeformType.BROWN_ALIEN);
+
+        assertEquals(expectedPlayer1Lifeforms.size(), shipPlayer1.getAllLifeforms().size());
+        assertTrue(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer1Lifeforms));
+        assertEquals(expectedPlayer2Lifeforms.size(), shipPlayer2.getAllLifeforms().size());
+        assertTrue(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer2Lifeforms));
+        assertEquals(expectedPlayer3Lifeforms.size(), shipPlayer3.getAllLifeforms().size());
+        assertTrue(shipPlayer3.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer3Lifeforms));
+
+        // (1.2) - Verify that the card is not used after P2
+        state = epidemy.generateState();
+        assertFalse(epidemy.hasFinished());
+
+        // (2.1) - P2 uses the card
+        epidemy.useCard();
+
+        expectedPlayer1Lifeforms = new ArrayList<>();
+        expectedPlayer2Lifeforms = new ArrayList<>();
+        expectedPlayer3Lifeforms = new ArrayList<>();
+
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.BROWN_ALIEN);
+
+        expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer3Lifeforms.add(LifeformType.BROWN_ALIEN);
+
+        assertEquals(expectedPlayer1Lifeforms.size(), shipPlayer1.getAllLifeforms().size());
+        assertTrue(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer1Lifeforms));
+        assertEquals(expectedPlayer2Lifeforms.size(), shipPlayer2.getAllLifeforms().size());
+        assertTrue(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer2Lifeforms));
+        assertEquals(expectedPlayer3Lifeforms.size(), shipPlayer3.getAllLifeforms().size());
+        assertTrue(shipPlayer3.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer3Lifeforms));
+
+        // (2.2) - Verify that the card is not used after P2
+        state = epidemy.generateState();
+        assertFalse(epidemy.hasFinished());
+
+        // (3) - P3 uses the card
+        epidemy.useCard();
+
+        expectedPlayer1Lifeforms = new ArrayList<>();
+        expectedPlayer2Lifeforms = new ArrayList<>();
+        expectedPlayer3Lifeforms = new ArrayList<>();
 
         expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
         expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
@@ -391,12 +464,16 @@ class EpidemyTest {
         expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
         expectedPlayer3Lifeforms.add(LifeformType.ASTRONAUT);
 
-        assertEquals(3, shipPlayer1.getAllLifeforms().size());
+        assertEquals(expectedPlayer1Lifeforms.size(), shipPlayer1.getAllLifeforms().size());
         assertTrue(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer1Lifeforms));
-        assertEquals(3, shipPlayer2.getAllLifeforms().size());
+        assertEquals(expectedPlayer2Lifeforms.size(), shipPlayer2.getAllLifeforms().size());
         assertTrue(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer2Lifeforms));
-        assertEquals(2, shipPlayer3.getAllLifeforms().size());
+        assertEquals(expectedPlayer3Lifeforms.size(), shipPlayer3.getAllLifeforms().size());
         assertTrue(shipPlayer3.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer3Lifeforms));
+
+        // (3.2) - Verify that the card IS used after P3
+        state = epidemy.generateState();
+        assertTrue(epidemy.hasFinished());
     }
 
     @Test
@@ -435,20 +512,20 @@ class EpidemyTest {
 
         // Adding humans to player1's ship
         shipPlayer1.getCabinList().forEach(
-            (Cabin c) -> {
-                if (c != shipPlayer1.getCore()) {
-                    c.addInhabitant(astronaut);
+                (Cabin c) -> {
+                    if (c != shipPlayer1.getCore()) {
+                        c.addInhabitant(astronaut);
+                    }
                 }
-            }
         );
 
         // Adding humans to player2's ship
         shipPlayer2.getCabinList().forEach(
-            (Cabin c) -> {
-                if (c != shipPlayer2.getCore()) {
-                    c.addInhabitant(astronaut);
+                (Cabin c) -> {
+                    if (c != shipPlayer2.getCore()) {
+                        c.addInhabitant(astronaut);
+                    }
                 }
-            }
         );
         ((Cabin) shipPlayer2.getComponent(5, 6)).addInhabitant(astronaut);
 
@@ -458,14 +535,43 @@ class EpidemyTest {
                 board
         );
 
+        List<LifeformType> expectedPlayer1Lifeforms;
+        List<LifeformType> expectedPlayer2Lifeforms;
+        CardStateJSON state;
+
         assertEquals(4, shipPlayer1.getAllLifeforms().size());
         assertEquals(5, shipPlayer2.getAllLifeforms().size());
 
         epidemy.initCardPlayers();
+
+        // (1.1) - P1 uses the card
         epidemy.useCard();
 
-        List<LifeformType> expectedPlayer1Lifeforms = new ArrayList<>();
-        List<LifeformType> expectedPlayer2Lifeforms = new ArrayList<>();
+        expectedPlayer1Lifeforms = new ArrayList<>();
+        expectedPlayer2Lifeforms = new ArrayList<>();
+
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+
+        assertEquals(expectedPlayer1Lifeforms.size(), shipPlayer1.getAllLifeforms().size());
+        assertTrue(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer1Lifeforms));
+        assertEquals(expectedPlayer2Lifeforms.size(), shipPlayer2.getAllLifeforms().size());
+        assertTrue(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer2Lifeforms));
+
+        // (1.2) - Verify that the card is still in use after P1
+        state = epidemy.generateState();
+        assertTrue(state.getIsCardUsable());
+
+        // (2.1) - P2 uses the card
+        epidemy.useCard();
+
+        expectedPlayer1Lifeforms = new ArrayList<>();
+        expectedPlayer2Lifeforms = new ArrayList<>();
 
         expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
 
@@ -477,6 +583,10 @@ class EpidemyTest {
         assertTrue(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer1Lifeforms));
         assertEquals(expectedPlayer2Lifeforms.size(), shipPlayer2.getAllLifeforms().size());
         assertTrue(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer2Lifeforms));
+
+        // (2.2) - Verify that the card is NOT in use after P2
+        state = epidemy.generateState();
+        assertFalse(state.getIsCardUsable());
     }
 
     @Test
@@ -487,7 +597,7 @@ class EpidemyTest {
         //              when Epidemy strikes the number of lifeforms should stay at 4 (2 aliens and 2 humans)
 
         Board board = new BoardLevel2();
-        
+
         add2PlayersToBoard(board);
 
         for (Player player : board.getPlayers()) {
@@ -517,19 +627,25 @@ class EpidemyTest {
         shipPlayer2.addLifeformToCabin(6, 8, BROWN_ALIEN);
 
         Epidemy epidemy = new Epidemy(
-            "Epidemy",
-            board.getLevel(),
-            board
+                "Epidemy",
+                board.getLevel(),
+                board
         );
+
+        List<LifeformType> expectedPlayer1Lifeforms;
+        List<LifeformType> expectedPlayer2Lifeforms;
+        CardStateJSON state;
 
         assertEquals(5, shipPlayer1.getAllLifeforms().size());
         assertEquals(4, shipPlayer2.getAllLifeforms().size());
 
         epidemy.initCardPlayers();
+
+        // (1.1) - P1 uses the card
         epidemy.useCard();
 
-        List<LifeformType> expectedPlayer1Lifeforms = new ArrayList<>();
-        List<LifeformType> expectedPlayer2Lifeforms = new ArrayList<>();
+        expectedPlayer1Lifeforms = new ArrayList<>();
+        expectedPlayer2Lifeforms = new ArrayList<>();
 
         expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
         expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
@@ -543,6 +659,33 @@ class EpidemyTest {
         assertTrue(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer1Lifeforms));
         assertEquals(expectedPlayer2Lifeforms.size(), shipPlayer2.getAllLifeforms().size());
         assertTrue(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer2Lifeforms));
+
+        // (1.2) - Verify that the card is still in use after P1
+        state = epidemy.generateState();
+        assertTrue(state.getIsCardUsable());
+
+        // (2.1) - P2 uses the card
+        epidemy.useCard();
+
+        expectedPlayer1Lifeforms = new ArrayList<>();
+        expectedPlayer2Lifeforms = new ArrayList<>();
+
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer1Lifeforms.add(LifeformType.ASTRONAUT);
+
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.ASTRONAUT);
+        expectedPlayer2Lifeforms.add(LifeformType.PURPLE_ALIEN);
+        expectedPlayer2Lifeforms.add(LifeformType.BROWN_ALIEN);
+
+        assertEquals(expectedPlayer1Lifeforms.size(), shipPlayer1.getAllLifeforms().size());
+        assertTrue(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer1Lifeforms));
+        assertEquals(expectedPlayer2Lifeforms.size(), shipPlayer2.getAllLifeforms().size());
+        assertTrue(shipPlayer2.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer2Lifeforms));
+
+        // (2.2) - Verify that the card is NOT in use after P2
+        state = epidemy.generateState();
+        assertFalse(state.getIsCardUsable());
     }
 
     @Test
@@ -606,10 +749,16 @@ class EpidemyTest {
                 board
         );
 
-        List<LifeformType> expectedLifeformsP1 = new ArrayList<>();
-        List<LifeformType> expectedLifeformsP2 = new ArrayList<>();
-        List<LifeformType> expectedLifeformsP3 = new ArrayList<>();
-        List<LifeformType> expectedLifeformsP4 = new ArrayList<>();
+        List<LifeformType> expectedLifeformsP1;
+        List<LifeformType> expectedLifeformsP2;
+        List<LifeformType> expectedLifeformsP3;
+        List<LifeformType> expectedLifeformsP4;
+        CardStateJSON state;
+
+        expectedLifeformsP1 = new ArrayList<>();
+        expectedLifeformsP2 = new ArrayList<>();
+        expectedLifeformsP3 = new ArrayList<>();
+        expectedLifeformsP4 = new ArrayList<>();
 
         expectedLifeformsP1.add(ASTRONAUT);
         expectedLifeformsP1.add(ASTRONAUT);
@@ -652,6 +801,7 @@ class EpidemyTest {
         board.getPlayers().get(1).setConnected(false);
         board.getPlayers().get(2).setConnected(false);
 
+        // (1.1) - P1 uses the card
         epidemy.useCard();
 
         // Verifying the expected lifeforms onboard each player's ship
@@ -674,6 +824,11 @@ class EpidemyTest {
         assertEquals(expectedLifeformsP1.size(), shipPlayer1.getAllLifeforms().size());
         assertTrue(expectedLifeformsP1.containsAll(shipPlayer1.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
 
+        // (1.2) - Verify that after P1 the card is still usable AND that the next player is P4 (since P2, P3 are marked as disconnected)
+        state = epidemy.generateState();
+        assertTrue(state.getIsCardUsable());
+        assertEquals(board.getPlayers().getLast().getNickname(), state.getPlayerNickname());
+
         // P2 was disconnected, thus his lifeforms should be the same
         expectedLifeformsP2.add(ASTRONAUT);
         expectedLifeformsP2.add(ASTRONAUT);
@@ -693,6 +848,9 @@ class EpidemyTest {
         assertEquals(expectedLifeformsP3.size(), shipPlayer3.getAllLifeforms().size());
         assertTrue(expectedLifeformsP3.containsAll(shipPlayer3.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
 
+        // (4.1) - P4 uses the card
+        epidemy.useCard();
+
         // P4 had well-distanced cabins, therefore his lifeforms should stay the same
         expectedLifeformsP4.add(ASTRONAUT);
         expectedLifeformsP4.add(ASTRONAUT);
@@ -702,5 +860,9 @@ class EpidemyTest {
 
         assertEquals(expectedLifeformsP4.size(), shipPlayer4.getAllLifeforms().size());
         assertTrue(expectedLifeformsP4.containsAll(shipPlayer4.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList()));
+
+        // (4.2) - Verify that after P4 the card is marked as used
+        state = epidemy.generateState();
+        assertFalse(state.getIsCardUsable());
     }
 }

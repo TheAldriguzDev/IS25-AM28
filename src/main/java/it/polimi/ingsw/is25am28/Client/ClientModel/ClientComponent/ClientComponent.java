@@ -2,11 +2,12 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent;
 
 import it.polimi.ingsw.is25am28.Model.Connector;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
 import java.util.Collections;
 import java.util.List;
 
-public sealed abstract class ClientComponent permits ClientBattery, ClientCabin, ClientCannon, ClientEngine, ClientShield, ClientStorage, ClientStructural, ClientVital {
+public sealed abstract class ClientComponent implements WidgetTUIGenerator permits ClientBattery, ClientCabin, ClientCannon, ClientEngine, ClientShield, ClientStorage, ClientStructural, ClientVital {
     // The id represent the coordinate of the component in the shipConstructionPhase. It's calculated with (19 * i) + j
     private int id;
 

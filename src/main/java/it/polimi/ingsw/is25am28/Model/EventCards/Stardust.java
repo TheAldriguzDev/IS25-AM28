@@ -77,19 +77,14 @@ public class Stardust extends EventCard {
         CardStateJSON stardustStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
             stardustStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+        }
             stardustStateJSON.setCardName(getCardName());
             stardustStateJSON.setCardLevel(getCardLevel());
             stardustStateJSON.setCardIsUsable(!hasFinished());
-        }
         return stardustStateJSON;
     }
-    @Override
-    public WidgetTUI generateWidget(CardStateJSON cardState) {
-        return null;
-    }
 
-    @Override
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON stardustJSON) {
         return null;
     }
 }

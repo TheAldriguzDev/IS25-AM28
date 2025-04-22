@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class EventCard implements WidgetTUIGenerator {
+public abstract class EventCard {
     protected String name;
     protected int cardLevel;
     protected List<Player> players;
@@ -129,7 +129,6 @@ public abstract class EventCard implements WidgetTUIGenerator {
      *
      * The communication of the new, valid or invalid, state will be sent (broadcast) to all the clients.
      * */
-
     public abstract EventCard useCard( ActionJSON data ) throws IllegalArgumentException;
 
     /**
@@ -140,7 +139,10 @@ public abstract class EventCard implements WidgetTUIGenerator {
      * */
     public abstract CardStateJSON generateState();
 
-    public abstract WidgetTUI generateWidget(CardStateJSON cardState);
+    /**
+     * @return This card's widget
+     */
+    public abstract WidgetTUI generateWidget(CardStateJSON cardStateJSON);
 }
 
 

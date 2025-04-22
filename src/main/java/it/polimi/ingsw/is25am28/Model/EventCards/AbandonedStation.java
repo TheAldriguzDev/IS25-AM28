@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import javax.smartcardio.Card;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -187,13 +188,7 @@ public class AbandonedStation extends EventCard {
         return cardState;
     }
 
-    @Override
-    public WidgetTUI generateWidget(CardStateJSON cardState) {
-        return null;
-    }
-
-    @Override
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON abandonedStationJSON) {
         return null;
     }
 }

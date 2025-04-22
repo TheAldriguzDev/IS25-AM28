@@ -3,20 +3,16 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 public class Pirates extends EventCard {
     private final int requiredFirepower;
@@ -303,31 +299,47 @@ public class Pirates extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON piratesStateJSON = new CardStateJSON();
-        if (playerOptional.isPresent()) {
-            // The dice throw is performed by generateState only at the beginning
-            // since the card hasn't been used yet
-            if (this.diceThrowResult == -1) {
-                this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
-            }
+        if(playerOptional.isPresent()) {
             piratesStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-            piratesStateJSON.setCardName(getCardName());
-            piratesStateJSON.setCardLevel(getCardLevel());
-            piratesStateJSON.setCardIsUsable(!hasFinished());
-            piratesStateJSON.setRequiredFirepower(this.requiredFirepower);
-            piratesStateJSON.setGivenCredits(this.givenCredits);
-            piratesStateJSON.setMovementSteps(this.movementSteps);
-            piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
-            piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
-            piratesStateJSON.setFirstRound(this.firstRound);
-            if (!firstRound) {
+        }
+
+        // The dice throw is performed by generateState only at the beginning
+        // since the card hasn't been used yet
+        if (this.diceThrowResult == -1) {
+            this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
+        }
+
+        piratesStateJSON.setCardName(getCardName());
+        piratesStateJSON.setCardLevel(getCardLevel());
+        piratesStateJSON.setCardIsUsable(!hasFinished());
+        piratesStateJSON.setFirstRound(this.firstRound);
+
+        if(hasFinished()) {
+            // Update the board
+            piratesStateJSON.setBoard(this.getBoard().generateState());
+
+            // Generate the player info that also includes the ship
+            Map<String, PlayerJSON> playerInfo = new HashMap<>();
+            playerInfo.put(playerOptional.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
+            piratesStateJSON.setPlayersInfo(playerInfo);
+        } else {
+            // If the first round is not finished, send card information to the players
+            if (firstRound) {
+                piratesStateJSON.setRequiredFirepower(this.requiredFirepower);
+                piratesStateJSON.setGivenCredits(this.givenCredits);
+                piratesStateJSON.setMovementSteps(this.movementSteps);
+                piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
+            } else {
+                // Send information on the players that are going to be hit, along with the plasmaShot's data and the dice result
+                // TODO : Piuttosto che inviare la lista dei player sconfitti inviare un boolean (si decide se inviarlo in base a se il player è presente nella lista degli sconfitti)
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToHit) {
                     defeatedPlayers.add(player.getNickname());
                 }
                 piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
+                piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
             }
         }
-
         return piratesStateJSON;
     }
 
@@ -336,7 +348,6 @@ public class Pirates extends EventCard {
         this.diceThrowResult = diceThrowResult;
     }
 
-    @Override
     public WidgetTUI generateWidget(CardStateJSON piratesState) {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
@@ -392,11 +403,6 @@ public class Pirates extends EventCard {
 
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
-    }
-
-    @Override
-    public WidgetTUI generateWidget() {
-        return null;
     }
 
     private WidgetTUI getSmallDownwardsShotWidget() {

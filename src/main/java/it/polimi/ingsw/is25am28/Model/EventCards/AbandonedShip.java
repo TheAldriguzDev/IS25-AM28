@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import javax.smartcardio.Card;
 import java.util.*;
 
 public class AbandonedShip extends EventCard {
@@ -198,13 +199,7 @@ public class AbandonedShip extends EventCard {
         return cardState;
     }
 
-    @Override
-    public WidgetTUI generateWidget(CardStateJSON cardState) {
-        return null;
-    }
-
-    @Override
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON abandonedShipJSON) {
         return null;
     }
 }

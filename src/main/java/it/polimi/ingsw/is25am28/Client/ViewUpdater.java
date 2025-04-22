@@ -11,11 +11,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipCons
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 /**
  * This class use the VisitorPattern to save useful information of each state and then show this information in
  * the given UI

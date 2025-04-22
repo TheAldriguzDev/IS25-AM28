@@ -21,7 +21,8 @@ public final class ShipConstructionDTO extends StateDTO {
     public ShipConstructionDTO(
             @JsonProperty("all_components") List<Map<String, Object>> all_components,
             @JsonProperty("flipped_components") List<Integer> flipped_components,
-            @JsonProperty("selected_components") List<Integer> selected_components ) {
+            @JsonProperty("selected_components") List<Integer> selected_components
+    ) {
         this.all_components = all_components;
         this.flipped_components = flipped_components;
         this.selected_components = selected_components;

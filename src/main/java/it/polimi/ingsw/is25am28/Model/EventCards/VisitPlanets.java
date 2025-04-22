@@ -331,13 +331,8 @@ public class VisitPlanets extends EventCard {
 
         return cardState;
     }
-    @Override
-    public WidgetTUI generateWidget(CardStateJSON cardState) {
-        return null;
-    }
 
-    @Override
-    public WidgetTUI generateWidget() {
+    public WidgetTUI generateWidget(CardStateJSON visitPlanetsJSON) {
         return null;
     }
 }

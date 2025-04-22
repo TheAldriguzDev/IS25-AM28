@@ -13,6 +13,8 @@ import it.polimi.ingsw.is25am28.Model.TimeObserver.TimerObserver;
 
 import java.util.*;
 
+// TODO: Implement the HourGlass here (the state contains the HourGlass instance and implements the onTimerEnd method)
+
 public final class ShipContructionState extends State implements TimeSubscriber {
     private final static int FLIP_TIME_ONE_HALF_MIN = (int)(1.5 * 1000 * 60);
     private final static int FLIP_COUNT_LV2 = 2;

@@ -1,16 +1,15 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.SmugglersJSON;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class Smugglers extends EventCard {
@@ -187,17 +186,31 @@ public class Smugglers extends EventCard {
         CardStateJSON smugglersStateJSON = new CardStateJSON();
         if(playerOptional.isPresent()) {
             smugglersStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-            smugglersStateJSON.setCardName(getCardName());
-            smugglersStateJSON.setCardLevel(getCardLevel());
-            smugglersStateJSON.setCardIsUsable(!hasFinished());
-            smugglersStateJSON.setRequiredFirepower(requiredFirepower);
-            smugglersStateJSON.setMovementSteps(movementSteps);
-            smugglersStateJSON.setTakenItems(takenItems);
-            smugglersStateJSON.setRedItems(redItems);
-            smugglersStateJSON.setYellowItems(yellowItems);
-            smugglersStateJSON.setBlueItems(blueItems);
-            smugglersStateJSON.setGreenItems(greenItems);
-            if (!firstRound) {
+        }
+        smugglersStateJSON.setCardName(getCardName());
+        smugglersStateJSON.setCardLevel(getCardLevel());
+        smugglersStateJSON.setCardIsUsable(!hasFinished());
+        smugglersStateJSON.setFirstRound(firstRound);
+
+        if(hasFinished()) {
+            // Update the board
+            smugglersStateJSON.setBoard(this.getBoard().generateState());
+
+            // Generate the player info that also includes the ship
+            Map<String, PlayerJSON> playerInfo = new HashMap<>();
+            playerInfo.put(playerOptional.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
+            smugglersStateJSON.setPlayersInfo(playerInfo);
+        } else {
+            if (firstRound) {
+                smugglersStateJSON.setRequiredFirepower(requiredFirepower);
+                smugglersStateJSON.setMovementSteps(movementSteps);
+                // TODO : Resorucebank question about number of items (referring to how it's done in abandonedStation)
+                smugglersStateJSON.setTakenItems(takenItems);
+                smugglersStateJSON.setRedItems(redItems);
+                smugglersStateJSON.setYellowItems(yellowItems);
+                smugglersStateJSON.setBlueItems(blueItems);
+                smugglersStateJSON.setGreenItems(greenItems);
+            } else {
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToTakeItemsFrom) {
                     defeatedPlayers.add(player.getNickname());
@@ -205,11 +218,9 @@ public class Smugglers extends EventCard {
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
         }
-
         return smugglersStateJSON;
     }
 
-    @Override
     public WidgetTUI generateWidget(CardStateJSON smugglersStateJSON) {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
@@ -226,17 +237,13 @@ public class Smugglers extends EventCard {
             cardInfoWidget.appendString("Blue items: " + smugglersStateJSON.getBlueItems());
             cardInfoWidget.appendString("Green items: " + smugglersStateJSON.getGreenItems());
             cardInfoWidget.appendString("Taken items: " + smugglersStateJSON.getTakenItems());
-        } else {
+        }
+        else {
             cardInfoWidget.appendString("Player: " + smugglersStateJSON.getPlayerNickname() + " has to drop " + smugglersStateJSON.getTakenItems() + " items");
         }
         cardInfoWidget.wrapWidgetWithBorder();
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
-    }
-
-    @Override
-    public WidgetTUI generateWidget() {
-        return null;
     }
 }
 

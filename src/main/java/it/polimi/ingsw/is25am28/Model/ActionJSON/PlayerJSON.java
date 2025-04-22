@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
@@ -29,7 +30,7 @@ public class PlayerJSON implements Serializable {
     public PlayerJSON(
             @JsonProperty("nickname") String nickname,
             @JsonProperty("color") String color,
-            @JsonProperty("cursors") int cursor,
+            @JsonProperty("cursor") int cursor,
             @JsonProperty("credits") int credits,
             @JsonProperty("lostPieces") int lostPieces,
             @JsonProperty("hasLost") boolean hasLost,
@@ -76,35 +77,42 @@ public class PlayerJSON implements Serializable {
         }
     }
 
-    // Metodi getter per permettere la serializzazione da parte di Jackson
+    @JsonGetter("nickname")
     public String getNickname() {
         return nickname;
     }
 
+    @JsonGetter("color")
     public String getColor() {
         return color;
     }
 
+    @JsonGetter("cursor")
     public int getCursor() {
         return cursor;
     }
 
+    @JsonGetter("credits")
     public int getCredits() {
         return credits;
     }
 
+    @JsonGetter("lostPieces")
     public int getLostPieces() {
         return lostPieces;
     }
 
-    public boolean isHasLost() {
+    @JsonGetter("hasLost")
+    public boolean hasLost() {
         return hasLost;
     }
 
+    @JsonGetter("isConnected")
     public boolean isConnected() {
         return isConnected;
     }
 
+    @JsonGetter("ship")
     public List<Map<String, Object>> getShip() {
         return ship;
     }

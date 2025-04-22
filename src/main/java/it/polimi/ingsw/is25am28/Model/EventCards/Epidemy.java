@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
@@ -12,7 +13,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.util.*;
 
 public class Epidemy extends EventCard {
-
+    // Constructor
     public Epidemy(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
     }
@@ -27,24 +28,25 @@ public class Epidemy extends EventCard {
         // Nothing
     }
 
-    @Override
-    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        return this;
+    /**
+     * Calls the useCard method but without passing an ActionJSON to it
+     * (since this card doesn't require user input to work)
+     */
+    public EventCard useCard() {
+        return this.useCard(null);
     }
 
-    public EventCard useCard() throws IllegalArgumentException {
+    @Override
+    public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
         Set<Cabin> alreadyQuarantined;
         List<Cabin> cabinList;
         Component[] neighbours;
         Ship shipPtr;
 
-        // Finding all neighbouring cabins and putting them into quarantine
-        for (Player player : this.getBoard().getPlayers()) {
-            // Skips any player marked as disconnected during their turn
-            if (!player.isConnected()) continue;
-
+        // Skips any player marked as disconnected during their turn
+        if (this.currentPlayer.isPresent() && this.currentPlayer.get().isConnected()) {
             alreadyQuarantined = new HashSet<>();
-            shipPtr = player.getShip();
+            shipPtr = this.currentPlayer.get().getShip();
             cabinList = shipPtr.getCabinList();
 
             for (Cabin cabin : cabinList) {
@@ -69,40 +71,59 @@ public class Epidemy extends EventCard {
             // Removing a lifeform for each cabin placed in quarantine
             for (Cabin cabin : alreadyQuarantined) {
                 shipPtr.removeLifeformFromCabin(
-                    cabin.getPosition()[0],
-                    cabin.getPosition()[1],
-                    cabin.getInhabitants().getFirst().getLifeformType()
+                        cabin.getPosition()[0],
+                        cabin.getPosition()[1],
+                        cabin.getInhabitants().getFirst().getLifeformType()
                 );
             }
         }
 
-        // Set this card as used
-        this.cardUsed();
+        // Getting the next player (in order of leaderboard placements)
+        this.currentPlayer = this.getNextPlayer();
+
+        // Set this card as used only if all players have used it
+        if (this.currentPlayer.isEmpty()) {
+            this.cardUsed();
+        }
 
         return this;
     }
 
+    /**
+     * @return The card's current state
+     */
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        Map<String, PlayerJSON> playerInfo;
 
         cardState.setCardName(this.getCardName());
         cardState.setCardLevel(this.cardLevel);
+        cardState.setCardIsUsable( !this.hasFinished());
 
-        if (this.getCurrentPlayer().isPresent()) {
-            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+        if (this.hasFinished()) {
+            // Generate the player info that also includes the ship
+            playerInfo = new HashMap<>();
+
+            for (Player player : this.players) {
+                playerInfo.put(player.getNickname(), PlayerJSON.fromPlayer(player, false));
+            }
+
+            cardState.setPlayersInfo(playerInfo);
+        }
+        else {
+            if (this.getCurrentPlayer().isPresent()) {
+                cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+            }
         }
 
         return cardState;
     }
 
-    @Override
-    public WidgetTUI generateWidget(CardStateJSON cardState) {
-        return null;
-    }
-
-    @Override
-    public WidgetTUI generateWidget() {
+    /**
+     * @return The card's widget
+     */
+    public WidgetTUI generateWidget(CardStateJSON epidemyStateJSON) {
         return null;
     }
 }
