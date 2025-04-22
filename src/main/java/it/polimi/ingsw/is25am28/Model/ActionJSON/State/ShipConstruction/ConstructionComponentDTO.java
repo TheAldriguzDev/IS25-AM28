@@ -25,6 +25,7 @@ public non-sealed class ConstructionComponentDTO extends ShipConstructionEventDT
         this.playerNickname = playerNickname;
         this.i = i;
         this.j = j;
+        this.rotation = rotation;
         this.isSelected = isSelected;
     }
 

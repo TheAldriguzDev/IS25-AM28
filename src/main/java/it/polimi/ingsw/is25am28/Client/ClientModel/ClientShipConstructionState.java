@@ -3,8 +3,6 @@ package it.polimi.ingsw.is25am28.Client.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.Components.Shield;
-import it.polimi.ingsw.is25am28.Model.Components.Storage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +13,7 @@ public class ClientShipConstructionState extends ClientState {
     private final List<ClientComponent> components;
     private final List<ClientComponent> reservedComponents;
 
+    // List of components that will be sent to the server for evaluation
     private final List<ComponentHelper<ConstructionComponentDTO>> ship;
 
     // TODO: Add the list that represent the ShipCreation --> In this way we can then send the created ship to the server
@@ -107,6 +106,7 @@ public class ClientShipConstructionState extends ClientState {
     public List<ClientComponent> getReservedComponents() throws UnsupportedOperationException {
         return this.reservedComponents;
     }
+
     /**
      * Command used by the player when he wants to select a Tile from the table in the ShipConstructionState
      * */
@@ -167,10 +167,10 @@ public class ClientShipConstructionState extends ClientState {
     }
 
     /**
-     * Command used by the player when he wants to send the created Ship to the server
-     * */
+     * @return The ship created by the player during the ship construction phase
+     */
     @Override
-    public void confirmShip() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The 'confirmShip' is not supported in the " + this + " state");
+    public List<ComponentHelper<ConstructionComponentDTO>> getCreatedShip() throws UnsupportedOperationException {
+        return this.ship;
     }
 }

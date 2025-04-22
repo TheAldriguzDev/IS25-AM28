@@ -94,8 +94,14 @@ public abstract class TUI implements ClientUI {
      */
     public void showError(ErrorAnswer error) {
         synchronized (this.ioLock) {
-            TUI.clearTerminal();
-            this.currCommand.handleError(error.getError());
+            clearTerminal();
+
+            if (this.currCommand != null) {
+                this.currCommand.handleError(error.getError());
+            }
+            else {
+                System.out.println(error.getError());
+            }
         }
     }
 

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
 import java.util.List;
@@ -55,11 +57,18 @@ public class ClientState {
         throw new UnsupportedOperationException("The 'flipTimer' is not supported in the " + this + " state");
     }
 
+//    /**
+//     * Command used by the player when he wants to send the created Ship to the server
+//     * */
+//    public void confirmShip() throws UnsupportedOperationException {
+//        throw new UnsupportedOperationException("The 'confirmShip' is not supported in the " + this + " state");
+//    }
+
     /**
-     * Command used by the player when he wants to send the created Ship to the server
-     * */
-    public void confirmShip() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The 'confirmShip' is not supported in the " + this + " state");
+     * @return The ship created by the player during the ship construction phase
+     */
+    public List<ComponentHelper<ConstructionComponentDTO>> getCreatedShip() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'getCreatedShip' is not supported in the " + this + " state");
     }
 
     /**

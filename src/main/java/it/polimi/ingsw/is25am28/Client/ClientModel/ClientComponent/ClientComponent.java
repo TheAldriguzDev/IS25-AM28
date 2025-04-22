@@ -151,14 +151,23 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
         return this.id;
     }
 
-    public WidgetTUI generateWidget() {
-        return null;
-    }
-
     /**
      * @return This component's screen
      */
     public abstract List<String> getComponentScreen();
+
+    /**
+     * @return A TUI border-wrapped widget containing the component's text representation
+     *         as well as other information about itself (e.g.: energy left inside a battery)
+     */
+    public WidgetTUI generateWidget() {
+        WidgetTUI componentWidget = new WidgetTUI();
+
+        // Setting the screen of this component
+        componentWidget.setScreen(this.getComponentScreen());
+
+        return componentWidget;
+    }
 
     /**
      * @return A custom border made specifically to show the actual

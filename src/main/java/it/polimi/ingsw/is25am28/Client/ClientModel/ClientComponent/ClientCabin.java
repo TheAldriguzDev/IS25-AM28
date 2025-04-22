@@ -77,7 +77,7 @@ public final class ClientCabin extends ClientComponent {
 
         // Creating the custom border character list that will be
         // used by the wrapper to create the border
-        List<String> customBorderScheme = generateComponentCustomBorder();
+        List<String> customBorderScheme = this.generateComponentCustomBorder();
 
         nameAlias = new StringBuilder();
         String nameAliasRightPadding = SPACE.repeat(width - Cabin.alias.length() - 1);

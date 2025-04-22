@@ -1,8 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel;
 
-import it.polimi.ingsw.is25am28.Model.GameModelv2.State;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-
 
 /**
  * This class represent the client-side model. It will contain all the data that are needed to handle the game from the
