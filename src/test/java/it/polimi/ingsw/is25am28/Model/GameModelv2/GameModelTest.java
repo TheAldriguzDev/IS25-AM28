@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
@@ -144,7 +145,7 @@ class GameModelTest {
         // ========================================
         assertInstanceOf(ShipContructionState.class, model.getCurrentState());
         json = mapper.writeValueAsString(model.getCurrentState().generateState());
-        System.out.println(json);
+        // System.out.println(json);
 
         // Select the tile
         ConstructionComponentDTO tileState = model.selectTile("Player 1", 1, 9);
@@ -153,9 +154,32 @@ class GameModelTest {
         assertEquals(tileState.getPlayerNickname(), "Player 1");
         assertTrue(tileState.isSelected());
 
+        ConstructionDeckDTO deckState = model.selectSubDeck("Player 1", 1);
+
         // Try to select the tile while is already selected by another player --> should throw an error
         assertThrows(
-                SelectedConcurrencyException.class,
+                IllegalStateException.class,
+                () -> model.selectSubDeck("Player 2", 1),
+                "The selected sub-deck should not be available for a select"
+        );
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> model.deselectSubDeck("Player 2", 1),
+                "The selected sub-deck should not be deselected from other players"
+        );
+
+        assertDoesNotThrow(
+                () -> model.deselectSubDeck("Player 1", 1)
+        );
+
+        assertDoesNotThrow(
+                () -> model.selectSubDeck("Player 2", 1)
+        );
+
+        // Try to select the tile while is already selected by another player --> should throw an error
+        assertThrows(
+                IllegalStateException.class,
                 () -> model.selectTile("Player 2", 1, 9),
                 "The selected tile should not be available for a select"
         );
@@ -397,7 +421,7 @@ class GameModelTest {
         assertInstanceOf(EndGameState.class, model.getCurrentState());
 
         json = mapper.writeValueAsString(this.model.generateState());
-        System.out.println(json);
+        // System.out.println(json);
 
 
         // TODO: try to execute some command with errors

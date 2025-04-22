@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitingForGameConfigurationDTO;
@@ -78,6 +79,18 @@ public class GameController {
     public List<StateDTO> addNewPlayer(String nickname, PlayerColor playerColor) throws IllegalStateException, IllegalArgumentException {
         synchronized (this.model) {
             return this.model.addNewPlayer(nickname, playerColor);
+        }
+    }
+
+    public ConstructionDeckDTO selectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
+        synchronized (this.model) {
+            return this.model.selectSubDeck(player, selectedDeck);
+        }
+    }
+
+    public ConstructionDeckDTO deselectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
+        synchronized (this.model) {
+            return this.model.deselectSubDeck(player, selectedDeck);
         }
     }
 

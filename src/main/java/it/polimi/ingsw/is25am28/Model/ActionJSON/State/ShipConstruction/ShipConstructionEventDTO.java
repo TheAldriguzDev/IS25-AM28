@@ -8,7 +8,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public sealed class ShipConstructionEventDTO extends StateDTO permits ConstructionComponentDTO, PlayerEndedShipDTO, TimerDTO {
+public sealed class ShipConstructionEventDTO extends StateDTO permits ConstructionComponentDTO, ConstructionDeckDTO, PlayerEndedShipDTO, TimerDTO {
     private String eventType;
 
     public ShipConstructionEventDTO() {}
