@@ -7,6 +7,8 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
+import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
+import it.polimi.ingsw.is25am28.Network.Messages.Reconnect;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
@@ -18,49 +20,10 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GameMenuTUI extends TUI {
-    // Testing
-    public static void main(String[] args) {
-        GameMenuTUI gameMenuTUI = new GameMenuTUI(null);
-
-        List<GameInfoDTO> availableGames = new ArrayList<>();
-
-        List<String> availableColors;
-        GameInfoDTO gameInfoDTO;
-
-        // Game 1
-        availableColors = new ArrayList<>();
-        availableColors.add("RED");
-        availableColors.add("GREEN");
-        gameInfoDTO = new GameInfoDTO(0, 2, 4, 2, availableColors);
-        availableGames.add(gameInfoDTO);
-
-        // Game 2
-        availableColors = new ArrayList<>();
-        availableColors.add("RED");
-        availableColors.add("GREEN");
-        availableColors.add("BLUE");
-        gameInfoDTO = new GameInfoDTO(1, 1, 4, 2, availableColors);
-        availableGames.add(gameInfoDTO);
-
-        // Game 3
-        availableColors = new ArrayList<>();
-        availableColors.add("GREEN");
-        gameInfoDTO = new GameInfoDTO(2, 2, 4, 3, availableColors);
-        availableGames.add(gameInfoDTO);
-
-        // Creating the DTO
-        AvailableGamesDTO availableGamesDTO = new AvailableGamesDTO();
-        availableGamesDTO.setAvailableGames(availableGames);
-
-        // Showing the GameMenuTUI to let the player interact
-        gameMenuTUI.showLobbies(availableGamesDTO);
-    }
-
     // Command grouping values for the input widgets below
-    public static final int LOBBY_COMMANDS_PER_COLUMN = 1;
+    public static final int LOBBY_COMMANDS_PER_COLUMN = 2;
     public static final int AVAILABLE_GAMES_PER_COLUMN = 16;
 
-    // All input widgets
     // All input widgets
     private final InputWidgetTUI menuCommandsWidget;
     private final InputWidgetTUI gameListInputWidget;
@@ -98,12 +61,28 @@ public class GameMenuTUI extends TUI {
         if (this.menuCommandsWidget.getCommandMap() == null || this.menuCommandsWidget.getCommandMap().isEmpty()) {
             CommandWidgetTUI menuCommand;
 
-            // (1) - List available games
+            // (1) - List available games to join
             menuCommand = new CommandWidgetTUI(
                 "l",
-                this::getGameListCommand
+                () -> {
+                    // Showing the user all the selectable games and setting
+                    // the selectedGameId attribute to that choice
+                    this.getGameListCommand();
+                    System.out.println();
+
+                    // Retrieving the selected game
+                    GameInfoDTO selectedGame = this.availableGamesDTO.getAvailableGames().get(this.selectedGameId);
+
+                    // Joining the selected game
+                    try {
+                        this.joinGameInput(selectedGame, this.availableGamesDTO.getUsedNicknames());
+                    }
+                    catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             );
-            menuCommand.appendString("List available games");
+            menuCommand.appendString("List available games to join");
             this.menuCommandsWidget.addCommand(menuCommand);
 
             // (2) - Create new game
@@ -111,14 +90,12 @@ public class GameMenuTUI extends TUI {
                 "c",
                 () -> {
                     // Create new game
-                    synchronized (this.ioLock) {
-                        try {
-                            System.out.println();
-                            this.createGameInput();
-                        }
-                        catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
+                    try {
+                        System.out.println();
+                        this.createGameInput();
+                    }
+                    catch (Exception e) {
+                        throw new RuntimeException(e);
                     }
                 }
             );
@@ -128,7 +105,16 @@ public class GameMenuTUI extends TUI {
             // (3) - Reconnect to an existing game
             menuCommand = new CommandWidgetTUI(
                 "r",
-                this::getGameListCommand
+                () -> {
+                    // Reconnecting the user to the game he selected
+                    try {
+                        System.out.println();
+                        this.reconnectToGameInput(this.availableGamesDTO, this.availableGamesDTO.getUsedNicknames());
+                    }
+                    catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             );
             menuCommand.appendString("Reconnect to an existing game");
             this.menuCommandsWidget.addCommand(menuCommand);
@@ -140,6 +126,7 @@ public class GameMenuTUI extends TUI {
                     // Return nothing and the program stops
                     System.out.println();
                     System.out.println(PrintUtils.addColor("[COMPUTER] Bye bye!", ANSIColors.BRIGHT_CYAN));
+                    System.exit(0);
                 }
             );
             menuCommand.appendString("Quit game");
@@ -171,7 +158,6 @@ public class GameMenuTUI extends TUI {
                 "" + game.getId(),
                 () -> {
                     this.selectedGameId = game.getId();
-                    System.out.println("SELECTED: " + this.selectedGameId);
                 }
             );
 
@@ -196,6 +182,7 @@ public class GameMenuTUI extends TUI {
         // 1)
         this.playerNickname = this.getPlayerChosenNickname();
         // 2)
+        System.out.print("Choose a color (Available=[RED, GREEN, BLUE, YELLOW]): ");
         PlayerColor playerColor = this.getPlayerChosenColor();
         // 3)
         int gameLevel = this.getPlayerChosenLevel();
@@ -224,15 +211,60 @@ public class GameMenuTUI extends TUI {
         );
 
         // Finally, sending the message to the server through
-        // the selected  virtual client
+        // the selected virtual client
         this.client.sendMessage(new ConfigGame(this.playerNickname, playerColor, gameLevel, totalPlayers));
     }
 
-    // TODO: Wait that Matteo implements it
-    private void reconnectToGameInput() {
+    /**
+     * Method used to ask for nickname and color to join the game
+     */
+    private void joinGameInput(GameInfoDTO game, List<String> usedNicknames) throws Exception {
+        System.out.println("Joining the game with id " + game.getId() + "...");
 
+        // Ask the player for the nickname and the color to use
+        this.playerNickname = this.getPlayerChosenNickname();
+
+        System.out.print("Choose a color (Available=" + game.getAvailableColors() + "): ");
+        PlayerColor playerColor = this.getPlayerChosenColor();
+
+        this.currCommand = new CommandCTX(
+            "joinGame",
+            () -> {
+                synchronized (this.model) {
+                    this.model.setNickname(this.playerNickname);
+                    this.model.setPlayerColor(playerColor);
+                    this.currCommand = null;
+                }
+            },
+            () -> {
+                try {
+                    this.joinGameInput(game, usedNicknames);
+                }
+                catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        );
+
+        this.client.sendMessage(new NewPlayer(this.playerNickname, playerColor, game.getId()));
     }
 
+    /**
+     * Method used to reconnect a player to an existing game
+     */
+    private void reconnectToGameInput(AvailableGamesDTO availableGames, List<String> usedNicknames) throws Exception {
+        if (usedNicknames.isEmpty()) {
+            this.showLobbies(availableGames, false);
+            return;
+        }
+
+        System.out.println("Trying to reconnect you to the game...");
+
+        // Asking for the username
+        this.playerNickname = this.getPlayerChosenNickname();
+
+        this.client.sendMessage(new Reconnect(this.playerNickname));
+    }
 
     /**
      * @return The current player's chosen nickname
@@ -260,7 +292,6 @@ public class GameMenuTUI extends TUI {
         PlayerColor playerColor = null;
 
         do {
-            System.out.print("Choose a color (e.g.: BLUE, GREEN, RED, YELLOW): ");
             String colorInput = scanner.nextLine().trim();
 
             if (colorInput.isEmpty()) {
@@ -381,7 +412,7 @@ public class GameMenuTUI extends TUI {
      * @param availableGamesDTO The DTO containing all currently available games that a player can choose from
      */
     @Override
-    public void showLobbies(AvailableGamesDTO availableGamesDTO) {
+    public void showLobbies(AvailableGamesDTO availableGamesDTO, boolean isFirstAccess) {
         // Storing the available games to later show them, thus
         // storing the update for later
         this.availableGamesDTO = availableGamesDTO;
@@ -399,7 +430,7 @@ public class GameMenuTUI extends TUI {
         //      In this way, updates are asynchronous and can happen at any time
 
         // Finally, show the GameMenuTUI to the player
-        System.out.println("Welcome to...");
+        System.out.println("\nWelcome to...\n");
         TUI.printTitle();
         this.getMenuCommand();
     }

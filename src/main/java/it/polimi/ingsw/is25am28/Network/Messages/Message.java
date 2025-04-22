@@ -13,7 +13,8 @@ import java.util.List;
         @JsonSubTypes.Type(value = SelectTile.class, name = "SelectTile"),
         @JsonSubTypes.Type(value = DeselectTile.class, name = "DeselectTile"),
         @JsonSubTypes.Type(value = Ping.class, name = "Ping"),
-        @JsonSubTypes.Type(value = RefreshGames.class, name = "RefreshGames")
+        @JsonSubTypes.Type(value = RefreshGames.class, name = "RefreshGames"),
+        @JsonSubTypes.Type(value = Reconnect.class, name = "Reconnect")
 })
 
 public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, NewPlayer, Ping, Reconnect, RefreshGames, SelectTile {

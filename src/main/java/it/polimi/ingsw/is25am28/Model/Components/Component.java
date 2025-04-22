@@ -181,12 +181,11 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
     }
 
     /**
-     * method used to transform the component in a sendable way.
-     * the result is similar to the "Tile.json" file.
-     * @return
+     * Method used to transform the component in a sendable way.
+     * The result is similar to the "Tile.json" file.
      */
     public Map<String, Object> toMap() {
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         List<Integer> connectors = new ArrayList<>();
 
         for (int i = 0; i < 4; i++) {
@@ -196,8 +195,8 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
         map.put("id", getId());
         map.put("tid", getTypeId());
         map.put("connectors", connectors);
-        map.put( "row", row );
-        map.put( "col", col );
+        map.put("row", row);
+        map.put("col", col);
 
         return map;
     }

@@ -17,22 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ShipConstructionTUI extends TUI {
-    // Testing
-    public static void main(String[] args) {
-        List<ClientComponent> selectableComponents = new ArrayList<>();
-
-        List<Integer> connectors = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            connectors.add(3);
-        }
-
-        for (int i = 0; i < 152; i++) {
-            selectableComponents.add(new ClientStructural(i, connectors));
-        }
-
-        ShipConstructionTUI shipConstructionTUI = new ShipConstructionTUI(null, selectableComponents);
-    }
-
     // Default component matrix (row, col) dimensions
     public static final int DEFAULT_COMPONENT_ROWS = 8;
     public static final int DEFAULT_COMPONENT_COLS = 19;
@@ -109,7 +93,8 @@ public class ShipConstructionTUI extends TUI {
         List<String> allRows = new ArrayList<>();
         List<List<String>> row;
         ClientComponent currComponent = null;
-        int selectableComponentsAmount = this.shipConstructionDTO.getAllComponents().size();
+        List<ClientComponent> clientComponents = this.model.getState().getConstructionShipComponents();
+        int selectableComponentsAmount = clientComponents.size();
         int printedComponentCounter = 0;
 
         for (int i = 0; i < ShipConstructionTUI.DEFAULT_COMPONENT_ROWS; i++) {
@@ -121,8 +106,7 @@ public class ShipConstructionTUI extends TUI {
                     break;
                 }
 
-                // TODO: Understand how to generate the component
-                // currComponent = this.shipConstructionDTO.getAllComponents().get(((19 * i) + j));
+                currComponent = clientComponents.get((i * DEFAULT_COMPONENT_COLS) + j);
                 List<String> screen = new ArrayList<>();
 
                 // Adding the current component ID at the top of the screen
@@ -130,6 +114,7 @@ public class ShipConstructionTUI extends TUI {
 
                 if (currComponent.isFlipped()) {
                     // TODO: This is a full update, maybe there's the need to make this a differential update as well
+                    //       (NOTE: It can be done by storing the generated widget and updating it only when necessary)
                     screen.addAll(currComponent.generateWidget().getScreen());
                 }
                 else {
@@ -175,7 +160,6 @@ public class ShipConstructionTUI extends TUI {
 
                     // Then goes to the ship construction TUI and
                     // waits for a command to handle the selected tile
-                    // TODO: Print the ship construction TUI before the command prompt
                     this.getShipConstructionCommand();
                 }
             );
@@ -189,10 +173,24 @@ public class ShipConstructionTUI extends TUI {
                     // Flips the timer (if possible), otherwise throws an error saying
                     // that time it is currently flowing (i.e.: cannot be flipped until it finishes)
 
-                    // Then goes to the ship construction TUI and
-                    // waits for a command to handle the selected tile
-                    // TODO: Print the ship construction TUI before the command prompt
-                    this.getShipConstructionCommand();
+                    // if hourglass.flip() == true, then notify the user and reprint
+
+                    // TODO: Figure out where to put the hourglass
+                    // TODO: Substitute the "true" here with "timer.flip()"
+                    if (true) {
+                        System.out.println(PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA));
+                    }
+                    else {
+                        System.out.println(PrintUtils.addColor("Someone else already flipped the timer, you must wait that it ends before flipping it again!", ANSIColors.BRIGHT_MAGENTA));
+                    }
+
+                    // Reprints the component selection widget to terminal
+                    TUI.clearTerminal();
+                    this.selectableComponentsWidget.printWidget();
+
+                    // Asking the user for the next command in
+                    // the component selection input widget
+                    this.getComponentSelectionCommand();
                 }
             );
             componentSelectionCommand.appendString("Flip Timer");
@@ -207,15 +205,16 @@ public class ShipConstructionTUI extends TUI {
 
                     // TODO: Synchronize on the ClientDeck when a player is observing a particular deck
 
+                    // Printing the selected deck to terminal and staying there until the
+                    // user is satisfied with his observation and wants to go back
                     TUI.clearTerminal();
                     this.cardDeckVisualizationWidget.printWidget();
                     System.out.println("Enter any key to go back...");
                     this.scanner.nextLine();
 
-                    // Then goes to the ship construction TUI and
-                    // waits for a command to handle the selected tile
-                    // TODO: Print the ship construction TUI before the command prompt
-                    this.getShipConstructionCommand();
+                    // Asking the user for the next command in
+                    // the component selection input widget
+                    this.getComponentSelectionCommand();
                 }
             );
             componentSelectionCommand.appendString("Visualize Deck");
@@ -259,7 +258,8 @@ public class ShipConstructionTUI extends TUI {
 
                     // At the end, it goes back to asking again a new
                     // component selection command
-                    // TODO: Reprint the component selection UI
+                    this.generateSelectableComponentsWidget();
+                    this.selectableComponentsWidget.printWidget();
                     this.getComponentSelectionCommand();
                 }
             );
@@ -274,8 +274,8 @@ public class ShipConstructionTUI extends TUI {
 
                     // At the end, it goes back to asking again a new
                     // component selection command
-                    // TODO: Reprint the component selection UI
-                    this.getShipConstructionCommand();
+                    this.generateSelectableComponentsWidget();
+                    this.selectableComponentsWidget.printWidget();
                     this.getComponentSelectionCommand();
                 }
             );
@@ -290,7 +290,8 @@ public class ShipConstructionTUI extends TUI {
 
                     // At the end, it goes back to asking again a new
                     // component selection command
-                    // TODO: Reprint the component selection UI
+                    this.generateSelectableComponentsWidget();
+                    this.selectableComponentsWidget.printWidget();
                     this.getComponentSelectionCommand();
                 }
             );
@@ -306,7 +307,8 @@ public class ShipConstructionTUI extends TUI {
 
                     // At the end, it goes back to asking again a new
                     // component selection command
-                    // TODO: Reprint the component selection UI
+                    this.generateSelectableComponentsWidget();
+                    this.selectableComponentsWidget.printWidget();
                     this.getComponentSelectionCommand();
                 }
             );
@@ -361,7 +363,12 @@ public class ShipConstructionTUI extends TUI {
         // Update the selected component widget to display the currently selected one
         this.selectedComponentWidget = selectedComponent.generateWidget();
 
+        // Adding some padding and wrapping the final widget
+        this.selectedComponentWidget.addPadding(2, 2, 2, 2);
+        this.selectedComponentWidget.wrapWidgetWithBorder();
+
         // Move to the ship construction TUI by recomposing it
+        TUI.clearTerminal();
         this.composeShipConstructionWidget().printWidget();
 
         // Ask the user what to do with the selected component

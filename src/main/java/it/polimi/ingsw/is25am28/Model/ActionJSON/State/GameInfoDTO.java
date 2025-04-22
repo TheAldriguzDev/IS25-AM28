@@ -25,6 +25,7 @@ public class GameInfoDTO implements Serializable {
         this.id = id;
         this.level = level;
         this.totalPlayers = totalPlayers;
+        this.actualPlayers = actualPlayers;
         this.availableColors = availableColors;
     }
 

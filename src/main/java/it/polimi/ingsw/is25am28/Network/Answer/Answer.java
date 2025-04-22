@@ -9,7 +9,7 @@ import java.io.Serializable;
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Answer.class, name = "Answer"),
-        @JsonSubTypes.Type(value = Error.class, name = "Error"),
+        @JsonSubTypes.Type(value = ErrorAnswer.class, name = "ErrorAnswer"),
 })
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

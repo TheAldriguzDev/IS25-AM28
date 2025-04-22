@@ -15,8 +15,11 @@ public interface ClientUI {
     void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception;
 
     // Possible other states (maybe these are all the remaining ones?):
+    // void showFixShip(...) throws Exception;
+    // void showPopulateShip(...) throws Exception;
     // void showMainGameLoop(...) throws Exception;
     // void showEndGameResults(...) throws Exception;
+    // void showInsufficientPlayers(...) throws Exception;
 
     void commitCommand(String playerNickname);
     void showError(ErrorAnswer error);

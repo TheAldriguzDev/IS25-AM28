@@ -60,7 +60,8 @@ public class Client {
         ClientModel model = new ClientModel();
 
         if (uiType == 1) {
-            clientUI = new ClientTUI(model);
+//            clientUI = new ClientTUI(model);
+            clientUI = new GameMenuTUI(model);
         } else {
             throw new RuntimeException("UI Type not yet supported");
         }

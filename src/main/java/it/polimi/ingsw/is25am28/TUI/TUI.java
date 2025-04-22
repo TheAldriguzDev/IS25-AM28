@@ -72,22 +72,18 @@ public abstract class TUI implements ClientUI {
     /**
      * @param client The virtual client to set this TUI to
      */
-    @Override
     public void setVirtualClient(VirtualView client) {
         this.client = client;
     }
 
-    @Override
-    public void showLobbies(AvailableGamesDTO availableGames) throws RuntimeException {
+    public void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws RuntimeException {
         throw new RuntimeException(DEFAULT_WRONG_METHOD_INVOCATION_ERROR);
     }
 
-    @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
         throw new RuntimeException(DEFAULT_WRONG_METHOD_INVOCATION_ERROR);
     }
 
-    @Override
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws RuntimeException {
         throw new RuntimeException(DEFAULT_WRONG_METHOD_INVOCATION_ERROR);
     }
@@ -96,7 +92,6 @@ public abstract class TUI implements ClientUI {
      * Prints to terminal the current error and also
      * runs the onError command
      */
-    @Override
     public void showError(ErrorAnswer error) {
         synchronized (this.ioLock) {
             TUI.clearTerminal();
@@ -108,7 +103,6 @@ public abstract class TUI implements ClientUI {
      * Executes the command if the previous action (that created
      * the CommandCTX instance) was determined to be successful
      */
-    @Override
     public void commitCommand(String playerNickname) {
         if (playerNickname.equals(this.playerNickname) && this.currCommand != null) {
             this.currCommand.handleSuccess();
