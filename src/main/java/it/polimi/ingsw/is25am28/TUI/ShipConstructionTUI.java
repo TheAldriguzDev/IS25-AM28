@@ -459,7 +459,7 @@ public class ShipConstructionTUI extends TUI {
         }
 
         // TODO: Generate the ship widget from the ClientShip
-        this.shipWidget = this.model.getShip().generateWidget();
+//        this.shipWidget = this.model.getShip().generateWidget();
 
         // Move to the ship construction TUI by recomposing it and
         // ask the user what to do with the selected component
@@ -485,12 +485,12 @@ public class ShipConstructionTUI extends TUI {
         );
 
         // TODO: Write the SendShipConfirmation class as a new Network Message
-        this.client.sendMessage(
-            new SendShipConfirmation(
-                this.model.getNickname(),
-                this.model.getState().getCreatedShip()
-            )
-        );
+//        this.client.sendMessage(
+//            new SendShipConfirmation(
+//                this.model.getNickname(),
+//                this.model.getState().getCreatedShip()
+//            )
+//        );
     }
 
     /**
