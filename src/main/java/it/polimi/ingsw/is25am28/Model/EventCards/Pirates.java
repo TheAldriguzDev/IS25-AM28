@@ -328,7 +328,7 @@ public class Pirates extends EventCard {
                 piratesStateJSON.setRequiredFirepower(this.requiredFirepower);
                 piratesStateJSON.setGivenCredits(this.givenCredits);
                 piratesStateJSON.setMovementSteps(this.movementSteps);
-                piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
+
             } else {
                 // Send information on the players that are going to be hit, along with the plasmaShot's data and the dice result
                 // TODO : Piuttosto che inviare la lista dei player sconfitti inviare un boolean (si decide se inviarlo in base a se il player è presente nella lista degli sconfitti)
@@ -336,6 +336,7 @@ public class Pirates extends EventCard {
                 for (Player player : playersToHit) {
                     defeatedPlayers.add(player.getNickname());
                 }
+                piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
                 piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
                 piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
             }
