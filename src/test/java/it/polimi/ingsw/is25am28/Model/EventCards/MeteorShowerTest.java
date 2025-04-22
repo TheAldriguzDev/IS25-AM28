@@ -273,6 +273,8 @@ class MeteorShowerTest {
 
         // Meteor 1 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
+        assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getValue());
 
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
@@ -331,6 +333,8 @@ class MeteorShowerTest {
 
         // Meteor 1 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        assertEquals("p1", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
+        assertEquals(1, meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getValue().size());
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -388,6 +392,8 @@ class MeteorShowerTest {
 
         // Meteor 2 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        assertEquals("p2", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
+        assertEquals(1, meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getValue().size());
 
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
@@ -444,6 +450,8 @@ class MeteorShowerTest {
 
         // Meteor 2 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        assertEquals("p1", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
+        assertEquals(1, meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getValue().size());
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -501,6 +509,8 @@ class MeteorShowerTest {
 
         // Meteor 3 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        assertEquals("p2", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
+        assertEquals(1, meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getValue().size());
 
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
@@ -557,6 +567,8 @@ class MeteorShowerTest {
 
         // Meteor 3 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        assertEquals("p1", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
+        assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getValue());
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();

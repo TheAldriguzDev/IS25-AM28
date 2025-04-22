@@ -68,7 +68,7 @@ public class CardStateJSON extends ActionJSON {
     private int currMeteorIndex;
     private int diceThrowResult;
     private Pair<Integer, Integer> currMeteorDescriptor;
-
+    private Pair<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
 
     // ======== Model Information Methods ======== //
 
@@ -412,6 +412,16 @@ public class CardStateJSON extends ActionJSON {
     @JsonSetter("currMeteorDescriptor")
     public void setCurrMeteorDescriptor(Pair<Integer, Integer> currMeteorDescriptor) {
         this.currMeteorDescriptor = currMeteorDescriptor;
+    }
+
+    @JsonGetter("previousPlayerRemovedComponents")
+    public Pair<String, List<Map<String, Object>>> getPreviousPlayerRemovedComponents() {
+        return this.previousPlayerRemovedComponents;
+    }
+
+    @JsonSetter("previousPlayerRemovedComponents")
+    public void setPreviousPlayerRemovedComponents(Pair<String, List<Map<String, Object>>> removedComponentsPerPlayer) {
+        this.previousPlayerRemovedComponents = removedComponentsPerPlayer;
     }
 
     // ======== //

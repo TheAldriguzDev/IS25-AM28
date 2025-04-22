@@ -27,6 +27,9 @@ public class MeteorShower extends EventCard {
     private int diceThrowResult;
     private final Random random;
 
+    private List<Component> prevPlayerRemovedComponents;
+    private String prevPlayer;
+
     public MeteorShower(
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
@@ -39,6 +42,8 @@ public class MeteorShower extends EventCard {
         this.diceThrowResult = -1;
         this.meteorSequence = new ArrayList<Meteor>();
         this.random = new Random();
+        this.prevPlayer = null;
+        this.prevPlayerRemovedComponents = null;
 
         try {
             for (List<Integer> meteorDescriptor : meteorSequence) {
@@ -386,13 +391,26 @@ public class MeteorShower extends EventCard {
             // that was hit from the current player's ship
             if (toHit != null && !threatDestroyed) {
                 try {
-                    shipPtr.removeComponent(
+                    // The current player will become the previous player after the
+                    // current meteor effects have been applied to him, therefore in
+                    // the next state this player will become the previous player and to
+                    // perform a differential update, we need to store the effects of the meteor
+                    // on the current player before the card moves to the next player.
+                    this.prevPlayer = this.currentPlayer.get().getNickname();
+                    this.prevPlayerRemovedComponents = shipPtr.removeComponent(
                             toHit.getPosition()[0],
                             toHit.getPosition()[1]
                     );
                 } catch (CoreDeletionAttemptException e) {
                     this.getBoard().eliminatePlayer(this.currentPlayer.get());
                 }
+            }
+            else {
+                // Otherwise, if the player did not get hit, just express it
+                // by setting the prevPlayerRemovedComponents list to null
+                // (since, again, the current player wasn't hit by any meteors)
+                this.prevPlayer = this.currentPlayer.get().getNickname();
+                this.prevPlayerRemovedComponents = null;
             }
         }
 
@@ -421,6 +439,30 @@ public class MeteorShower extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+
+        // The differential update happens always except when the card is
+        // first picked (since no one has been hit with a meteor yet)
+        if (this.prevPlayerRemovedComponents != null) {
+            // Setting which components were removed from the previous player, thus
+            // performing a differential update on what changed before the card
+            // transitioned to the next state
+            cardState.setPreviousPlayerRemovedComponents(
+                new Pair<>(
+                    this.prevPlayer,
+                    this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList()
+                )
+            );
+        }
+        else {
+            // No components were removed, therefore the
+            // prevPlayerRemovedComponents list is null
+            cardState.setPreviousPlayerRemovedComponents(
+                new Pair<>(
+                    this.prevPlayer,
+                    null
+                )
+            );
+        }
 
         // If the current player is present, then add it to the card state
         this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
