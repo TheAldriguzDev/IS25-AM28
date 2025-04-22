@@ -6,16 +6,19 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 public class Stardust extends EventCard {
+    private List<Pair<String, Integer>> updatedPositions;
 
     public Stardust(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
-
+        updatedPositions = new ArrayList<>();
     }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
@@ -34,6 +37,11 @@ public class Stardust extends EventCard {
                     }
 
                     int movementSteps = player.getShip().getExposedConnectorAmount();
+
+                    if (movementSteps != 0) {
+                        updatedPositions.add(new Pair<>(playerNickname, movementSteps));
+                    }
+
                     getBoard().movePlayerBackwards(player, movementSteps);
                     if (player.equals(this.players.getLast())) {
                         this.cardUsed(); // Mark the card as used
