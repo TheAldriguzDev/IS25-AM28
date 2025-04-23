@@ -2,26 +2,85 @@ package it.polimi.ingsw.is25am28.TUI;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Network.Messages.SelectTile;
+import it.polimi.ingsw.is25am28.Network.Messages.SendShipConfirmation;
+import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
+import it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import javafx.util.Pair;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class ShipConstructionTUI extends TUI {
-
+    // Testing
     public static void main(String[] args) {
-        ShipConstructionTUI shipConstructionTUI = new ShipConstructionTUI(null);
+        List<Integer> connectors = new ArrayList<>();
 
+        for (int i = 0; i < 4; i++) {
+            connectors.add(3);
+        }
 
+        ShipConstructionDTO shipConstructionDTO = new ShipConstructionDTO();
+        List<Component> components = new ArrayList<>();
+
+        components.add(new Battery(connectors, 2));
+        components.add(new Battery(connectors, 3));
+        components.add(new Cabin(connectors, false));
+        components.add(new Cannon(connectors, 1));
+        components.add(new Cannon(connectors, 2));
+        components.add(new Engine(connectors, 1));
+        components.add(new Engine(connectors, 2));
+        components.add(new Shield(connectors));
+        components.add(new Storage(connectors, 2, false));
+        components.add(new Storage(connectors, 3, false));
+        components.add(new Storage(connectors, 1, true));
+        components.add(new Storage(connectors, 2, true));
+        components.add(new Structural(connectors));
+        components.add(new Vital(connectors, 0));
+        components.add(new Vital(connectors, 1));
+
+        int id = 0;
+        for (Component c : components) {
+            c.setId(id);
+            id++;
+        }
+
+        ClientModel model = new ClientModel();
+        model.setState(new ClientShipConstructionState(model, components.stream().map(Component::toMap).toList()));
+        ShipConstructionTUI shipConstructionTUI = new ShipConstructionTUI(model);
+
+        int connectionType = 1;
+
+        if (connectionType == 1) {
+            try {
+                shipConstructionTUI.setVirtualClient(new RMIClient("127.0.0.1", 7777, UUID.randomUUID(), shipConstructionTUI, model));
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            try {
+                shipConstructionTUI.setVirtualClient(new TCPClient("127.0.0.1", 8888, shipConstructionTUI, model));
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        shipConstructionDTO.setAllComponents(null);
+        shipConstructionTUI.showShipConstruction(shipConstructionDTO);
     }
 
     // Default component matrix (row, col) dimensions
@@ -46,25 +105,31 @@ public class ShipConstructionTUI extends TUI {
 
     // Placeholder for the currently selected component
     private ClientComponent selectedComponent;
-    private boolean isSelectedComponentReserved;
+    private boolean isSelectedTileReserved;
 
     // Constructor
     public ShipConstructionTUI(ClientModel model) {
         super(model);
 
-        // General initializations
+        // Initializing the selected component
         this.selectedComponent = null;
-        this.isSelectedComponentReserved = false;
+        this.selectedComponentWidget = null;
+        this.isSelectedTileReserved = false;
+
+        // TODO: Set the model difficulty elsewhere
+        this.model.setDifficultyLevel(2);
+
+        // Initializing this player's ClientShip
+        this.model.setShip(new ClientShip(this.model.getDifficultyLevel()));
 
         // Generating the covered component widget
         this.generateCoveredComponentWidget();
 
         // Initializing all selectable components
-        this.selectableComponentsWidget = new WidgetTUI();
+        this.selectableComponentsWidget = null;
 
-        // Initializing the staging area as empty
+        // Initializing the staging area with placeholders
         this.reservedComponentsWidget = null;
-        this.selectedComponentWidget = null;
 
         // Initializing the component selection command widget
         this.componentSelectionCommandsWidget = new InputWidgetTUI();
@@ -77,69 +142,6 @@ public class ShipConstructionTUI extends TUI {
         this.shipConstructionCommandsWidget.setNewScanner(System.in);
         this.shipConstructionCommandsWidget.setColumnGroupingAmount(COMMANDS_PER_COLUMN);
         this.initShipConstructionCommands();
-    }
-
-    /**
-     * Generates a widget that will act as the back side of each component when covered
-     */
-    private void generateCoveredComponentWidget() {
-        if (this.coveredComponentWidget == null) {
-            this.coveredComponentWidget = new WidgetTUI();
-
-            this.coveredComponentWidget.setHeight(3);
-            this.coveredComponentWidget.setWidth(11);
-            this.coveredComponentWidget.wrapWidgetWithBorder();
-        }
-    }
-
-    /**
-     * Generates the selectableComponentsWidget with its screen set as the matrix of all the selectable components.
-     * (NOTE: At the beginning, all components are facing down because no one has flipped them yet)
-     */
-    private void generateSelectableComponentsWidget() {
-        if (this.selectableComponentsWidget == null) {
-            // Instantiating the selectableComponents widget if
-            // it wasn't already initialized
-            this.selectableComponentsWidget = new WidgetTUI();
-        }
-
-        List<String> allRows = new ArrayList<>();
-        List<List<String>> row = new ArrayList<>();
-        ClientComponent currComponent;
-        List<ClientComponent> clientComponents = this.model.getState().getConstructionShipComponents();
-
-        for (int i = 0; i < ShipConstructionTUI.DEFAULT_COMPONENT_ROWS; i++) {
-            for (int j = 0; j < ShipConstructionTUI.DEFAULT_COMPONENT_COLS; j++) {
-                currComponent = clientComponents.get((i * DEFAULT_COMPONENT_COLS) + j);
-
-                // Only adding something to print if the component is visible
-                if (currComponent.isVisible()) {
-                    List<String> screen = new ArrayList<>();
-
-                    // Adding the current component ID at the top of the screen
-                    screen.add("(" + currComponent.getID() + ")");
-
-                    if (currComponent.isFlipped()) {
-                        screen.addAll(currComponent.generateWidget().getScreen());
-                    }
-                    else {
-                        screen.addAll(this.coveredComponentWidget.getScreen());
-                    }
-
-                    row.add(WidgetTUI.fillScreenWithSpaces(screen));
-                }
-            }
-
-            if (!row.isEmpty()) {
-                // Composing the current component widget row
-                allRows.addAll(WidgetTUI.composeScreensHorizontally(row));
-                row = new ArrayList<>();
-            }
-        }
-
-        // Composing all rows into the final single matrix
-        this.selectableComponentsWidget.setScreen(allRows);
-        this.selectableComponentsWidget.wrapWidgetWithBorder();
     }
 
     /**
@@ -164,6 +166,8 @@ public class ShipConstructionTUI extends TUI {
 
                     // Then goes to the ship construction TUI and
                     // waits for a command to handle the selected tile
+                    TUI.clearTerminal();
+                    this.composeShipConstructionWidget().printWidget();
                     this.getShipConstructionCommand();
                 }
             );
@@ -180,6 +184,8 @@ public class ShipConstructionTUI extends TUI {
                         // If a reserved tile was present AND correctly selected, then
                         // go to the ship construction TUI and wait for a command
                         // to handle the selected tile
+                        TUI.clearTerminal();
+                        this.composeShipConstructionWidget().printWidget();
                         this.getShipConstructionCommand();
                     }
                     catch (IllegalArgumentException e) {
@@ -200,6 +206,10 @@ public class ShipConstructionTUI extends TUI {
                     // Flips the timer (if possible), otherwise throws an error saying
                     // that time it is currently flowing (i.e.: cannot be flipped until it finishes)
 
+                    // Printing the selectable components widget before the timer flip result
+                    TUI.clearTerminal();
+                    this.selectableComponentsWidget.printWidget();
+
                     // if hourglass.flip() == true, then notify the user and reprint
 
                     // TODO: Figure out where to put the hourglass
@@ -213,8 +223,6 @@ public class ShipConstructionTUI extends TUI {
 
                     // Asking the user for the next command in
                     // the component selection input widget
-                    TUI.clearTerminal();
-                    this.selectableComponentsWidget.printWidget();
                     this.getComponentSelectionCommand();
                 }
             );
@@ -252,7 +260,13 @@ public class ShipConstructionTUI extends TUI {
                 "5",
                 () -> {
                     if (this.getShipFinishedConfirmation()) {
-                        this.sendShipConfirmation();
+                        // Sending the ship to the server
+                        try {
+                            this.sendShipConfirmation();
+                        }
+                        catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
                     }
                     else {
                         // If player refuses to send the confirmation to conclude the ship
@@ -281,24 +295,14 @@ public class ShipConstructionTUI extends TUI {
                 "1",
                 () -> {
                     // Deselects the component that is currently taken by this user
-                    // only if it's not a reserved component
-                    if (!this.isSelectedComponentReserved) {
-                        this.deselectTile();
+                    this.deselectTile();
 
-                        // At the end, it goes back to asking again a new
-                        // component selection command
-                        TUI.clearTerminal();
-                        this.generateSelectableComponentsWidget();
-                        this.selectableComponentsWidget.printWidget();
-                        this.getComponentSelectionCommand();
-                    }
-                    else {
-                        // If it is a reserved component, then it notifies the user
-                        // of the error and goes back to the ship construction command widget
-                        TUI.clearTerminal();
-                        this.composeShipConstructionWidget().printWidget();
-                        this.getShipConstructionCommand();
-                    }
+                    // At the end, it goes back to asking again a new
+                    // component selection command
+                    TUI.clearTerminal();
+                    this.generateSelectableComponentsWidget();
+                    this.selectableComponentsWidget.printWidget();
+                    this.getComponentSelectionCommand();
                 }
             );
             shipConstructionCommand.appendString("Deselect Tile");
@@ -310,31 +314,48 @@ public class ShipConstructionTUI extends TUI {
                 () -> {
                     List<ClientComponent> reservedComponents = this.model.getState().getReservedComponents();
 
-                    // Puts the selected component in the reserved tiles
-                    // If it can't, then it'll ask the user to do something else
-                    if (reservedComponents.size() < 2) {
-                        reservedComponents.add(this.selectedComponent);
+                    // If the currently selected tile is from the reserved components, then
+                    // just don't do anything and leave it in the reserved components list
+                    if (!this.isSelectedTileReserved) {
+                        // Puts the selected component in the reserved tiles
+                        // If it can't, then it'll ask the user to do something else
+                        if (reservedComponents.size() < 2) {
+                            // Adding the currently selected component to the reserved component list
+                            this.model.getState().reserveTile(this.selectedComponent);
 
-                        // Setting the currently selected tile as non-visible, since the player decided
-                        // to reserve it and thus place it in the near future
-                        this.selectedComponent.setIsVisible(false);
+                            // Setting the currently selected tile as non-visible, since the player decided
+                            // to reserve it and thus place it in the near future
+                            this.selectedComponent.setIsVisible(false);
+                            this.selectedComponent = null;
 
-                        // At the end, it goes back to asking again a new
-                        // component selection command
+                            // At the end, it goes back to asking again a new
+                            // component selection command
+                            TUI.clearTerminal();
+                            this.generateSelectableComponentsWidget();
+                            this.selectableComponentsWidget.printWidget();
+                            this.getComponentSelectionCommand();
+                        }
+                        else {
+                            // Otherwise, it means that the user already has 2 reserved tiles,
+                            // therefore he cannot store any additional ones
+                            System.out.println(PrintUtils.addColor("ERROR: You already have 2 (max) reserved tiles! Use them before storing others!", ANSIColors.RED));
+
+                            // Go back to asking the user what to do with the selected component
+                            TUI.clearTerminal();
+                            this.composeShipConstructionWidget().printWidget();
+                            this.getShipConstructionCommand();
+                        }
+                    }
+                    else {
+                        // Since the current component is from the reserved component list, then
+                        // just go ahead and remove it from the selected component attribute
+                        this.selectedComponent = null;
+
+                        // And go back to the component selection screen
                         TUI.clearTerminal();
                         this.generateSelectableComponentsWidget();
                         this.selectableComponentsWidget.printWidget();
                         this.getComponentSelectionCommand();
-                    }
-                    else {
-                        // Otherwise, it means that the user already has 2 reserved tiles,
-                        // therefore he cannot store any additional ones
-                        System.out.println(PrintUtils.addColor("ERROR: You already have 2 (max) reserved tiles! Use them before storing others!", ANSIColors.RED));
-
-                        // Go back to asking the user what to do with the selected component
-                        TUI.clearTerminal();
-                        this.composeShipConstructionWidget().printWidget();
-                        this.getShipConstructionCommand();
                     }
                 }
             );
@@ -345,11 +366,14 @@ public class ShipConstructionTUI extends TUI {
             shipConstructionCommand = new CommandWidgetTUI(
                 "3",
                 () -> {
-                    // Puts the currently selected tile in the ship
-                    // Need to ask for the coordinates
+                    // Puts the currently selected tile in the ship and in the
+                    // ClientShipConstructionState when the ship will be sent to
+                    // the server for validation
+                    this.handleClientComponentAddition();
 
-                    // TODO: Place the tile on the ClientShip
-                    //       + Add the ComponentHelper<ConstructionComponentDTO> of this component into the ClientShipConstructionState
+                    // Deselecting the tile so that it clears the currently
+                    // selected component (since it just got placed)
+                    this.deselectTile();
 
                     // At the end, it goes back to asking again a new
                     // component selection command
@@ -372,23 +396,35 @@ public class ShipConstructionTUI extends TUI {
         // Getting the player's chosen tile by its index
         int idx = this.getTileIndex();
 
+        // If the selection was successful, then we get the user's selected
+        // component and store it in the aptly named attribute
+        this.selectedComponent = this.model.getState().getConstructionShipComponents().get(idx);
+
+        // Then generate the selected component widget
+        this.generateSelectedComponentWidget();
+
         // After getting the player's chosen tile index, it gets sent to the server who
         // will then validate whether the tile can be selectable or not and, from here, the client
         // will then execute either the onSuccess or onError lambda based on the server's response
         this.currCommand = new CommandCTX(
             "selectTile",
             () -> {
-                // If the selection was successful we jump to the method that handles the operations
-                try {
-                    this.handleSelectedTile(this.model.getState().getConstructionShipComponents().get(idx));
-                }
-                catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                // Setting the selected component as flipped since it was
+                // just uncovered by the current player
+                this.selectedComponent.setAsFlipped();
+
+                // Move to the ship construction TUI by recomposing it and
+                // ask the user what to do with the selected component
+                TUI.clearTerminal();
+                this.composeShipConstructionWidget().printWidget();
+                this.getShipConstructionCommand();
             },
             () -> {
-                // If an error occurred we re-execute the command
+                // If an error occurred we re-execute the command and reset
+                // the currently selected component attribute and widget
                 try {
+                    this.selectedComponent = null;
+                    this.selectedComponentWidget = null;
                     this.selectTile();
                 }
                 catch (Exception e) {
@@ -404,74 +440,97 @@ public class ShipConstructionTUI extends TUI {
     }
 
     /**
-     * Selects the player's chosen reserved tile
-     * to use (if present) when building the ship
-     */
-    private void selectReservedTile() throws IllegalArgumentException {
-        if (this.model.getState().getReservedComponents().isEmpty()) {
-            throw new IllegalArgumentException(PrintUtils.addColor("ERROR: You don't have any reserved components!", ANSIColors.RED));
-        }
-        else {
-            // Asking the user to either choose
-            int idx = this.getReservedTileIndex();
-
-            // Set the flag to true so that the currently selected reserved
-            // component cannot be deselected
-            this.isSelectedComponentReserved = true;
-        }
-    }
-
-    /**
      * Deselects the currently selected tile, leaving it available for other players
      */
     private void deselectTile() {
         this.selectedComponent = null;
         this.selectableComponentsWidget = null;
-        this.isSelectedComponentReserved = false;
+        this.isSelectedTileReserved = false;
     }
 
     /**
-     * Method used to handle the selected component by the client
+     * Handles the addition of the selected component to the current player's client ship
      */
-    private void handleSelectedTile(ClientComponent selectedComponent) throws IOException {
-        // Store the current selected tile in the appropriate attribute
-        this.selectedComponent = selectedComponent;
-        this.selectedComponent.setAsFlipped();
+    private void handleClientComponentAddition() {
+        Pair<Integer, Integer> componentPosition;
 
-        // Update the selected component widget to display the currently selected one
-        this.selectedComponentWidget = new WidgetTUI();
-        this.selectedComponentWidget.appendString("[SELECTED COMPONENT]");
-        this.selectedComponentWidget.appendScreen(selectedComponent.generateWidget().getScreen());
-        this.selectedComponentWidget = WidgetTUI.fillScreenWithSpaces(this.selectedComponentWidget);
-        this.selectedComponentWidget.centerWidgetScreen();
+        // Adding the client component both to the client ship and
+        // to the ClientShipConstructionState to send it later when the
+        // ship is completed and needs to be sent to the server for validation
+        if (this.selectedComponent != null) {
+            // Getting the component's coordinates
+            componentPosition = this.getComponentCoordinates();
 
-        // Adding some padding and wrapping the final widget
-        this.selectedComponentWidget.addPadding(1, 2, 1, 2);
-        this.selectedComponentWidget.wrapWidgetWithBorder();
+            // Adding the client component to the ship descriptor inside ClientShipConstructionState
+            this.model.getState().placeTile(
+                this.selectedComponent,
+                componentPosition.getKey(),
+                componentPosition.getValue()
+            );
 
-        // Creating the reservedComponents widget
-        this.reservedComponentsWidget = new WidgetTUI();
-        this.reservedComponentsWidget.appendString("[RESERVED COMPONENTS]");
+            // And then adding the currently selected component at those coordinates
+            // in the current player's ship
+            this.model.getShip().addComponent(
+                    this.selectedComponent,
+                    componentPosition.getKey(),
+                    componentPosition.getValue()
+            );
 
-        // Generating the reserved components widgets
-        for (ClientComponent reservedComponent : this.model.getState().getReservedComponents()) {
-            this.reservedComponentsWidget.appendScreen(reservedComponent.generateWidget().getScreen());
+            // Since the component was added, it is now unusable for other
+            // players thus they must not be able to see it
+            this.selectedComponent.setIsVisible(false);
+
+            // If the currently selected tile is from the reserve, then it needs
+            // to be removed from the reserved component list since it was just placed
+            if (this.isSelectedTileReserved) {
+                this.model.getState().getReservedComponents().remove(this.selectedComponent);
+            }
+
+            // Updating the ship widget
+            this.shipWidget = this.model.getShip().generateWidget();
         }
+    }
 
-        // TODO: Generate the ship widget from the ClientShip
-//        this.shipWidget = this.model.getShip().generateWidget();
+    /**
+     * @return A pair containing the current player's chosen component coordinates to use
+     */
+    private Pair<Integer, Integer> getComponentCoordinates() {
+        boolean validCoordinate;
+        int i, j;
 
-        // Move to the ship construction TUI by recomposing it and
-        // ask the user what to do with the selected component
-        TUI.clearTerminal();
-        this.composeShipConstructionWidget().printWidget();
-        this.getShipConstructionCommand();
+        // Getting the row --> i
+        do {
+            System.out.print("Insert row where to put the selected component: ");
+
+            i = this.scanner.nextInt();
+            validCoordinate = (i > 0 && i < ClientShip.getGridDimensions().getKey());
+
+            if (!validCoordinate) {
+                System.out.println(PrintUtils.addColor("ERROR: Given row is out of bounds (range is [0, " + ClientShip.getGridDimensions().getKey() + "))", ANSIColors.RED));
+            }
+        }
+        while (!validCoordinate);
+
+        // Getting the col --> j
+        do {
+            System.out.print("Insert column where to put the selected component: ");
+
+            j = this.scanner.nextInt();
+            validCoordinate = (j > 0 || j < ClientShip.getGridDimensions().getValue());
+
+            if (!validCoordinate) {
+                System.out.println(PrintUtils.addColor("ERROR: Given column is out of bounds (range is [0, " + ClientShip.getGridDimensions().getValue() + "))", ANSIColors.RED));
+            }
+        }
+        while (!validCoordinate);
+
+        return new Pair<>(i, j);
     }
 
     /**
      * Sends the ship to the server for evaluation
      */
-    private void sendShipConfirmation() {
+    private void sendShipConfirmation() throws Exception {
         this.currCommand = new CommandCTX(
             "sendShipConfirmation",
             () -> {
@@ -484,13 +543,145 @@ public class ShipConstructionTUI extends TUI {
             }
         );
 
-        // TODO: Write the SendShipConfirmation class as a new Network Message
-//        this.client.sendMessage(
-//            new SendShipConfirmation(
-//                this.model.getNickname(),
-//                this.model.getState().getCreatedShip()
-//            )
-//        );
+        this.client.sendMessage(
+            new SendShipConfirmation(
+                this.model.getNickname(),
+                this.model.getState().getCreatedShip()
+            )
+        );
+    }
+
+    /**
+     * Generates the selected component's widget and the frame around it
+     */
+    public void generateSelectedComponentWidget() {
+        if (this.selectedComponent != null) {
+            this.selectedComponentWidget = new WidgetTUI();
+
+            // Adding a title and some padding at the bottom
+            this.selectedComponentWidget.appendString("[SELECTED COMPONENT]");
+            this.selectedComponentWidget.addPadding(0, 0, 1, 0);
+
+            // Adding the selected component's generated widget screen
+            this.selectedComponentWidget.appendScreen(this.selectedComponent.generateWidget().getScreen());
+
+            // Centering the screen, adding some padding and then wrapping the final widget
+            this.selectedComponentWidget.centerWidgetScreen();
+            this.selectedComponentWidget.addPadding(0, 2, 1, 2);
+            this.selectedComponentWidget.wrapWidgetWithBorder();
+        }
+    }
+
+    /**
+     * Generates the reserved component widget and the frame around it
+     */
+    public void generateReservedComponentWidget() {
+        this.reservedComponentsWidget = new WidgetTUI();
+        int i, emptySlots;
+
+        // Adding a title
+        this.reservedComponentsWidget.appendString("[RESERVED COMPONENTS]");
+
+        // Adding each reserved component in the list
+        int reservedComponentAmount = this.model.getState().getReservedComponents().size();
+        for (i = 0; i < reservedComponentAmount; i++) {
+            // Adding a single space just for padding
+            this.reservedComponentsWidget.appendString(PrintUtils.SPACE);
+            this.reservedComponentsWidget.appendString("[SLOT " + (i + 1) + "]");
+            this.reservedComponentsWidget.appendScreen(this.model.getState().getReservedComponents().get(i).generateWidget().getScreen());
+        }
+
+        // Substituting empty slots with placeholder widgets
+        emptySlots = 2 - reservedComponentAmount;
+        while (emptySlots > 0) {
+            // Adding a single space just for padding
+            this.reservedComponentsWidget.appendString(PrintUtils.SPACE);
+            this.reservedComponentsWidget.appendString("[SLOT " + (i + 1) + "]");
+            this.reservedComponentsWidget.appendScreen(this.coveredComponentWidget.getScreen());
+            emptySlots--;
+            i++;
+        }
+
+        // Finally, add some more padding, then center the content and finally wrap it all
+        this.reservedComponentsWidget.addPadding(0, 2, 0, 2);
+        this.reservedComponentsWidget.centerWidgetScreen();
+        this.reservedComponentsWidget.wrapWidgetWithBorder();
+    }
+
+    /**
+     * Generates a widget that will act as the back side of each component when covered
+     */
+    private void generateCoveredComponentWidget() {
+        if (this.coveredComponentWidget == null) {
+            this.coveredComponentWidget = new WidgetTUI();
+
+            this.coveredComponentWidget.setHeight(3);
+            this.coveredComponentWidget.setWidth(11);
+            this.coveredComponentWidget.wrapWidgetWithBorder();
+        }
+    }
+
+    /**
+     * Generates the selectableComponentsWidget with its screen set as the matrix of all the selectable components.
+     * (NOTE: At the beginning, all components are facing down because no one has flipped them yet)
+     */
+    private void generateSelectableComponentsWidget() {
+        if (this.selectableComponentsWidget == null) {
+            // Instantiating the selectableComponents widget if
+            // it wasn't already initialized
+            this.selectableComponentsWidget = new WidgetTUI();
+        }
+
+        List<String> allRows = new ArrayList<>();
+        List<List<String>> row = new ArrayList<>();
+        ClientComponent currComponent;
+        List<ClientComponent> clientComponents = this.model.getState().getConstructionShipComponents();
+
+        int availableComponents = clientComponents.size();
+        int iteratedComponents = 0;
+
+        for (int i = 0; i < ShipConstructionTUI.DEFAULT_COMPONENT_ROWS; i++) {
+            for (int j = 0; j < ShipConstructionTUI.DEFAULT_COMPONENT_COLS; j++) {
+                currComponent = clientComponents.get((i * DEFAULT_COMPONENT_COLS) + j);
+
+                // Only adding something to print if the component is visible
+                if (currComponent.isVisible()) {
+                    List<String> screen = new ArrayList<>();
+
+                    // Adding the current component ID at the top of the screen
+                    screen.add("(" + currComponent.getID() + ")");
+
+                    if (currComponent.isFlipped()) {
+                        screen.addAll(currComponent.generateWidget().getScreen());
+                    }
+                    else {
+                        screen.addAll(this.coveredComponentWidget.getScreen());
+                    }
+
+                    row.add(WidgetTUI.fillScreenWithSpaces(screen));
+                }
+
+                iteratedComponents++;
+
+                if (iteratedComponents == availableComponents) {
+                    break;
+                }
+            }
+
+            if (!row.isEmpty()) {
+                // Composing the current component widget row
+                allRows.addAll(WidgetTUI.composeScreensHorizontally(row));
+                row = new ArrayList<>();
+            }
+
+            if (iteratedComponents == availableComponents) {
+                break;
+            }
+        }
+
+        // Composing all rows into the final single matrix
+        this.selectableComponentsWidget.setScreen(allRows);
+        this.selectableComponentsWidget.wrapWidgetWithBorder();
     }
 
     /**
@@ -499,12 +690,17 @@ public class ShipConstructionTUI extends TUI {
      * (NOTE: This method only recomposes the widgets together, each widget is updated separately)
      */
     private WidgetTUI composeShipConstructionWidget() {
+        // Ensuring each widget is updated
+        this.generateSelectedComponentWidget();
+        this.generateReservedComponentWidget();
+        this.shipWidget = this.model.getShip().getShipGridWidget();
+
         return WidgetTUI.composeTwoWidgetsHorizontally(
-            WidgetTUI.composeTwoWidgetsHorizontally(
+            WidgetTUI.composeTwoWidgetsVertically(
                 this.selectedComponentWidget,
-                this.shipWidget
-            ),
-            this.reservedComponentsWidget
+                this.reservedComponentsWidget
+            ).addPadding(0, 1, 0, 0).centerWidgetScreen(),
+            this.shipWidget
         );
     }
 
@@ -527,7 +723,7 @@ public class ShipConstructionTUI extends TUI {
                 try {
                     int tmpIndex = Integer.parseInt(input);
 
-                    if (tmpIndex < 0 || tmpIndex > 151) {
+                    if (tmpIndex < 0 || tmpIndex > selectableComponentsAmount) {
                         System.out.println(PrintUtils.addColor("ERROR: Given index must be between 0 and " + (selectableComponentsAmount - 1) + ".", ANSIColors.RED));
                     }
                     else {
@@ -540,7 +736,7 @@ public class ShipConstructionTUI extends TUI {
             }
 
             if (idx >= 0 && !this.model.getState().getConstructionShipComponents().get(idx).isVisible()) {
-                System.out.println(PrintUtils.addColor("ERROR: This component is already selected by someone else. You must wait that other player to make it available again", ANSIColors.RED));
+                System.out.println(PrintUtils.addColor("ERROR: This component is already selected by someone else.", ANSIColors.RED));
                 idx = -1;   // Reset to retry
             }
         }
@@ -550,22 +746,30 @@ public class ShipConstructionTUI extends TUI {
     }
 
     /**
-     * @return The user's chosen reserved tile index to select and possibly
+     * Selects the chosen reserved component to use it
      */
-    private int getReservedTileIndex() {
-        int idx = -1;
+    private void selectReservedTile() throws IllegalArgumentException {
+        boolean componentRetrieved;
+
+        componentRetrieved = false;
+
+        if (this.model.getState().getReservedComponents().isEmpty()) {
+            throw new IllegalArgumentException(PrintUtils.addColor("ERROR: You don't have any reserved components!", ANSIColors.RED));
+        }
 
         do {
-            System.out.println("Enter reserved tile index to select (0 = Slot1, 1 = Slot2):");
-            idx = this.scanner.nextInt();
+            System.out.print("Enter reserved tile index to select (0 = Slot1, 1 = Slot2): ");
 
-            if (idx != 0 && idx != 1) {
-                System.out.println(PrintUtils.addColor("ERROR: Wrong reserved tile index. The only options are index 0 (Slot1) and index 1 (Slot2).", ANSIColors.RED));
+            try {
+                this.selectedComponent = this.model.getState().getReservedComponents().get(this.scanner.nextInt());
+                this.isSelectedTileReserved = true;
+                componentRetrieved = true;
+            }
+            catch (IndexOutOfBoundsException e) {
+                System.out.println(PrintUtils.addColor("ERROR: Wrong reserved tile index.", ANSIColors.RED));
             }
         }
-        while (idx != 0 && idx != 1);
-
-        return idx;
+        while (!componentRetrieved);
     }
 
     /**
@@ -582,6 +786,7 @@ public class ShipConstructionTUI extends TUI {
 
         do {
             System.out.print(PrintUtils.addColor("[WARNING: This action is IRREVERSIBLE]", ANSIColors.RED));
+            System.out.println();
             System.out.print("Do you want to send your ship? [" + yesMessage + "/" + noMessage + "]");
             input = this.scanner.nextLine().trim();
 

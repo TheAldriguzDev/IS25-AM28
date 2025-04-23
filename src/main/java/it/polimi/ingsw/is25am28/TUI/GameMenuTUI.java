@@ -14,7 +14,6 @@ import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
