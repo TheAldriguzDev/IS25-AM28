@@ -46,6 +46,7 @@ public class Slavers extends EventCard {
             }
             currentPlayer = Optional.of(players.getFirst());
         }
+        cardActivated();
     }
 
 
@@ -172,36 +173,28 @@ public class Slavers extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON slaversStateJSON = new CardStateJSON();
-        if(playerOptional.isPresent()) {
-            slaversStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-        }
-        slaversStateJSON.setCardName(this.getCardName());
-        slaversStateJSON.setCardLevel(this.getCardLevel());
-        slaversStateJSON.setCardIsUsable(!hasFinished());
-        slaversStateJSON.setFirstRound(this.firstRound);
 
-        if(hasFinished()) {
-            // Update the board
-            slaversStateJSON.setBoard(this.getBoard().generateState());
-
-            // Generate the player info that also includes the ship
-            Map<String, PlayerJSON> playerInfo = new HashMap<>();
-            playerInfo.put(playerOptional.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
-            slaversStateJSON.setPlayersInfo(playerInfo);
-        } else {
-            if (firstRound) {
-                slaversStateJSON.setRequiredFirepower(requiredFirepower);
-                slaversStateJSON.setGivenCredits(this.givenCredits);
-                slaversStateJSON.setMovementSteps(this.movementSteps);
-                slaversStateJSON.setTakenCrew(this.takenCrew);
-            } else {
-                // TODO : see todo in pirates
+        if (hasBeenActivated()) {
+            if(playerOptional.isPresent()) {
+                slaversStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            }
+            // The clients need to know when to update the right parameters
+            slaversStateJSON.setFirstRound(this.firstRound);
+            // If the first round is finished, send the dynamic info to the players
+            if (!firstRound) {
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToTakeCrewFrom) {
                     defeatedPlayers.add(player.getNickname());
                 }
                 slaversStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
+        } else {
+            slaversStateJSON.setCardName(this.getCardName());
+            slaversStateJSON.setCardLevel(this.getCardLevel());
+            slaversStateJSON.setRequiredFirepower(requiredFirepower);
+            slaversStateJSON.setGivenCredits(this.givenCredits);
+            slaversStateJSON.setMovementSteps(this.movementSteps);
+            slaversStateJSON.setTakenCrew(this.takenCrew);
         }
         return slaversStateJSON;
     }

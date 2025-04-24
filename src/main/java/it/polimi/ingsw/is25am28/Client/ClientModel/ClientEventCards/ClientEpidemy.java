@@ -13,7 +13,11 @@ public class ClientEpidemy extends ClientEventCard {
 
     @Override
     public void updateCard(CardStateJSON cardState) {
+        if(cardState.getIsCardUsable()) {
+            this.playerNickname = cardState.getPlayerNickname();
+        } else {
 
+        }
     }
 
     @Override

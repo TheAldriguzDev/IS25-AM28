@@ -2,10 +2,13 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
+import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -13,6 +16,8 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.util.*;
 
 public class Epidemy extends EventCard {
+    private List<ComponentHelper<LifeformType>> previousPlayeRemovedLifeforms;
+
     // Constructor
     public Epidemy(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
@@ -67,9 +72,10 @@ public class Epidemy extends EventCard {
                     }
                 }
             }
-
+            previousPlayeRemovedLifeforms = new ArrayList<>();
             // Removing a lifeform for each cabin placed in quarantine
             for (Cabin cabin : alreadyQuarantined) {
+                previousPlayeRemovedLifeforms.add(new ComponentHelper<LifeformType>(cabin.getPosition()[0], cabin.getPosition()[1]).addItem(cabin.getInhabitants().getFirst().getLifeformType()));
                 shipPtr.removeLifeformFromCabin(
                         cabin.getPosition()[0],
                         cabin.getPosition()[1],
@@ -103,18 +109,20 @@ public class Epidemy extends EventCard {
 
         if (this.hasFinished()) {
             // Generate the player info that also includes the ship
-            playerInfo = new HashMap<>();
+//            playerInfo = new HashMap<>();
+//
+//            for (Player player : this.players) {
+//                playerInfo.put(player.getNickname(), PlayerJSON.fromPlayer(player, false));
+//            }
+//
+//            cardState.setPlayersInfo(playerInfo);
 
-            for (Player player : this.players) {
-                playerInfo.put(player.getNickname(), PlayerJSON.fromPlayer(player, false));
-            }
-
-            cardState.setPlayersInfo(playerInfo);
         }
         else {
             if (this.getCurrentPlayer().isPresent()) {
                 cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
             }
+            cardState.setLifeformsToRemove(this.previousPlayeRemovedLifeforms);
         }
 
         return cardState;

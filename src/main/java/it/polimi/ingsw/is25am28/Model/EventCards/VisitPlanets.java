@@ -13,6 +13,7 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import javafx.util.Pair;
 
 import java.util.*;
 
@@ -24,6 +25,9 @@ public class VisitPlanets extends EventCard {
     private int playerUseCount;
     private List<ComponentHelper<ItemColor>> itemsToDrop;
     private List<ComponentHelper<ItemColor>> itemsToTake;
+    private List<Pair<String, Integer>> updatedPositions;
+    private int chosenPlanetIndex;
+
 
     public VisitPlanets(
             @JsonProperty("cardName") String cardName,
@@ -34,6 +38,8 @@ public class VisitPlanets extends EventCard {
             Board board
     ) {
         super(cardName, cardLevel, board);
+
+        updatedPositions = new ArrayList<>();
 
         this.movementSteps = movementSteps;
         this.itemsPerPlanet = new HashMap<>();
@@ -159,6 +165,7 @@ public class VisitPlanets extends EventCard {
                         player,
                         this.movementSteps
                     );
+                    updatedPositions.add(new Pair<>(player.getNickname(), player.getCursor()));
                 }
             }
         }
@@ -317,17 +324,22 @@ public class VisitPlanets extends EventCard {
         // Generating the map of all the remaining planets to choose from
         availablePlanets = new HashMap<>(this.itemsPerPlanet);
 
-        for (Integer chosenPlanetIndex : this.playersChosenPlanet.keySet()) {
-            availablePlanets.remove(chosenPlanetIndex);
-        }
+//        for (Integer chosenPlanetIndex : this.playersChosenPlanet.keySet()) {
+//            availablePlanets.remove(chosenPlanetIndex);
+//        }
 
         // If the current player is present, then add it to the card state
+
+        // TODO: needs to only send the chosenPlanetIndex, resources taken/dropped (if present), and a flag that signals the client the need to update the resources
+
         this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
 
         cardState.setCardName(this.getCardName());
         cardState.setCardLevel(this.getCardLevel());
         cardState.setCardIsUsable( !this.hasFinished());
         cardState.setAvailablePlanets(availablePlanets);
+
+        cardState.setUpdatedPositions(updatedPositions);
 
         return cardState;
     }

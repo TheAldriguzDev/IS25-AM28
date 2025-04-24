@@ -60,6 +60,7 @@ public class Pirates extends EventCard {
             }
             currentPlayer = Optional.of(players.getFirst());
         }
+        cardActivated();
     }
 
     // Override necessary to not set the card as used when the last index of the player's list is reached
@@ -293,15 +294,10 @@ public class Pirates extends EventCard {
 
     protected void malusEffect() {}
 
-    // TODO: fix pirates' generate state to include the individual shot data instead of the full sequence at once
-
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON piratesStateJSON = new CardStateJSON();
-        if(playerOptional.isPresent()) {
-            piratesStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-        }
 
         // The dice throw is performed by generateState only at the beginning
         // since the card hasn't been used yet
@@ -309,27 +305,15 @@ public class Pirates extends EventCard {
             this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
         }
 
-        piratesStateJSON.setCardName(getCardName());
-        piratesStateJSON.setCardLevel(getCardLevel());
-        piratesStateJSON.setCardIsUsable(!hasFinished());
-        piratesStateJSON.setFirstRound(this.firstRound);
-
-        if(hasFinished()) {
-            // Update the board
-            piratesStateJSON.setBoard(this.getBoard().generateState());
-
-            // Generate the player info that also includes the ship
-            Map<String, PlayerJSON> playerInfo = new HashMap<>();
-            playerInfo.put(playerOptional.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
-            piratesStateJSON.setPlayersInfo(playerInfo);
-        } else {
-            // If the first round is not finished, send card information to the players
-            if (firstRound) {
-                piratesStateJSON.setRequiredFirepower(this.requiredFirepower);
-                piratesStateJSON.setGivenCredits(this.givenCredits);
-                piratesStateJSON.setMovementSteps(this.movementSteps);
-
-            } else {
+        //piratesStateJSON.setHasBeenActivated(hasBeenActivated());
+        if (hasBeenActivated()) {
+            if(playerOptional.isPresent()) {
+                piratesStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            }
+            // The clients need to know when to update the right parameters
+            piratesStateJSON.setFirstRound(this.firstRound);
+            // If the first round is finished, send the dynamic info to the players
+            if (!firstRound) {
                 // Send information on the players that are going to be hit, along with the plasmaShot's data and the dice result
                 // TODO : Piuttosto che inviare la lista dei player sconfitti inviare un boolean (si decide se inviarlo in base a se il player è presente nella lista degli sconfitti)
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
@@ -340,6 +324,13 @@ public class Pirates extends EventCard {
                 piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
                 piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
             }
+        } else {
+            // This static info will be sent to the clients only when the card has not been activated yet
+            piratesStateJSON.setCardName(getCardName());
+            piratesStateJSON.setCardLevel(getCardLevel());
+            piratesStateJSON.setRequiredFirepower(this.requiredFirepower);
+            piratesStateJSON.setGivenCredits(this.givenCredits);
+            piratesStateJSON.setMovementSteps(this.movementSteps);
         }
         return piratesStateJSON;
     }
@@ -348,6 +339,24 @@ public class Pirates extends EventCard {
     void setDiceThrowResult(int diceThrowResult) {
         this.diceThrowResult = diceThrowResult;
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public WidgetTUI generateWidget(CardStateJSON piratesState) {
         WidgetTUI cardWidget = new WidgetTUI();

@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import javafx.util.Pair;
 
+import javax.swing.text.Position;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -22,6 +24,16 @@ public class CardStateJSON extends ActionJSON {
     private String cardName;
     private int cardLevel;
     private boolean isCardUsable;
+    private List<Pair<String, Integer>> updatedPositions;
+    private List<String> eliminatedPlayers;
+    private boolean needsBoardUpdate;
+    // TODO: Implements hasBeenActivated logic/state in all eventCards
+    private boolean hasBeenActivated;
+
+    // ======== RESOURCES/CREW INFORMATION ======== //
+    private List<ComponentHelper<ItemColor>> resourcesToTake;
+    private List<ComponentHelper<ItemColor>> resourcesToDrop;
+    private List<ComponentHelper<LifeformType>> lifeformsToRemove;
 
     // ======== START MODEL INFORMATION ======== //
 
@@ -122,6 +134,33 @@ public class CardStateJSON extends ActionJSON {
     public void setPlayersInfo(Map<String, PlayerJSON> playersInfo) {
         this.playersInfo = playersInfo;
     }
+
+    // ======== Resource/Crew Methods ========//
+    @JsonSetter("resourcesToDrop")
+    public void setResourcesToDrop(List<ComponentHelper<ItemColor>> resourcesToDrop) {
+        this.resourcesToDrop = resourcesToDrop;
+    }
+    @JsonGetter("resourcesToDrop")
+    public List<ComponentHelper<ItemColor>> getResourcesToDrop() {
+        return this.resourcesToDrop;
+    }
+    @JsonSetter("resourcesToTake")
+    public void setResourcesToTake(List<ComponentHelper<ItemColor>> resourcesToTake) {
+        this.resourcesToTake = resourcesToTake;
+    }
+    @JsonGetter("resourcesToTake")
+    public List<ComponentHelper<ItemColor>> getResourcesToTake() {
+        return this.resourcesToTake;
+    }
+    @JsonSetter("lifeformsToRemove")
+    public void setLifeformsToRemove(List<ComponentHelper<LifeformType>> lifeformsToRemove) {
+        this.lifeformsToRemove = lifeformsToRemove;
+    }
+    @JsonGetter
+    public void getLifeformsToRemove(List<ComponentHelper<LifeformType>> lifeformsToRemove) {
+        this.lifeformsToRemove = lifeformsToRemove;
+    }
+
 
     // ======== Enemies Card State Attributes ========//
     @JsonSetter("requiredFirepower")
@@ -333,6 +372,42 @@ public class CardStateJSON extends ActionJSON {
     @JsonSetter("stationResources")
     public void setStationResources(List<ItemColor> stationResources) {
         this.stationResources = stationResources;
+    }
+
+    @JsonSetter("updatedPositions")
+    public void setUpdatedPositions(List<Pair<String, Integer>> updatedPositions) {
+        this.updatedPositions = updatedPositions;
+    }
+    @JsonGetter("updatedPositions")
+    public List<Pair<String, Integer>> getUpdatedPositions() {
+        return this.updatedPositions;
+    }
+
+    @JsonSetter("eliminatedPlayers")
+    public void setEliminatedPlayers(List<String> eliminatedPlayers) {
+        this.eliminatedPlayers = eliminatedPlayers;
+    }
+    @JsonGetter("eliminatedPlayers")
+    public List<String> getEliminatedPlayers() {
+        return this.eliminatedPlayers;
+    }
+
+    @JsonSetter("needsBoardUpdate")
+    public void setNeedsBoardUpdate(boolean needsBoardUpdate) {
+        this.needsBoardUpdate = needsBoardUpdate;
+    }
+    @JsonGetter("needsBoardUpdate")
+    public boolean getNeedsBoardUpdate() {
+        return this.needsBoardUpdate;
+    }
+
+    @JsonSetter("hasBeenActivated")
+    public void setHasBeenActivated(boolean hasBeenActivated) {
+        this.hasBeenActivated = hasBeenActivated;
+    }
+    @JsonGetter("hasBeenActivated")
+    public boolean getHasBeenActivated() {
+        return this.hasBeenActivated;
     }
 
     // Other data can be added to provide the context to the clients

@@ -61,6 +61,7 @@ public class Smugglers extends EventCard {
             }
             currentPlayer = Optional.of(players.getFirst());
         }
+        cardActivated();
     }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
@@ -184,39 +185,30 @@ public class Smugglers extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON smugglersStateJSON = new CardStateJSON();
-        if(playerOptional.isPresent()) {
-            smugglersStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-        }
-        smugglersStateJSON.setCardName(getCardName());
-        smugglersStateJSON.setCardLevel(getCardLevel());
-        smugglersStateJSON.setCardIsUsable(!hasFinished());
-        smugglersStateJSON.setFirstRound(firstRound);
 
-        if(hasFinished()) {
-            // Update the board
-            smugglersStateJSON.setBoard(this.getBoard().generateState());
-
-            // Generate the player info that also includes the ship
-            Map<String, PlayerJSON> playerInfo = new HashMap<>();
-            playerInfo.put(playerOptional.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
-            smugglersStateJSON.setPlayersInfo(playerInfo);
-        } else {
-            if (firstRound) {
-                smugglersStateJSON.setRequiredFirepower(requiredFirepower);
-                smugglersStateJSON.setMovementSteps(movementSteps);
-                // TODO : Resorucebank question about number of items (referring to how it's done in abandonedStation)
-                smugglersStateJSON.setTakenItems(takenItems);
-                smugglersStateJSON.setRedItems(redItems);
-                smugglersStateJSON.setYellowItems(yellowItems);
-                smugglersStateJSON.setBlueItems(blueItems);
-                smugglersStateJSON.setGreenItems(greenItems);
-            } else {
+        if (hasBeenActivated()) {
+            if(playerOptional.isPresent()) {
+                smugglersStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            }
+            // The clients need to know when to update the right parameters
+            smugglersStateJSON.setFirstRound(this.firstRound);
+            // If the first round is finished, send the dynamic info to the players
+            if (!firstRound) {
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToTakeItemsFrom) {
                     defeatedPlayers.add(player.getNickname());
                 }
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
+        } else {
+            smugglersStateJSON.setRequiredFirepower(requiredFirepower);
+            smugglersStateJSON.setMovementSteps(movementSteps);
+            // TODO : Resorucebank question about number of items (referring to how it's done in abandonedStation)
+            smugglersStateJSON.setTakenItems(takenItems);
+            smugglersStateJSON.setRedItems(redItems);
+            smugglersStateJSON.setYellowItems(yellowItems);
+            smugglersStateJSON.setBlueItems(blueItems);
+            smugglersStateJSON.setGreenItems(greenItems);
         }
         return smugglersStateJSON;
     }

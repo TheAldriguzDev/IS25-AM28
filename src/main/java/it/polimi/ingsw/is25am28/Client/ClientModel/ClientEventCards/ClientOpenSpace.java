@@ -2,11 +2,14 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import javafx.util.Pair;
 
+import java.util.List;
 import java.util.Map;
 
 public class ClientOpenSpace extends ClientEventCard {
-    // Question regarding board
+    private List<Pair<String, Integer>> updatedPositions;
+    private List<String> eliminatedPlayers;
 
     public ClientOpenSpace(CardStateJSON openSpaceState) {
         super(openSpaceState);
@@ -17,7 +20,11 @@ public class ClientOpenSpace extends ClientEventCard {
 
     @Override
     public void updateCard(CardStateJSON cardState) {
-
+        this.playerNickname = cardState.getPlayerNickname();
+        // TODO: Question about isCardUsable
+        // if case to do this only when needed -> is an additional flag necessary?
+        this.updatedPositions = cardState.getUpdatedPositions();
+        this.eliminatedPlayers = cardState.getEliminatedPlayers();
     }
 
     @Override

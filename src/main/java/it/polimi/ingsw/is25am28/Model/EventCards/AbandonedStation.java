@@ -49,6 +49,7 @@ public class AbandonedStation extends EventCard {
             this.players = new ArrayList<>(this.getBoard().getPlayers());
             currentPlayer = Optional.of(players.getFirst());
         }
+        cardActivated();
     }
 
     @Override
@@ -170,12 +171,16 @@ public class AbandonedStation extends EventCard {
         if (this.hasFinished()) {
             if (this.hasBeenUsedByPlayer) {
                 // Update the board
-                cardState.setBoard(this.getBoard().generateState());
+                //cardState.setBoard(this.getBoard().generateState());
 
                 // Generate the player info that also includes the ship
-                Map<String, PlayerJSON> playerInfo = new HashMap<>();
-                playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
-                cardState.setPlayersInfo(playerInfo);
+                //Map<String, PlayerJSON> playerInfo = new HashMap<>();
+                //playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
+                //cardState.setPlayersInfo(playerInfo);
+
+                // Info that other players can use to update their version of this player's ship
+                cardState.setResourcesToDrop(this.resourceToDropOff);
+                cardState.setResourcesToTake(this.resourceToTake);
             }
         } else {
             // If the player can use the card the flag will be set to true, otherwise if it doesn't have the card requirement it

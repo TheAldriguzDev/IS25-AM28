@@ -3,6 +3,8 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.List;
+
 public class ClientSmugglers extends ClientEventCard {
     private final int requiredFirepower;
     private final int movementSteps;
@@ -12,6 +14,8 @@ public class ClientSmugglers extends ClientEventCard {
     private final int greenItems;
     private final int takenItems;
     private boolean firstRound;
+
+    List<String> defeatedPlayers;
 
 
     public ClientSmugglers(CardStateJSON smugglersState) {
@@ -30,7 +34,14 @@ public class ClientSmugglers extends ClientEventCard {
     public void useCard() {}
 
     @Override
-    public void updateCard(CardStateJSON smugglersState) {}
+    public void updateCard(CardStateJSON smugglersState) {
+        this.playerNickname = smugglersState.getPlayerNickname();
+        this.firstRound = smugglersState.getFirstRound();
+        if (!smugglersState.getFirstRound()) {
+            defeatedPlayers = smugglersState.getDefeatedPlayers();
+            // TODO : Resources/Batteries previously taken (not shown the first time)
+        }
+    }
 
     @Override
     public WidgetTUI generateWidget() {

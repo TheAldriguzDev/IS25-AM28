@@ -10,18 +10,26 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import javafx.util.Pair;
 
 import javax.smartcardio.Card;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OpenSpace extends EventCard {
     private Map<String, Integer> playerPowerResult;
+    private List<Pair<String, Integer>> updatedPositions;
+    private List<String> eliminatedPlayers;
+    // TODO : modify the system to update from time to time, not at the end
 
     // TODO: Implement the specific constructor to build the card with the necessary data
     public OpenSpace(String name, int level, Board board) {
         super(name, level, board);
         this.playerPowerResult = new HashMap<>();
+        this.updatedPositions = new ArrayList<>();
+        this.eliminatedPlayers = new ArrayList<>();
     }
 
     @Override
@@ -110,8 +118,10 @@ public class OpenSpace extends EventCard {
             // otherwise move the player forward of the declared power
             if (totalPower == 0) {
                 this.getBoard().eliminatePlayer(this.getCurrentPlayer().get());
+                this.eliminatedPlayers.add(playerNickname);
             } else {
                 this.getBoard().movePlayerForward(this.getCurrentPlayer().get(), totalPower);
+                this.updatedPositions.add(new Pair<>(playerNickname, getCurrentPlayer().get().getCursor()));
             }
 
             // When we have moved the last player we need to re-validate the positions
@@ -155,7 +165,10 @@ public class OpenSpace extends EventCard {
             }
 
             cardState.setPlayersBatteries(playersBatteries);
-            cardState.setBoard(this.getBoard().generateState());
+            //cardState.setBoard(this.getBoard().generateState());
+            cardState.setEliminatedPlayers(this.eliminatedPlayers);
+            cardState.setUpdatedPositions(this.updatedPositions);
+
         }
 
         return cardState;

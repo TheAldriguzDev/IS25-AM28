@@ -20,6 +20,7 @@ public abstract class EventCard {
     private Board board;
 
     private boolean hasBeenUsed;
+    private boolean hasBeenActivated;
 
     /**
      * General constructor shared between the classes
@@ -30,6 +31,7 @@ public abstract class EventCard {
         this.board = board;
         this.hasBeenUsed = false;
         this.currentPlayer = Optional.empty();
+        this.hasBeenActivated = false;
     }
 
     /**
@@ -45,6 +47,7 @@ public abstract class EventCard {
             this.players = new ArrayList<>(this.board.getPlayers());
             currentPlayer = Optional.of(players.getFirst());
         }
+        cardActivated();
     }
 
     protected abstract void bonusEffect();
@@ -105,6 +108,12 @@ public abstract class EventCard {
         this.hasBeenUsed = true;
     }
 
+
+    /*
+    * Activate the card so that the generate state can send only a restricted amount of data to the client, instead that sending every time all the static information (has to be done only when first created)*/
+    protected void cardActivated() { this.hasBeenActivated = true; }
+
+    protected boolean hasBeenActivated() {return this.hasBeenActivated;}
     /**
      * This method will be used in the specific class, but also from outside (game model).
      *

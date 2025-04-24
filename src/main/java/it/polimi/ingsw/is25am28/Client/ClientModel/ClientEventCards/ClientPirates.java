@@ -31,12 +31,13 @@ public class ClientPirates extends ClientEventCard {
 
     @Override
     public void updateCard(CardStateJSON piratesState) {
-        if (piratesState.getFirstRound()) {
-            this.playerNickname = piratesState.getPlayerNickname();
-        } else {
+        this.playerNickname = piratesState.getPlayerNickname();
+        this.firstRound = piratesState.getFirstRound();
+        if (!piratesState.getFirstRound()) {
             firstRound = piratesState.getFirstRound();
             diceThrowResult = piratesState.getDiceThrowResult();
             currentPlasmaShot = piratesState.getCurrPlasmaShotDescriptor();
+            // TODO : previously removed components (not shown the first time)
         }
     }
 

@@ -15,10 +15,12 @@ import java.util.Optional;
 
 public class Stardust extends EventCard {
     private List<Pair<String, Integer>> updatedPositions;
+    private boolean needsBoardUpdate;
 
     public Stardust(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
         updatedPositions = new ArrayList<>();
+        needsBoardUpdate = false;
     }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
@@ -38,14 +40,15 @@ public class Stardust extends EventCard {
 
                     int movementSteps = player.getShip().getExposedConnectorAmount();
 
+                    getBoard().movePlayerBackwards(player, movementSteps);
                     if (movementSteps != 0) {
-                        updatedPositions.add(new Pair<>(playerNickname, movementSteps));
+                        updatedPositions.add(new Pair<>(playerNickname, player.getCursor()));
                     }
 
-                    getBoard().movePlayerBackwards(player, movementSteps);
                     if (player.equals(this.players.getLast())) {
                         this.cardUsed(); // Mark the card as used
                         this.getBoard().validatePlayersPosition();
+                        this.needsBoardUpdate = true;
                     } else {
                         this.getNextPlayer();
                     }
@@ -77,18 +80,26 @@ public class Stardust extends EventCard {
             Collections.reverse(players);
             currentPlayer = Optional.of(players.getFirst());
         }
+        cardActivated();
     }
 
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON stardustStateJSON = new CardStateJSON();
-        if(playerOptional.isPresent()) {
-            stardustStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-        }
+
+        if (hasBeenActivated()) {
+            if(playerOptional.isPresent()) {
+                stardustStateJSON.setPlayerNickname(playerOptional.get().getNickname());
+            }
+            stardustStateJSON.setNeedsBoardUpdate(needsBoardUpdate);
+            if(this.needsBoardUpdate) {
+                stardustStateJSON.setUpdatedPositions(updatedPositions);
+            }
+        } else {
             stardustStateJSON.setCardName(getCardName());
             stardustStateJSON.setCardLevel(getCardLevel());
-            stardustStateJSON.setCardIsUsable(!hasFinished());
+        }
         return stardustStateJSON;
     }
 
