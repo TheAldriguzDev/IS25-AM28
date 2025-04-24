@@ -58,6 +58,7 @@ public class ShipConstructionTUI extends TUI {
         }
 
         ClientModel model = new ClientModel();
+        model.setNickname("P1");
         model.setState(new ClientShipConstructionState(model, components.stream().map(Component::toMap).toList()));
         ShipConstructionTUI shipConstructionTUI = new ShipConstructionTUI(model);
 
@@ -84,8 +85,8 @@ public class ShipConstructionTUI extends TUI {
     }
 
     // Default component matrix (row, col) dimensions
-    public static final int DEFAULT_COMPONENT_ROWS = 8;
-    public static final int DEFAULT_COMPONENT_COLS = 19;
+    public static final int DEFAULT_COMPONENT_ROWS = 12;
+    public static final int DEFAULT_COMPONENT_COLS = 13;
     public static final int COMMANDS_PER_COLUMN = 2;
 
     // All widgets that compose the three distinct TUIs, which are:
@@ -119,8 +120,9 @@ public class ShipConstructionTUI extends TUI {
         // TODO: Set the model difficulty elsewhere
         this.model.setDifficultyLevel(2);
 
-        // Initializing this player's ClientShip
-        this.model.setShip(new ClientShip(this.model.getDifficultyLevel()));
+        // Initializing this player's ClientShip and getting the player nickname for this client
+        this.playerNickname = this.model.getNickname();
+        this.model.setShipToPlayer(this.playerNickname, new ClientShip(this.model.getDifficultyLevel()));
 
         // Generating the covered component widget
         this.generateCoveredComponentWidget();
@@ -468,7 +470,7 @@ public class ShipConstructionTUI extends TUI {
                 // Adding the currently selected component at those coordinates
                 // in the current player's ship
                 try {
-                    this.model.getShip().addComponent(
+                    this.model.getShipOfPlayer(this.playerNickname).addComponent(
                             this.selectedComponent,
                             componentPosition.getKey(),
                             componentPosition.getValue()
@@ -502,7 +504,7 @@ public class ShipConstructionTUI extends TUI {
             }
 
             // Updating the ship widget
-            this.shipWidget = this.model.getShip().generateWidget();
+            this.shipWidget = this.model.getShipOfPlayer(this.playerNickname).generateWidget();
         }
     }
 
@@ -716,7 +718,7 @@ public class ShipConstructionTUI extends TUI {
         // Ensuring each widget is updated
         this.generateSelectedComponentWidget();
         this.generateReservedComponentWidget();
-        this.shipWidget = this.model.getShip().getShipGridWidget();
+        this.shipWidget = this.model.getShipOfPlayer(this.playerNickname).getShipGridWidget();
 
         return WidgetTUI.composeTwoWidgetsHorizontally(
             WidgetTUI.composeTwoWidgetsVertically(

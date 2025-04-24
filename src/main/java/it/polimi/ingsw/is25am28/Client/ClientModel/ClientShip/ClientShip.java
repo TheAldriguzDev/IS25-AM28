@@ -503,6 +503,9 @@ public class ClientShip implements WidgetTUIGenerator {
         // Merging all rows together into the final widget
         shipGridWidget.setScreen(WidgetTUI.composeScreensVertically(mergedWidgetRowList));
 
+        // Adding right-side padding
+        shipGridWidget.addPadding(0, 1, 0, 0);
+
         // Wrapping the ship's grid widget with the default border
         shipGridWidget.wrapWidgetWithBorder();
 
