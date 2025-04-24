@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.TUI;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
@@ -206,6 +207,7 @@ public final class GameMenuTUIPage extends TUIPage {
                     synchronized (this.clientTUI.getModel()) {
                         this.clientTUI.getModel().setNickname(playerNickname);
                         this.clientTUI.getModel().setPlayerColor(playerColor);
+                        this.clientTUI.getModel().setDifficultyLevel(gameLevel);
                         this.clientTUI.setCurrCommand(null);
                     }
                 },
@@ -245,6 +247,7 @@ public final class GameMenuTUIPage extends TUIPage {
                     synchronized (this.clientTUI.getModel()) {
                         this.clientTUI.getModel().setNickname(playerNickname);
                         this.clientTUI.getModel().setPlayerColor(playerColor);
+                        this.clientTUI.getModel().setDifficultyLevel(game.getLevel());
                         this.clientTUI.setCurrCommand(null);
                     }
                 },
@@ -465,6 +468,14 @@ public final class GameMenuTUIPage extends TUIPage {
      */
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
+        // Creating the ship of the newly connected player in all clients
+        for (Map.Entry<String, PlayerColor> playerEntry : waitingForPlayers.getUsedNicknames().entrySet()) {
+            this.clientTUI.getModel().setShipToPlayer(
+                playerEntry.getKey(),
+                new ClientShip(this.clientTUI.getModel().getDifficultyLevel())
+            );
+        }
+
         synchronized (this.clientTUI.getIoLock()) {
             if (this.clientTUI.getModel().getNickname() != null) {
                 int connected = waitingForPlayers.getLobbyTotalSpot() - waitingForPlayers.getAvailableSpots();

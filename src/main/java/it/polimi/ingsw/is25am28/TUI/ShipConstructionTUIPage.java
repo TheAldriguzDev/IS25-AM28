@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.Network.Messages.DeselectTile;
 import it.polimi.ingsw.is25am28.Network.Messages.SelectTile;
 import it.polimi.ingsw.is25am28.Network.Messages.SendShipConfirmation;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
@@ -35,12 +36,13 @@ public final class ShipConstructionTUIPage extends TUIPage {
     private WidgetTUI reservedComponentsWidget;
     private WidgetTUI selectedComponentWidget;
     private WidgetTUI coveredComponentWidget;
+    private WidgetTUI emptyComponentWidget;
     private WidgetTUI cardDeckVisualizationWidget;
     private WidgetTUI shipWidget;
 
     // All input widgets
-    private InputWidgetTUI componentSelectionCommandsWidget;
-    private InputWidgetTUI shipConstructionCommandsWidget;
+    private final InputWidgetTUI componentSelectionCommandsWidget;
+    private final InputWidgetTUI shipConstructionCommandsWidget;
 
     // Placeholder for the currently selected component
     private ClientComponent selectedComponent;
@@ -61,8 +63,9 @@ public final class ShipConstructionTUIPage extends TUIPage {
             new ClientShip(this.clientTUI.getModel().getDifficultyLevel())
         );
 
-        // Generating the covered component widget
+        // Generating the covered component widget and the empty component widget
         this.generateCoveredComponentWidget();
+        this.generateEmptyComponentWidget();
 
         // Initializing all selectable components
         this.selectableComponentsWidget = null;
@@ -240,7 +243,12 @@ public final class ShipConstructionTUIPage extends TUIPage {
                 "1",
                 () -> {
                     // Deselects the component that is currently taken by this user
-                    this.deselectTile();
+                    try {
+                        this.deselectTile();
+                    }
+                    catch (Exception e) {
+                        System.out.println(PrintUtils.addColor(e.getMessage(), ANSIColors.RED));
+                    }
 
                     // At the end, it goes back to asking again a new
                     // component selection command
@@ -270,7 +278,6 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
                             // Setting the currently selected tile as non-visible, since the player decided
                             // to reserve it and thus place it in the near future
-                            this.selectedComponent.setIsVisible(false);
                             this.selectedComponent = null;
 
                             // At the end, it goes back to asking again a new
@@ -316,10 +323,6 @@ public final class ShipConstructionTUIPage extends TUIPage {
                     // the server for validation
                     this.handleClientComponentAddition();
 
-                    // Deselecting the tile so that it clears the currently
-                    // selected component (since it just got placed)
-                    this.deselectTile();
-
                     // At the end, it goes back to asking again a new
                     // component selection command
                     clearTerminal();
@@ -333,26 +336,34 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
             // (4) - Right Rotate Selected Tile
             shipConstructionCommand = new CommandWidgetTUI(
-                "3",
+                "4",
                 () -> {
-                    // Puts the currently selected tile in the ship and in the
-                    // ClientShipConstructionState when the ship will be sent to
-                    // the server for validation
-                    this.handleClientComponentAddition();
+                    // Rotates the current component
+                    this.selectedComponent.rotateRight();
 
-                    // Deselecting the tile so that it clears the currently
-                    // selected component (since it just got placed)
-                    this.deselectTile();
-
-                    // At the end, it goes back to asking again a new
-                    // component selection command
+                    // And then it goes back to the ship construction menu
                     clearTerminal();
-                    this.generateSelectableComponentsWidget();
-                    this.selectableComponentsWidget.printWidget();
-                    this.getComponentSelectionCommand();
+                    this.composeShipConstructionWidget().printWidget();
+                    this.getShipConstructionCommand();
                 }
             );
-            shipConstructionCommand.appendString("Place Selected Tile");
+            shipConstructionCommand.appendString("Right Rotate Selected Tile");
+            this.shipConstructionCommandsWidget.addCommand(shipConstructionCommand);
+
+            // (5) - Left Rotate Selected Tile
+            shipConstructionCommand = new CommandWidgetTUI(
+                "5",
+                () -> {
+                    // Rotates the current component
+                    this.selectedComponent.rotateLeft();
+
+                    // And then it goes back to the ship construction menu
+                    clearTerminal();
+                    this.composeShipConstructionWidget().printWidget();
+                    this.getShipConstructionCommand();
+                }
+            );
+            shipConstructionCommand.appendString("Left Rotate Selected Tile");
             this.shipConstructionCommandsWidget.addCommand(shipConstructionCommand);
         }
     }
@@ -409,10 +420,36 @@ public final class ShipConstructionTUIPage extends TUIPage {
     /**
      * Deselects the currently selected tile, leaving it available for other players
      */
-    private void deselectTile() {
-        this.selectedComponent = null;
-        this.selectableComponentsWidget = null;
-        this.isSelectedTileReserved = false;
+    private void deselectTile() throws Exception {
+        this.clientTUI.setCurrCommand(
+            new CommandCTX(
+                "deselectTile",
+                () -> {
+                    // Once we have deselected the tile we can return to
+                    // the component selection menu
+                    this.selectedComponent = null;
+                    this.isSelectedTileReserved = false;
+
+                    clearTerminal();
+                    this.generateSelectableComponentsWidget();
+                    this.selectableComponentsWidget.printWidget();
+                    this.getComponentSelectionCommand();
+                },
+                () -> {
+                    // If an error occurred we go back to the
+                    // ship construction menu
+                    clearTerminal();
+                    this.composeShipConstructionWidget().printWidget();
+                    this.getShipConstructionCommand();
+                }
+            )
+        );
+
+        int id = this.selectedComponent.getID();
+        int construction_i = id / 19;
+        int construction_j = id % 19;
+
+        this.clientTUI.getVirtualView().sendMessage(new DeselectTile(this.clientTUI.getPlayerNickname(), construction_i, construction_j));
     }
 
     /**
@@ -632,6 +669,19 @@ public final class ShipConstructionTUIPage extends TUIPage {
     }
 
     /**
+     * Generates a widget that will act as a blank space when the
+     * corresponding widget is flagged as non-visible
+     */
+    private void generateEmptyComponentWidget() {
+        if (this.emptyComponentWidget == null) {
+            this.emptyComponentWidget = new WidgetTUI();
+
+            this.emptyComponentWidget.setHeight(5);
+            this.emptyComponentWidget.setWidth(13);
+        }
+    }
+
+    /**
      * Generates the selectableComponentsWidget with its screen set as the matrix of all the selectable components.
      * (NOTE: At the beginning, all components are facing down because no one has flipped them yet)
      */
@@ -669,6 +719,9 @@ public final class ShipConstructionTUIPage extends TUIPage {
                     }
 
                     row.add(WidgetTUI.fillScreenWithSpaces(screen));
+                }
+                else {
+                    row.add(this.emptyComponentWidget.getScreen());
                 }
 
                 iteratedComponents++;
@@ -749,6 +802,12 @@ public final class ShipConstructionTUIPage extends TUIPage {
                 if (idx >= 0 && !this.clientTUI.getModel().getState().getConstructionShipComponents().get(idx).isVisible()) {
                     System.out.println(PrintUtils.addColor("ERROR: This component is already selected by someone else.", ANSIColors.RED));
                     idx = -1;   // Reset to retry
+
+                    // Print the updated component selection menu
+                    clearTerminal();
+                    this.generateSelectableComponentsWidget();
+                    this.selectableComponentsWidget.printWidget();
+                    this.getComponentSelectionCommand();
                 }
             }
             catch (IOException e) {
