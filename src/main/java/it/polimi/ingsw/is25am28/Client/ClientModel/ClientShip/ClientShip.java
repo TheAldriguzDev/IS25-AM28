@@ -549,8 +549,8 @@ public class ClientShip implements WidgetTUIGenerator {
     /**
      * Creates a Widget containing this ship's grid, its owner and its statistics
      *
-     * @return This ship's TUI widget, which will be composed alongside other widgets
-     *         in the final TUI
+     * @return This ship's TUIPage widget, which will be composed alongside other widgets
+     *         in the final TUIPage
      */
     public WidgetTUI generateWidget() {
         List<WidgetTUI> shipWidgets = new ArrayList<>();

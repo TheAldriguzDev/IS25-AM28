@@ -40,9 +40,4 @@ public final class CreateGameStateDTO extends StateDTO {
     public void setUsedNicknames(List<String> usedNicknames) {
         this.usedNicknames = usedNicknames;
     }
-
-    @Override
-    public void accept(StateVisitor visitor) throws Exception {
-        visitor.visit(this);
-    }
 }

@@ -207,7 +207,7 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
     public abstract List<String> getComponentScreen();
 
     /**
-     * @return A TUI border-wrapped widget containing the component's text representation
+     * @return A TUIPage border-wrapped widget containing the component's text representation
      *         as well as other information about itself (e.g.: energy left inside a battery)
      */
     public WidgetTUI generateWidget() {

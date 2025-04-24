@@ -16,7 +16,7 @@ public final class ConstructionDeckDTO extends ShipConstructionEventDTO {
     public ConstructionDeckDTO(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("subDeck") Integer subDeck,
-            @JsonProperty("isSelected")boolean isSelected) {
+            @JsonProperty("isSelected") boolean isSelected) {
         this.playerNickname = playerNickname;
         this.subDeck = subDeck;
         this.isSelected = isSelected;

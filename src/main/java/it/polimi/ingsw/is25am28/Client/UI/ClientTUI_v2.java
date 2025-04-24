@@ -1,46 +1,49 @@
-package it.polimi.ingsw.is25am28.TUI;
+package it.polimi.ingsw.is25am28.Client.UI;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
-import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
-import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
+import it.polimi.ingsw.is25am28.TUI.ShipConstructionTUIPage;
+import it.polimi.ingsw.is25am28.TUI.TUIPage;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.Random;
-import java.util.Scanner;
 
-public abstract class TUI implements ClientUI {
-    protected static final String UNKNOWN_COMMAND_ERROR = PrintUtils.addColor("ERROR: Selected command does not exist",ANSIColors.RED);
-    protected static final String DEFAULT_INPUT_PREFIX = "Select an option: ";
-    protected static final String DEFAULT_WRONG_METHOD_INVOCATION_ERROR = "ERROR: This command wasn't meant to be invoked in this current state";
+public class ClientTUI_v2 implements ClientUI {
+    public static final String DEFAULT_WRONG_METHOD_INVOCATION_ERROR = "ERROR: This command wasn't meant to be invoked in this current state";
 
     protected final ClientModel model;
     protected VirtualView client;
 
     protected final Object ioLock;
     protected CommandCTX currCommand;
-    protected Scanner scanner;
+    protected BufferedReader bufferedReader;
     protected Random random;
     protected String playerNickname;
 
-    // Constructor
-    public TUI(ClientModel model) {
+    // Current TUI page
+    private TUIPage currPage;
+
+    public ClientTUI_v2(ClientModel model) {
         this.model = model;
+        this.client = null;
         this.ioLock = new Object();
         this.currCommand = null;
-        this.scanner = new Scanner(System.in);
+        this.bufferedReader = new BufferedReader(new InputStreamReader(System.in));
         this.random = new Random();
+        this.playerNickname = null;
+        this.currPage = new GameMenuTUIPage(this);
     }
 
     /**
      * Prints the name of the game
      */
-    protected static void printTitle() {
+    public static void printTitle() {
         System.out.println("""
          ██████╗  █████╗ ██╗      █████╗ ██╗  ██╗██╗   ██╗    ████████╗██████╗ ██╗   ██╗ ██████╗██╗  ██╗███████╗██████╗\s
         ██╔════╝ ██╔══██╗██║     ██╔══██╗╚██╗██╔╝╚██╗ ██╔╝    ╚══██╔══╝██╔══██╗██║   ██║██╔════╝██║ ██╔╝██╔════╝██╔══██╗
@@ -62,19 +65,96 @@ public abstract class TUI implements ClientUI {
      *     </ul>
      * </p>
      */
-    protected static void clearTerminal() {
+    public static void clearTerminal() {
         System.out.print("\033[H\033[2J");
     }
 
     /**
-     * @param client The virtual client to set this TUI to
+     * @return This client model instance
+     */
+    public ClientModel getModel() {
+        return this.model;
+    }
+
+    /**
+     * @return This virtual client instance
+     */
+    public VirtualView getVirtualView() {
+        return this.client;
+    }
+
+    /**
+     * @return This IO lock instance
+     */
+    public Object getIoLock() {
+        return this.ioLock;
+    }
+
+    /**
+     * @return This command context instance
+     */
+    public CommandCTX getCurrCommand() {
+        return this.currCommand;
+    }
+
+    /**
+     * @param currCommand The current command context to set
+     */
+    public void setCurrCommand(CommandCTX currCommand) {
+        this.currCommand = currCommand;
+    }
+
+    /**
+     * @return This buffered reader instance
+     */
+    public BufferedReader getBufferedReader() {
+        return this.bufferedReader;
+    }
+
+    /**
+     * @return This random generator instance
+     */
+    public Random getRandom() {
+        return this.random;
+    }
+
+    /**
+     * @return This player nickname
+     */
+    public String getPlayerNickname() {
+        return this.playerNickname;
+    }
+
+    /**
+     * @param playerNickname The current player nickname to set it to
+     */
+    public void setPlayerNickname(String playerNickname) {
+        this.playerNickname = playerNickname;
+    }
+
+    /**
+     * @param client The virtual client to set this TUIPage to
      */
     public void setVirtualClient(VirtualView client) {
         this.client = client;
     }
 
     /**
-     * ViewUpdater triggers the GameMenuTUI page to show the game menu
+     * @return The current TUI page
+     */
+    public TUIPage getCurrPage() {
+        return this.currPage;
+    }
+
+    /**
+     * Sets the current TUI page to display
+     */
+    public void setCurrPage(TUIPage page) {
+        this.currPage = page;
+    }
+
+    /**
+     * ViewUpdater triggers the GameMenuTUIPage page to show the game menu
      * and let the user see the available games he can join or reconnect to
      * or directly create a new game from scratch
      *
@@ -83,31 +163,35 @@ public abstract class TUI implements ClientUI {
      * @param isFirstAccess Boolean value used to print the title
      *                      (not used in this implementation, since it's handled automatically already)
      */
+    @Override
     public void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws RuntimeException {
-        throw new RuntimeException(DEFAULT_WRONG_METHOD_INVOCATION_ERROR);
+        this.currPage.showLobbies(availableGames, isFirstAccess);
     }
 
     /**
-     * ViewUpdater triggers the GameMenuTUI page to show the user the
+     * ViewUpdater triggers the GameMenuTUIPage page to show the user the
      * players that are currently connected to the game and how many are left
      * before the game can start
      *
      * @param waitingForPlayers The current amount of players waiting in the current game
      */
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
-        throw new RuntimeException(DEFAULT_WRONG_METHOD_INVOCATION_ERROR);
+        this.currPage.showWaitingForPlayers(waitingForPlayers);
     }
 
     /**
-     * ViewUpdater triggers the ShipConstructionTUI to spawn for each player the
+     * ViewUpdater triggers the ShipConstructionTUIPage to spawn for each player the
      * component selection panel and the ship builder panel, thus giving each player
      * the possibility to create their own ship with the available components
      *
      * @param shipConstruction The components that a player can use to build his ship
      */
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws RuntimeException {
-        throw new RuntimeException(DEFAULT_WRONG_METHOD_INVOCATION_ERROR);
+        this.currPage = new ShipConstructionTUIPage(this);
+        this.currPage.showShipConstruction(shipConstruction);
     }
+
+    // TODO: Add the other methods in the game
 
     /**
      * Prints to terminal the current error and also
@@ -115,7 +199,7 @@ public abstract class TUI implements ClientUI {
      */
     public void showError(ErrorAnswer error) {
         synchronized (this.ioLock) {
-            clearTerminal();
+            ClientTUI_v2.clearTerminal();
 
             if (this.currCommand != null) {
                 this.currCommand.handleError(error.getError());

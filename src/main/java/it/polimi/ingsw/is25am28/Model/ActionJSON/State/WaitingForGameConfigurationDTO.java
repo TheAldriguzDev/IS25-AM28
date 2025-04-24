@@ -8,9 +8,4 @@ import java.io.Serializable;
 
 public final class WaitingForGameConfigurationDTO extends StateDTO implements Serializable {
     public WaitingForGameConfigurationDTO() {}
-
-    @Override
-    public void accept(StateVisitor visitor) {
-        visitor.visit(this);
-    }
 }
