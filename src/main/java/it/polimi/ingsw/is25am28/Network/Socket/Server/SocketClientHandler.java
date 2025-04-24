@@ -165,7 +165,7 @@ public class SocketClientHandler implements VirtualViewSocket {
 
     @Override
     public void updateState(Answer answer) throws JsonProcessingException {
-        String stateString = this.mapper.writeValueAsString(answer);;
+        String stateString = this.mapper.writeValueAsString(answer);
 
         this.output.println(stateString);
         this.output.flush();

@@ -245,6 +245,7 @@ public class CardStateJSON extends ActionJSON {
     /**
      * Returns the cardName
      * */
+    @JsonGetter("cardName")
     public String getCardName() throws IllegalStateException {
         if (this.cardName == null || this.cardName.isEmpty()) {
             throw new IllegalStateException("Key 'cardName' is missing in JSON data");
@@ -256,6 +257,7 @@ public class CardStateJSON extends ActionJSON {
     /**
      * Set the cardName to the given data
      * */
+    @JsonSetter("cardName")
     public void setCardName(String cardName) throws IllegalStateException {
         if (cardName == null || cardName.isEmpty()) {
             throw new IllegalStateException("cardName cannot be null or empty");
@@ -267,6 +269,7 @@ public class CardStateJSON extends ActionJSON {
     /**
      * Returns the cardLevel
      * */
+    @JsonGetter("cardLevel")
     public int getCardLevel() throws IllegalStateException {
         return this.cardLevel;
     }
@@ -274,6 +277,7 @@ public class CardStateJSON extends ActionJSON {
     /**
      * Set the cardLevel to the given data
      * */
+    @JsonSetter("cardLevel")
     public void setCardLevel(int cardLevel) throws IllegalStateException {
         if (cardLevel < 0) {
             throw new IllegalStateException("cardLevel cannot be negative");
@@ -285,10 +289,12 @@ public class CardStateJSON extends ActionJSON {
     /**
      * Returns the isCardUsable
      * */
+    @JsonGetter("isCardUsable")
     public boolean getIsCardUsable() throws IllegalStateException {
         return this.isCardUsable;
     }
 
+    @JsonSetter("isCardUsable")
     public void setCardIsUsable(boolean isCardUsable) throws IllegalStateException {
         this.isCardUsable = isCardUsable;
     }
