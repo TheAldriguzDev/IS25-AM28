@@ -61,7 +61,7 @@ public class ShipConstructionTUI extends TUI {
         model.setState(new ClientShipConstructionState(model, components.stream().map(Component::toMap).toList()));
         ShipConstructionTUI shipConstructionTUI = new ShipConstructionTUI(model);
 
-        int connectionType = 1;
+        int connectionType = 2;
 
         if (connectionType == 1) {
             try {
@@ -453,27 +453,42 @@ public class ShipConstructionTUI extends TUI {
      */
     private void handleClientComponentAddition() {
         Pair<Integer, Integer> componentPosition;
+        boolean correctCoordinates;
 
         // Adding the client component both to the client ship and
         // to the ClientShipConstructionState to send it later when the
         // ship is completed and needs to be sent to the server for validation
         if (this.selectedComponent != null) {
-            // Getting the component's coordinates
-            componentPosition = this.getComponentCoordinates();
+            correctCoordinates = false;
 
-            // Adding the client component to the ship descriptor inside ClientShipConstructionState
+            do {
+                // Getting the component's coordinates
+                componentPosition = this.getComponentCoordinates();
+
+                // Adding the currently selected component at those coordinates
+                // in the current player's ship
+                try {
+                    this.model.getShip().addComponent(
+                            this.selectedComponent,
+                            componentPosition.getKey(),
+                            componentPosition.getValue()
+                    );
+
+                    // Exit the loop only if the component can actually
+                    // be placed at the given coordinates
+                    correctCoordinates = true;
+                }
+                catch (Exception e) {
+                    System.out.println(PrintUtils.addColor(e.getMessage(), ANSIColors.RED));
+                }
+            }
+            while (!correctCoordinates);
+
+            // And then adding the client component to the ship descriptor inside ClientShipConstructionState
             this.model.getState().placeTile(
                 this.selectedComponent,
                 componentPosition.getKey(),
                 componentPosition.getValue()
-            );
-
-            // And then adding the currently selected component at those coordinates
-            // in the current player's ship
-            this.model.getShip().addComponent(
-                    this.selectedComponent,
-                    componentPosition.getKey(),
-                    componentPosition.getValue()
             );
 
             // Since the component was added, it is now unusable for other
@@ -498,15 +513,21 @@ public class ShipConstructionTUI extends TUI {
         boolean validCoordinate;
         int i, j;
 
+        int minRowValue = ClientShip.shipOffsets.get(this.model.getDifficultyLevel()).getKey();
+        int maxRowValue = ClientShip.shipDimensions.get(this.model.getDifficultyLevel()).getKey() + minRowValue + 1;
+
+        int minColValue = ClientShip.shipOffsets.get(this.model.getDifficultyLevel()).getValue();
+        int maxColValue = ClientShip.shipDimensions.get(this.model.getDifficultyLevel()).getValue() + minColValue + 1;
+
         // Getting the row --> i
         do {
             System.out.print("Insert row where to put the selected component: ");
 
             i = this.scanner.nextInt();
-            validCoordinate = (i > 0 && i < ClientShip.getGridDimensions().getKey());
+            validCoordinate = (i > minRowValue && i < maxRowValue);
 
             if (!validCoordinate) {
-                System.out.println(PrintUtils.addColor("ERROR: Given row is out of bounds (range is [0, " + ClientShip.getGridDimensions().getKey() + "))", ANSIColors.RED));
+                System.out.println(PrintUtils.addColor("ERROR: Given row is out of the ship boundaries (range is [" + (minRowValue + 1) + ", " + (maxRowValue - 1) + "])", ANSIColors.RED));
             }
         }
         while (!validCoordinate);
@@ -516,15 +537,17 @@ public class ShipConstructionTUI extends TUI {
             System.out.print("Insert column where to put the selected component: ");
 
             j = this.scanner.nextInt();
-            validCoordinate = (j > 0 || j < ClientShip.getGridDimensions().getValue());
+            validCoordinate = (j > minColValue && j < maxColValue);
 
             if (!validCoordinate) {
-                System.out.println(PrintUtils.addColor("ERROR: Given column is out of bounds (range is [0, " + ClientShip.getGridDimensions().getValue() + "))", ANSIColors.RED));
+                System.out.println(PrintUtils.addColor("ERROR: Given column is out of the ship boundaries (range is [" + (minColValue + 1) + ", " + (maxColValue - 1) + "])", ANSIColors.RED));
             }
         }
         while (!validCoordinate);
 
-        return new Pair<>(i, j);
+        // Reducing both by 1 since they will then be used as
+        // indexes inside the client ship component matrix
+        return new Pair<>(--i, --j);
     }
 
     /**

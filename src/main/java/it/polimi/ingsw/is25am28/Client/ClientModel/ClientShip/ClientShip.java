@@ -1,7 +1,12 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
+import it.polimi.ingsw.is25am28.Model.Components.Cabin;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
+import it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.NullComponentException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfShipException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
@@ -18,9 +23,9 @@ import static it.polimi.ingsw.is25am28.Model.Connector.THREE_PIPES;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientShip implements WidgetTUIGenerator {
-    private final static Map<Integer, int[][]> shipProfiles = new HashMap<>();
-    private final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
-    private final static Map<Integer, Pair<Integer, Integer>> shipOffsets = new HashMap<>();
+    public final static Map<Integer, int[][]> shipProfiles = new HashMap<>();
+    public final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
+    public final static Map<Integer, Pair<Integer, Integer>> shipOffsets = new HashMap<>();
 
     static {
         // (1) - Setting the Ship Profile Matrices
@@ -213,14 +218,6 @@ public class ClientShip implements WidgetTUIGenerator {
     }
 
     /**
-     * @return A pair of integers that represent the amount of rows and the amount
-     *         of columns of the ship's grid. Result is (rows, cols)
-     */
-    public static Pair<Integer, Integer> getGridDimensions() {
-        return new Pair<Integer, Integer>(grid_rows, grid_cols);
-    }
-
-    /**
      *  Uses an adapted version of the BFS algorithm to generate the sub-lists of
      *  each component type, which will be stored in this class for ease of use <br>
      *  <br>
@@ -373,9 +370,39 @@ public class ClientShip implements WidgetTUIGenerator {
     }
 
     /**
-     * Adds the given ClientComponent to this ship's components grid
+     * Adds the given client component at the given coordinates (i, j) in the ship's component grid.
+     *
+     * @param clientComponent The client component to add to the ship's grid
+     * @param i The index of the row
+     * @param j The index of the column
+     * @throws NullComponentException If the given client component is <code>null</code>
+     * @throws OutOfGridException If the given coordinates (i, j) fall outside the ship's grid
+     * @throws ExistingComponentException If the component at coordinates (i, j) is already occupied
+     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship profile, determined by the current difficulty level
      */
-    public void addComponent(ClientComponent clientComponent, int i, int j) {
+    public void addComponent(ClientComponent clientComponent, int i, int j)
+            throws NullComponentException, OutOfGridException,
+            ExistingComponentException, OutOfShipException
+    {
+        if (clientComponent == null) {
+            throw new NullComponentException("ERROR: Given client component to add is null");
+        }
+        if (i < 0 || j < 0 || i >= grid_rows || j >= grid_cols) {
+            throw new OutOfGridException("ERROR: Cannot insert given client component outside of the ship's grid");
+        }
+        if (this.components[i][j] != null) {
+            throw new ExistingComponentException("ERROR: Cannot insert given client component on top of an already existing one");
+        }
+        if (shipProfiles.containsKey(this.difficultyLevel)) {
+            if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
+                throw new OutOfShipException("ERROR: Cannot insert given client component outside the ship");
+            }
+        }
+
+        // Setting the current client component's position
+        clientComponent.setPosition(i, j);
+
+        // Finally, adding the client component
         this.components[i][j] = clientComponent;
     }
 
@@ -451,13 +478,21 @@ public class ClientShip implements WidgetTUIGenerator {
             for (int j = colOffset; j < shipColRange; j++) {
                 ClientComponent component = this.components[i][j];
 
-                if (component != null) {
-                    // If the component is not null, then generate its screen
-                    tmpComponentWidget.setScreen(this.components[i][j].getComponentScreen());
-                    screenRowList.add(tmpComponentWidget.getScreen());
+                if (shipProfiles.get(this.difficultyLevel)[i][j] == 1) {
+                    if (component != null) {
+                        // If the component is not null AND its coordinates are on the actual ship,
+                        // then go ahead and generate its widget
+                        tmpComponentWidget.setScreen(this.components[i][j].getComponentScreen());
+                        screenRowList.add(tmpComponentWidget.getScreen());
+                    }
+                    else {
+                        // Otherwise, this tile is a placeholder, thus generate the placeholder screen
+                        screenRowList.add(this.generateComponentPlaceholderWidget().getScreen());
+                    }
                 }
                 else {
-                    screenRowList.add(generateEmptySpaceScreen()); // Performance hit with style
+                    // Otherwise, this is actual empty space1
+                    screenRowList.add(generateEmptySpaceScreen(3)); // Performance hit with style
                 }
             }
 
@@ -530,7 +565,7 @@ public class ClientShip implements WidgetTUIGenerator {
      *         which come in a few colors, that will make the ship look
      *         like it is actually traversing an actual cosmic scenario
      */
-    private List<String> generateEmptySpaceScreen() {
+    private List<String> generateEmptySpaceScreen(int scale) {
         List<String> emptySpaceScreen = new ArrayList<>();
         List<String> colorPool = new ArrayList<>();
         Random rand = new Random();
@@ -538,7 +573,7 @@ public class ClientShip implements WidgetTUIGenerator {
         int randIndex, randColor;
 
         // TODO: Figure out where to put these values
-        int scale = 3;
+//        int scale = 3;
         int height = scale;
         int width = 3 * scale + 2;
 
@@ -581,6 +616,22 @@ public class ClientShip implements WidgetTUIGenerator {
         }
 
         return emptySpaceScreen;
+    }
+
+    /**
+     * @return A widget of the same dimensions of any client component widget
+     *         but with its screen filled with Space.
+     *         This is needed to outline the ship profile for the current level
+     */
+    private WidgetTUI generateComponentPlaceholderWidget() {
+        WidgetTUI componentPlaceholder = new WidgetTUI();
+
+        componentPlaceholder.setScreen(this.generateEmptySpaceScreen(1));
+        componentPlaceholder.setHeight(3);
+        componentPlaceholder.setWidth(3 * 3 + 2);
+        componentPlaceholder.wrapWidgetWithBorder();
+
+        return componentPlaceholder;
     }
 
     /**
