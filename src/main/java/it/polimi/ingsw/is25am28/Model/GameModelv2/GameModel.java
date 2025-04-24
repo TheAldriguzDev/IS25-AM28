@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
@@ -217,6 +218,14 @@ public class GameModel {
             states.add(this.currentState.generateState());
         }
         return states;
+    }
+
+    public ConstructionDeckDTO selectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
+        return this.currentState.selectSubDeck(player, selectedDeck);
+    }
+
+    public ConstructionDeckDTO deselectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
+        return this.currentState.deselectSubDeck(player, selectedDeck);
     }
 
     /**

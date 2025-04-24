@@ -77,6 +77,7 @@ public class PlayerJSON implements Serializable {
         }
     }
 
+    // Metodi getter per permettere la serializzazione da parte di Jackson
     @JsonGetter("nickname")
     public String getNickname() {
         return nickname;

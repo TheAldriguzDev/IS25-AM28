@@ -148,8 +148,8 @@ class SlaversTest {
         slavers.initCardPlayers();
 
         // =======================================================================
-        cardState = slavers.generateState();
-        slavers.generateWidget(cardState).printWidget();
+//        cardState = slavers.generateState();
+//        slavers.generateWidget(cardState).printWidget();
         // =======================================================================
 
         // Input gathering phase
@@ -158,8 +158,8 @@ class SlaversTest {
         }
 
         // =======================================================================
-        cardState = slavers.generateState();
-        slavers.generateWidget(cardState).printWidget();
+//        cardState = slavers.generateState();
+//        slavers.generateWidget(cardState).printWidget();
         // =======================================================================
 
         assertFalse(slavers.hasFinished());
@@ -168,8 +168,8 @@ class SlaversTest {
         }
 
         // =======================================================================
-        cardState = slavers.generateState();
-        slavers.generateWidget(cardState).printWidget();
+//        cardState = slavers.generateState();
+//        slavers.generateWidget(cardState).printWidget();
         // =======================================================================
 
         assertFalse(slavers.hasFinished());
@@ -178,8 +178,8 @@ class SlaversTest {
         }
 
         // =======================================================================
-        cardState = slavers.generateState();
-        slavers.generateWidget(cardState).printWidget();
+//        cardState = slavers.generateState();
+//        slavers.generateWidget(cardState).printWidget();
         // =======================================================================
 
         assertFalse(slavers.hasFinished());
@@ -189,8 +189,8 @@ class SlaversTest {
         assertFalse(slavers.hasFinished());
 
         // =======================================================================
-        cardState = slavers.generateState();
-        slavers.generateWidget(cardState).printWidget();
+//        cardState = slavers.generateState();
+//        slavers.generateWidget(cardState).printWidget();
         // =======================================================================
 
             // Phase in which the defeated players need to send the crew members they want to remove form the ship
@@ -200,8 +200,8 @@ class SlaversTest {
             assertFalse(slavers.hasFinished());
 
         // =======================================================================
-        cardState = slavers.generateState();
-        slavers.generateWidget(cardState).printWidget();
+//        cardState = slavers.generateState();
+//        slavers.generateWidget(cardState).printWidget();
         // =======================================================================
 
         if (!slavers.hasFinished()) {

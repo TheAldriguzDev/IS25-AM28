@@ -10,7 +10,6 @@ import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.Random;
 import java.util.Scanner;
@@ -20,7 +19,6 @@ public abstract class TUI implements ClientUI {
     protected static final String DEFAULT_INPUT_PREFIX = "Select an option: ";
     protected static final String DEFAULT_WRONG_METHOD_INVOCATION_ERROR = "ERROR: This command wasn't meant to be invoked in this current state";
 
-    protected WidgetTUI tui;
     protected final ClientModel model;
     protected VirtualView client;
 
@@ -28,7 +26,6 @@ public abstract class TUI implements ClientUI {
     protected CommandCTX currCommand;
     protected Scanner scanner;
     protected Random random;
-
     protected String playerNickname;
 
     // Constructor
@@ -76,14 +73,38 @@ public abstract class TUI implements ClientUI {
         this.client = client;
     }
 
+    /**
+     * ViewUpdater triggers the GameMenuTUI page to show the game menu
+     * and let the user see the available games he can join or reconnect to
+     * or directly create a new game from scratch
+     *
+     * @param availableGames Information about all currently open games that are waiting
+     *                       to reach the specified capacity before starting
+     * @param isFirstAccess Boolean value used to print the title
+     *                      (not used in this implementation, since it's handled automatically already)
+     */
     public void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws RuntimeException {
         throw new RuntimeException(DEFAULT_WRONG_METHOD_INVOCATION_ERROR);
     }
 
+    /**
+     * ViewUpdater triggers the GameMenuTUI page to show the user the
+     * players that are currently connected to the game and how many are left
+     * before the game can start
+     *
+     * @param waitingForPlayers The current amount of players waiting in the current game
+     */
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
         throw new RuntimeException(DEFAULT_WRONG_METHOD_INVOCATION_ERROR);
     }
 
+    /**
+     * ViewUpdater triggers the ShipConstructionTUI to spawn for each player the
+     * component selection panel and the ship builder panel, thus giving each player
+     * the possibility to create their own ship with the available components
+     *
+     * @param shipConstruction The components that a player can use to build his ship
+     */
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws RuntimeException {
         throw new RuntimeException(DEFAULT_WRONG_METHOD_INVOCATION_ERROR);
     }

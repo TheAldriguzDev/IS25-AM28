@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
@@ -16,16 +17,20 @@ public final class ShipConstructionDTO extends StateDTO {
     private List<Integer> flipped_components;
     private List<Integer> selected_components;
 
+    // Card list that contains the information about the deck in the game
+    private List<CardStateJSON> cards;
+
     public ShipConstructionDTO() {}
 
     public ShipConstructionDTO(
             @JsonProperty("all_components") List<Map<String, Object>> all_components,
             @JsonProperty("flipped_components") List<Integer> flipped_components,
-            @JsonProperty("selected_components") List<Integer> selected_components
-    ) {
+            @JsonProperty("selected_components") List<Integer> selected_components,
+            @JsonProperty("cards") List<CardStateJSON> cards) {
         this.all_components = all_components;
         this.flipped_components = flipped_components;
         this.selected_components = selected_components;
+        this.cards = cards;
     }
 
     @JsonGetter("all_components")
@@ -58,6 +63,17 @@ public final class ShipConstructionDTO extends StateDTO {
     @JsonSetter("selected_components")
     public ShipConstructionDTO setSelectedComponents(List<Integer> selected_components) {
         this.selected_components = selected_components;
+        return this;
+    }
+
+    @JsonGetter("cards")
+    public List<CardStateJSON> getCards() {
+        return cards;
+    }
+
+    @JsonSetter("cards")
+    public ShipConstructionDTO setCards(List<CardStateJSON> cards) {
+        this.cards = cards;
         return this;
     }
 

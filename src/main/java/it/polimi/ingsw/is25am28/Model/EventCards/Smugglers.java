@@ -203,7 +203,7 @@ public class Smugglers extends EventCard {
         } else {
             smugglersStateJSON.setRequiredFirepower(requiredFirepower);
             smugglersStateJSON.setMovementSteps(movementSteps);
-            // TODO : Resorucebank question about number of items (referring to how it's done in abandonedStation)
+            // TODO : Resourcebank question about number of items (referring to how it's done in abandonedStation)
             smugglersStateJSON.setTakenItems(takenItems);
             smugglersStateJSON.setRedItems(redItems);
             smugglersStateJSON.setYellowItems(yellowItems);

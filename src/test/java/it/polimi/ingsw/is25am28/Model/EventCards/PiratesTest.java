@@ -134,8 +134,8 @@ class PiratesTest {
         pirates.initCardPlayers();
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         Player eliminatedPlayer = p1;
@@ -146,8 +146,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 2
@@ -155,8 +155,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         actionJSON3 = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
@@ -164,8 +164,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         actionJSON4 = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
@@ -178,8 +178,8 @@ class PiratesTest {
         pirates.setDiceThrowResult(7);
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
@@ -188,8 +188,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
@@ -198,8 +198,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
@@ -208,8 +208,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
@@ -224,8 +224,8 @@ class PiratesTest {
         // First player should be no more
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
@@ -234,8 +234,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
@@ -245,8 +245,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
@@ -256,8 +256,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
@@ -267,8 +267,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         // Third shot : small from above on column 6
@@ -280,8 +280,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
@@ -291,8 +291,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();
@@ -302,8 +302,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // =======================================================================
-        cardState = pirates.generateState();
-        pirates.generateWidget(cardState).printWidget();
+//        cardState = pirates.generateState();
+//        pirates.generateWidget(cardState).printWidget();
         // =======================================================================
 
         ShieldsToActivate = new ArrayList<>();

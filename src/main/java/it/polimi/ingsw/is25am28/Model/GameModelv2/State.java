@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
@@ -31,6 +32,14 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
 
     public void addNewPlayer(String playerNickname, PlayerColor playerColor) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The 'addNewPlayer' command is not allowed in the " + this + " state");
+    }
+
+    public synchronized ConstructionDeckDTO selectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
+        throw new IllegalStateException("The 'selectSubDeck' command is not allowed in the " + this + " state");
+    }
+
+    public synchronized ConstructionDeckDTO deselectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
+        throw new IllegalStateException("The 'deselectSubDeck' command is not allowed in the " + this + " state");
     }
 
     public synchronized ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {

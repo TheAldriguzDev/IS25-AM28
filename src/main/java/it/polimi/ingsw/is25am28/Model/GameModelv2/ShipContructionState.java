@@ -1,9 +1,11 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
+import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.FileLoader.TileLoader;
@@ -33,6 +35,11 @@ public final class ShipContructionState extends State implements TimeSubscriber 
     // Needed to send the data to the clients --> they need to understand in which state is each component
     private final Set<Integer> selected;
     private final Set<Integer> flipped;
+
+    private final List<EventCard> cards;
+
+    // The map will store the pair of sub-deck id with the playerNickname that selected it
+    private final Map<Integer, String> selectedSubDecks;
 
     private boolean shipConfigEnded;
 
@@ -68,21 +75,86 @@ public final class ShipContructionState extends State implements TimeSubscriber 
         this.flippedTimes = 0;
         this.players_done = new ArrayList<>();
         this.shipConfigEnded = false;
+
+        this.cards = this.model.getGameDeck();
+        this.selectedSubDecks = new HashMap<>();
+    }
+
+    /**
+     * Mark the given sub-deck as selected
+     * @return the Component Data Object Transfer needed to update the client with the selected deck event
+     * */
+    public synchronized ConstructionDeckDTO selectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
+        if (selectedDeck < 1 || selectedDeck > 3) {
+            throw new IllegalStateException("The given sub-deck does not exist");
+        }
+
+        if (this.shipConfigEnded) {
+            throw new IllegalStateException("The time to select the sub-decks has ended");
+        }
+
+        if (this.selectedSubDecks.containsKey(selectedDeck)) {
+            throw new IllegalStateException("The required sub-deck has already been selected from someone else");
+        }
+
+        this.selectedSubDecks.put(selectedDeck, player);
+        ConstructionDeckDTO state = new ConstructionDeckDTO()
+                .setSubDeck(selectedDeck)
+                .setPlayerNickname(player)
+                .setSelected(true);
+
+        state.setStateName(this.toString());
+        state.setEventType(ShipConstructionType.DECK_EVENT.toString());
+
+        return state;
+    }
+
+    /**
+     * Removes the selected mark of the given sub-deck
+     * @return the Component Data Object Transfer needed to update the client with the deselected deck event
+     * */
+    public synchronized ConstructionDeckDTO deselectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
+        if (selectedDeck < 1 || selectedDeck > 3) {
+            throw new IllegalStateException("The given sub-deck does not exist");
+        }
+
+        if (this.shipConfigEnded) {
+            throw new IllegalStateException("The time to select the sub-decks has ended");
+        }
+
+        if (!this.selectedSubDecks.containsKey(selectedDeck)) {
+            throw new IllegalStateException("The given sub-deck id is not selected by anyone");
+        }
+
+        if (!this.selectedSubDecks.get(selectedDeck).equals(player)) {
+            throw new IllegalStateException("You cannot deselect a sub-deck selected from someone else");
+        }
+
+        this.selectedSubDecks.remove(selectedDeck);
+        ConstructionDeckDTO state = new ConstructionDeckDTO()
+                .setSubDeck(selectedDeck)
+                .setPlayerNickname(player)
+                .setSelected(false);
+
+        state.setStateName(this.toString());
+        state.setEventType(ShipConstructionType.DECK_EVENT.toString());
+        return state;
     }
 
     /**
      * Select the given tile
-     * @return the Component Data Object Transfer needed to update the client with the selectComponent event --> the controller will be able to notifyAllTheClients
+     * @return the Component Data Object Transfer needed to update the client with the selectComponent event
      * */
     public synchronized ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {
         if (shipConfigEnded) {
-            throw new IllegalStateException("The time to selected the tiles has ended");
+            throw new IllegalStateException("The time to select the tiles has ended");
         }
 
         Integer id = i * SHIP_GRID_SIZE + j;
 
+        // TODO: Understand if we need to put the player name in the Exception
         if (selected.contains(id)) {
-            throw new SelectedConcurrencyException(player);
+            throw new IllegalStateException("The required tile has already been selected from someone else");
         }
 
         // Add the selected component to the flipped and selected SET
@@ -103,7 +175,7 @@ public final class ShipContructionState extends State implements TimeSubscriber 
 
     /**
      * Deselect the given tile
-     * @return the Component Data Object Transfer needed to update the client with the deselectComponent event --> the controller will be able to notifyAllTheClients
+     * @return the Component Data Object Transfer needed to update the client with the deselectComponent event
      * */
     public synchronized ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {
         if (shipConfigEnded) {
@@ -240,8 +312,15 @@ public final class ShipContructionState extends State implements TimeSubscriber 
 
     @Override
     public StateDTO generateState() {
+        List<CardStateJSON> cardsState = new ArrayList<>();
+
+        for (EventCard card : this.cards) {
+            cardsState.add(card.generateState());
+        }
+
         ShipConstructionDTO state = new ShipConstructionDTO()
                 .setAllComponents(this.all_components.stream().map(Component::toMap).toList())
+                .setCards(cardsState)
                 .setFlippedComponents(this.flipped.stream().toList())
                 .setSelectedComponents(this.selected.stream().toList());
 

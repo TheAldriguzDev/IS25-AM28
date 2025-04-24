@@ -113,11 +113,13 @@ public class WidgetTUI {
      * @return The widget resulting from the composition of the two given widgets
      */
     public static WidgetTUI composeTwoWidgetsHorizontally(WidgetTUI mainWidget, WidgetTUI donorWidget) {
-        List<WidgetTUI> widgets = new ArrayList<>();
+        if (mainWidget != null && donorWidget != null) {
+            List<WidgetTUI> widgets = new ArrayList<>();
 
-        widgets.add(mainWidget);
-        widgets.add(donorWidget);
-        mainWidget = WidgetTUI.composeWidgetsHorizontally(widgets);
+            widgets.add(mainWidget);
+            widgets.add(donorWidget);
+            mainWidget = WidgetTUI.composeWidgetsHorizontally(widgets);
+        }
 
         return mainWidget;
     }
@@ -723,6 +725,13 @@ public class WidgetTUI {
      */
     public int getWidth() {
         return this.width;
+    }
+
+    /**
+     * Sets the border count to the given value
+     */
+    public void setBorderCount(int borderCount) {
+        this.borderCount = Math.max(0, borderCount);
     }
 
     /**

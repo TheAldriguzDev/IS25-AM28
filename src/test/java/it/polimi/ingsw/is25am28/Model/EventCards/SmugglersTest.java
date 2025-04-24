@@ -143,8 +143,8 @@ class SmugglersTest {
         smugglers.initCardPlayers();
 
         // =======================================================================
-        cardState = smugglers.generateState();
-        smugglers.generateWidget(cardState).printWidget();
+//        cardState = smugglers.generateState();
+//        smugglers.generateWidget(cardState).printWidget();
         // =======================================================================
 
         //Input gathering phase
@@ -152,32 +152,32 @@ class SmugglersTest {
         assertFalse(smugglers.hasFinished());
 
         // =======================================================================
-        cardState = smugglers.generateState();
-        smugglers.generateWidget(cardState).printWidget();
+//        cardState = smugglers.generateState();
+//        smugglers.generateWidget(cardState).printWidget();
         // =======================================================================
 
         smugglers.useCard(new SmugglersJSON("Player 2", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
         // =======================================================================
-        cardState = smugglers.generateState();
-        smugglers.generateWidget(cardState).printWidget();
+//        cardState = smugglers.generateState();
+//        smugglers.generateWidget(cardState).printWidget();
         // =======================================================================
 
         smugglers.useCard(new SmugglersJSON("Player 3", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
         // =======================================================================
-        cardState = smugglers.generateState();
-        smugglers.generateWidget(cardState).printWidget();
+//        cardState = smugglers.generateState();
+//        smugglers.generateWidget(cardState).printWidget();
         // =======================================================================
 
         smugglers.useCard(new SmugglersJSON("Player 4", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
         // =======================================================================
-        cardState = smugglers.generateState();
-        smugglers.generateWidget(cardState).printWidget();
+//        cardState = smugglers.generateState();
+//        smugglers.generateWidget(cardState).printWidget();
         // =======================================================================
 
             // The defeated players now need to specify what resources to get rid of
@@ -185,24 +185,24 @@ class SmugglersTest {
             assertFalse(smugglers.hasFinished());
 
             // =======================================================================
-            cardState = smugglers.generateState();
-            smugglers.generateWidget(cardState).printWidget();
+//            cardState = smugglers.generateState();
+//            smugglers.generateWidget(cardState).printWidget();
             // =======================================================================
 
             smugglers.useCard(actionJSON2);
             assertFalse(smugglers.hasFinished());
 
             // =======================================================================
-            cardState = smugglers.generateState();
-            smugglers.generateWidget(cardState).printWidget();
+//            cardState = smugglers.generateState();
+//            smugglers.generateWidget(cardState).printWidget();
             // =======================================================================
 
             smugglers.useCard(actionJSON3);
             assertFalse(smugglers.hasFinished());
 
             // =======================================================================
-            cardState = smugglers.generateState();
-            smugglers.generateWidget(cardState).printWidget();
+//            cardState = smugglers.generateState();
+//            smugglers.generateWidget(cardState).printWidget();
             // =======================================================================
 
             smugglers.useCard(actionJSON4);
