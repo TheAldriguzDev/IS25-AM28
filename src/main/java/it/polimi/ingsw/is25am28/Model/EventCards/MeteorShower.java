@@ -447,10 +447,10 @@ public class MeteorShower extends EventCard {
             // performing a differential update on what changed before the card
             // transitioned to the next state
             cardState.setPreviousPlayerRemovedComponents(
-                new Pair<>(
-                    this.prevPlayer,
-                    this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList()
-                )
+                Map.of(this.prevPlayer,
+                        this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList())
+
+
             );
         }
         else {

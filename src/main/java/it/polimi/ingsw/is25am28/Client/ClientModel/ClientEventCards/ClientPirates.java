@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import javafx.util.Pair;
 
 import java.util.List;
+import java.util.Map;
 
 public class ClientPirates extends ClientEventCard {
     private int diceThrowResult;
@@ -15,6 +16,7 @@ public class ClientPirates extends ClientEventCard {
     private final int movementSteps;
     Pair<Integer, Integer> currentPlasmaShot;
     List<Player> playersToHit;
+    Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
 
     public ClientPirates(CardStateJSON piratesState) {
         super(piratesState);
@@ -37,7 +39,6 @@ public class ClientPirates extends ClientEventCard {
             firstRound = piratesState.getFirstRound();
             diceThrowResult = piratesState.getDiceThrowResult();
             currentPlasmaShot = piratesState.getCurrPlasmaShotDescriptor();
-            // TODO : previously removed components (not shown the first time)
         }
     }
 

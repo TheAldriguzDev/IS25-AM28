@@ -25,9 +25,9 @@ public class CardStateJSON extends ActionJSON {
     private int cardLevel;
     private boolean isCardUsable;
     private List<Pair<String, Integer>> updatedPositions;
-    private List<String> eliminatedPlayers;
+    private String eliminatedPlayer;
     private boolean needsBoardUpdate;
-    // TODO: Implements hasBeenActivated logic/state in all eventCards
+    private boolean needsShipsUpdate;
     private boolean hasBeenActivated;
 
     // ======== RESOURCES/CREW INFORMATION ======== //
@@ -80,7 +80,7 @@ public class CardStateJSON extends ActionJSON {
     private int currMeteorIndex;
     private int diceThrowResult;
     private Pair<Integer, Integer> currMeteorDescriptor;
-    private Pair<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
+    private Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
 
     // ======== Model Information Methods ======== //
 
@@ -389,13 +389,13 @@ public class CardStateJSON extends ActionJSON {
         return this.updatedPositions;
     }
 
-    @JsonSetter("eliminatedPlayers")
-    public void setEliminatedPlayers(List<String> eliminatedPlayers) {
-        this.eliminatedPlayers = eliminatedPlayers;
+    @JsonSetter("eliminatedPlayer")
+    public void setEliminatedPlayer(String eliminatedPlayer) {
+        this.eliminatedPlayer = eliminatedPlayer;
     }
-    @JsonGetter("eliminatedPlayers")
-    public List<String> getEliminatedPlayers() {
-        return this.eliminatedPlayers;
+    @JsonGetter("eliminatedPlayer")
+    public String getEliminatedPlayer() {
+        return this.eliminatedPlayer;
     }
 
     @JsonSetter("needsBoardUpdate")
@@ -414,6 +414,15 @@ public class CardStateJSON extends ActionJSON {
     @JsonGetter("hasBeenActivated")
     public boolean getHasBeenActivated() {
         return this.hasBeenActivated;
+    }
+
+    @JsonSetter("needsShipsUpdate")
+    public void setNeedsShipsUpdate(boolean needsShipsUpdate) {
+        this.needsShipsUpdate = needsShipsUpdate;
+    }
+    @JsonGetter("needShipsUpdate")
+    public boolean getNeedsShipsUpdate() {
+        return this.needsShipsUpdate;
     }
 
     // Other data can be added to provide the context to the clients
@@ -496,12 +505,12 @@ public class CardStateJSON extends ActionJSON {
     }
 
     @JsonGetter("previousPlayerRemovedComponents")
-    public Pair<String, List<Map<String, Object>>> getPreviousPlayerRemovedComponents() {
+    public Map<String, List<Map<String, Object>>> getPreviousPlayerRemovedComponents() {
         return this.previousPlayerRemovedComponents;
     }
 
     @JsonSetter("previousPlayerRemovedComponents")
-    public void setPreviousPlayerRemovedComponents(Pair<String, List<Map<String, Object>>> removedComponentsPerPlayer) {
+    public void setPreviousPlayerRemovedComponents(Map<String, List<Map<String, Object>>> removedComponentsPerPlayer) {
         this.previousPlayerRemovedComponents = removedComponentsPerPlayer;
     }
 

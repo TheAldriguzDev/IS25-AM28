@@ -163,7 +163,7 @@ public class OpenSpace extends EventCard {
             for (Player p : this.players) {
                 playersBatteries.put(p.getNickname(), p.getShip().getBatteryList().stream().mapToInt(Battery::getAvailability).sum());
             }
-
+            // TODO: va fatto tutto un passo alla volta
             cardState.setPlayersBatteries(playersBatteries);
             //cardState.setBoard(this.getBoard().generateState());
             cardState.setEliminatedPlayers(this.eliminatedPlayers);

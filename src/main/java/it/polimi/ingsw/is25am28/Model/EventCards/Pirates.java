@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
@@ -30,6 +31,9 @@ public class Pirates extends EventCard {
     private boolean firstRound;
     List<Player> playersToHit;
     private boolean hasBeenDefeated;
+    private List<Component> previousPlayerRemovedComponents;
+    private String prevPlayer;
+    private String eliminateddPlayer;
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board) {
         super(name, cardLevel, board);
@@ -97,6 +101,7 @@ public class Pirates extends EventCard {
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
                     String playerNickname = piratesData.getPlayerNickname();
+                    prevPlayer = playerNickname;
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
@@ -169,6 +174,8 @@ public class Pirates extends EventCard {
     protected void malusEffect(ActionJSON data) throws ClassCastException {
         Optional<Player> playerOptional = getCurrentPlayer();
         PiratesJSON piratesData = (PiratesJSON) data;
+        previousPlayerRemovedComponents = new ArrayList<>();
+        eliminateddPlayer = null;
         playerOptional.ifPresent(
                 (Player player) -> {
 
@@ -216,8 +223,9 @@ public class Pirates extends EventCard {
                                 for (int row = 4; row < 9; row++) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
-                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
+                                            eliminateddPlayer = player.getNickname();
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
                                             if (playersToHit.isEmpty()) {
@@ -234,8 +242,9 @@ public class Pirates extends EventCard {
                                 for (int column = 3; column < 10; column++) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
-                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
+                                            eliminateddPlayer = player.getNickname();
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
                                             if (playersToHit.isEmpty()) {
@@ -252,8 +261,9 @@ public class Pirates extends EventCard {
                                 for (int row = 8; row > 3; row--) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
-                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
+                                            eliminateddPlayer = player.getNickname();
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
                                             if (playersToHit.isEmpty()) {
@@ -270,8 +280,9 @@ public class Pirates extends EventCard {
                                 for (int column = 9; column > 2; column--) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
-                                            player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
+                                            eliminateddPlayer = player.getNickname();
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
                                             if (playersToHit.isEmpty()) {
@@ -315,7 +326,6 @@ public class Pirates extends EventCard {
             // If the first round is finished, send the dynamic info to the players
             if (!firstRound) {
                 // Send information on the players that are going to be hit, along with the plasmaShot's data and the dice result
-                // TODO : Piuttosto che inviare la lista dei player sconfitti inviare un boolean (si decide se inviarlo in base a se il player è presente nella lista degli sconfitti)
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToHit) {
                     defeatedPlayers.add(player.getNickname());
@@ -323,6 +333,12 @@ public class Pirates extends EventCard {
                 piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
                 piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
                 piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
+                if (previousPlayerRemovedComponents.isEmpty()) {
+                    piratesStateJSON.setNeedsShipsUpdate(true);
+                    piratesStateJSON.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
+                } else if (eliminateddPlayer != null) {
+                    piratesStateJSON.setEliminatedPlayer(eliminateddPlayer);
+                }
             }
         } else {
             // This static info will be sent to the clients only when the card has not been activated yet
