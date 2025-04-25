@@ -37,8 +37,14 @@ public final class ShipConstructionTUIPage extends TUIPage {
     private WidgetTUI selectedComponentWidget;
     private WidgetTUI coveredComponentWidget;
     private WidgetTUI emptyComponentWidget;
-    private WidgetTUI cardDeckVisualizationWidget;
     private WidgetTUI shipWidget;
+
+    // TODO: Implement Timer Flip command
+    // TODO: Implement these widgets & relative functionalities
+    private WidgetTUI cardDeckVisualizationWidget;  // TODO: Store the constructed cards in ClientShipConstructionState, not in ClientModel
+    private WidgetTUI otherPlayerShipWidget;        // TODO: + Add the show other ship command
+    private WidgetTUI playersThatFinishedWidget;
+       // TODO: Players that finished will have 2 commands: 1) Flip timer, 2) Show other ships, 3) Show card decks
 
     // All input widgets
     private InputWidgetTUI componentSelectionCommandsWidget;
@@ -57,21 +63,20 @@ public final class ShipConstructionTUIPage extends TUIPage {
         this.selectedComponentWidget = null;
         this.isSelectedTileReserved = false;
 
-        // Initializing this player's ClientShip and getting the player nickname for this client
-        this.clientTUI.getModel().setShipToPlayer(
-            this.clientTUI.getPlayerNickname(),
-            new ClientShip(this.clientTUI.getModel().getDifficultyLevel())
-        );
+        // Initializing various widgets
+        this.selectableComponentsWidget = null;
+        this.reservedComponentsWidget = null;
+        this.cardDeckVisualizationWidget = null;
+        this.otherPlayerShipWidget = null;
+        this.playersThatFinishedWidget = null;
+
+        // Initially all players still need to build their ships,
+        // therefore the map is initialized with all false values
+
 
         // Generating the covered component widget and the empty component widget
         this.generateCoveredComponentWidget();
         this.generateEmptyComponentWidget();
-
-        // Initializing all selectable components
-        this.selectableComponentsWidget = null;
-
-        // Initializing the staging area with placeholders
-        this.reservedComponentsWidget = null;
 
         // Initializing the component selection command widget
         this.componentSelectionCommandsWidget = new InputWidgetTUI();
@@ -105,99 +110,98 @@ public final class ShipConstructionTUIPage extends TUIPage {
             this.componentSelectionCommandsWidget.resetScreenAndDimensions();
         }
 
-        // (1) - Select Tile
-        componentSelectionCommand = new CommandWidgetTUI(
-            "1",
-            () -> {
-                // Asks for the index and then selects the tile
-                try {
-                    this.selectTile();
-                }
-                catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        );
-        componentSelectionCommand.appendString("Select Tile");
-        this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
-
-        // (2) - Select Reserved Tile
-        componentSelectionCommand = new CommandWidgetTUI(
-            "2",
-            () -> {
-                try {
-                    this.selectReservedTile();
-
-                    // If a reserved tile was present AND correctly selected, then
-                    // go to the ship construction TUIPage and wait for a command
-                    // to handle the selected tile
-                    clearTerminal();
-                    this.composeShipConstructionWidget().printWidget();
-                    this.getShipConstructionCommand();
-
-                    // Then regenerate the ship construction commands widget
-                    // to restore any commands that were not supposed to be seen
-                    // when the selected component was a reserved component
-                    this.initShipConstructionCommands();
-                }
-                catch (IllegalArgumentException e) {
-                    System.out.println(e.getMessage());
-
-                    // Otherwise, go back to the component selection command widget
-                    this.getComponentSelectionCommand();
-                }
-            }
-        );
-        componentSelectionCommand.appendString("Select Reserved Tile");
-        this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
-
-        // Command is added only if the current game
-        // difficulty level is not 0 (i.e.: Test Flight)
-        if (this.clientTUI.getModel().getDifficultyLevel() != 0) {
-            // (3) - Flip Timer
+        // Commands 1 through 4 are excluded for players that
+        // already finished building their ship
+        if (this.clientTUI.getModel().getPlayerFinishedBuildingShip(this.clientTUI.getPlayerNickname())) {
+            // (1) - Select Tile
             componentSelectionCommand = new CommandWidgetTUI(
+                "1",
+                () -> {
+                    // Asks for the index and then selects the tile
+                    try {
+                        this.selectTile();
+                    }
+                    catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            );
+            componentSelectionCommand.appendString("Select Tile");
+            this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
+
+            // (2) - Select Reserved Tile
+            componentSelectionCommand = new CommandWidgetTUI(
+                "2",
+                () -> {
+                    try {
+                        this.selectReservedTile();
+
+                        // If a reserved tile was present AND correctly selected, then
+                        // go to the ship construction TUIPage and wait for a command
+                        // to handle the selected tile
+                        clearTerminal();
+                        this.composeShipConstructionWidget().printWidget();
+                        this.getShipConstructionCommand();
+
+                        // Then regenerate the ship construction commands widget
+                        // to restore any commands that were not supposed to be seen
+                        // when the selected component was a reserved component
+                        this.initShipConstructionCommands();
+                    }
+                    catch (IllegalArgumentException e) {
+                        System.out.println(e.getMessage());
+
+                        // Otherwise, go back to the component selection command widget
+                        this.getComponentSelectionCommand();
+                    }
+                }
+            );
+            componentSelectionCommand.appendString("Select Reserved Tile");
+            this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
+
+            // Command is added only if the current game
+            // difficulty level is not 0 (i.e.: Test Flight)
+            if (this.clientTUI.getModel().getDifficultyLevel() != 0) {
+                // (3) - Flip Timer
+                componentSelectionCommand = new CommandWidgetTUI(
                     "3",
                     () -> {
-                        // Flips the timer (if possible), otherwise throws an error saying
-                        // that time it is currently flowing (i.e.: cannot be flipped until it finishes)
-
-                        // Printing the selectable components widget before the timer flip result
-//                        clearTerminal();
-//                        this.composeSelectableComponentsMenuWidget().printWidget();
-
-                        // if hourglass.flip() == true, then notify the user and reprint
-
-                        // TODO: Figure out where to put the hourglass
-                        // TODO: Substitute the "true" here with "timer.flip()"
-
-//                        try {
-//                            this.clientTUI.getModel().getState().flipTimer();
-//                        }
-//                        catch (Exception e) {
-//
-//                        }
-
-//                        if (true) {
-//                            System.out.println(PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA));
-//                        }
-//                        else {
-//                            System.out.println(PrintUtils.addColor("Someone else already flipped the timer, you must wait that it ends before flipping it again!", ANSIColors.BRIGHT_MAGENTA));
-//                        }
-
-                        // Asking the user for the next command in
-                        // the component selection input widget
-//                        this.getComponentSelectionCommand();
-
-                        this.clientTUI.getModel().getState().flipTimer();
+                        // TODO
                     }
+                );
+                componentSelectionCommand.appendString("Flip Timer");
+                this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
+            }
+
+            // (4) - Finish Ship
+            componentSelectionCommand = new CommandWidgetTUI(
+                "4",
+                () -> {
+                    if (this.getShipFinishedConfirmation()) {
+                        // Sending the ship to the server
+                        try {
+                            this.sendShipConfirmation();
+                        }
+                        catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                    else {
+                        // If player refuses to send the confirmation to conclude the ship
+                        // building phase, then go back to the component selection menu
+                        clearTerminal();
+                        this.composeSelectableComponentsMenuWidget().printWidget();
+                        this.getComponentSelectionCommand();
+                    }
+                }
             );
-            componentSelectionCommand.appendString("Flip Timer");
+            componentSelectionCommand.appendString("Finish Ship");
             this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
         }
 
-        // (4) - Visualize Deck
+        // (5) - Visualize Deck
         componentSelectionCommand = new CommandWidgetTUI(
-            "4",
+            "5",
             () -> {
                 // Visualizes the selected deck from the board (if someone is not already observing it)
                 boolean existingCommandSelected;
@@ -227,29 +231,14 @@ public final class ShipConstructionTUIPage extends TUIPage {
         componentSelectionCommand.appendString("Visualize Deck");
         this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
 
-        // (5) - Finish Ship
+        // (6) - Visualize Other Ships
         componentSelectionCommand = new CommandWidgetTUI(
-            "5",
+            "6",
             () -> {
-                if (this.getShipFinishedConfirmation()) {
-                    // Sending the ship to the server
-                    try {
-                        this.sendShipConfirmation();
-                    }
-                    catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                else {
-                    // If player refuses to send the confirmation to conclude the ship
-                    // building phase, then go back to the component selection menu
-                    clearTerminal();
-                    this.composeSelectableComponentsMenuWidget().printWidget();
-                    this.getComponentSelectionCommand();
-                }
+                // TODO
             }
         );
-        componentSelectionCommand.appendString("Finish Ship");
+        componentSelectionCommand.appendString("Visualize Other Ships");
         this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
     }
 

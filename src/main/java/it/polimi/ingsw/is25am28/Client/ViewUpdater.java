@@ -102,13 +102,15 @@ public class ViewUpdater implements StateVisitor {
     public void visit(PlacedComponentDTO state) throws Exception {
         synchronized (this.model) {
             if (state.getEventType().equals(ShipConstructionType.PLACE_EVENT.toString())) {
-
                 // Get the component
                 ClientComponent comp = this.model.getState().getConstructionShipComponents().get(state.getId());
                 comp.setRotation(state.getRotation());
 
                 ClientShip ship = this.model.getShipOfPlayer(state.getPlayerNickname());
-                ship.addComponent(comp, state.getI(), state.getJ());
+
+                if (ship != null) {
+                    ship.addComponent(comp, state.getI(), state.getJ());
+                }
             }
         }
     }
