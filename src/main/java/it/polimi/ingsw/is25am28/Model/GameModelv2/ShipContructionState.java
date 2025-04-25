@@ -57,7 +57,9 @@ public final class ShipContructionState extends State implements TimerObserver {
             this.hourGlass = new HourGlass(this.gameLevel);
             this.hourGlass.addTimerSubscriber(this);
 
-            this.hourGlass.setDurationInMillis(3000);   // TODO: Remove after tests
+            // TODO (NOTE: Add this if you want to run the "test_game_model_hourglass" in GameModelTest.java)
+            //      (It only reduces the time to wait when running said test)
+            // this.hourGlass.setDurationInMillis(3000);
 
             this.hourGlass.flip();
         }

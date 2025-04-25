@@ -187,6 +187,8 @@ public final class ShipConstructionTUIPage extends TUIPage {
                         // Asking the user for the next command in
                         // the component selection input widget
 //                        this.getComponentSelectionCommand();
+
+                        this.clientTUI.getModel().getState().flipTimer();
                     }
             );
             componentSelectionCommand.appendString("Flip Timer");
