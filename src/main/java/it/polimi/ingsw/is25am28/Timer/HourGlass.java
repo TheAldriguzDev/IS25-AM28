@@ -32,7 +32,7 @@ public class HourGlass extends TimerObservable {
         if (difficultyLevel >= 0 && difficultyLevel <= 3) {
             // In the game, the difficulty level corresponds
             // to the amount of flips available
-            this.remainingFlips = difficultyLevel;
+            this.remainingFlips = difficultyLevel + 1;
         }
         else {
             this.remainingFlips = Long.MAX_VALUE;
@@ -80,7 +80,6 @@ public class HourGlass extends TimerObservable {
      */
     public void initTimerThread() {
         // Instantiating the timer thread that will sleep for the set duration
-
         this.timerThread = new Thread(
             () -> {
                 long startTime = System.currentTimeMillis();
@@ -126,6 +125,7 @@ public class HourGlass extends TimerObservable {
         if (this.remainingFlips > 0) {
             if (this.timerThread != null && !this.timerThread.isAlive()) {
                 this.remainingFlips--;
+                this.initTimerThread();
                 this.timerThread.start();
                 return true;
             }

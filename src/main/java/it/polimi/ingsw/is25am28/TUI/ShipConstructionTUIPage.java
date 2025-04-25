@@ -151,35 +151,47 @@ public final class ShipConstructionTUIPage extends TUIPage {
         componentSelectionCommand.appendString("Select Reserved Tile");
         this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
 
-        // (3) - Flip Timer
-        componentSelectionCommand = new CommandWidgetTUI(
-            "3",
-            () -> {
-                // Flips the timer (if possible), otherwise throws an error saying
-                // that time it is currently flowing (i.e.: cannot be flipped until it finishes)
+        // Command is added only if the current game
+        // difficulty level is not 0 (i.e.: Test Flight)
+        if (this.clientTUI.getModel().getDifficultyLevel() != 0) {
+            // (3) - Flip Timer
+            componentSelectionCommand = new CommandWidgetTUI(
+                    "3",
+                    () -> {
+                        // Flips the timer (if possible), otherwise throws an error saying
+                        // that time it is currently flowing (i.e.: cannot be flipped until it finishes)
 
-                // Printing the selectable components widget before the timer flip result
-                clearTerminal();
-                this.composeSelectableComponentsMenuWidget().printWidget();
+                        // Printing the selectable components widget before the timer flip result
+//                        clearTerminal();
+//                        this.composeSelectableComponentsMenuWidget().printWidget();
 
-                // if hourglass.flip() == true, then notify the user and reprint
+                        // if hourglass.flip() == true, then notify the user and reprint
 
-                // TODO: Figure out where to put the hourglass
-                // TODO: Substitute the "true" here with "timer.flip()"
-                if (true) {
-                    System.out.println(PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA));
-                }
-                else {
-                    System.out.println(PrintUtils.addColor("Someone else already flipped the timer, you must wait that it ends before flipping it again!", ANSIColors.BRIGHT_MAGENTA));
-                }
+                        // TODO: Figure out where to put the hourglass
+                        // TODO: Substitute the "true" here with "timer.flip()"
 
-                // Asking the user for the next command in
-                // the component selection input widget
-                this.getComponentSelectionCommand();
-            }
-        );
-        componentSelectionCommand.appendString("Flip Timer");
-        this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
+//                        try {
+//                            this.clientTUI.getModel().getState().flipTimer();
+//                        }
+//                        catch (Exception e) {
+//
+//                        }
+
+//                        if (true) {
+//                            System.out.println(PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA));
+//                        }
+//                        else {
+//                            System.out.println(PrintUtils.addColor("Someone else already flipped the timer, you must wait that it ends before flipping it again!", ANSIColors.BRIGHT_MAGENTA));
+//                        }
+
+                        // Asking the user for the next command in
+                        // the component selection input widget
+//                        this.getComponentSelectionCommand();
+                    }
+            );
+            componentSelectionCommand.appendString("Flip Timer");
+            this.componentSelectionCommandsWidget.addCommand(componentSelectionCommand);
+        }
 
         // (4) - Visualize Deck
         componentSelectionCommand = new CommandWidgetTUI(
@@ -582,15 +594,15 @@ public final class ShipConstructionTUIPage extends TUIPage {
      * Sends the ship to the server for evaluation
      */
     private void sendShipConfirmation() throws Exception {
+        // TODO: Remove SendShipConfirmation Network Message since TUI
+        //       page routing is done externally
         this.clientTUI.setCurrCommand(
             new CommandCTX(
                 "sendShipConfirmation",
                 () -> {
-                    // TODO: onSuccess --> Go to PopulateShip phase
                     System.out.println(PrintUtils.addColor("SHIP IS VALID --> Next: PopulateShip", ANSIColors.BRIGHT_GREEN));
                 },
                 () -> {
-                    // TODO: onError --> Go to FixShip phase
                     System.out.println(PrintUtils.addColor("SHIP IS INVALID --> Next: FixShip", ANSIColors.BRIGHT_RED));
                 }
             )

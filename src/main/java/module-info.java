@@ -28,14 +28,12 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Model.Lifeform;
     exports it.polimi.ingsw.is25am28.Model.EventCards;
     exports it.polimi.ingsw.is25am28.Model.Items;
-    exports it.polimi.ingsw.is25am28.Model.TimeObserver;
     exports it.polimi.ingsw.is25am28.Model.ActionJSON;
     exports it.polimi.ingsw.is25am28.Model.ResourceBank;
     exports it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities;
     opens it.polimi.ingsw.is25am28.Model.Exceptions to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Model.Ship to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Model.Player to javafx.fxml;
-    opens it.polimi.ingsw.is25am28.Model.TimeObserver to javafx.fxml;
     exports it.polimi.ingsw.is25am28.FileLoader;
     opens it.polimi.ingsw.is25am28.FileLoader to javafx.fxml;
     exports it.polimi.ingsw.is25am28.Model.ActionJSON.State;
