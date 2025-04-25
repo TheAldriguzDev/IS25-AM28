@@ -109,7 +109,7 @@ public class GameModel {
         // Board information
         state.setBoard(this.board.generateState());
 
-        // Player information
+        // Players information
         List<PlayerJSON> playerInfo = new ArrayList<>();
         for (Player player : this.players.values()) {
             playerInfo.add(PlayerJSON.fromPlayer(player, true));

@@ -1,10 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 
 public interface StateVisitor {
     void visit (StateDTO state);
@@ -15,6 +12,7 @@ public interface StateVisitor {
     void visit (ConstructionComponentDTO state) throws Exception;
     void visit (PlacedComponentDTO state) throws Exception;
     void visit (PlayerEndedShipDTO state) throws Exception;
+    void visit (TimerDTO state) throws Exception;
     void visit (FixShipDTO state);
     void visit (PopulateShipDTO state);
     void visit (CardRoundDTO state);

@@ -205,7 +205,6 @@ public final class GameMenuTUIPage extends TUIPage {
                 () -> {
                     synchronized (this.clientTUI.getModel()) {
                         this.clientTUI.getModel().setNickname(playerNickname);
-                        this.clientTUI.getModel().setPlayerColor(playerColor);
                         this.clientTUI.getModel().setDifficultyLevel(gameLevel);
                         this.clientTUI.setCurrCommand(null);
                     }
@@ -245,7 +244,6 @@ public final class GameMenuTUIPage extends TUIPage {
                 () -> {
                     synchronized (this.clientTUI.getModel()) {
                         this.clientTUI.getModel().setNickname(playerNickname);
-                        this.clientTUI.getModel().setPlayerColor(playerColor);
                         this.clientTUI.getModel().setDifficultyLevel(game.getLevel());
                         this.clientTUI.setCurrCommand(null);
                     }
@@ -469,10 +467,7 @@ public final class GameMenuTUIPage extends TUIPage {
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
         // Creating the ship of the newly connected player in all clients
         for (Map.Entry<String, PlayerColor> playerEntry : waitingForPlayers.getUsedNicknames().entrySet()) {
-            this.clientTUI.getModel().setShipToPlayer(
-                playerEntry.getKey(),
-                new ClientShip(this.clientTUI.getModel().getDifficultyLevel())
-            );
+            this.clientTUI.getModel().addNewPlayer(playerEntry.getKey(), playerEntry.getValue());
         }
 
         synchronized (this.clientTUI.getIoLock()) {
@@ -502,7 +497,7 @@ public final class GameMenuTUIPage extends TUIPage {
                 }
 
                 // Adding some left and right padding
-                this.waitingForPlayersWidget.addPadding(0, 12, 0, 1);
+                this.waitingForPlayersWidget.addPadding(0, 1, 0, 1);
 
                 // Finally, wrap and print the widget
                 this.waitingForPlayersWidget.wrapWidgetWithBorder().printWidget();

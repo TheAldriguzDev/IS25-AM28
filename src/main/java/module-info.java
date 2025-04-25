@@ -58,4 +58,6 @@ module it.polimi.ingsw.is25am {
     opens it.polimi.ingsw.is25am28.Client.ClientModel to javafx.fxml;
     exports it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent to java.rmi;
     opens it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip;
+    exports it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer;
 }

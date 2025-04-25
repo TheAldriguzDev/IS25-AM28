@@ -201,7 +201,6 @@ public class ClientTUI implements ClientUI {
                 () -> {
                     synchronized (this.model) {
                         this.model.setNickname(finalPlayerName);
-                        this.model.setPlayerColor(finalPlayerColor);
                         this.currCommand = null;
                     }
                 },
@@ -290,7 +289,6 @@ public class ClientTUI implements ClientUI {
                 () -> {
                     synchronized (this.model) {
                         this.model.setNickname(finalPlayerName);
-                        this.model.setPlayerColor(finalPlayerColor);
                         this.currCommand = null;
                     }
                 },

@@ -9,6 +9,8 @@ import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.FileLoader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Network.Answer.Answer;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
 import it.polimi.ingsw.is25am28.Timer.HourGlass;
 import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
@@ -282,9 +284,14 @@ public final class ShipContructionState extends State implements TimerObserver {
             throw new IllegalStateException("ERROR: You cannot flip the timer since you've not finished the ship yet!");
         }
 
+        if (!this.hourGlass.flip()) {
+            throw new IllegalStateException("ERROR: Hourglass cannot be flipped at this time");
+        }
+
         TimerDTO state = new TimerDTO()
-                .setHasBeenFlipped(this.hourGlass.flip())
-                .setCanBeFlipped(this.hourGlass.getRemainingFlips() != 0);
+                .setIsServerAction(false)
+                .setHasEnded(false)
+                .setCanBeFlipped(this.hourGlass.getRemainingFlips() > 0);
 
         state.setStateName(this.toString());
         state.setEventType(ShipConstructionType.TIMER_EVENT.toString());
@@ -296,6 +303,9 @@ public final class ShipContructionState extends State implements TimerObserver {
     @Override
     public void onComplete() {
         if (players_done.size() == model.getNumPlayers()) {
+
+            // Unsubscribe the state from receiving updated when the HourGlass ends
+            this.hourGlass.removeTimerSubscriber(this);
 
             // Check the players ship
             // if all the ships are valid go to PopulateShipState
@@ -318,28 +328,27 @@ public final class ShipContructionState extends State implements TimerObserver {
 
     @Override
     public void onTimerEnd() {
-        System.out.println("TIMER EVENT");
-
         synchronized (this.hourGlass) {
+            TimerDTO state = new TimerDTO()
+                    .setIsServerAction(true)
+                    .setHasEnded(this.hourGlass.getRemainingFlips() == 0)
+                    .setCanBeFlipped(this.hourGlass.getRemainingFlips() > 0);
+            state.setStateName(this.toString());
+            state.setEventType(ShipConstructionType.TIMER_EVENT.toString());
+
             if (this.hourGlass.getRemainingFlips() == 0) {
                 this.shipConfigEnded = true;
-
-                // TODO: Notify players that the ship building phase is concluded and they must then send their ships
-
-                // TODO: Modify how we send the data to the client --> we need to communicate that the time is over,
-                //  they need to send the ship
             }
-            else {
-                // TODO: Notify players that the timer is now available to be flipped again
 
-                // The hourglass is in the state where it has just finished
-                // counting, and it can be flipped at least once more by another player
-                TimerDTO state = new TimerDTO()
-                        .setHasBeenFlipped(false)
-                        .setCanBeFlipped(true);
+            Answer answer = new Answer()
+                    .setState(state);
 
-                state.setStateName(this.toString());
-                state.setEventType(ShipConstructionType.TIMER_EVENT.toString());
+            for (VirtualView clientView : this.model.getVirtualViews().values()) {
+                try {
+                    clientView.updateState(answer);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
         }
     }

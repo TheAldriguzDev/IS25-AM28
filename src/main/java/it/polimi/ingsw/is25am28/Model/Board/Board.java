@@ -198,23 +198,11 @@ public abstract class Board implements WidgetTUIGenerator {
 
             player.getCurrentCell().removePlayer();
             player.eliminate();
-            player.setCurrentCell(null); // TODO: CAPIRE SE ESISTE UN ALTRO MODO, COSI A ME NON PIACE
+            player.setCurrentCell(null);
         }
 
         // Re-order the current players by theirs cursor
         players.sort((p1, p2) -> Integer.compare(p2.getCursor(), p1.getCursor()));
-    }
-
-    public void printBoard() {
-        if (head == null) {
-            System.out.println("The board is empty.");
-        }
-
-        Cell curr = head;
-        do {
-            System.out.println(curr.toString());
-            curr = curr.getNextCell();
-        } while (curr != head);
     }
 
     public BoardJSON generateState(){

@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -140,7 +141,7 @@ public class TCPClient implements VirtualViewSocket {
 
         CompletableFuture<Void> future;
 
-        if (state instanceof ConstructionComponentDTO || state instanceof PlacedComponentDTO) {
+        if (state instanceof ConstructionComponentDTO || state instanceof PlacedComponentDTO || state instanceof TimerDTO) {
             // If we have a State that gives only updates --> Execute it first
             future = CompletableFuture.runAsync(() -> {
                 try {
@@ -195,7 +196,6 @@ public class TCPClient implements VirtualViewSocket {
                 }
             }, inputThread);
         }
-
         // TODO: Understand if we need to handle the errors in the futures better
     }
 

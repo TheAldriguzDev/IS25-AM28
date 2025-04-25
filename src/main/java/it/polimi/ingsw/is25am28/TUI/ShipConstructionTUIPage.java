@@ -15,10 +15,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.*;
 
@@ -112,7 +109,7 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
         // Commands 1 through 4 are excluded for players that
         // already finished building their ship
-        if (this.clientTUI.getModel().getPlayerFinishedBuildingShip(this.clientTUI.getPlayerNickname())) {
+        if (!this.clientTUI.getModel().getPlayerFinishedBuildingShip(this.clientTUI.getPlayerNickname())) {
             // (1) - Select Tile
             componentSelectionCommand = new CommandWidgetTUI(
                 "1",
@@ -480,13 +477,15 @@ public final class ShipConstructionTUIPage extends TUIPage {
                 // Adding the currently selected component at those coordinates
                 // in the current player's ship
                 try {
-                    this.clientTUI.getModel()
-                        .getShipOfPlayer(this.clientTUI.getPlayerNickname())
-                        .addComponent(
-                            this.selectedComponent,
-                            componentPosition.getKey(),
-                            componentPosition.getValue()
+
+                    Optional<ClientShip> optionalShip = this.clientTUI.getModel().getShipOfPlayer(this.clientTUI.getPlayerNickname());
+                    if (optionalShip.isPresent()) {
+                        optionalShip.get().addComponent(
+                                this.selectedComponent,
+                                componentPosition.getKey(),
+                                componentPosition.getValue()
                         );
+                    }
 
                     // Exit the loop only if the component can actually
                     // be placed at the given coordinates
@@ -517,7 +516,8 @@ public final class ShipConstructionTUIPage extends TUIPage {
             }
 
             // Updating the ship widget
-            this.shipWidget = this.clientTUI.getModel().getShipOfPlayer(this.clientTUI.getPlayerNickname()).generateWidget();
+            Optional<ClientShip> optionalShip = this.clientTUI.getModel().getShipOfPlayer(this.clientTUI.getPlayerNickname());
+            optionalShip.ifPresent(clientShip -> this.shipWidget = clientShip.getShipGridWidget());
         }
     }
 
@@ -781,7 +781,8 @@ public final class ShipConstructionTUIPage extends TUIPage {
         this.generateSelectedComponentWidget();
         this.generateReservedComponentWidget();
         try {
-            this.shipWidget = this.clientTUI.getModel().getShipOfPlayer(this.clientTUI.getPlayerNickname()).getShipGridWidget();
+            Optional<ClientShip> optionalShip = this.clientTUI.getModel().getShipOfPlayer(this.clientTUI.getPlayerNickname());
+            optionalShip.ifPresent(clientShip -> this.shipWidget = clientShip.getShipGridWidget());
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -14,6 +14,8 @@ import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
 import it.polimi.ingsw.is25am28.TUI.ShipConstructionTUIPage;
 
+import java.util.Optional;
+
 /**
  * This class use the VisitorPattern to save useful information of each state and then show this information in
  * the given UI
@@ -66,11 +68,19 @@ public class ViewUpdater implements StateVisitor {
     public void visit(ShipConstructionDTO state) throws Exception {
         // Set the model state to the ShipConstructionState that will initialize all the components
         synchronized (this.model) {
-            this.model.setState(new ClientShipConstructionState(this.model, state.getAllComponents()));
+            try {
+                this.model.setState(new ClientShipConstructionState(this.model, state.getAllComponents()));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
 
         if (this.ui instanceof ClientTUI_v2 tui) {
-            tui.setCurrPage(new ShipConstructionTUIPage(tui));
+            try {
+                tui.setCurrPage(new ShipConstructionTUIPage(tui));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
 
         this.ui.showShipConstruction(state);
@@ -106,11 +116,8 @@ public class ViewUpdater implements StateVisitor {
                 ClientComponent comp = this.model.getState().getConstructionShipComponents().get(state.getId());
                 comp.setRotation(state.getRotation());
 
-                ClientShip ship = this.model.getShipOfPlayer(state.getPlayerNickname());
-
-                if (ship != null) {
-                    ship.addComponent(comp, state.getI(), state.getJ());
-                }
+                Optional<ClientShip> optionalShip = this.model.getShipOfPlayer(state.getPlayerNickname());
+                optionalShip.ifPresent(ship -> ship.addComponent(comp, state.getI(), state.getJ()));
             }
         }
     }
@@ -118,6 +125,11 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(PlayerEndedShipDTO state) throws Exception {
 
+    }
+
+    @Override
+    public void visit(TimerDTO state) throws Exception {
+        // TODO: Handle the timer information :)
     }
 
     @Override
