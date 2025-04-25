@@ -24,7 +24,7 @@ public class CardStateJSON extends ActionJSON {
     private String cardName;
     private int cardLevel;
     private boolean isCardUsable;
-    private List<Pair<String, Integer>> updatedPositions;
+    private Map<String, Integer> updatedPositions;
     private List<String> eliminatedPlayers;
     private boolean needsBoardUpdate;
     // TODO: Implements hasBeenActivated logic/state in all eventCards
@@ -73,7 +73,7 @@ public class CardStateJSON extends ActionJSON {
 
     // ======== VisitPlanets Card State Attributes ======== //
 
-    Map<Integer, Map<ItemColor, Integer>> availablePlanets;
+    private Map<Integer, Map<ItemColor, Integer>> availablePlanets;
 
     // ======== MeteorShower Card State Attributes ======== //
 
@@ -286,10 +286,6 @@ public class CardStateJSON extends ActionJSON {
      * */
     @JsonGetter("cardName")
     public String getCardName() throws IllegalStateException {
-        if (this.cardName == null || this.cardName.isEmpty()) {
-            throw new IllegalStateException("Key 'cardName' is missing in JSON data");
-        }
-
         return this.cardName;
     }
 
@@ -298,10 +294,6 @@ public class CardStateJSON extends ActionJSON {
      * */
     @JsonSetter("cardName")
     public void setCardName(String cardName) throws IllegalStateException {
-        if (cardName == null || cardName.isEmpty()) {
-            throw new IllegalStateException("cardName cannot be null or empty");
-        }
-
         this.cardName = cardName;
     }
 
@@ -318,10 +310,6 @@ public class CardStateJSON extends ActionJSON {
      * */
     @JsonSetter("cardLevel")
     public void setCardLevel(int cardLevel) throws IllegalStateException {
-        if (cardLevel < 0) {
-            throw new IllegalStateException("cardLevel cannot be negative");
-        }
-
         this.cardLevel = cardLevel;
     }
 
@@ -381,11 +369,11 @@ public class CardStateJSON extends ActionJSON {
     }
 
     @JsonSetter("updatedPositions")
-    public void setUpdatedPositions(List<Pair<String, Integer>> updatedPositions) {
+    public void setUpdatedPositions(Map<String, Integer> updatedPositions) {
         this.updatedPositions = updatedPositions;
     }
     @JsonGetter("updatedPositions")
-    public List<Pair<String, Integer>> getUpdatedPositions() {
+    public Map<String, Integer> getUpdatedPositions() {
         return this.updatedPositions;
     }
 

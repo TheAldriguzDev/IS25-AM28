@@ -18,10 +18,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.UUID;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
@@ -150,40 +147,107 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
     @Override
     public void updateState(Answer answer) throws Exception {
-        // Commit the executed command --> could trigger some input so we execute it in the input thread
-        if (answer.getPlayerNickname() != null) {
-            inputThread.submit(() -> {
-                try {
-                    viewUpdater.commitCommand(answer.getPlayerNickname());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
+        StateDTO state = answer.getState();
+        StateDTO nextState = answer.getNextState();
+        String nickname = answer.getPlayerNickname();
+
+        CompletableFuture<Void> future;
+
+        if (state instanceof ConstructionComponentDTO) {
+            // If we have a State that gives only updates --> Execute it first
+            future = CompletableFuture.runAsync(() -> {
+               try {
+                    state.accept(viewUpdater);
+               } catch (Exception e) {
+                   throw new RuntimeException(e);
+               }
+            }, updateThread);
+
+            // Then commit the command
+            if (nickname != null) {
+                future = future.thenRunAsync(() -> {
+                    try {
+                        viewUpdater.commitCommand(nickname);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error while commiting the command: ", e);
+                    }
+                }, inputThread);
+            }
+        } else {
+            // If the nickname is present, commit the command first
+            if (nickname != null) {
+                future = CompletableFuture.runAsync(() -> {
+                    try {
+                        viewUpdater.commitCommand(nickname);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error while commiting the command: ", e);
+                    }
+                }, inputThread);
+            } else {
+                future = CompletableFuture.completedFuture(null);
+            }
+
+            if (state != null) {
+                future = future.thenRunAsync(() -> {
+                    try {
+                        state.accept(viewUpdater);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error while executing the state: ", e);
+                    }
+                }, inputThread);
+            }
         }
 
-        // Lambda function to handle the states
-        Consumer<StateDTO> handleState = state -> {
-            if (state == null) return;
-
-            Runnable task = () -> {
+        // Execute the last state
+        if (nextState != null) {
+            future = future.thenRunAsync(() -> {
                 try {
-                    state.accept(viewUpdater);
+                    nextState.accept(viewUpdater);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    throw new RuntimeException("Error while executing the next state: ", e);
                 }
-            };
+            }, inputThread);
+        }
 
-            // TODO: Add in the state a boolean: couldRequireInput --> In this way we can switch much easier
-            if (state instanceof ConstructionComponentDTO) {
-                updateThread.submit(task);
-            } else {
-                inputThread.submit(task);
-            }
-        };
-
-        handleState.accept(answer.getState());
-        handleState.accept(answer.getNextState());
+        // TODO: Understand if we need to handle the errors in the futures better
     }
+
+//    @Override
+//    public void updateState(Answer answer) throws Exception {
+//        // Commit the executed command --> could trigger some input so we execute it in the input thread
+//        if (answer.getPlayerNickname() != null) {
+//            inputThread.submit(() -> {
+//                try {
+//                    viewUpdater.commitCommand(answer.getPlayerNickname());
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e);
+//                }
+//            });
+//        }
+//
+//        // Lambda function to handle the states
+//        Consumer<StateDTO> handleState = state -> {
+//            if (state == null) return;
+//
+//            Runnable task = () -> {
+//                try {
+//                    state.accept(viewUpdater);
+//                } catch (Exception e) {
+//                    throw new RuntimeException(e);
+//                }
+//            };
+//
+//            // TODO: Add in the state a boolean: couldRequireInput --> In this way we can switch much easier
+//            if (state instanceof ConstructionComponentDTO) {
+//                updateThread.submit(task);
+//            } else {
+//                inputThread.submit(task);
+//            }
+//        };
+//
+//        handleState.accept(answer.getState());
+//        handleState.accept(answer.getNextState());
+//    }
 
     @Override
     public void reportError(ErrorAnswer error) throws RemoteException {

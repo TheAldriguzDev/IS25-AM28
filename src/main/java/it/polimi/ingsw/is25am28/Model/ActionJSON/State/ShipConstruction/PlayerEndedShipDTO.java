@@ -9,7 +9,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public non-sealed class PlayerEndedShipDTO extends ShipConstructionEventDTO {
+public final class PlayerEndedShipDTO extends ShipConstructionEventDTO {
     private List<String> playerNicknames;
 
     public PlayerEndedShipDTO() {}

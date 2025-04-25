@@ -108,9 +108,9 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
                     // Then goes to the ship construction TUIPage and
                     // waits for a command to handle the selected tile
-                    clearTerminal();
-                    this.composeShipConstructionWidget().printWidget();
-                    this.getShipConstructionCommand();
+//                    clearTerminal();
+//                    this.composeShipConstructionWidget().printWidget();
+//                    this.getShipConstructionCommand();
                 }
             );
             componentSelectionCommand.appendString("Select Tile");
@@ -252,10 +252,10 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
                     // At the end, it goes back to asking again a new
                     // component selection command
-                    clearTerminal();
-                    this.generateSelectableComponentsWidget();
-                    this.selectableComponentsWidget.printWidget();
-                    this.getComponentSelectionCommand();
+//                    clearTerminal();
+//                    this.generateSelectableComponentsWidget();
+//                    this.selectableComponentsWidget.printWidget();
+//                    this.getComponentSelectionCommand();
                 }
             );
             shipConstructionCommand.appendString("Deselect Tile");
@@ -568,7 +568,7 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
         // Reducing both by 1 since they will then be used as
         // indexes inside the client ship component matrix
-        coordinates.put(i, j);
+        coordinates.put(--i, --j);
         return coordinates.entrySet().stream().toList().getFirst();
     }
 
@@ -756,7 +756,11 @@ public final class ShipConstructionTUIPage extends TUIPage {
         // Ensuring each widget is updated
         this.generateSelectedComponentWidget();
         this.generateReservedComponentWidget();
-        this.shipWidget = this.clientTUI.getModel().getShipOfPlayer(this.clientTUI.getPlayerNickname()).getShipGridWidget();
+        try {
+            this.shipWidget = this.clientTUI.getModel().getShipOfPlayer(this.clientTUI.getPlayerNickname()).getShipGridWidget();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return WidgetTUI.composeTwoWidgetsHorizontally(
             WidgetTUI.composeTwoWidgetsVertically(

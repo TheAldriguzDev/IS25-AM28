@@ -22,8 +22,6 @@ public class ClientShipConstructionState extends ClientState {
     // TODO: Add the list for the removedComponents to support the FIX SHIP PHASE
     // TODO: Add the list for the populateShipComponent to support the POPULATE SHIP PHASE
 
-    // TODO ADD THE VIRTUAL CLIENT TO SEND THE MESSAGES TO THE SERVER IN THIS STATES
-
     /**
      * The constructor will set the model and then create all the components needed to build the player ship
      * */

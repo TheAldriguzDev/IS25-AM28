@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientOpenSpace extends ClientEventCard {
-    private List<Pair<String, Integer>> updatedPositions;
+    private Map<String, Integer> updatedPositions;
     private List<String> eliminatedPlayers;
 
     public ClientOpenSpace(CardStateJSON openSpaceState) {

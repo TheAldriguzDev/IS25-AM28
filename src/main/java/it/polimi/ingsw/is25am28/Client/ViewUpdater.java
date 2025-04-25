@@ -82,12 +82,14 @@ public class ViewUpdater implements StateVisitor {
      * */
     @Override
     public void visit(ConstructionComponentDTO state) throws Exception {
-        if (state.getEventType().equals(ShipConstructionType.TILE_EVENT.toString())) {
-            int idx = (state.getI() * 19) + state.getJ();
+        synchronized (this.model) {
+            if (state.getEventType().equals(ShipConstructionType.TILE_EVENT.toString())) {
+                int idx = (state.getI() * 19) + state.getJ();
 
-            ClientComponent comp = this.model.getState().getConstructionShipComponents().get(idx);
-            comp.setAsFlipped();
-            comp.setIsVisible(!state.isSelected());
+                ClientComponent comp = this.model.getState().getConstructionShipComponents().get(idx);
+                comp.setAsFlipped();
+                comp.setIsVisible(!state.isSelected());
+            }
         }
     }
 

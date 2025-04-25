@@ -5,9 +5,10 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import javafx.util.Pair;
 
 import java.util.List;
+import java.util.Map;
 
 public class ClientStardust extends ClientEventCard {
-    private List<Pair<String, Integer>> updatedPositions;
+    private Map<String, Integer> updatedPositions;
 
     public ClientStardust(CardStateJSON StardustCardState) {
         super(StardustCardState);

@@ -460,7 +460,7 @@ public class ClientShip implements WidgetTUIGenerator {
         tmpComponentWidget.setHeight(height);
         tmpComponentWidget.setWidth(width);
 
-        int shipRows= ClientShip.shipDimensions.get(this.difficultyLevel).getKey();
+        int shipRows = ClientShip.shipDimensions.get(this.difficultyLevel).getKey();
         int shipCols= ClientShip.shipDimensions.get(this.difficultyLevel).getValue();
 
         int rowOffset = ClientShip.shipOffsets.get(this.difficultyLevel).getKey();
