@@ -582,7 +582,7 @@ public class Ship implements WidgetTUIGenerator {
      *
      * @return The current ship's total firepower
      */
-    public float getFirePower(List<Pair<Integer, Integer>> doubleCannonsToActivate) {
+    public float getFirePower(List<List<Integer>> doubleCannonsToActivate) {
         float totalFirePower;
         boolean allEnergyConsumed;
 
@@ -597,11 +597,11 @@ public class Ship implements WidgetTUIGenerator {
 
         // Adding the firepower of only the double cannons (if there are any)
         if (doubleCannonsToActivate != null) {
-            for (Pair<Integer, Integer> doubleCannonCoords : doubleCannonsToActivate) {
+            for (List<Integer> doubleCannonCoords : doubleCannonsToActivate) {
                 if (doubleCannonCoords != null) {
                     Component component = this.getComponent(
-                        doubleCannonCoords.getKey(),
-                        doubleCannonCoords.getValue()
+                        doubleCannonCoords.get(0),
+                        doubleCannonCoords.get(1)
                     );
 
                     switch (component) {

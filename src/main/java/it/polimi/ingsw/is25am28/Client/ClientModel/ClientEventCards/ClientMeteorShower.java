@@ -4,7 +4,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-import javafx.util.Pair;
 
 import java.util.List;
 import java.util.Map;
@@ -12,8 +11,8 @@ import java.util.Map;
 public class ClientMeteorShower extends ClientEventCard {
     private int currMeteorIndex;
     private int diceThrowResult;
-    private Pair<Integer, Integer> currMeteorDescriptor;
-    private Pair<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
+    private Map<String, Integer> currMeteorDescriptor;
+    private Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
 
     public ClientMeteorShower(CardStateJSON cardState) {
         super(cardState);

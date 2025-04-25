@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,12 +8,12 @@ import java.util.List;
 public class PiratesJSON extends ActionJSON {
     private final boolean takeCredits;
     private final ArrayList<int []> shieldsActivatedCoordinates;
-    private final ArrayList<Pair<Integer, Integer>> doubleCannonsToActivateCoordinates;
+    private final ArrayList<List<Integer>> doubleCannonsToActivateCoordinates;
 
     public PiratesJSON(@JsonProperty("PlayerNickname") String playerNickname,
                        @JsonProperty("takeCredits") boolean takeCredits,
                        @JsonProperty("shieldsActivatedCoordinates") ArrayList<int[]> shieldsActivatedCoordinates,
-                       @JsonProperty("doubleCannonsToActivateCoordinates") ArrayList<Pair<Integer, Integer>> doubleCannonsToActivateCoordinates) {
+                       @JsonProperty("doubleCannonsToActivateCoordinates") ArrayList<List<Integer>> doubleCannonsToActivateCoordinates) {
         super(playerNickname);
         this.takeCredits = takeCredits;
         this.shieldsActivatedCoordinates = shieldsActivatedCoordinates;
@@ -29,7 +28,7 @@ public class PiratesJSON extends ActionJSON {
         return shieldsActivatedCoordinates;
     }
 
-    public List<Pair<Integer, Integer>> getDoubleCannonsToActivateCoordinates() {
+    public List<List<Integer>> getDoubleCannonsToActivateCoordinates() {
         return doubleCannonsToActivateCoordinates;
     }
 }

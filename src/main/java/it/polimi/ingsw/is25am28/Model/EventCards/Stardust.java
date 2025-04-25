@@ -6,7 +6,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-import javafx.util.Pair;
 
 import java.util.*;
 

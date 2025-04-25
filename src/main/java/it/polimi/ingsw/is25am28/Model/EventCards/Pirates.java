@@ -3,15 +3,12 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-
-import javafx.util.Pair;
 
 import java.util.*;
 
@@ -24,7 +21,7 @@ public class Pirates extends EventCard {
     private int playerUseCount;
     private int diceThrowResult;
     private int plasmashotIndex;
-    Pair<Integer, Integer> currentPlasmaShot;
+    Map<String, Integer> currentPlasmaShot;
     private int shotSize;
     private int shotDirection;
 
@@ -33,7 +30,7 @@ public class Pirates extends EventCard {
     private boolean hasBeenDefeated;
     private List<Component> previousPlayerRemovedComponents;
     private String prevPlayer;
-    private String eliminateddPlayer;
+    private List<String> eliminatedPlayers;
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board) {
         super(name, cardLevel, board);
@@ -136,7 +133,8 @@ public class Pirates extends EventCard {
                             // Necessary for the first round of shots (without this the descriptor would not be included in the state generated)
                             shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
                             shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
-                            currentPlasmaShot = new Pair<>(shotSize, shotDirection);
+                            //currentPlasmaShot = new ArrayList<>(Arrays.asList(shotSize, shotDirection));
+                            currentPlasmaShot = Map.of("shotSize", shotSize, "shotDirection", shotDirection);
                             // If there are no defeated players at the end of the first round the card is set as used
                             if (playersToHit.isEmpty()) {
                                 cardUsed();
@@ -175,7 +173,7 @@ public class Pirates extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         PiratesJSON piratesData = (PiratesJSON) data;
         previousPlayerRemovedComponents = new ArrayList<>();
-        eliminateddPlayer = null;
+        eliminatedPlayers = new ArrayList<>();
         playerOptional.ifPresent(
                 (Player player) -> {
 
@@ -225,7 +223,7 @@ public class Pirates extends EventCard {
                                         try {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
-                                            eliminateddPlayer = player.getNickname();
+                                            eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
                                             if (playersToHit.isEmpty()) {
@@ -244,7 +242,7 @@ public class Pirates extends EventCard {
                                         try {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
-                                            eliminateddPlayer = player.getNickname();
+                                            eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
                                             if (playersToHit.isEmpty()) {
@@ -263,7 +261,7 @@ public class Pirates extends EventCard {
                                         try {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
-                                            eliminateddPlayer = player.getNickname();
+                                            eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
                                             if (playersToHit.isEmpty()) {
@@ -282,7 +280,7 @@ public class Pirates extends EventCard {
                                         try {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
                                         } catch (CoreDeletionAttemptException e) {
-                                            eliminateddPlayer = player.getNickname();
+                                            eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
                                             if (playersToHit.isEmpty()) {
@@ -298,7 +296,8 @@ public class Pirates extends EventCard {
                     }
                     shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
                     shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
-                    currentPlasmaShot = new Pair<>(shotSize, shotDirection);
+                    //currentPlasmaShot = new ArrayList<>(Arrays.asList(shotSize, shotDirection));
+                    currentPlasmaShot = Map.of("shotSize", shotSize, "shotDirection", shotDirection);
                 }
         );
     }
@@ -333,11 +332,11 @@ public class Pirates extends EventCard {
                 piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
                 piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
                 piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
-                if (previousPlayerRemovedComponents.isEmpty()) {
+                if (!previousPlayerRemovedComponents.isEmpty()) {
                     piratesStateJSON.setNeedsShipsUpdate(true);
                     piratesStateJSON.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
-                } else if (eliminateddPlayer != null) {
-                    piratesStateJSON.setEliminatedPlayer(eliminateddPlayer);
+                } else if (!eliminatedPlayers.isEmpty()) {
+                    piratesStateJSON.setEliminatedPlayers(eliminatedPlayers);
                 }
             }
         } else {
@@ -390,30 +389,30 @@ public class Pirates extends EventCard {
 //            cardInfoWidget.appendString("Target player is: " + piratesState.getPlayerNickname());
 //            cardInfoWidget.appendString("Current PlasmaShot size: " + piratesState.getCurrPlasmaShotDescriptor().getKey());
 //            cardInfoWidget.appendString("Current PlasmaShot direction: " + piratesState.getCurrPlasmaShotDescriptor().getValue());
-            switch (piratesState.getCurrPlasmaShotDescriptor().getValue()) {
+            switch (piratesState.getCurrPlasmaShotDescriptor().get("shotDirection")) {
                 case 0 -> {
-                    if(piratesState.getCurrPlasmaShotDescriptor().getKey() == 1) {
+                    if(piratesState.getCurrPlasmaShotDescriptor().get("shotSize") == 1) {
                         cardInfoWidget = getSmallDownwardsShotWidget();
                     } else {
                         cardInfoWidget = getBigDownwardsShotWidget();
                     }
                 }
                 case 1 -> {
-                    if(piratesState.getCurrPlasmaShotDescriptor().getKey() == 1) {
+                    if(piratesState.getCurrPlasmaShotDescriptor().get("shotSize") == 1) {
                         cardInfoWidget = getSmallShotUpwardsWidget();
                     } else {
                         cardInfoWidget = getBigShotUpwardsWidget();
                     }
                 }
                 case 2 -> {
-                    if (piratesState.getCurrPlasmaShotDescriptor().getKey() == 1) {
+                    if (piratesState.getCurrPlasmaShotDescriptor().get("shotSize") == 1) {
                         cardInfoWidget = getSmallRightShotWidget();
                     } else {
                         cardInfoWidget = getBigRightShotWidget();
                     }
                 }
                 case 3 -> {
-                    if (piratesState.getCurrPlasmaShotDescriptor().getKey() == 1) {
+                    if (piratesState.getCurrPlasmaShotDescriptor().get("shotSize") == 1) {
                         cardInfoWidget = getSmallLeftShotWidget();
                     } else {
                         cardInfoWidget = getBigLeftShotWidget();

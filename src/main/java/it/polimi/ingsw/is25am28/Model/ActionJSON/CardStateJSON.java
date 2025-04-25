@@ -7,9 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
-import javafx.util.Pair;
 
-import javax.swing.text.Position;
 import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
@@ -69,7 +67,7 @@ public class CardStateJSON extends ActionJSON {
 
     private String affectedPlayer;
     private int requiredResources;
-    private Pair<Integer, Integer> currPlasmaShotDescriptor;
+    private Map<String, Integer> currPlasmaShotDescriptor;
 
     // ======== VisitPlanets Card State Attributes ======== //
 
@@ -79,7 +77,7 @@ public class CardStateJSON extends ActionJSON {
 
     private int currMeteorIndex;
     private int diceThrowResult;
-    private Pair<Integer, Integer> currMeteorDescriptor;
+    private Map<String, Integer> currMeteorDescriptor;
     private Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
 
     // ======== Model Information Methods ======== //
@@ -439,12 +437,12 @@ public class CardStateJSON extends ActionJSON {
     }
 
     @JsonGetter("currPlasmaShotDescriptor")
-    public Pair<Integer, Integer> getCurrPlasmaShotDescriptor() {
+    public Map<String, Integer> getCurrPlasmaShotDescriptor() {
         return this.currPlasmaShotDescriptor;
     }
 
     @JsonSetter("currPlasmaShotDescriptor")
-    public void setCurrPlasmaShotDescriptor(Pair<Integer, Integer> currPlasmaShotDescriptor) {
+    public void setCurrPlasmaShotDescriptor(Map<String, Integer> currPlasmaShotDescriptor) {
         this.currPlasmaShotDescriptor = currPlasmaShotDescriptor;
     }
 
@@ -483,12 +481,12 @@ public class CardStateJSON extends ActionJSON {
     }
 
     @JsonGetter("currMeteorDescriptor")
-    public Pair<Integer, Integer> getCurrMeteorDescriptor() {
+    public Map<String, Integer> getCurrMeteorDescriptor() {
         return this.currMeteorDescriptor;
     }
 
     @JsonSetter("currMeteorDescriptor")
-    public void setCurrMeteorDescriptor(Pair<Integer, Integer> currMeteorDescriptor) {
+    public void setCurrMeteorDescriptor(Map<String, Integer> currMeteorDescriptor) {
         this.currMeteorDescriptor = currMeteorDescriptor;
     }
 

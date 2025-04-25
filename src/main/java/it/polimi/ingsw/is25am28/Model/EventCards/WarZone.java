@@ -18,9 +18,7 @@ import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-import javafx.util.Pair;
 
-import javax.smartcardio.Card;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -689,7 +687,7 @@ public class WarZone extends EventCard {
         cardState.setRequiredResources(this.requiredItems);
 
         PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
-        cardState.setCurrPlasmaShotDescriptor(new Pair<>(currPlasmaShot.getSize(), currPlasmaShot.getOrientation()));
+        cardState.setCurrPlasmaShotDescriptor(Map.of("shotSize", currPlasmaShot.getSize(), "shotDirection", currPlasmaShot.getOrientation()));//<>(currPlasmaShot.getSize(), currPlasmaShot.getOrientation()));
         cardState.setDiceThrowResult(this.diceResult);
 
         Map<String, Float> playersFirePowerMap = this.playersFirePower.entrySet().stream()

@@ -15,7 +15,6 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-import javafx.util.Pair;
 
 import java.util.*;
 
@@ -114,8 +113,8 @@ public class MeteorShower extends EventCard {
         boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
-        List<Pair<Integer, Integer>> shieldCoordsList;
-        List<Pair<Integer, Integer>> cannonCoordsList;
+        List<List<Integer>> shieldCoordsList;
+        List<List<Integer>> cannonCoordsList;
         Component toHit;
         Ship shipPtr;
 
@@ -237,11 +236,11 @@ public class MeteorShower extends EventCard {
                 // => Check if it can bounce on toHit or a shield is required
                 if (sideToHit != ZERO_PIPES.ordinal()) {
                     if (shieldCoordsList != null) {
-                        for (Pair<Integer, Integer> shieldCoords : shieldCoordsList) {
+                        for (List<Integer> shieldCoords : shieldCoordsList) {
                             if (shieldCoords != null) {
                                 Component component = shipPtr.getComponent(
-                                        shieldCoords.getKey(),
-                                        shieldCoords.getValue()
+                                        shieldCoords.get(0),
+                                        shieldCoords.get(1)
                                 );
 
                                 // Safe cast of Component to Shield
@@ -277,11 +276,11 @@ public class MeteorShower extends EventCard {
                 // Case 2 - Big Meteor
                 // => Check if there are cannons that can destroy it
                 if (cannonCoordsList != null) {
-                    for (Pair<Integer, Integer> cannonCoords : cannonCoordsList) {
+                    for (List<Integer> cannonCoords : cannonCoordsList) {
                         if (cannonCoords != null) {
                             Component component = shipPtr.getComponent(
-                                    cannonCoords.getKey(),
-                                    cannonCoords.getValue()
+                                    cannonCoords.get(0),
+                                    cannonCoords.get(1)
                             );
 
                             // Safe cast of Component to Cannon
@@ -448,20 +447,13 @@ public class MeteorShower extends EventCard {
             // transitioned to the next state
             cardState.setPreviousPlayerRemovedComponents(
                 Map.of(this.prevPlayer,
-                        this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList())
-
-
-            );
+                        this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList()));
         }
         else {
             // No components were removed, therefore the
             // prevPlayerRemovedComponents list is null
-            cardState.setPreviousPlayerRemovedComponents(
-                new Pair<>(
-                    this.prevPlayer,
-                    null
-                )
-            );
+//            cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer,null));
+            cardState.setPreviousPlayerRemovedComponents(null);
         }
 
         // If the current player is present, then add it to the card state
@@ -480,11 +472,12 @@ public class MeteorShower extends EventCard {
         cardState.setDiceThrowResult(this.diceThrowResult);
 
         cardState.setCurrMeteorDescriptor(
-            new Pair<Integer, Integer>(
-                this.meteorSequence.get(this.currMeteorIndex).getSize(),
-                this.meteorSequence.get(this.currMeteorIndex).getOrientation()
-            )
-        );
+                Map.of("meteorSize", this.meteorSequence.get(this.currMeteorIndex).getSize(), "meteorDirection", this.meteorSequence.get(this.currMeteorIndex).getOrientation()));
+//            new Pair<Integer, Integer>(
+//                this.meteorSequence.get(this.currMeteorIndex).getSize(),
+//                this.meteorSequence.get(this.currMeteorIndex).getOrientation()
+//            )
+//        );
 
         return cardState;
     }

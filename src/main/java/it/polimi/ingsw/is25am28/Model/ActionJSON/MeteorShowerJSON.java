@@ -4,23 +4,22 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import javafx.util.Pair;
 
 import java.util.List;
 
 public class MeteorShowerJSON extends ActionJSON {
     private int currMeteorIndex;
     private int diceThrowResult;
-    private List<Pair<Integer, Integer>>  shieldsCoordinates;
-    private List<Pair<Integer, Integer>> cannonsCoordinates;
+    private List<List<Integer>>  shieldsCoordinates;
+    private List<List<Integer>> cannonsCoordinates;
 
     @JsonCreator
     public MeteorShowerJSON(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("currMeteorIndex") int currMeteorIndex,
             @JsonProperty("diceThrowResult") int diceThrowResult,
-            @JsonProperty("shieldsCoordinates") List<Pair<Integer, Integer>> shieldsCoordinates,
-            @JsonProperty("cannonsCoordinates") List<Pair<Integer, Integer>> cannonsCoordinates
+            @JsonProperty("shieldsCoordinates") List<List<Integer>> shieldsCoordinates,
+            @JsonProperty("cannonsCoordinates") List<List<Integer>> cannonsCoordinates
     ) {
         super(playerNickname);
         this.currMeteorIndex = currMeteorIndex;
@@ -50,22 +49,22 @@ public class MeteorShowerJSON extends ActionJSON {
     }
 
     @JsonGetter("shieldsCoordinates")
-    public List<Pair<Integer, Integer>> getShieldsCoordinates() {
+    public List<List<Integer>> getShieldsCoordinates() {
         return this.shieldsCoordinates;
     }
 
     @JsonSetter("shieldsCoordinates")
-    public void setShieldsCoordinates(List<Pair<Integer, Integer>> shieldsCoordinates) {
+    public void setShieldsCoordinates(List<List<Integer>> shieldsCoordinates) {
         this.shieldsCoordinates = shieldsCoordinates;
     }
 
     @JsonGetter("cannonsCoordinates")
-    public List<Pair<Integer, Integer>> getCannonsCoordinates() {
+    public List<List<Integer>> getCannonsCoordinates() {
         return this.cannonsCoordinates;
     }
 
     @JsonSetter("cannonsCoordinates")
-    public void setCannonsCoordinates(List<Pair<Integer, Integer>> cannonsCoordinates) {
+    public void setCannonsCoordinates(List<List<Integer>> cannonsCoordinates) {
         this.cannonsCoordinates = cannonsCoordinates;
     }
 }

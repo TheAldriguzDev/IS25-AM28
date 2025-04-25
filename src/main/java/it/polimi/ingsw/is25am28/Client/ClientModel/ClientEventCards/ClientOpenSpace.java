@@ -2,7 +2,6 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-import javafx.util.Pair;
 
 import java.util.List;
 import java.util.Map;

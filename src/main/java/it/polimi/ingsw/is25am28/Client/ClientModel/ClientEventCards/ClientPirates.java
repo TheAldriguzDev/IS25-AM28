@@ -3,7 +3,6 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-import javafx.util.Pair;
 
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ public class ClientPirates extends ClientEventCard {
     private final int requiredFirepower;
     private final int givenCredits;
     private final int movementSteps;
-    Pair<Integer, Integer> currentPlasmaShot;
+    Map<String, Integer> currentPlasmaShot;
     List<Player> playersToHit;
     Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
 

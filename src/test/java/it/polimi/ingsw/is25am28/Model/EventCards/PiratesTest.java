@@ -14,12 +14,11 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
-import javafx.util.Pair;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -377,8 +376,12 @@ class PiratesTest {
 
         ShieldsToActivate = new ArrayList<>();
 
-        ArrayList<Pair<Integer, Integer>> doubleCannonActivated = new ArrayList<>();
-        doubleCannonActivated.add(new Pair<>(5, 6));
+        ArrayList<List<Integer>> doubleCannonActivated = new ArrayList<>();
+//        x.add(5);
+//        y.add(6);
+        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(5, 6)));
+//        doubleCannonActivated.add(y);
+
 
         actionJSON1 = new PiratesJSON("Player 1", true, ShieldsToActivate, doubleCannonActivated); // Total FirePower: 4
         actionJSON2 = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 2
