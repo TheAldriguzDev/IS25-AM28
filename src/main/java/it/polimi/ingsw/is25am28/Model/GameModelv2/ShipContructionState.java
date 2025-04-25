@@ -305,7 +305,9 @@ public final class ShipContructionState extends State implements TimerObserver {
         if (players_done.size() == model.getNumPlayers()) {
 
             // Unsubscribe the state from receiving updated when the HourGlass ends
-            this.hourGlass.removeTimerSubscriber(this);
+            if (this.gameLevel != 0) {
+                this.hourGlass.removeTimerSubscriber(this);
+            }
 
             // Check the players ship
             // if all the ships are valid go to PopulateShipState
