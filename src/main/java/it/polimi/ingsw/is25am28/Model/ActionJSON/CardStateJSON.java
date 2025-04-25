@@ -72,6 +72,7 @@ public class CardStateJSON extends ActionJSON {
     // ======== VisitPlanets Card State Attributes ======== //
 
     private Map<Integer, Map<ItemColor, Integer>> availablePlanets;
+    private int chosenPlanetIndex;
 
     // ======== MeteorShower Card State Attributes ======== //
 
@@ -456,6 +457,15 @@ public class CardStateJSON extends ActionJSON {
     @JsonSetter("availablePlanets")
     public void setAvailablePlanets(Map<Integer, Map<ItemColor, Integer>> availablePlanets) {
         this.availablePlanets = availablePlanets;
+    }
+
+    @JsonGetter("chosenPlanetIndex")
+    public int getChosenPlanetIndex() {
+        return this.chosenPlanetIndex;
+    }
+    @JsonSetter("chosenPlanetIndex")
+    public void setChosenPlanetIndex(int chosenPlanetIndex) {
+        this.chosenPlanetIndex = chosenPlanetIndex;
     }
 
     // ======== MeteorShower Card State Getters/Setters ======== //

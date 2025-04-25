@@ -21,11 +21,21 @@ public class ClientVisitPlanets extends ClientEventCard {
 
     @Override
     public void updateCard(CardStateJSON cardState) {
-
+        this.playerNickname = cardState.getPlayerNickname();
+        // If a valid planet has been chosen by a player, the corresponding planed will be removed form the avaiable planets
+        if (cardState.getChosenPlanetIndex() != -1) {
+            availablePlanets.remove(cardState.getChosenPlanetIndex());
+        }
     }
 
     @Override
     public WidgetTUI generateWidget() {
-        return null;
+        WidgetTUI cardWidget = new WidgetTUI();
+        WidgetTUI cardInfoWidget = new WidgetTUI();
+
+        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+
+
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 }

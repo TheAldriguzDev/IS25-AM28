@@ -139,56 +139,63 @@ public class AbandonedStation extends EventCard {
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
 
-        // Card information that are needed to play
-        cardState.setCardName(this.getCardName());
-        cardState.setCardLevel(this.cardLevel);
-        cardState.setRequiredCrewMembers(this.requiredCrew);
-        cardState.setMovementSteps(this.movementStep);
-
-        // Filter the resources to the only available in the bank.
-        // The numbers of the resources will be set as the min between the given by the card and the available in the bank
-        Map<ItemColor, Integer> givenItemByTypeCount = givenItems.stream()
-                .collect(Collectors.groupingBy(
-                        Item::getColor,
-                        Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
-                ));
-
-        givenItemByTypeCount.replaceAll((c, _) -> Math.min(givenItemByTypeCount.get(c), this.resourceBank.getResourceAvailabilityFromColor(c)));
-
-        List<ItemColor> itemList = givenItemByTypeCount.entrySet().stream()
-                .flatMap(entry -> Collections.nCopies(entry.getValue(), entry.getKey()).stream())
-                .toList();
-
-        cardState.setStationResources(itemList);
-
         // If there is a currentPlayer set it in the DTO
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
 
-        // if the card is finished and a player has used it, we can update the clients with the changes
-        // otherwise send to the players the card information
-        if (this.hasFinished()) {
-            if (this.hasBeenUsedByPlayer) {
-                // Update the board
-                //cardState.setBoard(this.getBoard().generateState());
-
-                // Generate the player info that also includes the ship
-                //Map<String, PlayerJSON> playerInfo = new HashMap<>();
-                //playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
-                //cardState.setPlayersInfo(playerInfo);
-
-                // Info that other players can use to update their version of this player's ship
+        if (hasBeenActivated()) {
+            cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
+            if (hasBeenUsedByPlayer) {
                 cardState.setResourcesToDrop(this.resourceToDropOff);
                 cardState.setResourcesToTake(this.resourceToTake);
             }
         } else {
-            // If the player can use the card the flag will be set to true, otherwise if it doesn't have the card requirement it
-            // will be set to false
-            if (this.currentPlayer.isPresent()) {
-                cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
-            }
+            // Card information that are needed to play
+            cardState.setCardName(this.getCardName());
+            cardState.setCardLevel(this.cardLevel);
+            cardState.setRequiredCrewMembers(this.requiredCrew);
+            cardState.setMovementSteps(this.movementStep);
+            // Filter the resources to the only available in the bank.
+            // The numbers of the resources will be set as the min between the given by the card and the available in the bank
+            Map<ItemColor, Integer> givenItemByTypeCount = givenItems.stream()
+                    .collect(Collectors.groupingBy(
+                            Item::getColor,
+                            Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
+                    ));
+
+            givenItemByTypeCount.replaceAll((c, _) -> Math.min(givenItemByTypeCount.get(c), this.resourceBank.getResourceAvailabilityFromColor(c)));
+
+            List<ItemColor> itemList = givenItemByTypeCount.entrySet().stream()
+                    .flatMap(entry -> Collections.nCopies(entry.getValue(), entry.getKey()).stream())
+                    .toList();
+
+            cardState.setStationResources(itemList);
         }
+
+
+
+//        // if the card is finished and a player has used it, we can update the clients with the changes
+//        // otherwise send to the players the card information
+//        if (this.hasFinished()) {
+//            if (this.hasBeenUsedByPlayer) {
+//                // Update the board
+//                //cardState.setBoard(this.getBoard().generateState());
+//
+//                // Generate the player info that also includes the ship
+//                //Map<String, PlayerJSON> playerInfo = new HashMap<>();
+//                //playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
+//                //cardState.setPlayersInfo(playerInfo);
+//
+//                // Info that other players can use to update their version of this player's ship
+//
+//        } else {
+//            // If the player can use the card the flag will be set to true, otherwise if it doesn't have the card requirement it
+//            // will be set to false
+//            if (this.currentPlayer.isPresent()) {
+//                cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
+//            }
+//        }
 
         return cardState;
     }

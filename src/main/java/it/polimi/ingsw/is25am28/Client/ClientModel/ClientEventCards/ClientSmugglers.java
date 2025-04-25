@@ -15,7 +15,7 @@ public class ClientSmugglers extends ClientEventCard {
     private final int takenItems;
     private boolean firstRound;
 
-    List<String> defeatedPlayers;
+//    List<String> defeatedPlayers;
 
 
     public ClientSmugglers(CardStateJSON smugglersState) {
@@ -37,10 +37,10 @@ public class ClientSmugglers extends ClientEventCard {
     public void updateCard(CardStateJSON smugglersState) {
         this.playerNickname = smugglersState.getPlayerNickname();
         this.firstRound = smugglersState.getFirstRound();
-        if (!smugglersState.getFirstRound()) {
-            defeatedPlayers = smugglersState.getDefeatedPlayers();
-            // TODO : Resources/Batteries previously taken (not shown the first time)
-        }
+//        if (!smugglersState.getFirstRound()) {
+//            defeatedPlayers = smugglersState.getDefeatedPlayers();
+//            // TODO : Resources/Batteries previously taken (not shown the first time)
+//        }
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientStardust extends ClientEventCard {
-    private Map<String, Integer> updatedPositions;
+    //private Map<String, Integer> updatedPositions;
 
     public ClientStardust(CardStateJSON StardustCardState) {
         super(StardustCardState);
@@ -19,9 +19,9 @@ public class ClientStardust extends ClientEventCard {
     @Override
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
-        if (cardState.getNeedsBoardUpdate()) {
-            this.updatedPositions = cardState.getUpdatedPositions();
-        }
+//        if (cardState.getNeedsBoardUpdate()) {
+//            this.updatedPositions = cardState.getUpdatedPositions();
+//        }
     }
 
     @Override

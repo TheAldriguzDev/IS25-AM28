@@ -13,7 +13,7 @@ public class ClientSlavers extends ClientEventCard {
     private final int takenCrew;
     private boolean firstRound;
 
-    private List<String> defeatedPlayers;
+//    private List<String> defeatedPlayers;
 
     public ClientSlavers(CardStateJSON slaversCardState) {
         super(slaversCardState);
@@ -22,7 +22,7 @@ public class ClientSlavers extends ClientEventCard {
         this.givenCredits = slaversCardState.getGivenCredits();
         this.takenCrew = slaversCardState.getTakenCrew();
         this.firstRound = slaversCardState.getFirstRound();
-        this.defeatedPlayers = null;
+//        this.defeatedPlayers = null;
     }
 
     @Override
@@ -34,10 +34,9 @@ public class ClientSlavers extends ClientEventCard {
     public void updateCard(CardStateJSON slaversCardState) {
         this.playerNickname = slaversCardState.getPlayerNickname();
         this.firstRound = slaversCardState.getFirstRound();
-        if (slaversCardState.getFirstRound()) {
-            defeatedPlayers = slaversCardState.getDefeatedPlayers();
-            // TODO : previous removed lifeforms (not shown the first time)
-        }
+//        if (slaversCardState.getFirstRound()) {
+//            defeatedPlayers = slaversCardState.getDefeatedPlayers();
+//        }
     }
 
     @Override

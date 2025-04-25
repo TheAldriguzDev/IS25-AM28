@@ -144,30 +144,43 @@ public class OpenSpace extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        Map<String, Integer> playersBatteries = new HashMap<>();
 
-        cardState.setCardName(this.getCardName());
-        cardState.setCardLevel(this.cardLevel);
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
 
-        cardState.setPlayersEnginePower(this.playerPowerResult);
+        if (hasBeenActivated()) {
+            cardState.setPlayersEnginePower(this.playerPowerResult);
+            cardState.setEliminatedPlayers(this.eliminatedPlayers);
+            cardState.setUpdatedPositions(this.updatedPositions);
+            for (Player p : this.players) {
+                playersBatteries.put(p.getNickname(), p.getShip().getBatteryList().stream().mapToInt(Battery::getAvailability).sum());
+            }
+            cardState.setPlayersBatteries(playersBatteries);
+
+        } else {
+            cardState.setCardName(this.getCardName());
+            cardState.setCardLevel(this.cardLevel);
+        }
+
+
+
+
+
 
         // If the card is finished we send all the effective changes:
         // 1. The players updated available energies
         // 2. The updated board with the new players positions
-        if (this.hasFinished()) {
-            Map<String, Integer> playersBatteries = new HashMap<>();
-
-            for (Player p : this.players) {
-                playersBatteries.put(p.getNickname(), p.getShip().getBatteryList().stream().mapToInt(Battery::getAvailability).sum());
-            }
-            // TODO: va fatto tutto un passo alla volta
-            cardState.setPlayersBatteries(playersBatteries);
-            //cardState.setBoard(this.getBoard().generateState());
-            cardState.setEliminatedPlayers(this.eliminatedPlayers);
-            cardState.setUpdatedPositions(this.updatedPositions);
-        }
+//        if (this.hasFinished()) {
+//
+//
+//
+//            // TODO: va fatto tutto un passo alla volta
+//
+//            //cardState.setBoard(this.getBoard().generateState());
+//
+//        }
 
         return cardState;
     }

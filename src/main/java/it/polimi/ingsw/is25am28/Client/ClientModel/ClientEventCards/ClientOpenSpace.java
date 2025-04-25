@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientOpenSpace extends ClientEventCard {
-    private Map<String, Integer> updatedPositions;
-    private List<String> eliminatedPlayers;
+//    private Map<String, Integer> updatedPositions;
+//    private List<String> eliminatedPlayers;
 
     public ClientOpenSpace(CardStateJSON openSpaceState) {
         super(openSpaceState);
@@ -20,10 +20,9 @@ public class ClientOpenSpace extends ClientEventCard {
     @Override
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
-        // TODO: Question about isCardUsable
         // if case to do this only when needed -> is an additional flag necessary?
-        this.updatedPositions = cardState.getUpdatedPositions();
-        this.eliminatedPlayers = cardState.getEliminatedPlayers();
+//        this.updatedPositions = cardState.getUpdatedPositions();
+//        this.eliminatedPlayers = cardState.getEliminatedPlayers();
     }
 
     @Override

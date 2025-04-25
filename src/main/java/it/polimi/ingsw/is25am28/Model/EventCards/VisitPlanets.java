@@ -176,7 +176,7 @@ public class VisitPlanets extends EventCard {
         List<ComponentHelper<ItemColor>> itemsToVerify;
         Map<ItemColor, Integer> planetConfig;
         ItemColor itemToVerify;
-        int chosenPlanetIndex;
+
 
         // ActionJSON unpacking
         try {
@@ -320,26 +320,26 @@ public class VisitPlanets extends EventCard {
         CardStateJSON cardState = new CardStateJSON();
         Map<Integer, Map<ItemColor, Integer>> availablePlanets;
 
-        // Generating the map of all the remaining planets to choose from
-        availablePlanets = new HashMap<>(this.itemsPerPlanet);
-
-        for (Integer chosenPlanetIndex : this.playersChosenPlanet.keySet()) {
-            availablePlanets.remove(chosenPlanetIndex);
-        }
-
-        // If the current player is present, then add it to the card state
-
-        // TODO: needs to only send the chosenPlanetIndex, resources taken/dropped (if present), and a flag that signals the client the need to update the resources
-
         this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+        if (hasBeenActivated()) {
+            System.out.println("trippi troppi");
+            if (itemsPerPlanet.containsKey(chosenPlanetIndex)) {
+                cardState.setChosenPlanetIndex(chosenPlanetIndex);
+                cardState.setUpdatedPositions(updatedPositions);
+                cardState.setResourcesToDrop(itemsToDrop);
+                cardState.setResourcesToTake(itemsToTake);
+            } else {
+                cardState.setChosenPlanetIndex(-1);
+            }
+        } else {
+            System.out.println("turbo turbo");
+            cardState.setCardName(this.getCardName());
+            cardState.setCardLevel(this.getCardLevel());
+            cardState.setCardIsUsable( !this.hasFinished());
 
-        cardState.setCardName(this.getCardName());
-        cardState.setCardLevel(this.getCardLevel());
-        cardState.setCardIsUsable( !this.hasFinished());
-        cardState.setAvailablePlanets(availablePlanets);
-
-        cardState.setUpdatedPositions(updatedPositions);
-
+            availablePlanets = new HashMap<>(this.itemsPerPlanet);
+            cardState.setAvailablePlanets(availablePlanets);
+        }
         return cardState;
     }
 
