@@ -89,9 +89,9 @@ public class GameModel {
     }
 
     /**
-     * @return true if a disconnected player returns in the game
+     * @return the DTO needed to resume the game
      * */
-    public ReconnectDTO reconnectClient(String nickname) throws Exception {
+    public ReconnectDTO reconnectClient(String nickname, VirtualView clientView) throws Exception {
         if (!this.getDisconnectedPlayers().contains(nickname)) {
             throw new IllegalArgumentException("The given nickname does not exist in the disconnected players");
         }
@@ -102,6 +102,7 @@ public class GameModel {
         }
 
         p.setConnected(true);
+        this.playeVirtualViews.put(nickname, clientView);
 
         // Get the current information that the client needs to resume the game
         ReconnectDTO state = new ReconnectDTO();

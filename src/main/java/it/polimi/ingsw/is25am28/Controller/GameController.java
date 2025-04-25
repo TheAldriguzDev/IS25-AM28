@@ -66,9 +66,9 @@ public class GameController {
     }
 
     // TODO: THIS METHOD SHOULD RETURN THE STATE THAT THE CLIENT NEEDS TO CONFIGURE THE GAME SINCE HE LEFT IT
-    public ReconnectDTO reconnectClient(String nickname) throws Exception {
+    public ReconnectDTO reconnectClient(String nickname, VirtualView clientView) throws Exception {
         synchronized (this.model) {
-            return this.model.reconnectClient(nickname);
+            return this.model.reconnectClient(nickname, clientView);
         }
     }
 

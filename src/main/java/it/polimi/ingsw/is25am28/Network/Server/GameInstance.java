@@ -211,7 +211,7 @@ public class GameInstance {
         }
 
         // Update the client with the state to resume the game
-        ReconnectDTO reconnectState = this.controller.reconnectClient(playerNickname);
+        ReconnectDTO reconnectState = this.controller.reconnectClient(playerNickname, virtualClient);
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)
                 .setState(reconnectState);

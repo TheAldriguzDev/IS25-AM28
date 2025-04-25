@@ -209,7 +209,6 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                 }
             }, inputThread);
         }
-
         // TODO: Understand if we need to handle the errors in the futures better
     }
 
