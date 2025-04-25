@@ -44,31 +44,10 @@ public class ClientState {
     }
 
     /**
-     * Command used by the player when he wants to place a Tile to build his Ship
-     * */
-    public void placeTile(ClientComponent component, int i, int j) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The 'placeTile' is not supported in the " + this + " state");
-    }
-
-    /**
      * Command used by the player when he wants to flip the timer
      * */
     public void flipTimer() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'flipTimer' is not supported in the " + this + " state");
-    }
-
-//    /**
-//     * Command used by the player when he wants to send the created Ship to the server
-//     * */
-//    public void confirmShip() throws UnsupportedOperationException {
-//        throw new UnsupportedOperationException("The 'confirmShip' is not supported in the " + this + " state");
-//    }
-
-    /**
-     * @return The ship created by the player during the ship construction phase
-     */
-    public List<ComponentHelper<ConstructionComponentDTO>> getCreatedShip() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The 'getCreatedShip' is not supported in the " + this + " state");
     }
 
     /**

@@ -322,7 +322,6 @@ public class VisitPlanets extends EventCard {
 
         this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
         if (hasBeenActivated()) {
-            System.out.println("trippi troppi");
             if (itemsPerPlanet.containsKey(chosenPlanetIndex)) {
                 cardState.setChosenPlanetIndex(chosenPlanetIndex);
                 cardState.setUpdatedPositions(updatedPositions);
@@ -332,7 +331,6 @@ public class VisitPlanets extends EventCard {
                 cardState.setChosenPlanetIndex(-1);
             }
         } else {
-            System.out.println("turbo turbo");
             cardState.setCardName(this.getCardName());
             cardState.setCardLevel(this.getCardLevel());
             cardState.setCardIsUsable( !this.hasFinished());

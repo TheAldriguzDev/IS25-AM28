@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -18,10 +19,7 @@ import it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket;
 import java.io.*;
 import java.net.Socket;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 public class TCPClient implements VirtualViewSocket {
@@ -135,40 +133,70 @@ public class TCPClient implements VirtualViewSocket {
     }
 
     @Override
-    public void updateState(Answer answer) throws JsonProcessingException {
-        // Commit the executed command --> could trigger some input so we execute it in the input thread
-        if (answer.getPlayerNickname() != null) {
-            inputThread.submit(() -> {
-                try {
-                    viewUpdater.commitCommand(answer.getPlayerNickname());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
-        }
+    public void updateState(Answer answer) {
+        StateDTO state = answer.getState();
+        StateDTO nextState = answer.getNextState();
+        String nickname = answer.getPlayerNickname();
 
-        // Lambda function to handle the states
-        Consumer<StateDTO> handleState = state -> {
-            if (state == null) return;
+        CompletableFuture<Void> future;
 
-            Runnable task = () -> {
+        if (state instanceof ConstructionComponentDTO || state instanceof PlacedComponentDTO) {
+            // If we have a State that gives only updates --> Execute it first
+            future = CompletableFuture.runAsync(() -> {
                 try {
                     state.accept(viewUpdater);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
-            };
+            }, updateThread);
 
-            // TODO: Add in the state a boolean: couldRequireInput --> In this way we can switch much easier
-            if (state instanceof ConstructionComponentDTO) {
-                updateThread.submit(task);
-            } else {
-                inputThread.submit(task);
+            // Then commit the command
+            if (nickname != null) {
+                future = future.thenRunAsync(() -> {
+                    try {
+                        viewUpdater.commitCommand(nickname);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error while commiting the command: ", e);
+                    }
+                }, inputThread);
             }
-        };
+        } else {
+            // If the nickname is present, commit the command first
+            if (nickname != null) {
+                future = CompletableFuture.runAsync(() -> {
+                    try {
+                        viewUpdater.commitCommand(nickname);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error while commiting the command: ", e);
+                    }
+                }, inputThread);
+            } else {
+                future = CompletableFuture.completedFuture(null);
+            }
 
-        handleState.accept(answer.getState());
-        handleState.accept(answer.getNextState());
+            if (state != null) {
+                future = future.thenRunAsync(() -> {
+                    try {
+                        state.accept(viewUpdater);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error while executing the state: ", e);
+                    }
+                }, inputThread);
+            }
+        }
+
+        // Execute the last state
+        if (nextState != null) {
+            future = future.thenRunAsync(() -> {
+                try {
+                    nextState.accept(viewUpdater);
+                } catch (Exception e) {
+                    throw new RuntimeException("Error while executing the next state: ", e);
+                }
+            }, inputThread);
+        }
+
+        // TODO: Understand if we need to handle the errors in the futures better
     }
 
     @Override

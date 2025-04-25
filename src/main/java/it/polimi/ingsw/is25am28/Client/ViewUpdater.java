@@ -2,14 +2,14 @@ package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
 import it.polimi.ingsw.is25am28.TUI.ShipConstructionTUIPage;
@@ -89,6 +89,26 @@ public class ViewUpdater implements StateVisitor {
                 ClientComponent comp = this.model.getState().getConstructionShipComponents().get(idx);
                 comp.setAsFlipped();
                 comp.setIsVisible(!state.isSelected());
+            }
+        }
+    }
+
+    /**
+     * This method is used to create in real time the players ship in the ShipConstructionState.
+     * It will get the player ship based on the given nickname and add the component with the proper rotation in the
+     * given coordinates (i, j)
+     * */
+    @Override
+    public void visit(PlacedComponentDTO state) throws Exception {
+        synchronized (this.model) {
+            if (state.getEventType().equals(ShipConstructionType.PLACE_EVENT.toString())) {
+
+                // Get the component
+                ClientComponent comp = this.model.getState().getConstructionShipComponents().get(state.getId());
+                comp.setRotation(state.getRotation());
+
+                ClientShip ship = this.model.getShipOfPlayer(state.getPlayerNickname());
+                ship.addComponent(comp, state.getI(), state.getJ());
             }
         }
     }

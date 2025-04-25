@@ -10,16 +10,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class SendShipConfirmation implements Message {
-    private String playerNickname;
-    private List<ComponentHelper<ConstructionComponentDTO>> playerShip;
+    private final String playerNickname;
+    private final Integer reservedTiles;
 
     @JsonCreator
     public SendShipConfirmation(
             @JsonProperty("playerNickname") String playerNickname,
-            @JsonProperty("playerShip") List<ComponentHelper<ConstructionComponentDTO>> playerShip
+            @JsonProperty("reservedTiles") Integer reservedTiles
     ) {
         this.playerNickname = playerNickname;
-        this.playerShip = playerShip;
+        this.reservedTiles = reservedTiles;
     }
 
     @JsonGetter("playerNickname")
@@ -27,17 +27,16 @@ public final class SendShipConfirmation implements Message {
         return this.playerNickname;
     }
 
-    @JsonGetter("playerShip")
-    public List<ComponentHelper<ConstructionComponentDTO>> getPlayerShip() {
-        return this.playerShip;
+    @JsonGetter("reservedTiles")
+    public Integer getReservedTiles() {
+        return this.reservedTiles;
     }
 
     @Override
     public boolean validate() {
         return this.playerNickname != null
                 && !this.playerNickname.isEmpty()
-                && this.playerShip != null
-                && !this.playerShip.isEmpty();
+                && this.reservedTiles != null;
     }
 
     @Override
@@ -45,11 +44,11 @@ public final class SendShipConfirmation implements Message {
         List<String> errors = new ArrayList<>();
 
         if (playerNickname == null || playerNickname.isEmpty()) {
-            errors.add("ERROR: Your name cannot be null or empty");
+            errors.add("ERROR: The 'playerNickname' field cannot be null or empty.'");
         }
 
-        if (this.playerShip == null || this.playerShip.isEmpty()) {
-            errors.add("ERROR: Your ship cannot be null or empty");
+        if (this.reservedTiles == null) {
+            errors.add("ERROR: The 'reservedTiles' field cannot be null'");
         }
 
         return errors;

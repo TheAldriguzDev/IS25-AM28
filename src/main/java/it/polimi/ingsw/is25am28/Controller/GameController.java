@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitingForGameConfigurationDTO;
@@ -16,6 +17,7 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.Model.GameModelv2.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,15 +72,15 @@ public class GameController {
         }
     }
 
-    public StateDTO gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws IllegalStateException, IllegalArgumentException {
+    public StateDTO gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, VirtualView clientView) throws IllegalStateException, IllegalArgumentException {
         synchronized (this.model) {
-            return this.model.gameConfig(nickname, playerColor, level, numPlayers);
+            return this.model.gameConfig(nickname, playerColor, level, numPlayers, clientView);
         }
     }
 
-    public List<StateDTO> addNewPlayer(String nickname, PlayerColor playerColor) throws IllegalStateException, IllegalArgumentException {
+    public List<StateDTO> addNewPlayer(String nickname, PlayerColor playerColor, VirtualView clientView) throws IllegalStateException, IllegalArgumentException {
         synchronized (this.model) {
-            return this.model.addNewPlayer(nickname, playerColor);
+            return this.model.addNewPlayer(nickname, playerColor, clientView);
         }
     }
 
@@ -106,9 +108,15 @@ public class GameController {
         }
     }
 
-    public List<StateDTO> playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles) {
+    public PlacedComponentDTO placeTile(String player, Integer componentID, Integer i, Integer j, Integer rotation) {
         synchronized (this.model) {
-            return this.model.playerEndedSendShip(player, playerShip, reservedTiles);
+            return this.model.placeTile(player, componentID, i, j, rotation);
+        }
+    }
+
+    public List<StateDTO> playerEndedSendShip(String player, int reservedTiles) {
+        synchronized (this.model) {
+            return this.model.playerEndedSendShip(player, reservedTiles);
         }
     }
 

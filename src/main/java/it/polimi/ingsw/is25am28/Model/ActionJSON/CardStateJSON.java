@@ -380,6 +380,7 @@ public class CardStateJSON extends ActionJSON {
     public void setEliminatedPlayers(List<String> eliminatedPlayers) {
         this.eliminatedPlayers = eliminatedPlayers;
     }
+
     @JsonGetter("eliminatedPlayers")
     public List<String> getEliminatedPlayers() {
         return this.eliminatedPlayers;
@@ -389,6 +390,7 @@ public class CardStateJSON extends ActionJSON {
     public void setNeedsBoardUpdate(boolean needsBoardUpdate) {
         this.needsBoardUpdate = needsBoardUpdate;
     }
+
     @JsonGetter("needsBoardUpdate")
     public boolean getNeedsBoardUpdate() {
         return this.needsBoardUpdate;
@@ -398,6 +400,7 @@ public class CardStateJSON extends ActionJSON {
     public void setHasBeenActivated(boolean hasBeenActivated) {
         this.hasBeenActivated = hasBeenActivated;
     }
+
     @JsonGetter("hasBeenActivated")
     public boolean getHasBeenActivated() {
         return this.hasBeenActivated;
@@ -407,7 +410,8 @@ public class CardStateJSON extends ActionJSON {
     public void setNeedsShipsUpdate(boolean needsShipsUpdate) {
         this.needsShipsUpdate = needsShipsUpdate;
     }
-    @JsonGetter("needShipsUpdate")
+
+    @JsonGetter("needsShipsUpdate")
     public boolean getNeedsShipsUpdate() {
         return this.needsShipsUpdate;
     }

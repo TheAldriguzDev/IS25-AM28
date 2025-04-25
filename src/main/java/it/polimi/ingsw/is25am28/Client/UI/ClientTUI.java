@@ -455,7 +455,9 @@ public class ClientTUI implements ClientUI {
         // since the component is already reserved. Otherwise, we execute the command to place the tile in the player ship.
         // This command is executed locally since we send the client ship once its finished
         if (choice == 1) {
-            this.model.getState().placeTile(reservedComponent, x, y);
+
+            // TODO: Send the message to the server
+            // this.model.getState().placeTile(reservedComponent, x, y);
         }
 
         // Return to the shipConstructionComponents menu
@@ -588,7 +590,8 @@ public class ClientTUI implements ClientUI {
             }
             // Place tile
             case 3 -> {
-                this.model.getState().placeTile(selectedComponent, x, y);
+                // TODO: Send the message to the server
+                // this.model.getState().placeTile(selectedComponent, x, y);
             }
             // Deselect the tile
             case 4 -> {

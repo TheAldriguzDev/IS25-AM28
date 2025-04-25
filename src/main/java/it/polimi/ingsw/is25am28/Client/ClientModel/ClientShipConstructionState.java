@@ -13,9 +13,6 @@ public class ClientShipConstructionState extends ClientState {
     private final List<ClientComponent> components;
     private final List<ClientComponent> reservedComponents;
 
-    // List of components that will be sent to the server for evaluation
-    private final List<ComponentHelper<ConstructionComponentDTO>> ship;
-
     // TODO: Add the list that represent the ShipCreation --> In this way we can then send the created ship to the server
 
     // (NOT HERE --> IN THE CORRECT STATES
@@ -31,7 +28,6 @@ public class ClientShipConstructionState extends ClientState {
         // Create the component list
         this.components = new ArrayList<>();
         this.reservedComponents = new ArrayList<>();
-        this.ship = new ArrayList<>();
 
         for (Map<String, Object> map : componentList) {
             int id = (int) map.get("id");
@@ -136,39 +132,10 @@ public class ClientShipConstructionState extends ClientState {
     }
 
     /**
-     * Command used by the player when he wants to place a Tile to build his Ship
-     * */
-    @Override
-    public void placeTile(ClientComponent component, int i, int j) throws UnsupportedOperationException {
-        int id = component.getID();
-        int construction_i = id / 19;
-        int construction_j = id % 19;
-
-        // Set the component coordinate
-        component.setI(i);
-        component.setJ(j);
-
-        // Add the tile to the list of components that will be sent to the server to build the player ship
-        this.ship.add(
-                new ComponentHelper<ConstructionComponentDTO>(construction_i, construction_j)
-                        .addItem(new ConstructionComponentDTO().setI(component.getI()).setJ(component.getJ()).setRotation(component.getDirection())));
-
-        // TODO: Add the tile to the player ship (so that we can already save it locally)
-    }
-
-    /**
      * Command used by the player when he wants to flip the timer
      * */
     @Override
     public void flipTimer() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'flipTimer' is not supported in the " + this + " state");
-    }
-
-    /**
-     * @return The ship created by the player during the ship construction phase
-     */
-    @Override
-    public List<ComponentHelper<ConstructionComponentDTO>> getCreatedShip() throws UnsupportedOperationException {
-        return this.ship;
     }
 }

@@ -18,19 +18,19 @@ public final class ShipConstructionDTO extends StateDTO {
     private List<Integer> selected_components;
 
     // Card list that contains the information about the deck in the game
-    // private List<CardStateJSON> cards;
+     private List<CardStateJSON> cards;
 
     public ShipConstructionDTO() {}
 
     public ShipConstructionDTO(
             @JsonProperty("all_components") List<Map<String, Object>> all_components,
             @JsonProperty("flipped_components") List<Integer> flipped_components,
-            @JsonProperty("selected_components") List<Integer> selected_components
-            /* @JsonProperty("cards") List<CardStateJSON> cards */ ) {
+            @JsonProperty("selected_components") List<Integer> selected_components,
+            @JsonProperty("cards") List<CardStateJSON> cards) {
         this.all_components = all_components;
         this.flipped_components = flipped_components;
         this.selected_components = selected_components;
-        // this.cards = cards;
+         this.cards = cards;
     }
 
     @JsonGetter("all_components")
@@ -66,16 +66,16 @@ public final class ShipConstructionDTO extends StateDTO {
         return this;
     }
 
-//    @JsonGetter("cards")
-//    public List<CardStateJSON> getCards() {
-//        return cards;
-//    }
-//
-//    @JsonSetter("cards")
-//    public ShipConstructionDTO setCards(List<CardStateJSON> cards) {
-//        this.cards = cards;
-//        return this;
-//    }
+    @JsonGetter("cards")
+    public List<CardStateJSON> getCards() {
+        return cards;
+    }
+
+    @JsonSetter("cards")
+    public ShipConstructionDTO setCards(List<CardStateJSON> cards) {
+        this.cards = cards;
+        return this;
+    }
 
     @Override
     public void accept(StateVisitor visitor) throws Exception {

@@ -92,6 +92,11 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
         return this;
     }
 
+    public ClientComponent setRotation(int rotation) {
+        this.direction = rotation;
+        return this;
+    }
+
     public Connector getLeftSide() {
         int normalizedPos = 3 - direction;
         if (normalizedPos < 0) normalizedPos += 4;
