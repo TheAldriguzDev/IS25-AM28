@@ -229,6 +229,16 @@ public class Server {
         }
     }
 
+    public void flipTimer(String playerNickname) throws Exception {
+        synchronized (this.gameInstances) {
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.flipTimer(playerNickname);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " flipped the timer");
+        }
+    }
+
     // TODO: For all the interaction with the user we need to pass his nickname to get the associated game and then route the
     //  request
 

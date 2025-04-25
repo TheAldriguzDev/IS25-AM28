@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
@@ -68,7 +69,7 @@ public class GameInstance {
      * the connected clients (the leader) and it will open the lobby to wait for more players.
      * */
     public void gameConfig(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers, VirtualView virtualClient) throws Exception {
-        StateDTO state = this.controller.gameConfig(playerNickname, playerColor, gameLevel, totalPlayers);
+        StateDTO state = this.controller.gameConfig(playerNickname, playerColor, gameLevel, totalPlayers, virtualClient);
 
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)
@@ -93,7 +94,7 @@ public class GameInstance {
      * do no accept new clients connections.
      * */
     public void addNewPlayer(String playerNickname, PlayerColor playerColor, VirtualView virtualClient) throws Exception {
-        List<StateDTO> states = this.controller.addNewPlayer(playerNickname, playerColor);
+        List<StateDTO> states = this.controller.addNewPlayer(playerNickname, playerColor, virtualClient);
 
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)
@@ -162,6 +163,19 @@ public class GameInstance {
         if (states.size() > 1) {
             answer.setNextState(states.get(1));
         }
+
+        this.broadCastUpdate(answer);
+    }
+
+    /**
+     * Command used by the given player to flip the timer
+     * */
+    public void flipTimer(String playerNickname) throws Exception {
+        TimerDTO state = this.controller.flipTimer(playerNickname);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(playerNickname)
+                .setState(state);
 
         this.broadCastUpdate(answer);
     }

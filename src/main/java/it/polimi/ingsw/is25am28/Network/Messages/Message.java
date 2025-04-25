@@ -16,10 +16,11 @@ import java.util.List;
         @JsonSubTypes.Type(value = RefreshGames.class, name = "RefreshGames"),
         @JsonSubTypes.Type(value = Reconnect.class, name = "Reconnect"),
         @JsonSubTypes.Type(value = PlaceTile.class, name = "PlaceTile"),
-        @JsonSubTypes.Type(value = SendShipConfirmation.class, name = "SendShipConfirmation")
+        @JsonSubTypes.Type(value = SendShipConfirmation.class, name = "SendShipConfirmation"),
+        @JsonSubTypes.Type(value = FlipTimer.class, name = "FlipTimer")
 })
 
-public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, NewPlayer, Ping, PlaceTile, Reconnect, RefreshGames, SelectTile, SendShipConfirmation {
+public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FlipTimer, NewPlayer, Ping, PlaceTile, Reconnect, RefreshGames, SelectTile, SendShipConfirmation {
 
     /**
      * @return true if the message it's correct, otherwise it will return false

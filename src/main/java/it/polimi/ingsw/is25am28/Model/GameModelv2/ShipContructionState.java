@@ -85,7 +85,7 @@ public final class ShipContructionState extends State implements TimeSubscriber 
      * @return the Component Data Object Transfer needed to update the client with the selected deck event
      * */
     public synchronized ConstructionDeckDTO selectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
-        if (selectedDeck < 1 || selectedDeck > 3) {
+        if (selectedDeck < 0 || selectedDeck > 3) {
             throw new IllegalStateException("The given sub-deck does not exist");
         }
 
@@ -114,7 +114,7 @@ public final class ShipContructionState extends State implements TimeSubscriber 
      * @return the Component Data Object Transfer needed to update the client with the deselected deck event
      * */
     public synchronized ConstructionDeckDTO deselectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
-        if (selectedDeck < 1 || selectedDeck > 3) {
+        if (selectedDeck < 0 || selectedDeck > 3) {
             throw new IllegalStateException("The given sub-deck does not exist");
         }
 

@@ -92,6 +92,9 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             case SendShipConfirmation data -> {
                 this.sendShipConfirmation(data.getPlayerNickname(), data.getReservedTiles(), uuid);
             }
+            case FlipTimer data -> {
+                this.flipTimer(data.getPlayerNickname(), uuid);
+            }
             default -> {
                 throw new Exception("The given Message is not supported");
             }
@@ -163,6 +166,16 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
 
         try {
             this.controller.playerEndedSendShip(playerNickname, reservedTiles);
+        } catch (Exception e) {
+            client.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void flipTimer(String playerNickname, UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.flipTimer(playerNickname);
         } catch (Exception e) {
             client.reportError(new ErrorAnswer(e.getMessage()));
         }

@@ -17,6 +17,7 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.Model.GameModelv2.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,15 +72,15 @@ public class GameController {
         }
     }
 
-    public StateDTO gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws IllegalStateException, IllegalArgumentException {
+    public StateDTO gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, VirtualView clientView) throws IllegalStateException, IllegalArgumentException {
         synchronized (this.model) {
-            return this.model.gameConfig(nickname, playerColor, level, numPlayers);
+            return this.model.gameConfig(nickname, playerColor, level, numPlayers, clientView);
         }
     }
 
-    public List<StateDTO> addNewPlayer(String nickname, PlayerColor playerColor) throws IllegalStateException, IllegalArgumentException {
+    public List<StateDTO> addNewPlayer(String nickname, PlayerColor playerColor, VirtualView clientView) throws IllegalStateException, IllegalArgumentException {
         synchronized (this.model) {
-            return this.model.addNewPlayer(nickname, playerColor);
+            return this.model.addNewPlayer(nickname, playerColor, clientView);
         }
     }
 

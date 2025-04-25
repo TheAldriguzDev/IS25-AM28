@@ -55,43 +55,43 @@ class GameModelTest {
         // ========================================
         assertThrows(
                 IllegalArgumentException.class,
-                () -> model.gameConfig("", PlayerColor.RED, 2, 4),
+                () -> model.gameConfig("", PlayerColor.RED, 2, 4, null),
                 "The player nickname should not be empty"
         );
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> model.gameConfig(null, PlayerColor.RED, 2, 4),
+                () -> model.gameConfig(null, PlayerColor.RED, 2, 4, null),
                 "The player nickname should not be null"
         );
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> model.gameConfig("Player 1", PlayerColor.RED, -1, 4),
+                () -> model.gameConfig("Player 1", PlayerColor.RED, -1, 4, null),
                 "The model level should not be negative"
         );
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> model.gameConfig("Player 1", PlayerColor.RED, 10, 4),
+                () -> model.gameConfig("Player 1", PlayerColor.RED, 10, 4, null),
                 "The model level should not be grader than 3"
         );
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> model.gameConfig("Player 1", PlayerColor.RED, 2, 1),
+                () -> model.gameConfig("Player 1", PlayerColor.RED, 2, 1, null),
                 "The numPlayer should not be lower than 2"
         );
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> model.gameConfig("Player 1", PlayerColor.RED, 2, 5),
+                () -> model.gameConfig("Player 1", PlayerColor.RED, 2, 5, null),
                 "The numPlayer should not be greater than 4"
         );
 
         // 2.1. The leader execute the command to configure the game
         int gameLevel = 0;
-        StateDTO state = model.gameConfig("Player 1", PlayerColor.RED, gameLevel, 4);
+        StateDTO state = model.gameConfig("Player 1", PlayerColor.RED, gameLevel, 4, null);
 
         assertEquals(gameLevel, model.getGameLevel());
         assertEquals(4, model.getNumPlayers());
@@ -112,32 +112,32 @@ class GameModelTest {
         // 3.1 Test invalid newPlayerInput
         assertThrows(
                 IllegalArgumentException.class,
-                () -> model.addNewPlayer("Player 1", PlayerColor.YELLOW),
+                () -> model.addNewPlayer("Player 1", PlayerColor.YELLOW, null),
                 "The nickname should be different from another player"
         );
 
         assertThrows(
                 IllegalArgumentException.class,
-                () -> model.addNewPlayer("Player 2", PlayerColor.RED),
+                () -> model.addNewPlayer("Player 2", PlayerColor.RED, null),
                 "The color should be different from another player"
         );
 
         // Add three player to the game --> the state should change to the ship construction session
-        List<StateDTO> states = model.addNewPlayer("Player 2", PlayerColor.YELLOW);
+        List<StateDTO> states = model.addNewPlayer("Player 2", PlayerColor.YELLOW, null);
         assertEquals(1, states.size());
 
         json = mapper.writeValueAsString(states.getFirst());
         expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\",\"BLUE\"],\"usedNicknames\":{\"Player 2\":\"YELLOW\",\"Player 1\":\"RED\"},\"lobbyTotalSpot\":4,\"availableSpots\":2,\"stateName\":\"WaitPlayersState\"}";
         assertEquals(expectedState, json);
 
-        states = model.addNewPlayer("Player 3", PlayerColor.BLUE);
+        states = model.addNewPlayer("Player 3", PlayerColor.BLUE, null);
         assertEquals(1, states.size());
 
         json = mapper.writeValueAsString(states.getFirst());
         expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\"],\"usedNicknames\":{\"Player 3\":\"BLUE\",\"Player 2\":\"YELLOW\",\"Player 1\":\"RED\"},\"lobbyTotalSpot\":4,\"availableSpots\":1,\"stateName\":\"WaitPlayersState\"}";
         assertEquals(expectedState, json);
 
-        states = model.addNewPlayer("Player 4", PlayerColor.GREEN);
+        states = model.addNewPlayer("Player 4", PlayerColor.GREEN, null);
         assertEquals(2, states.size());
 
         // ========================================

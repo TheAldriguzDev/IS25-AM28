@@ -90,6 +90,9 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case SendShipConfirmation data -> {
                     this.sendShipConfirmation(data.getPlayerNickname(), data.getReservedTiles());
                 }
+                case FlipTimer data -> {
+                    this.flipTimer(data.getPlayerNickname());
+                }
                 default -> {
                     throw new Exception("The given Message is not supported");
                 }
@@ -157,6 +160,16 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    public void flipTimer(String playerNickname) throws Exception {
+        try {
+            this.controller.flipTimer(playerNickname);
+        } catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+
+    // ===== PING UTILITY METHODS ===== //
 
     private void ping() throws Exception {
         this.controller.clientPing(this);
