@@ -10,7 +10,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
@@ -55,7 +54,7 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
         throw new IllegalStateException("The 'playerEndedSendShip' command is not allowed in the " + this + " state");
     }
 
-    public synchronized TimerDTO flipTimer(String player) throws IllegalStateException, TimerFlipException {
+    public synchronized TimerDTO flipTimer(String player) throws IllegalStateException {
         throw new IllegalStateException("The 'flipTimer' command is not allowed in the " + this + " state");
     }
 

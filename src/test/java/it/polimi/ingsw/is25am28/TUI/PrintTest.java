@@ -1572,13 +1572,13 @@ public class PrintTest {
 
         String content = "2";
         InputStream stream = new ByteArrayInputStream(content.getBytes());
-        inputWidget.setNewScanner(stream);
+        inputWidget.setNewReader(stream);
 
         assertTrue(inputWidget.selectCommand("Select a command: "));
 
         content = "-1";
         stream = new ByteArrayInputStream(content.getBytes());
-        inputWidget.setNewScanner(stream);
+        inputWidget.setNewReader(stream);
 
         assertFalse(inputWidget.selectCommand("Select a command: "));
     }
@@ -1627,7 +1627,7 @@ public class PrintTest {
 
         boardWidget = this.generateMockupBoardWidget();
         inputWidget = this.generateMockupInputWidget();
-        inputWidget.setNewScanner(new ByteArrayInputStream(input.getBytes()));
+        inputWidget.setNewReader(new ByteArrayInputStream(input.getBytes()));
         inputWidget.setColumnGroupingAmount(1);
 
         cardWidget = new WidgetTUI();

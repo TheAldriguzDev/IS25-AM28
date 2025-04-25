@@ -7,27 +7,23 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.FileLoader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.Model.TimeObserver.TimeSubscriber;
-import it.polimi.ingsw.is25am28.Model.TimeObserver.TimerObserver;
+import it.polimi.ingsw.is25am28.Timer.HourGlass;
+import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
 import java.util.*;
 
 // TODO: Implement the HourGlass here (the state contains the HourGlass instance and implements the onTimerEnd method)
 
-public final class ShipContructionState extends State implements TimeSubscriber {
-    private final static int FLIP_TIME_ONE_HALF_MIN = (int)(1.5 * 1000 * 60);
-    private final static int FLIP_COUNT_LV2 = 2;
+public final class ShipContructionState extends State implements TimerObserver {
     private final static int SHIP_GRID_SIZE = 12;
 
-    private final TimerObserver clock;
+    private final HourGlass hourGlass;
     // TODO: private final SessionSubscriber controller;
 
     // Count the number of players that finished to build their ship --> Will be used to make the state transaction
     private final int gameLevel;
-    private int flippedTimes;
     private final List<String> players_done; // List of players nickname that ended to build their ship
 
     private final List<Component> all_components;
@@ -55,24 +51,22 @@ public final class ShipContructionState extends State implements TimeSubscriber 
         this.selected = new HashSet<>();
         this.flipped = new HashSet<>();
 
-        switch (this.gameLevel) {
-            // Since there is no time limit for the test flight, we can set it to 30 minutes
-            case 0: {
-                this.clock = new TimerObserver( FLIP_TIME_ONE_HALF_MIN * 20 );
-                break;
-            }
-            // For the real game levels (1, 2, and 3), each flip will last 1.5 minutes
-            case 1, 2, 3: {
-                this.clock = new TimerObserver(FLIP_TIME_ONE_HALF_MIN);
-                break;
-            }
-            default:
-                throw new IllegalArgumentException("The clock does not support the required level: " + this.gameLevel);
+        // Only initialize the hourglass if the current game
+        // difficulty level is not 0 (i.e.: Test Flight)
+        if (this.gameLevel != 0) {
+            this.hourGlass = new HourGlass(this.gameLevel);
+            this.hourGlass.addTimerSubscriber(this);
+
+            // TODO (NOTE: Add this if you want to run the "test_game_model_hourglass" in GameModelTest.java)
+            //      (It only reduces the time to wait when running said test)
+            // this.hourGlass.setDurationInMillis(3000);
+
+            this.hourGlass.flip();
+        }
+        else {
+            this.hourGlass = null;
         }
 
-        clock.observe(this);
-
-        this.flippedTimes = 0;
         this.players_done = new ArrayList<>();
         this.shipConfigEnded = false;
 
@@ -275,20 +269,22 @@ public final class ShipContructionState extends State implements TimeSubscriber 
         return state;
     }
 
-    public synchronized TimerDTO flipTimer(String player) throws IllegalStateException, TimerFlipException {
-        if (this.gameLevel != 2) {
-            throw new TimerFlipException(player);
+    public synchronized TimerDTO flipTimer(String player) throws IllegalStateException {
+        if (this.hourGlass == null) {
+            throw new IllegalStateException("ERROR: Hourglass is null because the current game doesn't require a hourglass (i.e.: Test Flight)");
         }
 
-        if (!clock.hasFinished()) {
-            throw new TimerFlipException(player);
+        if (this.hourGlass.getRemainingFlips() == 0) {
+            throw new IllegalStateException("ERROR: Hourglass cannot be flipped again (all flips have been consumed)");
         }
 
-        clock.flip();
+        if (this.hourGlass.getRemainingFlips() == 1 && !this.players_done.contains(player)) {
+            throw new IllegalStateException("ERROR: You cannot flip the timer since you've not finished the ship yet!");
+        }
 
         TimerDTO state = new TimerDTO()
-                .setHasBeenFlipped(true)
-                .setCanBeFlipped(flippedTimes != FLIP_COUNT_LV2);
+                .setHasBeenFlipped(this.hourGlass.flip())
+                .setCanBeFlipped(this.hourGlass.getRemainingFlips() != 0);
 
         state.setStateName(this.toString());
         state.setEventType(ShipConstructionType.TIMER_EVENT.toString());
@@ -320,17 +316,30 @@ public final class ShipContructionState extends State implements TimeSubscriber 
         }
     }
 
-    // TODO: Modify the code to send, when finished, to the client a status that indicates that they need to send their ship.
     @Override
     public void onTimerEnd() {
-        if (this.gameLevel != 2) return;
+        System.out.println("TIMER EVENT");
 
-        synchronized (clock) {
-            if (flippedTimes == FLIP_COUNT_LV2) {
+        synchronized (this.hourGlass) {
+            if (this.hourGlass.getRemainingFlips() == 0) {
                 this.shipConfigEnded = true;
+
+                // TODO: Notify players that the ship building phase is concluded and they must then send their ships
 
                 // TODO: Modify how we send the data to the client --> we need to communicate that the time is over,
                 //  they need to send the ship
+            }
+            else {
+                // TODO: Notify players that the timer is now available to be flipped again
+
+                // The hourglass is in the state where it has just finished
+                // counting, and it can be flipped at least once more by another player
+                TimerDTO state = new TimerDTO()
+                        .setHasBeenFlipped(false)
+                        .setCanBeFlipped(true);
+
+                state.setStateName(this.toString());
+                state.setEventType(ShipConstructionType.TIMER_EVENT.toString());
             }
         }
     }

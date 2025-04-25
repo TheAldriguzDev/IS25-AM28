@@ -2,24 +2,20 @@ package it.polimi.ingsw.is25am28.Controller;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitingForGameConfigurationDTO;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.Model.GameModelv2.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GameController {
@@ -120,7 +116,7 @@ public class GameController {
         }
     }
 
-    public TimerDTO flipTimer(String player) throws TimerFlipException {
+    public TimerDTO flipTimer(String player) throws IllegalStateException {
         synchronized (this.model) {
             return this.model.flipTimer(player);
         }

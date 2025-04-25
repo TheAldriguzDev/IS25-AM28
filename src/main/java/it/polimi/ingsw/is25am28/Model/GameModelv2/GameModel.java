@@ -15,7 +15,6 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.TimerFlipException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -287,10 +286,10 @@ public class GameModel {
     /**
      * Command used to flip the timer
      * @return TimerDTO that has:
-     * - hasBennFlipped --> if the clock has been flipped
-     * - canBeenFlipped --> if the clock can be flipped at least another time
+     * - hasBeenFlipped --> if the clock has been flipped
+     * - canBeFlipped --> if the clock can be flipped at least another time
      * */
-    public TimerDTO flipTimer(String player) throws TimerFlipException {
+    public TimerDTO flipTimer(String player) throws IllegalStateException {
         return this.currentState.flipTimer(player);
     }
 

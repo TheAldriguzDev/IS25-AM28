@@ -1,8 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
-import it.polimi.ingsw.is25am28.Model.Components.Cabin;
-import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;

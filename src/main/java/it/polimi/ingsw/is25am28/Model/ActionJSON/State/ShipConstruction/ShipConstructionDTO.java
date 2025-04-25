@@ -18,7 +18,7 @@ public final class ShipConstructionDTO extends StateDTO {
     private List<Integer> selected_components;
 
     // Card list that contains the information about the deck in the game
-     private List<CardStateJSON> cards;
+    private List<CardStateJSON> cards;
 
     public ShipConstructionDTO() {}
 
@@ -30,7 +30,7 @@ public final class ShipConstructionDTO extends StateDTO {
         this.all_components = all_components;
         this.flipped_components = flipped_components;
         this.selected_components = selected_components;
-         this.cards = cards;
+        this.cards = cards;
     }
 
     @JsonGetter("all_components")
