@@ -207,6 +207,28 @@ public class Server {
         }
     }
 
+    public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
+        synchronized (this.gameInstances) {
+            // Get the game where the player is playing
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.placeTile(playerNickname, componentID, i, j, rotation);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " placed the ("+ componentID +") tile at (" + i + "," + j + ") tile");
+        }
+    }
+
+    public void playerEndedSendShip(String playerNickname, int reservedTiles) throws Exception {
+        synchronized (this.gameInstances) {
+            // Get the game where the player is playing
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.playerEndedSendShip(playerNickname, reservedTiles);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " ended his ship with " + reservedTiles + " reserved tile");
+        }
+    }
+
     // TODO: For all the interaction with the user we need to pass his nickname to get the associated game and then route the
     //  request
 

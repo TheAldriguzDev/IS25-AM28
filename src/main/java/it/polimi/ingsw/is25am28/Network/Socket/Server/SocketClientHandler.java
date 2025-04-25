@@ -84,6 +84,12 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case RefreshGames ignored -> {
                     this.refreshGames();
                 }
+                case PlaceTile data -> {
+                    this.placeTile(data.getNickname(), data.getComponentID(), data.getI(), data.getJ(), data.getRotation());
+                }
+                case SendShipConfirmation data -> {
+                    this.sendShipConfirmation(data.getPlayerNickname(), data.getReservedTiles());
+                }
                 default -> {
                     throw new Exception("The given Message is not supported");
                 }
@@ -134,6 +140,23 @@ public class SocketClientHandler implements VirtualViewSocket {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }
     }
+
+    public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
+        try {
+            this.controller.placeTile(playerNickname, componentID, i, j, rotation);
+        } catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void sendShipConfirmation(String playerNickname, int reservedTiles) throws Exception {
+        try {
+            this.controller.playerEndedSendShip(playerNickname, reservedTiles);
+        } catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
 
     private void ping() throws Exception {
         this.controller.clientPing(this);

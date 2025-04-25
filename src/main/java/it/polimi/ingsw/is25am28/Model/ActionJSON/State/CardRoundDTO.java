@@ -16,6 +16,7 @@ public final class CardRoundDTO extends StateDTO {
     private BoardJSON board;
     private Map<String, PlayerJSON> playersInfo;
     private CardStateJSON cardInfo;
+    private boolean isCardNew;
 
     // TODO: Understand if other attributes are needed
 
@@ -25,11 +26,13 @@ public final class CardRoundDTO extends StateDTO {
             @JsonProperty("round") int round,
             @JsonProperty("board") BoardJSON board,
             @JsonProperty("playersInfo") Map<String, PlayerJSON> playersInfo,
-            @JsonProperty("cardInfo") CardStateJSON cardInfo ) {
+            @JsonProperty("cardInfo") CardStateJSON cardInfo,
+            @JsonProperty("isCardNew") boolean isCardNew ) {
         this.round = round;
         this.board = board;
         this.playersInfo = playersInfo;
         this.cardInfo = cardInfo;
+        this.isCardNew = isCardNew;
     }
 
     @JsonGetter("round")
@@ -71,6 +74,17 @@ public final class CardRoundDTO extends StateDTO {
     @JsonSetter("cardInfo")
     public CardRoundDTO setCardInfo(CardStateJSON cardInfo) {
         this.cardInfo = cardInfo;
+        return this;
+    }
+
+    @JsonGetter("isCardNew")
+    public boolean isCardNew() {
+        return isCardNew;
+    }
+
+    @JsonSetter("isCardNew")
+    public CardRoundDTO setCardNew(boolean isCardNew) {
+        this.isCardNew = isCardNew;
         return this;
     }
 

@@ -5,9 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
@@ -247,17 +245,25 @@ public class GameModel {
     }
 
     /**
+     * Execute the command to place a tile
+     * @return PlacedComponentDTO that contains the information about the placed component of the player
+     * */
+    public PlacedComponentDTO placeTile(String player, Integer componentID, Integer i, Integer j, Integer rotation) {
+        return currentState.placeTile(player, componentID, i, j, rotation);
+    }
+
+    /**
      * Command used when a player finish his ship or the time has ended to send the created ship
      * @return the list of states that are required to update the client:
      * 1. The result of the command executed by the client
      * 2. If all the players has sent the ship it will return the new state. This could be: FixShip if some player has an
      * invalid ship or populateShip if all the players have a valid ship
      * */
-    public List<StateDTO> playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles) {
+    public List<StateDTO> playerEndedSendShip(String player, int reservedTiles) {
         List<StateDTO> states = new ArrayList<>();
 
         // Execute the command
-        StateDTO tmpState = this.currentState.playerEndedSendShip(player, playerShip, reservedTiles);
+        StateDTO tmpState = this.currentState.playerEndedSendShip(player, reservedTiles);
         if (tmpState != null) {
             states.add(tmpState);
         }

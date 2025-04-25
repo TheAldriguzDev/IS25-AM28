@@ -86,9 +86,11 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             case RefreshGames ignored -> {
                 this.refreshGames(uuid);
             }
+            case PlaceTile data -> {
+                this.placeTile(data.getNickname(), data.getComponentID(), data.getI(), data.getJ(), data.getRotation(), uuid);
+            }
             case SendShipConfirmation data -> {
-                // this.sendShipConfirmation(data);
-                // TODO:
+                this.sendShipConfirmation(data.getPlayerNickname(), data.getReservedTiles(), uuid);
             }
             default -> {
                 throw new Exception("The given Message is not supported");
@@ -141,6 +143,26 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
 
         try {
             this.controller.deselectTile(playerNickname, i, j);
+        } catch (Exception e) {
+            client.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation, UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.placeTile(playerNickname, componentID, i, j, rotation);
+        } catch (Exception e) {
+            client.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void sendShipConfirmation(String playerNickname, int reservedTiles, UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.playerEndedSendShip(playerNickname, reservedTiles);
         } catch (Exception e) {
             client.reportError(new ErrorAnswer(e.getMessage()));
         }

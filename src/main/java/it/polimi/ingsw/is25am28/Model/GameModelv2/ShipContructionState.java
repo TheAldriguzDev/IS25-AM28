@@ -202,11 +202,52 @@ public final class ShipContructionState extends State implements TimeSubscriber 
         return state;
     }
 
+    /**
+     * Command executed by the client to place a component in his ship:
+     * @param player is the playerNickname used to get the specific ship
+     * @param componentID is the ID of the placed component
+     * @param i is the 'i' coordinate of where the component has been placed
+     * @param j is the 'j' coordinate of where the component has been placed
+     *
+     * @return the DTO that will contain the information about where the player placed the component
+     * */
+    public synchronized PlacedComponentDTO placeTile(String player, Integer componentID, Integer i, Integer j, Integer rotation) {
+        if (this.shipConfigEnded) {
+            throw new IllegalStateException("The time to place the tiles has ended");
+        }
+
+        // Get the player from the map
+        Player p = this.model.getPlayers().get(player);
+        if (p == null) {
+            throw new IllegalStateException("The player " + player + " does not exist");
+        }
+
+        // Get the component, set the rotation and add it to the player ship
+        Component baseComp = all_components.get(componentID);
+        baseComp.setRotation(rotation);
+        p.getShip().addComponent(baseComp, i, j);
+
+        PlacedComponentDTO state =  new PlacedComponentDTO()
+                .setPlayerNickname(player)
+                .setId(componentID)
+                .setI(i)
+                .setJ(j)
+                .setRotation(rotation);
+
+        state.setStateName(this.toString());
+        state.setEventType(ShipConstructionType.SHIP_EVENT.toString());
+
+        return state;
+    }
 
     /**
-     * @return the list of players that have ended their ship
+     * Execute the command that will be triggered once the player decided to confirm his ship.
+     * @param player is the playerNickname that will be used to mark the player as finished
+     * @param reservedTiles is the number of reservedComponents not used by the player --> will count as negative credits
+     *
+     * @return the DTO that contains the information of the player that submitted the ship (nickname, credits and cursor)
      * */
-    public synchronized PlayerEndedShipDTO playerEndedSendShip(String player, List<ComponentHelper<ConstructionComponentDTO>> playerShip, int reservedTiles) throws IllegalStateException {
+    public synchronized PlayerEndedShipDTO playerEndedSendShip(String player, int reservedTiles) throws IllegalStateException {
         if (this.players_done.contains(player)) {
             throw new IllegalArgumentException("The player " + player + " has already sent the ship");
         }
@@ -214,24 +255,6 @@ public final class ShipContructionState extends State implements TimeSubscriber 
         Player p = model.getPlayers().get(player);
         if (p == null) {
             throw new IllegalArgumentException("No player was found with the nickname: " + player);
-        }
-
-        for (ComponentHelper<ConstructionComponentDTO> c : playerShip) {
-            int i = c.getI();
-            int j = c.getJ();
-            int index = i * SHIP_GRID_SIZE + j;
-
-            if (index < 0 || index >= all_components.size()) {
-                throw new IllegalArgumentException("No component was found with the given index: " + i + " - " + j);
-            }
-
-            if (c.getItem().isPresent()) {
-                ConstructionComponentDTO info = c.getItem().get();
-                Component baseComponent = all_components.get(index);
-
-                Component rotated = baseComponent.setRotation(info.getRotation());
-                p.getShip().addComponent(rotated, info.getI(), info.getJ());
-            }
         }
 
         // Add the reserved and not used components to the stack of lost components
@@ -242,7 +265,9 @@ public final class ShipContructionState extends State implements TimeSubscriber 
         this.model.addPlayerToBoard(player);
 
         PlayerEndedShipDTO state = new PlayerEndedShipDTO()
-                .setPlayerNicknames(this.players_done);
+                .setPlayerCredits(p.getLostPieces())
+                .setPlayerCursors(p.getCursor())
+                .setPlayerNicknames(player);
 
         state.setStateName(this.toString());
         state.setEventType(ShipConstructionType.SHIP_EVENT.toString());
@@ -320,7 +345,7 @@ public final class ShipContructionState extends State implements TimeSubscriber 
 
         ShipConstructionDTO state = new ShipConstructionDTO()
                 .setAllComponents(this.all_components.stream().map(Component::toMap).toList())
-                //.setCards(cardsState)
+                .setCards(cardsState)
                 .setFlippedComponents(this.flipped.stream().toList())
                 .setSelectedComponents(this.selected.stream().toList());
 

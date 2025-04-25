@@ -212,43 +212,6 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         // TODO: Understand if we need to handle the errors in the futures better
     }
 
-//    @Override
-//    public void updateState(Answer answer) throws Exception {
-//        // Commit the executed command --> could trigger some input so we execute it in the input thread
-//        if (answer.getPlayerNickname() != null) {
-//            inputThread.submit(() -> {
-//                try {
-//                    viewUpdater.commitCommand(answer.getPlayerNickname());
-//                } catch (Exception e) {
-//                    throw new RuntimeException(e);
-//                }
-//            });
-//        }
-//
-//        // Lambda function to handle the states
-//        Consumer<StateDTO> handleState = state -> {
-//            if (state == null) return;
-//
-//            Runnable task = () -> {
-//                try {
-//                    state.accept(viewUpdater);
-//                } catch (Exception e) {
-//                    throw new RuntimeException(e);
-//                }
-//            };
-//
-//            // TODO: Add in the state a boolean: couldRequireInput --> In this way we can switch much easier
-//            if (state instanceof ConstructionComponentDTO) {
-//                updateThread.submit(task);
-//            } else {
-//                inputThread.submit(task);
-//            }
-//        };
-//
-//        handleState.accept(answer.getState());
-//        handleState.accept(answer.getNextState());
-//    }
-
     @Override
     public void reportError(ErrorAnswer error) throws RemoteException {
         viewUpdater.reportError(error.getError());

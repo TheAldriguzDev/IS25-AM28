@@ -92,6 +92,16 @@ public final class CardRoundState extends State {
             result.add(newCardState);
         }
 
+        // Always set the first cardRoundDTO to false, as it's the response to the command executed by the player.
+        // Instead, if present, set the second state as newCard since it's the new card that has just been drawn.
+        for (int i = 0; i < result.size(); i++) {
+            if (i == 1) {
+                result.get(i).setCardNew(true);
+                continue;
+            }
+            result.get(i).setCardNew(false);
+        }
+
         return result;
     }
 

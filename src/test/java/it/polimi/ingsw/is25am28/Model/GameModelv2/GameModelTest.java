@@ -207,48 +207,44 @@ class GameModelTest {
         // Player 4: Invalid ship
         List<ComponentHelper<ConstructionComponentDTO>> playerShipComponents = new ArrayList<>();
 
-        // Cannon level one over the core cabin
-        playerShipComponents.add(
-                new ComponentHelper<ConstructionComponentDTO>(1, 9) // Represent the index of the selected component from the view
-                        .addItem(new ConstructionComponentDTO().setI(5).setJ(6).setRotation(0))); // Represent the i and j of the position where the component has been placed on the ship
+        this.model.placeTile("Player 1", 21, 5, 6, 0);
+        this.model.placeTile("Player 1", 117, 5, 7, 2);
+        this.model.placeTile("Player 1", 60, 6, 7, 0);
 
-        // Brown vital on the right of the cannon
-        playerShipComponents.add(
-                new ComponentHelper<ConstructionComponentDTO>(9, 9)
-                        .addItem(new ConstructionComponentDTO().setI(5).setJ(7).setRotation(2)));
-
-        // Cabin on the right of the core
-        playerShipComponents.add(
-                new ComponentHelper<ConstructionComponentDTO>(4, 12)
-                        .addItem(new ConstructionComponentDTO().setI(6).setJ(7).setRotation(0)));
-
-        List<StateDTO> playerEndedShipStates = model.playerEndedSendShip("Player 1", playerShipComponents, 2);
+        List<StateDTO> playerEndedShipStates = model.playerEndedSendShip("Player 1", 2);
         assertEquals(1, playerEndedShipStates.size());
 
         // Try to send another time the ship --> should throw an error
         assertThrows(
                 IllegalArgumentException.class,
-                () -> model.playerEndedSendShip("Player 1", playerShipComponents, 0),
+                () -> model.playerEndedSendShip("Player 1", 0),
                 "The player should have already sent the ship"
         );
 
-        // Engine under the core cabin
-        playerShipComponents.add(
-                new ComponentHelper<ConstructionComponentDTO>(5, 11)
-                        .addItem(new ConstructionComponentDTO().setI(7).setJ(6).setRotation(0)));
+        this.model.placeTile("Player 2", 21, 5, 6, 0);
+        this.model.placeTile("Player 2", 117, 5, 7, 2);
+        this.model.placeTile("Player 2", 60, 6, 7, 0);
+        this.model.placeTile("Player 2", 71, 7, 6, 0);
 
-        playerEndedShipStates = model.playerEndedSendShip("Player 2", playerShipComponents, 0);
+        playerEndedShipStates = model.playerEndedSendShip("Player 2", 0);
         assertEquals(1, playerEndedShipStates.size());
 
-        // Invalid ship for the player 3 and 4
-        playerShipComponents.add(
-                new ComponentHelper<ConstructionComponentDTO>(2, 10)
-                        .addItem(new ConstructionComponentDTO().setI(6).setJ(4).setRotation(0)));
+        this.model.placeTile("Player 3", 21, 5, 6, 0);
+        this.model.placeTile("Player 3", 117, 5, 7, 2);
+        this.model.placeTile("Player 3", 60, 6, 7, 0);
+        this.model.placeTile("Player 3", 71, 7, 6, 0);
+        this.model.placeTile("Player 3", 34, 6, 4, 0);
 
-        playerEndedShipStates = model.playerEndedSendShip("Player 3", playerShipComponents, 1);
+        playerEndedShipStates = model.playerEndedSendShip("Player 3", 1);
         assertEquals(1, playerEndedShipStates.size());
 
-        playerEndedShipStates = model.playerEndedSendShip("Player 4", playerShipComponents, 0);
+        this.model.placeTile("Player 4", 21, 5, 6, 0);
+        this.model.placeTile("Player 4", 117, 5, 7, 2);
+        this.model.placeTile("Player 4", 60, 6, 7, 0);
+        this.model.placeTile("Player 4", 71, 7, 6, 0);
+        this.model.placeTile("Player 4", 34, 6, 4, 0);
+
+        playerEndedShipStates = model.playerEndedSendShip("Player 4", 0);
 
         // We should have two states since the state should change in FIX_SHIP
         assertEquals(2, playerEndedShipStates.size());

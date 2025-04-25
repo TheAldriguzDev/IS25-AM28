@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Network.Server;
 import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
@@ -131,6 +132,36 @@ public class GameInstance {
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)
                 .setState(state);
+
+        this.broadCastUpdate(answer);
+    }
+
+    /**
+     * Command used to place a tile to the given player ship
+     * */
+    public void placeTile(String player, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
+        PlacedComponentDTO state = this.controller.placeTile(player, componentID, i, j, rotation);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(player)
+                .setState(state);
+
+        this.broadCastUpdate(answer);
+    }
+
+    /**
+     * Command used when a player decides to end his ship construction or when the time is over
+     * */
+    public void playerEndedSendShip(String player, int reservedTiles) throws Exception {
+        List<StateDTO> states = this.controller.playerEndedSendShip(player, reservedTiles);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(player)
+                .setState(states.getFirst());
+
+        if (states.size() > 1) {
+            answer.setNextState(states.get(1));
+        }
 
         this.broadCastUpdate(answer);
     }

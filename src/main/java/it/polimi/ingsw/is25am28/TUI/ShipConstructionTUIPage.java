@@ -593,7 +593,7 @@ public final class ShipConstructionTUIPage extends TUIPage {
         this.clientTUI.getVirtualView().sendMessage(
             new SendShipConfirmation(
                 this.clientTUI.getModel().getNickname(),
-                this.clientTUI.getModel().getState().getCreatedShip()
+                this.clientTUI.getModel().getState().getReservedComponents().size()
             )
         );
     }
