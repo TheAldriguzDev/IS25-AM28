@@ -490,12 +490,13 @@ public final class ShipConstructionTUIPage extends TUIPage {
             }
             while (!correctCoordinates);
 
+            // TODO: Change with the network message and the correct commandCTX
             // And then adding the client component to the ship descriptor inside ClientShipConstructionState
-            this.clientTUI.getModel().getState().placeTile(
-                this.selectedComponent,
-                componentPosition.getKey(),
-                componentPosition.getValue()
-            );
+//            this.clientTUI.getModel().getState().placeTile(
+//                this.selectedComponent,
+//                componentPosition.getKey(),
+//                componentPosition.getValue()
+//            );
 
             // Since the component was added, it is now unusable for other
             // players thus they must not be able to see it

@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
 public final class PlacedComponentDTO extends ShipConstructionEventDTO {
     private String playerNickname;
@@ -79,5 +80,10 @@ public final class PlacedComponentDTO extends ShipConstructionEventDTO {
     public PlacedComponentDTO setRotation(Integer rotation) {
         this.rotation = rotation;
         return this;
+    }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
     }
 }

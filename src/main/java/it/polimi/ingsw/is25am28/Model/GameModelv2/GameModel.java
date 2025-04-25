@@ -20,6 +20,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +32,7 @@ public class GameModel {
     private final ResourceBank resourceBank;
     private int numPlayers;
     private final Map<String, Player> players;
+    private final Map<String, VirtualView> playeVirtualViews;
     private State currentState;
 
     private final Random random = new Random();
@@ -41,6 +43,7 @@ public class GameModel {
         this.players = new HashMap<>();
         this.numPlayers = 2; // min value
         this.currentState = new CreateGameState(this);
+        this.playeVirtualViews = new HashMap<>();
     }
 
     /**
@@ -174,12 +177,14 @@ public class GameModel {
      * Initializes the game configuration as defined by the leader.
      * Sets the game level, number of players, and creates the leader as the first player.
      */
-    public StateDTO gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers) throws IllegalStateException, IllegalArgumentException {
+    public StateDTO gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, VirtualView clientView) throws IllegalStateException, IllegalArgumentException {
         // Set the game configuration sent by the leader
         this.currentState.gameConfig(nickname, playerColor, level, numPlayers);
 
         this.createBoard();
         this.generateDeck();
+
+        this.playeVirtualViews.put(nickname, clientView);
 
         // If all the previous operations are validated we can make the state transition
         this.currentState.onComplete();
@@ -202,10 +207,11 @@ public class GameModel {
      * 1. The response of the action of the command
      * 2. If all the players have joined it will also include the nextState information
      * */
-    public List<StateDTO> addNewPlayer(String nickname, PlayerColor playerColor) throws IllegalStateException, IllegalArgumentException {
+    public List<StateDTO> addNewPlayer(String nickname, PlayerColor playerColor, VirtualView clientView) throws IllegalStateException, IllegalArgumentException {
         List<StateDTO> states = new ArrayList<>();
 
         this.currentState.addNewPlayer(nickname, playerColor);
+        this.playeVirtualViews.put(nickname, clientView);
 
         states.add(this.currentState.generateState());
 
@@ -454,5 +460,13 @@ public class GameModel {
 
     Board getBoard() {
         return this.board;
+    }
+
+    /**
+     * @return a map that associate each player with his VirtualView --> this is needed to update the clients
+     * when some events occurred on the server (e.g. onTimerEnd)
+     * */
+    Map<String, VirtualView> getVirtualViews() {
+        return new HashMap<>(this.playeVirtualViews);
     }
 }

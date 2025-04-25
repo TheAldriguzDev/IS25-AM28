@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -153,7 +154,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
         CompletableFuture<Void> future;
 
-        if (state instanceof ConstructionComponentDTO) {
+        if (state instanceof ConstructionComponentDTO || state instanceof PlacedComponentDTO) {
             // If we have a State that gives only updates --> Execute it first
             future = CompletableFuture.runAsync(() -> {
                try {
