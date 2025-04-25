@@ -25,7 +25,7 @@ public class VisitPlanets extends EventCard {
     private int playerUseCount;
     private List<ComponentHelper<ItemColor>> itemsToDrop;
     private List<ComponentHelper<ItemColor>> itemsToTake;
-    private List<Pair<String, Integer>> updatedPositions;
+    private Map<String, Integer> updatedPositions;
     private int chosenPlanetIndex;
 
 
@@ -39,7 +39,7 @@ public class VisitPlanets extends EventCard {
     ) {
         super(cardName, cardLevel, board);
 
-        updatedPositions = new ArrayList<>();
+        updatedPositions = new HashMap<>();
 
         this.movementSteps = movementSteps;
         this.itemsPerPlanet = new HashMap<>();
@@ -165,7 +165,7 @@ public class VisitPlanets extends EventCard {
                         player,
                         this.movementSteps
                     );
-                    updatedPositions.add(new Pair<>(player.getNickname(), player.getCursor()));
+                    this.updatedPositions.put(player.getNickname(), player.getCursor());
                 }
             }
         }
@@ -324,9 +324,9 @@ public class VisitPlanets extends EventCard {
         // Generating the map of all the remaining planets to choose from
         availablePlanets = new HashMap<>(this.itemsPerPlanet);
 
-//        for (Integer chosenPlanetIndex : this.playersChosenPlanet.keySet()) {
-//            availablePlanets.remove(chosenPlanetIndex);
-//        }
+        for (Integer chosenPlanetIndex : this.playersChosenPlanet.keySet()) {
+            availablePlanets.remove(chosenPlanetIndex);
+        }
 
         // If the current player is present, then add it to the card state
 

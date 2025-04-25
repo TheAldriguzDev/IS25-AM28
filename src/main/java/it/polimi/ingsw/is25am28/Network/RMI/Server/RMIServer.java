@@ -86,6 +86,10 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             case RefreshGames ignored -> {
                 this.refreshGames(uuid);
             }
+            case SendShipConfirmation data -> {
+                // this.sendShipConfirmation(data);
+                // TODO:
+            }
             default -> {
                 throw new Exception("The given Message is not supported");
             }

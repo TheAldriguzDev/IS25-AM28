@@ -201,6 +201,8 @@ public class Smugglers extends EventCard {
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
         } else {
+            smugglersStateJSON.setCardName(this.getCardName());
+            smugglersStateJSON.setCardLevel(this.getCardLevel());
             smugglersStateJSON.setRequiredFirepower(requiredFirepower);
             smugglersStateJSON.setMovementSteps(movementSteps);
             // TODO : Resourcebank question about number of items (referring to how it's done in abandonedStation)

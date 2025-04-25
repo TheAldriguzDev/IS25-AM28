@@ -16,6 +16,7 @@ module it.polimi.ingsw.is25am {
     requires junit;
     requires java.rmi;
     requires java.management;
+    requires java.sql;
 
     opens it.polimi.ingsw.is25am28 to javafx.fxml;
     exports it.polimi.ingsw.is25am28.Model;

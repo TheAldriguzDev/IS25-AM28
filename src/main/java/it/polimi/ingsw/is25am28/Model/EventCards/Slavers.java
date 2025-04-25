@@ -175,9 +175,8 @@ public class Slavers extends EventCard {
         CardStateJSON slaversStateJSON = new CardStateJSON();
 
         if (hasBeenActivated()) {
-            if(playerOptional.isPresent()) {
-                slaversStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-            }
+            playerOptional.ifPresent(player -> slaversStateJSON.setPlayerNickname(player.getNickname()));
+
             // The clients need to know when to update the right parameters
             slaversStateJSON.setFirstRound(this.firstRound);
             // If the first round is finished, send the dynamic info to the players

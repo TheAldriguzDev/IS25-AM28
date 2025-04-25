@@ -66,7 +66,9 @@ public class ClientModel {
         }
 
         if (playerNickname != null && ship != null) {
-            this.playerShips.put(playerNickname, ship);
+            if (!this.playerShips.containsKey(playerNickname)) {
+                this.playerShips.put(playerNickname, ship);
+            }
         }
     }
 

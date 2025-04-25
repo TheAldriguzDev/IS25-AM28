@@ -8,18 +8,15 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import javafx.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class Stardust extends EventCard {
-    private List<Pair<String, Integer>> updatedPositions;
+    private Map<String, Integer> updatedPositions;
     private boolean needsBoardUpdate;
 
     public Stardust(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
-        updatedPositions = new ArrayList<>();
+        updatedPositions = new HashMap<>();
         needsBoardUpdate = false;
     }
 
@@ -42,7 +39,7 @@ public class Stardust extends EventCard {
 
                     getBoard().movePlayerBackwards(player, movementSteps);
                     if (movementSteps != 0) {
-                        updatedPositions.add(new Pair<>(playerNickname, player.getCursor()));
+                        this.updatedPositions.put(player.getNickname(), player.getCursor());
                     }
 
                     if (player.equals(this.players.getLast())) {
@@ -89,9 +86,8 @@ public class Stardust extends EventCard {
         CardStateJSON stardustStateJSON = new CardStateJSON();
 
         if (hasBeenActivated()) {
-            if(playerOptional.isPresent()) {
-                stardustStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-            }
+            playerOptional.ifPresent(player -> stardustStateJSON.setPlayerNickname(player.getNickname()));
+
             stardustStateJSON.setNeedsBoardUpdate(needsBoardUpdate);
             if(this.needsBoardUpdate) {
                 stardustStateJSON.setUpdatedPositions(updatedPositions);

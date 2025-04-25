@@ -320,7 +320,7 @@ public final class ShipContructionState extends State implements TimeSubscriber 
 
         ShipConstructionDTO state = new ShipConstructionDTO()
                 .setAllComponents(this.all_components.stream().map(Component::toMap).toList())
-                .setCards(cardsState)
+                //.setCards(cardsState)
                 .setFlippedComponents(this.flipped.stream().toList())
                 .setSelectedComponents(this.selected.stream().toList());
 

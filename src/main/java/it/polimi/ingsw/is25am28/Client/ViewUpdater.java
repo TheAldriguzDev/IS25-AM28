@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
+import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
@@ -10,6 +11,8 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEn
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
+import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
+import it.polimi.ingsw.is25am28.TUI.ShipConstructionTUIPage;
 
 /**
  * This class use the VisitorPattern to save useful information of each state and then show this information in
@@ -37,23 +40,14 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(AvailableGamesDTO state) throws Exception {
-        this.ui.showLobbies(state, isFirstAccess);
-
-        if (this.isFirstAccess) {
-            this.isFirstAccess = false;
+        if (this.ui instanceof ClientTUI_v2 tui) {
+            if (tui.getCurrPage() == null) {
+                tui.setCurrPage(new GameMenuTUIPage(tui));
+            }
         }
-    }
 
-    // TODO: Remove this method since it's not used anymore
-    @Override
-    public void visit(CreateGameStateDTO state) throws Exception {
-
-    }
-
-    // TODO: Remove this method since it's not used anymore
-    @Override
-    public void visit(WaitingForGameConfigurationDTO state) {
-
+        this.ui.showLobbies(state, isFirstAccess);
+        this.isFirstAccess = false;
     }
 
     @Override
@@ -75,6 +69,10 @@ public class ViewUpdater implements StateVisitor {
             this.model.setState(new ClientShipConstructionState(this.model, state.getAllComponents()));
         }
 
+        if (this.ui instanceof ClientTUI_v2 tui) {
+            tui.setCurrPage(new ShipConstructionTUIPage(tui));
+        }
+
         this.ui.showShipConstruction(state);
     }
 
@@ -84,12 +82,14 @@ public class ViewUpdater implements StateVisitor {
      * */
     @Override
     public void visit(ConstructionComponentDTO state) throws Exception {
-        if (state.getEventType().equals(ShipConstructionType.TILE_EVENT.toString())) {
-            int idx = (state.getI() * 19) + state.getJ();
+        synchronized (this.model) {
+            if (state.getEventType().equals(ShipConstructionType.TILE_EVENT.toString())) {
+                int idx = (state.getI() * 19) + state.getJ();
 
-            ClientComponent comp = this.model.getState().getConstructionShipComponents().get(idx);
-            comp.setAsFlipped();
-            comp.setIsVisible(!state.isSelected());
+                ClientComponent comp = this.model.getState().getConstructionShipComponents().get(idx);
+                comp.setAsFlipped();
+                comp.setIsVisible(!state.isSelected());
+            }
         }
     }
 

@@ -118,7 +118,7 @@ public class BoardLevel2 extends Board {
     }
 
     /**
-     * @return A TUI border-wrapped widget containing the board's text representation
+     * @return A TUIPage border-wrapped widget containing the board's text representation
      *         as well as other information about itself
      */
     public WidgetTUI generateWidget() {

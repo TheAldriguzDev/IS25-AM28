@@ -20,7 +20,7 @@ import java.util.Map;
 
 public class OpenSpace extends EventCard {
     private Map<String, Integer> playerPowerResult;
-    private List<Pair<String, Integer>> updatedPositions;
+    private Map<String, Integer> updatedPositions;
     private List<String> eliminatedPlayers;
     // TODO : modify the system to update from time to time, not at the end
 
@@ -28,7 +28,7 @@ public class OpenSpace extends EventCard {
     public OpenSpace(String name, int level, Board board) {
         super(name, level, board);
         this.playerPowerResult = new HashMap<>();
-        this.updatedPositions = new ArrayList<>();
+        this.updatedPositions = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
     }
 
@@ -121,11 +121,11 @@ public class OpenSpace extends EventCard {
                 this.eliminatedPlayers.add(playerNickname);
             } else {
                 this.getBoard().movePlayerForward(this.getCurrentPlayer().get(), totalPower);
-                this.updatedPositions.add(new Pair<>(playerNickname, getCurrentPlayer().get().getCursor()));
+                this.updatedPositions.put(playerNickname, this.getCurrentPlayer().get().getCursor());
             }
 
             // When we have moved the last player we need to re-validate the positions
-            if (this.getCurrentPlayer().equals(this.players.getLast())) {
+            if (this.getCurrentPlayer().get().equals(this.players.getLast())) {
                 this.cardUsed(); // Mark the card as used
                 this.getBoard().validatePlayersPosition();
             } else {
@@ -168,7 +168,6 @@ public class OpenSpace extends EventCard {
             //cardState.setBoard(this.getBoard().generateState());
             cardState.setEliminatedPlayers(this.eliminatedPlayers);
             cardState.setUpdatedPositions(this.updatedPositions);
-
         }
 
         return cardState;

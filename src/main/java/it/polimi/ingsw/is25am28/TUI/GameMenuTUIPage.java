@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.TUI;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
@@ -13,12 +14,16 @@ import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-public class GameMenuTUI extends TUI {
+import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.*;
+
+public final class GameMenuTUIPage extends TUIPage {
     // Command grouping values for the input widgets below
     public static final int LOBBY_COMMANDS_PER_COLUMN = 2;
     public static final int AVAILABLE_GAMES_PER_COLUMN = 16;
@@ -30,11 +35,15 @@ public class GameMenuTUI extends TUI {
     // DTO containing the available games from which the player can choose from
     private AvailableGamesDTO availableGamesDTO;
 
+    private final WidgetTUI waitingForPlayersWidget;
     private int selectedGameId = -1;
 
     // Constructor
-    public GameMenuTUI(ClientModel model) {
-        super(model);
+    public GameMenuTUIPage(ClientTUI_v2 clientTUI) {
+        super(clientTUI);
+
+        // Initializing waiting for players widget
+        this.waitingForPlayersWidget = new WidgetTUI();
 
         // Initializing menuCommandsWidget
         this.menuCommandsWidget = new InputWidgetTUI();
@@ -179,7 +188,8 @@ public class GameMenuTUI extends TUI {
         //  4) The amount of players he wants to play with
 
         // 1)
-        this.playerNickname = this.getPlayerChosenNickname();
+        String playerNickname = this.getPlayerChosenNickname();
+        this.clientTUI.setPlayerNickname(playerNickname);
         // 2)
         System.out.print("Choose a color (Available=[RED, GREEN, BLUE, YELLOW]): ");
         PlayerColor playerColor = this.getPlayerChosenColor();
@@ -190,28 +200,31 @@ public class GameMenuTUI extends TUI {
 
         // Creating the command context to handle the actions to
         // take either onSuccess or onError, depending on the server's response
-        this.currCommand = new CommandCTX(
-            "createGame",
-            () -> {
-                synchronized (this.model) {
-                    this.model.setNickname(this.playerNickname);
-                    this.model.setPlayerColor(playerColor);
-                    this.currCommand = null;
+        this.clientTUI.setCurrCommand(
+            new CommandCTX(
+                "createGame",
+                () -> {
+                    synchronized (this.clientTUI.getModel()) {
+                        this.clientTUI.getModel().setNickname(playerNickname);
+                        this.clientTUI.getModel().setPlayerColor(playerColor);
+                        this.clientTUI.getModel().setDifficultyLevel(gameLevel);
+                        this.clientTUI.setCurrCommand(null);
+                    }
+                },
+                () -> {
+                    try {
+                        this.createGameInput();
+                    }
+                    catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-            },
-            () -> {
-                try {
-                    this.createGameInput();
-                }
-                catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            )
         );
 
         // Finally, sending the message to the server through
         // the selected virtual client
-        this.client.sendMessage(new ConfigGame(this.playerNickname, playerColor, gameLevel, totalPlayers));
+        this.clientTUI.getVirtualView().sendMessage(new ConfigGame(playerNickname, playerColor, gameLevel, totalPlayers));
     }
 
     /**
@@ -221,31 +234,35 @@ public class GameMenuTUI extends TUI {
         System.out.println("Joining the game with id " + game.getId() + "...");
 
         // Ask the player for the nickname and the color to use
-        this.playerNickname = this.getPlayerChosenNickname();
+        String playerNickname = this.getPlayerChosenNickname();
+        this.clientTUI.setPlayerNickname(playerNickname);
 
         System.out.print("Choose a color (Available=" + game.getAvailableColors() + "): ");
         PlayerColor playerColor = this.getPlayerChosenColor();
 
-        this.currCommand = new CommandCTX(
-            "joinGame",
-            () -> {
-                synchronized (this.model) {
-                    this.model.setNickname(this.playerNickname);
-                    this.model.setPlayerColor(playerColor);
-                    this.currCommand = null;
+        this.clientTUI.setCurrCommand(
+            new CommandCTX(
+                "joinGame",
+                () -> {
+                    synchronized (this.clientTUI.getModel()) {
+                        this.clientTUI.getModel().setNickname(playerNickname);
+                        this.clientTUI.getModel().setPlayerColor(playerColor);
+                        this.clientTUI.getModel().setDifficultyLevel(game.getLevel());
+                        this.clientTUI.setCurrCommand(null);
+                    }
+                },
+                () -> {
+                    try {
+                        this.joinGameInput(game, usedNicknames);
+                    }
+                    catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
                 }
-            },
-            () -> {
-                try {
-                    this.joinGameInput(game, usedNicknames);
-                }
-                catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            }
+            )
         );
 
-        this.client.sendMessage(new NewPlayer(this.playerNickname, playerColor, game.getId()));
+        this.clientTUI.getVirtualView().sendMessage(new NewPlayer(playerNickname, playerColor, game.getId()));
     }
 
     /**
@@ -260,23 +277,30 @@ public class GameMenuTUI extends TUI {
         System.out.println("Trying to reconnect you to the game...");
 
         // Asking for the username
-        this.playerNickname = this.getPlayerChosenNickname();
+        String playerNickname = this.getPlayerChosenNickname();
+        this.clientTUI.setPlayerNickname(playerNickname);
 
-        this.client.sendMessage(new Reconnect(this.playerNickname));
+        this.clientTUI.getVirtualView().sendMessage(new Reconnect(playerNickname));
     }
 
     /**
      * @return The current player's chosen nickname
      */
     public String getPlayerChosenNickname() {
-        String playerNickname;
+        String playerNickname = "";
 
         do {
             System.out.print("Insert your nickname: ");
-            playerNickname = scanner.nextLine().trim();
 
-            if (playerNickname.isEmpty()) {
-                System.out.println(PrintUtils.addColor("ERROR: Name cannot be empty. Please insert a nickname", ANSIColors.RED));
+            try {
+                playerNickname = this.clientTUI.getBufferedReader().readLine().trim();
+
+                if (playerNickname.isEmpty()) {
+                    System.out.println(PrintUtils.addColor("ERROR: Name cannot be empty. Please insert a nickname", ANSIColors.RED));
+                }
+            }
+            catch (IOException e) {
+                System.out.println(PrintUtils.addColor(e.getMessage(), ANSIColors.RED));
             }
         }
         while (playerNickname.isEmpty());
@@ -289,17 +313,21 @@ public class GameMenuTUI extends TUI {
      */
     public PlayerColor getPlayerChosenColor() {
         PlayerColor playerColor = null;
+        String colorInput;
 
         do {
-            String colorInput = scanner.nextLine().trim();
-
-            if (colorInput.isEmpty()) {
-                System.out.println(PrintUtils.addColor("ERROR: Color cannot be empty. Please insert a color", ANSIColors.RED));
-                continue;
-            }
-
             try {
+                colorInput = this.clientTUI.getBufferedReader().readLine().trim();
+
+                if (colorInput.isEmpty()) {
+                    System.out.println(PrintUtils.addColor("ERROR: Color cannot be empty. Please insert a color", ANSIColors.RED));
+                    continue;
+                }
+
                 playerColor = PlayerColor.valueOf(colorInput.toUpperCase());
+            }
+            catch (IOException e) {
+                System.out.println(PrintUtils.addColor(e.getMessage(), ANSIColors.RED));
             }
             catch (IllegalArgumentException e) {
                 System.out.println(PrintUtils.addColor("ERROR: Unknown color. Please insert an available color", ANSIColors.RED));
@@ -314,18 +342,22 @@ public class GameMenuTUI extends TUI {
      * @return The current player's chosen difficulty level
      */
     public int getPlayerChosenLevel() {
+        String line;
         int gameLevel = -1;
 
         do {
             System.out.print("Select game difficulty level: (0 -> Test flight, 2 -> Level 2 Flight): ");
-            String line = scanner.nextLine().trim();
 
             try {
+                line = this.clientTUI.getBufferedReader().readLine().trim();
                 gameLevel = Integer.parseInt(line);
 
                 if (gameLevel != 0 && gameLevel != 2) {
                     System.out.println(PrintUtils.addColor("ERROR: Game difficulty level must be 0 or 2.", ANSIColors.RED));
                 }
+            }
+            catch (IOException e) {
+                System.out.println(PrintUtils.addColor(e.getMessage(), ANSIColors.RED));
             }
             catch (NumberFormatException e) {
                 System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please insert a number.", ANSIColors.RED));
@@ -340,18 +372,22 @@ public class GameMenuTUI extends TUI {
      * @return The current player's chosen total players amount for a game
      */
     public int getPlayerChosenTotalPlayers() {
+        String line;
         int totalPlayers = -1;
 
         do {
             System.out.print("Insert the total number of players (min=2, max=4): ");
-            String line = scanner.nextLine().trim();
 
             try {
+                line = this.clientTUI.getBufferedReader().readLine().trim();
                 totalPlayers = Integer.parseInt(line);
 
                 if (totalPlayers < 2 || totalPlayers > 4) {
                     System.out.println(PrintUtils.addColor("ERROR: Number of players must be between 2 and 4.", ANSIColors.RED));
                 }
+            }
+            catch (IOException e) {
+                System.out.println(PrintUtils.addColor(e.getMessage(), ANSIColors.RED));
             }
             catch (NumberFormatException e) {
                 System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please enter a number", ANSIColors.RED));
@@ -368,7 +404,7 @@ public class GameMenuTUI extends TUI {
     public void getMenuCommand() {
         boolean existingCommandSelected;
 
-        synchronized (this.ioLock) {
+        synchronized (this.clientTUI.getIoLock()) {
             do {
                 System.out.println();
                 System.out.println("Available menu commands:");
@@ -389,13 +425,13 @@ public class GameMenuTUI extends TUI {
     public void getGameListCommand() {
         boolean existingCommandSelected;
 
-        synchronized (this.ioLock) {
+        synchronized (this.clientTUI.getIoLock()) {
             do {
                 System.out.println();
                 System.out.println("Currently Available Games:");
 
                 // Clearing the terminal before showing all the available games
-                TUI.clearTerminal();
+                clearTerminal();
 
                 existingCommandSelected = this.gameListInputWidget.selectCommand(DEFAULT_INPUT_PREFIX);
 
@@ -420,17 +456,9 @@ public class GameMenuTUI extends TUI {
         // game selection commands inside this gameListInputWidget
         this.updateGameListWidget();
 
-        // TODO: Discuss the case where a player keeps observing the available games list
-        //       and an update arrives. In that case, the TUI must be reprinted again!! (threads required)
-        //       ACTIONS: Updated AvailableGamesDTO Arrives, then:
-        //                  1 --> Save current user input (force ENTER)
-        //                  2 --> Reprint everything
-        //                  3 --> Put player back to where he was writing (with the previous input as well)
-        //      In this way, updates are asynchronous and can happen at any time
-
-        // Finally, show the GameMenuTUI to the player
+        // Finally, show the GameMenuTUIPage to the player
         System.out.println("\nWelcome to...\n");
-        TUI.printTitle();
+        printTitle();
         this.getMenuCommand();
     }
 
@@ -440,21 +468,45 @@ public class GameMenuTUI extends TUI {
      */
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
-        synchronized (this.ioLock) {
-            if (this.model.getNickname() != null) {
+        // Creating the ship of the newly connected player in all clients
+        for (Map.Entry<String, PlayerColor> playerEntry : waitingForPlayers.getUsedNicknames().entrySet()) {
+            this.clientTUI.getModel().setShipToPlayer(
+                playerEntry.getKey(),
+                new ClientShip(this.clientTUI.getModel().getDifficultyLevel())
+            );
+        }
+
+        synchronized (this.clientTUI.getIoLock()) {
+            if (this.clientTUI.getModel().getNickname() != null) {
                 int connected = waitingForPlayers.getLobbyTotalSpot() - waitingForPlayers.getAvailableSpots();
                 int total = waitingForPlayers.getLobbyTotalSpot();
                 Map<String, PlayerColor> nicknamesAndColor = waitingForPlayers.getUsedNicknames();
 
-                System.out.printf("Waiting for more players to join the game [%d/%d]...%n", connected, total);
+                // Resetting the widget
+                this.waitingForPlayersWidget.resetScreenAndDimensions();
+
+                // Adding the currently connected players and total players counters to the widget
+                this.waitingForPlayersWidget.appendString(PrintUtils.addColor("[STATUS]", ANSIColors.BRIGHT_CYAN));
+                this.waitingForPlayersWidget.appendString("Waiting for more players to join the game [" + connected + "/" + total + "]...");
+
+                // Then adding all the currently present players
+                this.waitingForPlayersWidget.appendString("Connected players:");
+                int i = 1;
 
                 if (!nicknamesAndColor.isEmpty()) {
-                    System.out.print("Connected players: ");
-                    String formattedNames = nicknamesAndColor.entrySet().stream()
-                            .map(entry -> entry.getValue().formatColor(entry.getKey()))
-                            .collect(Collectors.joining(", "));
-                    System.out.println(formattedNames);
+                    for (Map.Entry<String, PlayerColor> entry : nicknamesAndColor.entrySet()) {
+                        this.waitingForPlayersWidget.appendString(
+                            i + " - " + PrintUtils.addColor(entry.getKey(), entry.getValue().getColorString())
+                        );
+                        i++;
+                    }
                 }
+
+                // Adding some left and right padding
+                this.waitingForPlayersWidget.addPadding(0, 12, 0, 1);
+
+                // Finally, wrap and print the widget
+                this.waitingForPlayersWidget.wrapWidgetWithBorder().printWidget();
             }
         }
     }
