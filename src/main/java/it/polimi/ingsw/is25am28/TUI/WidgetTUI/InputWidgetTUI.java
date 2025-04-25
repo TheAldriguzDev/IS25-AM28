@@ -1,19 +1,19 @@
 package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
-import java.io.InputStream;
+import java.io.*;
 
 import java.util.*;
 
 public class InputWidgetTUI extends WidgetTUI {
     private Map<String, CommandWidgetTUI> commands;
-    private Scanner scanner;
+    private BufferedReader reader;
     private int commandsPerCol;
 
     // Constructor
     public InputWidgetTUI() {
         super();
         this.commands = null;
-        this.scanner = null;
+        this.reader = null;
         this.commandsPerCol = 1;
     }
 
@@ -23,8 +23,8 @@ public class InputWidgetTUI extends WidgetTUI {
      *
      * @param stream The stream that the new scanner will observe
      */
-    public void setNewScanner(InputStream stream) {
-        this.scanner = new Scanner(stream);
+    public void setNewReader(InputStream stream) {
+        this.reader = new BufferedReader(new InputStreamReader(stream));
     }
 
     /**
@@ -32,6 +32,10 @@ public class InputWidgetTUI extends WidgetTUI {
      *                 easy retrieval when selected by the user
      */
     public void setCommands(List<CommandWidgetTUI> commands) {
+        if (this.commands == null) {
+            this.commands = new HashMap<>();
+        }
+
         if (commands != null && !commands.isEmpty() && !commands.contains(null)) {
             for (CommandWidgetTUI command : commands) {
                 this.commands.put(command.getCommandId(), command);
@@ -94,14 +98,21 @@ public class InputWidgetTUI extends WidgetTUI {
 
             if (prefixText != null) { System.out.print(prefixText); }
 
-            input = this.scanner.next();
-            commandWidget = this.commands.get(input);
+            try {
+                input = this.reader.readLine().trim();
+                commandWidget = this.commands.get(input);
 
-            if (commandWidget != null) {
-                commandWidget.runCommand();
-                return true;
+                if (commandWidget != null) {
+                    commandWidget.runCommand();
+                    return true;
+                }
+                else {
+                    return false;
+                }
             }
-            else {
+            catch (IOException e) {
+                // If an exception is thrown, then signal to whoever is
+                // using this method that a command was not selected
                 return false;
             }
         }

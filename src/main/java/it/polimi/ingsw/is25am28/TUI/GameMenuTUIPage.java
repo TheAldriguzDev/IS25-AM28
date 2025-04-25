@@ -19,7 +19,6 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.*;
 
@@ -47,13 +46,13 @@ public final class GameMenuTUIPage extends TUIPage {
 
         // Initializing menuCommandsWidget
         this.menuCommandsWidget = new InputWidgetTUI();
-        this.menuCommandsWidget.setNewScanner(System.in);
+        this.menuCommandsWidget.setNewReader(System.in);
         this.menuCommandsWidget.setColumnGroupingAmount(LOBBY_COMMANDS_PER_COLUMN);
         this.initMenuCommands();
 
         // Initializing gameListWidget
         this.gameListInputWidget = new InputWidgetTUI();
-        this.gameListInputWidget.setNewScanner(System.in);
+        this.gameListInputWidget.setNewReader(System.in);
         this.gameListInputWidget.setColumnGroupingAmount(AVAILABLE_GAMES_PER_COLUMN);
     }
 
