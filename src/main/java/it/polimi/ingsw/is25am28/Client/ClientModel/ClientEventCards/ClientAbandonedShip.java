@@ -7,14 +7,13 @@ public class ClientAbandonedShip extends ClientEventCard {
     private final int requiredCrew;
     private final int movementStep;
     private final int givenCredits;
-    private boolean is;
 
     public ClientAbandonedShip(CardStateJSON cardState) {
         super(cardState);
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementStep = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();
-        this.hasBeenUsed = cardState.getIsCardUsable();
+        //this.hasBeenUsed = cardState.getIsCardUsable();
         //this.hasBeenUsed // Purpose of isCardUsable in this card?
 
     }
@@ -29,7 +28,7 @@ public class ClientAbandonedShip extends ClientEventCard {
         // TODO: generate state need to send info about the removed crew
         // Should only change the playerNickname during round execution
         this.playerNickname = cardState.getPlayerNickname();
-        this.hasBeenUsed = cardState.getIsCardUsable();
+        //this.hasBeenUsed = cardState.getIsCardUsable();
         // Need info about what the removed crew
 
     }

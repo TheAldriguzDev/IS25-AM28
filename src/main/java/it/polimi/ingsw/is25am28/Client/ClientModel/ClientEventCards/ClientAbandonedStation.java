@@ -11,8 +11,8 @@ public class ClientAbandonedStation extends ClientEventCard {
     private final int requiredCrew;
     private final int movementStep;
     private List<ItemColor> stationResources;
-    private List<ComponentHelper<ItemColor>> resourcesToDrop;
-    private List<ComponentHelper<ItemColor>> resourcesToTake;
+//    private List<ComponentHelper<ItemColor>> resourcesToDrop;
+//    private List<ComponentHelper<ItemColor>> resourcesToTake;
 
     public ClientAbandonedStation(CardStateJSON cardState) {
         super(cardState);
@@ -31,10 +31,10 @@ public class ClientAbandonedStation extends ClientEventCard {
     public void updateCard(CardStateJSON cardState) {
         // Should only change the playerNickname during round execution
         this.playerNickname = cardState.getPlayerNickname();
-        this.hasBeenUsed = cardState.getIsCardUsable();
+//        this.hasBeenUsed = cardState.getIsCardUsable();
         // Need info about what the player took/dropped
-        this.resourcesToDrop = cardState.getResourcesToDrop();
-        this.resourcesToTake = cardState.getResourcesToTake();
+//        this.resourcesToDrop = cardState.getResourcesToDrop();
+//        this.resourcesToTake = cardState.getResourcesToTake();
     }
 
     @Override

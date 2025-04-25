@@ -165,38 +165,49 @@ public class AbandonedShip extends EventCard {
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
 
-        // Set the card information that are needed to play the game
-        cardState.setCardName(this.getCardName());
-        cardState.setCardLevel(this.cardLevel);
-        cardState.setRequiredCrewMembers(this.requiredCrew);
-        cardState.setGivenCredits(this.givenCredits);
-        cardState.setMovementSteps(this.movementStep);
-
         // If there is a currentPlayer set it in the DTO
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
 
-        // If the card is finished and a player has used it, we can update the clients with the changes
-        // otherwise send to the players the card information
-        if (this.hasFinished()) {
+        if (hasBeenActivated()) {
+            cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             if (this.hasBeenUsedByPlayer) {
-                // Update the board
-//                cardState.setBoard(this.getBoard().generateState());
-
-                // Generate the player info that also includes the ship
-//                Map<String, PlayerJSON> playerInfo = new HashMap<>();
-//                playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
-//                cardState.setPlayersInfo(playerInfo);
                 cardState.setLifeformsToRemove(this.lifeformsToBeRemoved);
             }
         } else {
-            // If the player can use the card the flag will be set to true, otherwise if it doesn't have the card requirement it
-            // will be set to false
-            if (this.currentPlayer.isPresent()) {
-                cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
-            }
+            // Set the card information that are needed to play the game
+            cardState.setCardName(this.getCardName());
+            cardState.setCardLevel(this.cardLevel);
+            cardState.setRequiredCrewMembers(this.requiredCrew);
+            cardState.setGivenCredits(this.givenCredits);
+            cardState.setMovementSteps(this.movementStep);
         }
+
+
+
+
+
+        // If the card is finished and a player has used it, we can update the clients with the changes
+//        // otherwise send to the players the card information
+//        if (this.hasFinished()) {
+//            if (this.hasBeenUsedByPlayer) {
+//                // Update the board
+////                cardState.setBoard(this.getBoard().generateState());
+//
+//                // Generate the player info that also includes the ship
+////                Map<String, PlayerJSON> playerInfo = new HashMap<>();
+////                playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
+////                cardState.setPlayersInfo(playerInfo);
+//
+//            }
+//        } else {
+//            // If the player can use the card the flag will be set to true, otherwise if it doesn't have the card requirement it
+//            // will be set to false
+//            if (this.currentPlayer.isPresent()) {
+//                cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
+//            }
+//        }
 
         return cardState;
     }

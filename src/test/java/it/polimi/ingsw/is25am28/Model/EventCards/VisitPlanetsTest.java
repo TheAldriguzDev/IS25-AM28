@@ -230,8 +230,7 @@ class VisitPlanetsTest {
             this.board
         );
 
-        // Initializing the internal player list
-        this.visitPlanets.initCardPlayers();
+
     }
 
     @Test
@@ -267,6 +266,9 @@ class VisitPlanetsTest {
         assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
         assertTrue(cardStateJSON.getAvailablePlanets().containsKey(2));
         assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
+
+        // Initializing the internal player list
+        this.visitPlanets.initCardPlayers();
 
 //        System.out.println("\n ======== P1 BEFORE ========");
 //        printAvailableResources(this.resourceBank);
@@ -306,10 +308,11 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P1 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(2));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(2));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
 
         // Verify that the card is not finished yet
         assertTrue(cardStateJSON.getIsCardUsable());
@@ -414,10 +417,11 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P2 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
 
         // Verify that the card is not finished yet
         assertTrue(cardStateJSON.getIsCardUsable());
@@ -468,6 +472,7 @@ class VisitPlanetsTest {
         //     (HOWEVER: Even if he wants to drop/take stuff, he doesn't want to land, therefore his storage stays the same)
         chosenPlanetIndex = 3;
         cardStateJSON = this.visitPlanets.generateState();
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
 //        System.out.println("\n ======== P3 BEFORE ========");
 //        printAvailableResources(this.resourceBank);
 //        visualizeVisitPlanetsCardStateParameters(cardStateJSON);
@@ -510,10 +515,11 @@ class VisitPlanetsTest {
 
         // Verifying that the planetID chosen by P3 is not available
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
 
         // Verify that the card is not finished yet
         assertTrue(cardStateJSON.getIsCardUsable());
@@ -600,13 +606,15 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P4 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(2));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(3));
 
         // Since P4 is the last player, the state should say that the card is not usable anymore
-        assertFalse(cardStateJSON.getIsCardUsable());
+        // NOT USED ANYMORE
+        //assertFalse(cardStateJSON.getIsCardUsable());
 
         // Visualize changes
 //        System.out.println("\n ======== P4 AFTER ========");
@@ -723,8 +731,9 @@ class VisitPlanetsTest {
         cardStateJSON = this.visitPlanets.generateState();
 
         // Verify that all planets are currently available
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
 
         itemsToDrop = new ArrayList<>();
         itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
@@ -761,8 +770,9 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P1 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
 
         // Verify that the card is not finished yet
         assertTrue(cardStateJSON.getIsCardUsable());
@@ -841,11 +851,12 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P2 is still available,
         // since he specified that he did not want to land
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
 
         // Verify that the card is not finished yet
-        assertTrue(cardStateJSON.getIsCardUsable());
+        //assertTrue(cardStateJSON.getIsCardUsable());
 
         // Verify that the correct resources are dropped and taken by P2
         // specialDoubleStorage1
@@ -924,12 +935,13 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P3 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
 
         // Verify that, since all planets have been chosen, P4 will not be able to choose, thus
         // he should be skipped and the card should be then marked as used
-        assertFalse(cardStateJSON.getIsCardUsable());
+        //assertFalse(cardStateJSON.getIsCardUsable());
 
         // Verify that the correct resources are dropped and taken by P3
         // specialDoubleStorage1
@@ -1038,8 +1050,9 @@ class VisitPlanetsTest {
         cardStateJSON = this.visitPlanets.generateState();
 
         // Verify that all planets are currently available
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
 
         itemsToDrop = new ArrayList<>();
         itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
@@ -1076,11 +1089,12 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P1 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
 
         // Verify that the card is not finished yet
-        assertTrue(cardStateJSON.getIsCardUsable());
+        //assertTrue(cardStateJSON.getIsCardUsable());
 
         // Verify that the correct resources are dropped and taken by P1
         // specialDoubleStorage1
@@ -1140,11 +1154,12 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P3 is still available,
         // since he specified that he did not want to land
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
 
         // Verify that the card is not finished yet
-        assertTrue(cardStateJSON.getIsCardUsable());
+        //assertTrue(cardStateJSON.getIsCardUsable());
 
         // Verify that P2 has still the same resources as before
         // specialDoubleStorage1
@@ -1223,12 +1238,13 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P3 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
-        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
+        // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
+//        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
 
         // Verify that, since all planets have been chosen, P4 will not be able to choose, thus
         // he should be skipped and the card should be then marked as used
-        assertFalse(cardStateJSON.getIsCardUsable());
+        //assertFalse(cardStateJSON.getIsCardUsable());
 
         // Verify that the correct resources are dropped and taken by P3
         // specialDoubleStorage1

@@ -101,30 +101,21 @@ public class Epidemy extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
-        Map<String, PlayerJSON> playerInfo;
 
-        cardState.setCardName(this.getCardName());
-        cardState.setCardLevel(this.cardLevel);
-        cardState.setCardIsUsable( !this.hasFinished());
-
-        if (this.hasFinished()) {
-            // Generate the player info that also includes the ship
-//            playerInfo = new HashMap<>();
-//
-//            for (Player player : this.players) {
-//                playerInfo.put(player.getNickname(), PlayerJSON.fromPlayer(player, false));
-//            }
-//
-//            cardState.setPlayersInfo(playerInfo);
-
+        if (this.getCurrentPlayer().isPresent()) {
+            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
         }
-        else {
-            if (this.getCurrentPlayer().isPresent()) {
-                cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
+
+        if (hasBeenActivated()) {
+            if (!previousPlayeRemovedLifeforms.isEmpty()) {
+                cardState.setLifeformsToRemove(this.previousPlayeRemovedLifeforms);
+            } else {
+                cardState.setLifeformsToRemove(null);
             }
-            cardState.setLifeformsToRemove(this.previousPlayeRemovedLifeforms);
+        } else {
+            cardState.setCardName(this.getCardName());
+            cardState.setCardLevel(this.cardLevel);
         }
-
         return cardState;
     }
 

@@ -439,46 +439,39 @@ public class MeteorShower extends EventCard {
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
 
-        // The differential update happens always except when the card is
-        // first picked (since no one has been hit with a meteor yet)
-        if (this.prevPlayerRemovedComponents != null) {
-            // Setting which components were removed from the previous player, thus
-            // performing a differential update on what changed before the card
-            // transitioned to the next state
-            cardState.setPreviousPlayerRemovedComponents(
-                Map.of(this.prevPlayer,
-                        this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList()));
-        }
-        else {
-            // No components were removed, therefore the
-            // prevPlayerRemovedComponents list is null
-//            cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer,null));
-            cardState.setPreviousPlayerRemovedComponents(null);
-        }
-
-        // If the current player is present, then add it to the card state
-        this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
-
         // The dice throw is performed by generateState only at the beginning
         // since the card hasn't been used yet
         if (this.diceThrowResult == -1) {
             this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
         }
 
-        cardState.setCardName(this.getCardName());
-        cardState.setCardLevel(this.cardLevel);
-        cardState.setCardIsUsable(! this.hasFinished());
-        cardState.setCurrMeteorIndex(this.currMeteorIndex);
-        cardState.setDiceThrowResult(this.diceThrowResult);
+        // If the current player is present, then add it to the card state
+        this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
 
-        cardState.setCurrMeteorDescriptor(
-                Map.of("meteorSize", this.meteorSequence.get(this.currMeteorIndex).getSize(), "meteorDirection", this.meteorSequence.get(this.currMeteorIndex).getOrientation()));
-//            new Pair<Integer, Integer>(
-//                this.meteorSequence.get(this.currMeteorIndex).getSize(),
-//                this.meteorSequence.get(this.currMeteorIndex).getOrientation()
-//            )
-//        );
+        if (hasBeenActivated()) {
+            cardState.setCurrMeteorIndex(this.currMeteorIndex);
+            cardState.setDiceThrowResult(this.diceThrowResult);
+            cardState.setCurrMeteorDescriptor(Map.of("meteorSize", this.meteorSequence.get(this.currMeteorIndex).getSize(), "meteorDirection", this.meteorSequence.get(this.currMeteorIndex).getOrientation()));
+            // The differential update happens always except when the card is
+            // first picked (since no one has been hit with a meteor yet)
+            if (this.prevPlayerRemovedComponents != null) {
+                // Setting which components were removed from the previous player, thus
+                // performing a differential update on what changed before the card
+                // transitioned to the next state
+                cardState.setPreviousPlayerRemovedComponents(
+                        Map.of(this.prevPlayer,
+                                this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList()));
+            }
+            else {
+                // No components were removed, therefore the
+                // prevPlayerRemovedComponents list is null
+                cardState.setPreviousPlayerRemovedComponents(null);
+            }
 
+        } else {
+            cardState.setCardName(this.getCardName());
+            cardState.setCardLevel(this.cardLevel);
+        }
         return cardState;
     }
 

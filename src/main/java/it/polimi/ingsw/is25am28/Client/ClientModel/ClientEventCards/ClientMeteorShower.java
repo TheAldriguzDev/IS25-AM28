@@ -12,14 +12,10 @@ public class ClientMeteorShower extends ClientEventCard {
     private int currMeteorIndex;
     private int diceThrowResult;
     private Map<String, Integer> currMeteorDescriptor;
-    private Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
+//    private Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
 
     public ClientMeteorShower(CardStateJSON cardState) {
         super(cardState);
-        this.currMeteorIndex = cardState.getCurrMeteorIndex();
-        this.diceThrowResult = cardState.getDiceThrowResult();
-        this.currMeteorDescriptor = cardState.getCurrMeteorDescriptor();
-        hasBeenUsed = cardState.getIsCardUsable();
     }
 
 
@@ -31,7 +27,8 @@ public class ClientMeteorShower extends ClientEventCard {
 
     @Override
     public void updateCard(CardStateJSON cardState) {
-        this.previousPlayerRemovedComponents = cardState.getPreviousPlayerRemovedComponents();
+        this.playerNickname = cardState.getPlayerNickname();
+//        this.previousPlayerRemovedComponents = cardState.getPreviousPlayerRemovedComponents();
         this.currMeteorIndex = cardState.getCurrMeteorIndex();
         this.diceThrowResult = cardState.getDiceThrowResult();
         this.currMeteorDescriptor = cardState.getCurrMeteorDescriptor();
