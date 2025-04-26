@@ -110,7 +110,7 @@ public final class CardRoundState extends State {
     public void onComplete() {
         // If all the cards has been played, we go to EndGameState
         if (this.round == this.deck.size()) {
-            this.model.setCurrentState(new EndGameState(model));
+            this.model.setCurrentState(new EndGameState(model, null));
         }
     }
 

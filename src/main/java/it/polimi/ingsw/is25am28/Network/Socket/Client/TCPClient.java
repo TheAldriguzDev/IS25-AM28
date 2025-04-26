@@ -6,7 +6,9 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
@@ -141,7 +143,7 @@ public class TCPClient implements VirtualViewSocket {
 
         CompletableFuture<Void> future;
 
-        if (state instanceof ConstructionComponentDTO || state instanceof PlacedComponentDTO || state instanceof TimerDTO) {
+        if (state instanceof ConstructionComponentDTO || state instanceof PlacedComponentDTO || state instanceof TimerDTO || state instanceof EndGameDTO || state instanceof InsufficientPlayerDTO) {
             // If we have a State that gives only updates --> Execute it first
             future = CompletableFuture.runAsync(() -> {
                 try {

@@ -8,12 +8,21 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import java.util.*;
 
 public final class EndGameState extends State {
+    private final String winner;
+    // Associate the player with his totalCredits
     private final Map<String, Integer> playersResult;
+
     private final Map<String, Integer> playersPositionResult;
     private final int levelMultiplier;
 
-    public EndGameState(GameModel model) {
+    /**
+     * @param model is the ref to the GameModel
+     * @param winner is the winner of the game --> will be null or empty in the normal game flow, instead it will be
+     *               the player nickname when the state is created from the InsufficientPlayerState
+     * */
+    public EndGameState(GameModel model, String winner) {
         super(model);
+        this.winner = winner;
         this.playersResult = new HashMap<>();
         this.playersPositionResult = new HashMap<>();
 
@@ -84,9 +93,15 @@ public final class EndGameState extends State {
 
     @Override
     public StateDTO generateState() {
-        return new EndGameDTO()
+        EndGameDTO state =  new EndGameDTO()
                 .setPlayersCredits(this.playersResult)
                 .setPlayersPositionResult(this.playersPositionResult);
+
+        if (this.winner != null && !this.winner.isEmpty()) {
+            state.setWinner(this.winner);
+        }
+
+        return state;
     }
 
     @Override

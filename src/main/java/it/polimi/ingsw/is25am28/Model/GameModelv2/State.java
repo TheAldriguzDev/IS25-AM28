@@ -15,7 +15,7 @@ import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.util.List;
 
-public abstract sealed class State permits CardRoundState, CreateGameState, EndGameState, FixShipState, PopulateShipState, ShipContructionState, WaitPlayersState {
+public abstract sealed class State permits CardRoundState, CreateGameState, EndGameState, FixShipState, InsufficientPlayerState, PopulateShipState, ShipContructionState, WaitPlayersState {
     protected GameModel model;
 
     public State(GameModel model) {

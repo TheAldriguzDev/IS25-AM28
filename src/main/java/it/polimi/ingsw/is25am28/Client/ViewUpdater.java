@@ -7,6 +7,8 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
@@ -60,8 +62,11 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(ReconnectDTO state) throws Exception {
         System.out.println("Reconnect player to the game lessgooooo");
+
+        // TODO: IMPORTANT: RECREATE THE DATA BEFORE ACCEPTING THE STATE
         // TODO: --> Recreate the board | Set the players with their information and resume the state
-        state.getCurrentState().accept(this);
+
+        // state.getCurrentState().accept(this);
     }
 
     @Override
@@ -149,6 +154,18 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(EndGameDTO state) {
+        System.out.println("END GAMEEEEEE");
+    }
+
+    // TODO: mark the given player as disconnected
+    @Override
+    public void visit(DisconnectedPlayerDTO state) {
+
+    }
+
+    // TODO: Make the transition to the page where no players are connected --> we are waiting for reconnection
+    @Override
+    public void visit(InsufficientPlayerDTO state) {
 
     }
 

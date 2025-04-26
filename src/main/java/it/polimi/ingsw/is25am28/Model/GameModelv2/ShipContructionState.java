@@ -345,12 +345,9 @@ public final class ShipContructionState extends State implements TimerObserver {
             Answer answer = new Answer()
                     .setState(state);
 
-            for (VirtualView clientView : this.model.getVirtualViews().values()) {
-                try {
-                    clientView.updateState(answer);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+            // TODO: Understand if this is the correct solution to update the client about the timer end
+            if (this.model.getCurrentState().equals(this)) {
+                this.model.broadCastUpdate(answer);
             }
         }
     }

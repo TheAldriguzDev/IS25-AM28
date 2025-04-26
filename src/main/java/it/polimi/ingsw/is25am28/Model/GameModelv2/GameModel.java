@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
@@ -19,6 +20,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.*;
@@ -64,17 +66,30 @@ public class GameModel {
     }
 
     /**
-     * @return true if the given player exist. It will set the player connection set to false
+     * @return a list of StateDTO where:
+     * 1. The first state represent the response to the client disconnection, so it will be a DisconnectedPlayerDTO
+     * 2. If there is only one player left, then the game will be in the InsufficientPlayerState, so we add this state
+     *     to the response
      * */
-    public boolean disconnectClient(String nickname) {
+    public List<StateDTO> disconnectClient(String nickname) throws IllegalArgumentException{
         Player p = this.players.get(nickname);
         if (p == null) {
-            return false;
+            throw new IllegalArgumentException("The given player cannot be disconnected since it doesn't exist");
         }
 
+        // Set the player connection to false
         p.setConnected(false);
 
-        return true;
+        List<StateDTO> states = new ArrayList<>();
+        states.add(new DisconnectedPlayerDTO().setNickname(nickname));
+
+        List<Player> connectedPlayers = this.players.values().stream().filter(Player::isConnected).toList();
+        if (connectedPlayers.size() == 1) {
+            this.setCurrentState(new InsufficientPlayerState(this, this.currentState));
+            states.add(this.currentState.generateState());
+        }
+
+        return states;
     }
 
     /**
@@ -88,9 +103,12 @@ public class GameModel {
     }
 
     /**
-     * @return the DTO needed to resume the game
+     * @return a list of DTO containing useful information about:
+     * 1. The response to a client reconnection --> will be used from the reconnected player to resume the game
+     *     and from other players to set the player as connected
+     * 2. If we had a state transition from InsufficientPlayerState to any other state, the new state will be added to the response
      * */
-    public ReconnectDTO reconnectClient(String nickname, VirtualView clientView) throws Exception {
+    public List<StateDTO> reconnectClient(String nickname, VirtualView clientView) throws Exception {
         if (!this.getDisconnectedPlayers().contains(nickname)) {
             throw new IllegalArgumentException("The given nickname does not exist in the disconnected players");
         }
@@ -99,15 +117,16 @@ public class GameModel {
         if (p == null) {
             throw new IllegalArgumentException("The given nickname does not exist");
         }
-
         p.setConnected(true);
         this.playeVirtualViews.put(nickname, clientView);
 
-        // Get the current information that the client needs to resume the game
-        ReconnectDTO state = new ReconnectDTO();
+        List<StateDTO> states = new ArrayList<>();
 
-        // Board information
-        state.setBoard(this.board.generateState());
+        // ===== RECONNECT DTO INFO ===== //
+        // Get the current information that the client needs to resume the game
+        ReconnectDTO state = new ReconnectDTO()
+                .setTargetNickname(nickname);
+        state.setBoard(this.board.generateState()); // Board information
 
         // Players information
         List<PlayerJSON> playerInfo = new ArrayList<>();
@@ -117,7 +136,21 @@ public class GameModel {
         state.setPlayers(playerInfo);
         state.setCurrentState(this.currentState.generateState());
 
-        return state;
+        states.add(state);
+
+        // Check if the current state is InsufficientPlayerState
+        State prev = this.currentState;
+        if (this.currentState instanceof InsufficientPlayerState) {
+            this.currentState.onComplete(); // Try to make the state transition --> if two players are
+                                            // connected the game will resume
+        }
+
+        // If we had a state updated, then we need to generate the state to resume the game
+        if (!prev.equals(this.currentState)) {
+            states.add(this.currentState.generateState());
+        }
+
+        return states;
     }
 
     /**
@@ -362,13 +395,6 @@ public class GameModel {
         return states;
     }
 
-    /**
-     * If the current state is WaitingForPlayers, then the controller will be able to accept new players
-     * */
-    public boolean isReadyForNewPlayers() {
-        return Objects.requireNonNull(this.currentState) instanceof WaitPlayersState;
-    }
-
 
     // ========================================
     // PACKAGE PRIVATE METHODS --> used by the states
@@ -468,5 +494,20 @@ public class GameModel {
      * */
     Map<String, VirtualView> getVirtualViews() {
         return new HashMap<>(this.playeVirtualViews);
+    }
+
+    /**
+     * Method used by the states to update the clients on certain events
+     * */
+    void broadCastUpdate(Answer answer) {
+        for (Map.Entry<String, VirtualView> entry : this.playeVirtualViews.entrySet()) {
+            if (this.players.get(entry.getKey()).isConnected()) {
+                try {
+                    entry.getValue().updateState(answer);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
     }
 }

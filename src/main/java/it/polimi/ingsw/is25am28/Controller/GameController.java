@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Controller;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
@@ -55,14 +56,13 @@ public class GameController {
     /**
      * Marks the given player as not connected
      * */
-    public void disconnectClient(String nickname) {
+    public List<StateDTO> disconnectClient(String nickname) {
         synchronized (this.model) {
-            this.model.disconnectClient(nickname);
+            return this.model.disconnectClient(nickname);
         }
     }
 
-    // TODO: THIS METHOD SHOULD RETURN THE STATE THAT THE CLIENT NEEDS TO CONFIGURE THE GAME SINCE HE LEFT IT
-    public ReconnectDTO reconnectClient(String nickname, VirtualView clientView) throws Exception {
+    public List<StateDTO> reconnectClient(String nickname, VirtualView clientView) throws Exception {
         synchronized (this.model) {
             return this.model.reconnectClient(nickname, clientView);
         }

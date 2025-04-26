@@ -6,19 +6,34 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.util.Map;
+import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class EndGameDTO extends StateDTO {
+    private String winner;
     private Map<String, Integer> playersCredits;
     private Map<String, Integer> playersPositionResult;
 
     public EndGameDTO() {}
 
     public EndGameDTO(
+            @JsonProperty("winner") String winner,
             @JsonProperty("playersCredits") Map<String, Integer> playersCredits,
             @JsonProperty("playersPositionResult") Map<String, Integer> playersPositionResult ) {
         this.playersCredits = playersCredits;
         this.playersPositionResult = playersPositionResult;
+        this.winner = winner;
+    }
+
+    @JsonGetter("winner")
+    public String getWinner() {
+        return winner;
+    }
+
+    @JsonSetter("winner")
+    public EndGameDTO setWinner(String winner) {
+        this.winner = winner;
+        return this;
     }
 
     @JsonGetter("playersCredits")

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Network.Server;
 
 import it.polimi.ingsw.is25am28.Controller.GameController;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +25,9 @@ public class GameInstance {
 
     private final Map<String, VirtualView> connectedClients;
 
+    private final List<VirtualView> disconnectedClients;
+    private final Object virtualClientLock;
+
     // This flag will indicate if the game accept new clients connection
     private boolean canBeJoined;
 
@@ -33,6 +38,8 @@ public class GameInstance {
     public GameInstance(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers, VirtualView virtualClient) throws Exception {
         this.controller = new GameController();
         this.connectedClients = new HashMap<>();
+        this.disconnectedClients = new ArrayList<>();
+        this.virtualClientLock = new Object();
         this.canBeJoined = false;
         this.totalPlayers = totalPlayers;
         this.level = gameLevel;
@@ -75,7 +82,7 @@ public class GameInstance {
                 .setPlayerNickname(playerNickname)
                 .setNextState(state);
 
-        synchronized (this.connectedClients) {
+        synchronized (this.virtualClientLock) {
             this.connectedClients.put(playerNickname, virtualClient);
 
             // Broadcast the state to all the connected clients (should be only to the leader)
@@ -106,7 +113,7 @@ public class GameInstance {
             answer.setNextState(states.get(1));
         }
 
-        synchronized (this.connectedClients) {
+        synchronized (this.virtualClientLock) {
             this.connectedClients.put(playerNickname, virtualClient);
 
             // Broadcast the state to the clients
@@ -184,10 +191,13 @@ public class GameInstance {
      * Method used to broadcast any server Answer to the clients
      * */
     private void broadCastUpdate(Answer answer) throws Exception {
-        synchronized (this.connectedClients) {
+        synchronized (this.virtualClientLock) {
             // Broadcast the state to the clients
+
             for (VirtualView client : this.connectedClients.values()) {
-                client.updateState(answer);
+                if (!this.disconnectedClients.contains(client)) {
+                    client.updateState(answer);
+                }
             }
         }
     }
@@ -200,21 +210,42 @@ public class GameInstance {
         return this.controller.getDisconnectedPlayers();
     }
 
-    public void disconnectClient(String playerNickname) {
-        this.controller.disconnectClient(playerNickname);
+    public void disconnectClient(String playerNickname) throws Exception {
+        List<StateDTO> state = this.controller.disconnectClient(playerNickname);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(playerNickname)
+                .setState(state.getFirst());
+
+        // If the game switched to the InsufficientPlayerState
+        if (state.size() > 1) {
+            answer.setNextState(state.get(1));
+        }
+
+        synchronized (this.virtualClientLock) {
+            this.disconnectedClients.add(this.connectedClients.get(playerNickname));
+        }
+
+        this.broadCastUpdate(answer);
     }
 
     public void reconnectClient(String playerNickname, VirtualView virtualClient) throws Exception {
         // Update the client VirtualView
-        synchronized (this.connectedClients) {
+        synchronized (this.virtualClientLock) {
+            this.disconnectedClients.remove(this.connectedClients.get(playerNickname));
             this.connectedClients.put(playerNickname, virtualClient);
         }
 
         // Update the client with the state to resume the game
-        ReconnectDTO reconnectState = this.controller.reconnectClient(playerNickname, virtualClient);
+        List<StateDTO> reconnectState = this.controller.reconnectClient(playerNickname, virtualClient);
+
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)
-                .setState(reconnectState);
+                .setState(reconnectState.getFirst());
+
+        if (reconnectState.size() > 1) {
+            answer.setNextState(reconnectState.get(1));
+        }
 
         virtualClient.updateState(answer);
     }

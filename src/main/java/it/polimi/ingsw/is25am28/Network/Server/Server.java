@@ -303,7 +303,12 @@ public class Server {
                             // Disconnect the player from the game
                             if (game != null) {
                                 pingHelper.setConnected(false);
-                                game.disconnectClient(pingHelper.getNickname());
+                                try {
+                                    game.disconnectClient(pingHelper.getNickname());
+                                } catch (Exception e) {
+                                    ServerLogger.error("ROUTER", String.valueOf(gameID), "An error occurred while disconnecting the client: " + e.getMessage());
+                                }
+
                                 ServerLogger.warn("ROUTER", String.valueOf(gameID), "Client " + pingHelper.getNickname() + " has been disconnected");
                             }
                         }

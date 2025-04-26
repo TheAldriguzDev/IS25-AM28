@@ -16,6 +16,7 @@ import java.util.List;
  * */
 
 public final class ReconnectDTO extends StateDTO {
+    private String targetNickname;
     private List<PlayerJSON> players;
     private BoardJSON board;
     private StateDTO currentState;
@@ -23,13 +24,26 @@ public final class ReconnectDTO extends StateDTO {
     public ReconnectDTO() {}
 
     public ReconnectDTO(
+            @JsonProperty("targetNickname") String targetNickname,
             @JsonProperty("players") List<PlayerJSON> players,
             @JsonProperty("board") BoardJSON board,
             @JsonProperty("currentState") StateDTO currentState
     ) {
+        this.targetNickname = targetNickname;
         this.players = players;
         this.board = board;
         this.currentState = currentState;
+    }
+
+    @JsonGetter("targetNickname")
+    public String getTargetNickname() {
+        return targetNickname;
+    }
+
+    @JsonSetter("targetNickname")
+    public ReconnectDTO setTargetNickname(String targetNickname) {
+        this.targetNickname = targetNickname;
+        return this;
     }
 
     @JsonGetter("players")

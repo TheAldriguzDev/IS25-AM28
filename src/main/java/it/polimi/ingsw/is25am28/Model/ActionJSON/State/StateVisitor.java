@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 
 public interface StateVisitor {
@@ -17,4 +19,7 @@ public interface StateVisitor {
     void visit (PopulateShipDTO state);
     void visit (CardRoundDTO state);
     void visit (EndGameDTO state);
+
+    void visit (DisconnectedPlayerDTO state);
+    void visit (InsufficientPlayerDTO state);
 }
