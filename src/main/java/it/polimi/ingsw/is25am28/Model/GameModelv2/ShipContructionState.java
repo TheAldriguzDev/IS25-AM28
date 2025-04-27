@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.FileLoader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 import it.polimi.ingsw.is25am28.Timer.HourGlass;
@@ -218,10 +219,16 @@ public final class ShipContructionState extends State implements TimerObserver {
             throw new IllegalStateException("The player " + player + " does not exist");
         }
 
+        Ship ship = p.getShip();
+
+        if (ship.getComponent(i, j) != null) {
+            throw new IllegalStateException("The given coordinates have already stored a component");
+        }
+
         // Get the component, set the rotation and add it to the player ship
         Component baseComp = all_components.get(componentID);
         baseComp.setRotation(rotation);
-        p.getShip().addComponent(baseComp, i, j);
+        ship.addComponent(baseComp, i, j);
 
         PlacedComponentDTO state =  new PlacedComponentDTO()
                 .setPlayerNickname(player)

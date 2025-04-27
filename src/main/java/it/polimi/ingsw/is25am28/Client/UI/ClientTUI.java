@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCompone
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -358,6 +359,11 @@ public class ClientTUI implements ClientUI {
         }
     }
 
+    @Override
+    public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
+
+    }
+
     private void displayShipConstructionComponents() throws Exception {
         List<ClientComponent> reservedComponents = List.of();
         try {
@@ -647,5 +653,10 @@ public class ClientTUI implements ClientUI {
                 System.out.println(error.getError());
             }
         }
+    }
+
+    @Override
+    public boolean isCTXAvailable() {
+        return this.currCommand != null;
     }
 }

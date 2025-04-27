@@ -1,0 +1,78 @@
+package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
+
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
+import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
+import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
+
+public class Screen implements ClientUI {
+    protected final ClientModel model;
+    protected InputThread inputThread;
+    protected VirtualView client;
+    protected CommandCTX ctx;
+
+    public Screen(ClientModel model, InputThread inputThread) {
+        this.model = model;
+        this.inputThread = inputThread;
+    }
+
+    @Override
+    public void setVirtualClient(VirtualView client) {
+        this.client = client;
+    }
+
+    @Override
+    public void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws Exception {
+        throw new UnsupportedOperationException("The 'showLobbies' is not supported in the " + this + "screen");
+    }
+
+    @Override
+    public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
+        throw new UnsupportedOperationException("The 'showWaitingForPlayers' is not supported in the " + this + "screen");
+    }
+
+    @Override
+    public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
+        throw new UnsupportedOperationException("The 'showShipConstruction' is not supported in the " + this + "screen");
+    }
+
+    @Override
+    public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
+        throw new UnsupportedOperationException("The 'showInsufficientPlayer' is not supported in the " + this + "screen");
+    }
+
+    @Override
+    public void commitCommand(String playerNickname) {
+        if (this.ctx != null && playerNickname.equals(this.model.getNickname())) {
+            this.ctx.handleSuccess();
+        }
+    }
+
+    @Override
+    public void showError(ErrorAnswer error) {
+        // TODO: Clear terminal
+        if (this.ctx != null) {
+            this.ctx.handleError(error.getError());
+        } else {
+            System.out.println(error.getError());
+        }
+    }
+
+    @Override
+    public boolean isCTXAvailable() {
+        return this.ctx != null;
+    }
+
+    /**
+     * This method will be used to stop the input thread
+     * */
+    public void forceStopScreen() {
+        this.inputThread.interruptInputReader();
+    }
+}

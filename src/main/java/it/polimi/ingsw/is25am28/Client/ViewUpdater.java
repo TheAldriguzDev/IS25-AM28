@@ -34,6 +34,8 @@ public class ViewUpdater implements StateVisitor {
     public ViewUpdater(ClientUI ui, ClientModel model) {
         this.ui = ui;
         this.model = model;
+
+
     }
 
     @Override
@@ -160,18 +162,22 @@ public class ViewUpdater implements StateVisitor {
     // TODO: mark the given player as disconnected
     @Override
     public void visit(DisconnectedPlayerDTO state) {
-
+        System.out.println("disconnected player updated");
     }
 
     // TODO: Make the transition to the page where no players are connected --> we are waiting for reconnection
     @Override
     public void visit(InsufficientPlayerDTO state) {
-
+        this.ui.showInsufficientPlayer(state);
     }
 
     // TODO Change from String message to ErrorDTO
     public void reportError(String message) {
         this.ui.showError(new ErrorAnswer(message));
+    }
+
+    public boolean isCTXAvailable() {
+        return this.ui.isCTXAvailable();
     }
 
     public void commitCommand(String playerNickname) {

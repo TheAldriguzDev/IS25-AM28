@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
@@ -503,5 +504,15 @@ public final class GameMenuTUIPage extends TUIPage {
                 this.waitingForPlayersWidget.wrapWidgetWithBorder().printWidget();
             }
         }
+    }
+
+    @Override
+    public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
+
+    }
+
+    @Override
+    public boolean isCTXAvailable() {
+        return false;
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.UI;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -16,6 +17,10 @@ public interface ClientUI {
     void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers);
     void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception;
 
+    void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer);
+
     void commitCommand(String playerNickname);
     void showError(ErrorAnswer error);
+
+    boolean isCTXAvailable();
 }

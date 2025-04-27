@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCompone
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Network.Messages.DeselectTile;
 import it.polimi.ingsw.is25am28.Network.Messages.SelectTile;
@@ -988,5 +989,15 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
         // Then, ask the user for a command
         this.getComponentSelectionCommand();
+    }
+
+    @Override
+    public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
+
+    }
+
+    @Override
+    public boolean isCTXAvailable() {
+        return false;
     }
 }

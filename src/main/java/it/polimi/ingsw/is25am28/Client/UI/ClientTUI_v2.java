@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Client.UI;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -191,6 +192,11 @@ public class ClientTUI_v2 implements ClientUI {
         this.currPage.showShipConstruction(shipConstruction);
     }
 
+    @Override
+    public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
+
+    }
+
     // TODO: Add the other methods in the game
 
     /**
@@ -208,6 +214,11 @@ public class ClientTUI_v2 implements ClientUI {
                 System.out.println(error.getError());
             }
         }
+    }
+
+    @Override
+    public boolean isCTXAvailable() {
+        return this.currCommand != null;
     }
 
     /**
