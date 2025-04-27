@@ -14,7 +14,7 @@ import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.DEFAULT_WRONG_METH
 
 public abstract sealed class TUIPage implements ClientUI permits GameMenuTUIPage, ShipConstructionTUIPage {
     public static final String UNKNOWN_COMMAND_ERROR = PrintUtils.addColor("ERROR: Selected command does not exist",ANSIColors.RED);
-    public static final String DEFAULT_INPUT_PREFIX = "Select an option: ";
+    public static final String DEFAULT_COMMAND_PREFIX = "Select an option: ";
 
     protected ClientTUI_v2 clientTUI;
 

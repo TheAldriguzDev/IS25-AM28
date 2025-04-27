@@ -160,6 +160,7 @@ public class OpenSpace extends EventCard {
             cardState.setPlayersBatteries(playersBatteries);
 
         } else {
+            cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
             cardState.setCardLevel(this.cardLevel);
         }

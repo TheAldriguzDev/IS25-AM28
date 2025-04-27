@@ -152,6 +152,7 @@ public class AbandonedStation extends EventCard {
             }
         } else {
             // Card information that are needed to play
+            cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
             cardState.setCardLevel(this.cardLevel);
             cardState.setRequiredCrewMembers(this.requiredCrew);

@@ -188,6 +188,7 @@ public class Slavers extends EventCard {
                 slaversStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
         } else {
+            slaversStateJSON.setId(this.id);
             slaversStateJSON.setCardName(this.getCardName());
             slaversStateJSON.setCardLevel(this.getCardLevel());
             slaversStateJSON.setRequiredFirepower(requiredFirepower);

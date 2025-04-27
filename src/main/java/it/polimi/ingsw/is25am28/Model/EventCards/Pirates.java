@@ -341,6 +341,7 @@ public class Pirates extends EventCard {
             }
         } else {
             // This static info will be sent to the clients only when the card has not been activated yet
+            piratesStateJSON.setId(this.id);
             piratesStateJSON.setCardName(getCardName());
             piratesStateJSON.setCardLevel(getCardLevel());
             piratesStateJSON.setRequiredFirepower(this.requiredFirepower);

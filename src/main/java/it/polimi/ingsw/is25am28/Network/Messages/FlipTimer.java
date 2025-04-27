@@ -6,6 +6,12 @@ import java.util.List;
 public final class FlipTimer implements Message {
     private String playerNickname;
 
+    public FlipTimer() {}
+
+    public FlipTimer(String playerNickname) {
+        this.playerNickname = playerNickname;
+    }
+
     public String getPlayerNickname() {
         return playerNickname;
     }

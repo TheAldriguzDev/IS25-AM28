@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.TUI;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
@@ -10,15 +9,18 @@ import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
 import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 import it.polimi.ingsw.is25am28.Network.Messages.Reconnect;
+import it.polimi.ingsw.is25am28.Network.Messages.RefreshGames;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.*;
 
@@ -126,6 +128,21 @@ public final class GameMenuTUIPage extends TUIPage {
             menuCommand.appendString("Reconnect to an existing game");
             this.menuCommandsWidget.addCommand(menuCommand);
 
+            // (4) - Refresh available games
+            menuCommand = new CommandWidgetTUI(
+              "f",
+                () -> {
+                    try {
+                        this.refreshGames();
+                    }
+                    catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            );
+            menuCommand.appendString("Refresh Games");
+            this.menuCommandsWidget.addCommand(menuCommand);
+
             // (-1) - Quit game
             menuCommand = new CommandWidgetTUI(
                 "q",
@@ -172,6 +189,14 @@ public final class GameMenuTUIPage extends TUIPage {
             gameListCommand.appendString("GameId=" + game.getId() + " (level=" + game.getLevel() + ", players=" + game.getActualPlayers() + "/" + game.getTotalPlayers() + ")");
             this.gameListInputWidget.addCommand(gameListCommand);
         }
+    }
+
+    /**
+     * Refreshes the available games shown in the games list
+     */
+    private void refreshGames() throws Exception {
+        System.out.println("Refreshing available games...");
+        this.clientTUI.getVirtualView().sendMessage(new RefreshGames());
     }
 
     /**
@@ -406,7 +431,7 @@ public final class GameMenuTUIPage extends TUIPage {
                 System.out.println();
                 System.out.println("Available menu commands:");
 
-                existingCommandSelected = this.menuCommandsWidget.selectCommand(DEFAULT_INPUT_PREFIX);
+                existingCommandSelected = this.menuCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
 
                 if (!existingCommandSelected) {
                     System.out.println(UNKNOWN_COMMAND_ERROR);
@@ -427,10 +452,7 @@ public final class GameMenuTUIPage extends TUIPage {
                 System.out.println();
                 System.out.println("Currently Available Games:");
 
-                // Clearing the terminal before showing all the available games
-                clearTerminal();
-
-                existingCommandSelected = this.gameListInputWidget.selectCommand(DEFAULT_INPUT_PREFIX);
+                existingCommandSelected = this.gameListInputWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
 
                 if (!existingCommandSelected) {
                     System.out.println(UNKNOWN_COMMAND_ERROR);
@@ -445,18 +467,25 @@ public final class GameMenuTUIPage extends TUIPage {
      */
     @Override
     public void showLobbies(AvailableGamesDTO availableGamesDTO, boolean isFirstAccess) {
-        // Storing the available games to later show them, thus
-        // storing the update for later
-        this.availableGamesDTO = availableGamesDTO;
+        synchronized (this.clientTUI.getIoLock()) {
+            // Storing the available games to later show them, thus
+            // storing the update for later
+            this.availableGamesDTO = availableGamesDTO;
 
-        // Refresh all available games by recreating all the
-        // game selection commands inside this gameListInputWidget
-        this.updateGameListWidget();
+            // Refresh all available games by recreating all the
+            // game selection commands inside this gameListInputWidget
+            this.updateGameListWidget();
 
-        // Finally, show the GameMenuTUIPage to the player
-        System.out.println("\nWelcome to...\n");
-        printTitle();
-        this.getMenuCommand();
+            if (isFirstAccess) {
+                // Show the GameMenuTUIPage to the player on first access
+                clearTerminal();
+                System.out.println("\nWelcome to...\n");
+                printTitle();
+            }
+
+            // Show the game menu commands
+            this.getMenuCommand();
+        }
     }
 
     /**

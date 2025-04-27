@@ -2,7 +2,10 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Components.*;
+import it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -13,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class EventCard {
+    protected final int id;
     protected String name;
     protected int cardLevel;
     protected List<Player> players;
@@ -26,12 +30,34 @@ public abstract class EventCard {
      * General constructor shared between the classes
      * */
     protected EventCard(String name, int cardLevel, Board board) {
+        this.id = this.getId();
         this.name = name;
         this.cardLevel = cardLevel;
         this.board = board;
         this.hasBeenUsed = false;
         this.currentPlayer = Optional.empty();
         this.hasBeenActivated = false;
+    }
+
+    /**
+     * @return This event card's unique identifier
+     */
+    public int getId(){
+        switch (this){
+            case AbandonedShip _:       return 0;
+            case AbandonedStation _:    return 1;
+            case Epidemy _:             return 2;
+            case MeteorShower _:        return 3;
+            case OpenSpace _:           return 4;
+            case Pirates _:             return 5;
+            case Slavers _:             return 6;
+            case Smugglers _:           return 7;
+            case Stardust _:            return 8;
+            case VisitPlanets _:        return 9;
+            case WarZone _:             return 10;
+            default:
+                throw new IllegalStateException("ERROR: Unexpected EventCard instance \"" + this +  "\"");
+        }
     }
 
     /**
