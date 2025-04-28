@@ -2,7 +2,6 @@ package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.util.*;
@@ -81,5 +80,13 @@ public class ClientModel {
      */
     public List<String> getAllPlayersNicknames() {
         return this.players.keySet().stream().toList();
+    }
+
+
+    /**
+    * @return Returns the clientPlayers map(nickname, data)
+    * */
+    public Map<String, ClientPlayer> getAllClientPlayers() {
+        return players;
     }
 }
