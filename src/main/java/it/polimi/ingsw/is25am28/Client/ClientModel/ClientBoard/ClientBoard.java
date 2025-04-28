@@ -1,11 +1,9 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.Board.Cell;
-import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
@@ -16,54 +14,58 @@ import java.util.*;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientBoard {
-    private int size;
-    private int level;
+    private final int size;
+    private final int level;
 //    private List<String> playerNicknames;
-    private List<String> eliminatedPlayerNicknames;
-    private Map<String, Integer> currPlayersPositions;
+    private List<ClientPlayer> eliminatedPlayers;
+    //private Map<String, Integer> currPlayersPositions;
 
-    private final List<ClientPlayer> players;
-    private final List<ClientPlayer> eliminatedPlayers;
+    //private final List<ClientPlayer> eliminatedPlayers;
 
-    public ClientBoard(BoardJSON BoardJSON) {
+    private final Map<String, ClientPlayer> players;
+
+
+
+    public ClientBoard(BoardJSON BoardJSON, ClientModel clientModel) {
         this.size = BoardJSON.getSize();
         this.level = BoardJSON.getLevel();
-        this.currPlayersPositions = BoardJSON.getCurrPlayerPositions();
-        this.players = new ArrayList<>();
+        //this.currPlayersPositions = BoardJSON.getStartingPlayerPositions();
+        this.players = clientModel.getAllClientPlayers();
         this.eliminatedPlayers = new ArrayList<>();
-    }
-
-    public void newClientPlayer(ClientPlayer newPlayer) {
-        this.players.add(newPlayer);
+        // Setting the starting players' positions
+        for (String playerNickName : BoardJSON.getStartingPlayerPositions().keySet()) {
+            this.players.get(playerNickName).setCursor(BoardJSON.getStartingPlayerPositions().get(playerNickName));
+        }
     }
 
     public void updateBoard(CardStateJSON cardState) {
         // If a player's position has been changed we need to set it again
         if (cardState.getNeedsUpdatedPositions()) {
-            for (ClientPlayer player : players) {
-                if (cardState.getUpdatedPositions().containsKey(player.getNickname())) {
-                    player.setCursor(cardState.getUpdatedPositions().get(player.getNickname()));
-                }
+            for (String playerNickname : cardState.getUpdatedPositions().keySet()) {
+                this.players.get(playerNickname).setCursor(cardState.getUpdatedPositions().get(playerNickname));
             }
         }
-        // If a player has been eliminated we need to remove him from the player's list, and to add him to the eliminatedPlayers list
+        // If a player has been eliminated we need to remove him from the player's list, and add him to the eliminatedPlayers list
         if (cardState.getNeedsUpdatedEliminatedPlayers()) {
-            for (ClientPlayer player : players) {
-                if (cardState.getEliminatedPlayers().contains(player.getNickname())) {
-                    eliminatedPlayers.add(player);
-                    players.remove(player);
-                }
+            for (String playerNickname : cardState.getEliminatedPlayers()) {
+                this.eliminatedPlayers.add(players.get(playerNickname));
+                this.players.remove(playerNickname);
             }
         }
     }
 
-    public int getLevel() { return this.level; }
 
-    public List<ClientPlayer> getPlayers() { return this.players; }
+
+
+    public int getLevel() { return this.level; }
 
     public List<ClientPlayer> getEliminatedPlayers() { return this.eliminatedPlayers; }
 
     public int getSize() { return this.size; }
+
+    public List<ClientPlayer> getPlayers() {
+        return this.players.values().stream().toList();
+    }
 
 //    public Cell getHead() { return this.head; }
 
@@ -90,12 +92,12 @@ public class ClientBoard {
 
         // Initializations
         boardInfoWidget = new WidgetTUI();
-        placements = new ArrayList<String>();
+        placements = new ArrayList<>();
 
         // Getting only the currently playing players (aka: active players)
-        activePlayers = new ArrayList<ClientPlayer>(this.getPlayers());
+        activePlayers = new ArrayList<>(this.getPlayers());
         activePlayers.removeAll(this.getEliminatedPlayers());
-        eliminatedPlayers = new ArrayList<ClientPlayer>(this.getEliminatedPlayers());
+        eliminatedPlayers = new ArrayList<>(this.getEliminatedPlayers());
 
         // Adding the placement strings
         placements.add("1st");
@@ -107,6 +109,9 @@ public class ClientBoard {
         // Adding the leaderboard
         boardInfoWidget.appendString("Leaderboard:");
         playerCount = activePlayers.size();
+
+        //Sorting the activePlayers list
+        activePlayers.sort(Comparator.comparingInt(ClientPlayer::getCursor).reversed());
 
         // Adding the placement for each active player
         for (int i = 0; i < playerCount; i++) {
@@ -155,9 +160,7 @@ public class ClientBoard {
         // Only create the widget if the board has been created
         if (this.getSize() > 0) {
             WidgetTUI boardWidget = new WidgetTUI();
-            List<WidgetTUI> widgetList = new ArrayList<WidgetTUI>();
-//            Optional<ClientPlayer> optionalPlayer;
-            String optionalClientPlayer;
+            List<WidgetTUI> widgetList = new ArrayList<>();
             StringBuilder boardLine;
 
             int height = 6;
@@ -174,52 +177,21 @@ public class ClientBoard {
 
             // Sets which blocks need to be colored
             Map<Integer, String> coloredCells = new HashMap<>();
-            for (ClientPlayer player : this.getPlayers()) {
-                if (currPlayersPositions.containsKey(player.getNickname())) {
-                    coloredCells.put(currPlayersPositions.get(player.getNickname()), player.getColor().getColorString());
-                }
+            for (ClientPlayer player : this.players.values()) {
+                coloredCells.put(player.getCursor(), player.getColor().getColorString());
+                //System.out.println("put color: " + player.getColor().getColorString() + "COLOR " + ANSIColors.RESET + "of player:" + player.getNickname() + " cursor: " + player.getCursor());
             }
 
 
-
-
-            for (int i = 0; i < this.getSize(); i++) {
-                for (int j = 0; j < this.getSize(); j++) {
+                for (int i = 0; i < this.getSize(); i++) {
                     if (coloredCells.containsKey(i)) {
                         allCells.add(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, coloredCells.get(i)));
+                        //System.out.println("Added cell number " + i + " COLOR " + ANSIColors.RESET);
                     } else {
                         allCells.add(UnicodeCharacters.FULL_BLOCK);
                     }
                 }
-            }
 
-//            // Getting all cells of the board
-//            do {
-//
-//                optionalClientPlayer = boardCells.get(currCellIndex);
-//
-//                if (optionalClientPlayer.isEmpty()) {
-//                    allCells.add(UnicodeCharacters.FULL_BLOCK);
-//                }
-//                else {
-//                    PlayerColor color = null;
-//                    for (ClientPlayer player : this.getPlayers()) {
-//                        if (player.getNickname().equals(optionalClientPlayer)) {
-//                            color = player.getColor();
-//                        }
-//                    }
-//                    allCells.add(
-//                            PrintUtils.addColor(
-//                                    UnicodeCharacters.FULL_BLOCK,
-//                                    color.getColorString()
-//                            )
-//                    );
-//                }
-//
-//
-//
-////                currCell = currCell.getNextCell();
-//            } while (currCellIndex < getSize());
 
             List<String> topSide = new ArrayList<>(allCells.subList(0, width));
             List<String> rightSide = new ArrayList<>(allCells.subList(width, width + height - 1));

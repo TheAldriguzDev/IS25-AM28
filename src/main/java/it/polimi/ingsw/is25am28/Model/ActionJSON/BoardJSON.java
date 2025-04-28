@@ -18,8 +18,8 @@ public class BoardJSON implements Serializable {
     private Cell boardHead;
     private List<String> playersNickname;
     private List<String> eliminatedPlayersNickname;
-    private Map<String, Integer> boardCells;
-    private Map<String, Integer> currPlayerPositions = new HashMap<>();
+    private Map<Integer, String> boardCells;
+    private Map<String, Integer> startingPlayerPositions = new HashMap<>();
 
 
 
@@ -39,19 +39,11 @@ public class BoardJSON implements Serializable {
     public BoardJSON(
             @JsonProperty("size") int size,
             @JsonProperty("level") int level,
-            //@JsonProperty("playerNickname") List<String> playerNickname,
-            @JsonProperty("eliminatedPlayersNickname") List<String> eliminatedPlayersNickname,
-            //@JsonProperty("boardCells") Map<Integer, String> boardCells
-            //@JsonProperty("head") Cell boardHead
-            @JsonProperty("currPlayerPositions") Map<String, Integer> currPlayerPositions
+            @JsonProperty("startingPlayerPositions") Map<String, Integer> startingPlayerPositions
     ) {
         this.size = size;
         this.level = level;
-        //this.playersNickname = playerNickname;
-        this.eliminatedPlayersNickname = eliminatedPlayersNickname;
-        //this.boardCells = boardCells;
-        this.currPlayerPositions = currPlayerPositions;
-        //this.boardHead = boardHead;
+        this.startingPlayerPositions = startingPlayerPositions;
     }
 
 //    public static BoardJSON fromBoard(Board board) {
@@ -94,7 +86,6 @@ public class BoardJSON implements Serializable {
         return new BoardJSON(
                 board.getSize(),
                 board.getLevel(),
-                eliminatedPlayersNickname,
                 currPlayerPositions
         );
     }
@@ -129,8 +120,8 @@ public class BoardJSON implements Serializable {
         return boardHead;
     }
 
-    @JsonGetter("currPlayersPositions")
-    public Map<String, Integer> getCurrPlayerPositions() {
-        return boardCells;
+    @JsonGetter("startingPlayersPositions")
+    public Map<String, Integer> getStartingPlayerPositions() {
+        return startingPlayerPositions;
     }
 }

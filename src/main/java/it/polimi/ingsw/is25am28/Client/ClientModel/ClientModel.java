@@ -118,4 +118,12 @@ public class ClientModel {
             throw new IllegalArgumentException("ERROR: Given playerNickname is either empty or null");
         }
     }
+
+
+    /**
+    * @return Returns the clientPlayers map(nickname, data)
+    * */
+    public Map<String, ClientPlayer> getAllClientPlayers() {
+        return players;
+    }
 }
