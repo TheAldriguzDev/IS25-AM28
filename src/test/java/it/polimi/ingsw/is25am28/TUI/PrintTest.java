@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 
 import static it.polimi.ingsw.is25am28.Model.Connector.THREE_PIPES;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
@@ -1574,13 +1575,13 @@ public class PrintTest {
         InputStream stream = new ByteArrayInputStream(content.getBytes());
         inputWidget.setNewReader(stream);
 
-        assertTrue(inputWidget.selectCommand("Select a command: "));
+        assertTrue(inputWidget.selectCommand("Select an option: "));
 
         content = "-1";
         stream = new ByteArrayInputStream(content.getBytes());
         inputWidget.setNewReader(stream);
 
-        assertFalse(inputWidget.selectCommand("Select a command: "));
+        assertFalse(inputWidget.selectCommand("Select an option: "));
     }
 
     @Test
@@ -1670,7 +1671,8 @@ public class PrintTest {
         ).wrapWidgetWithBorder();
 
         tui.printWidget();
-        inputWidget.selectCommand("[SELECT_COMMAND] ID=");
+
+        inputWidget.selectCommand("Select an option: ");
     }
 
     @Test

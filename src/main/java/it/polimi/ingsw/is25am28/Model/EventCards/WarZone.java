@@ -679,6 +679,7 @@ public class WarZone extends EventCard {
         if (hasBeenActivated()) {
 
         } else {
+            cardState.setId(this.id);
             // Set the card name
             cardState.setCardName(this.getCardName());
             // Set the card level

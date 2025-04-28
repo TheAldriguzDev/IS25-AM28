@@ -113,6 +113,7 @@ public class Epidemy extends EventCard {
                 cardState.setLifeformsToRemove(null);
             }
         } else {
+            cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
             cardState.setCardLevel(this.cardLevel);
         }

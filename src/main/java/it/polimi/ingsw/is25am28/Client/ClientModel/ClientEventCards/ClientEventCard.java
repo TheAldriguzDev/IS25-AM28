@@ -7,14 +7,16 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 public abstract class ClientEventCard implements WidgetTUIGenerator {
     // TODO: need a flag in the majority of the serverEventCards for the sake of not sending the entire card's static information every time that a different player input is required
 
+    protected final int id;
     protected String playerNickname;
     protected String cardName;
     protected int cardLevel;
     protected boolean hasBeenUsed;
     protected boolean needsBoardUpdate;
-    protected boolean hasBeenActivated; // this flag allows the card to send its full static informations (like when only visualized at the start of the game) only when ita has not been used a single time wit useCard()
+    protected boolean hasBeenActivated; // this flag allows the card to send its full static information (like when only visualized at the start of the game) only when ita has not been used a single time wit useCard()
 
     public ClientEventCard(CardStateJSON cardState) {
+        this.id = cardState.getId();
         this.playerNickname = cardState.getPlayerNickname();
         this.cardName = cardState.getCardName();
         this.cardLevel = cardState.getCardLevel();

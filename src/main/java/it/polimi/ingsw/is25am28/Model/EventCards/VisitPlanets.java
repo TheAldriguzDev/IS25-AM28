@@ -331,6 +331,7 @@ public class VisitPlanets extends EventCard {
                 cardState.setChosenPlanetIndex(-1);
             }
         } else {
+            cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
             cardState.setCardLevel(this.getCardLevel());
             cardState.setCardIsUsable( !this.hasFinished());

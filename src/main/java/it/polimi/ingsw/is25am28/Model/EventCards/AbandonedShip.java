@@ -177,6 +177,7 @@ public class AbandonedShip extends EventCard {
             }
         } else {
             // Set the card information that are needed to play the game
+            cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
             cardState.setCardLevel(this.cardLevel);
             cardState.setRequiredCrewMembers(this.requiredCrew);

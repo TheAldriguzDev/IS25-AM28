@@ -5,16 +5,18 @@ import java.io.*;
 import java.util.*;
 
 public class InputWidgetTUI extends WidgetTUI {
+    public static int DEFAULT_GROUPING_FACTOR = 1;
+
     private Map<String, CommandWidgetTUI> commands;
-    private BufferedReader reader;
     private int commandsPerCol;
+    private BufferedReader reader;
 
     // Constructor
     public InputWidgetTUI() {
         super();
         this.commands = null;
+        this.commandsPerCol = DEFAULT_GROUPING_FACTOR;
         this.reader = null;
-        this.commandsPerCol = 1;
     }
 
     /**
@@ -83,20 +85,20 @@ public class InputWidgetTUI extends WidgetTUI {
     /**
      * Asks the user to input the ID of the command to run
      *
-     * @param prefixText What to show before asking the user for input
-     *
-     * @return TRUE if the user selected a command ID that matched a command among
-     *         the available ones, FALSE if the input command ID doesn't exist
-     *         (i.e.: no command is currently associated to it)
+     * @return A <code>Future</code> of <code>Boolean</code> that contains whether
+     *         the user input resulted in the selection of a command or not.
      */
-    public boolean selectCommand(String prefixText) {
+    public boolean selectCommand(String prefix) {
         CommandWidgetTUI commandWidget;
         String input;
 
         if (this.commands != null && !this.commands.isEmpty()) {
             this.printWidget();
 
-            if (prefixText != null) { System.out.print(prefixText); }
+            // Quick change of the prefix
+            if (prefix != null && !prefix.isEmpty()) {
+                System.out.print(prefix);
+            }
 
             try {
                 input = this.reader.readLine().trim();
@@ -109,10 +111,9 @@ public class InputWidgetTUI extends WidgetTUI {
                 else {
                     return false;
                 }
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 // If an exception is thrown, then signal to whoever is
-                // using this method that a command was not selected
+                // using this method that a command was not selected.
                 return false;
             }
         }

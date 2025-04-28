@@ -13,13 +13,14 @@ public class VisitPlanetsStateJSON extends CardStateJSON {
 
     @JsonCreator
     public VisitPlanetsStateJSON(
+            @JsonProperty("id") int id,
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
             @JsonProperty("isCardUsable") boolean isCardUsable,
             @JsonProperty("availablePlanets") Map<Integer, Map<ItemColor, Integer>> availablePlanets
     ) {
-        super(playerNickname, cardName, cardLevel, isCardUsable);
+        super(id, playerNickname, cardName, cardLevel, isCardUsable);
         this.availablePlanets = availablePlanets;
     }
 

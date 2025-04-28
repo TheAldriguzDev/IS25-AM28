@@ -76,7 +76,7 @@ public class ViewUpdater implements StateVisitor {
         // Set the model state to the ShipConstructionState that will initialize all the components
         synchronized (this.model) {
             try {
-                this.model.setState(new ClientShipConstructionState(this.model, state.getAllComponents()));
+                this.model.setState(new ClientShipConstructionState(this.model, state));
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
@@ -136,7 +136,21 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(TimerDTO state) throws Exception {
-        // TODO: Handle the timer information :)
+        if (state.getHasEnded()) {
+            // If this TimerDTO is the last one, then it means
+            // that the players must move from the ship construction
+            // phase to the ship fixing phase
+
+            // TODO
+        }
+        else {
+            // Sets the flag in the model's state to TRUE
+            // so that players are then shown a message
+            // saying that the timer can now be flipped
+            synchronized (this.model) {
+                this.model.getState().setIsTimeRunning(state);
+            }
+        }
     }
 
     @Override

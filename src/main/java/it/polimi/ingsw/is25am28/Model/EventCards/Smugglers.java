@@ -201,6 +201,7 @@ public class Smugglers extends EventCard {
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
         } else {
+            smugglersStateJSON.setId(this.id);
             smugglersStateJSON.setCardName(this.getCardName());
             smugglersStateJSON.setCardLevel(this.getCardLevel());
             smugglersStateJSON.setRequiredFirepower(requiredFirepower);

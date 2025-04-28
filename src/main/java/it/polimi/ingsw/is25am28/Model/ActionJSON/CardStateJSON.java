@@ -19,6 +19,7 @@ import java.util.ArrayList;
  * */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CardStateJSON extends ActionJSON {
+    private int id;
     private String cardName;
     private int cardLevel;
     private boolean isCardUsable;
@@ -269,16 +270,35 @@ public class CardStateJSON extends ActionJSON {
         this.isCardUsable = true;
     }
 
-    public CardStateJSON(@JsonProperty("playerNickname") String playerNickname,
-                         @JsonProperty("cardName") String cardName,
-                         @JsonProperty("cardLevel") int cardLevel,
-                         @JsonProperty("isCardUsable") boolean isCardUsable) {
+    public CardStateJSON(
+            @JsonProperty("id") int id,
+            @JsonProperty("playerNickname") String playerNickname,
+            @JsonProperty("cardName") String cardName,
+            @JsonProperty("cardLevel") int cardLevel,
+            @JsonProperty("isCardUsable") boolean isCardUsable
+    ) {
         super(playerNickname);
+        this.id = id;
         this.cardName = cardName;
         this.cardLevel = cardLevel;
         this.isCardUsable = isCardUsable;
     }
 
+    /**
+     * Returns the card's id
+     */
+    @JsonGetter("id")
+    public int getId() {
+        return this.id;
+    }
+
+    /**
+     * Sets the card's id
+     */
+    @JsonSetter("id")
+    public void setId(int id) {
+        this.id = id;
+    }
 
     /**
      * Returns the cardName
