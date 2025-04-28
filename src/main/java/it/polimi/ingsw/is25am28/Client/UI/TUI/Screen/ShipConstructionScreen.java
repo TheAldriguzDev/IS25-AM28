@@ -1,86 +1,133 @@
 package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ShipConstructionScreen extends Screen {
-    // TODO: added needed data
-    private Map<String, Runnable> cmds;
+    private WidgetTUI componentSelectionWidget;
+    private WidgetTUI componentSelectionCommandsWidget;
+
+    private WidgetTUI shipConstructionWidget;
+    private WidgetTUI shipConstructionCommandsWidget;
+
+    private WidgetTUI cardSubdeckWidget;
+    private WidgetTUI cardSubdeckCommandsWidget;
+
+    private WidgetTUI otherPlayerShipWidget;
+    private WidgetTUI otherPlayerShipCommandsWidget;
 
     public ShipConstructionScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
-        this.cmds = new HashMap<>();
-
-        cmds.put("Select tile", () -> {
-            try {
-                this.selectTile();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-    }
-
-    public void showShipConstruction(ShipConstructionDTO shipConstruction) throws InterruptedException {
-        System.out.println("Showing ship construction state --> TEST NEEDS TUI FIXES");
-
-        for (String cmd : cmds.keySet()) {
-            System.out.println(cmd);
-        }
-
-        String result;
-        do {
-            result = inputThread.waitForInput();
-            if (result == null) {
-                return;
-            }
-        } while (cmds.containsKey(result));
-
-        this.cmds.get(result).run();
-    }
-
-    private void selectTile() throws InterruptedException {
-        System.out.println("Selected tile cmd");
-        String result;
-        do {
-            result = inputThread.waitForInput();
-            if (result == null) {
-                return;
-            }
-        } while (cmds.containsKey(result));
-
     }
 
     /**
-     * @return the options available when the player can select a tile in the shipConstructionState
-     * */
-    private static List<String> getShipConstructionBaseOptions(List<ClientComponent> reservedComponents) {
-        List<String> options = new ArrayList<>();
+     * Initializes the widget containing all the commands
+     * available during the component selection menu
+     */
+    public void initComponentSelectionCommands() {
+        this.componentSelectionCommandsWidget = new WidgetTUI();
 
-        // If present, add the available games
-        for (ClientComponent comp : reservedComponents) {
-            options.add(
-                    "Select reserved tile - " + comp.getClass().getSimpleName()
-            );
-        }
+        this.componentSelectionCommandsWidget.appendString("(1) Select tile");
+        this.componentSelectionCommandsWidget.appendString("(2) Select reserved tile");
+        this.componentSelectionCommandsWidget.appendString("(3) Finish ship");
+        this.componentSelectionCommandsWidget.appendString("(4) Flip timer");
+        this.componentSelectionCommandsWidget.appendString("(5) Visualize sub-deck");
+        this.componentSelectionCommandsWidget.appendString("(6) Visualize other ships");
 
-        // Extra options
-        options.add("Select a new tile");
-        options.add("Show deck");
-        return options;
+        this.componentSelectionCommandsWidget.addPadding(0, 1, 0, 1);
+        this.componentSelectionCommandsWidget.wrapWidgetWithBorder();
     }
 
-}
+    /**
+     * Initializes the widget containing all the commands
+     * available during the ship construction menu
+     */
+    public void initShipConstructionCommands() {
+        WidgetTUI leftWidget = new WidgetTUI();
+        WidgetTUI rightWidget = new WidgetTUI();
 
-/*
-   | 1) XXXX
-*  | 2) nkdsldksl
-*  |
-*  |
-* */
+        leftWidget.appendString("(1) Deselect tile");
+        leftWidget.appendString("(2) Reserve tile");
+        leftWidget.addPadding(0, 1, 0, 0);
+
+        rightWidget.appendString("(3) Place selected tile");
+        rightWidget.appendString("(4) Rotate right");
+        rightWidget.addPadding(0, 1, 0, 0);
+
+        leftWidget =
+            WidgetTUI.composeTwoWidgetsHorizontally(
+                leftWidget, rightWidget
+            );
+
+        rightWidget = new WidgetTUI();
+        rightWidget.appendString("(5) Rotate left");
+        rightWidget.addPadding(0, 1, 0, 0);
+
+        leftWidget =
+            WidgetTUI.composeTwoWidgetsHorizontally(
+                    leftWidget, rightWidget
+            );
+
+        this.shipConstructionCommandsWidget = leftWidget;
+        this.shipConstructionCommandsWidget.addPadding(0, 0, 0, 1);
+        this.shipConstructionCommandsWidget.wrapWidgetWithBorder();
+    }
+
+    /**
+     * Initializes the widget containing all the available
+     * subdecks that a player can choose from
+     */
+    public void initCardSubdeckCommandsWidget() {
+        this.cardSubdeckCommandsWidget = new WidgetTUI();
+
+        this.cardSubdeckCommandsWidget.appendString("(1) Select deck #1");
+        this.cardSubdeckCommandsWidget.appendString("(2) Select deck #2");
+        this.cardSubdeckCommandsWidget.appendString("(3) Select deck #3");
+
+        this.cardSubdeckCommandsWidget.addPadding(0, 1, 0, 1);
+        this.cardSubdeckCommandsWidget.wrapWidgetWithBorder();
+    }
+
+    /**
+     * Initializes the widget containing all the
+     * available ships that a player can look at
+     */
+    public void initOtherPlayerShipCommandsWidget() {
+        int i, len;
+
+        this.otherPlayerShipCommandsWidget = new WidgetTUI();
+        List<String> allNicknames = this.model.getAllPlayersNicknames();
+        len = allNicknames.size();
+
+        for (i = 0; i < len; i++) {
+            this.otherPlayerShipCommandsWidget.appendString("(" + i + ") " + allNicknames.get(i));
+        }
+
+        this.otherPlayerShipCommandsWidget.addPadding(0, 1, 0, 1);
+        this.otherPlayerShipCommandsWidget.wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void showShipConstruction(ShipConstructionDTO shipConstruction) throws InterruptedException {
+        System.out.println("SHIP CONSTRUCTION START");
+        System.out.println("ACQUIRING INPUT");
+
+        String line;
+
+        do {
+            line = this.inputThread.waitForInput();
+
+            if (line != null) {
+                System.out.println("NO INTERRUPT --> \"" + line + "\"");
+            }
+            else {
+                System.out.println("INTERRUPT RECEIVED");
+            }
+        }
+        while (line != null);
+    }
+}

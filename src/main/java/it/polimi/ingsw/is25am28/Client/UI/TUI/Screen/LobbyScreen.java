@@ -152,7 +152,7 @@ public class LobbyScreen extends Screen {
                 }
                 case 3 -> {
                     // (3) - Reconnect to an existing game
-                    if (!state.getAvailableGames().isEmpty()) {
+                    if (!state.getUsedNicknames().isEmpty()) {
                         this.reconnectToGameInput(state, state.getUsedNicknames());
                     }
                     else {
