@@ -247,6 +247,6 @@ public class GameInstance {
             answer.setNextState(reconnectState.get(1));
         }
 
-        virtualClient.updateState(answer);
+        this.broadCastUpdate(answer);
     }
 }

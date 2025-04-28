@@ -77,7 +77,11 @@ public class InputThread extends Thread {
      * */
     public String waitForInput() throws InterruptedException {
         synchronized (this.inputLock) {
+            // Attributes reset to handle a new input request
             this.isReadingEnable = true;
+            this.line = null;
+            this.hasBeenForced = false;
+
             while (this.line == null && !this.hasBeenForced) {
                 this.inputLock.wait();
             }

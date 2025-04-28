@@ -40,6 +40,7 @@ public class TCPClient implements VirtualViewSocket {
 
     private final ExecutorService inputThread;
     private final ExecutorService updateThread;
+    private final ExecutorService forceThread;
     private final ScheduledExecutorService pingScheduler;
 
     /**
@@ -68,6 +69,7 @@ public class TCPClient implements VirtualViewSocket {
 
         this.inputThread = Executors.newSingleThreadExecutor();
         this.updateThread = Executors.newSingleThreadExecutor();
+        this.forceThread = Executors.newSingleThreadExecutor();
         this.pingScheduler = Executors.newSingleThreadScheduledExecutor();
 
         // Run the client TCPClient
@@ -215,13 +217,13 @@ public class TCPClient implements VirtualViewSocket {
 
         switch (nextState) {
             case InsufficientPlayerDTO _ -> {
-                future = future.thenRunAsync(() -> {
+                forceThread.submit(() -> {
                     try {
                         nextState.accept(viewUpdater);
                     } catch (Exception e) {
                         throw new RuntimeException("Error while executing the next state: ", e);
                     }
-                }, updateThread);
+                });
             }
             case null -> {}
             default -> {

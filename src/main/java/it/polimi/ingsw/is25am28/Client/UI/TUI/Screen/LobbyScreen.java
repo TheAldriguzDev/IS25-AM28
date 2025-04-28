@@ -6,7 +6,6 @@ import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
@@ -14,8 +13,6 @@ import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 import it.polimi.ingsw.is25am28.Network.Messages.Reconnect;
 import it.polimi.ingsw.is25am28.Network.Messages.RefreshGames;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,12 +20,10 @@ import java.util.stream.Collectors;
 
 public class LobbyScreen extends Screen {
     private String playerNickname;
-    private PlayerColor playerColor;
 
     public LobbyScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
         this.playerNickname = null;
-        this.playerColor = null;
     }
 
     /**
