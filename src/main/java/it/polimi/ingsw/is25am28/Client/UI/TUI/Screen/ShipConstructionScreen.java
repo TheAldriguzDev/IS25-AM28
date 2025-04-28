@@ -1,10 +1,13 @@
 package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ShipConstructionScreen extends Screen {
@@ -52,6 +55,25 @@ public class ShipConstructionScreen extends Screen {
             }
         } while (cmds.containsKey(result));
 
+    }
+
+    /**
+     * @return the options available when the player can select a tile in the shipConstructionState
+     * */
+    private static List<String> getShipConstructionBaseOptions(List<ClientComponent> reservedComponents) {
+        List<String> options = new ArrayList<>();
+
+        // If present, add the available games
+        for (ClientComponent comp : reservedComponents) {
+            options.add(
+                    "Select reserved tile - " + comp.getClass().getSimpleName()
+            );
+        }
+
+        // Extra options
+        options.add("Select a new tile");
+        options.add("Show deck");
+        return options;
     }
 
 }

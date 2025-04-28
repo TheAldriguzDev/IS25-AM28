@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
@@ -12,67 +11,25 @@ import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
 import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
 import it.polimi.ingsw.is25am28.Network.Messages.Reconnect;
 import it.polimi.ingsw.is25am28.Network.Messages.RefreshGames;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class LobbyScreen extends Screen {
-    private String playerNickname;
+    private WidgetTUI availableGamesWidget;
+    private WidgetTUI lobbyCommandsWidget;
 
     public LobbyScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
-        this.playerNickname = null;
+        this.initLobbyCommandsWidget();
     }
 
     /**
-     * @return the possible options available in the game lobby
-     * 1. Available games
-     * 2. Create a new game
-     * 3. Reconnect to an existing game
-     * 4. Refresh available games
-     * */
-    private static List<String> getLobbiesOptions(List<GameInfoDTO> availableGames) {
-        List<String> options = new ArrayList<>();
-
-        // If present, add the available games
-        for (GameInfoDTO game : availableGames) {
-            options.add(
-                    "Join the game with the ID: " + game.getId() +
-                            " - Level: " + game.getLevel() +
-                            " - Players: " + game.getActualPlayers() + "/" + game.getTotalPlayers()
-            );
-        }
-
-        // Extra options
-        options.add("Create a new game");
-
-        // If there is at least one game show the reconnect option
-        options.add("Reconnect to an existing game");
-        options.add("Refresh available games");
-        return options;
-    }
-
-    /**
-     * @return the options available when the player can select a tile in the shipConstructionState
-     * */
-    private static List<String> getShipConstructionBaseOptions(List<ClientComponent> reservedComponents) {
-        List<String> options = new ArrayList<>();
-
-        // If present, add the available games
-        for (ClientComponent comp : reservedComponents) {
-            options.add(
-                    "Select reserved tile - " + comp.getClass().getSimpleName()
-            );
-        }
-
-        // Extra options
-        options.add("Select a new tile");
-        options.add("Show deck");
-        return options;
-    }
-
+     * Prints an ASCII art of the game title
+     */
     private static void printTitle() {
         System.out.println("""
          ██████╗  █████╗ ██╗      █████╗ ██╗  ██╗██╗   ██╗    ████████╗██████╗ ██╗   ██╗ ██████╗██╗  ██╗███████╗██████╗\s
@@ -84,105 +41,188 @@ public class LobbyScreen extends Screen {
         """);
     }
 
+    /**
+     * Initializes the widget containing all available lobby commands
+     */
+    private void initLobbyCommandsWidget() {
+        this.lobbyCommandsWidget = new WidgetTUI();
+
+        this.lobbyCommandsWidget.appendString("(0) Quit game");
+        this.lobbyCommandsWidget.appendString("(1) Create new game");
+        this.lobbyCommandsWidget.appendString("(2) Join an existing game");
+        this.lobbyCommandsWidget.appendString("(3) Reconnect to an existing game");
+        this.lobbyCommandsWidget.appendString("(4) Refresh available games");
+
+        this.lobbyCommandsWidget.addPadding(0, 1, 0, 1);
+        this.lobbyCommandsWidget.wrapWidgetWithBorder();
+    }
+
+    /**
+     * Initializes the widget containing all available games
+     */
+    private void initAvailableGamesWidget(List<GameInfoDTO> availableGames) {
+        this.availableGamesWidget = new WidgetTUI();
+
+        this.availableGamesWidget.appendString("(-1) Go back to the menu");
+
+        if (availableGames != null && !availableGames.isEmpty()) {
+            for (GameInfoDTO game : availableGames) {
+                this.availableGamesWidget.appendString("(" + game.getId() + ") (level=" + game.getLevel() + ", players=" + game.getActualPlayers() + "/" + game.getTotalPlayers() + ")");
+            }
+
+            this.availableGamesWidget.addPadding(0, 1, 0, 1);
+            this.availableGamesWidget.wrapWidgetWithBorder();
+        }
+    }
 
     /**
      * This method is used to display the possibles options that the player can make when connect to the game.
-     * 1. Join an active game (that is waiting for players)
-     * 2. Create e new game
-     * 3. Reconnect to an existing game
-     * 4. Refresh the lobbies
-     *
-     * TODO: Need to be reworked with the TUI
+     *  0) Quit game
+     *  1) Create new game (that is waiting for players)
+     *  2) Join an existing game
+     *  3) Reconnect to an existing game
+     *  4) Refresh the lobbies
      * */
     @Override
     public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
-        if (isFirstAccess) {
-            printTitle();
-        }
+        String line;
+        int choice;
 
-        List<GameInfoDTO> availableGames = state.getAvailableGames();
+        if (isFirstAccess) { printTitle(); }
 
-        // Build the list of available games
-        List<String> options = getLobbiesOptions(availableGames);
+        this.initAvailableGamesWidget(state.getAvailableGames());
 
-        // Display the options
-        for (int i = 0; i < options.size(); i++) {
-            System.out.println((i + 1) + ". " + options.get(i));
-        }
-
-        int choice = -1;
         do {
-            System.out.print("Choose an option: ");
-            String line = this.inputThread.waitForInput();
+            System.out.println("Available commands:");
+            this.lobbyCommandsWidget.printWidget();
+
+            choice = -1;
+
+            System.out.print("Select an option: ");
+            line = this.inputThread.waitForInput();
+
             try {
                 choice = Integer.parseInt(line);
-                if (choice < 1 || choice > options.size()) {
-                    System.out.println("Invalid choice: please select a number between 1 and " + options.size() + ".");
-                }
-            } catch (NumberFormatException e) {
-                System.out.println("Invalid input: please enter a number.");
             }
-        } while (choice < 1 || choice > options.size());
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please enter a number.", ANSIColors.RED));
+            }
 
-        // Evaluate the correct command
-        if (choice <= availableGames.size()) {
-            GameInfoDTO selectedGame = availableGames.get(choice - 1);
-            this.joinGameInput(selectedGame, state.getUsedNicknames());
-        } else if (choice == availableGames.size() + 1) {
-            this.createGameInput();
-        } else if (choice == availableGames.size() + 2) {
-            this.reconnectToGameInput(state, state.getUsedNicknames());
-        } else {
-            this.refreshGames();
+            switch (choice) {
+                case 0 -> {
+                    // (0) - Quit game
+                    // Return nothing and the program stops
+                    System.out.println();
+                    System.out.println(PrintUtils.addColor("[COMPUTER] Bye bye!", ANSIColors.BRIGHT_CYAN));
+                    System.exit(0);
+                }
+                case 1 -> {
+                    // (1) - Create new game
+                    this.createGameInput();
+                }
+                case 2 -> {
+                    // (2) - Join an existing game
+                    if (!state.getAvailableGames().isEmpty()) {
+                        do {
+                            choice = -2;
+
+                            System.out.println("Currently available games:");
+                            this.availableGamesWidget.printWidget();
+
+                            System.out.print("Select an option: ");
+                            line = this.inputThread.waitForInput();
+
+                            try {
+                                choice = Integer.parseInt(line);
+                            }
+                            catch (NumberFormatException e) {
+                                System.out.println("ERROR: Invalid input. Please enter a number.");
+                            }
+                        }
+                        while (choice < -1);
+
+                        if (choice != -1) {
+                            this.joinGameInput(state.getAvailableGames().get(choice), state.getUsedNicknames());
+                        }
+                    }
+                    else {
+                        System.out.println(PrintUtils.addColor("ERROR: There aren't any available games to join. Create one first.", ANSIColors.RED));
+                        choice = -1;
+                    }
+                }
+                case 3 -> {
+                    // (3) - Reconnect to an existing game
+                    if (!state.getAvailableGames().isEmpty()) {
+                        this.reconnectToGameInput(state, state.getUsedNicknames());
+                    }
+                    else {
+                        System.out.println(PrintUtils.addColor("ERROR: There aren't any available games to join. Create one first.", ANSIColors.RED));
+                        choice = -1;
+                    }
+                }
+                case 4 -> {
+                    // (4) - Refresh available games
+                    this.refreshGames();
+                }
+                default -> {
+                    System.out.println(PrintUtils.addColor("ERROR: Invalid command. Please try again.", ANSIColors.RED));
+                    choice = -1;
+                }
+            }
         }
+        while (choice < 0);
     }
 
     /**
      * Method used to ask for nickname and color to join the game
      */
     private void joinGameInput(GameInfoDTO game, List<String> usedNicknames) throws Exception {
-        System.out.println("Joining the game with id " + game.getId() + " ...");
+        System.out.println("Joining the game with id " + game.getId() + "...");
 
         // Ask for nickname
         String playerName;
         do {
             System.out.print("Enter your name: ");
             playerName = this.inputThread.waitForInput();
+
             if (playerName.isEmpty() || usedNicknames.contains(playerName)) {
                 System.out.println("Invalid input: name already used or empty.");
             }
-        } while (playerName.isEmpty() || usedNicknames.contains(playerName));
-        this.playerNickname = playerName;
+        }
+        while (playerName.isEmpty() || usedNicknames.contains(playerName));
 
         // Ask for color
         PlayerColor playerColor = null;
         do {
             System.out.print("Choose a color " + game.getAvailableColors() + ": ");
             String colorInput = this.inputThread.waitForInput();
+
             if (colorInput.isEmpty()) {
                 System.out.println("Invalid input: color cannot be empty.");
                 continue;
             }
             try {
                 playerColor = PlayerColor.valueOf(colorInput.toUpperCase());
-            } catch (IllegalArgumentException e) {
+            }
+            catch (IllegalArgumentException e) {
                 System.out.println("Invalid input: unknown color.");
             }
         } while (playerColor == null);
 
         this.model.setNickname(playerName);
         this.ctx = new CommandCTX(
-                "joinGame",
-                () -> {
-                    this.ctx = null;
-                },
-                () -> {
-                    try {
-                        joinGameInput(game, usedNicknames);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+            "joinGame",
+            () -> {
+                this.ctx = null;
+            },
+            () -> {
+                try {
+                    this.joinGameInput(game, usedNicknames);
                 }
+                catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
         );
 
         this.client.sendMessage(new NewPlayer(playerName, playerColor, game.getId()));
@@ -203,7 +243,6 @@ public class LobbyScreen extends Screen {
                 System.out.println("Invalid input: name cannot be empty.");
             }
         } while (playerName.isEmpty());
-        this.playerNickname = playerName;
 
         // Ask for color
         PlayerColor playerColor = null;
@@ -253,17 +292,17 @@ public class LobbyScreen extends Screen {
 
         this.model.setNickname(playerName);
         this.ctx = new CommandCTX(
-                "createGame",
-                () -> {
-                    this.ctx = null;
-                },
-                () -> {
-                    try {
-                        createGameInput();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
+            "createGame",
+            () -> {
+                this.ctx = null;
+            },
+            () -> {
+                try {
+                    createGameInput();
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
                 }
+            }
         );
 
         this.client.sendMessage(new ConfigGame(playerName, playerColor, gameLevel, totalPlayers));
@@ -282,11 +321,12 @@ public class LobbyScreen extends Screen {
         do {
             System.out.print("Enter your name: ");
             playerName = this.inputThread.waitForInput();
+
             if (playerName.isEmpty() && !usedNicknames.contains(playerName)) {
                 System.out.println("Invalid input: name cannot be empty or different from an existing one.");
             }
-        } while (playerName.isEmpty() && !usedNicknames.contains(playerName));
-        this.playerNickname = playerName;
+        }
+        while (playerName.isEmpty() && !usedNicknames.contains(playerName));
 
         this.client.sendMessage(new Reconnect(playerName));
     }
@@ -297,22 +337,43 @@ public class LobbyScreen extends Screen {
 
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
+        WidgetTUI waitingForPlayersWidget = new WidgetTUI();
+
+        // Creating the ship of the newly connected player in all clients
+        for (Map.Entry<String, PlayerColor> playerEntry : waitingForPlayers.getUsedNicknames().entrySet()) {
+            this.model.addNewPlayer(playerEntry.getKey(), playerEntry.getValue());
+        }
+
         if (this.model.getNickname() != null) {
             int connected = waitingForPlayers.getLobbyTotalSpot() - waitingForPlayers.getAvailableSpots();
             int total = waitingForPlayers.getLobbyTotalSpot();
             Map<String, PlayerColor> nicknamesAndColor = waitingForPlayers.getUsedNicknames();
 
-            System.out.printf("Waiting for more players to join the game [%d/%d]...%n", connected, total);
+            // Resetting the widget
+            waitingForPlayersWidget.resetScreenAndDimensions();
+
+            // Adding the currently connected players and total players counters to the widget
+            waitingForPlayersWidget.appendString(PrintUtils.addColor("[STATUS]", ANSIColors.BRIGHT_CYAN));
+            waitingForPlayersWidget.appendString("Waiting for more players to join the game [" + connected + "/" + total + "]...");
+
+            // Then adding all the currently present players
+            waitingForPlayersWidget.appendString("Connected players:");
+            int i = 1;
 
             if (!nicknamesAndColor.isEmpty()) {
-                System.out.print("Connected players: ");
-                String formattedNames = nicknamesAndColor.entrySet().stream()
-                        .map(entry -> entry.getValue().formatColor(entry.getKey()))
-                        .collect(Collectors.joining(", "));
-                System.out.println(formattedNames);
+                for (Map.Entry<String, PlayerColor> entry : nicknamesAndColor.entrySet()) {
+                    waitingForPlayersWidget.appendString(
+                            i + " - " + PrintUtils.addColor(entry.getKey(), entry.getValue().getColorString())
+                    );
+                    i++;
+                }
             }
-        } else {
-            System.out.println("Player nickname not found.");
+
+            // Adding some left and right padding
+            waitingForPlayersWidget.addPadding(0, 1, 0, 1);
+
+            // Finally, wrap and print the widget
+            waitingForPlayersWidget.wrapWidgetWithBorder().printWidget();
         }
     }
 }

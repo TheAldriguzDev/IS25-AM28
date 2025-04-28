@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
