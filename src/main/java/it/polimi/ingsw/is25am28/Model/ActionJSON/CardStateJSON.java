@@ -1,14 +1,11 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import it.polimi.ingsw.is25am28.Model.Components.Battery;
-import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
 import java.util.Map;
@@ -96,6 +93,12 @@ public class CardStateJSON extends ActionJSON {
     private String affectedPlayer;
     private int requiredResources;
     private Map<String, Integer> currPlasmaShotDescriptor;
+    private Map<String, String> actionsAndConsequences;
+    private int currActionIndex;
+    private boolean applyRequiredCrewConsequence;
+    private boolean applyMovementStepsConsequence;
+    private boolean applyShootingSequenceConsequence;
+    private boolean applyLossItemsConsequence;
 
     // ======== VisitPlanets Card State Attributes ======== //
 
@@ -607,7 +610,6 @@ public class CardStateJSON extends ActionJSON {
     public String getAffectedPlayer() {
         return this.affectedPlayer;
     }
-
     @JsonSetter("affectedPlayer")
     public void setAffectedPlayer(String affectedPlayer) {
         this.affectedPlayer = affectedPlayer;
@@ -617,7 +619,6 @@ public class CardStateJSON extends ActionJSON {
     public int getRequiredResources() {
         return this.requiredResources;
     }
-
     @JsonSetter("requiredResources")
     public void setRequiredResources(int requiredResources) {
         this.requiredResources = requiredResources;
@@ -627,11 +628,67 @@ public class CardStateJSON extends ActionJSON {
     public Map<String, Integer> getCurrPlasmaShotDescriptor() {
         return this.currPlasmaShotDescriptor;
     }
-
     @JsonSetter("currPlasmaShotDescriptor")
     public void setCurrPlasmaShotDescriptor(Map<String, Integer> currPlasmaShotDescriptor) {
         this.currPlasmaShotDescriptor = currPlasmaShotDescriptor;
     }
+
+    @JsonSetter("actionsAndConsequences")
+    public void setActionsAndConsequences(Map<String, String> actionsAndConsequences) {
+        this.actionsAndConsequences = actionsAndConsequences;
+    }
+    @JsonGetter("actionsAndConsequences")
+    public Map<String, String> getActionsAndConsequences() {
+        return this.actionsAndConsequences;
+    }
+
+    @JsonSetter("currActionIndex")
+    public void setCurrActionIndex(int currActionIndex) {
+        this.currActionIndex = currActionIndex;
+    }
+    @JsonGetter("currActionIndex")
+    public int getCurrActionIndex() {
+        return this.currActionIndex;
+    }
+
+    @JsonSetter("applyRequiredCrewConsequences")
+    public void setApplyRequiredCrewConsequences(boolean applyRequiredCrewConsequences) {
+        this.applyRequiredCrewConsequence = applyRequiredCrewConsequences;
+    }
+    @JsonGetter("applyRequiredCrewConsequence")
+    public boolean getApplyRequiredCrewConsequence() {
+        return this.applyRequiredCrewConsequence;
+    }
+
+    @JsonSetter("applyMovementStepsConsequence")
+    public void setApplyMovementStepsConsequence(boolean applyMovementStepsConsequence) {
+        this.applyMovementStepsConsequence = applyMovementStepsConsequence;
+    }
+    @JsonGetter("applyMovementStepsConsequence")
+    public boolean getApplyMovementStepsConsequence() {
+        return this.applyMovementStepsConsequence;
+    }
+
+    @JsonSetter("applyShootingSequenceConsequence")
+    public void setApplyShootingSequenceConsequence(boolean applyShootingSequenceConsequence) {
+        this.applyShootingSequenceConsequence = applyShootingSequenceConsequence;
+    }
+    @JsonGetter("applyShootingSequenceConsequence")
+    public boolean getApplyShootingSequenceConsequence() {
+        return this.applyShootingSequenceConsequence;
+    }
+
+    @JsonSetter("applyLossItemsConsequence")
+    public void setApplyLossItemsConsequence(boolean applyLossItemsConsequence) {
+        this.applyLossItemsConsequence = applyLossItemsConsequence;
+    }
+    @JsonGetter("applyLossItemsConsequence")
+    public boolean getApplyLossItemsConsequence() {
+        return this.applyLossItemsConsequence;
+    }
+
+
+
 
     // ======== VisitPlanets Card State Getters/Setters ======== //
 

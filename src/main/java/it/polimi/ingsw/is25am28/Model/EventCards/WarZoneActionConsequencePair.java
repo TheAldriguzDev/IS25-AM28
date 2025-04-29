@@ -1,5 +1,10 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import javafx.util.Pair;
+
+import java.util.HashMap;
+import java.util.Map;
+
 public class WarZoneActionConsequencePair {
     private final WarZoneAction action;
     private final WarZoneConsequence consequence;
