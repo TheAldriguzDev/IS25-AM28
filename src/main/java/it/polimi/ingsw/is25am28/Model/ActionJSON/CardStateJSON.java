@@ -23,35 +23,50 @@ public class CardStateJSON extends ActionJSON {
     private String cardName;
     private int cardLevel;
     private boolean isCardUsable;
-    private boolean needsShipsUpdate;
     private boolean hasBeenActivated;
 
-    // ======== BOARD FLAGS/INFORMATION ======== //
+    // ==== CLIENT PLAYER FLAGS/INFORMATION ==== //
+    private boolean needsPlayerUpdate;
+    private boolean needsUpdatedCredits;
+    private Map<String, Integer> updatedCredits;
+    // ========================================= //
+
+    // ======== CLIENT BOARD FLAGS/INFORMATION ======== //
     private boolean needsBoardUpdate;
     private boolean needsUpdatedPositions;
     private boolean needsUpdatedEliminatedPlayers;
     private Map<String, Integer> updatedPositions;
     private List<String> eliminatedPlayers;
+    // =================================================//
+
+    // ======= CLIENT SHIP FLAGS/INFORMATION ======== //
+    private boolean needsShipUpdate;
+    private boolean needsUpdatedDroppedResources;
+    private boolean needsUpdatedTakenResources;
+    private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
+    private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
+    // ===============================================//
+
 
     // ======== RESOURCES/CREW INFORMATION ======== //
     private List<ComponentHelper<ItemColor>> resourcesToTake;
     private List<ComponentHelper<ItemColor>> resourcesToDrop;
     private List<ComponentHelper<LifeformType>> lifeformsToRemove;
+    // =============================================//
+
 
     // ======== START MODEL INFORMATION ======== //
-
     private BoardJSON board;
-
     // ======== END MODEL INFORMATION ======== //
 
-    // ======== START PLAYER INFORMATION ======== //
 
+    // ======== START PLAYER INFORMATION ======== //
     private Map<String, Float> playersFirePower;
     private Map<String, Integer> playersEnginePower;
     private Map<String, Integer> playersBatteries;
     private Map<String, PlayerJSON> playersInfo;
-
     // ======== END PLAYER INFORMATION ======== //
+
 
     private int requiredFirepower;
     private int givenCredits;
@@ -401,68 +416,135 @@ public class CardStateJSON extends ActionJSON {
         return this.hasBeenActivated;
     }
 
-    @JsonSetter("needsShipsUpdate")
-    public void setNeedsShipsUpdate(boolean needsShipsUpdate) {
-        this.needsShipsUpdate = needsShipsUpdate;
-    }
-
-    @JsonGetter("needsShipsUpdate")
-    public boolean getNeedsShipsUpdate() {
-        return this.needsShipsUpdate;
-    }
 
     // Other data can be added to provide the context to the clients
 
-    // ======== BOARD STATE GETTERS/SETTERS ======== //
-    @JsonSetter("needsBoardUpdate")
-    public void setNeedsBoardUpdate(boolean needsBoardUpdate) {
-        this.needsBoardUpdate = needsBoardUpdate;
+    // ======== CLIENT PLAYER STATE GETTERS/SETTERS ======== //
+        // ==== MAIN FLAG ==== //
+        @JsonSetter("needsPlayerUpdate")
+        public void setNeedsPlayerUpdate(boolean needsPlayerUpdate) {
+            this.needsPlayerUpdate = needsPlayerUpdate;
+        }
+        @JsonGetter("needsPlayerUpdate")
+        public boolean getNeedsPlayerUpdate() {
+            return this.needsPlayerUpdate;
+        }
+
+        // ==== CREDITS ==== //
+        @JsonSetter("needsUpdatedCredits")
+        public void setNeedsUpdatedCredits(boolean needsUpdatedCredits) {
+            this.needsUpdatedCredits = needsUpdatedCredits;
+        }
+        @JsonGetter("needsUpdatedCredits")
+        public boolean getNeedsUpdatedCredits() {
+            return this.needsUpdatedCredits;
+        }
+        @JsonSetter("updatedCredits")
+        public void setUpdatedCredits(Map<String, Integer> updatedCredits) {
+            this.updatedCredits = updatedCredits;
+        }
+        @JsonGetter("updatedCredits")
+        public Map<String, Integer> getUpdatedCredits() {
+            return this.updatedCredits;
+        }
+    // ==================================================== //
+
+
+    // ======== CLIENT BOARD STATE GETTERS/SETTERS ======== //
+        // ==== MAIN FLAG ==== //
+        @JsonSetter("needsBoardUpdate")
+        public void setNeedsBoardUpdate(boolean needsBoardUpdate) {
+            this.needsBoardUpdate = needsBoardUpdate;
+        }
+        @JsonGetter("needsBoardUpdate")
+        public boolean getNeedsBoardUpdate() {
+            return this.needsBoardUpdate;
+        }
+
+        // ==== POSITIONS ==== //
+        @JsonSetter("needsUpdatedPositions")
+        public void setNeedsUpdatedPositions(boolean needsUpdatedPositions) {
+            this.needsUpdatedPositions = needsUpdatedPositions;
+        }
+        @JsonGetter("needsUpdatedPositions")
+        public boolean getNeedsUpdatedPositions() {
+            return this.needsUpdatedPositions;
+        }
+        @JsonSetter("updatedPositions")
+        public void setUpdatedPositions(Map<String, Integer> updatedPositions) {
+            this.updatedPositions = updatedPositions;
+        }
+        @JsonGetter("updatedPositions")
+        public Map<String, Integer> getUpdatedPositions() {
+            return this.updatedPositions;
     }
 
-    @JsonGetter("needsBoardUpdate")
-    public boolean getNeedsBoardUpdate() {
-        return this.needsBoardUpdate;
+        // ==== ELIMINATED PLAYERS ==== //
+        @JsonSetter("needsEliminatedPlayers")
+        public void setNeedsUpdatedEliminatedPlayers(boolean needsUpdatedEliminatedPlayers) {
+            this.needsUpdatedEliminatedPlayers = needsUpdatedEliminatedPlayers;
+        }
+        @JsonGetter("needsEliminatedPlayers")
+        public boolean getNeedsUpdatedEliminatedPlayers() {
+            return this.needsUpdatedEliminatedPlayers;
+        }
+        @JsonSetter("eliminatedPlayers")
+        public void setEliminatedPlayers(List<String> eliminatedPlayers) {
+            this.eliminatedPlayers = eliminatedPlayers;
+        }
+        @JsonGetter("eliminatedPlayers")
+        public List<String> getEliminatedPlayers() {
+            return this.eliminatedPlayers;
+        }
+    // =====================================================//
+
+
+    // ======== CLIENT SHIP STATE GETTERS/SETTERS ======== //
+        // ==== MAIN FLAG ==== //
+        @JsonSetter("needsShipsUpdate")
+        public void setNeedsShipUpdate(boolean needsShipUpdate) {
+            this.needsShipUpdate = needsShipUpdate;
+        }
+        @JsonGetter("needsShipsUpdate")
+        public boolean getNeedsShipUpdate() {
+            return this.needsShipUpdate;
+        }
+        // ==== DROPPED RESOURCES ==== //
+        @JsonSetter("needsUpdatedDroppedResources")
+        public void setNeedsUpdatedDroppedResources(boolean needsUpdatedDroppedResources) {
+            this.needsUpdatedDroppedResources = needsUpdatedDroppedResources;
+        }
+        @JsonGetter("updatedDroppedResources")
+        public boolean getNeedsUpdatedDroppedResources() {
+            return needsUpdatedDroppedResources;
+        }
+        @JsonSetter("droppedResources")
+        public void setDroppedResources(Map<String, List<ComponentHelper<ItemColor>>> droppedResources) {
+            this.droppedResources = droppedResources;
+        }
+        @JsonGetter("droppedResources")
+        public Map<String, List<ComponentHelper<ItemColor>>> getDroppedResources() {
+        return this.droppedResources;
     }
 
-    @JsonSetter("updatedPositions")
-    public void setUpdatedPositions(Map<String, Integer> updatedPositions) {
-        this.updatedPositions = updatedPositions;
-    }
-
-    @JsonGetter("updatedPositions")
-    public Map<String, Integer> getUpdatedPositions() {
-        return this.updatedPositions;
-    }
-
-    @JsonSetter("eliminatedPlayers")
-    public void setEliminatedPlayers(List<String> eliminatedPlayers) {
-        this.eliminatedPlayers = eliminatedPlayers;
-    }
-
-    @JsonGetter("eliminatedPlayers")
-    public List<String> getEliminatedPlayers() {
-        return this.eliminatedPlayers;
-    }
-
-    @JsonSetter("needsUpdatedPositions")
-    public void setNeedsUpdatedPositions(boolean needsUpdatedPositions) {
-        this.needsUpdatedPositions = needsUpdatedPositions;
-    }
-
-    @JsonGetter("needsUpdatedPositions")
-    public boolean getNeedsUpdatedPositions() {
-        return this.needsUpdatedPositions;
-    }
-
-    @JsonSetter("needsEliminatedPlayers")
-    public void setNeedsUpdatedEliminatedPlayers(boolean needsUpdatedEliminatedPlayers) {
-        this.needsUpdatedEliminatedPlayers = needsUpdatedEliminatedPlayers;
-    }
-
-    @JsonGetter("needsEliminatedPlayers")
-    public boolean getNeedsUpdatedEliminatedPlayers() {
-        return this.needsUpdatedEliminatedPlayers;
-    }
+        // ==== TAKEN RESOURCES ==== //
+        @JsonSetter("needsUpdatedTakenResources")
+        public void setNeedsUpdatedTakenResources(boolean needsUpdatedTakenResources) {
+            this.needsUpdatedTakenResources = needsUpdatedTakenResources;
+        }
+        @JsonGetter("needsUpdatedTakenResources")
+        public boolean getNeedsUpdatedTakenResources() {
+            return this.needsUpdatedTakenResources;
+        }
+        @JsonSetter("takenResources")
+        public void setTakenResources(Map<String, List<ComponentHelper<ItemColor>>> takenResources) {
+            this.takenResources = takenResources;
+        }
+        @JsonGetter("takenResources")
+        public Map<String, List<ComponentHelper<ItemColor>>> getTakenResources() {
+            return this.takenResources;
+        }
+    // ==================================================  //
 
     // ======== WarZone Card State Getters/Setters ======== //
 

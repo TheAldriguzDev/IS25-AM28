@@ -32,6 +32,7 @@ public class Pirates extends EventCard {
     private String prevPlayer;
     private List<String> eliminatedPlayers;
     private Map<String, Integer> updatedPositions;
+    private Map<String, Integer> updatedCredits;
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board) {
         super(name, cardLevel, board);
@@ -40,14 +41,15 @@ public class Pirates extends EventCard {
         this.movementSteps = movementSteps;
         this.shootingSequence = shootingSequence;
 
-        random = new Random();
-        playerUseCount = 0;
-        diceThrowResult = -1;
-        plasmashotIndex = 0;
-        firstRound = true;
-        playersToHit = new ArrayList<>();
-        hasBeenDefeated = false;
-        updatedPositions = new HashMap<>();
+        this.random = new Random();
+        this.playerUseCount = 0;
+        this.diceThrowResult = -1;
+        this.plasmashotIndex = 0;
+        this.firstRound = true;
+        this.playersToHit = new ArrayList<>();
+        this.hasBeenDefeated = false;
+        this.updatedPositions = new HashMap<>();
+        this.updatedCredits = new HashMap<>();
     }
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
@@ -168,6 +170,7 @@ public class Pirates extends EventCard {
         playerOptional.ifPresent(
                 (Player player) -> {
                     player.setCredits(player.getCredits() + this.givenCredits);
+                    this.updatedCredits.put(player.getNickname(), player.getCredits());
                 }
         );
     }
@@ -337,7 +340,7 @@ public class Pirates extends EventCard {
                 piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
                 piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
                 if (!previousPlayerRemovedComponents.isEmpty()) {
-                    piratesStateJSON.setNeedsShipsUpdate(true);
+                    piratesStateJSON.setNeedsShipUpdate(true);
                     piratesStateJSON.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
                 } else if (!eliminatedPlayers.isEmpty()) {
                     piratesStateJSON.setNeedsBoardUpdate(true); // need to update the board
@@ -349,6 +352,12 @@ public class Pirates extends EventCard {
                 piratesStateJSON.setNeedsBoardUpdate(true);
                 piratesStateJSON.setNeedsUpdatedPositions(true);
                 piratesStateJSON.setUpdatedPositions(updatedPositions);
+                if (!this.updatedCredits.isEmpty()) {
+                    piratesStateJSON.setNeedsUpdatedCredits(true);
+                    piratesStateJSON.setUpdatedCredits(this.updatedCredits);
+                } else {
+                    piratesStateJSON.setNeedsUpdatedCredits(false);
+                }
             }
         } else {
             // This static info will be sent to the clients only when the card has not been activated yet

@@ -38,6 +38,8 @@ public class ClientBoard {
         }
     }
 
+    /**
+     * This method updates only what has been changed (regarding players' info)*/
     public void updateBoard(CardStateJSON cardState) {
         // If a player's position has been changed we need to set it again
         if (cardState.getNeedsUpdatedPositions()) {

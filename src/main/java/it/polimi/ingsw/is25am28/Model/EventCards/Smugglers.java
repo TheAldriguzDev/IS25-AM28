@@ -7,10 +7,7 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class Smugglers extends EventCard {
     private final int requiredFirepower;
@@ -26,6 +23,8 @@ public class Smugglers extends EventCard {
     private boolean firstRound;
     private ArrayList<Player> playersToTakeItemsFrom;
     private Map<String, Integer> updatedPositions;
+    private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
+    private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
 
     public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
@@ -42,6 +41,8 @@ public class Smugglers extends EventCard {
         this.firstRound = true;
         this.playersToTakeItemsFrom = new ArrayList<>();
         this.updatedPositions = new HashMap<>();
+        this.droppedResources = new HashMap<>();
+        this.takenResources = new HashMap<>();
     }
 
     /*
@@ -133,6 +134,8 @@ public class Smugglers extends EventCard {
                 (Player player) -> {
                     ArrayList<ComponentHelper<ItemColor>> resourcesToLoad = smugglersData.getItemsToBeTaken();
                     ArrayList<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
+                    this.droppedResources.put(player.getNickname(), resourcesToDrop);
+                    this.takenResources.put(player.getNickname(), resourcesToLoad);
                     // Item da lasciare per fare spazio
                     for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
                         resourceDrop.getItem().ifPresent( i ->
@@ -197,6 +200,7 @@ public class Smugglers extends EventCard {
             smugglersStateJSON.setFirstRound(this.firstRound);
             // If the first round is finished, send the dynamic info to the players
             smugglersStateJSON.setNeedsBoardUpdate(false);
+            smugglersStateJSON.setNeedsShipUpdate(false);
             if (!firstRound) {
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToTakeItemsFrom) {
@@ -208,6 +212,16 @@ public class Smugglers extends EventCard {
                 smugglersStateJSON.setNeedsBoardUpdate(true);
                 smugglersStateJSON.setNeedsUpdatedPositions(true);
                 smugglersStateJSON.setUpdatedPositions(updatedPositions);
+                if (!this.droppedResources.isEmpty()) {
+                    smugglersStateJSON.setNeedsShipUpdate(true);
+                    smugglersStateJSON.setNeedsUpdatedResources(true);
+                    smugglersStateJSON.setDroppedResources(this.droppedResources);
+                }
+                if (!this.takenResources.isEmpty()) {
+                    smugglersStateJSON.setNeedsShipUpdate(true);
+                    smugglersStateJSON.setNeedsUpdatedResources(true);
+                    smugglersStateJSON.setTakenResources(this.takenResources);
+                }
             }
         } else {
             smugglersStateJSON.setId(this.id);

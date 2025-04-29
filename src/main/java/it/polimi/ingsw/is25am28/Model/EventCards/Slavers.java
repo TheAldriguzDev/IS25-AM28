@@ -21,6 +21,7 @@ public class Slavers extends EventCard {
     ArrayList<Player> playersToTakeCrewFrom;
     private List<String> eliminatedPlayers;
     private Map<String, Integer> updatedPositions;
+    private Map<String, Integer> updatedCredits;
 
     public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board) {
         super(name, cardLevel, board);
@@ -32,7 +33,8 @@ public class Slavers extends EventCard {
         this.defeatedPlayers = new ArrayList<>();
         this.firstRound = true;
         this.playersToTakeCrewFrom = new ArrayList<>();
-        updatedPositions = new HashMap<>();
+        this.updatedPositions = new HashMap<>();
+        this.updatedCredits = new HashMap<>();
     }
 
     @Override
@@ -117,6 +119,7 @@ public class Slavers extends EventCard {
         playerOptional.ifPresent(
                 (Player player) -> {
                     player.setCredits(player.getCredits() + this.givenCredits);
+                    this.updatedCredits.put(player.getNickname(), player.getCredits());
                 }
         );
     }
@@ -203,6 +206,12 @@ public class Slavers extends EventCard {
                 slaversStateJSON.setNeedsBoardUpdate(true);
                 slaversStateJSON.setNeedsUpdatedPositions(true);
                 slaversStateJSON.setUpdatedPositions(this.updatedPositions);
+                if (!this.updatedCredits.isEmpty()) {
+                    slaversStateJSON.setNeedsUpdatedCredits(true);
+                    slaversStateJSON.setUpdatedCredits(this.updatedCredits);
+                } else {
+                    slaversStateJSON.setNeedsUpdatedCredits(false);
+                }
             }
         } else {
             slaversStateJSON.setId(this.id);
