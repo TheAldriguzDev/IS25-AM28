@@ -56,7 +56,7 @@ class ClientBoardTest {
     public void printClientBoardTest () {
         WidgetTUI clientBoardWidget;
         clientBoardWidget = clientBoard.generateWidget();
-
+        System.out.println("Client Version");
         clientBoardWidget.printWidget();
     }
 
@@ -64,6 +64,7 @@ class ClientBoardTest {
     public void printServerBoardTest () {
         WidgetTUI serverBoardWidget;
         serverBoardWidget = serverBoard.generateWidget();
+        System.out.println("Server Version");
         serverBoardWidget.printWidget();
     }
 }

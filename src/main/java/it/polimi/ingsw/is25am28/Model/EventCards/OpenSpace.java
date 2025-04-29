@@ -144,6 +144,9 @@ public class OpenSpace extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        cardState.setNeedsBoardUpdate(false);
+        cardState.setNeedsPlayerUpdate(false);
+        cardState.setNeedsShipUpdate(false);
         Map<String, Integer> playersBatteries = new HashMap<>();
 
         if (this.getCurrentPlayer().isPresent()) {

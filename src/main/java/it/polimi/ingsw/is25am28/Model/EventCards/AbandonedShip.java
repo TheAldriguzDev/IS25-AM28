@@ -18,6 +18,7 @@ public class AbandonedShip extends EventCard {
     private final int givenCredits;
 
     private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
+    private Map <String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
     private boolean hasBeenUsedByPlayer;
 
@@ -31,6 +32,7 @@ public class AbandonedShip extends EventCard {
         this.lifeformsToBeRemoved = new ArrayList<>();
         this.hasBeenUsedByPlayer = false;
         this.playersThatCanUseTheCard = new ArrayList<>();
+        this.removedLifeforms = new HashMap<>();
     }
 
     /**
@@ -84,6 +86,7 @@ public class AbandonedShip extends EventCard {
             // otherwise get the next player
             if (wantsToVisitTheShip) {
                 this.lifeformsToBeRemoved = abandonedShip.getLifeformsToBeRemoved();
+                this.removedLifeforms.put(playerNickname, this.lifeformsToBeRemoved);
 
                 // Check if the given input is valid
                 if (lifeformsToBeRemoved.size() != this.requiredCrew) {
@@ -164,6 +167,9 @@ public class AbandonedShip extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        cardState.setNeedsBoardUpdate(false);
+        cardState.setNeedsPlayerUpdate(false);
+        cardState.setNeedsShipUpdate(false);
 
         // If there is a currentPlayer set it in the DTO
         if (this.getCurrentPlayer().isPresent()) {
@@ -173,7 +179,7 @@ public class AbandonedShip extends EventCard {
         if (hasBeenActivated()) {
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             if (this.hasBeenUsedByPlayer) {
-                cardState.setLifeformsToRemove(this.lifeformsToBeRemoved);
+                cardState.setRemovedLifeforms(removedLifeforms);
             }
         } else {
             // Set the card information that are needed to play the game

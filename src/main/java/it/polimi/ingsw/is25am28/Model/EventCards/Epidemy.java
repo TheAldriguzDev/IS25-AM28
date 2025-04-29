@@ -101,6 +101,9 @@ public class Epidemy extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        cardState.setNeedsBoardUpdate(false);
+        cardState.setNeedsPlayerUpdate(false);
+        cardState.setNeedsShipUpdate(false);
 
         if (this.getCurrentPlayer().isPresent()) {
             cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());

@@ -318,6 +318,9 @@ public class VisitPlanets extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        cardState.setNeedsBoardUpdate(false);
+        cardState.setNeedsPlayerUpdate(false);
+        cardState.setNeedsShipUpdate(false);
         Map<Integer, Map<ItemColor, Integer>> availablePlanets;
 
         this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));

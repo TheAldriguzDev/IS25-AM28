@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.util.*;
@@ -88,5 +89,15 @@ public class ClientModel {
     * */
     public Map<String, ClientPlayer> getAllClientPlayers() {
         return players;
+    }
+
+    /**
+     * Updates the current clientPlayer stats (only the credits, the other stats are updated by the clientShip (Batteries, lostComponents, dropped/taken resources, removedLifeforms) or clientBoard (Cursor, eliminatedPlayers)) (if needed)*/
+    public void updatePlayers(CardStateJSON cardStateJSON) {
+        if (cardStateJSON.getNeedsUpdatedCredits()) {
+            for (String playerNickname : cardStateJSON.getUpdatedCredits().keySet()) {
+                this.players.get(playerNickname).setCredits(cardStateJSON.getUpdatedCredits().get(playerNickname));
+            }
+        }
     }
 }

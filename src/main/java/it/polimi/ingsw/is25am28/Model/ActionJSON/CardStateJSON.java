@@ -51,7 +51,8 @@ public class CardStateJSON extends ActionJSON {
         private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
         private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
         private Map<String , List<ComponentHelper<LifeformType>>> removedLifeforms;
-        private Map<String , List<ComponentHelper<Battery>>> removedBatteries;
+        //private Map<String , List<ComponentHelper<Battery>>> removedBatteries;
+        private Map<String, Integer> removedBatteries; // Temporary solution while deciding what to do about batteries
     // ===============================================//
 
 
@@ -579,14 +580,25 @@ public class CardStateJSON extends ActionJSON {
         public boolean getNeedsUpdatedBatteries() {
             return this.needsUpdatedBatteries;
         }
+        // ComponentHelper version
+//        @JsonSetter("removedBatteries")
+//        public void setRemovedBatteries(Map<String, List<ComponentHelper<Battery>>> removedBatteries) {
+//            this.removedBatteries = removedBatteries;
+//        }
+//        @JsonSetter("removedBatteries")
+//        public Map<String, List<ComponentHelper<Battery>>> getRemovedBatteries() {
+//            return this.removedBatteries;
+//        }
+        // Integer version
         @JsonSetter("removedBatteries")
-        public void setRemovedBatteries(Map<String, List<ComponentHelper<Battery>>> removedBatteries) {
+        public void setRemovedBatteries(Map<String, Integer> removedBatteries) {
             this.removedBatteries = removedBatteries;
         }
-        @JsonSetter("removedBatteries")
-        public Map<String, List<ComponentHelper<Battery>>> getRemovedBatteries() {
-            return this.removedBatteries;
+        @JsonGetter("removedBatteries")
+        public Map<String, Integer> getRemovedBatteries() {
+        return this.removedBatteries;
         }
+
     // ==================================================  //
 
     // ======== WarZone Card State Getters/Setters ======== //

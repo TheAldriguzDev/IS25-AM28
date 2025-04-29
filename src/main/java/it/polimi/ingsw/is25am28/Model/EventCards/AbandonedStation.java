@@ -138,6 +138,9 @@ public class AbandonedStation extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        cardState.setNeedsBoardUpdate(false);
+        cardState.setNeedsPlayerUpdate(false);
+        cardState.setNeedsShipUpdate(false);
 
         // If there is a currentPlayer set it in the DTO
         if (this.getCurrentPlayer().isPresent()) {

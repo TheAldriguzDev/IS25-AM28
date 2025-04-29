@@ -666,6 +666,9 @@ public class WarZone extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        cardState.setNeedsBoardUpdate(false);
+        cardState.setNeedsPlayerUpdate(false);
+        cardState.setNeedsShipUpdate(false);
 
         // If present set the current player (the one that needs to play the game)
         if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {

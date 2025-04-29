@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Components.Battery;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
@@ -25,6 +26,8 @@ public class Smugglers extends EventCard {
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
     private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
+    //private Map<String, List<ComponentHelper<Battery>>> removedBatteries;
+    private Map<String, Integer> removedBatteries;
 
     public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
@@ -43,6 +46,7 @@ public class Smugglers extends EventCard {
         this.updatedPositions = new HashMap<>();
         this.droppedResources = new HashMap<>();
         this.takenResources = new HashMap<>();
+        this.removedBatteries = new HashMap<>();
     }
 
     /*
@@ -176,8 +180,10 @@ public class Smugglers extends EventCard {
                     // Le batterie da rimuovere solo nel caso la lista di elementi da rimuovere non isa abbastanza grande, il client farà il controllo di fare la lista di elementi da togliore il piu grande possibile se non è possibile raggiungere una grandezza pari a takenItems
                     // TODO: usare il component helper per le batterie
                     if (player.getShip().getAvailableEnergy() >= (takenItems - resourcesToDrop.size())) {
+                        this.removedBatteries.put(player.getNickname(), takenItems - resourcesToDrop.size());
                         player.getShip().consumeEnergy(takenItems - resourcesToDrop.size());
                     } else {
+                        this.removedBatteries.put(player.getNickname(), player.getShip().getAvailableEnergy());
                         player.getShip().consumeEnergy(player.getShip().getAvailableEnergy());
                     } // Se viene presa più energia di quanta ne è disponibile semplicemente va a 0
 
@@ -210,13 +216,7 @@ public class Smugglers extends EventCard {
                     defeatedPlayers.add(player.getNickname());
                 }
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
-            }
-            // if the smugglers have been defeated we need to set the rewards (if taken)
-            if (this.hasBeenDefeated && !updatedPositions.isEmpty()) {
-                smugglersStateJSON.setNeedsBoardUpdate(true);
-                smugglersStateJSON.setNeedsUpdatedPositions(true);
-                smugglersStateJSON.setUpdatedPositions(updatedPositions);
-                // Sets the dropped resources
+                // Sets the dropped resources (if there are any) // this works both in case of defeat or victory
                 if (!this.droppedResources.isEmpty()) {
                     smugglersStateJSON.setNeedsShipUpdate(true);
                     smugglersStateJSON.setNeedsUpdatedDroppedResources(true);
@@ -224,7 +224,21 @@ public class Smugglers extends EventCard {
                 } else {
                     smugglersStateJSON.setNeedsUpdatedDroppedResources(false);
                 }
-                // Sets the taken resources
+                // Sets the removed batteries (if there are any)
+                if (!this.removedBatteries.isEmpty()) {
+                    smugglersStateJSON.setNeedsShipUpdate(true);
+                    smugglersStateJSON.setNeedsUpdatedBatteries(true);
+                    smugglersStateJSON.setRemovedBatteries(this.removedBatteries);
+                } else {
+                    smugglersStateJSON.setNeedsUpdatedBatteries(false);
+                }
+            }
+            // if the smugglers have been defeated we need to set the rewards (if taken)
+            if (this.hasBeenDefeated && !updatedPositions.isEmpty()) {
+                smugglersStateJSON.setNeedsBoardUpdate(true);
+                smugglersStateJSON.setNeedsUpdatedPositions(true);
+                smugglersStateJSON.setUpdatedPositions(updatedPositions);
+                // Sets the taken resources (if there are any)
                 if (!this.takenResources.isEmpty()) {
                     smugglersStateJSON.setNeedsShipUpdate(true);
                     smugglersStateJSON.setNeedsUpdatedTakenResources(true);
