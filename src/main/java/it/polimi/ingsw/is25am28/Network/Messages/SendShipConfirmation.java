@@ -44,11 +44,11 @@ public final class SendShipConfirmation implements Message {
         List<String> errors = new ArrayList<>();
 
         if (playerNickname == null || playerNickname.isEmpty()) {
-            errors.add("ERROR: The 'playerNickname' field cannot be null or empty.'");
+            errors.add("ERROR: The 'playerNickname' field cannot be null or empty.");
         }
 
         if (this.reservedTiles == null) {
-            errors.add("ERROR: The 'reservedTiles' field cannot be null'");
+            errors.add("ERROR: The 'reservedTiles' field cannot be null.");
         }
 
         return errors;
