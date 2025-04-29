@@ -36,6 +36,11 @@ public class TUIHandler implements ClientUI {
         this.ioLock = new Object();
     }
 
+    private void setScreen(Screen screen) {
+        this.screen = screen;
+        this.screen.setVirtualClient(this.virtualClient);
+    }
+
     @Override
     public void setVirtualClient(VirtualView client) {
         this.virtualClient = client;
@@ -46,8 +51,7 @@ public class TUIHandler implements ClientUI {
         synchronized (this.ioLock) {
             // Check if the screen has been loaded, otherwise create it
             if (!(this.screen instanceof LobbyScreen)) {
-                this.screen = new LobbyScreen(this.model, this.inputThread);
-                this.screen.setVirtualClient(virtualClient);
+                this.setScreen(new LobbyScreen(this.model, this.inputThread));
             }
 
             this.screen.showLobbies(availableGames, isFirstAccess);
@@ -65,8 +69,7 @@ public class TUIHandler implements ClientUI {
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
         synchronized (this.ioLock) {
             if (!(screen instanceof ShipConstructionScreen)) {
-                // TODO: Handle this better to init the data in the state
-                this.screen = new ShipConstructionScreen(this.model, this.inputThread);
+                this.setScreen(new ShipConstructionScreen(this.model, this.inputThread));
             }
 
             this.screen.showShipConstruction(shipConstruction);
@@ -75,10 +78,12 @@ public class TUIHandler implements ClientUI {
 
     @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
-        this.prevScreen = this.screen;
-
-        this.screen = new InsufficientPlayerScreen(this.model, this.inputThread);
+        // Interrupt the inputThread to prevent actions from the player
         this.inputThread.interruptInputReader();
+        // Save the previous screen
+        this.prevScreen = this.screen;
+        // Force and show the new screen
+        this.setScreen(new InsufficientPlayerScreen(this.model, this.inputThread));
         this.screen.showInsufficientPlayer(insufficientPlayer);
     }
 
