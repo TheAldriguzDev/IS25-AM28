@@ -40,6 +40,7 @@ public class CardStateJSON extends ActionJSON {
     // =================================================//
 
     // ======= CLIENT SHIP FLAGS/INFORMATION ======== //
+        // TODO: revise the maps with isEmpty check, there is the possibility they're not emptied after use, so once used they'll always be set // can just reset them after setting the state
         private boolean needsShipUpdate;
         private boolean needsUpdatedDroppedResources;
         private boolean needsUpdatedTakenResources;

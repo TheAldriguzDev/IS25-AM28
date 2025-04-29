@@ -40,7 +40,8 @@ public class WarZone extends EventCard {
     private String prevPlayer;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
     private Map<String, Integer> removedBatteries;
-    //private
+    private Map<String, Integer> updatedPositions;
+    private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
     private final Random random;
     private int diceResult;
@@ -79,6 +80,10 @@ public class WarZone extends EventCard {
         this.diceResult = generateDiceResult();
 
         this.affectedPlayer = Optional.empty();
+
+        this.updatedPositions = new HashMap<>();
+        this.removedBatteries = new HashMap<>();
+        this.removedLifeforms = new HashMap<>();
     }
 
     /**
@@ -392,6 +397,7 @@ public class WarZone extends EventCard {
             }
             case MOVEMENTSTEPS -> {
                 this.getBoard().movePlayerBackwards(player, this.movementSteps);
+                this.updatedPositions.put(player.getNickname(), player.getCursor());
 
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or to mark the card as used
                 this.affectedPlayer = Optional.empty();
@@ -459,6 +465,7 @@ public class WarZone extends EventCard {
     private WarZone handleRequiredCrew(Player player, WarZoneJSON warZoneJSON) {
         // Get the list of components where we need to remove the lifeform of the given player
         List<ComponentHelper<LifeformType>> lifeFormToBeRemoved = new ArrayList<>(warZoneJSON.getLifeformsToBeRemoved());
+        this.removedLifeforms.put(player.getNickname(), lifeFormToBeRemoved);
 
         if (lifeFormToBeRemoved.size() != this.requiredCrew) {
             throw new IllegalArgumentException("The lifeformsToBeRemoved size does not match with the card requirements!");
@@ -623,6 +630,8 @@ public class WarZone extends EventCard {
                         toHit.getPosition()[0],
                         toHit.getPosition()[1]
                 );
+                this.prevPlayer = player.getNickname();
+                this.previousPlayerRemovedComponents = new ArrayList<>();
             } catch (CoreDeletionAttemptException e) {
                 this.getBoard().eliminatePlayer(player);
             }
@@ -669,19 +678,34 @@ public class WarZone extends EventCard {
             if (this.getCurrentPlayer().isPresent()) {
                 cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
             }
-            cardState.setCurrActionIndex(this.current_action); // Need a way to set this only when necessary, but it might not be worth it
+            cardState.setCurrActionIndex(this.current_action); // Need a way to set this only when necessary, but it might not be worth it // should now be obsolete since there are flags
             // If present set the current player (the one that needs to play the game)
             if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
                 cardState.setAffectedPlayer(this.affectedPlayer.get().getNickname());
                 switch (this.cardActions.get(current_action).getConsequence()) {
                     case REQUIREDCREW -> {
+                        if (!this.removedLifeforms.isEmpty()) {
+                            cardState.setNeedsShipUpdate(true);
+                            cardState.setNeedsUpdatedRemovedLifeforms(true);
+                            cardState.setRemovedLifeforms(this.removedLifeforms);
+                        }
+                        // TODO: MISSING ELIMINATED PLAYER CASE
 
                     }
                     case MOVEMENTSTEPS -> {
-
+                        if(!this.updatedPositions.isEmpty()) {
+                            cardState.setNeedsBoardUpdate(true);
+                            cardState.setNeedsUpdatedPositions(true);
+                            cardState.setUpdatedPositions(this.updatedPositions);
+                        }
                     }
                     case SHOOTINGSEQUENCE -> {
-
+                        if(!this.previousPlayerRemovedComponents.isEmpty()) {
+                            cardState.setNeedsShipUpdate(true);
+                            cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
+                            // TODO: MISSING ELIMINATED PLAYER CASE
+                            // TODO: NEW FLAG SYSTEM NEEDED (needsComponentsUpdate)
+                        }
                     }
                     case LOSSITEMS -> {
                         // TODO: neede revision on the use of isEmpty on maps/mapsOf, it should might (probably) be wrong // can fix it with get(nickname).isEmpty
