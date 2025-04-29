@@ -184,12 +184,16 @@ public class Slavers extends EventCard {
         CardStateJSON slaversStateJSON = new CardStateJSON();
 
         if (hasBeenActivated()) {
+            slaversStateJSON.setNeedsBoardUpdate(false);
+            slaversStateJSON.setNeedsPlayerUpdate(false);
+            slaversStateJSON.setNeedsShipUpdate(false);
+
             playerOptional.ifPresent(player -> slaversStateJSON.setPlayerNickname(player.getNickname()));
 
             // The clients need to know when to update the right parameters
             slaversStateJSON.setFirstRound(this.firstRound);
+
             // If the first round is finished, send the dynamic info to the players
-            slaversStateJSON.setNeedsBoardUpdate(false);
             if (!firstRound) {
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToTakeCrewFrom) {
@@ -202,11 +206,13 @@ public class Slavers extends EventCard {
                     slaversStateJSON.setEliminatedPlayers(this.eliminatedPlayers);
                 }
             }
-            if (hasBeenDefeated && !updatedPositions.isEmpty()) { // if a player defeated the slavers and took the reward we need to update his position
+            // if the smugglers have been defeated we need to set the rewards (if taken)
+            if (hasBeenDefeated && !updatedPositions.isEmpty()) {
                 slaversStateJSON.setNeedsBoardUpdate(true);
                 slaversStateJSON.setNeedsUpdatedPositions(true);
                 slaversStateJSON.setUpdatedPositions(this.updatedPositions);
                 if (!this.updatedCredits.isEmpty()) {
+                    slaversStateJSON.setNeedsPlayerUpdate(true);
                     slaversStateJSON.setNeedsUpdatedCredits(true);
                     slaversStateJSON.setUpdatedCredits(this.updatedCredits);
                 } else {

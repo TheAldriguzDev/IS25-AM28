@@ -174,6 +174,7 @@ public class Smugglers extends EventCard {
                     // Nel caso gli item da lasciare non siano abbastanza (check lato client), batterie da rimuovere
                     //player.getShip().consumeEnergy(smugglersData.getTakenBatteries());
                     // Le batterie da rimuovere solo nel caso la lista di elementi da rimuovere non isa abbastanza grande, il client farà il controllo di fare la lista di elementi da togliore il piu grande possibile se non è possibile raggiungere una grandezza pari a takenItems
+                    // TODO: usare il component helper per le batterie
                     if (player.getShip().getAvailableEnergy() >= (takenItems - resourcesToDrop.size())) {
                         player.getShip().consumeEnergy(takenItems - resourcesToDrop.size());
                     } else {
@@ -193,14 +194,16 @@ public class Smugglers extends EventCard {
         CardStateJSON smugglersStateJSON = new CardStateJSON();
 
         if (hasBeenActivated()) {
-            if(playerOptional.isPresent()) {
-                smugglersStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-            }
-            // The clients need to know when to update the right parameters
-            smugglersStateJSON.setFirstRound(this.firstRound);
-            // If the first round is finished, send the dynamic info to the players
             smugglersStateJSON.setNeedsBoardUpdate(false);
             smugglersStateJSON.setNeedsShipUpdate(false);
+            smugglersStateJSON.setNeedsPlayerUpdate(false);
+
+            playerOptional.ifPresent(player -> smugglersStateJSON.setPlayerNickname(player.getNickname()));
+
+            // The clients need to know when to update the right parameters
+            smugglersStateJSON.setFirstRound(this.firstRound);
+
+            // If the first round is finished, send the dynamic info to the players
             if (!firstRound) {
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToTakeItemsFrom) {
@@ -208,19 +211,26 @@ public class Smugglers extends EventCard {
                 }
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
             }
+            // if the smugglers have been defeated we need to set the rewards (if taken)
             if (this.hasBeenDefeated && !updatedPositions.isEmpty()) {
                 smugglersStateJSON.setNeedsBoardUpdate(true);
                 smugglersStateJSON.setNeedsUpdatedPositions(true);
                 smugglersStateJSON.setUpdatedPositions(updatedPositions);
+                // Sets the dropped resources
                 if (!this.droppedResources.isEmpty()) {
                     smugglersStateJSON.setNeedsShipUpdate(true);
-                    smugglersStateJSON.setNeedsUpdatedResources(true);
+                    smugglersStateJSON.setNeedsUpdatedDroppedResources(true);
                     smugglersStateJSON.setDroppedResources(this.droppedResources);
+                } else {
+                    smugglersStateJSON.setNeedsUpdatedDroppedResources(false);
                 }
+                // Sets the taken resources
                 if (!this.takenResources.isEmpty()) {
                     smugglersStateJSON.setNeedsShipUpdate(true);
-                    smugglersStateJSON.setNeedsUpdatedResources(true);
+                    smugglersStateJSON.setNeedsUpdatedTakenResources(true);
                     smugglersStateJSON.setTakenResources(this.takenResources);
+                } else {
+                    smugglersStateJSON.setNeedsUpdatedTakenResources(false);
                 }
             }
         } else {

@@ -323,13 +323,15 @@ public class Pirates extends EventCard {
 
         //piratesStateJSON.setHasBeenActivated(hasBeenActivated());
         if (hasBeenActivated()) {
-            if(playerOptional.isPresent()) {
-                piratesStateJSON.setPlayerNickname(playerOptional.get().getNickname());
-            }
+            piratesStateJSON.setNeedsBoardUpdate(false);
+            piratesStateJSON.setNeedsPlayerUpdate(false);
+            piratesStateJSON.setNeedsShipUpdate(false);
+
+            playerOptional.ifPresent(player -> piratesStateJSON.setPlayerNickname(player.getNickname()));
             // The clients need to know when to update the right parameters
             piratesStateJSON.setFirstRound(this.firstRound);
+
             // If the first round is finished, send the dynamic info to the players
-            piratesStateJSON.setNeedsBoardUpdate(false);
             if (!firstRound) {
                 // Send information on the players that are going to be hit, along with the plasmaShot's data and the dice result
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
@@ -353,6 +355,7 @@ public class Pirates extends EventCard {
                 piratesStateJSON.setNeedsUpdatedPositions(true);
                 piratesStateJSON.setUpdatedPositions(updatedPositions);
                 if (!this.updatedCredits.isEmpty()) {
+                    piratesStateJSON.setNeedsPlayerUpdate(true);
                     piratesStateJSON.setNeedsUpdatedCredits(true);
                     piratesStateJSON.setUpdatedCredits(this.updatedCredits);
                 } else {

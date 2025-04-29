@@ -1,11 +1,14 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import it.polimi.ingsw.is25am28.Model.Components.Battery;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
 import java.util.Map;
@@ -32,26 +35,30 @@ public class CardStateJSON extends ActionJSON {
     // ========================================= //
 
     // ======== CLIENT BOARD FLAGS/INFORMATION ======== //
-    private boolean needsBoardUpdate;
-    private boolean needsUpdatedPositions;
-    private boolean needsUpdatedEliminatedPlayers;
-    private Map<String, Integer> updatedPositions;
-    private List<String> eliminatedPlayers;
+        private boolean needsBoardUpdate;
+        private boolean needsUpdatedPositions;
+        private boolean needsUpdatedEliminatedPlayers;
+        private Map<String, Integer> updatedPositions;
+        private List<String> eliminatedPlayers;
     // =================================================//
 
     // ======= CLIENT SHIP FLAGS/INFORMATION ======== //
-    private boolean needsShipUpdate;
-    private boolean needsUpdatedDroppedResources;
-    private boolean needsUpdatedTakenResources;
-    private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
-    private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
+        private boolean needsShipUpdate;
+        private boolean needsUpdatedDroppedResources;
+        private boolean needsUpdatedTakenResources;
+        private boolean needsUpdatedRemovedLifeforms;
+        private boolean needsUpdatedBatteries;
+        private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
+        private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
+        private Map<String , List<ComponentHelper<LifeformType>>> removedLifeforms;
+        private Map<String , List<ComponentHelper<Battery>>> removedBatteries;
     // ===============================================//
 
 
     // ======== RESOURCES/CREW INFORMATION ======== //
-    private List<ComponentHelper<ItemColor>> resourcesToTake;
-    private List<ComponentHelper<ItemColor>> resourcesToDrop;
-    private List<ComponentHelper<LifeformType>> lifeformsToRemove;
+        private List<ComponentHelper<ItemColor>> resourcesToTake;
+        private List<ComponentHelper<ItemColor>> resourcesToDrop;
+        private List<ComponentHelper<LifeformType>> lifeformsToRemove;
     // =============================================//
 
 
@@ -543,6 +550,42 @@ public class CardStateJSON extends ActionJSON {
         @JsonGetter("takenResources")
         public Map<String, List<ComponentHelper<ItemColor>>> getTakenResources() {
             return this.takenResources;
+        }
+
+        // ==== REMOVED LIFEFORMS ==== //
+        @JsonSetter("needsUpdatedRemovedLifeforms")
+        public void setNeedsUpdatedRemovedLifeforms(boolean needsUpdatedRemovedLifeforms) {
+            this.needsUpdatedRemovedLifeforms = needsUpdatedRemovedLifeforms;
+        }
+        @JsonGetter("needsUpdatedRemovedLifeforms")
+        public boolean getNeedsUpdatedRemovedLifeforms() {
+            return this.needsUpdatedRemovedLifeforms;
+        }
+        @JsonSetter("removedLifeforms")
+        public void setRemovedLifeforms(Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms) {
+            this.removedLifeforms = removedLifeforms;
+        }
+        @JsonGetter("removedLifeforms")
+        public Map<String, List<ComponentHelper<LifeformType>>> getRemovedLifeforms() {
+            return this.removedLifeforms;
+        }
+
+        // ==== REMOVED BATTERIES ==== //
+        @JsonSetter("needsUpdatedBatteries")
+        public void setNeedsUpdatedBatteries(boolean needsUpdatedBatteries) {
+            this.needsUpdatedBatteries = needsUpdatedBatteries;
+        }
+        @JsonGetter("needsUpdatedBatteries")
+        public boolean getNeedsUpdatedBatteries() {
+            return this.needsUpdatedBatteries;
+        }
+        @JsonSetter("removedBatteries")
+        public void setRemovedBatteries(Map<String, List<ComponentHelper<Battery>>> removedBatteries) {
+            this.removedBatteries = removedBatteries;
+        }
+        @JsonSetter("removedBatteries")
+        public Map<String, List<ComponentHelper<Battery>>> getRemovedBatteries() {
+            return this.removedBatteries;
         }
     // ==================================================  //
 
