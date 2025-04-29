@@ -19,6 +19,8 @@ public class Slavers extends EventCard {
     ArrayList<String> defeatedPlayers;
     private boolean firstRound;
     ArrayList<Player> playersToTakeCrewFrom;
+    private List<String> eliminatedPlayers;
+    private Map<String, Integer> updatedPositions;
 
     public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board) {
         super(name, cardLevel, board);
@@ -30,6 +32,7 @@ public class Slavers extends EventCard {
         this.defeatedPlayers = new ArrayList<>();
         this.firstRound = true;
         this.playersToTakeCrewFrom = new ArrayList<>();
+        updatedPositions = new HashMap<>();
     }
 
     @Override
@@ -73,6 +76,7 @@ public class Slavers extends EventCard {
                             if (slaversData.getTakeCredits()) {
                                 bonusEffect();
                                 getBoard().movePlayerBackwards(player, movementSteps);
+                                this.updatedPositions.put(playerNickname, player.getCursor());
                                 getBoard().validatePlayersPosition();
                             }
                         } else if (playerFirepower < requiredFirepower && !hasBeenDefeated) {
@@ -81,7 +85,7 @@ public class Slavers extends EventCard {
                         }
                     }
                     if (!firstRound) {
-                        if (playersToTakeCrewFrom.contains(player)) { // REdundant, since only affected players will send the data
+                        if (playersToTakeCrewFrom.contains(player)) { // Redundant, since only affected players will send the data
                             malusEffect(slaversData);
                         }
                     }
@@ -131,6 +135,7 @@ public class Slavers extends EventCard {
     protected void malusEffect(ActionJSON data) {
         Optional<Player> playerOptional = getCurrentPlayer();
         SlaversJSON slaversData = (SlaversJSON) data;
+        this.eliminatedPlayers = new ArrayList<>();
         playerOptional.ifPresent(
                 (Player player) -> {
                     // Remove the crew members from the given cabins
@@ -156,6 +161,7 @@ public class Slavers extends EventCard {
 
                     // Check if the player has finished all of its astronauts --> if yes it needs to be eliminated from the game
                     if (player.getShip().getCabinList().stream().flatMap(c -> c.getInhabitants().stream()).noneMatch(i -> i.getLifeformType().equals(LifeformType.ASTRONAUT))) {
+                        this.eliminatedPlayers.add(player.getNickname());
                         this.getBoard().eliminatePlayer(player);
                     }
 
@@ -180,12 +186,23 @@ public class Slavers extends EventCard {
             // The clients need to know when to update the right parameters
             slaversStateJSON.setFirstRound(this.firstRound);
             // If the first round is finished, send the dynamic info to the players
+            slaversStateJSON.setNeedsBoardUpdate(false);
             if (!firstRound) {
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToTakeCrewFrom) {
                     defeatedPlayers.add(player.getNickname());
                 }
                 slaversStateJSON.setDefeatedPlayers(defeatedPlayers);
+                if (!this.eliminatedPlayers.isEmpty()) {
+                    slaversStateJSON.setNeedsBoardUpdate(true);
+                    slaversStateJSON.setNeedsUpdatedEliminatedPlayers(true);
+                    slaversStateJSON.setEliminatedPlayers(this.eliminatedPlayers);
+                }
+            }
+            if (hasBeenDefeated && !updatedPositions.isEmpty()) { // if a player defeated the slavers and took the reward we need to update his position
+                slaversStateJSON.setNeedsBoardUpdate(true);
+                slaversStateJSON.setNeedsUpdatedPositions(true);
+                slaversStateJSON.setUpdatedPositions(this.updatedPositions);
             }
         } else {
             slaversStateJSON.setId(this.id);

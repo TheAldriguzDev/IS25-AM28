@@ -31,6 +31,7 @@ public class Pirates extends EventCard {
     private List<Component> previousPlayerRemovedComponents;
     private String prevPlayer;
     private List<String> eliminatedPlayers;
+    private Map<String, Integer> updatedPositions;
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board) {
         super(name, cardLevel, board);
@@ -46,6 +47,7 @@ public class Pirates extends EventCard {
         firstRound = true;
         playersToHit = new ArrayList<>();
         hasBeenDefeated = false;
+        updatedPositions = new HashMap<>();
     }
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
@@ -112,6 +114,7 @@ public class Pirates extends EventCard {
                             if (piratesData.getTakeCredits()) {
                                 bonusEffect();
                                 getBoard().movePlayerBackwards(player, movementSteps);
+                                this.updatedPositions.put(playerNickname, player.getCursor());
                                 getBoard().validatePlayersPosition();
                             }
                         } else if (playerFirepower < requiredFirepower && !hasBeenDefeated) {
@@ -323,6 +326,7 @@ public class Pirates extends EventCard {
             // The clients need to know when to update the right parameters
             piratesStateJSON.setFirstRound(this.firstRound);
             // If the first round is finished, send the dynamic info to the players
+            piratesStateJSON.setNeedsBoardUpdate(false);
             if (!firstRound) {
                 // Send information on the players that are going to be hit, along with the plasmaShot's data and the dice result
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
@@ -336,8 +340,15 @@ public class Pirates extends EventCard {
                     piratesStateJSON.setNeedsShipsUpdate(true);
                     piratesStateJSON.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
                 } else if (!eliminatedPlayers.isEmpty()) {
+                    piratesStateJSON.setNeedsBoardUpdate(true); // need to update the board
+                    piratesStateJSON.setNeedsUpdatedEliminatedPlayers(true); // in particular, need to update the eliminated players in the board
                     piratesStateJSON.setEliminatedPlayers(eliminatedPlayers);
                 }
+            }
+            if (this.hasBeenDefeated && !updatedPositions.isEmpty()) {
+                piratesStateJSON.setNeedsBoardUpdate(true);
+                piratesStateJSON.setNeedsUpdatedPositions(true);
+                piratesStateJSON.setUpdatedPositions(updatedPositions);
             }
         } else {
             // This static info will be sent to the clients only when the card has not been activated yet

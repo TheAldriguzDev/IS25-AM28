@@ -25,6 +25,7 @@ public class Smugglers extends EventCard {
     private ArrayList<String> defeatedPlayers;
     private boolean firstRound;
     private ArrayList<Player> playersToTakeItemsFrom;
+    private Map<String, Integer> updatedPositions;
 
     public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
@@ -40,6 +41,7 @@ public class Smugglers extends EventCard {
         this.defeatedPlayers = new ArrayList<>();
         this.firstRound = true;
         this.playersToTakeItemsFrom = new ArrayList<>();
+        this.updatedPositions = new HashMap<>();
     }
 
     /*
@@ -89,6 +91,7 @@ public class Smugglers extends EventCard {
                             if (smugglersData.getTakeLoot()) {
                                 bonusEffect(data);
                                 getBoard().movePlayerBackwards(player, movementSteps);
+                                this.updatedPositions.put(playerNickname, player.getCursor());
                                 getBoard().validatePlayersPosition();
                             }
                         } else if (playerFirepower < requiredFirepower) {
@@ -193,12 +196,18 @@ public class Smugglers extends EventCard {
             // The clients need to know when to update the right parameters
             smugglersStateJSON.setFirstRound(this.firstRound);
             // If the first round is finished, send the dynamic info to the players
+            smugglersStateJSON.setNeedsBoardUpdate(false);
             if (!firstRound) {
                 ArrayList<String> defeatedPlayers = new ArrayList<>();
                 for (Player player : playersToTakeItemsFrom) {
                     defeatedPlayers.add(player.getNickname());
                 }
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
+            }
+            if (this.hasBeenDefeated && !updatedPositions.isEmpty()) {
+                smugglersStateJSON.setNeedsBoardUpdate(true);
+                smugglersStateJSON.setNeedsUpdatedPositions(true);
+                smugglersStateJSON.setUpdatedPositions(updatedPositions);
             }
         } else {
             smugglersStateJSON.setId(this.id);
