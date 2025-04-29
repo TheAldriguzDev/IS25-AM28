@@ -10,8 +10,13 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipCons
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 
 public class Screen implements ClientUI {
+    public static final String UNKNOWN_COMMAND_ERROR = PrintUtils.addColor("ERROR: Selected command does not exist", ANSIColors.RED);
+    public static final String DEFAULT_COMMAND_PREFIX = "Select an option: ";
+
     protected final ClientModel model;
     protected InputThread inputThread;
     protected VirtualView client;

@@ -440,6 +440,7 @@ public final class ShipConstructionTUIPage extends TUIPage {
         this.composeShipConstructionWidget().printWidget();
         this.getShipConstructionCommand();
     }
+
     /**
      * Selects a tile among the available ones and "binds" it to the user that
      * selected it until he either places, deselects or reserves that tile.

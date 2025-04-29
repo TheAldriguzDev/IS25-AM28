@@ -20,7 +20,7 @@ import java.util.List;
         @JsonSubTypes.Type(value = FlipTimer.class, name = "FlipTimer")
 })
 
-public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FlipTimer, NewPlayer, Ping, PlaceTile, Reconnect, RefreshGames, SelectTile, SendShipConfirmation {
+public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FlipTimer, NewPlayer, Ping, PlaceTile, Reconnect, RefreshGames, SelectSubdeck, SelectTile, SendShipConfirmation {
 
     /**
      * @return true if the message it's correct, otherwise it will return false
