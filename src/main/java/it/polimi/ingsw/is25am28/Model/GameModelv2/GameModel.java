@@ -257,8 +257,8 @@ public class GameModel {
         return states;
     }
 
-    public ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectedAction) throws IllegalStateException {
-        return this.currentState.selectDeselectSubdeck(player, selectedDeck, isSelectedAction);
+    public ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws IllegalStateException {
+        return this.currentState.selectDeselectSubdeck(player, selectedDeck, isSelectAction);
     }
 
     /**

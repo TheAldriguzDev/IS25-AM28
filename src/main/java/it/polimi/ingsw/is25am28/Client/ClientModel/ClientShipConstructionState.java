@@ -4,7 +4,6 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 
 import java.util.*;
 
