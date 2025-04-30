@@ -12,15 +12,13 @@ import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import javax.smartcardio.Card;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class OpenSpace extends EventCard {
     private Map<String, Integer> playerPowerResult;
     private Map<String, Integer> updatedPositions;
     private List<String> eliminatedPlayers;
+    private Map<String, Integer> removedBatteries;
     // TODO : modify the system to update from time to time, not at the end
 
     // TODO: Implement the specific constructor to build the card with the necessary data
@@ -29,6 +27,7 @@ public class OpenSpace extends EventCard {
         this.playerPowerResult = new HashMap<>();
         this.updatedPositions = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
+        this.removedBatteries = new HashMap<>();
     }
 
     @Override
@@ -77,6 +76,7 @@ public class OpenSpace extends EventCard {
                 playerNickname.equals( this.getCurrentPlayer().get().getNickname() ) &&
                 usedEnergy <= this.getCurrentPlayer().get().getShip().getAvailableEnergy() ) {
 
+            this.removedBatteries.put(playerNickname, this.getCurrentPlayer().get().getShip().getAvailableEnergy() - usedEnergy);
             // Calculate the ship engines power with:
             // +1 for every normal motor
             // +2 for every double motor activated
@@ -143,51 +143,24 @@ public class OpenSpace extends EventCard {
 
     @Override
     public CardStateJSON generateState() {
+        Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setNeedsBoardUpdate(false);
-        cardState.setNeedsPlayerUpdate(false);
-        cardState.setNeedsShipUpdate(false);
-        Map<String, Integer> playersBatteries = new HashMap<>();
-
-        if (this.getCurrentPlayer().isPresent()) {
-            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
-        }
 
         if (hasBeenActivated()) {
-            cardState.setPlayersEnginePower(this.playerPowerResult);
-            cardState.setEliminatedPlayers(this.eliminatedPlayers);
-            cardState.setUpdatedPositions(this.updatedPositions);
-            this.updatedPositions.clear();
-            // TODO: this part about the batteries needs to be fixed, as of now it looks for all the batteries, it should only set the changed batteries, like with removedBatteries in other cards
-            for (Player p : this.players) {
-                playersBatteries.put(p.getNickname(), p.getShip().getBatteryList().stream().mapToInt(Battery::getAvailability).sum());
-            }
-            cardState.setPlayersBatteries(playersBatteries);
+            initStateFlags(cardState);
 
+            // Setting the playerNickname (if present)
+            playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+
+            //cardState.setPlayersEnginePower(this.playerPowerResult);
+            setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
+            setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
+            setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
         } else {
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
             cardState.setCardLevel(this.cardLevel);
         }
-
-
-
-
-
-
-        // If the card is finished we send all the effective changes:
-        // 1. The players updated available energies
-        // 2. The updated board with the new players positions
-//        if (this.hasFinished()) {
-//
-//
-//
-//            // TODO: va fatto tutto un passo alla volta
-//
-//            //cardState.setBoard(this.getBoard().generateState());
-//
-//        }
-
         return cardState;
     }
 

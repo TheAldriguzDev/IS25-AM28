@@ -80,19 +80,16 @@ public class Stardust extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON stardustStateJSON = new CardStateJSON();
-        stardustStateJSON.setNeedsBoardUpdate(false);
-        stardustStateJSON.setNeedsPlayerUpdate(false);
-        stardustStateJSON.setNeedsShipUpdate(false);
 
         if (hasBeenActivated()) {
+            // Initializing the state flags
+            initStateFlags(stardustStateJSON);
+
+            // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> stardustStateJSON.setPlayerNickname(player.getNickname()));
 
-            if(!this.updatedPositions.isEmpty()) {
-                stardustStateJSON.setNeedsBoardUpdate(true);
-                stardustStateJSON.setNeedsUpdatedPositions(true);
-                stardustStateJSON.setUpdatedPositions(this.updatedPositions);
-                this.updatedPositions.clear();
-            }
+            // Sets the updatedPositions (if there are any)
+            setUpdatedPositionsIfNecessary(stardustStateJSON, updatedPositions);
         } else {
             stardustStateJSON.setId(this.id);
             stardustStateJSON.setCardName(getCardName());

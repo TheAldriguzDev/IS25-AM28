@@ -29,6 +29,11 @@ public class MeteorShower extends EventCard {
     private List<Component> prevPlayerRemovedComponents;
     private String prevPlayer;
 
+    private Map<String, List<Map<String, Object>>> removedComponents;
+    private Map<String, Integer> removedBatteries; // TODO: Implement in the state
+    private List<String> eliminatedPlayers;
+
+
     public MeteorShower(
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
@@ -43,6 +48,9 @@ public class MeteorShower extends EventCard {
         this.random = new Random();
         this.prevPlayer = null;
         this.prevPlayerRemovedComponents = new ArrayList<>();
+        this.removedComponents = new HashMap<>();
+        this.removedBatteries = new HashMap<>();
+        this.eliminatedPlayers = new ArrayList<>();
 
         try {
             for (List<Integer> meteorDescriptor : meteorSequence) {
@@ -249,6 +257,7 @@ public class MeteorShower extends EventCard {
                                         int[] shieldCoverage = shield.getCoveredSide();
                                         try {
                                             // Consume energy only if there's enough energy available
+
                                             shipPtr.consumeEnergy(1);
                                             for (int j : shieldCoverage) {
                                                 if (currMeteor.getSize() == 1 && j == inboundDirection) {
@@ -400,7 +409,9 @@ public class MeteorShower extends EventCard {
                             toHit.getPosition()[0],
                             toHit.getPosition()[1]
                     );
+                    this.removedComponents.put(this.prevPlayer, this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList());
                 } catch (CoreDeletionAttemptException e) {
+                    this.eliminatedPlayers.add(this.currentPlayer.get().getNickname());
                     this.getBoard().eliminatePlayer(this.currentPlayer.get());
                 }
             }
@@ -438,9 +449,6 @@ public class MeteorShower extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setNeedsBoardUpdate(false);
-        cardState.setNeedsPlayerUpdate(false);
-        cardState.setNeedsShipUpdate(false);
 
         // The dice throw is performed by generateState only at the beginning
         // since the card hasn't been used yet
@@ -448,29 +456,25 @@ public class MeteorShower extends EventCard {
             this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
         }
 
-        // If the current player is present, then add it to the card state
-        this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
-
         if (hasBeenActivated()) {
+            initStateFlags(cardState);
+
+            // If the current player is present, then add it to the card state
+            this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+
             cardState.setCurrMeteorIndex(this.currMeteorIndex);
             cardState.setDiceThrowResult(this.diceThrowResult);
             cardState.setCurrMeteorDescriptor(Map.of("meteorSize", this.meteorSequence.get(this.currMeteorIndex).getSize(), "meteorDirection", this.meteorSequence.get(this.currMeteorIndex).getOrientation()));
             // The differential update happens always except when the card is
             // first picked (since no one has been hit with a meteor yet)
-            if (!this.prevPlayerRemovedComponents.isEmpty()) {
-                // Setting which components were removed from the previous player, thus
-                // performing a differential update on what changed before the card
-                // transitioned to the next state
-                cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList()));
-                this.prevPlayerRemovedComponents.clear();
-                this.prevPlayer = null;
-            }
-            else {
-                // No components were removed, therefore the
-                // prevPlayerRemovedComponents list is null
-                cardState.setPreviousPlayerRemovedComponents(null);
-            }
 
+            // Setting which components were removed from the previous player, thus
+            // performing a differential update on what changed before the card
+            // transitioned to the next state
+            setUpdatedRemovedComponentsIfNecessary(cardState, this.removedComponents);
+
+            // Setting the eliminated players (if there are any)
+            setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
         } else {
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());

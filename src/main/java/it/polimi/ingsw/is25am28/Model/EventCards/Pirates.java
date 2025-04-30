@@ -29,10 +29,11 @@ public class Pirates extends EventCard {
     List<Player> playersToHit;
     private boolean hasBeenDefeated;
     private List<Component> previousPlayerRemovedComponents;
-    private String prevPlayer;
     private List<String> eliminatedPlayers;
     private Map<String, Integer> updatedPositions;
     private Map<String, Integer> updatedCredits;
+    private Map<String, List<Map<String, Object>>> removedComponents;
+    private Map<String, Integer> removedBatteries; // TODO: Implement in the state (both firepower and shields)
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board) {
         super(name, cardLevel, board);
@@ -50,6 +51,7 @@ public class Pirates extends EventCard {
         this.hasBeenDefeated = false;
         this.updatedPositions = new HashMap<>();
         this.updatedCredits = new HashMap<>();
+        this.removedComponents = new HashMap<>();
     }
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
@@ -102,7 +104,6 @@ public class Pirates extends EventCard {
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
                     String playerNickname = piratesData.getPlayerNickname();
-                    prevPlayer = playerNickname;
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
@@ -227,7 +228,8 @@ public class Pirates extends EventCard {
                                 for (int row = 4; row < 9; row++) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
-                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
+                                            this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -246,7 +248,8 @@ public class Pirates extends EventCard {
                                 for (int column = 3; column < 10; column++) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
-                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
+                                            this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -265,7 +268,8 @@ public class Pirates extends EventCard {
                                 for (int row = 8; row > 3; row--) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
-                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
+                                            this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -284,7 +288,8 @@ public class Pirates extends EventCard {
                                 for (int column = 9; column > 2; column--) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
-                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componenete
+                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
+                                            this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -323,11 +328,11 @@ public class Pirates extends EventCard {
 
         //piratesStateJSON.setHasBeenActivated(hasBeenActivated());
         if (hasBeenActivated()) {
-            piratesStateJSON.setNeedsBoardUpdate(false);
-            piratesStateJSON.setNeedsPlayerUpdate(false);
-            piratesStateJSON.setNeedsShipUpdate(false);
+            initStateFlags(piratesStateJSON);
 
+            // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> piratesStateJSON.setPlayerNickname(player.getNickname()));
+
             // The clients need to know when to update the right parameters
             piratesStateJSON.setFirstRound(this.firstRound);
 
@@ -338,34 +343,19 @@ public class Pirates extends EventCard {
                 for (Player player : playersToHit) {
                     defeatedPlayers.add(player.getNickname());
                 }
+                piratesStateJSON.setDefeatedPlayers(defeatedPlayers);  // TODO: Need more thinking on this
+
                 piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
-                piratesStateJSON.setDefeatedPlayers(defeatedPlayers);
                 piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
-                if (!previousPlayerRemovedComponents.isEmpty()) {
-                    piratesStateJSON.setNeedsShipUpdate(true);
-                    piratesStateJSON.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
-                    this.previousPlayerRemovedComponents.clear();
-                    this.prevPlayer = null;
-                } else if (!eliminatedPlayers.isEmpty()) {
-                    piratesStateJSON.setNeedsBoardUpdate(true); // need to update the board
-                    piratesStateJSON.setNeedsUpdatedEliminatedPlayers(true); // in particular, need to update the eliminated players in the board
-                    piratesStateJSON.setEliminatedPlayers(eliminatedPlayers);
-                    this.eliminatedPlayers.clear();
-                }
+
+                setUpdatedRemovedComponentsIfNecessary(piratesStateJSON, this.removedComponents);
+                setUpdatedEliminatedPlayersIfNecessary(piratesStateJSON, this.eliminatedPlayers);
+
             }
-            if (this.hasBeenDefeated && !updatedPositions.isEmpty()) {
-                piratesStateJSON.setNeedsBoardUpdate(true);
-                piratesStateJSON.setNeedsUpdatedPositions(true);
-                piratesStateJSON.setUpdatedPositions(updatedPositions);
-                this.updatedPositions.clear();
-                if (!this.updatedCredits.isEmpty()) {
-                    piratesStateJSON.setNeedsPlayerUpdate(true);
-                    piratesStateJSON.setNeedsUpdatedCredits(true);
-                    piratesStateJSON.setUpdatedCredits(this.updatedCredits);
-                    this.updatedCredits.clear();
-                } else {
-                    piratesStateJSON.setNeedsUpdatedCredits(false);
-                }
+            // If the pirates have been defeated, set the rewards
+            if (this.hasBeenDefeated) {
+                setUpdatedPositionsIfNecessary(piratesStateJSON, this.updatedPositions);
+                setUpdatedCreditsIfNecessary(piratesStateJSON, this.updatedCredits);
             }
         } else {
             // This static info will be sent to the clients only when the card has not been activated yet

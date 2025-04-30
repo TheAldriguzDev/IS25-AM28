@@ -17,6 +17,7 @@ import java.util.*;
 
 public class Epidemy extends EventCard {
     private List<ComponentHelper<LifeformType>> previousPlayeRemovedLifeforms;
+    private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
     // Constructor
     public Epidemy(String name, int cardLevel, Board board) {
@@ -82,6 +83,8 @@ public class Epidemy extends EventCard {
                         cabin.getInhabitants().getFirst().getLifeformType()
                 );
             }
+            removedLifeforms = new HashMap<>();
+            removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), previousPlayeRemovedLifeforms);
         }
 
         // Getting the next player (in order of leaderboard placements)
@@ -100,24 +103,16 @@ public class Epidemy extends EventCard {
      */
     @Override
     public CardStateJSON generateState() {
+        Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setNeedsBoardUpdate(false);
-        cardState.setNeedsPlayerUpdate(false);
-        cardState.setNeedsShipUpdate(false);
-
-        if (this.getCurrentPlayer().isPresent()) {
-            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
-        }
 
         if (hasBeenActivated()) {
-            if (!previousPlayeRemovedLifeforms.isEmpty()) {
-                cardState.setNeedsShipUpdate(true);
-                cardState.setNeedsUpdatedRemovedLifeforms(true);
-                cardState.setLifeformsToRemove(this.previousPlayeRemovedLifeforms);
-                this.previousPlayeRemovedLifeforms.clear();
-            } else {
-                cardState.setLifeformsToRemove(null);
-            }
+            initStateFlags(cardState);
+
+            // Setting the playerNickname (if present)
+            playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+
+            setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
         } else {
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());

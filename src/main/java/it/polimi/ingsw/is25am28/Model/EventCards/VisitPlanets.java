@@ -25,6 +25,8 @@ public class VisitPlanets extends EventCard {
     private List<ComponentHelper<ItemColor>> itemsToDrop;
     private List<ComponentHelper<ItemColor>> itemsToTake;
     private Map<String, Integer> updatedPositions;
+    private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
+    private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
     private int chosenPlanetIndex;
 
 
@@ -43,8 +45,10 @@ public class VisitPlanets extends EventCard {
         this.movementSteps = movementSteps;
         this.itemsPerPlanet = new HashMap<>();
         this.resourceBank = resourceBank;
-        itemsToDrop = new ArrayList<>();
-        itemsToTake = new ArrayList<>();
+        this.itemsToDrop = new ArrayList<>();
+        this.itemsToTake = new ArrayList<>();
+        this.droppedResources = new HashMap<>();
+        this.takenResources = new HashMap<>();
 
         int planetIndex = 0;
 
@@ -254,6 +258,7 @@ public class VisitPlanets extends EventCard {
                             }
                         }
                     }
+                    this.droppedResources.put(this.getCurrentPlayer().get().getNickname(), this.itemsToDrop);
 
                     // (2) - Before withdrawing the requested resources from the planet,
                     //       verify that they are actually present, otherwise consider
@@ -282,6 +287,7 @@ public class VisitPlanets extends EventCard {
                             }
                         }
                     }
+                    this.takenResources.put(this.getCurrentPlayer().get().getNickname(), this.itemsToTake);
 
                     // Finally, apply all the deposits and withdrawals
                     // that are now considered valid resource transfers
@@ -320,33 +326,21 @@ public class VisitPlanets extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setNeedsBoardUpdate(false);
-        cardState.setNeedsPlayerUpdate(false);
-        cardState.setNeedsShipUpdate(false);
         Map<Integer, Map<ItemColor, Integer>> availablePlanets;
 
-        this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+
         if (hasBeenActivated()) {
+            initStateFlags(cardState);
+
+            // Setting the playerNickname (if present)
+            this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+
             if (itemsPerPlanet.containsKey(chosenPlanetIndex)) {
                 cardState.setChosenPlanetIndex(chosenPlanetIndex);
-                if (!this.updatedPositions.isEmpty()) {
-                    cardState.setNeedsBoardUpdate(true);
-                    cardState.setNeedsUpdatedPositions(true);
-                    cardState.setUpdatedPositions(this.updatedPositions);
-                    this.updatedPositions.clear();
-                }
-                if (!this.itemsToDrop.isEmpty()) {
-                    cardState.setNeedsShipUpdate(true);
-                    cardState.setNeedsUpdatedDroppedResources(true);
-                    cardState.setResourcesToDrop(itemsToDrop);
-                    this.itemsToDrop.clear();
-                }
-                if (!this.itemsToTake.isEmpty()) {
-                    cardState.setNeedsShipUpdate(true);
-                    cardState.setNeedsUpdatedTakenResources(true);
-                    cardState.setResourcesToTake(itemsToTake);
-                    this.itemsToTake.clear();
-                }
+
+                setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
+                setUpdatedDroppedResourcesIfNecessary(cardState, this.droppedResources);
+                setUpdatedTakenResourcesIfNecessary(cardState, this.takenResources);
             } else {
                 cardState.setChosenPlanetIndex(-1);
             }

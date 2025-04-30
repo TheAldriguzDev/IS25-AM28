@@ -24,12 +24,19 @@ public class AbandonedStation extends EventCard {
 
     private List<String> playersThatCanUseTheCard;
 
+    private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
+    private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
+    private Map<String, Integer> updatedPositions;
+
     public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> givenItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
         this.requiredCrew = requiredCrew;
         this.movementStep = movementStep;
         this.givenItems = givenItems;
         this.resourceBank = resourceBank;
+        this.droppedResources = new HashMap<>();
+        this.takenResources = new HashMap<>();
+        this.updatedPositions = new HashMap<>();
     }
 
     /**
@@ -104,6 +111,8 @@ public class AbandonedStation extends EventCard {
         if (this.getCurrentPlayer().isPresent()) {
             this.cardUsed();
 
+            this.droppedResources.put(this.getCurrentPlayer().get().getNickname(), this.resourceToDropOff);
+
             // Add the resources from the player to the bank
             for ( ComponentHelper<ItemColor> resourceDrop : this.resourceToDropOff ) {
                 resourceDrop.getItem().ifPresent( i ->
@@ -113,6 +122,8 @@ public class AbandonedStation extends EventCard {
                                 resourceDrop.getI(),
                                 resourceDrop.getJ()));
             }
+
+            this.takenResources.put(this.getCurrentPlayer().get().getNickname(), this.resourceToTake);
 
             // Add the resources from the bank to the player
             for ( ComponentHelper<ItemColor> resourceTake : this.resourceToTake ) {
@@ -131,38 +142,26 @@ public class AbandonedStation extends EventCard {
         if (this.getCurrentPlayer().isPresent()) {
             // Move the player of the given steps and re-validate the positions
             this.getBoard().movePlayerBackwards(this.getCurrentPlayer().get(), this.movementStep);
+            this.updatedPositions.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getCursor());
             this.getBoard().validatePlayersPosition();
         }
     }
 
     @Override
     public CardStateJSON generateState() {
+        Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setNeedsBoardUpdate(false);
-        cardState.setNeedsPlayerUpdate(false);
-        cardState.setNeedsShipUpdate(false);
-
-        // If there is a currentPlayer set it in the DTO
-        if (this.getCurrentPlayer().isPresent()) {
-            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
-        }
 
         if (hasBeenActivated()) {
+            initStateFlags(cardState);
+
+            // Setting the playerNickname (if present)
+            playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
-            if (hasBeenUsedByPlayer) {
-                if (!this.resourceToDropOff.isEmpty()) {
-                    cardState.setNeedsShipUpdate(true);
-                    cardState.setNeedsUpdatedDroppedResources(true);
-                    cardState.setResourcesToDrop(this.resourceToDropOff);
-                    this.resourceToDropOff.clear();
-                }
-                if (!this.resourceToTake.isEmpty()) {
-                    cardState.setNeedsShipUpdate(true);
-                    cardState.setNeedsUpdatedTakenResources(true);
-                    cardState.setResourcesToTake(this.resourceToTake);
-                    this.resourceToTake.clear();
-                }
-            }
+            setUpdatedDroppedResourcesIfNecessary(cardState, droppedResources);
+            setUpdatedTakenResourcesIfNecessary(cardState, takenResources);
+            setUpdatedPositionsIfNecessary(cardState, updatedPositions);
         } else {
             // Card information that are needed to play
             cardState.setId(this.id);
@@ -186,31 +185,6 @@ public class AbandonedStation extends EventCard {
 
             cardState.setStationResources(itemList);
         }
-
-
-
-//        // if the card is finished and a player has used it, we can update the clients with the changes
-//        // otherwise send to the players the card information
-//        if (this.hasFinished()) {
-//            if (this.hasBeenUsedByPlayer) {
-//                // Update the board
-//                //cardState.setBoard(this.getBoard().generateState());
-//
-//                // Generate the player info that also includes the ship
-//                //Map<String, PlayerJSON> playerInfo = new HashMap<>();
-//                //playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
-//                //cardState.setPlayersInfo(playerInfo);
-//
-//                // Info that other players can use to update their version of this player's ship
-//
-//        } else {
-//            // If the player can use the card the flag will be set to true, otherwise if it doesn't have the card requirement it
-//            // will be set to false
-//            if (this.currentPlayer.isPresent()) {
-//                cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
-//            }
-//        }
-
         return cardState;
     }
 

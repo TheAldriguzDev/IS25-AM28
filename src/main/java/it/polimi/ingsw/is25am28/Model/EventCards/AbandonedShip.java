@@ -19,6 +19,7 @@ public class AbandonedShip extends EventCard {
 
     private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
     private Map <String, List<ComponentHelper<LifeformType>>> removedLifeforms;
+    private List<String> eliminatedPlayers;
 
     private boolean hasBeenUsedByPlayer;
 
@@ -33,6 +34,7 @@ public class AbandonedShip extends EventCard {
         this.hasBeenUsedByPlayer = false;
         this.playersThatCanUseTheCard = new ArrayList<>();
         this.removedLifeforms = new HashMap<>();
+        this.eliminatedPlayers = new ArrayList<>();
     }
 
     /**
@@ -159,6 +161,7 @@ public class AbandonedShip extends EventCard {
 
             // Check if the player has finished all of its astronauts --> if yes it needs to be eliminated from the game
             if (ship.getCabinList().stream().flatMap(c -> c.getInhabitants().stream()).noneMatch(i -> i.getLifeformType().equals(LifeformType.ASTRONAUT))) {
+                this.eliminatedPlayers.add(this.getCurrentPlayer().get().getNickname());
                 this.getBoard().eliminatePlayer(this.getCurrentPlayer().get());
             }
         }
@@ -166,25 +169,19 @@ public class AbandonedShip extends EventCard {
 
     @Override
     public CardStateJSON generateState() {
+        Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setNeedsBoardUpdate(false);
-        cardState.setNeedsPlayerUpdate(false);
-        cardState.setNeedsShipUpdate(false);
-
-        // If there is a currentPlayer set it in the DTO
-        if (this.getCurrentPlayer().isPresent()) {
-            cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
-        }
 
         if (hasBeenActivated()) {
+            initStateFlags(cardState);
+
+            // Setting the playerNickname (if present)
+            playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             if (this.hasBeenUsedByPlayer) {
-                if (!this.removedLifeforms.isEmpty()) {
-                    cardState.setNeedsShipUpdate(true);
-                    cardState.setNeedsUpdatedRemovedLifeforms(true);
-                    cardState.setRemovedLifeforms(removedLifeforms);
-                    this.removedLifeforms.clear();
-                }
+                setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
+                setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
             }
         } else {
             // Set the card information that are needed to play the game
@@ -195,32 +192,6 @@ public class AbandonedShip extends EventCard {
             cardState.setGivenCredits(this.givenCredits);
             cardState.setMovementSteps(this.movementStep);
         }
-
-
-
-
-
-        // If the card is finished and a player has used it, we can update the clients with the changes
-//        // otherwise send to the players the card information
-//        if (this.hasFinished()) {
-//            if (this.hasBeenUsedByPlayer) {
-//                // Update the board
-////                cardState.setBoard(this.getBoard().generateState());
-//
-//                // Generate the player info that also includes the ship
-////                Map<String, PlayerJSON> playerInfo = new HashMap<>();
-////                playerInfo.put(this.currentPlayer.get().getNickname(), PlayerJSON.fromPlayer(this.getCurrentPlayer().get(), true));
-////                cardState.setPlayersInfo(playerInfo);
-//
-//            }
-//        } else {
-//            // If the player can use the card the flag will be set to true, otherwise if it doesn't have the card requirement it
-//            // will be set to false
-//            if (this.currentPlayer.isPresent()) {
-//                cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
-//            }
-//        }
-
         return cardState;
     }
 

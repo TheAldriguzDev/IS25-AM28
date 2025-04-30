@@ -14,10 +14,7 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class EventCard {
     protected final int id;
@@ -183,6 +180,28 @@ public abstract class EventCard {
      */
     public abstract WidgetTUI generateWidget(CardStateJSON cardStateJSON);
 
+    protected void initStateFlags(CardStateJSON cardState) {
+        // Initializing the three main Flags
+        cardState.setNeedsShipUpdate(false);
+        cardState.setNeedsPlayerUpdate(false);
+        cardState.setNeedsBoardUpdate(false);
+        // Initializing the lesser flags, it necessary since otherwise null flag fields will be checked when a main flag is set to true
+
+        // Lesser flags relative to updateShip (clientSide)
+        cardState.setNeedsUpdatedDroppedResources(false);
+        cardState.setNeedsUpdatedTakenResources(false);
+        cardState.setNeedsUpdatedRemovedLifeforms(false);
+        cardState.setNeedsUpdatedBatteries(false);
+        cardState.setNeedsUpdatedRemovedComponents(false);
+        //Lesser flags relative to updateBoard (clientSide)
+        cardState.setNeedsUpdatedPositions(false);
+        cardState.setNeedsUpdatedEliminatedPlayers(false);
+        // Lesser flags relative to updateClient (clientSide)
+        cardState.setNeedsUpdatedCredits(false);
+    }
+
+    // TODO: IMPORTANT: instead of new HashMap there should be clear(), but this empties the data set in the state, a copy of the data is needed, the states are currently not usable
+
     /**
      * If the map of updatedPositions is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
      * */
@@ -190,24 +209,20 @@ public abstract class EventCard {
         if(!updatedPositions.isEmpty()) {
             cardState.setNeedsBoardUpdate(true);
             cardState.setNeedsUpdatedPositions(true);
-            cardState.setUpdatedPositions(updatedPositions);
+            cardState.setUpdatedPositions(new HashMap<>(updatedPositions));
             updatedPositions.clear();
-        } else {
-            cardState.setNeedsUpdatedPositions(false);
         }
     }
 
     /**
      * If the list of eliminatedPlayers is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
      * */
-    protected void setUpdatedEliminatedPlayersIfNecessary(CardStateJSON cardState, List<String> updatedEliminatedPlayers) {
-        if(!updatedEliminatedPlayers.isEmpty()) {
+    protected void setUpdatedEliminatedPlayersIfNecessary(CardStateJSON cardState, List<String> eliminatedPlayers) {
+        if(!eliminatedPlayers.isEmpty()) {
             cardState.setNeedsBoardUpdate(true);
             cardState.setNeedsUpdatedEliminatedPlayers(true);
-            cardState.setEliminatedPlayers(updatedEliminatedPlayers);
-            updatedEliminatedPlayers.clear();
-        } else {
-            cardState.setNeedsUpdatedEliminatedPlayers(false);
+            cardState.setEliminatedPlayers(new ArrayList<>(eliminatedPlayers));
+            eliminatedPlayers.clear();
         }
     }
 
@@ -218,77 +233,69 @@ public abstract class EventCard {
         if(!updatedCredits.isEmpty()) {
             cardState.setNeedsPlayerUpdate(true);
             cardState.setNeedsUpdatedCredits(true);
-            cardState.setUpdatedCredits(updatedCredits);
+            cardState.setUpdatedCredits(new HashMap<>(updatedCredits));
             updatedCredits.clear();
-        } else {
-            cardState.setNeedsUpdatedCredits(false);
         }
     }
 
     /**
-     * If the map of updatedDroppedResources is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * If the map of droppedResources is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
      * */
     protected void setUpdatedDroppedResourcesIfNecessary(CardStateJSON cardState, Map<String, List<ComponentHelper<ItemColor>>> droppedResources) {
         if(!droppedResources.isEmpty()) {
             cardState.setNeedsShipUpdate(true);
             cardState.setNeedsUpdatedDroppedResources(true);
-            cardState.setDroppedResources(droppedResources);
+            cardState.setDroppedResources(new HashMap<>(droppedResources));
             droppedResources.clear();
-        } else {
-            cardState.setNeedsUpdatedDroppedResources(false);
         }
     }
 
     /**
-     * If the map of updatedTakenResources is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * If the map of takenResources is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
      * */
     protected void setUpdatedTakenResourcesIfNecessary(CardStateJSON cardState, Map<String, List<ComponentHelper<ItemColor>>> takenResources) {
         if(!takenResources.isEmpty()) {
             cardState.setNeedsShipUpdate(true);
             cardState.setNeedsUpdatedTakenResources(true);
-            cardState.setTakenResources(takenResources);
+            cardState.setTakenResources(new HashMap<>(takenResources));
             takenResources.clear();
-        } else {
-            cardState.setNeedsUpdatedTakenResources(false);
-        }
-    }
-
-    // THIS NEEDS TO BE CHANGE TO WORK IN A SIMILAR FASHION TO THE OTHERS
-    protected void setUpdatedRemovedComponentsIfNecessary(CardStateJSON cardState, String nickname, List<Component> removedComponents) {
-        if(!removedComponents.isEmpty()) {
-            cardState.setNeedsShipUpdate(true);
-            // Missing flag
-            cardState.setPreviousPlayerRemovedComponents(Map.of(nickname, removedComponents.stream().map(Component::toMap).toList()));
-        } else {
-            // Missing flag
         }
     }
 
     /**
-     * If the map of updatedRemovedComponents is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * If the map of removedComponents is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * */
+    protected void setUpdatedRemovedComponentsIfNecessary(CardStateJSON cardState, Map<String, List<Map<String, Object>>> removedComponents) {
+        if(!removedComponents.isEmpty()) {
+            cardState.setNeedsShipUpdate(true);
+            cardState.setNeedsUpdatedRemovedComponents(true);
+            cardState.setRemovedComponents(new HashMap<>(removedComponents));
+            removedComponents.clear();
+        }
+    }
+
+    /**
+     * If the map of removedLifeforms is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
      * */
     protected void setUpdatedRemovedLifeformsIfNecessary(CardStateJSON cardState, Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms) {
         if (!removedLifeforms.isEmpty()) {
             cardState.setNeedsShipUpdate(true);
             cardState.setNeedsUpdatedRemovedLifeforms(true);
-            cardState.setRemovedLifeforms(removedLifeforms);
+            cardState.setRemovedLifeforms(new HashMap<>(removedLifeforms));
             removedLifeforms.clear();
-        } else {
-            cardState.setNeedsUpdatedRemovedLifeforms(false);
         }
     }
 
     /**
-     * If the map of updatedRemovedBatteries is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * If the map of removedBatteries is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
      * */
+    // TODO: The name should be UpdatedBatteries since it contains the new batteries count, but i will be changed in the future to contain the coordinates of the actual components from which to remove the batteries, so in theory a name change is not necessary
     protected void setUpdatedRemovedBatteriesIfNecessary(CardStateJSON cardState, Map<String, Integer> removedBatteries) {
         if (!removedBatteries.isEmpty()) {
             cardState.setNeedsShipUpdate(true);
             cardState.setNeedsUpdatedBatteries(true);
-            cardState.setRemovedBatteries(removedBatteries);
+            cardState.setRemovedBatteries(new HashMap<>(removedBatteries));
             removedBatteries.clear();
-        } else {
-            cardState.setNeedsUpdatedBatteries(false);
         }
     }
 

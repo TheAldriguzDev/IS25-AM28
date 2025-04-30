@@ -22,6 +22,7 @@ public class Slavers extends EventCard {
     private List<String> eliminatedPlayers;
     private Map<String, Integer> updatedPositions;
     private Map<String, Integer> updatedCredits;
+    private Map<String, Integer> removedBatteries; // TODO: Implement in the state
 
     public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board) {
         super(name, cardLevel, board);
@@ -184,10 +185,10 @@ public class Slavers extends EventCard {
         CardStateJSON slaversStateJSON = new CardStateJSON();
 
         if (hasBeenActivated()) {
-            slaversStateJSON.setNeedsBoardUpdate(false);
-            slaversStateJSON.setNeedsPlayerUpdate(false);
-            slaversStateJSON.setNeedsShipUpdate(false);
+            // Initializing the state flags
+            initStateFlags(slaversStateJSON);
 
+            // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> slaversStateJSON.setPlayerNickname(player.getNickname()));
 
             // The clients need to know when to update the right parameters
@@ -199,30 +200,17 @@ public class Slavers extends EventCard {
                 for (Player player : playersToTakeCrewFrom) {
                     defeatedPlayers.add(player.getNickname());
                 }
-                slaversStateJSON.setDefeatedPlayers(defeatedPlayers);
-                if (!this.eliminatedPlayers.isEmpty()) {
-                    slaversStateJSON.setNeedsBoardUpdate(true);
-                    slaversStateJSON.setNeedsUpdatedEliminatedPlayers(true);
-                    slaversStateJSON.setEliminatedPlayers(this.eliminatedPlayers);
-                    this.eliminatedPlayers.clear();
-                }
+                slaversStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO: Need more thinking on this
+
+                setUpdatedEliminatedPlayersIfNecessary(slaversStateJSON, eliminatedPlayers);
             }
             // if the smugglers have been defeated we need to set the rewards (if taken)
-            if (hasBeenDefeated && !updatedPositions.isEmpty()) {
-                slaversStateJSON.setNeedsBoardUpdate(true);
-                slaversStateJSON.setNeedsUpdatedPositions(true);
-                slaversStateJSON.setUpdatedPositions(this.updatedPositions);
-                this.updatedPositions.clear();
-                if (!this.updatedCredits.isEmpty()) {
-                    slaversStateJSON.setNeedsPlayerUpdate(true);
-                    slaversStateJSON.setNeedsUpdatedCredits(true);
-                    slaversStateJSON.setUpdatedCredits(this.updatedCredits);
-                    this.updatedCredits.clear();
-                } else {
-                    slaversStateJSON.setNeedsUpdatedCredits(false);
-                }
+            if (hasBeenDefeated) {
+                setUpdatedPositionsIfNecessary(slaversStateJSON, updatedPositions);
+                setUpdatedCreditsIfNecessary(slaversStateJSON, updatedCredits);
             }
         } else {
+            // Static info about the card
             slaversStateJSON.setId(this.id);
             slaversStateJSON.setCardName(this.getCardName());
             slaversStateJSON.setCardLevel(this.getCardLevel());

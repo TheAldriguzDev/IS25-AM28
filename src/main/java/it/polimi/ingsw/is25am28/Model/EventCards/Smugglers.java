@@ -27,7 +27,7 @@ public class Smugglers extends EventCard {
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
     private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
     //private Map<String, List<ComponentHelper<Battery>>> removedBatteries;
-    private Map<String, Integer> removedBatteries;
+    private Map<String, Integer> removedBatteries; // TODO: missing implementation on firepower
 
     public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
@@ -200,10 +200,10 @@ public class Smugglers extends EventCard {
         CardStateJSON smugglersStateJSON = new CardStateJSON();
 
         if (hasBeenActivated()) {
-            smugglersStateJSON.setNeedsBoardUpdate(false);
-            smugglersStateJSON.setNeedsShipUpdate(false);
-            smugglersStateJSON.setNeedsPlayerUpdate(false);
+            // Initializing the state flags
+            initStateFlags(smugglersStateJSON);
 
+            // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> smugglersStateJSON.setPlayerNickname(player.getNickname()));
 
             // The clients need to know when to update the right parameters
@@ -215,43 +215,24 @@ public class Smugglers extends EventCard {
                 for (Player player : playersToTakeItemsFrom) {
                     defeatedPlayers.add(player.getNickname());
                 }
-                smugglersStateJSON.setDefeatedPlayers(defeatedPlayers);
+
+                // This field is necessary to the clients to know if they need to send additional info
+                smugglersStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO: Need more thinking on this
+
                 // Sets the dropped resources (if there are any) // this works both in case of defeat or victory
-                if (!this.droppedResources.isEmpty()) {
-                    smugglersStateJSON.setNeedsShipUpdate(true);
-                    smugglersStateJSON.setNeedsUpdatedDroppedResources(true);
-                    smugglersStateJSON.setDroppedResources(this.droppedResources);
-                    this.droppedResources.clear();
-                } else {
-                    smugglersStateJSON.setNeedsUpdatedDroppedResources(false);
-                }
+                setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, droppedResources);
+
                 // Sets the removed batteries (if there are any)
-                if (!this.removedBatteries.isEmpty()) {
-                    smugglersStateJSON.setNeedsShipUpdate(true);
-                    smugglersStateJSON.setNeedsUpdatedBatteries(true);
-                    smugglersStateJSON.setRemovedBatteries(this.removedBatteries);
-                    this.removedBatteries.clear();
-                } else {
-                    smugglersStateJSON.setNeedsUpdatedBatteries(false);
-                }
+                setUpdatedRemovedBatteriesIfNecessary(smugglersStateJSON, removedBatteries);
             }
             // if the smugglers have been defeated we need to set the rewards (if taken)
-            if (this.hasBeenDefeated && !updatedPositions.isEmpty()) {
-                smugglersStateJSON.setNeedsBoardUpdate(true);
-                smugglersStateJSON.setNeedsUpdatedPositions(true);
-                smugglersStateJSON.setUpdatedPositions(updatedPositions);
-                this.updatedPositions.clear();
-                // Sets the taken resources (if there are any)
-                if (!this.takenResources.isEmpty()) {
-                    smugglersStateJSON.setNeedsShipUpdate(true);
-                    smugglersStateJSON.setNeedsUpdatedTakenResources(true);
-                    smugglersStateJSON.setTakenResources(this.takenResources);
-                    this.takenResources.clear();
-                } else {
-                    smugglersStateJSON.setNeedsUpdatedTakenResources(false);
-                }
+            if (this.hasBeenDefeated) {
+                setUpdatedPositionsIfNecessary(smugglersStateJSON, updatedPositions);
+                setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, droppedResources);
+                setUpdatedTakenResourcesIfNecessary(smugglersStateJSON, takenResources);
             }
         } else {
+            // Setting the card's static data
             smugglersStateJSON.setId(this.id);
             smugglersStateJSON.setCardName(this.getCardName());
             smugglersStateJSON.setCardLevel(this.getCardLevel());

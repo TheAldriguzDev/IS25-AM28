@@ -668,45 +668,33 @@ public class WarZone extends EventCard {
      * */
     @Override
     public CardStateJSON generateState() {
+        Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setNeedsBoardUpdate(false);
-        cardState.setNeedsPlayerUpdate(false);
-        cardState.setNeedsShipUpdate(false);
+
 
         if (this.hasBeenActivated()) {
+            initStateFlags(cardState);
+
             cardState.setApplyMovementStepsConsequence(false);
             cardState.setApplyRequiredCrewConsequences(false);
             cardState.setApplyLossItemsConsequence(false);
             cardState.setApplyShootingSequenceConsequence(false);
 
-            if (this.getCurrentPlayer().isPresent()) {
-                cardState.setPlayerNickname(this.getCurrentPlayer().get().getNickname());
-            }
+            // Setting the playerNickname (if present)
+            playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+
             cardState.setCurrActionIndex(this.current_action); // Need a way to set this only when necessary, but it might not be worth it // should now be obsolete since there are flags
             // If present set the current player (the one that needs to play the game)
             if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
                 cardState.setAffectedPlayer(this.affectedPlayer.get().getNickname());
                 switch (this.cardActions.get(current_action).getConsequence()) {
                     case REQUIREDCREW -> {
-                        if (!this.removedLifeforms.isEmpty()) {
-                            cardState.setNeedsShipUpdate(true);
-                            cardState.setNeedsUpdatedRemovedLifeforms(true);
-                            cardState.setRemovedLifeforms(this.removedLifeforms);
-                        }
-                        if (!this.eliminatedPlayers.isEmpty()) {
-                            cardState.setNeedsBoardUpdate(true);
-                            cardState.setNeedsUpdatedEliminatedPlayers(true);
-                            cardState.setEliminatedPlayers(this.eliminatedPlayers);
-                            this.eliminatedPlayers.clear();
-                        }
+                        setUpdatedRemovedLifeformsIfNecessary(cardState, removedLifeforms);
+                        setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
 
                     }
                     case MOVEMENTSTEPS -> {
-                        if(!this.updatedPositions.isEmpty()) {
-                            cardState.setNeedsBoardUpdate(true);
-                            cardState.setNeedsUpdatedPositions(true);
-                            cardState.setUpdatedPositions(this.updatedPositions);
-                        }
+                        setUpdatedPositionsIfNecessary(cardState, updatedPositions);
                     }
                     case SHOOTINGSEQUENCE -> {
                         if(!this.previousPlayerRemovedComponents.isEmpty()) {
@@ -714,27 +702,12 @@ public class WarZone extends EventCard {
                             cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
                             // TODO: NEW FLAG SYSTEM NEEDED (needsComponentsUpdate)
                         }
-                        if (!this.eliminatedPlayers.isEmpty()) {
-                            cardState.setNeedsBoardUpdate(true);
-                            cardState.setNeedsUpdatedEliminatedPlayers(true);
-                            cardState.setEliminatedPlayers(this.eliminatedPlayers);
-                            this.eliminatedPlayers.clear();
-                        }
+                        setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
                     }
                     case LOSSITEMS -> {
                         // TODO: neede revision on the use of isEmpty on maps/mapsOf, it should might (probably) be wrong // can fix it with get(nickname).isEmpty
-                        if (!this.droppedResources.isEmpty()) {
-                            cardState.setNeedsShipUpdate(true);
-                            cardState.setNeedsUpdatedDroppedResources(true);
-                            cardState.setDroppedResources(droppedResources);
-                        } else {
-                            cardState.setNeedsUpdatedDroppedResources(false);
-                        }
-                        if (!this.removedBatteries.isEmpty()) {
-                            cardState.setNeedsShipUpdate(true);
-                            cardState.setNeedsUpdatedBatteries(true);
-                            cardState.setRemovedBatteries(removedBatteries);
-                        }
+                        setUpdatedDroppedResourcesIfNecessary(cardState, this.droppedResources);
+                        setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
                     }
                 }
             } else {

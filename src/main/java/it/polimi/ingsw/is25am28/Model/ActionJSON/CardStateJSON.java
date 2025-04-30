@@ -46,11 +46,13 @@ public class CardStateJSON extends ActionJSON {
         private boolean needsUpdatedTakenResources;
         private boolean needsUpdatedRemovedLifeforms;
         private boolean needsUpdatedBatteries;
+        private boolean needsUpdatedRemovedComponents;
         private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
         private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
         private Map<String , List<ComponentHelper<LifeformType>>> removedLifeforms;
         //private Map<String , List<ComponentHelper<Battery>>> removedBatteries;
         private Map<String, Integer> removedBatteries; // Temporary solution while deciding what to do about batteries
+        private Map<String, List<Map<String, Object>>> removedComponents;
     // ===============================================//
 
 
@@ -539,6 +541,7 @@ public class CardStateJSON extends ActionJSON {
         return this.droppedResources;
     }
 
+
         // ==== TAKEN RESOURCES ==== //
         @JsonSetter("needsUpdatedTakenResources")
         public void setNeedsUpdatedTakenResources(boolean needsUpdatedTakenResources) {
@@ -601,6 +604,24 @@ public class CardStateJSON extends ActionJSON {
         @JsonGetter("removedBatteries")
         public Map<String, Integer> getRemovedBatteries() {
         return this.removedBatteries;
+        }
+
+        // ==== REMOVED COMPONENTS ==== //
+        @JsonSetter("needsUpdatedRemovedComponents")
+        public void setNeedsUpdatedRemovedComponents(boolean needsUpdatedRemovedComponents) {
+        this.needsUpdatedRemovedComponents = needsUpdatedRemovedComponents;
+        }
+        @JsonGetter("needsUpdatedRemovedComponents")
+        public boolean getNeedsUpdatedRemovedComponents() {
+        return this.needsUpdatedRemovedComponents;
+        }
+        @JsonSetter("removedComponents")
+        public void setRemovedComponents(Map<String, List<Map<String, Object>>> removedComponents) {
+        this.removedComponents = removedComponents;
+        }
+        @JsonGetter("removedComponents")
+        public Map<String, List<Map<String, Object>>> getRemovedComponents() {
+        return this.removedComponents;
         }
 
     // ==================================================  //
