@@ -111,7 +111,10 @@ public class Epidemy extends EventCard {
 
         if (hasBeenActivated()) {
             if (!previousPlayeRemovedLifeforms.isEmpty()) {
+                cardState.setNeedsShipUpdate(true);
+                cardState.setNeedsUpdatedRemovedLifeforms(true);
                 cardState.setLifeformsToRemove(this.previousPlayeRemovedLifeforms);
+                this.previousPlayeRemovedLifeforms.clear();
             } else {
                 cardState.setLifeformsToRemove(null);
             }

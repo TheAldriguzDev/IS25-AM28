@@ -150,8 +150,18 @@ public class AbandonedStation extends EventCard {
         if (hasBeenActivated()) {
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             if (hasBeenUsedByPlayer) {
-                cardState.setResourcesToDrop(this.resourceToDropOff);
-                cardState.setResourcesToTake(this.resourceToTake);
+                if (!this.resourceToDropOff.isEmpty()) {
+                    cardState.setNeedsShipUpdate(true);
+                    cardState.setNeedsUpdatedDroppedResources(true);
+                    cardState.setResourcesToDrop(this.resourceToDropOff);
+                    this.resourceToDropOff.clear();
+                }
+                if (!this.resourceToTake.isEmpty()) {
+                    cardState.setNeedsShipUpdate(true);
+                    cardState.setNeedsUpdatedTakenResources(true);
+                    cardState.setResourcesToTake(this.resourceToTake);
+                    this.resourceToTake.clear();
+                }
             }
         } else {
             // Card information that are needed to play

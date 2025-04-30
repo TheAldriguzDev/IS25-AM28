@@ -11,6 +11,8 @@ public class ClientWarZone extends ClientEventCard {
     private final int requiredCrew;
     private final int movementSteps;
     private final int requiredResources;
+    private String affectedPlayer;
+    private int currActionIndex;
 
     public ClientWarZone(CardStateJSON cardState) {
         super(cardState);
@@ -27,18 +29,24 @@ public class ClientWarZone extends ClientEventCard {
 
     @Override
     public void updateCard(CardStateJSON cardState) {
-        if (cardState.getAffectedPlayer().isEmpty()) {
-
+        if (!cardState.getAffectedPlayer().isEmpty()) {
+            this.affectedPlayer = cardState.getAffectedPlayer();
         }
-        if (cardState.getApplyRequiredCrewConsequence()) {
+        if (cardState.getCurrActionIndex() == -1) {
+            this.currActionIndex = cardState.getCurrActionIndex();
+        } // necessary to know what to display
+//        if (cardState.getApplyRequiredCrewConsequence()) {
+//
+//        } else if (cardState.getApplyMovementStepsConsequence()) {
+//
+//        } else if (cardState.getApplyShootingSequenceConsequence()) {
+//
+//        } else if (cardState.getApplyLossItemsConsequence()) {
+//
+//        }
+        //all this stuff is done by the other update functions
+        //Only need to read the action index to properly display the widget
 
-        } else if (cardState.getApplyMovementStepsConsequence()) {
-
-        } else if (cardState.getApplyShootingSequenceConsequence()) {
-
-        } else if (cardState.getApplyLossItemsConsequence()) {
-
-        }
     }
 
     @Override

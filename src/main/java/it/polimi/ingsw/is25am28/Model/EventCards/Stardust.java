@@ -11,12 +11,10 @@ import java.util.*;
 
 public class Stardust extends EventCard {
     private Map<String, Integer> updatedPositions;
-    private boolean needsBoardUpdate;
 
     public Stardust(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
         updatedPositions = new HashMap<>();
-        needsBoardUpdate = false;
     }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
@@ -44,7 +42,6 @@ public class Stardust extends EventCard {
                     if (player.equals(this.players.getLast())) {
                         this.cardUsed(); // Mark the card as used
                         this.getBoard().validatePlayersPosition();
-                        this.needsBoardUpdate = true;
                     } else {
                         this.getNextPlayer();
                     }
@@ -90,9 +87,11 @@ public class Stardust extends EventCard {
         if (hasBeenActivated()) {
             playerOptional.ifPresent(player -> stardustStateJSON.setPlayerNickname(player.getNickname()));
 
-            stardustStateJSON.setNeedsBoardUpdate(needsBoardUpdate);
-            if(this.needsBoardUpdate) {
-                stardustStateJSON.setUpdatedPositions(updatedPositions);
+            if(!this.updatedPositions.isEmpty()) {
+                stardustStateJSON.setNeedsBoardUpdate(true);
+                stardustStateJSON.setNeedsUpdatedPositions(true);
+                stardustStateJSON.setUpdatedPositions(this.updatedPositions);
+                this.updatedPositions.clear();
             }
         } else {
             stardustStateJSON.setId(this.id);

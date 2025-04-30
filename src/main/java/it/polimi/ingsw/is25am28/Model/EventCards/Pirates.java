@@ -344,20 +344,25 @@ public class Pirates extends EventCard {
                 if (!previousPlayerRemovedComponents.isEmpty()) {
                     piratesStateJSON.setNeedsShipUpdate(true);
                     piratesStateJSON.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
+                    this.previousPlayerRemovedComponents.clear();
+                    this.prevPlayer = null;
                 } else if (!eliminatedPlayers.isEmpty()) {
                     piratesStateJSON.setNeedsBoardUpdate(true); // need to update the board
                     piratesStateJSON.setNeedsUpdatedEliminatedPlayers(true); // in particular, need to update the eliminated players in the board
                     piratesStateJSON.setEliminatedPlayers(eliminatedPlayers);
+                    this.eliminatedPlayers.clear();
                 }
             }
             if (this.hasBeenDefeated && !updatedPositions.isEmpty()) {
                 piratesStateJSON.setNeedsBoardUpdate(true);
                 piratesStateJSON.setNeedsUpdatedPositions(true);
                 piratesStateJSON.setUpdatedPositions(updatedPositions);
+                this.updatedPositions.clear();
                 if (!this.updatedCredits.isEmpty()) {
                     piratesStateJSON.setNeedsPlayerUpdate(true);
                     piratesStateJSON.setNeedsUpdatedCredits(true);
                     piratesStateJSON.setUpdatedCredits(this.updatedCredits);
+                    this.updatedCredits.clear();
                 } else {
                     piratesStateJSON.setNeedsUpdatedCredits(false);
                 }
@@ -398,152 +403,5 @@ public class Pirates extends EventCard {
 
 
     public WidgetTUI generateWidget(CardStateJSON piratesState) {
-        WidgetTUI cardWidget = new WidgetTUI();
-        WidgetTUI cardInfoWidget = new WidgetTUI();
-
-        cardWidget.appendString("====" + piratesState.getCardName().toUpperCase() + "====");
-
-        if (this.firstRound) {
-            cardInfoWidget.appendString("Level: " + piratesState.getCardLevel());
-            cardInfoWidget.appendString("Given credits: " + piratesState.getGivenCredits());
-            cardInfoWidget.appendString("Days: " + piratesState.getMovementSteps());
-            // TODO : does the shootingSequence need to be shown to the clients as a whole?
-            cardInfoWidget.appendString("Required Firepower: " + piratesState.getRequiredFirepower());
-        } else {
-//            cardInfoWidget.appendString("Target player is: " + piratesState.getPlayerNickname());
-//            cardInfoWidget.appendString("Current PlasmaShot size: " + piratesState.getCurrPlasmaShotDescriptor().getKey());
-//            cardInfoWidget.appendString("Current PlasmaShot direction: " + piratesState.getCurrPlasmaShotDescriptor().getValue());
-            switch (piratesState.getCurrPlasmaShotDescriptor().get("shotDirection")) {
-                case 0 -> {
-                    if(piratesState.getCurrPlasmaShotDescriptor().get("shotSize") == 1) {
-                        cardInfoWidget = getSmallDownwardsShotWidget();
-                    } else {
-                        cardInfoWidget = getBigDownwardsShotWidget();
-                    }
-                }
-                case 1 -> {
-                    if(piratesState.getCurrPlasmaShotDescriptor().get("shotSize") == 1) {
-                        cardInfoWidget = getSmallShotUpwardsWidget();
-                    } else {
-                        cardInfoWidget = getBigShotUpwardsWidget();
-                    }
-                }
-                case 2 -> {
-                    if (piratesState.getCurrPlasmaShotDescriptor().get("shotSize") == 1) {
-                        cardInfoWidget = getSmallRightShotWidget();
-                    } else {
-                        cardInfoWidget = getBigRightShotWidget();
-                    }
-                }
-                case 3 -> {
-                    if (piratesState.getCurrPlasmaShotDescriptor().get("shotSize") == 1) {
-                        cardInfoWidget = getSmallLeftShotWidget();
-                    } else {
-                        cardInfoWidget = getBigLeftShotWidget();
-                    }
-                }
-            }
-
-
-            // TODO : when does the dice throw need to be shown to the client?
-        }
-        cardInfoWidget.wrapWidgetWithBorder();
-
-
-
-        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
-    }
-
-    private WidgetTUI getSmallDownwardsShotWidget() {
-        WidgetTUI plasmaShotWidget = new WidgetTUI();
-
-        // TODO : swap to colored version once the centerScreen is fixed to work with colored widgets
-
-//        plasmaShotWidget.appendString(PrintUtils.addColor("    ┌─┐    ", ANSIColors.RED));
-//        plasmaShotWidget.appendString(PrintUtils.addColor("   ┌╯ ╰┐   ", ANSIColors.RED));
-//        plasmaShotWidget.appendString(PrintUtils.addColor("  ┌╯ ░ ╰┐  ", ANSIColors.RED));
-//        plasmaShotWidget.appendString(PrintUtils.addColor(" ┌╯ ░░░ ╰┐ ", ANSIColors.RED));
-//        plasmaShotWidget.appendString(PrintUtils.addColor("┌╯ ░░░░░ ╰┐", ANSIColors.RED));
-//        plasmaShotWidget.appendString(PrintUtils.addColor("│ ░░░░░░░ │", ANSIColors.RED));
-//        plasmaShotWidget.appendString(PrintUtils.addColor("╰─┐ ░░░ ┌─╯", ANSIColors.RED));
-//        plasmaShotWidget.appendString(PrintUtils.addColor("  ╰─────╯  ", ANSIColors.RED));
-
-        plasmaShotWidget.appendString("SMALL PLASMASHOT");
-        plasmaShotWidget.appendString("    ┌─┐    ");
-        plasmaShotWidget.appendString("   ┌╯ ╰┐   ");
-        plasmaShotWidget.appendString("  ┌╯ ░ ╰┐  ");
-        plasmaShotWidget.appendString(" ┌╯ ░░░ ╰┐ ");
-        plasmaShotWidget.appendString("┌╯ ░░░░░ ╰┐");
-        plasmaShotWidget.appendString("│ ░░░░░░░ │");
-        plasmaShotWidget.appendString("╰─┐ ░░░ ┌─╯");
-        plasmaShotWidget.appendString("  ╰─────╯  ");
-        plasmaShotWidget.appendString("COMING FROM ABOVE");
-
-        return plasmaShotWidget.centerWidgetScreen();
-    }
-
-    private WidgetTUI getBigDownwardsShotWidget() {
-        WidgetTUI plasmaShotWidget = new WidgetTUI();
-
-        plasmaShotWidget.appendString("BIG PLASMASHOT");
-        plasmaShotWidget.appendString("    ┌──┐    ");
-        plasmaShotWidget.appendString("   ┌╯  ╰┐   ");
-        plasmaShotWidget.appendString("  ┌╯ ░░ ╰┐  ");
-        plasmaShotWidget.appendString(" ┌╯ ░░░░ ╰┐ ");
-        plasmaShotWidget.appendString("┌╯ ░░░░░░ ╰┐");
-        plasmaShotWidget.appendString("│ ░░░░░░░░ │");
-        plasmaShotWidget.appendString("│ ░░░░░░░░ │");
-        plasmaShotWidget.appendString("╰─┐ ░░░░ ┌─╯");
-        plasmaShotWidget.appendString("  ╰──────╯  ");
-        plasmaShotWidget.appendString("COMING FROM ABOVE");
-
-        return plasmaShotWidget.centerWidgetScreen();
-    }
-
-    private WidgetTUI getSmallShotUpwardsWidget() {
-        return null;
-    }
-
-    private WidgetTUI getBigShotUpwardsWidget() {
-        return null;
-    }
-
-    private WidgetTUI getSmallRightShotWidget() {
-        return null;
-    }
-
-    private WidgetTUI getBigRightShotWidget() {
-        return null;
-    }
-
-    private WidgetTUI getSmallLeftShotWidget() {
-        WidgetTUI plasmaShotWidget = new WidgetTUI();
-
-        plasmaShotWidget.appendString("SMALL PLASMASHOT ");
-        plasmaShotWidget.appendString("       ┌──────╮  ");
-        plasmaShotWidget.appendString("   ┌───╯ ░░░░ └─╮");
-        plasmaShotWidget.appendString("┌──╯ ░░░░░░░░░░ │");
-        plasmaShotWidget.appendString("└──╮ ░░░░░░░░░░ │");
-        plasmaShotWidget.appendString("   └───╮ ░░░░ ┌─╯");
-        plasmaShotWidget.appendString("       └──────╯  ");
-        plasmaShotWidget.appendString("COMING FOR THE LEFT");
-
-        return plasmaShotWidget.addPadding(0,0,0, 1);
-    }
-
-    private WidgetTUI getBigLeftShotWidget() {
-        WidgetTUI plasmaShotWidget = new WidgetTUI();
-
-        plasmaShotWidget.appendString("BIG PLASMASHOT");
-        plasmaShotWidget.appendString("         ┌───────╮  ");
-        plasmaShotWidget.appendString("    ┌────╯ ░░░░░ └─╮");
-        plasmaShotWidget.appendString("┌───╯ ░░░░░░░░░░░░ │");
-        plasmaShotWidget.appendString("│ ░░░░░░░░░░░░░░░░ │");
-        plasmaShotWidget.appendString("└───╮ ░░░░░░░░░░░░ │");
-        plasmaShotWidget.appendString("    └────╮ ░░░░░ ┌─╯");
-        plasmaShotWidget.appendString("         └───────╯  ");
-        plasmaShotWidget.appendString("COMING FOR THE LEFT");
-
-        return plasmaShotWidget;
-    }
+        return null;}
 }

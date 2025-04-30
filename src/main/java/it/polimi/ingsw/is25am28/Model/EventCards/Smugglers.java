@@ -221,6 +221,7 @@ public class Smugglers extends EventCard {
                     smugglersStateJSON.setNeedsShipUpdate(true);
                     smugglersStateJSON.setNeedsUpdatedDroppedResources(true);
                     smugglersStateJSON.setDroppedResources(this.droppedResources);
+                    this.droppedResources.clear();
                 } else {
                     smugglersStateJSON.setNeedsUpdatedDroppedResources(false);
                 }
@@ -229,6 +230,7 @@ public class Smugglers extends EventCard {
                     smugglersStateJSON.setNeedsShipUpdate(true);
                     smugglersStateJSON.setNeedsUpdatedBatteries(true);
                     smugglersStateJSON.setRemovedBatteries(this.removedBatteries);
+                    this.removedBatteries.clear();
                 } else {
                     smugglersStateJSON.setNeedsUpdatedBatteries(false);
                 }
@@ -238,11 +240,13 @@ public class Smugglers extends EventCard {
                 smugglersStateJSON.setNeedsBoardUpdate(true);
                 smugglersStateJSON.setNeedsUpdatedPositions(true);
                 smugglersStateJSON.setUpdatedPositions(updatedPositions);
+                this.updatedPositions.clear();
                 // Sets the taken resources (if there are any)
                 if (!this.takenResources.isEmpty()) {
                     smugglersStateJSON.setNeedsShipUpdate(true);
                     smugglersStateJSON.setNeedsUpdatedTakenResources(true);
                     smugglersStateJSON.setTakenResources(this.takenResources);
+                    this.takenResources.clear();
                 } else {
                     smugglersStateJSON.setNeedsUpdatedTakenResources(false);
                 }

@@ -43,6 +43,8 @@ public class VisitPlanets extends EventCard {
         this.movementSteps = movementSteps;
         this.itemsPerPlanet = new HashMap<>();
         this.resourceBank = resourceBank;
+        itemsToDrop = new ArrayList<>();
+        itemsToTake = new ArrayList<>();
 
         int planetIndex = 0;
 
@@ -327,9 +329,24 @@ public class VisitPlanets extends EventCard {
         if (hasBeenActivated()) {
             if (itemsPerPlanet.containsKey(chosenPlanetIndex)) {
                 cardState.setChosenPlanetIndex(chosenPlanetIndex);
-                cardState.setUpdatedPositions(updatedPositions);
-                cardState.setResourcesToDrop(itemsToDrop);
-                cardState.setResourcesToTake(itemsToTake);
+                if (!this.updatedPositions.isEmpty()) {
+                    cardState.setNeedsBoardUpdate(true);
+                    cardState.setNeedsUpdatedPositions(true);
+                    cardState.setUpdatedPositions(this.updatedPositions);
+                    this.updatedPositions.clear();
+                }
+                if (!this.itemsToDrop.isEmpty()) {
+                    cardState.setNeedsShipUpdate(true);
+                    cardState.setNeedsUpdatedDroppedResources(true);
+                    cardState.setResourcesToDrop(itemsToDrop);
+                    this.itemsToDrop.clear();
+                }
+                if (!this.itemsToTake.isEmpty()) {
+                    cardState.setNeedsShipUpdate(true);
+                    cardState.setNeedsUpdatedTakenResources(true);
+                    cardState.setResourcesToTake(itemsToTake);
+                    this.itemsToTake.clear();
+                }
             } else {
                 cardState.setChosenPlanetIndex(-1);
             }

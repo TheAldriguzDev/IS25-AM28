@@ -42,6 +42,7 @@ public class WarZone extends EventCard {
     private Map<String, Integer> removedBatteries;
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
+    private List<String> eliminatedPlayers;
 
     private final Random random;
     private int diceResult;
@@ -84,6 +85,7 @@ public class WarZone extends EventCard {
         this.updatedPositions = new HashMap<>();
         this.removedBatteries = new HashMap<>();
         this.removedLifeforms = new HashMap<>();
+        this.eliminatedPlayers = new ArrayList<>();
     }
 
     /**
@@ -483,6 +485,7 @@ public class WarZone extends EventCard {
 
         // Check if the player has finished all of its astronauts --> if yes it needs to be eliminated from the game
         if (playerShip.getCabinList().stream().flatMap(c -> c.getInhabitants().stream()).noneMatch(i -> i.getLifeformType().equals(LifeformType.ASTRONAUT))) {
+            this.eliminatedPlayers.add(player.getNickname());
             this.getBoard().eliminatePlayer(player);
         }
 
@@ -633,6 +636,7 @@ public class WarZone extends EventCard {
                 this.prevPlayer = player.getNickname();
                 this.previousPlayerRemovedComponents = new ArrayList<>();
             } catch (CoreDeletionAttemptException e) {
+                this.eliminatedPlayers.add(player.getNickname());
                 this.getBoard().eliminatePlayer(player);
             }
         }
@@ -689,7 +693,12 @@ public class WarZone extends EventCard {
                             cardState.setNeedsUpdatedRemovedLifeforms(true);
                             cardState.setRemovedLifeforms(this.removedLifeforms);
                         }
-                        // TODO: MISSING ELIMINATED PLAYER CASE
+                        if (!this.eliminatedPlayers.isEmpty()) {
+                            cardState.setNeedsBoardUpdate(true);
+                            cardState.setNeedsUpdatedEliminatedPlayers(true);
+                            cardState.setEliminatedPlayers(this.eliminatedPlayers);
+                            this.eliminatedPlayers.clear();
+                        }
 
                     }
                     case MOVEMENTSTEPS -> {
@@ -703,8 +712,13 @@ public class WarZone extends EventCard {
                         if(!this.previousPlayerRemovedComponents.isEmpty()) {
                             cardState.setNeedsShipUpdate(true);
                             cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
-                            // TODO: MISSING ELIMINATED PLAYER CASE
                             // TODO: NEW FLAG SYSTEM NEEDED (needsComponentsUpdate)
+                        }
+                        if (!this.eliminatedPlayers.isEmpty()) {
+                            cardState.setNeedsBoardUpdate(true);
+                            cardState.setNeedsUpdatedEliminatedPlayers(true);
+                            cardState.setEliminatedPlayers(this.eliminatedPlayers);
+                            this.eliminatedPlayers.clear();
                         }
                     }
                     case LOSSITEMS -> {

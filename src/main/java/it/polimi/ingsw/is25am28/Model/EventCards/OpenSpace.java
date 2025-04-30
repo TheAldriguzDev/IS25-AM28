@@ -157,6 +157,8 @@ public class OpenSpace extends EventCard {
             cardState.setPlayersEnginePower(this.playerPowerResult);
             cardState.setEliminatedPlayers(this.eliminatedPlayers);
             cardState.setUpdatedPositions(this.updatedPositions);
+            this.updatedPositions.clear();
+            // TODO: this part about the batteries needs to be fixed, as of now it looks for all the batteries, it should only set the changed batteries, like with removedBatteries in other cards
             for (Player p : this.players) {
                 playersBatteries.put(p.getNickname(), p.getShip().getBatteryList().stream().mapToInt(Battery::getAvailability).sum());
             }

@@ -204,6 +204,7 @@ public class Slavers extends EventCard {
                     slaversStateJSON.setNeedsBoardUpdate(true);
                     slaversStateJSON.setNeedsUpdatedEliminatedPlayers(true);
                     slaversStateJSON.setEliminatedPlayers(this.eliminatedPlayers);
+                    this.eliminatedPlayers.clear();
                 }
             }
             // if the smugglers have been defeated we need to set the rewards (if taken)
@@ -211,10 +212,12 @@ public class Slavers extends EventCard {
                 slaversStateJSON.setNeedsBoardUpdate(true);
                 slaversStateJSON.setNeedsUpdatedPositions(true);
                 slaversStateJSON.setUpdatedPositions(this.updatedPositions);
+                this.updatedPositions.clear();
                 if (!this.updatedCredits.isEmpty()) {
                     slaversStateJSON.setNeedsPlayerUpdate(true);
                     slaversStateJSON.setNeedsUpdatedCredits(true);
                     slaversStateJSON.setUpdatedCredits(this.updatedCredits);
+                    this.updatedCredits.clear();
                 } else {
                     slaversStateJSON.setNeedsUpdatedCredits(false);
                 }

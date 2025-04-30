@@ -179,7 +179,12 @@ public class AbandonedShip extends EventCard {
         if (hasBeenActivated()) {
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             if (this.hasBeenUsedByPlayer) {
-                cardState.setRemovedLifeforms(removedLifeforms);
+                if (!this.removedLifeforms.isEmpty()) {
+                    cardState.setNeedsShipUpdate(true);
+                    cardState.setNeedsUpdatedRemovedLifeforms(true);
+                    cardState.setRemovedLifeforms(removedLifeforms);
+                    this.removedLifeforms.clear();
+                }
             }
         } else {
             // Set the card information that are needed to play the game

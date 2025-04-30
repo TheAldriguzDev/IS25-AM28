@@ -42,7 +42,7 @@ public class MeteorShower extends EventCard {
         this.meteorSequence = new ArrayList<Meteor>();
         this.random = new Random();
         this.prevPlayer = null;
-        this.prevPlayerRemovedComponents = null;
+        this.prevPlayerRemovedComponents = new ArrayList<>();
 
         try {
             for (List<Integer> meteorDescriptor : meteorSequence) {
@@ -409,7 +409,7 @@ public class MeteorShower extends EventCard {
                 // by setting the prevPlayerRemovedComponents list to null
                 // (since, again, the current player wasn't hit by any meteors)
                 this.prevPlayer = this.currentPlayer.get().getNickname();
-                this.prevPlayerRemovedComponents = null;
+                //this.prevPlayerRemovedComponents = null;
             }
         }
 
@@ -457,13 +457,13 @@ public class MeteorShower extends EventCard {
             cardState.setCurrMeteorDescriptor(Map.of("meteorSize", this.meteorSequence.get(this.currMeteorIndex).getSize(), "meteorDirection", this.meteorSequence.get(this.currMeteorIndex).getOrientation()));
             // The differential update happens always except when the card is
             // first picked (since no one has been hit with a meteor yet)
-            if (this.prevPlayerRemovedComponents != null) {
+            if (!this.prevPlayerRemovedComponents.isEmpty()) {
                 // Setting which components were removed from the previous player, thus
                 // performing a differential update on what changed before the card
                 // transitioned to the next state
-                cardState.setPreviousPlayerRemovedComponents(
-                        Map.of(this.prevPlayer,
-                                this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList()));
+                cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList()));
+                this.prevPlayerRemovedComponents.clear();
+                this.prevPlayer = null;
             }
             else {
                 // No components were removed, therefore the
