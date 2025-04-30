@@ -679,7 +679,7 @@ public class ShipConstructionScreen extends Screen {
                     return;
                 }
 
-                if (subdeckIdx < 0 || subdeckIdx > subdeckAmount) {
+                if (subdeckIdx < 1 || subdeckIdx > subdeckAmount) {
                     System.out.println(UNKNOWN_COMMAND_ERROR);
                     subdeckIdx = -1;
                 }
@@ -718,6 +718,21 @@ public class ShipConstructionScreen extends Screen {
 
                     // Then deselect the deck by sending a message to the server
                     try {
+                        // Go back to the component selection screen
+                        this.ctx = new CommandCTX(
+                            "selectDeselectSubdeck",
+                            this::getComponentSelectionCommand,
+                            () -> {
+                                // Make the user choose another subdeck command
+                                try {
+                                    this.getCardSubdeckCommand();
+                                }
+                                catch (Exception e) {
+                                    System.out.println(PrintUtils.addColor("ERROR: getCardSubdeckCommand::sendMessage threw \"" + e.getClass().getSimpleName() + "\"", ANSIColors.RED));
+                                }
+                            }
+                        );
+
                         this.client.sendMessage(
                             new SelectDeselectSubdeck(
                                 this.model.getNickname(),
