@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
@@ -170,6 +171,16 @@ public class GameInstance {
         if (states.size() > 1) {
             answer.setNextState(states.get(1));
         }
+
+        this.broadCastUpdate(answer);
+    }
+
+    public void selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws Exception {
+        ConstructionDeckDTO state = this.controller.selectDeselectSubdeck(player, selectedDeck, isSelectAction);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(player)
+                .setState(state);
 
         this.broadCastUpdate(answer);
     }

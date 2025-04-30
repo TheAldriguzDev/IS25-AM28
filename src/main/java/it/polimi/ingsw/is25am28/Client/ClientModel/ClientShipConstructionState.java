@@ -207,30 +207,14 @@ public class ClientShipConstructionState extends ClientState {
      * */
     @Override
     public void flipTimer() throws UnsupportedOperationException {
-        if (!this.isTimeRunning) {
-            // Flips the timer if a TimerDTO arrived
-            // before this method was invoked
-            this.isTimeRunning = true;
+        if (this.model.getTimerDTO() != null) {
+            // If the timerDTO arrived in the past, it means that
+            // the timer ended and thus it's now flippable
+
+            // Setting it to null so that it means
+            // "A new TimerDTO will arrive <==> The timer ends"
+            this.model.setTimerDTO(null);
         }
-    }
-
-    /**
-     * Sets the flag to what the TimerDTO
-     * sent from the server is saying about it
-     */
-    @Override
-    public void setIsTimeRunning(TimerDTO timerState) throws UnsupportedOperationException {
-        // Always false since the TimerDTO is always returned
-        // when the server-side timer ends.
-        this.isTimeRunning = false;
-    }
-
-    /**
-     * Returns TRUE if the timer can be flipped, FALSE otherwise
-     */
-    @Override
-    public boolean isTimeRunning() throws UnsupportedOperationException {
-        return this.isTimeRunning;
     }
 
     /**

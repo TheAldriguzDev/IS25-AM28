@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.util.*;
@@ -16,6 +17,7 @@ public class ClientModel {
     private String nickname;
     private int difficultyLevel;
     private ClientState currState;
+    private TimerDTO timerDTO;
 
     // Map that stores the client nicknames with their ClientPlayer data structure
     private final Map<String, ClientPlayer> players;
@@ -83,7 +85,6 @@ public class ClientModel {
         return this.players.keySet().stream().toList();
     }
 
-
     /**
     * @return Returns the clientPlayers map(nickname, data)
     * */
@@ -92,7 +93,26 @@ public class ClientModel {
     }
 
     /**
-     * Updates the current clientPlayer stats (only the credits, the other stats are updated by the clientShip (Batteries, lostComponents, dropped/taken resources, removedLifeforms) or clientBoard (Cursor, eliminatedPlayers)) (if needed)*/
+     * @param timerDTO The timerDTO containing all the data about the
+     *                 last received timer event from the server-side
+     *                 ShipConstructionState
+     */
+    public void setTimerDTO(TimerDTO timerDTO) {
+        this.timerDTO = timerDTO;
+    }
+
+    /**
+     * @return The earliest timerDTO arrived to this client
+     */
+    public TimerDTO getTimerDTO() {
+        return this.timerDTO;
+    }
+
+    /**
+     * Updates the current clientPlayer stats (only the credits, the other stats are updated by the clientShip
+     * (Batteries, lostComponents, dropped/taken resources, removedLifeforms) or clientBoard
+     * (Cursor, eliminatedPlayers)) (if needed)
+     * */
     public void updatePlayers(CardStateJSON cardStateJSON) {
         if (cardStateJSON.getNeedsUpdatedCredits()) {
             for (String playerNickname : cardStateJSON.getUpdatedCredits().keySet()) {

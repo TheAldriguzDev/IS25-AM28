@@ -93,6 +93,9 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case FlipTimer data -> {
                     this.flipTimer(data.getPlayerNickname());
                 }
+                case SelectDeselectSubdeck data -> {
+                    this.selectDeselectSubdeck(data.getPlayerNickname(), data.getSubdeck(), data.isSelectAction());
+                }
                 default -> {
                     throw new Exception("The given Message is not supported");
                 }
@@ -168,6 +171,14 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    public void selectDeselectSubdeck(String playerNickname, Integer selectedSubdeck, boolean isSelectAction) throws Exception {
+        try {
+            this.controller.selectDeselectSubdeck(playerNickname, selectedSubdeck, isSelectAction);
+        }
+        catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
 
     // ===== PING UTILITY METHODS ===== //
 

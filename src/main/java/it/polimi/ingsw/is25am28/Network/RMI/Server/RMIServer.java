@@ -10,7 +10,6 @@ import it.polimi.ingsw.is25am28.Network.Server.ServerLogger;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.rmi.RemoteException;
-import java.rmi.ServerError;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -95,6 +94,9 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             case FlipTimer data -> {
                 this.flipTimer(data.getPlayerNickname(), uuid);
             }
+            case SelectDeselectSubdeck data -> {
+                this.selectDeselectSubdeck(data.getPlayerNickname(), data.getSubdeck(), data.isSelectAction(), uuid);
+            }
             default -> {
                 throw new Exception("The given Message is not supported");
             }
@@ -177,6 +179,17 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.flipTimer(playerNickname);
         } catch (Exception e) {
+            client.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void selectDeselectSubdeck(String playerNickname, Integer subdeck, Boolean isSelectAction, UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.selectDeselectSubdeck(playerNickname, subdeck, isSelectAction);
+        }
+        catch (Exception e) {
             client.reportError(new ErrorAnswer(e.getMessage()));
         }
     }

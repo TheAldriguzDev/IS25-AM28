@@ -239,6 +239,22 @@ public class Server {
         }
     }
 
+    public void selectDeselectSubdeck(String playerNickname, int subdeck, boolean isSelectAction) throws Exception {
+        synchronized (this.gameInstances) {
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.selectDeselectSubdeck(playerNickname, subdeck, isSelectAction);
+
+            if (isSelectAction) {
+                ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " selected the subdeck #" + (subdeck + 1));
+            }
+            else {
+                ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " deselected the subdeck #" + (subdeck + 1));
+            }
+        }
+    }
+
     // TODO: For all the interaction with the user we need to pass his nickname to get the associated game and then route the
     //  request
 

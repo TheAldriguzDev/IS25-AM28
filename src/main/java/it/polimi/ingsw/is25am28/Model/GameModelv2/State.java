@@ -30,12 +30,8 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
         throw new IllegalStateException("The 'addNewPlayer' command is not allowed in the " + this + " state");
     }
 
-    public synchronized ConstructionDeckDTO selectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
-        throw new IllegalStateException("The 'selectSubDeck' command is not allowed in the " + this + " state");
-    }
-
-    public synchronized ConstructionDeckDTO deselectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
-        throw new IllegalStateException("The 'deselectSubDeck' command is not allowed in the " + this + " state");
+    public synchronized ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws IllegalStateException {
+        throw new IllegalStateException("The 'selectDeselectSubdeck' command is not allowed in the " + this + " state");
     }
 
     public synchronized ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {

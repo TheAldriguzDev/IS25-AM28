@@ -80,15 +80,9 @@ public class GameController {
         }
     }
 
-    public ConstructionDeckDTO selectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
+    public ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws IllegalStateException {
         synchronized (this.model) {
-            return this.model.selectSubDeck(player, selectedDeck);
-        }
-    }
-
-    public ConstructionDeckDTO deselectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
-        synchronized (this.model) {
-            return this.model.deselectSubDeck(player, selectedDeck);
+            return this.model.selectDeselectSubdeck(player, selectedDeck, isSelectAction);
         }
     }
 

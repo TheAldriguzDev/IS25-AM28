@@ -69,22 +69,6 @@ public class ClientState {
     }
 
     /**
-     * Command used when the TimerDTO arrives and the players need
-     * to know that the timer could now be flippable
-     */
-    public void setIsTimeRunning(TimerDTO timerState) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The 'setIsTimeRunning' is not supported in the " + this + " state");
-    }
-
-    /**
-     * Command used when the TimerDTO arrives and the players need
-     * to know that the timer could now be flippable
-     */
-    public boolean isTimeRunning() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The 'isTimeRunning' is not supported in the " + this + " state");
-    }
-
-    /**
      * Command used by the player when he wants to remove a component in the FixShipState
      * */
     public void removeComponentFromShip(int i, int j) throws UnsupportedOperationException {

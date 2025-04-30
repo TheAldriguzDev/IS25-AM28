@@ -11,6 +11,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.ShipConstructionScreen;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
@@ -77,6 +78,34 @@ public class TUIHandler implements ClientUI {
     }
 
     @Override
+    public void showShipFixing() {
+        // Interrupt the inputThread to prevent actions from the player
+        this.inputThread.interruptInputReader();
+
+        System.out.println("SHOW SHIP FIXING");
+
+        // TODO: Send the ships to the server, if at least one comes up
+        //       as "invalid", then show this screen, otherwise move
+        //       directly to the ship populate screens
+
+        // Save the previous screen when appropriate
+//        // Save the previous screen
+//        this.prevScreen = this.screen;
+    }
+
+    @Override
+    public void showShipPopulate() {
+        // Interrupt the inputThread to prevent actions from the player
+        this.inputThread.interruptInputReader();
+
+        System.out.println("SHOW SHIP POPULATE");
+
+        // Save the previous screen when appropriate
+//        // Save the previous screen
+//        this.prevScreen = this.screen;
+    }
+
+    @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
         // Interrupt the inputThread to prevent actions from the player
         this.inputThread.interruptInputReader();
@@ -87,6 +116,11 @@ public class TUIHandler implements ClientUI {
         // Force and show the new screen
         this.setScreen(new InsufficientPlayerScreen(this.model, this.inputThread));
         this.screen.showInsufficientPlayer(insufficientPlayer);
+    }
+
+    @Override
+    public void receiveTimerDTO(TimerDTO timerDTO) {
+        this.model.setTimerDTO(timerDTO);
     }
 
     @Override

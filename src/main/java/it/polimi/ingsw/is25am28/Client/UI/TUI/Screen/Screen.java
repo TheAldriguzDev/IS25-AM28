@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
@@ -48,8 +49,24 @@ public class Screen implements ClientUI {
     }
 
     @Override
+    public void showShipFixing() {
+        throw new UnsupportedOperationException("The 'showShipFixing' is not supported in the " + this + "screen");
+    }
+
+    @Override
+    public void showShipPopulate() {
+        throw new UnsupportedOperationException("The 'showShipPopulate' is not supported in the " + this + "screen");
+
+    }
+
+    @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
         throw new UnsupportedOperationException("The 'showInsufficientPlayer' is not supported in the " + this + "screen");
+    }
+
+    @Override
+    public void receiveTimerDTO(TimerDTO timerDTO) {
+        throw new UnsupportedOperationException("The 'receiveTimerDTO' is not supported in the " + this + "screen");
     }
 
     @Override

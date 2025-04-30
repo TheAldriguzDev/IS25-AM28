@@ -10,8 +10,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
-import it.polimi.ingsw.is25am28.Model.Components.Component;
-import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
 import it.polimi.ingsw.is25am28.TUI.ShipConstructionTUIPage;
@@ -144,18 +142,27 @@ public class ViewUpdater implements StateVisitor {
             // TODO
         }
         else {
-            // Sets the flag in the model's state to TRUE
-            // so that players are then shown a message
-            // saying that the timer can now be flipped
-            synchronized (this.model) {
-                this.model.getState().setIsTimeRunning(state);
-            }
+            this.ui.receiveTimerDTO(state);
         }
     }
 
     @Override
     public void visit(FixShipDTO state) {
+        if (state.getPlayerWithInvalidShip().isEmpty()) {
+            // Go straight ahead to the ship populate screen
+            // but all players must wait for any other ones
+            // to fix their ships before staffing their ships
 
+            // TODO: Make the players with valid ships wait for any others
+            //       that need to repair their own ships before moving on
+
+            this.ui.showShipPopulate();
+        }
+        else if (state.getPlayerWithInvalidShip().contains(this.model.getNickname())) {
+            // If this client is a player that needs to fix, then
+            // show him his ships and the commands he can perform to fix it
+            this.ui.showShipFixing();
+        }
     }
 
     @Override
