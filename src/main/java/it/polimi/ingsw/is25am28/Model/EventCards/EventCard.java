@@ -2,10 +2,13 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities.Meteor;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -13,6 +16,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public abstract class EventCard {
@@ -178,6 +182,117 @@ public abstract class EventCard {
      * @return This card's widget
      */
     public abstract WidgetTUI generateWidget(CardStateJSON cardStateJSON);
+
+    /**
+     * If the map of updatedPositions is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * */
+    protected void setUpdatedPositionsIfNecessary(CardStateJSON cardState, Map<String, Integer> updatedPositions) {
+        if(!updatedPositions.isEmpty()) {
+            cardState.setNeedsBoardUpdate(true);
+            cardState.setNeedsUpdatedPositions(true);
+            cardState.setUpdatedPositions(updatedPositions);
+            updatedPositions.clear();
+        } else {
+            cardState.setNeedsUpdatedPositions(false);
+        }
+    }
+
+    /**
+     * If the list of eliminatedPlayers is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * */
+    protected void setUpdatedEliminatedPlayersIfNecessary(CardStateJSON cardState, List<String> updatedEliminatedPlayers) {
+        if(!updatedEliminatedPlayers.isEmpty()) {
+            cardState.setNeedsBoardUpdate(true);
+            cardState.setNeedsUpdatedEliminatedPlayers(true);
+            cardState.setEliminatedPlayers(updatedEliminatedPlayers);
+            updatedEliminatedPlayers.clear();
+        } else {
+            cardState.setNeedsUpdatedEliminatedPlayers(false);
+        }
+    }
+
+    /**
+     * If the map of updatedCredits, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * */
+    protected void setUpdatedCreditsIfNecessary(CardStateJSON cardState, Map<String, Integer> updatedCredits) {
+        if(!updatedCredits.isEmpty()) {
+            cardState.setNeedsPlayerUpdate(true);
+            cardState.setNeedsUpdatedCredits(true);
+            cardState.setUpdatedCredits(updatedCredits);
+            updatedCredits.clear();
+        } else {
+            cardState.setNeedsUpdatedCredits(false);
+        }
+    }
+
+    /**
+     * If the map of updatedDroppedResources is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * */
+    protected void setUpdatedDroppedResourcesIfNecessary(CardStateJSON cardState, Map<String, List<ComponentHelper<ItemColor>>> droppedResources) {
+        if(!droppedResources.isEmpty()) {
+            cardState.setNeedsShipUpdate(true);
+            cardState.setNeedsUpdatedDroppedResources(true);
+            cardState.setDroppedResources(droppedResources);
+            droppedResources.clear();
+        } else {
+            cardState.setNeedsUpdatedDroppedResources(false);
+        }
+    }
+
+    /**
+     * If the map of updatedTakenResources is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * */
+    protected void setUpdatedTakenResourcesIfNecessary(CardStateJSON cardState, Map<String, List<ComponentHelper<ItemColor>>> takenResources) {
+        if(!takenResources.isEmpty()) {
+            cardState.setNeedsShipUpdate(true);
+            cardState.setNeedsUpdatedTakenResources(true);
+            cardState.setTakenResources(takenResources);
+            takenResources.clear();
+        } else {
+            cardState.setNeedsUpdatedTakenResources(false);
+        }
+    }
+
+    // THIS NEEDS TO BE CHANGE TO WORK IN A SIMILAR FASHION TO THE OTHERS
+    protected void setUpdatedRemovedComponentsIfNecessary(CardStateJSON cardState, String nickname, List<Component> removedComponents) {
+        if(!removedComponents.isEmpty()) {
+            cardState.setNeedsShipUpdate(true);
+            // Missing flag
+            cardState.setPreviousPlayerRemovedComponents(Map.of(nickname, removedComponents.stream().map(Component::toMap).toList()));
+        } else {
+            // Missing flag
+        }
+    }
+
+    /**
+     * If the map of updatedRemovedComponents is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * */
+    protected void setUpdatedRemovedLifeformsIfNecessary(CardStateJSON cardState, Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms) {
+        if (!removedLifeforms.isEmpty()) {
+            cardState.setNeedsShipUpdate(true);
+            cardState.setNeedsUpdatedRemovedLifeforms(true);
+            cardState.setRemovedLifeforms(removedLifeforms);
+            removedLifeforms.clear();
+        } else {
+            cardState.setNeedsUpdatedRemovedLifeforms(false);
+        }
+    }
+
+    /**
+     * If the map of updatedRemovedBatteries is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
+     * */
+    protected void setUpdatedRemovedBatteriesIfNecessary(CardStateJSON cardState, Map<String, Integer> removedBatteries) {
+        if (!removedBatteries.isEmpty()) {
+            cardState.setNeedsShipUpdate(true);
+            cardState.setNeedsUpdatedBatteries(true);
+            cardState.setRemovedBatteries(removedBatteries);
+            removedBatteries.clear();
+        } else {
+            cardState.setNeedsUpdatedBatteries(false);
+        }
+    }
+
+
 }
 
 
