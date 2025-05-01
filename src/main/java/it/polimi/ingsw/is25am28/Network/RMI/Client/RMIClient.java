@@ -256,6 +256,8 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
     @Override
     public void reportError(ErrorAnswer error) throws RemoteException {
-        viewUpdater.reportError(error.getError());
+        inputThread.submit(() -> {
+            viewUpdater.reportError(error.getError());
+        });
     }
 }

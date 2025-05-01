@@ -21,6 +21,8 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
+import it.polimi.ingsw.is25am28.Network.Queue.Queue;
+import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.*;
@@ -35,6 +37,7 @@ public class GameModel {
     private final Map<String, Player> players;
     private final Map<String, VirtualView> playerVirtualViews;
     private State currentState;
+    private final Queue queueHandler;
 
     private final Random random = new Random();
 
@@ -45,6 +48,9 @@ public class GameModel {
         this.numPlayers = 2; // min value
         this.currentState = new CreateGameState(this);
         this.playerVirtualViews = new HashMap<>();
+
+        this.queueHandler = new Queue();
+        new Thread(queueHandler).start();
     }
 
     /**
@@ -499,7 +505,14 @@ public class GameModel {
         for (Map.Entry<String, VirtualView> entry : this.playerVirtualViews.entrySet()) {
             if (this.players.get(entry.getKey()).isConnected()) {
                 try {
-                    entry.getValue().updateState(answer);
+                    VirtualView virtualView = entry.getValue();
+                    queueHandler.enqueue(() -> {
+                        try {
+                            virtualView.updateState(answer);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }

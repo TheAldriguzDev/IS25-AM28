@@ -109,7 +109,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.onClientConnection(client);
         } catch (Exception e) {
-            client.reportError(new ErrorAnswer(e.getMessage()));
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -119,7 +119,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.createNewGame(playerNickname, playerColor, gameLevel, totalPlayers, client);
         } catch (Exception e) {
-            client.reportError(new ErrorAnswer(e.getMessage()));
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -129,7 +129,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.joinGame(playerNickname, playerColor, gameID, client);
         } catch (Exception e) {
-            client.reportError(new ErrorAnswer(e.getMessage()));
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -139,7 +139,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.selectTile(playerNickname, i, j);
         } catch (Exception e) {
-            client.reportError(new ErrorAnswer(e.getMessage()));
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -149,7 +149,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.deselectTile(playerNickname, i, j);
         } catch (Exception e) {
-            client.reportError(new ErrorAnswer(e.getMessage()));
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -159,7 +159,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.placeTile(playerNickname, componentID, i, j, rotation);
         } catch (Exception e) {
-            client.reportError(new ErrorAnswer(e.getMessage()));
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -169,7 +169,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.playerEndedSendShip(playerNickname, reservedTiles);
         } catch (Exception e) {
-            client.reportError(new ErrorAnswer(e.getMessage()));
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -179,7 +179,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.flipTimer(playerNickname);
         } catch (Exception e) {
-            client.reportError(new ErrorAnswer(e.getMessage()));
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -190,7 +190,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             this.controller.selectDeselectSubdeck(playerNickname, subdeck, isSelectAction);
         }
         catch (Exception e) {
-            client.reportError(new ErrorAnswer(e.getMessage()));
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
     }
 
@@ -207,7 +207,17 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         try {
             this.controller.reconnectClient(nickname, client);
         } catch (Exception e) {
-            client.reportError(new ErrorAnswer(e.getMessage()));
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
+    }
+
+    private void reportError(VirtualView client, ErrorAnswer answer) {
+        this.queueHandler.enqueue(() -> {
+            try {
+                client.reportError(answer);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

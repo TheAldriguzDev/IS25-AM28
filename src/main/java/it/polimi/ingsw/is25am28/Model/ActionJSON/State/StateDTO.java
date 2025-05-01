@@ -3,9 +3,7 @@ package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.GameModelv2.InsufficientPlayerState;
 
 import java.io.Serial;
@@ -18,9 +16,11 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = CreateGameStateDTO.class, name = "CreateGameStateDTO"),
         @JsonSubTypes.Type(value = WaitPlayersStateDTO.class, name = "WaitPlayersStateDTO"),
         @JsonSubTypes.Type(value = ReconnectDTO.class, name = "ReconnectDTO"),
+        @JsonSubTypes.Type(value = TimerDTO.class, name = "TimerDTO"),
         @JsonSubTypes.Type(value = WaitingForGameConfigurationDTO.class, name = "WaitingForGameConfigurationDTO"),
         @JsonSubTypes.Type(value = ShipConstructionDTO.class, name = "ShipConstructionDTO"),
         @JsonSubTypes.Type(value = ConstructionComponentDTO.class, name = "ConstructionComponentDTO"),
+        @JsonSubTypes.Type(value = ConstructionDeckDTO.class, name = "ConstructionDeckDTO"),
         @JsonSubTypes.Type(value = DisconnectedPlayerDTO.class, name = "DisconnectedPlayerDTO"),
         @JsonSubTypes.Type(value = InsufficientPlayerDTO.class, name = "InsufficientPlayerDTO")
 })

@@ -134,15 +134,19 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(TimerDTO state) throws Exception {
-        if (state.getHasEnded()) {
-            // If this TimerDTO is the last one, then it means
-            // that the players must move from the ship construction
-            // phase to the ship fixing phase
+        try {
+            if (state.getHasEnded()) {
+                // If this TimerDTO is the last one, then it means
+                // that the players must move from the ship construction
+                // phase to the ship fixing phase
 
-            // TODO
-        }
-        else {
-            this.ui.receiveTimerDTO(state);
+                // TODO
+            }
+            else {
+                this.ui.receiveTimerDTO(state);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
