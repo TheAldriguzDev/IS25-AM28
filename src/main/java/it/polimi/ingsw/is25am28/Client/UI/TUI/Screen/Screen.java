@@ -73,6 +73,7 @@ public class Screen implements ClientUI {
     public void commitCommand(String playerNickname) {
         if (this.ctx != null && playerNickname.equals(this.model.getNickname())) {
             this.ctx.handleSuccess();
+            // this.ctx = null;
         }
     }
 
@@ -81,6 +82,7 @@ public class Screen implements ClientUI {
         // TODO: Clear terminal
         if (this.ctx != null) {
             this.ctx.handleError(error.getError());
+            // this.ctx = null;
         } else {
             System.out.println(error.getError());
         }

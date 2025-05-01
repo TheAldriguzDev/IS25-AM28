@@ -129,6 +129,8 @@ public class LobbyScreen extends Screen {
                     if (!state.getAvailableGames().isEmpty()) {
                         List<Integer> availableGameIDs = state.getAvailableGames().stream().map(GameInfoDTO::getId).toList();
 
+                        GameInfoDTO game = null;
+
                         do {
                             System.out.println("Currently available games:");
                             this.availableGamesWidget.printWidget();
@@ -147,15 +149,21 @@ public class LobbyScreen extends Screen {
                                 // Go back to the lobby commands
                                 break;
                             }
+                            int finalChoice = choice;
 
-                            if ( !availableGameIDs.contains(choice)) {
+                            game = state.getAvailableGames().stream()
+                                    .filter(g -> g.getId() == finalChoice)
+                                    .findFirst()
+                                    .orElse(null);
+
+                            if (game == null) {
                                 System.out.println(PrintUtils.addColor("ERROR: Game with ID=" + choice + " does not exist. Please choose an existing game.", ANSIColors.RED));
                             }
                         }
-                        while ( !availableGameIDs.contains(choice));
+                        while (!availableGameIDs.contains(choice) || game == null);
 
                         if (choice != -1) {
-                            this.joinGameInput(state.getAvailableGames().get(choice), state.getUsedNicknames());
+                            this.joinGameInput(game, state.getUsedNicknames());
                             commandExecuted = true;
                         }
                     }

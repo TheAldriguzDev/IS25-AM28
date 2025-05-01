@@ -62,7 +62,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
             // TODO (NOTE: Add this if you want to run the "test_game_model_hourglass" in GameModelTest.java)
             //      (It only reduces the time to wait when running said test)
-            // this.hourGlass.setDurationInMillis(3000);
+            this.hourGlass.setDurationInMillis(3000);
 
             this.hourGlass.flip();
         }
@@ -87,7 +87,7 @@ public final class ShipContructionState extends State implements TimerObserver {
      *
      * @return the Component Data Object Transfer needed to update the client with the selected deck event
      * */
-    public synchronized ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws IllegalStateException {
+    public ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws IllegalStateException {
         if (selectedDeck < 0 || selectedDeck > 3) {
             throw new IllegalStateException("The given sub-deck does not exist");
         }
@@ -130,7 +130,7 @@ public final class ShipContructionState extends State implements TimerObserver {
      * Select the given tile
      * @return the Component Data Object Transfer needed to update the client with the selectComponent event
      * */
-    public synchronized ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {
+    public ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {
         if (shipConfigEnded) {
             throw new IllegalStateException("The time to select the tiles has ended");
         }
@@ -162,7 +162,7 @@ public final class ShipContructionState extends State implements TimerObserver {
      * Deselect the given tile
      * @return the Component Data Object Transfer needed to update the client with the deselectComponent event
      * */
-    public synchronized ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {
+    public ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {
         if (shipConfigEnded) {
             throw new IllegalStateException("The time to deselected the tiles has ended");
         }
@@ -196,7 +196,7 @@ public final class ShipContructionState extends State implements TimerObserver {
      *
      * @return the DTO that will contain the information about where the player placed the component
      * */
-    public synchronized PlacedComponentDTO placeTile(String player, Integer componentID, Integer i, Integer j, Integer rotation) {
+    public PlacedComponentDTO placeTile(String player, Integer componentID, Integer i, Integer j, Integer rotation) {
         if (this.shipConfigEnded) {
             throw new IllegalStateException("The time to place the tiles has ended");
         }
@@ -238,7 +238,7 @@ public final class ShipContructionState extends State implements TimerObserver {
      *
      * @return the DTO that contains the information of the player that submitted the ship (nickname, credits and cursor)
      * */
-    public synchronized PlayerEndedShipDTO playerEndedSendShip(String player, int reservedTiles) throws IllegalStateException {
+    public PlayerEndedShipDTO playerEndedSendShip(String player, int reservedTiles) throws IllegalStateException {
         if (this.players_done.contains(player)) {
             throw new IllegalArgumentException("The player " + player + " has already sent the ship");
         }
@@ -266,7 +266,7 @@ public final class ShipContructionState extends State implements TimerObserver {
         return state;
     }
 
-    public synchronized TimerDTO flipTimer(String player) throws IllegalStateException {
+    public TimerDTO flipTimer(String player) throws IllegalStateException {
         if (this.hourGlass == null) {
             throw new IllegalStateException("ERROR: Hourglass is null because the current game doesn't require a hourglass (i.e.: Test Flight)");
         }
@@ -325,7 +325,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
     @Override
     public void onTimerEnd() {
-        synchronized (this.hourGlass) {
+         synchronized (this.hourGlass) {
             TimerDTO state = new TimerDTO()
                     .setIsServerAction(true)
                     .setHasEnded(this.hourGlass.getRemainingFlips() == 0)

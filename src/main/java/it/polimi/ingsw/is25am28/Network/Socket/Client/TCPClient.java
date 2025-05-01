@@ -22,6 +22,7 @@ import it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket;
 
 import java.io.*;
 import java.net.Socket;
+import java.rmi.RemoteException;
 import java.util.Objects;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
@@ -239,7 +240,9 @@ public class TCPClient implements VirtualViewSocket {
     }
 
     @Override
-    public void reportError(ErrorAnswer errorDTO) throws JsonProcessingException {
-        viewUpdater.reportError(errorDTO.getError());
+    public void reportError(ErrorAnswer error) {
+        inputThread.submit(() -> {
+            viewUpdater.reportError(error.getError());
+        });
     }
 }

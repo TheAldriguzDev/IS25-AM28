@@ -557,9 +557,6 @@ public class ShipConstructionScreen extends Screen {
                     try {
                         // Deselects the component that is currently taken by this user
                         this.deselectTile();
-
-                        // Go to the component selection screen
-                        this.getComponentSelectionCommand();
                     }
                     catch (Exception e) {
                         System.out.println(PrintUtils.addColor("ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.", ANSIColors.RED));
@@ -955,18 +952,12 @@ public class ShipConstructionScreen extends Screen {
         // After getting the player's chosen tile index, it gets sent to the server who
         // will then validate whether the tile can be selectable or not and, from here, the client
         // will then execute either the onSuccess or onError lambda based on the server's response
+        // Move to the ship construction screen by recomposing it and
+        // ask the user what to do with the selected component
+        // And go to the ship construction screen
         this.ctx = new CommandCTX(
             "selectTile",
-            () -> {
-                // Move to the ship construction screen by recomposing it and
-                // ask the user what to do with the selected component
-
-                // On success, generate the selected component widget
-                this.generateSelectedComponentWidget();
-
-                // And go to the ship construction screen
-                this.getShipConstructionCommand();
-            },
+                this::getShipConstructionCommand,
             () -> {
                 // If an error occurred we re-execute the command and reset
                 // the currently selected component attribute and widget
@@ -1000,6 +991,8 @@ public class ShipConstructionScreen extends Screen {
      * Deselects the currently selected tile, leaving it available for other players
      */
     private void deselectTile() throws Exception {
+        // If an error occurred we go back to the
+        // ship construction menu
         this.ctx = new CommandCTX(
             "deselectTile",
             () -> {
@@ -1011,11 +1004,7 @@ public class ShipConstructionScreen extends Screen {
                 // component selection command
                 this.getComponentSelectionCommand();
             },
-            () -> {
-                // If an error occurred we go back to the
-                // ship construction menu
-                this.getShipConstructionCommand();
-            }
+                this::getShipConstructionCommand
         );
 
         int id = this.selectedComponent.getID();
@@ -1275,20 +1264,17 @@ public class ShipConstructionScreen extends Screen {
      * Flips the timer and sends the relative message to broadcast it to other players
      */
     private void flipTimer() throws Exception {
-        // Both onSuccess and onFailure will route the player
-        // back to the component selection screen, regardless
-        // of the result of the command
         this.ctx = new CommandCTX(
-            "flipTimer",
-            () -> {
-                System.out.println(PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA));
-                this.getComponentSelectionCommand();
-            },
-            this::getComponentSelectionCommand
+                "flipTimer",
+                () -> {
+                    System.out.println(PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA));
+                    this.getComponentSelectionCommand();
+                },
+                this::getComponentSelectionCommand
         );
 
         this.client.sendMessage(
-            new FlipTimer(this.model.getNickname())
+                new FlipTimer(this.model.getNickname())
         );
     }
 

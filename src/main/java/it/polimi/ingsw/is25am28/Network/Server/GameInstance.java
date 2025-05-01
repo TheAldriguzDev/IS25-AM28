@@ -10,6 +10,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
+import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.ArrayList;
@@ -36,6 +37,8 @@ public class GameInstance {
     private final int level;
     private int currentPlayers;
 
+    private final Queue queueHandler;
+
     public GameInstance(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers, VirtualView virtualClient) throws Exception {
         this.controller = new GameController();
         this.connectedClients = new HashMap<>();
@@ -45,6 +48,9 @@ public class GameInstance {
         this.totalPlayers = totalPlayers;
         this.level = gameLevel;
         this.currentPlayers = 0;
+
+        this.queueHandler = new Queue();
+        new Thread(queueHandler).start();
 
         this.gameConfig(playerNickname, playerColor, gameLevel, totalPlayers, virtualClient);
     }
@@ -87,9 +93,7 @@ public class GameInstance {
             this.connectedClients.put(playerNickname, virtualClient);
 
             // Broadcast the state to all the connected clients (should be only to the leader)
-            for (VirtualView client : this.connectedClients.values()) {
-                client.updateState(answer);
-            }
+            this.broadCastUpdate(answer);
         }
 
         // Set the game as accepting new connection
@@ -118,9 +122,7 @@ public class GameInstance {
             this.connectedClients.put(playerNickname, virtualClient);
 
             // Broadcast the state to the clients
-            for (VirtualView client : this.connectedClients.values()) {
-                client.updateState(answer);
-            }
+            this.broadCastUpdate(answer);
         }
         this.currentPlayers++;
     }
@@ -207,7 +209,13 @@ public class GameInstance {
 
             for (VirtualView client : this.connectedClients.values()) {
                 if (!this.disconnectedClients.contains(client)) {
-                    client.updateState(answer);
+                    this.queueHandler.enqueue(() -> {
+                        try {
+                            client.updateState(answer);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
                 }
             }
         }
