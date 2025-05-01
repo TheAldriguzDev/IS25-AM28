@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
@@ -36,6 +37,7 @@ class StardustTest {
     ActionJSON actionJSON4;
 
     Stardust stardust;
+    CardStateJSON cardState;
 
     @BeforeEach
     public void init() {
@@ -80,36 +82,84 @@ class StardustTest {
 
     @Test
     public void movementTest() {
-
-
-
         ActionJSON actionJSON1 = new StardustJSON("Player 1");
         ActionJSON actionJSON2 = new StardustJSON("Player 2"); // 3 connettori esposti
         ActionJSON actionJSON3 = new StardustJSON("Player 3"); // 2 connettori esposti
         ActionJSON actionJSON4 = new StardustJSON("Player 4"); // 4 connettori esposti
 
+        // ======== STATE TESTING ======== //
+        cardState = stardust.generateState();
+        assertEquals("Stardust", cardState.getCardName());
+        assertEquals(2, cardState.getCardLevel());
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertFalse(cardState.getNeedsBoardUpdate());
+        assertNull(cardState.getPlayerNickname());
+        // =============================== //
+
         stardust.initCardPlayers();
 
-//        for(Player p : board.getPlayers()) {
-//            ActionJSON actionJSON = new StardustJSON(p.getNickname());
-//            stardust.useCard(actionJSON);
-//        }
+        // ======== STATE TESTING ======== //
+        cardState = stardust.generateState();
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertFalse(cardState.getNeedsBoardUpdate());
+        assertEquals("Player 4", cardState.getPlayerNickname());
+        // =============================== //
 
         stardust.useCard(actionJSON4);
         assertFalse(stardust.hasFinished());
+
+        // ======== STATE TESTING ======== //
+        cardState = stardust.generateState();
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertTrue(cardState.getNeedsBoardUpdate());
+        assertTrue(cardState.getNeedsUpdatedPositions());
+        assertEquals(1, cardState.getUpdatedPositions().size());
+        assertEquals(-4, cardState.getUpdatedPositions().get("Player 4"));
+        assertEquals("Player 3", cardState.getPlayerNickname());
+        // =============================== //
+
         stardust.useCard(actionJSON3);
         assertFalse(stardust.hasFinished());
+
+        // ======== STATE TESTING ======== //
+        cardState = stardust.generateState();
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertTrue(cardState.getNeedsBoardUpdate());
+        assertTrue(cardState.getNeedsUpdatedPositions());
+        assertEquals(1, cardState.getUpdatedPositions().size());
+        assertEquals(-1, cardState.getUpdatedPositions().get("Player 3"));
+        assertEquals("Player 2", cardState.getPlayerNickname());
+        // =============================== //
+
         stardust.useCard(actionJSON2);
         assertFalse(stardust.hasFinished());
+
+        // ======== STATE TESTING ======== //
+        cardState = stardust.generateState();
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertTrue(cardState.getNeedsBoardUpdate());
+        assertTrue(cardState.getNeedsUpdatedPositions());
+        assertEquals(1, cardState.getUpdatedPositions().size());
+        assertEquals(0, cardState.getUpdatedPositions().get("Player 2"));
+        assertEquals("Player 1", cardState.getPlayerNickname());
+        // =============================== //
+
         stardust.useCard(actionJSON1);
         assertTrue(stardust.hasFinished());
 
-
-
-//        assert p1.getCursor() == 6 : "p1 cursor should be 6, not " + p1.getCursor();
-//        assert p2.getCursor() == 0 : "p2 cursor should be 0, not " + p2.getCursor();
-//        assert p3.getCursor() == -1 : "p3 cursor should be -1, not " + p3.getCursor();
-//        assert p4.getCursor() == -4 : "p4 cursor should be -4, not " + p4.getCursor();
+        // ======== STATE TESTING ======== //
+        cardState = stardust.generateState();
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertFalse(cardState.getNeedsBoardUpdate());
+        assertFalse(cardState.getNeedsUpdatedPositions());
+        assertEquals("Player 1", cardState.getPlayerNickname()); //TODO: Since the card has been used the getNextPlayer was not invoked, see what to do with isCardUsable
+        // =============================== //
 
         assertEquals(6, p1.getCursor());
         assertEquals(0, p2.getCursor());

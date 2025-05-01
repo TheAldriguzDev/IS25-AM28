@@ -280,7 +280,7 @@ class SlaversTest {
         assertTrue(cardState.getNeedsUpdatedEliminatedPlayers());
         assertEquals(1, cardState.getEliminatedPlayers().size());
         assertEquals("Player 2", cardState.getEliminatedPlayers().getFirst());
-        assertEquals("Player 2", cardState.getPlayerNickname()); //TODO Since the card has been used the getNextPlayer was not invoked, see what to do with isCardUsable
+        assertEquals("Player 2", cardState.getPlayerNickname()); //TODO: Since the card has been used the getNextPlayer was not invoked, see what to do with isCardUsable
         // =============================== //
 
 
