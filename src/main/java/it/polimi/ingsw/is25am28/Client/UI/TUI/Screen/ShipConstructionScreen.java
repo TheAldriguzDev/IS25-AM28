@@ -42,6 +42,7 @@ public class ShipConstructionScreen extends Screen {
     private ClientComponent selectedComponent;
     private ClientShip currPlayerShip;
     private boolean isSelectedTileReserved;
+    private int selectedSubdeckIndex;
 
     public ShipConstructionScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
@@ -54,6 +55,7 @@ public class ShipConstructionScreen extends Screen {
         // Other initializations
         this.selectedComponent = null;
         this.isSelectedTileReserved = false;
+        this.selectedSubdeckIndex = -1;
 
         // Creating the covered and empty component widgets
         this.generateCoveredComponentWidget();
@@ -405,6 +407,7 @@ public class ShipConstructionScreen extends Screen {
         this.componentSelectionCommandsWidget.printWidget();
 
         try {
+            System.out.print(DEFAULT_COMMAND_PREFIX);
             line = this.inputThread.waitForInput();
 
             // A forced interrupt arrived
@@ -695,13 +698,13 @@ public class ShipConstructionScreen extends Screen {
                     this.deselectSubdeck(subdeckIndex);
                 }
                 catch (Exception e) {
-
+                    System.out.println(PrintUtils.addColor("[ERROR] Couldn't deselect subdeck #" + (subdeckIndex + 1), ANSIColors.RED));
                 }
             },
             () -> {
                 // Show an error if the selected subdeck is
                 // currently in the hands of another player
-                System.out.println(PrintUtils.addColor("ERROR: Selected deck #" + (subdeckIndex + 1) + " is currently observed by another player. You must wait.", ANSIColors.RED));
+                System.out.println(PrintUtils.addColor("[ERROR] Selected deck #" + (subdeckIndex + 1) + " is currently observed by another player. You must wait.", ANSIColors.RED));
 
                 // Go back to the component selection screen
                 this.getComponentSelectionCommand();
@@ -746,7 +749,7 @@ public class ShipConstructionScreen extends Screen {
                     this.getCardSubdeckCommand();
                 }
                 catch (Exception e) {
-                    System.out.println(PrintUtils.addColor("ERROR: getCardSubdeckCommand::sendMessage threw \"" + e.getClass().getSimpleName() + "\"", ANSIColors.RED));
+                    System.out.println(PrintUtils.addColor("[ERROR] getCardSubdeckCommand::sendMessage threw \"" + e.getClass().getSimpleName() + "\"", ANSIColors.RED));
                 }
             }
         );
@@ -846,7 +849,7 @@ public class ShipConstructionScreen extends Screen {
         String noMessage = "N";
 
         do {
-            System.out.print(PrintUtils.addColor("[WARNING: This action is IRREVERSIBLE]", ANSIColors.RED));
+            System.out.print(PrintUtils.addColor("[!] [WARNING: This action is IRREVERSIBLE] [!]", ANSIColors.RED));
             System.out.println();
             System.out.print("Do you want to send your ship? [" + yesMessage + "/" + noMessage + "] ");
 
@@ -957,7 +960,7 @@ public class ShipConstructionScreen extends Screen {
                     this.selectTile();
                 }
                 catch (Exception e) {
-                    throw new RuntimeException(e);
+                    System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" was thrown by 'selectTile' method", ANSIColors.RED));
                 }
             }
         );
@@ -1018,7 +1021,7 @@ public class ShipConstructionScreen extends Screen {
         componentRetrieved = false;
 
         if (this.model.getState().getReservedComponents().isEmpty()) {
-            throw new IllegalArgumentException(PrintUtils.addColor("ERROR: You don't have any reserved components!", ANSIColors.RED));
+            throw new IllegalArgumentException(PrintUtils.addColor("[ERROR] You don't have any reserved components!", ANSIColors.RED));
         }
 
         do {
@@ -1226,7 +1229,7 @@ public class ShipConstructionScreen extends Screen {
                     this.getComponentSelectionCommand();
                 }
                 catch (Exception e) {
-                    throw new RuntimeException(e);
+                    System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" was thrown when calling 'getComponentSelectionCommand' method", ANSIColors.RED));
                 }
             },
             () -> {
@@ -1238,7 +1241,7 @@ public class ShipConstructionScreen extends Screen {
                     this.getComponentSelectionCommand();
                 }
                 catch (Exception e) {
-                    throw new RuntimeException(e);
+                    System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" was thrown when calling 'getComponentSelectionCommand' method", ANSIColors.RED));
                 }
             }
         );
@@ -1260,7 +1263,8 @@ public class ShipConstructionScreen extends Screen {
         this.ctx = new CommandCTX(
             "flipTimer",
             () -> {
-                System.out.println(PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA));
+                System.out.println(COMPUTER_MSG_TAG + PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA));
+                this.model.setTimerDTO(null);
                 this.getComponentSelectionCommand();
             },
             this::getComponentSelectionCommand
