@@ -6,20 +6,32 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.Insuff
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 
 public interface StateVisitor {
+    // ===== GENERAL STATE ===== //
     void visit (StateDTO state);
+
+    // ===== LOBBY STATE ===== //
     void visit (AvailableGamesDTO state) throws Exception;
     void visit (WaitPlayersStateDTO state) throws Exception;
     void visit (ReconnectDTO state) throws Exception;
+
+    // ===== SHIP CONSTRUCTION - FIX - POPULATE  ===== //
     void visit (ShipConstructionDTO state) throws Exception;
     void visit (ConstructionComponentDTO state) throws Exception;
     void visit (PlacedComponentDTO state) throws Exception;
+    void visit (FixedComponentDTO state) throws Exception;
+    void visit (PopulateShipComponentDTO state) throws Exception;
     void visit (PlayerEndedShipDTO state) throws Exception;
     void visit (TimerDTO state) throws Exception;
     void visit (FixShipDTO state);
     void visit (PopulateShipDTO state);
+
+    // ===== CARD ROUND ===== //
     void visit (CardRoundDTO state);
+
+    // ===== END GAME ===== //
     void visit (EndGameDTO state);
 
+    // ===== UTILITY ===== //
     void visit (DisconnectedPlayerDTO state);
     void visit (InsufficientPlayerDTO state);
 }

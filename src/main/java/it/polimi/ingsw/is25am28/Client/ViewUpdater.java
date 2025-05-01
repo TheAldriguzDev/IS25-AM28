@@ -108,6 +108,16 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
+    @Override
+    public void visit(FixedComponentDTO state) throws Exception {
+
+    }
+
+    @Override
+    public void visit(PopulateShipComponentDTO state) throws Exception {
+
+    }
+
     /**
      * This method is used to create in real time the players ship in the ShipConstructionState.
      * It will get the player ship based on the given nickname and add the component with the proper rotation in the

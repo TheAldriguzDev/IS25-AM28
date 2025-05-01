@@ -334,10 +334,10 @@ public class GameModel {
      * 1. Contains the response of the executed command
      * 2. If all the players have fixed their ship, it contains the PopulateShipState information
      * */
-    public List<StateDTO> fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove) throws IllegalArgumentException, FixNotRequiredError {
+    public List<StateDTO> fixShip(String player, Integer i, Integer j) throws IllegalArgumentException, FixNotRequiredError {
         List<StateDTO> states = new ArrayList<>();
 
-        StateDTO tmpState = this.currentState.fixShip(player, componentsToRemove);
+        StateDTO tmpState = this.currentState.fixShip(player, i, j);
         if (tmpState != null) {
             states.add(tmpState);
         }
@@ -357,10 +357,10 @@ public class GameModel {
      * 1. Contains the response of the executed command
      * 2. If all the players has populated their ship, it contains the CardRoundState information
      * */
-    public List<StateDTO> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException, ShipPopulationFailException {
+    public List<StateDTO> populateShip(String player, ComponentHelper<LifeformType> lifeformToAdd) throws IllegalArgumentException, ShipPopulationFailException {
         List<StateDTO> states = new ArrayList<>();
 
-        StateDTO tmpState = this.currentState.populateShip(player, lifeFormToAdd);
+        StateDTO tmpState = this.currentState.populateShip(player, lifeformToAdd);
         if (tmpState != null) {
             states.add(tmpState);
         }

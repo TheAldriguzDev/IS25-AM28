@@ -428,22 +428,6 @@ public class ClientShip implements WidgetTUIGenerator {
     }
 
     /**
-     * @return TRUE if this ship cannot host any other lifeforms, FALSE otherwise
-     */
-    public boolean isShipPopulated() {
-        boolean allCabinsFull = true;
-        int cabinAmount = this.cabinList.size();
-
-        for (int i = 0; allCabinsFull && (i < cabinAmount); i++) {
-            List<Lifeform> inhabitants = this.cabinList.get(i).getInhabitants();
-
-            allCabinsFull = (((inhabitants.size() == 1) && (inhabitants.getFirst().getRequiredSpace() == 2)) || (inhabitants.size() == 2));
-        }
-
-        return allCabinsFull;
-    }
-
-    /**
      * @return The ship's total onboard <code>Lifeform</code>s
      *         (both humans and aliens)
      */

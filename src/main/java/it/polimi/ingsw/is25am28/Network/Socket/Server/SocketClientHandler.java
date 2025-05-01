@@ -2,7 +2,10 @@ package it.polimi.ingsw.is25am28.Network.Socket.Server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -174,6 +177,33 @@ public class SocketClientHandler implements VirtualViewSocket {
     public void selectDeselectSubdeck(String playerNickname, Integer selectedSubdeck, boolean isSelectAction) throws Exception {
         try {
             this.controller.selectDeselectSubdeck(playerNickname, selectedSubdeck, isSelectAction);
+        }
+        catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void fixShip(String playerNickname, Integer i, Integer j, UUID uuid) throws Exception {
+        try {
+            this.controller.fixShip(playerNickname, i, j);
+        }
+        catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void populateShip(String playerNickname, ComponentHelper<LifeformType> lifeFormToAdd, UUID uuid) throws Exception {
+        try {
+            this.controller.populateShip(playerNickname, lifeFormToAdd);
+        }
+        catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void playCard(String playerNickname, ActionJSON action, UUID uuid) throws Exception {
+        try {
+            this.controller.playCard(playerNickname, action);
         }
         catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));

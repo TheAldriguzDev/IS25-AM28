@@ -1,10 +1,14 @@
 package it.polimi.ingsw.is25am28.Network.RMI.Server;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI;
+import it.polimi.ingsw.is25am28.Network.Server.GameInstance;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
 import it.polimi.ingsw.is25am28.Network.Server.ServerLogger;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
@@ -188,6 +192,39 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
 
         try {
             this.controller.selectDeselectSubdeck(playerNickname, subdeck, isSelectAction);
+        }
+        catch (Exception e) {
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void fixShip(String playerNickname, Integer i, Integer j, UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.fixShip(playerNickname, i, j);
+        }
+        catch (Exception e) {
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void populateShip(String playerNickname, ComponentHelper<LifeformType> lifeFormToAdd, UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.populateShip(playerNickname, lifeFormToAdd);
+        }
+        catch (Exception e) {
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    public void playCard(String playerNickname, ActionJSON action, UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.playCard(playerNickname, action);
         }
         catch (Exception e) {
             this.reportError(client, new ErrorAnswer(e.getMessage()));

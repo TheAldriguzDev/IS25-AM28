@@ -2,9 +2,12 @@ package it.polimi.ingsw.is25am28.Network.Server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import it.polimi.ingsw.is25am28.Controller.GameController;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -252,6 +255,36 @@ public class Server {
             else {
                 ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " deselected the subdeck #" + (subdeck + 1));
             }
+        }
+    }
+
+    public void fixShip(String playerNickname, Integer i, Integer j) throws Exception {
+        synchronized (this.gameInstances) {
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.fixShip(playerNickname, i, j);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " removed a component from his ship (" + i + "," + j + ")" );
+        }
+    }
+
+    public void populateShip(String playerNickname, ComponentHelper<LifeformType> lifeFormToAdd) throws Exception {
+        synchronized (this.gameInstances) {
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.populateShip(playerNickname, lifeFormToAdd);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " populated a component of his ship (" + lifeFormToAdd.getI() + "," + lifeFormToAdd.getJ() + ") with " + lifeFormToAdd.getItem().toString());
+        }
+    }
+
+    public void playCard(String playerNickname, ActionJSON action) throws Exception {
+        synchronized (this.gameInstances) {
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.playCard(playerNickname, action);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " played the card");
         }
     }
 
