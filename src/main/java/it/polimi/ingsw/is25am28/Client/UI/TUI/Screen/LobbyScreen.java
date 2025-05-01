@@ -69,11 +69,10 @@ public class LobbyScreen extends Screen {
             for (GameInfoDTO game : availableGames) {
                 this.availableGamesWidget.appendString("(" + game.getId() + ") (level=" + game.getLevel() + ", players=" + game.getActualPlayers() + "/" + game.getTotalPlayers() + ")");
             }
-
-            this.availableGamesWidget.addPadding(0, 1, 0, 1);
         }
 
         this.availableGamesWidget.appendString("(-1) Go back to the menu");
+        this.availableGamesWidget.addPadding(0, 1, 0, 1);
         this.availableGamesWidget.wrapWidgetWithBorder();
     }
 

@@ -157,27 +157,27 @@ class GameModelTest {
         assertEquals(tileState.getPlayerNickname(), "Player 1");
         assertTrue(tileState.isSelected());
 
-        ConstructionDeckDTO deckState = model.selectSubDeck("Player 1", 1);
+        ConstructionDeckDTO deckState = model.selectDeselectSubdeck("Player 1", 1, true);
 
         // Try to select the tile while is already selected by another player --> should throw an error
         assertThrows(
                 IllegalStateException.class,
-                () -> model.selectSubDeck("Player 2", 1),
+                () -> model.selectDeselectSubdeck("Player 2", 1, true),
                 "The selected sub-deck should not be available for a select"
         );
 
         assertThrows(
                 IllegalStateException.class,
-                () -> model.deselectSubDeck("Player 2", 1),
+                () -> model.selectDeselectSubdeck("Player 2", 1, false),
                 "The selected sub-deck should not be deselected from other players"
         );
 
         assertDoesNotThrow(
-                () -> model.deselectSubDeck("Player 1", 1)
+                () -> model.selectDeselectSubdeck("Player 1", 1, false)
         );
 
         assertDoesNotThrow(
-                () -> model.selectSubDeck("Player 2", 1)
+                () -> model.selectDeselectSubdeck("Player 2", 1, true)
         );
 
         // Try to select the tile while is already selected by another player --> should throw an error

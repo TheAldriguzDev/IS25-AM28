@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
@@ -536,7 +537,22 @@ public final class GameMenuTUIPage extends TUIPage {
     }
 
     @Override
+    public void showShipFixing() {
+
+    }
+
+    @Override
+    public void showShipPopulate() {
+
+    }
+
+    @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
+
+    }
+
+    @Override
+    public void receiveTimerDTO(TimerDTO timerDTO) {
 
     }
 

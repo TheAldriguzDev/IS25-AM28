@@ -33,7 +33,7 @@ public class GameModel {
     private final ResourceBank resourceBank;
     private int numPlayers;
     private final Map<String, Player> players;
-    private final Map<String, VirtualView> playeVirtualViews;
+    private final Map<String, VirtualView> playerVirtualViews;
     private State currentState;
 
     private final Random random = new Random();
@@ -44,7 +44,7 @@ public class GameModel {
         this.players = new HashMap<>();
         this.numPlayers = 2; // min value
         this.currentState = new CreateGameState(this);
-        this.playeVirtualViews = new HashMap<>();
+        this.playerVirtualViews = new HashMap<>();
     }
 
     /**
@@ -118,7 +118,7 @@ public class GameModel {
             throw new IllegalArgumentException("The given nickname does not exist");
         }
         p.setConnected(true);
-        this.playeVirtualViews.put(nickname, clientView);
+        this.playerVirtualViews.put(nickname, clientView);
 
         List<StateDTO> states = new ArrayList<>();
 
@@ -217,7 +217,7 @@ public class GameModel {
         this.createBoard();
         this.generateDeck();
 
-        this.playeVirtualViews.put(nickname, clientView);
+        this.playerVirtualViews.put(nickname, clientView);
 
         // If all the previous operations are validated we can make the state transition
         this.currentState.onComplete();
@@ -244,7 +244,7 @@ public class GameModel {
         List<StateDTO> states = new ArrayList<>();
 
         this.currentState.addNewPlayer(nickname, playerColor);
-        this.playeVirtualViews.put(nickname, clientView);
+        this.playerVirtualViews.put(nickname, clientView);
 
         states.add(this.currentState.generateState());
 
@@ -257,12 +257,8 @@ public class GameModel {
         return states;
     }
 
-    public ConstructionDeckDTO selectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
-        return this.currentState.selectSubDeck(player, selectedDeck);
-    }
-
-    public ConstructionDeckDTO deselectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
-        return this.currentState.deselectSubDeck(player, selectedDeck);
+    public ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws IllegalStateException {
+        return this.currentState.selectDeselectSubdeck(player, selectedDeck, isSelectAction);
     }
 
     /**
@@ -493,14 +489,14 @@ public class GameModel {
      * when some events occurred on the server (e.g. onTimerEnd)
      * */
     Map<String, VirtualView> getVirtualViews() {
-        return new HashMap<>(this.playeVirtualViews);
+        return new HashMap<>(this.playerVirtualViews);
     }
 
     /**
      * Method used by the states to update the clients on certain events
      * */
     void broadCastUpdate(Answer answer) {
-        for (Map.Entry<String, VirtualView> entry : this.playeVirtualViews.entrySet()) {
+        for (Map.Entry<String, VirtualView> entry : this.playerVirtualViews.entrySet()) {
             if (this.players.get(entry.getKey()).isConnected()) {
                 try {
                     entry.getValue().updateState(answer);

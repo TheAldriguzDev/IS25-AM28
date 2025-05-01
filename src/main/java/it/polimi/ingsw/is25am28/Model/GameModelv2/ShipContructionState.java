@@ -78,10 +78,16 @@ public final class ShipContructionState extends State implements TimerObserver {
     }
 
     /**
-     * Mark the given sub-deck as selected
+     * Either selects or deselects the given subdeck
+     *
+     * @param player The player that initiated this action
+     * @param selectedDeck The subdeck ID that the player wants to select or deselect
+     * @param isSelectAction TRUE if the player wants to select the given subdeck, and
+     *                       FALSE if the player wants to deselect the given subdeck
+     *
      * @return the Component Data Object Transfer needed to update the client with the selected deck event
      * */
-    public synchronized ConstructionDeckDTO selectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
+    public synchronized ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws IllegalStateException {
         if (selectedDeck < 0 || selectedDeck > 3) {
             throw new IllegalStateException("The given sub-deck does not exist");
         }
@@ -90,51 +96,33 @@ public final class ShipContructionState extends State implements TimerObserver {
             throw new IllegalStateException("The time to select the sub-decks has ended");
         }
 
-        if (this.selectedSubDecks.containsKey(selectedDeck)) {
-            throw new IllegalStateException("The required sub-deck has already been selected from someone else");
+        if (isSelectAction) {
+            if (this.selectedSubDecks.containsKey(selectedDeck)) {
+                throw new IllegalStateException("The required sub-deck has already been selected from someone else");
+            }
+
+            this.selectedSubDecks.put(selectedDeck, player);
+        }
+        else {
+            if (!this.selectedSubDecks.containsKey(selectedDeck)) {
+                throw new IllegalStateException("The given sub-deck id is not selected by anyone");
+            }
+
+            if (!this.selectedSubDecks.get(selectedDeck).equals(player)) {
+                throw new IllegalStateException("You cannot deselect a sub-deck selected from someone else");
+            }
+
+            this.selectedSubDecks.remove(selectedDeck, player);
         }
 
-        this.selectedSubDecks.put(selectedDeck, player);
         ConstructionDeckDTO state = new ConstructionDeckDTO()
                 .setSubDeck(selectedDeck)
                 .setPlayerNickname(player)
-                .setSelected(true);
+                .setSelected(isSelectAction);
 
         state.setStateName(this.toString());
         state.setEventType(ShipConstructionType.DECK_EVENT.toString());
 
-        return state;
-    }
-
-    /**
-     * Removes the selected mark of the given sub-deck
-     * @return the Component Data Object Transfer needed to update the client with the deselected deck event
-     * */
-    public synchronized ConstructionDeckDTO deselectSubDeck(String player, Integer selectedDeck) throws IllegalStateException {
-        if (selectedDeck < 0 || selectedDeck > 3) {
-            throw new IllegalStateException("The given sub-deck does not exist");
-        }
-
-        if (this.shipConfigEnded) {
-            throw new IllegalStateException("The time to select the sub-decks has ended");
-        }
-
-        if (!this.selectedSubDecks.containsKey(selectedDeck)) {
-            throw new IllegalStateException("The given sub-deck id is not selected by anyone");
-        }
-
-        if (!this.selectedSubDecks.get(selectedDeck).equals(player)) {
-            throw new IllegalStateException("You cannot deselect a sub-deck selected from someone else");
-        }
-
-        this.selectedSubDecks.remove(selectedDeck);
-        ConstructionDeckDTO state = new ConstructionDeckDTO()
-                .setSubDeck(selectedDeck)
-                .setPlayerNickname(player)
-                .setSelected(false);
-
-        state.setStateName(this.toString());
-        state.setEventType(ShipConstructionType.DECK_EVENT.toString());
         return state;
     }
 
@@ -238,7 +226,7 @@ public final class ShipContructionState extends State implements TimerObserver {
                 .setRotation(rotation);
 
         state.setStateName(this.toString());
-        state.setEventType(ShipConstructionType.SHIP_EVENT.toString());
+        state.setEventType(ShipConstructionType.PLACE_EVENT.toString());
 
         return state;
     }
@@ -306,7 +294,7 @@ public final class ShipContructionState extends State implements TimerObserver {
         return state;
     }
 
-    // TODO: Make the state transaction
+    // TODO: Make the state transition
     @Override
     public void onComplete() {
         if (players_done.size() == model.getNumPlayers()) {

@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
@@ -943,7 +944,7 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
         // If the timer can be flipped, then print it to the player
         // by appending a message to the selectable components widget
-        if ( !this.clientTUI.getModel().getState().isTimeRunning()) {
+        if ( this.clientTUI.getModel().getTimerDTO() != null) {
             selectableComponentsWidget.appendString(
                 PrintUtils.addColor("==== Hourglass can now be flipped! ====", ANSIColors.BRIGHT_MAGENTA)
             );
@@ -1183,7 +1184,22 @@ public final class ShipConstructionTUIPage extends TUIPage {
     }
 
     @Override
+    public void showShipFixing() {
+
+    }
+
+    @Override
+    public void showShipPopulate() {
+
+    }
+
+    @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
+
+    }
+
+    @Override
+    public void receiveTimerDTO(TimerDTO timerDTO) {
 
     }
 
