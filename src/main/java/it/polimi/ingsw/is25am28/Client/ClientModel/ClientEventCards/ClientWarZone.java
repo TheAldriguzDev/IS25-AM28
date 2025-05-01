@@ -4,15 +4,17 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ClientWarZone extends ClientEventCard {
-    private Map<String, String> actionAndConsequences;
+    private List<List<String>> actionAndConsequences;
     private final int requiredCrew;
     private final int movementSteps;
     private final int requiredResources;
     private String affectedPlayer;
     private int currActionIndex;
+
 
     public ClientWarZone(CardStateJSON cardState) {
         super(cardState);
@@ -29,24 +31,9 @@ public class ClientWarZone extends ClientEventCard {
 
     @Override
     public void updateCard(CardStateJSON cardState) {
-        if (!cardState.getAffectedPlayer().isEmpty()) {
-            this.affectedPlayer = cardState.getAffectedPlayer();
-        }
-        if (cardState.getCurrActionIndex() == -1) {
-            this.currActionIndex = cardState.getCurrActionIndex();
-        } // necessary to know what to display
-//        if (cardState.getApplyRequiredCrewConsequence()) {
-//
-//        } else if (cardState.getApplyMovementStepsConsequence()) {
-//
-//        } else if (cardState.getApplyShootingSequenceConsequence()) {
-//
-//        } else if (cardState.getApplyLossItemsConsequence()) {
-//
-//        }
-        //all this stuff is done by the other update functions
-        //Only need to read the action index to properly display the widget
-
+        this.playerNickname = cardState.getPlayerNickname(); // If present, the current action (not the general card thumbnail) will be shown
+        this.affectedPlayer = cardState.getAffectedPlayer();
+        this.currActionIndex = cardState.getCurrActionIndex(); // Will be used in the generateWidget to determine what to display
     }
 
     @Override

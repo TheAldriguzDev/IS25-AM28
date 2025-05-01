@@ -111,7 +111,9 @@ public class Pirates extends EventCard {
                     // if the first round of meteors has passed, this block won't be executed, assuring that no players will get the same reward twice (or activate the cannons twice)
                     if (firstRound) {
                         // Power consumed by the DoubleCannons
-                        this.removedBatteries.put(playerNickname, player.getShip().getAvailableEnergy() - piratesData.getDoubleCannonsToActivateCoordinates().size());
+                        if (!piratesData.getDoubleCannonsToActivateCoordinates().isEmpty()) {
+                            this.removedBatteries.put(playerNickname, piratesData.getDoubleCannonsToActivateCoordinates().size());
+                        }
                         float playerFirepower = player.getShip().getFirePower(piratesData.getDoubleCannonsToActivateCoordinates());
                         if (playerFirepower > requiredFirepower && !hasBeenDefeated) {
                             // Pirates defeated, even if the player who defeated them does not take the credits, the card won't be used by other players

@@ -20,9 +20,6 @@ public class ClientOpenSpace extends ClientEventCard {
     @Override
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
-        // if case to do this only when needed -> is an additional flag necessary?
-//        this.updatedPositions = cardState.getUpdatedPositions();
-//        this.eliminatedPlayers = cardState.getEliminatedPlayers();
     }
 
     @Override

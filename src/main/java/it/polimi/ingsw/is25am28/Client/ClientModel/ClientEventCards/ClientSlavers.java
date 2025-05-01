@@ -12,6 +12,7 @@ public class ClientSlavers extends ClientEventCard {
     private final int givenCredits;
     private final int takenCrew;
     private boolean firstRound;
+    private List<String> defeatedPlayers;
 
 //    private List<String> defeatedPlayers;
 
@@ -22,7 +23,7 @@ public class ClientSlavers extends ClientEventCard {
         this.givenCredits = slaversCardState.getGivenCredits();
         this.takenCrew = slaversCardState.getTakenCrew();
         this.firstRound = slaversCardState.getFirstRound();
-//        this.defeatedPlayers = null;
+        this.defeatedPlayers = new ArrayList<>();
     }
 
     @Override
@@ -34,9 +35,9 @@ public class ClientSlavers extends ClientEventCard {
     public void updateCard(CardStateJSON slaversCardState) {
         this.playerNickname = slaversCardState.getPlayerNickname();
         this.firstRound = slaversCardState.getFirstRound();
-//        if (slaversCardState.getFirstRound()) {
-//            defeatedPlayers = slaversCardState.getDefeatedPlayers();
-//        }
+        if (!this.firstRound) {
+            this.defeatedPlayers = slaversCardState.getDefeatedPlayers();
+        }
     }
 
     @Override

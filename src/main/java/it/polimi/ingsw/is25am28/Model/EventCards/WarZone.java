@@ -675,10 +675,10 @@ public class WarZone extends EventCard {
         if (this.hasBeenActivated()) {
             initStateFlags(cardState);
 
-            cardState.setApplyMovementStepsConsequence(false);
-            cardState.setApplyRequiredCrewConsequences(false);
-            cardState.setApplyLossItemsConsequence(false);
-            cardState.setApplyShootingSequenceConsequence(false);
+//            cardState.setApplyMovementStepsConsequence(false);
+//            cardState.setApplyRequiredCrewConsequences(false);
+//            cardState.setApplyLossItemsConsequence(false);
+//            cardState.setApplyShootingSequenceConsequence(false);
 
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
@@ -691,7 +691,6 @@ public class WarZone extends EventCard {
                     case REQUIREDCREW -> {
                         setUpdatedRemovedLifeformsIfNecessary(cardState, removedLifeforms);
                         setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
-
                     }
                     case MOVEMENTSTEPS -> {
                         setUpdatedPositionsIfNecessary(cardState, updatedPositions);
@@ -699,8 +698,8 @@ public class WarZone extends EventCard {
                     case SHOOTINGSEQUENCE -> {
                         if(!this.previousPlayerRemovedComponents.isEmpty()) {
                             cardState.setNeedsShipUpdate(true);
+                            cardState.setNeedsUpdatedRemovedComponents(true);
                             cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
-                            // TODO: NEW FLAG SYSTEM NEEDED (needsComponentsUpdate)
                         }
                         setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
                     }
@@ -722,9 +721,10 @@ public class WarZone extends EventCard {
             // Set the card level
             cardState.setCardLevel(this.cardLevel);
 
-            Map<String, String> actionsAndConsequences = new HashMap<>();
+
+            List<List<String>> actionsAndConsequences = new ArrayList<>();
             for (WarZoneActionConsequencePair pair : this.cardActions) {
-                actionsAndConsequences.put(pair.getAction().toString(), pair.getConsequence().toString());
+                actionsAndConsequences.add(Arrays.asList(pair.getAction().toString(), pair.getConsequence().toString()));
             }
             cardState.setRequiredCrewMembers(this.requiredCrew);
             cardState.setMovementSteps(this.movementSteps);

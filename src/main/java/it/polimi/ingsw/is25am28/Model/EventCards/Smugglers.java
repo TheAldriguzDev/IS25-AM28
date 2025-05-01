@@ -89,6 +89,9 @@ public class Smugglers extends EventCard {
                     }
                     if (firstRound) {
                         // Power consumed by the DoubleCannons
+                        if (!smugglersData.getDoubleCannonsToActivateCoordinates().isEmpty()) {
+                            this.removedBatteries.put(playerNickname, smugglersData.getDoubleCannonsToActivateCoordinates().size());
+                        }
                         float playerFirepower = player.getShip().getFirePower(smugglersData.getDoubleCannonsToActivateCoordinates());
                         if (playerFirepower > requiredFirepower) {
                             // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players

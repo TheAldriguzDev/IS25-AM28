@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,8 +15,7 @@ public class ClientPirates extends ClientEventCard {
     private final int givenCredits;
     private final int movementSteps;
     Map<String, Integer> currentPlasmaShot;
-    List<Player> playersToHit;
-    Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
+    private List<String> defeatedPlayers;
 
     public ClientPirates(CardStateJSON piratesState) {
         super(piratesState);
@@ -23,6 +23,7 @@ public class ClientPirates extends ClientEventCard {
         this.requiredFirepower = piratesState.getRequiredFirepower();
         this.givenCredits = piratesState.getGivenCredits();
         this.movementSteps = piratesState.getMovementSteps();
+        this.defeatedPlayers = new ArrayList<>();
     }
 
     @Override
@@ -34,10 +35,10 @@ public class ClientPirates extends ClientEventCard {
     public void updateCard(CardStateJSON piratesState) {
         this.playerNickname = piratesState.getPlayerNickname();
         this.firstRound = piratesState.getFirstRound();
-        if (!piratesState.getFirstRound()) {
-            firstRound = piratesState.getFirstRound();
-            diceThrowResult = piratesState.getDiceThrowResult();
-            currentPlasmaShot = piratesState.getCurrPlasmaShotDescriptor();
+        if (!this.firstRound) {
+            this.diceThrowResult = piratesState.getDiceThrowResult();
+            this.currentPlasmaShot = piratesState.getCurrPlasmaShotDescriptor();
+            this.defeatedPlayers = piratesState.getDefeatedPlayers();
         }
     }
 

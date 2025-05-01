@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientSmugglers extends ClientEventCard {
@@ -14,6 +15,7 @@ public class ClientSmugglers extends ClientEventCard {
     private final int greenItems;
     private final int takenItems;
     private boolean firstRound;
+    private List<String> defeatedPlayers;
 
 //    List<String> defeatedPlayers;
 
@@ -28,6 +30,7 @@ public class ClientSmugglers extends ClientEventCard {
         this.greenItems = smugglersState.getGreenItems();
         this.takenItems = smugglersState.getTakenItems();
         this.firstRound = smugglersState.getFirstRound();
+        this.defeatedPlayers = new ArrayList<>();
     }
 
     @Override
@@ -37,10 +40,9 @@ public class ClientSmugglers extends ClientEventCard {
     public void updateCard(CardStateJSON smugglersState) {
         this.playerNickname = smugglersState.getPlayerNickname();
         this.firstRound = smugglersState.getFirstRound();
-//        if (!smugglersState.getFirstRound()) {
-//            defeatedPlayers = smugglersState.getDefeatedPlayers();
-//            // TODO : Resources/Batteries previously taken (not shown the first time)
-//        }
+        if (this.firstRound) {
+            this.defeatedPlayers = smugglersState.getDefeatedPlayers();
+        }
     }
 
     @Override

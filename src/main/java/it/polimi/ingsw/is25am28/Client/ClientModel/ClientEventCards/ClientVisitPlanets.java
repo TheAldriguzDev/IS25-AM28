@@ -8,6 +8,7 @@ import java.util.Map;
 
 public class ClientVisitPlanets extends ClientEventCard {
     Map<Integer, Map<ItemColor, Integer>> availablePlanets;
+    private int chosenPlanetIndex;
 
     public ClientVisitPlanets(CardStateJSON cardState) {
         super(cardState);

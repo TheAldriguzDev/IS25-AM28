@@ -28,7 +28,6 @@ public class ClientMeteorShower extends ClientEventCard {
     @Override
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
-//        this.previousPlayerRemovedComponents = cardState.getPreviousPlayerRemovedComponents();
         this.currMeteorIndex = cardState.getCurrMeteorIndex();
         this.diceThrowResult = cardState.getDiceThrowResult();
         this.currMeteorDescriptor = cardState.getCurrMeteorDescriptor();

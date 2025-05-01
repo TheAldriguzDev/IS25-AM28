@@ -19,9 +19,6 @@ public class ClientStardust extends ClientEventCard {
     @Override
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
-//        if (cardState.getNeedsBoardUpdate()) {
-//            this.updatedPositions = cardState.getUpdatedPositions();
-//        }
     }
 
     @Override

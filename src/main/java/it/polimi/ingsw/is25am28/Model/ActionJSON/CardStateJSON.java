@@ -96,7 +96,7 @@ public class CardStateJSON extends ActionJSON {
     private String affectedPlayer;
     private int requiredResources;
     private Map<String, Integer> currPlasmaShotDescriptor;
-    private Map<String, String> actionsAndConsequences;
+    private List<List<String>> actionsAndConsequences;
     private int currActionIndex;
     private boolean applyRequiredCrewConsequence;
     private boolean applyMovementStepsConsequence;
@@ -656,11 +656,11 @@ public class CardStateJSON extends ActionJSON {
     }
 
     @JsonSetter("actionsAndConsequences")
-    public void setActionsAndConsequences(Map<String, String> actionsAndConsequences) {
+    public void setActionsAndConsequences(List<List<String>> actionsAndConsequences) {
         this.actionsAndConsequences = actionsAndConsequences;
     }
     @JsonGetter("actionsAndConsequences")
-    public Map<String, String> getActionsAndConsequences() {
+    public List<List<String>> getActionsAndConsequences() {
         return this.actionsAndConsequences;
     }
 
