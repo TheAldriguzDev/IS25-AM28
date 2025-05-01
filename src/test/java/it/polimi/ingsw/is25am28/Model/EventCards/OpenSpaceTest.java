@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
@@ -193,6 +194,17 @@ class OpenSpaceTest {
     void test_open_space_with_1_players_eliminated_and_3_players_with_all_the_engines_supply() {
         // Create the card that will be used in the simulation
         OpenSpace openSpaceCard = new OpenSpace("openSpace", 2, board);
+        CardStateJSON cardState;
+
+        // ======== STATE TESTING ======== //
+        cardState = openSpaceCard.generateState();
+        assertEquals("openSpace", cardState.getCardName());
+        assertEquals(2, cardState.getCardLevel());
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertFalse(cardState.getNeedsBoardUpdate());
+        assertNull(cardState.getPlayerNickname());
+        // =============================== //
 
         // Init the players that will use the card
         openSpaceCard.initCardPlayers();
@@ -202,6 +214,7 @@ class OpenSpaceTest {
 
         // Use the card for each player.
         // We expect that p1 - p3 - p4 will be able to use the card, instead the p2 will be eliminated since he doesn't have any power (the alien boost can't be used)
+        int count = 0;
         ArrayList<Player> players = new ArrayList<>(board.getPlayers());
         for (Player player : players) {
             // Add the initial cursor of each player
@@ -213,12 +226,71 @@ class OpenSpaceTest {
 
             openSpaceJSON.setUsedEnergy(1);
 
+            // ======== STATE TESTING ======== //
+            cardState = openSpaceCard.generateState();
+            assertFalse(cardState.getNeedsPlayerUpdate());
+            switch (count) {
+                case 0 -> { // State after initCard
+                    assertFalse(cardState.getNeedsShipUpdate());
+                    assertFalse(cardState.getNeedsBoardUpdate());
+
+                    assertFalse(cardState.getNeedsUpdatedEliminatedPlayers());
+                }
+                case 1 -> { // State relative to player 1
+                    assertTrue(cardState.getNeedsShipUpdate());
+                    assertTrue(cardState.getNeedsBoardUpdate());
+                    assertTrue(cardState.getNeedsUpdatedPositions());
+                    assertEquals(1, cardState.getUpdatedPositions().size());
+                    assertEquals(13, cardState.getUpdatedPositions().get("Player 1"));
+                    assertTrue(cardState.getNeedsUpdatedBatteries());
+                    assertEquals(1, cardState.getRemovedBatteries().size());
+                    assertEquals(1, cardState.getRemovedBatteries().get("Player 1"));
+                    assertFalse(cardState.getNeedsUpdatedEliminatedPlayers());
+                }
+                case 2 -> { // State relative to player 2
+                    assertTrue(cardState.getNeedsShipUpdate());
+                    assertTrue(cardState.getNeedsBoardUpdate());
+                    assertFalse(cardState.getNeedsUpdatedPositions());
+                    assertTrue(cardState.getNeedsUpdatedEliminatedPlayers());
+                    assertEquals(1, cardState.getEliminatedPlayers().size());
+                    assertEquals("Player 2", cardState.getEliminatedPlayers().getFirst());
+                }
+                case 3 -> { // State relative to player 3
+                    assertTrue(cardState.getNeedsShipUpdate());
+                    assertTrue(cardState.getNeedsBoardUpdate());
+                    assertTrue(cardState.getNeedsUpdatedPositions());
+                    assertEquals(1, cardState.getUpdatedPositions().size());
+                    assertEquals(8, cardState.getUpdatedPositions().get("Player 3"));
+                    assertTrue(cardState.getNeedsUpdatedBatteries());
+                    assertEquals(1, cardState.getRemovedBatteries().size());
+                    assertEquals(1, cardState.getRemovedBatteries().get("Player 3"));
+                    assertFalse(cardState.getNeedsUpdatedEliminatedPlayers());
+                }
+            }
+            assertEquals(player.getNickname(), cardState.getPlayerNickname());
+            // =============================== //
+            count++;
+
             // Use the card
             openSpaceCard = (OpenSpace) openSpaceCard.useCard(openSpaceJSON);
             if (openSpaceCard.hasFinished()) break;
         }
 
-        // All the types of power has been tested
+        // ======== STATE TESTING ======== //
+        cardState = openSpaceCard.generateState();
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertTrue(cardState.getNeedsShipUpdate());
+        assertTrue(cardState.getNeedsBoardUpdate());
+        assertTrue(cardState.getNeedsUpdatedPositions());
+        assertEquals(1, cardState.getUpdatedPositions().size());
+        assertEquals(7, cardState.getUpdatedPositions().get("Player 4"));
+        assertTrue(cardState.getNeedsUpdatedBatteries());
+        assertEquals(1, cardState.getRemovedBatteries().size());
+        assertEquals(1, cardState.getRemovedBatteries().get("Player 4"));
+        assertFalse(cardState.getNeedsUpdatedEliminatedPlayers());
+        // =============================== //
+
+        // All the types of power have been tested
         assertEquals(tmpCursors.get(0) + 7, players.get(0).getCursor());
         assertEquals(tmpCursors.get(2) + 7, players.get(2).getCursor());
         assertEquals(tmpCursors.get(3) + 7, players.get(3).getCursor());

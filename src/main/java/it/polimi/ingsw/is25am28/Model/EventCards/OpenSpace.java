@@ -76,7 +76,9 @@ public class OpenSpace extends EventCard {
                 playerNickname.equals( this.getCurrentPlayer().get().getNickname() ) &&
                 usedEnergy <= this.getCurrentPlayer().get().getShip().getAvailableEnergy() ) {
 
-            this.removedBatteries.put(playerNickname, this.getCurrentPlayer().get().getShip().getAvailableEnergy() - usedEnergy);
+            if (usedEnergy > 0) {
+                this.removedBatteries.put(playerNickname, usedEnergy);
+            }
             // Calculate the ship engines power with:
             // +1 for every normal motor
             // +2 for every double motor activated
