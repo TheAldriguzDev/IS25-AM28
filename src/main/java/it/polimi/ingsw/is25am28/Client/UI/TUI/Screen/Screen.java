@@ -14,9 +14,12 @@ import it.polimi.ingsw.is25am28.Network.VirtualView;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
+
 public class Screen implements ClientUI {
     public static final String UNKNOWN_COMMAND_ERROR = PrintUtils.addColor("ERROR: Selected command does not exist", ANSIColors.RED);
     public static final String DEFAULT_COMMAND_PREFIX = "Select an option: ";
+    public static final String COMPUTER_MSG_TAG = PrintUtils.addColor("[COMPUTER]", ANSIColors.BRIGHT_CYAN) + SPACE;
 
     protected final ClientModel model;
     protected InputThread inputThread;

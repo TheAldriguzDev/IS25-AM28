@@ -107,7 +107,7 @@ public class LobbyScreen extends Screen {
                 choice = Integer.parseInt(line);
             }
             catch (NumberFormatException e) {
-                System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please enter a number.", ANSIColors.RED));
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please enter a number.", ANSIColors.RED));
                 continue;
             }
 
@@ -116,7 +116,7 @@ public class LobbyScreen extends Screen {
                     // (0) - Quit game
                     // Return nothing and the program stops
                     System.out.println();
-                    System.out.println(PrintUtils.addColor("[COMPUTER]", ANSIColors.BRIGHT_CYAN) + SPACE + "Bye bye!");
+                    System.out.println(COMPUTER_MSG_TAG + "Bye bye!");
                     System.exit(0);
                 }
                 case 1 -> {
@@ -142,7 +142,7 @@ public class LobbyScreen extends Screen {
                                 choice = Integer.parseInt(line);
                             }
                             catch (NumberFormatException e) {
-                                System.out.println("ERROR: Invalid input. Please enter a number.");
+                                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please enter a number.", ANSIColors.RED));
                             }
 
                             if (choice == -1) {
@@ -157,7 +157,7 @@ public class LobbyScreen extends Screen {
                                     .orElse(null);
 
                             if (game == null) {
-                                System.out.println(PrintUtils.addColor("ERROR: Game with ID=" + choice + " does not exist. Please choose an existing game.", ANSIColors.RED));
+                                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Game with ID=" + choice + " does not exist. Please choose an existing game.", ANSIColors.RED));
                             }
                         }
                         while (!availableGameIDs.contains(choice) || game == null);
@@ -168,7 +168,7 @@ public class LobbyScreen extends Screen {
                         }
                     }
                     else {
-                        System.out.println(PrintUtils.addColor("ERROR: There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
+                        System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
                     }
                 }
                 case 3 -> {
@@ -178,7 +178,7 @@ public class LobbyScreen extends Screen {
                         commandExecuted = true;
                     }
                     else {
-                        System.out.println(PrintUtils.addColor("ERROR: There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
+                        System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
                     }
                 }
                 case 4 -> {
@@ -207,7 +207,7 @@ public class LobbyScreen extends Screen {
             playerName = this.inputThread.waitForInput();
 
             if (playerName.isEmpty() || usedNicknames.contains(playerName)) {
-                System.out.println("Invalid input: name already used or empty.");
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Given name is already used or empty.", ANSIColors.RED));
             }
         }
         while (playerName.isEmpty() || usedNicknames.contains(playerName));
@@ -219,14 +219,14 @@ public class LobbyScreen extends Screen {
             String colorInput = this.inputThread.waitForInput();
 
             if (colorInput.isEmpty()) {
-                System.out.println("Invalid input: color cannot be empty.");
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Color cannot be empty.", ANSIColors.RED));
                 continue;
             }
             try {
                 playerColor = PlayerColor.valueOf(colorInput.toUpperCase());
             }
             catch (IllegalArgumentException e) {
-                System.out.println("Invalid input: unknown color.");
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Unknown color.", ANSIColors.RED));
             }
         } while (playerColor == null);
 
@@ -261,11 +261,11 @@ public class LobbyScreen extends Screen {
         // Ask for nickname
         String playerName;
         do {
-            System.out.print("Your name: ");
+            System.out.print("Insert your name: ");
             playerName = this.inputThread.waitForInput();
 
             if (playerName.isEmpty()) {
-                System.out.println("Invalid input: name cannot be empty.");
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Name cannot be empty.", ANSIColors.RED));
             }
         } while (playerName.isEmpty());
 
@@ -276,50 +276,50 @@ public class LobbyScreen extends Screen {
             String colorInput = this.inputThread.waitForInput();
 
             if (colorInput.isEmpty()) {
-                System.out.println("Invalid input: color cannot be empty.");
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Given color cannot be empty.", ANSIColors.RED));
                 continue;
             }
             try {
                 playerColor = PlayerColor.valueOf(colorInput.toUpperCase());
             }
             catch (IllegalArgumentException e) {
-                System.out.println("Invalid input: unknown color.");
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Unknown color.", ANSIColors.RED));
             }
         } while (playerColor == null);
 
         // Ask for game level
         int gameLevel = -1;
         do {
-            System.out.print("Select game level (0 --> Test Flight, 2 = Level 2 Flight): ");
+            System.out.print("Select game level ([0] = Test Flight, [2] = Level 2 Flight): ");
             String line = this.inputThread.waitForInput();
 
             try {
                 gameLevel = Integer.parseInt(line);
 
                 if (gameLevel != 0 && gameLevel != 2) {
-                    System.out.println("Game level must be 0 or 2.");
+                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Game level must be 0 or 2.", ANSIColors.RED));
                 }
             }
             catch (NumberFormatException e) {
-                System.out.println("Invalid input: please enter a number.");
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] please enter a number.", ANSIColors.RED));
             }
         } while (gameLevel != 0 && gameLevel != 2);
 
         // Ask for total number of players
         int totalPlayers = -1;
         do {
-            System.out.print("Enter total number of players (2 to 4): ");
+            System.out.print("Enter total number of players (from 2 to 4): ");
             String line = this.inputThread.waitForInput();
 
             try {
                 totalPlayers = Integer.parseInt(line);
 
                 if (totalPlayers < 2 || totalPlayers > 4) {
-                    System.out.println("Number of players must be between 2 and 4.");
+                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Number of players must be between 2 and 4.", ANSIColors.RED));
                 }
             }
             catch (NumberFormatException e) {
-                System.out.println("Invalid input: please enter a number.");
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please enter a number.", ANSIColors.RED));
             }
         } while (totalPlayers < 2 || totalPlayers > 4);
 
@@ -344,6 +344,10 @@ public class LobbyScreen extends Screen {
         this.client.sendMessage(new ConfigGame(playerName, playerColor, gameLevel, totalPlayers));
     }
 
+    /**
+     * Asks the user the nickname with which he last player and
+     * attempts to reconnect him to the game he previously player in.
+     */
     private void reconnectToGameInput(AvailableGamesDTO availableGames, List<String> usedNicknames) throws Exception {
         if (usedNicknames.isEmpty()) {
             this.showLobbies(availableGames, false);
@@ -359,7 +363,7 @@ public class LobbyScreen extends Screen {
             playerName = this.inputThread.waitForInput();
 
             if (playerName.isEmpty() && !usedNicknames.contains(playerName)) {
-                System.out.println("Invalid input: name cannot be empty or different from an existing one.");
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Name cannot be empty or different from an existing one.", ANSIColors.RED));
             }
         }
         while (playerName.isEmpty() && !usedNicknames.contains(playerName));
@@ -367,10 +371,20 @@ public class LobbyScreen extends Screen {
         this.client.sendMessage(new Reconnect(playerName));
     }
 
+    /**
+     * Refreshes the currently available games
+     */
     private void refreshGames() throws Exception {
+        System.out.println(COMPUTER_MSG_TAG + "Refreshing games...");
         this.client.sendMessage(new RefreshGames());
+        System.out.println(COMPUTER_MSG_TAG + "Available games are now up to date!");
     }
 
+    /**
+     * Puts the current player's client into the waiting state
+     * and shows how many players are currently connected and
+     * also how many are left before the game starts
+     */
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
         WidgetTUI waitingForPlayersWidget = new WidgetTUI();
@@ -410,6 +424,15 @@ public class LobbyScreen extends Screen {
 
             // Finally, wrap and print the widget
             waitingForPlayersWidget.wrapWidgetWithBorder().printWidget();
+
+            // Show a start game message if the goal player amount is reached
+            if (connected == total) {
+                WidgetTUI startGameMessage = new WidgetTUI();
+
+                startGameMessage.appendString(COMPUTER_MSG_TAG + "All players are connected! Starting game...");
+                startGameMessage.addPadding(0, 1, 0, 1);
+                startGameMessage.wrapWidgetWithBorder().printWidget();
+            }
         }
     }
 }

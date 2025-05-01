@@ -15,6 +15,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import static it.polimi.ingsw.is25am28.Model.Connector.THREE_PIPES;
@@ -424,6 +425,22 @@ public class ClientShip implements WidgetTUIGenerator {
         }
 
         return grid;
+    }
+
+    /**
+     * @return TRUE if this ship cannot host any other lifeforms, FALSE otherwise
+     */
+    public boolean isShipPopulated() {
+        boolean allCabinsFull = true;
+        int cabinAmount = this.cabinList.size();
+
+        for (int i = 0; allCabinsFull && (i < cabinAmount); i++) {
+            List<Lifeform> inhabitants = this.cabinList.get(i).getInhabitants();
+
+            allCabinsFull = (((inhabitants.size() == 1) && (inhabitants.getFirst().getRequiredSpace() == 2)) || (inhabitants.size() == 2));
+        }
+
+        return allCabinsFull;
     }
 
     /**
