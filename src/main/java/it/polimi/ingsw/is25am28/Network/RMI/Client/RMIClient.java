@@ -161,11 +161,11 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         StateDTO nextState = answer.getNextState();
         String nickname = answer.getPlayerNickname();
 
-        CompletableFuture<Void> future;
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         switch (state) {
             // Update the current state of the game
-            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PlayerEndedShipDTO _ -> { // TODO: Timer should be removed from here
+            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _ -> { // TODO: Timer should be removed from here
                 future = CompletableFuture.runAsync(() -> {
                     try {
                         state.accept(viewUpdater);
@@ -183,6 +183,28 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                             throw new RuntimeException("Error while commiting the command: ", e);
                         }
                     }, inputThread);
+                }
+            }
+            case PlayerEndedShipDTO _ -> {
+                if (nextState == null) {
+                    future = CompletableFuture.runAsync(() -> {
+                        try {
+                            state.accept(viewUpdater);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }, updateThread);
+
+                    // Then commit the command
+                    if (nickname != null && viewUpdater.isCTXAvailable()) { // Try to commit the message only if it's present --> otherwise is not smart to potentially lock the program
+                        future = future.thenRunAsync(() -> {
+                            try {
+                                viewUpdater.commitCommand(nickname);
+                            } catch (Exception e) {
+                                throw new RuntimeException("Error while commiting the command: ", e);
+                            }
+                        }, inputThread);
+                    }
                 }
             }
             case DisconnectedPlayerDTO _ -> {

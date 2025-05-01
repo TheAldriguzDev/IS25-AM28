@@ -1,7 +1,9 @@
 package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientFixShipState;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPopulateShipState;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
@@ -80,14 +82,6 @@ public class ViewUpdater implements StateVisitor {
             }
         }
 
-        if (this.ui instanceof ClientTUI_v2 tui) {
-            try {
-                tui.setCurrPage(new ShipConstructionTUIPage(tui));
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
         this.ui.showShipConstruction(state);
     }
 
@@ -153,11 +147,29 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(FixShipDTO state) {
+        // Set the model state to the ShipConstructionState that will initialize all the components
+        synchronized (this.model) {
+            try {
+                this.model.setState(new ClientFixShipState(this.model, state));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
         this.ui.showShipFixing(state);
     }
 
     @Override
     public void visit(PopulateShipDTO state) {
+        // Set the model state to the ShipConstructionState that will initialize all the components
+        synchronized (this.model) {
+            try {
+                this.model.setState(new ClientPopulateShipState(this.model, state));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
         this.ui.showShipPopulate(state);
     }
 
@@ -197,9 +209,7 @@ public class ViewUpdater implements StateVisitor {
     }
 
     public void interruptCurrScreen() {
-        System.out.println("ENTERING");
         if (this.ui instanceof TUIHandler) {
-            System.out.println("INTERRUPTED");
             ((TUIHandler) this.ui).interruptCurrScreen();
         }
     }

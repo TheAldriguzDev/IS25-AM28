@@ -137,6 +137,6 @@ public class TUIHandler implements ClientUI {
      * Forces an interrupt of this input thread
      */
     public void interruptCurrScreen() {
-        this.inputThread.interrupt();
+        this.inputThread.interruptInputReader();
     }
 }
