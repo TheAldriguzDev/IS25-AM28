@@ -23,6 +23,7 @@ public class Slavers extends EventCard {
     private Map<String, Integer> updatedPositions;
     private Map<String, Integer> updatedCredits;
     private Map<String, Integer> removedBatteries; // TODO: Implement in the state
+    private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
     public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board) {
         super(name, cardLevel, board);
@@ -37,6 +38,8 @@ public class Slavers extends EventCard {
         this.updatedPositions = new HashMap<>();
         this.updatedCredits = new HashMap<>();
         this.removedBatteries = new HashMap<>();
+        this.eliminatedPlayers = new ArrayList<>();
+        this.removedLifeforms = new HashMap<>();
     }
 
     @Override
@@ -74,7 +77,9 @@ public class Slavers extends EventCard {
                     }
                     if (firstRound) {
                         // Power consumed by the DoubleCannons
-                        this.removedBatteries.put(playerNickname, player.getShip().getAvailableEnergy() - slaversData.getDoubleCannonsToActivateCoordinates().size());
+                        if (!slaversData.getDoubleCannonsToActivateCoordinates().isEmpty()) {
+                            this.removedBatteries.put(playerNickname, slaversData.getDoubleCannonsToActivateCoordinates().size());
+                        }
                         float playerFirepower = player.getShip().getFirePower(slaversData.getDoubleCannonsToActivateCoordinates());
                         if (playerFirepower > requiredFirepower && !hasBeenDefeated) {
                             hasBeenDefeated = true;
@@ -149,6 +154,8 @@ public class Slavers extends EventCard {
                     for (ComponentHelper<LifeformType> lifeform : slaversData.getCrewToRemove()) {
                         Cabin tmpCabin;
 
+
+
                         try {
                             tmpCabin = (Cabin) player.getShip().getComponent(lifeform.getI(), lifeform.getJ());
                         } catch (Exception e) {
@@ -166,6 +173,7 @@ public class Slavers extends EventCard {
                         });
                     }
 
+                    this.removedLifeforms.put(player.getNickname(), slaversData.getCrewToRemove());
                     // Check if the player has finished all of its astronauts --> if yes it needs to be eliminated from the game
                     if (player.getShip().getCabinList().stream().flatMap(c -> c.getInhabitants().stream()).noneMatch(i -> i.getLifeformType().equals(LifeformType.ASTRONAUT))) {
                         this.eliminatedPlayers.add(player.getNickname());
@@ -205,6 +213,7 @@ public class Slavers extends EventCard {
                 }
                 slaversStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO: Need more thinking on this
 
+                setUpdatedRemovedLifeformsIfNecessary(slaversStateJSON, removedLifeforms);
                 setUpdatedEliminatedPlayersIfNecessary(slaversStateJSON, eliminatedPlayers);
             } else {
                 // Batteries consumed due to the double cannons

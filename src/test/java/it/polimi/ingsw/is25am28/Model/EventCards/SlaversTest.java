@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientSlavers;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -100,6 +101,8 @@ class SlaversTest {
         board.addPlayerToBoard(p3);
         board.addPlayerToBoard(p4);
 
+
+
     }
 
     @Test
@@ -108,14 +111,24 @@ class SlaversTest {
 
 
         slavers = new Slavers("Slavers", 2, 4, 2, 4, 6, board);
+        // ======== STATE TESTING ======== //
+        cardState = slavers.generateState();
+        assertEquals("Slavers", cardState.getCardName());
+        assertEquals(2, cardState.getCardLevel());
+        assertEquals(4, cardState.getRequiredFirepower());
+        assertEquals(2, cardState.getMovementSteps());
+        assertEquals(4, cardState.getGivenCredits());
+        assertEquals(6, cardState.getTakenCrew());
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertFalse(cardState.getNeedsBoardUpdate());
+        assertNull(cardState.getPlayerNickname());
+        assertFalse(cardState.getFirstRound());
+        // =============================== //
 
+        // ======== DATA NECESSARY TO TEST THE CARD ======== //
         ArrayList<List<Integer>> doubleCannonActivated = new ArrayList<>();
-//        List<Integer> x = new ArrayList<>();
-//        List<Integer> y = new ArrayList<>();
-//        x.add(7);
-//        y.add(9);
-//        doubleCannonActivated.add(x);
-//        doubleCannonActivated.add(y);
+
         doubleCannonActivated.add(new ArrayList<>(Arrays.asList(7, 9)));
 
         actionJSON1 = new SlaversJSON("Player 1", false, crewToRemove1, new ArrayList<>()); // Total FirePower: 3
@@ -150,43 +163,72 @@ class SlaversTest {
         for (Player player : board.getPlayers()) {
             playerPositionsBefore.add(player.getCursor());
         }
+        // ================================================= //
 
         slavers.initCardPlayers();
 
-        // =======================================================================
-//        cardState = slavers.generateState();
-//        slavers.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== STATE TESTING ======== //
+        cardState = slavers.generateState();
+        assertTrue(cardState.getFirstRound());
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertFalse(cardState.getNeedsBoardUpdate());
+        assertEquals("Player 1", cardState.getPlayerNickname());
+        // =============================== //
 
         // Input gathering phase
         if (!slavers.hasFinished()) {
             slavers.useCard(new SlaversJSON("Player 1", false, new ArrayList<>(), new ArrayList<>()));
         }
 
-        // =======================================================================
-//        cardState = slavers.generateState();
-//        slavers.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== STATE TESTING ======== //
+        cardState = slavers.generateState();
+        assertTrue(cardState.getFirstRound());
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsUpdatedBatteries());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertFalse(cardState.getNeedsBoardUpdate());
+        assertEquals("Player 2", cardState.getPlayerNickname());
+        // =============================== //
 
         assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
             slavers.useCard(new SlaversJSON("Player 2", false, new ArrayList<>(), new ArrayList<>()));
         }
 
-        // =======================================================================
-//        cardState = slavers.generateState();
-//        slavers.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== STATE TESTING ======== //
+        cardState = slavers.generateState();
+        assertTrue(cardState.getFirstRound());
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsUpdatedBatteries());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertFalse(cardState.getNeedsBoardUpdate());
+        assertEquals("Player 3", cardState.getPlayerNickname());
+        // =============================== //
 
         assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
             slavers.useCard(new SlaversJSON("Player 3", true, new ArrayList<>(), doubleCannonActivated));
         }
 
-        // =======================================================================
-//        cardState = slavers.generateState();
-//        slavers.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== STATE TESTING ======== //
+            // The player 3 defeated the slavers
+        cardState = slavers.generateState();
+        assertTrue(cardState.getFirstRound());
+        assertTrue(cardState.getNeedsShipUpdate());
+        assertTrue(cardState.getNeedsUpdatedBatteries());
+        assertEquals(1, cardState.getRemovedBatteries().size());
+        assertEquals(1, cardState.getRemovedBatteries().get("Player 3"));
+        assertTrue(cardState.getNeedsPlayerUpdate());
+        assertTrue(cardState.getNeedsUpdatedCredits());
+        assertEquals(1, cardState.getUpdatedCredits().size());
+        assertEquals(4, cardState.getUpdatedCredits().get("Player 3"));
+        assertTrue(cardState.getNeedsBoardUpdate());
+        assertTrue(cardState.getNeedsUpdatedPositions());
+        assertEquals(1, cardState.getUpdatedPositions().size());
+        assertEquals(playerPositionsBefore.get(2) - 2 - 1, cardState.getUpdatedPositions().get("Player 3"));
+        assertEquals("Player 4", cardState.getPlayerNickname());
+        // =============================== //
 
         assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
@@ -194,10 +236,14 @@ class SlaversTest {
         }
         assertFalse(slavers.hasFinished());
 
-        // =======================================================================
-//        cardState = slavers.generateState();
-//        slavers.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== STATE TESTING ======== //
+        cardState = slavers.generateState();
+        assertFalse(cardState.getFirstRound());
+        assertFalse(cardState.getNeedsShipUpdate());
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertFalse(cardState.getNeedsBoardUpdate());
+        assertEquals("Player 1", cardState.getPlayerNickname());
+        // =============================== //
 
             // Phase in which the defeated players need to send the crew members they want to remove form the ship
             if (!slavers.hasFinished()) {
@@ -205,17 +251,37 @@ class SlaversTest {
             }
             assertFalse(slavers.hasFinished());
 
-        // =======================================================================
-//        cardState = slavers.generateState();
-//        slavers.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== STATE TESTING ======== //
+        cardState = slavers.generateState();
+        assertFalse(cardState.getFirstRound());
+        assertTrue(cardState.getNeedsShipUpdate());
+        assertTrue(cardState.getNeedsUpdatedRemovedLifeforms());
+        assertEquals(1, cardState.getRemovedLifeforms().size()); // one player in the Map
+        assertEquals(6, cardState.getRemovedLifeforms().get("Player 1").size()); // 6 lifeForms taken
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertFalse(cardState.getNeedsBoardUpdate());
+        assertEquals("Player 2", cardState.getPlayerNickname());
+        // =============================== //
 
         if (!slavers.hasFinished()) {
             slavers.useCard(new SlaversJSON("Player 2", false, crewToRemove2, new ArrayList<>()));
         }
         assertTrue(slavers.hasFinished());
 
-
+        // ======== STATE TESTING ======== //
+        cardState = slavers.generateState();
+        assertFalse(cardState.getFirstRound());
+        assertTrue(cardState.getNeedsShipUpdate());
+        assertTrue(cardState.getNeedsUpdatedRemovedLifeforms());
+        assertEquals(1, cardState.getRemovedLifeforms().size()); // one player in the Map
+        assertEquals(6, cardState.getRemovedLifeforms().get("Player 2").size()); // 6 lifeForms taken
+        assertFalse(cardState.getNeedsPlayerUpdate());
+        assertTrue(cardState.getNeedsBoardUpdate());
+        assertTrue(cardState.getNeedsUpdatedEliminatedPlayers());
+        assertEquals(1, cardState.getEliminatedPlayers().size());
+        assertEquals("Player 2", cardState.getEliminatedPlayers().getFirst());
+        assertEquals("Player 2", cardState.getPlayerNickname()); //TODO Since the card has been used the getNextPlayer was not invoked, see what to do with isCardUsable
+        // =============================== //
 
 
 
@@ -229,7 +295,7 @@ class SlaversTest {
         assertEquals(eliminatedPlayer, board.getEliminatedPlayers().getFirst());
 
         assertEquals(playerPositionsBefore.get(0), p1.getCursor());
-        assertEquals(playerPositionsBefore.get(2) - 2 - 1, p3.getCursor()); // 2 steps backwards + jump over p4
+        assertEquals(playerPositionsBefore.get(2) - 2 - 1, p3.getCursor()); // 2 steps backwards + jump over p4 // Final Position: -2
         assertEquals(playerPositionsBefore.get(3), p4.getCursor());
 
         assertEquals(0, p1.getCredits());

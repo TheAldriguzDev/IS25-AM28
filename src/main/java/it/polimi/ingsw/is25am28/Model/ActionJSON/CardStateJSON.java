@@ -528,7 +528,7 @@ public class CardStateJSON extends ActionJSON {
         public void setNeedsUpdatedDroppedResources(boolean needsUpdatedDroppedResources) {
             this.needsUpdatedDroppedResources = needsUpdatedDroppedResources;
         }
-        @JsonGetter("updatedDroppedResources")
+        @JsonGetter("needsUpdatedDroppedResources")
         public boolean getNeedsUpdatedDroppedResources() {
             return needsUpdatedDroppedResources;
         }
