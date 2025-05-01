@@ -126,6 +126,10 @@ public class MeteorShower extends EventCard {
         Component toHit;
         Ship shipPtr;
 
+        int energyConsumedByShields = 0;
+        int energyConsumedByCannons = 0;
+        int totalBatteriesConsumed = 0;
+
         // Initializing variables
         toHit = null;
         threatDestroyed = false;
@@ -157,6 +161,11 @@ public class MeteorShower extends EventCard {
             // Other initializations
             shipPtr = this.currentPlayer.get().getShip();
             Meteor currMeteor = this.meteorSequence.get(this.currMeteorIndex);
+
+            energyConsumedByShields = shieldCoordsList.size();
+            energyConsumedByCannons = cannonCoordsList.size();
+            totalBatteriesConsumed = energyConsumedByShields + energyConsumedByCannons;
+            this.removedBatteries.put(this.currentPlayer.get().getNickname(), totalBatteriesConsumed);
 
             // The meteor descriptor already has as its orientation the
             // side from which the ship sees that meteor come from
@@ -475,6 +484,9 @@ public class MeteorShower extends EventCard {
 
             // Setting the eliminated players (if there are any)
             setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
+
+            // Setting the batteries consumed by the shields and the doubleCannons
+            setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
         } else {
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());

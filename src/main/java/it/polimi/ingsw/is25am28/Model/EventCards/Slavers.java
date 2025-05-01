@@ -36,6 +36,7 @@ public class Slavers extends EventCard {
         this.playersToTakeCrewFrom = new ArrayList<>();
         this.updatedPositions = new HashMap<>();
         this.updatedCredits = new HashMap<>();
+        this.removedBatteries = new HashMap<>();
     }
 
     @Override
@@ -72,6 +73,8 @@ public class Slavers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
                     if (firstRound) {
+                        // Power consumed by the DoubleCannons
+                        this.removedBatteries.put(playerNickname, player.getShip().getAvailableEnergy() - slaversData.getDoubleCannonsToActivateCoordinates().size());
                         float playerFirepower = player.getShip().getFirePower(slaversData.getDoubleCannonsToActivateCoordinates());
                         if (playerFirepower > requiredFirepower && !hasBeenDefeated) {
                             hasBeenDefeated = true;
@@ -203,6 +206,9 @@ public class Slavers extends EventCard {
                 slaversStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO: Need more thinking on this
 
                 setUpdatedEliminatedPlayersIfNecessary(slaversStateJSON, eliminatedPlayers);
+            } else {
+                // Batteries consumed due to the double cannons
+                setUpdatedRemovedBatteriesIfNecessary(slaversStateJSON, removedBatteries);
             }
             // if the smugglers have been defeated we need to set the rewards (if taken)
             if (hasBeenDefeated) {
