@@ -682,8 +682,6 @@ public class ShipConstructionScreen extends Screen {
         this.ctx = new CommandCTX(
             "selectDeselectSubdeck",
             () -> {
-
-
                 // When the server gives the OK to lock the subdeck, then
                 // proceed to generate and show the corresponding widget
                 this.generateCardSubdeckWidget(
@@ -699,8 +697,6 @@ public class ShipConstructionScreen extends Screen {
                 catch (Exception e) {
 
                 }
-
-
             },
             () -> {
                 // Show an error if the selected subdeck is
