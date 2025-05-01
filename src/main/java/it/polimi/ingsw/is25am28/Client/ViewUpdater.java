@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
@@ -14,6 +15,7 @@ import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
 import it.polimi.ingsw.is25am28.TUI.ShipConstructionTUIPage;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -32,8 +34,6 @@ public class ViewUpdater implements StateVisitor {
     public ViewUpdater(ClientUI ui, ClientModel model) {
         this.ui = ui;
         this.model = model;
-
-
     }
 
     @Override
@@ -110,12 +110,12 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(FixedComponentDTO state) throws Exception {
-
+        System.out.println("FIXED COMPONENT DTO ARRIVED");
     }
 
     @Override
     public void visit(PopulateShipComponentDTO state) throws Exception {
-
+        System.out.println("POPULATE SHIP COMPONENT DTO ARRIVED");
     }
 
     /**
@@ -139,54 +139,31 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(PlayerEndedShipDTO state) throws Exception {
-
+        synchronized (this.model) {
+            // Sets this player's homonymous flag to TRUE to mask the
+            // commands he can no longer use (since he sent the ship)
+            this.model.getState().setPlayerFinishedBuildingShip(state.getPlayerNickname());
+        }
     }
 
     @Override
     public void visit(TimerDTO state) throws Exception {
-        try {
-            if (state.getHasEnded()) {
-                // If this TimerDTO is the last one, then it means
-                // that the players must move from the ship construction
-                // phase to the ship fixing phase
-
-                // TODO
-            }
-            else {
-                this.ui.receiveTimerDTO(state);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.ui.receiveTimerDTO(state);
     }
 
     @Override
     public void visit(FixShipDTO state) {
-        if (state.getPlayerWithInvalidShip().isEmpty()) {
-            // Go straight ahead to the ship populate screen
-            // but all players must wait for any other ones
-            // to fix their ships before staffing their ships
-
-            // TODO: Make the players with valid ships wait for any others
-            //       that need to repair their own ships before moving on
-
-            this.ui.showShipPopulate();
-        }
-        else if (state.getPlayerWithInvalidShip().contains(this.model.getNickname())) {
-            // If this client is a player that needs to fix, then
-            // show him his ships and the commands he can perform to fix it
-            this.ui.showShipFixing();
-        }
+        this.ui.showShipFixing(state);
     }
 
     @Override
     public void visit(PopulateShipDTO state) {
-
+        this.ui.showShipPopulate(state);
     }
 
     @Override
     public void visit(CardRoundDTO state) {
-
+        System.out.println("MOVE TO CARD ROUND PHASE");
     }
 
     @Override
@@ -217,5 +194,13 @@ public class ViewUpdater implements StateVisitor {
 
     public void commitCommand(String playerNickname) {
         this.ui.commitCommand(playerNickname);
+    }
+
+    public void interruptCurrScreen() {
+        System.out.println("ENTERING");
+        if (this.ui instanceof TUIHandler) {
+            System.out.println("INTERRUPTED");
+            ((TUIHandler) this.ui).interruptCurrScreen();
+        }
     }
 }

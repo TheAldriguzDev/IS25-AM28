@@ -228,7 +228,7 @@ public class Server {
             GameInstance game = this.gameInstances.get(gameID);
 
             game.playerEndedSendShip(playerNickname, reservedTiles);
-            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " ended his ship with " + reservedTiles + " reserved tile");
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " ended his ship with " + reservedTiles + " reserved tile(s)");
         }
     }
 

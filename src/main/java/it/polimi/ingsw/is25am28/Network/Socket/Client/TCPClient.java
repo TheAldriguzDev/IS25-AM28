@@ -12,6 +12,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.Discon
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
@@ -149,7 +150,7 @@ public class TCPClient implements VirtualViewSocket {
 
         switch (state) {
             // Update the current state of the game
-            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _ -> { // TODO: Timer should be removed from here
+            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PlayerEndedShipDTO _ -> { // TODO: Timer should be removed from here
                 future = CompletableFuture.runAsync(() -> {
                     try {
                         state.accept(viewUpdater);

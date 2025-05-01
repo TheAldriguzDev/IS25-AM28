@@ -18,8 +18,6 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
-
 public class LobbyScreen extends Screen {
     private WidgetTUI availableGamesWidget;
     private WidgetTUI lobbyCommandsWidget;
@@ -74,124 +72,6 @@ public class LobbyScreen extends Screen {
         this.availableGamesWidget.appendString("(-1) Go back to the menu");
         this.availableGamesWidget.addPadding(0, 1, 0, 1);
         this.availableGamesWidget.wrapWidgetWithBorder();
-    }
-
-    /**
-     * This method is used to display the possibles options that the player can make when connect to the game.
-     *  0) Quit game
-     *  1) Create new game (that is waiting for players)
-     *  2) Join an existing game
-     *  3) Reconnect to an existing game
-     *  4) Refresh the lobbies
-     * */
-    @Override
-    public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
-        boolean commandExecuted;
-        String line;
-        int choice;
-
-        if (isFirstAccess) { printTitle(); }
-
-        this.initAvailableGamesWidget(state.getAvailableGames());
-
-        do {
-            commandExecuted = false;
-
-            System.out.println("Available commands:");
-            this.lobbyCommandsWidget.printWidget();
-
-            System.out.print(DEFAULT_COMMAND_PREFIX);
-            line = this.inputThread.waitForInput();
-
-            try {
-                choice = Integer.parseInt(line);
-            }
-            catch (NumberFormatException e) {
-                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please enter a number.", ANSIColors.RED));
-                continue;
-            }
-
-            switch (choice) {
-                case 0 -> {
-                    // (0) - Quit game
-                    // Return nothing and the program stops
-                    System.out.println();
-                    System.out.println(COMPUTER_MSG_TAG + "Bye bye!");
-                    System.exit(0);
-                }
-                case 1 -> {
-                    // (1) - Create new game
-                    this.createGameInput();
-                    commandExecuted = true;
-                }
-                case 2 -> {
-                    // (2) - Join an existing game
-                    if (!state.getAvailableGames().isEmpty()) {
-                        List<Integer> availableGameIDs = state.getAvailableGames().stream().map(GameInfoDTO::getId).toList();
-
-                        GameInfoDTO game = null;
-
-                        do {
-                            System.out.println("Currently available games:");
-                            this.availableGamesWidget.printWidget();
-
-                            System.out.print(DEFAULT_COMMAND_PREFIX);
-                            line = this.inputThread.waitForInput();
-
-                            try {
-                                choice = Integer.parseInt(line);
-                            }
-                            catch (NumberFormatException e) {
-                                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please enter a number.", ANSIColors.RED));
-                            }
-
-                            if (choice == -1) {
-                                // Go back to the lobby commands
-                                break;
-                            }
-                            int finalChoice = choice;
-
-                            game = state.getAvailableGames().stream()
-                                    .filter(g -> g.getId() == finalChoice)
-                                    .findFirst()
-                                    .orElse(null);
-
-                            if (game == null) {
-                                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Game with ID=" + choice + " does not exist. Please choose an existing game.", ANSIColors.RED));
-                            }
-                        }
-                        while (!availableGameIDs.contains(choice) || game == null);
-
-                        if (choice != -1) {
-                            this.joinGameInput(game, state.getUsedNicknames());
-                            commandExecuted = true;
-                        }
-                    }
-                    else {
-                        System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
-                    }
-                }
-                case 3 -> {
-                    // (3) - Reconnect to an existing game
-                    if (!state.getUsedNicknames().isEmpty()) {
-                        this.reconnectToGameInput(state, state.getUsedNicknames());
-                        commandExecuted = true;
-                    }
-                    else {
-                        System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
-                    }
-                }
-                case 4 -> {
-                    // (4) - Refresh available games
-                    this.refreshGames();
-                    commandExecuted = true;
-                }
-                default -> {
-                    System.out.println(UNKNOWN_COMMAND_ERROR);
-                }
-            }
-        }
-        while (!commandExecuted);
     }
 
     /**
@@ -378,6 +258,124 @@ public class LobbyScreen extends Screen {
         System.out.println(COMPUTER_MSG_TAG + "Refreshing games...");
         this.client.sendMessage(new RefreshGames());
         System.out.println(COMPUTER_MSG_TAG + "Available games are now up to date!");
+    }
+
+    /**
+     * This method is used to display the possibles options that the player can make when connect to the game.
+     *  0) Quit game
+     *  1) Create new game
+     *  2) Join an existing game
+     *  3) Reconnect to an existing game
+     *  4) Refresh the lobbies
+     * */
+    @Override
+    public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
+        boolean commandExecuted;
+        String line;
+        int choice;
+
+        if (isFirstAccess) { printTitle(); }
+
+        this.initAvailableGamesWidget(state.getAvailableGames());
+
+        do {
+            commandExecuted = false;
+
+            System.out.println("Available commands:");
+            this.lobbyCommandsWidget.printWidget();
+
+            System.out.print(DEFAULT_COMMAND_PREFIX);
+            line = this.inputThread.waitForInput();
+
+            try {
+                choice = Integer.parseInt(line);
+            }
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please enter a number.", ANSIColors.RED));
+                continue;
+            }
+
+            switch (choice) {
+                case 0 -> {
+                    // (0) - Quit game
+                    // Return nothing and the program stops
+                    System.out.println();
+                    System.out.println(COMPUTER_MSG_TAG + "Bye bye!");
+                    System.exit(0);
+                }
+                case 1 -> {
+                    // (1) - Create new game
+                    this.createGameInput();
+                    commandExecuted = true;
+                }
+                case 2 -> {
+                    // (2) - Join an existing game
+                    if (!state.getAvailableGames().isEmpty()) {
+                        List<Integer> availableGameIDs = state.getAvailableGames().stream().map(GameInfoDTO::getId).toList();
+
+                        GameInfoDTO game = null;
+
+                        do {
+                            System.out.println("Currently available games:");
+                            this.availableGamesWidget.printWidget();
+
+                            System.out.print(DEFAULT_COMMAND_PREFIX);
+                            line = this.inputThread.waitForInput();
+
+                            try {
+                                choice = Integer.parseInt(line);
+                            }
+                            catch (NumberFormatException e) {
+                                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please enter a number.", ANSIColors.RED));
+                            }
+
+                            if (choice == -1) {
+                                // Go back to the lobby commands
+                                break;
+                            }
+                            int finalChoice = choice;
+
+                            game = state.getAvailableGames().stream()
+                                    .filter(g -> g.getId() == finalChoice)
+                                    .findFirst()
+                                    .orElse(null);
+
+                            if (game == null) {
+                                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Game with ID=" + choice + " does not exist. Please choose an existing game.", ANSIColors.RED));
+                            }
+                        }
+                        while (!availableGameIDs.contains(choice) || game == null);
+
+                        if (choice != -1) {
+                            this.joinGameInput(game, state.getUsedNicknames());
+                            commandExecuted = true;
+                        }
+                    }
+                    else {
+                        System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
+                    }
+                }
+                case 3 -> {
+                    // (3) - Reconnect to an existing game
+                    if (!state.getUsedNicknames().isEmpty()) {
+                        this.reconnectToGameInput(state, state.getUsedNicknames());
+                        commandExecuted = true;
+                    }
+                    else {
+                        System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
+                    }
+                }
+                case 4 -> {
+                    // (4) - Refresh available games
+                    this.refreshGames();
+                    commandExecuted = true;
+                }
+                default -> {
+                    System.out.println(UNKNOWN_COMMAND_ERROR);
+                }
+            }
+        }
+        while (!commandExecuted);
     }
 
     /**

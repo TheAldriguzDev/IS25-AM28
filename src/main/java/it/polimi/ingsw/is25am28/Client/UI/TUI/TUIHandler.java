@@ -4,12 +4,11 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.InsufficientPlayerScreen;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.LobbyScreen;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.ShipConstructionScreen;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
@@ -78,31 +77,27 @@ public class TUIHandler implements ClientUI {
     }
 
     @Override
-    public void showShipFixing() {
+    public void showShipFixing(FixShipDTO fixShip) {
         // Interrupt the inputThread to prevent actions from the player
         this.inputThread.interruptInputReader();
 
-        System.out.println("SHOW SHIP FIXING");
+        synchronized (this.ioLock) {
+            this.setScreen(new FixShipScreen(this.model, this.inputThread));
+        }
 
-        // TODO: Send the ships to the server, if at least one comes up
-        //       as "invalid", then show this screen, otherwise move
-        //       directly to the ship populate screens
-
-        // Save the previous screen when appropriate
-//        // Save the previous screen
-//        this.prevScreen = this.screen;
+        this.screen.showShipFixing(fixShip);
     }
 
     @Override
-    public void showShipPopulate() {
+    public void showShipPopulate(PopulateShipDTO populateShip) {
         // Interrupt the inputThread to prevent actions from the player
         this.inputThread.interruptInputReader();
 
-        System.out.println("SHOW SHIP POPULATE");
+        synchronized (this.ioLock) {
+            this.setScreen(new PopulateShipScreen(this.model, this.inputThread));
+        }
 
-        // Save the previous screen when appropriate
-//        // Save the previous screen
-//        this.prevScreen = this.screen;
+        this.screen.showShipPopulate(populateShip);
     }
 
     @Override
@@ -136,5 +131,12 @@ public class TUIHandler implements ClientUI {
     @Override
     public boolean isCTXAvailable() {
         return this.screen.isCTXAvailable();
+    }
+
+    /**
+     * Forces an interrupt of this input thread
+     */
+    public void interruptCurrScreen() {
+        this.inputThread.interrupt();
     }
 }

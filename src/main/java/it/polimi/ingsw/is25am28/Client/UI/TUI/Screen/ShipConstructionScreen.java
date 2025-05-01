@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
@@ -84,7 +85,7 @@ public class ShipConstructionScreen extends Screen {
 
         this.componentSelectionCommandsWidget.appendString("(4) Flip timer");
         this.componentSelectionCommandsWidget.appendString("(5) Visualize subdeck");
-        this.componentSelectionCommandsWidget.appendString("(6) Visualize other ships");
+        this.componentSelectionCommandsWidget.appendString("(6) Visualize ships");
 
         this.componentSelectionCommandsWidget.addPadding(0, 1, 0, 1);
         this.componentSelectionCommandsWidget.wrapWidgetWithBorder();
@@ -155,7 +156,21 @@ public class ShipConstructionScreen extends Screen {
         len = allNicknames.size();
 
         for (i = 0; i < len; i++) {
-            this.otherPlayerShipCommandsWidget.appendString("(" + i + ") Show ship of \"" + allNicknames.get(i) + "\"");
+            String s = "(" + i + ") Show ship of \"" + allNicknames.get(i) + "\"";
+
+            if (allNicknames.get(i).equals(this.model.getNickname())) {
+                this.otherPlayerShipCommandsWidget.appendString(
+                    s + SPACE + PrintUtils.addColor(
+                        "(YOU)",
+                        this.model.getAllClientPlayers().get(allNicknames.get(i))
+                                .getColor()
+                                .getColorString()
+                    )
+                );
+            }
+            else {
+                this.otherPlayerShipCommandsWidget.appendString(s);
+            }
         }
 
         this.otherPlayerShipCommandsWidget.appendString("(-1) Go back");
@@ -388,7 +403,12 @@ public class ShipConstructionScreen extends Screen {
 
         // Show all the available commands
         if (this.model.getState().getPlayerFinishedBuildingShip(this.model.getNickname())) {
-            System.out.println(COMPUTER_MSG_TAG + "Your ship was sent! Wait until either all other players have finished or the timer to runs out!");
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + "Your ship was sent!")
+                    .appendString(COMPUTER_MSG_TAG + "Wait until either all other players have finished or the timer runs out!")
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
         }
         else {
             this.composeComponentSelectionWidgets().printWidget();
@@ -396,7 +416,7 @@ public class ShipConstructionScreen extends Screen {
 
         // If it's not null, it means that it's available to be flipped
         if (this.model.getTimerDTO() != null) {
-            if (this.model.getTimerDTO().getCanBeFlipped()) {
+            if (this.model.getTimerDTO().getIsServerAction()) {
                 System.out.println(COMPUTER_MSG_TAG + PrintUtils.addColor("Hourglass can now be flipped!", ANSIColors.BRIGHT_MAGENTA));
             }
         }
@@ -422,7 +442,7 @@ public class ShipConstructionScreen extends Screen {
             choice = Integer.parseInt(line);
         }
         catch (NumberFormatException e) {
-            System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please insert a number.", ANSIColors.RED));
+            System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
             this.getComponentSelectionCommand();
             return;
         }
@@ -469,6 +489,10 @@ public class ShipConstructionScreen extends Screen {
                             System.out.println(PrintUtils.addColor("ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.", ANSIColors.RED));
                         }
                     }
+                    else {
+                        // Otherwise, go back to the component selection screen
+                        this.getComponentSelectionCommand();
+                    }
                 }
                 else {
                     System.out.println(UNKNOWN_COMMAND_ERROR);
@@ -502,6 +526,7 @@ public class ShipConstructionScreen extends Screen {
             default -> {
                 // Loopback and ask for a valid command
                 System.out.println(UNKNOWN_COMMAND_ERROR);
+                this.getComponentSelectionCommand();
             }
         }
     }
@@ -731,9 +756,13 @@ public class ShipConstructionScreen extends Screen {
         try {
             System.out.print("Press any key and then press [ENTER] to go back...");
             String line = this.inputThread.waitForInput();
+
+            // A forced interrupt arrived
+            if (line == null) return;
         }
         catch (InterruptedException e) {
             // A forced interrupt arrived
+            return;
         }
 
         // Dereferencing the subdeck widget
@@ -822,14 +851,17 @@ public class ShipConstructionScreen extends Screen {
             this.otherPlayerShipWidget.printWidget();
 
             System.out.println(COMPUTER_MSG_TAG + "You're now viewing \"" + this.model.getAllPlayersNicknames().get(chosenShip) + "\"'s ship");
-            System.out.println();
 
             try {
                 System.out.print(COMPUTER_MSG_TAG + "Press any key and then press [ENTER] to go back...");
                 line = this.inputThread.waitForInput();
+
+                // A forced interrupt arrived
+                if (line == null) return;
             }
             catch (InterruptedException e) {
                 // A forced interrupt arrived
+                return;
             }
 
             this.otherPlayerShipWidget = null;
@@ -1213,13 +1245,7 @@ public class ShipConstructionScreen extends Screen {
         this.ctx = new CommandCTX(
             "sendShipConfirmation",
             () -> {
-                // If successful, then the player needs to wait that all players
-                // finish building or the hourglass timer runs out (with all flips consumed)
-
-                // The current player gets marked as "has sent his ship"
-                this.model.getState().setPlayerFinishedBuildingShip(this.model.getNickname());
-
-                // And also update the component selection commands
+                // Update the component selection commands
                 // with the only commands available for his state
                 this.generateComponentSelectionCommands();
 
@@ -1264,7 +1290,6 @@ public class ShipConstructionScreen extends Screen {
             "flipTimer",
             () -> {
                 System.out.println(COMPUTER_MSG_TAG + PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA));
-                this.model.setTimerDTO(null);
                 this.getComponentSelectionCommand();
             },
             this::getComponentSelectionCommand
@@ -1275,6 +1300,67 @@ public class ShipConstructionScreen extends Screen {
         );
     }
 
+    /**
+     * Forcing this player (as well as all the others) to
+     * send his ship (if they didn't do it already) when the
+     * server-side timer ends (i.e.: no more flips available)
+     */
+    private void sendShipOnTimerEnd() throws Exception {
+        this.ctx = new CommandCTX(
+            "sendShipOnTimerEnd",
+            () -> {
+                // Nothing
+            },
+            () -> {
+                // Retrying to send the ship if it fails
+                // TODO: Implement, if needed, a "max retry"
+                //       functionality to avoid infinite loop
+                try {
+                    this.sendShipOnTimerEnd();
+                }
+                catch (Exception e) {
+                    System.out.println(PrintUtils.addColor("", ANSIColors.RED));
+                }
+            }
+        );
+
+        // Sends the current player's ship when he
+        // decides to finish building it
+        this.client.sendMessage(
+            new SendShipConfirmation(
+                this.model.getNickname(),
+                this.model.getState().getReservedComponents().size()
+            )
+        );
+    }
+
+    /**
+     * @param timerDTO The updated timerDTO generated when
+     *                 the server-side timer ends
+     */
+    @Override
+    public void receiveTimerDTO(TimerDTO timerDTO) {
+        this.model.setTimerDTO(timerDTO);
+
+        if (timerDTO.getHasEnded()) {
+            try {
+                new WidgetTUI()
+                        .appendString(COMPUTER_MSG_TAG + "Time's up! All ships will now be sent.")
+                        .addPadding(1, 1, 1, 1)
+                        .wrapWidgetWithBorder();
+
+                this.sendShipOnTimerEnd();
+            }
+            catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    /**
+     * Shows to this player the available commands and all the component
+     * he can choose from to build his ship
+     */
     @Override
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
         // Show all selectable components grid as well as the reserved

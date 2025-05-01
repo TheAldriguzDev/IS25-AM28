@@ -1,14 +1,14 @@
 package it.polimi.ingsw.is25am28.Client.UI;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
-
-import java.io.IOException;
 
 public interface ClientUI {
     void setVirtualClient(VirtualView client);
@@ -17,8 +17,8 @@ public interface ClientUI {
     void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws Exception;
     void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers);
     void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception;
-    void showShipFixing();
-    void showShipPopulate();
+    void showShipFixing(FixShipDTO fixShip);
+    void showShipPopulate(PopulateShipDTO populateShip);
 
     void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer);
 
