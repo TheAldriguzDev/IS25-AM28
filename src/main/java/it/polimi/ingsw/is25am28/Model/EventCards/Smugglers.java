@@ -88,6 +88,7 @@ public class Smugglers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
                     if (firstRound) {
+                        // Power consumed by the DoubleCannons
                         float playerFirepower = player.getShip().getFirePower(smugglersData.getDoubleCannonsToActivateCoordinates());
                         if (playerFirepower > requiredFirepower) {
                             // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
@@ -222,7 +223,10 @@ public class Smugglers extends EventCard {
                 // Sets the dropped resources (if there are any) // this works both in case of defeat or victory
                 setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, droppedResources);
 
-                // Sets the removed batteries (if there are any)
+                // Sets the removed batteries (if there are any), due to the smugglers
+                setUpdatedRemovedBatteriesIfNecessary(smugglersStateJSON, removedBatteries);
+            } else {
+                // Batteries consumed due to the double cannons
                 setUpdatedRemovedBatteriesIfNecessary(smugglersStateJSON, removedBatteries);
             }
             // if the smugglers have been defeated we need to set the rewards (if taken)

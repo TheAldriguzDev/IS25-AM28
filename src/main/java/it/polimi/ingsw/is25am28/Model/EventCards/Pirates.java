@@ -52,6 +52,7 @@ public class Pirates extends EventCard {
         this.updatedPositions = new HashMap<>();
         this.updatedCredits = new HashMap<>();
         this.removedComponents = new HashMap<>();
+        this.removedBatteries = new HashMap<>();
     }
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
@@ -109,6 +110,8 @@ public class Pirates extends EventCard {
                     }
                     // if the first round of meteors has passed, this block won't be executed, assuring that no players will get the same reward twice (or activate the cannons twice)
                     if (firstRound) {
+                        // Power consumed by the DoubleCannons
+                        this.removedBatteries.put(playerNickname, player.getShip().getAvailableEnergy() - piratesData.getDoubleCannonsToActivateCoordinates().size());
                         float playerFirepower = player.getShip().getFirePower(piratesData.getDoubleCannonsToActivateCoordinates());
                         if (playerFirepower > requiredFirepower && !hasBeenDefeated) {
                             // Pirates defeated, even if the player who defeated them does not take the credits, the card won't be used by other players
@@ -220,6 +223,8 @@ public class Pirates extends EventCard {
                             break;
                         }
                     }
+                    // Batteries comsumed by the shields, might need a check on avaiability
+                    this.removedBatteries.put(player.getNickname(), piratesData.getShieldsActivatedCoordinates().size());
 
                     if ((shotSize == 1 && !shieldedSides[shotDirection]) || shotSize == 2) {
                         switch (shotDirection) {
@@ -351,6 +356,12 @@ public class Pirates extends EventCard {
                 setUpdatedRemovedComponentsIfNecessary(piratesStateJSON, this.removedComponents);
                 setUpdatedEliminatedPlayersIfNecessary(piratesStateJSON, this.eliminatedPlayers);
 
+                // Batteries consumed due to the shield
+                setUpdatedRemovedBatteriesIfNecessary(piratesStateJSON, removedBatteries);
+
+            } else {
+                // Batteries consumed due to the double cannons
+                setUpdatedRemovedBatteriesIfNecessary(piratesStateJSON, removedBatteries);
             }
             // If the pirates have been defeated, set the rewards
             if (this.hasBeenDefeated) {
@@ -373,24 +384,6 @@ public class Pirates extends EventCard {
     void setDiceThrowResult(int diceThrowResult) {
         this.diceThrowResult = diceThrowResult;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public WidgetTUI generateWidget(CardStateJSON piratesState) {
         return null;}
