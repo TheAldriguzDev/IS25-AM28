@@ -27,6 +27,7 @@ public class AbandonedStation extends EventCard {
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
     private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
     private Map<String, Integer> updatedPositions;
+    private List<String> eliminatedPlayers;
 
     public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> givenItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
@@ -37,6 +38,7 @@ public class AbandonedStation extends EventCard {
         this.droppedResources = new HashMap<>();
         this.takenResources = new HashMap<>();
         this.updatedPositions = new HashMap<>();
+        this.eliminatedPlayers = new ArrayList<>();
     }
 
     /**
@@ -147,7 +149,11 @@ public class AbandonedStation extends EventCard {
             // Move the player of the given steps and re-validate the positions
             this.getBoard().movePlayerBackwards(this.getCurrentPlayer().get(), this.movementStep);
             this.updatedPositions.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getCursor());
+            int tmp = getBoard().getEliminatedPlayers().size();
             this.getBoard().validatePlayersPosition();
+            for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
+                this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
+            }
         }
     }
 

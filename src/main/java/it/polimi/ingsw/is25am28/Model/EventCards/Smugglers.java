@@ -28,6 +28,7 @@ public class Smugglers extends EventCard {
     private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
     //private Map<String, List<ComponentHelper<Battery>>> removedBatteries;
     private Map<String, Integer> removedBatteries; // TODO: missing implementation on firepower
+    private List<String> eliminatedPlayers;
 
     public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank) {
         super(name, cardLevel, board);
@@ -47,6 +48,7 @@ public class Smugglers extends EventCard {
         this.droppedResources = new HashMap<>();
         this.takenResources = new HashMap<>();
         this.removedBatteries = new HashMap<>();
+        this.eliminatedPlayers = new ArrayList<>();
     }
 
     /*
@@ -101,7 +103,11 @@ public class Smugglers extends EventCard {
                                 bonusEffect(data);
                                 getBoard().movePlayerBackwards(player, movementSteps);
                                 this.updatedPositions.put(playerNickname, player.getCursor());
-                                getBoard().validatePlayersPosition();
+                                int tmp = getBoard().getEliminatedPlayers().size();
+                                this.getBoard().validatePlayersPosition();
+                                for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
+                                    this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
+                                }
                             }
                         } else if (playerFirepower < requiredFirepower) {
                             playersToTakeItemsFrom.add(player);
@@ -241,6 +247,7 @@ public class Smugglers extends EventCard {
                 setUpdatedPositionsIfNecessary(smugglersStateJSON, updatedPositions);
                 setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, droppedResources);
                 setUpdatedTakenResourcesIfNecessary(smugglersStateJSON, takenResources);
+                setUpdatedEliminatedPlayersIfNecessary(smugglersStateJSON, this.eliminatedPlayers);
             }
         } else {
             // Setting the card's static data

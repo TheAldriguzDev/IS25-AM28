@@ -111,7 +111,11 @@ public class WarZone extends EventCard {
                     return Optional.empty();
                 } else {
                     // Revalidate the board position
+                    int tmp = getBoard().getEliminatedPlayers().size();
                     this.getBoard().validatePlayersPosition();
+                    for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
+                        this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
+                    }
                     // Clear the current players and reset them and set the currentPlayer to the first one
                     this.initCardPlayers();
                     // Go to the next action
