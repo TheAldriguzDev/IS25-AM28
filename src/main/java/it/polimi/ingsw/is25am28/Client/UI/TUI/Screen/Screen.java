@@ -5,7 +5,9 @@ import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
@@ -14,9 +16,12 @@ import it.polimi.ingsw.is25am28.Network.VirtualView;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
+
 public class Screen implements ClientUI {
     public static final String UNKNOWN_COMMAND_ERROR = PrintUtils.addColor("ERROR: Selected command does not exist", ANSIColors.RED);
     public static final String DEFAULT_COMMAND_PREFIX = "Select an option: ";
+    public static final String COMPUTER_MSG_TAG = PrintUtils.addColor("[COMPUTER]", ANSIColors.BRIGHT_CYAN) + SPACE;
 
     protected final ClientModel model;
     protected InputThread inputThread;
@@ -49,14 +54,13 @@ public class Screen implements ClientUI {
     }
 
     @Override
-    public void showShipFixing() {
+    public void showShipFixing(FixShipDTO fixShip) throws Exception {
         throw new UnsupportedOperationException("The 'showShipFixing' is not supported in the " + this + "screen");
     }
 
     @Override
-    public void showShipPopulate() {
+    public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
         throw new UnsupportedOperationException("The 'showShipPopulate' is not supported in the " + this + "screen");
-
     }
 
     @Override
@@ -90,7 +94,11 @@ public class Screen implements ClientUI {
 
     @Override
     public boolean isCTXAvailable() {
-        return this.ctx != null;
+        if (this.ctx != null) {
+            return this.ctx.isUsable();
+        } else {
+            return false;
+        }
     }
 
     /**

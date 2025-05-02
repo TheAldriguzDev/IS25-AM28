@@ -17,10 +17,12 @@ import java.util.List;
         @JsonSubTypes.Type(value = Reconnect.class, name = "Reconnect"),
         @JsonSubTypes.Type(value = PlaceTile.class, name = "PlaceTile"),
         @JsonSubTypes.Type(value = SendShipConfirmation.class, name = "SendShipConfirmation"),
-        @JsonSubTypes.Type(value = FlipTimer.class, name = "FlipTimer")
+        @JsonSubTypes.Type(value = FlipTimer.class, name = "FlipTimer"),
+        @JsonSubTypes.Type(value = FixShip.class, name = "FixShip"),
+        @JsonSubTypes.Type(value = PopulateShip.class, name = "PopulateShip")
 })
 
-public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FlipTimer, NewPlayer, Ping, PlaceTile, Reconnect, RefreshGames, SelectDeselectSubdeck, SelectTile, SendShipConfirmation {
+public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FixShip, FlipTimer, NewPlayer, Ping, PlaceTile, PopulateShip, Reconnect, RefreshGames, SelectDeselectSubdeck, SelectTile, SendShipConfirmation {
 
     /**
      * @return true if the message it's correct, otherwise it will return false

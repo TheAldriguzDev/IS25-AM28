@@ -5,7 +5,9 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventC
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
@@ -17,7 +19,6 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.*;
 
@@ -1184,12 +1185,12 @@ public final class ShipConstructionTUIPage extends TUIPage {
     }
 
     @Override
-    public void showShipFixing() {
+    public void showShipFixing(FixShipDTO fixShip) throws Exception {
 
     }
 
     @Override
-    public void showShipPopulate() {
+    public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
 
     }
 

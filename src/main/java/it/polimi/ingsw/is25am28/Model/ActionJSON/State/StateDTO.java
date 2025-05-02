@@ -20,6 +20,8 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = WaitingForGameConfigurationDTO.class, name = "WaitingForGameConfigurationDTO"),
         @JsonSubTypes.Type(value = ShipConstructionDTO.class, name = "ShipConstructionDTO"),
         @JsonSubTypes.Type(value = ConstructionComponentDTO.class, name = "ConstructionComponentDTO"),
+        @JsonSubTypes.Type(value = FixedComponentDTO.class, name = "FixedComponentDTO"),
+        @JsonSubTypes.Type(value = PopulateShipComponentDTO.class, name = "PopulateShipComponentDTO"),
         @JsonSubTypes.Type(value = ConstructionDeckDTO.class, name = "ConstructionDeckDTO"),
         @JsonSubTypes.Type(value = DisconnectedPlayerDTO.class, name = "DisconnectedPlayerDTO"),
         @JsonSubTypes.Type(value = InsufficientPlayerDTO.class, name = "InsufficientPlayerDTO")

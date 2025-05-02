@@ -35,7 +35,7 @@ public final class TimerDTO extends ShipConstructionEventDTO {
         return canBeFlipped;
     }
 
-    @JsonSetter
+    @JsonSetter("canBeFlipped")
     public TimerDTO setCanBeFlipped(boolean canBeFlipped) {
         this.canBeFlipped = canBeFlipped;
         return this;

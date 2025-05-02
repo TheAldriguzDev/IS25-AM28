@@ -15,6 +15,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 import javafx.util.Pair;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import static it.polimi.ingsw.is25am28.Model.Connector.THREE_PIPES;

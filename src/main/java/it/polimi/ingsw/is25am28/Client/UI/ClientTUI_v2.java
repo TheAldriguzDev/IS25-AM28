@@ -2,7 +2,9 @@ package it.polimi.ingsw.is25am28.Client.UI;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
@@ -194,12 +196,12 @@ public class ClientTUI_v2 implements ClientUI {
     }
 
     @Override
-    public void showShipFixing() {
+    public void showShipFixing(FixShipDTO fixShip) throws Exception {
 
     }
 
     @Override
-    public void showShipPopulate() {
+    public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
 
     }
 

@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is25am28.Network.Server;
 
 import it.polimi.ingsw.is25am28.Controller.GameController;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
@@ -8,6 +10,8 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.Construc
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
+import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
@@ -196,6 +200,48 @@ public class GameInstance {
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)
                 .setState(state);
+
+        this.broadCastUpdate(answer);
+    }
+
+    public void fixShip(String player, Integer i, Integer j) throws Exception {
+        List<StateDTO> states = this.controller.fixShip(player, i, j);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(player)
+                .setState(states.getFirst());
+
+        if (states.size() > 1) {
+            answer.setNextState(states.get(1));
+        }
+
+        this.broadCastUpdate(answer);
+    }
+
+    public void populateShip(String player, ComponentHelper<LifeformType> lifeFormToAdd) throws Exception {
+        List<StateDTO> states = this.controller.populateShip(player, lifeFormToAdd);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(player)
+                .setState(states.getFirst());
+
+        if (states.size() > 1) {
+            answer.setNextState(states.get(1));
+        }
+
+        this.broadCastUpdate(answer);
+    }
+
+    public void playCard(String player, ActionJSON action) throws Exception {
+        List<StateDTO> states = this.controller.playCard(action);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(player)
+                .setState(states.getFirst());
+
+        if (states.size() > 1) {
+            answer.setNextState(states.get(1));
+        }
 
         this.broadCastUpdate(answer);
     }

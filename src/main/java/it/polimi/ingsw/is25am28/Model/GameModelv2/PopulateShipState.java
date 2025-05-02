@@ -2,6 +2,8 @@ package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PopulateShipComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfShipException;
@@ -22,7 +24,7 @@ public final class PopulateShipState extends State {
         playersReady = new ArrayList<>();
     }
 
-    public PopulateShipDTO populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException, ShipPopulationFailException {
+    public PopulateShipComponentDTO populateShip(String player, ComponentHelper<LifeformType> lifeformToAdd) throws IllegalArgumentException, ShipPopulationFailException {
         if (playersReady.contains(player)) {
             throw new IllegalArgumentException("The given player has already populated the ship");
         }
@@ -35,19 +37,28 @@ public final class PopulateShipState extends State {
         Ship pShip = p.getShip();
 
         // Add the lifeform to the cabin
-        for (ComponentHelper<LifeformType> c : lifeFormToAdd) {
-            if (c.getItem().isPresent()) {
-                try {
-                    pShip.addLifeformToCabin(c.getI(), c.getJ(), c.getItem().get());
-                } catch(TooManyAliensException | OutOfGridException | IllegalArgumentException | OutOfShipException e){
-                    throw new ShipPopulationFailException(player);
-                }
+        if (lifeformToAdd.getItem().isPresent()) {
+            try {
+                pShip.addLifeformToCabin(lifeformToAdd.getI(), lifeformToAdd.getJ(), lifeformToAdd.getItem().get());
+            } catch(TooManyAliensException | OutOfGridException | IllegalArgumentException | OutOfShipException e){
+                throw new ShipPopulationFailException(player);
             }
         }
 
-        this.playersReady.add(player);
+        PopulateShipComponentDTO state = new PopulateShipComponentDTO()
+                .setPlayerNickname(player)
+                .setComponent(lifeformToAdd);
 
-        return new PopulateShipDTO().setPlayersReady(playersReady);
+        if (pShip.isShipPopulated()) {
+            this.playersReady.add(player);
+            state.setIsShipPopulated(true);
+        } else {
+            state.setIsShipPopulated(false);
+        }
+
+        state.setStateName(this.toString());
+        state.setEventType(ShipConstructionType.TILE_EVENT.toString());
+        return state;
     }
 
     @Override

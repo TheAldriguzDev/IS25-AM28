@@ -2,13 +2,14 @@ package it.polimi.ingsw.is25am28.Network.RMI.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -160,7 +161,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         StateDTO nextState = answer.getNextState();
         String nickname = answer.getPlayerNickname();
 
-        CompletableFuture<Void> future;
+        CompletableFuture<Void> future = new CompletableFuture<>();
 
         switch (state) {
             // Update the current state of the game
@@ -182,6 +183,28 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                             throw new RuntimeException("Error while commiting the command: ", e);
                         }
                     }, inputThread);
+                }
+            }
+            case PlayerEndedShipDTO _ -> {
+                if (nextState == null) {
+                    future = CompletableFuture.runAsync(() -> {
+                        try {
+                            state.accept(viewUpdater);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }, updateThread);
+
+                    // Then commit the command
+                    if (nickname != null && viewUpdater.isCTXAvailable()) { // Try to commit the message only if it's present --> otherwise is not smart to potentially lock the program
+                        future = future.thenRunAsync(() -> {
+                            try {
+                                viewUpdater.commitCommand(nickname);
+                            } catch (Exception e) {
+                                throw new RuntimeException("Error while commiting the command: ", e);
+                            }
+                        }, inputThread);
+                    }
                 }
             }
             case DisconnectedPlayerDTO _ -> {
@@ -232,7 +255,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         }
 
         switch (nextState) {
-            case InsufficientPlayerDTO _ -> {
+            case InsufficientPlayerDTO _-> {
                 forceThread.submit(() -> {
                     try {
                         nextState.accept(viewUpdater);
@@ -240,6 +263,25 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                         throw new RuntimeException("Error while executing the next state: ", e);
                     }
                 });
+            }
+            case FixShipDTO _, PopulateShipDTO _ -> {
+                CompletableFuture<Void> completableFuture;
+
+                completableFuture = CompletableFuture.runAsync(
+                    this.viewUpdater::interruptCurrScreen,
+                    forceThread
+                );
+
+                completableFuture = completableFuture.thenRunAsync(
+                    () -> {
+                        try {
+                            nextState.accept(viewUpdater);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Error while executing the next state: ", e);
+                        }
+                    },
+                    inputThread
+                );
             }
             case null -> {}
             default -> {

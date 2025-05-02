@@ -6,11 +6,13 @@ public class CommandCTX {
     private String commandName;
     private Runnable onSuccess;
     private Runnable onError;
+    private boolean hasBeenUsed;
 
     public CommandCTX(String commandName, Runnable onSuccess, Runnable onError) {
         this.commandName = commandName;
         this.onSuccess = onSuccess;
         this.onError = onError;
+        this.hasBeenUsed = false;
     }
 
     /**
@@ -18,6 +20,7 @@ public class CommandCTX {
      * */
     public void handleSuccess() {
         this.onSuccess.run();
+        this.hasBeenUsed = true;
     }
 
     /**
@@ -26,7 +29,10 @@ public class CommandCTX {
     public void handleError(String error) {
         System.out.println(error);
         this.onError.run();
+        this.hasBeenUsed = true;
     }
 
-
+    public boolean isUsable() {
+        return !this.hasBeenUsed;
+    }
 }

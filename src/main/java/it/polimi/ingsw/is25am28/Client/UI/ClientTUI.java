@@ -2,26 +2,21 @@ package it.polimi.ingsw.is25am28.Client.UI;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 public class ClientTUI implements ClientUI {
@@ -361,12 +356,12 @@ public class ClientTUI implements ClientUI {
     }
 
     @Override
-    public void showShipFixing() {
+    public void showShipFixing(FixShipDTO fixShip) throws Exception {
 
     }
 
     @Override
-    public void showShipPopulate() {
+    public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
 
     }
 

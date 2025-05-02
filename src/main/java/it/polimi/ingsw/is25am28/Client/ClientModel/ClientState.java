@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
@@ -73,6 +74,22 @@ public class ClientState {
      * */
     public void removeComponentFromShip(int i, int j) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'removeComponentFromShip' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used to remove a player from the ClientFixShipState when
+     * the received FixedComponentDTO has the isShipFixed flag to TRUE
+     */
+    public void removePlayerFromFixList(String playerNickname) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'removePlayerFromFixList' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used to remove a player from the ClientFixShipState when
+     * the received FixedComponentDTO has the isShipFixed flag to TRUE
+     */
+    public FixShipDTO getFixShipDTO() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'getFixShipDTO' is not supported in the " + this + " state");
     }
 
     /**

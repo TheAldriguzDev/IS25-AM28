@@ -1,18 +1,20 @@
 package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientFixShipState;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPopulateShipState;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
-import it.polimi.ingsw.is25am28.TUI.ShipConstructionTUIPage;
 
 import java.util.Optional;
 
@@ -32,8 +34,6 @@ public class ViewUpdater implements StateVisitor {
     public ViewUpdater(ClientUI ui, ClientModel model) {
         this.ui = ui;
         this.model = model;
-
-
     }
 
     @Override
@@ -80,14 +80,6 @@ public class ViewUpdater implements StateVisitor {
             }
         }
 
-        if (this.ui instanceof ClientTUI_v2 tui) {
-            try {
-                tui.setCurrPage(new ShipConstructionTUIPage(tui));
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
-        }
-
         this.ui.showShipConstruction(state);
     }
 
@@ -106,6 +98,29 @@ public class ViewUpdater implements StateVisitor {
                 comp.setIsVisible(!state.isSelected());
             }
         }
+    }
+
+    @Override
+    public void visit(FixedComponentDTO state) throws Exception {
+        synchronized (this.model) {
+            if (state.getPlayerNickname().equals(this.model.getNickname())) {
+                this.model.getState().removeComponentFromShip(
+                        state.getI(),
+                        state.getJ()
+                );
+
+                if (state.isShipFixed()) {
+                    this.model.getState().removePlayerFromFixList(state.getPlayerNickname());
+                }
+
+                this.ui.showShipFixing(this.model.getState().getFixShipDTO());
+            }
+        }
+    }
+
+    @Override
+    public void visit(PopulateShipComponentDTO state) throws Exception {
+        System.out.println("POPULATE SHIP COMPONENT DTO ARRIVED");
     }
 
     /**
@@ -129,54 +144,57 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(PlayerEndedShipDTO state) throws Exception {
-
+        synchronized (this.model) {
+            // Sets this player's homonymous flag to TRUE to mask the
+            // commands he can no longer use (since he sent the ship)
+            this.model.getState().setPlayerFinishedBuildingShip(state.getPlayerNickname());
+        }
     }
 
     @Override
     public void visit(TimerDTO state) throws Exception {
-        try {
-            if (state.getHasEnded()) {
-                // If this TimerDTO is the last one, then it means
-                // that the players must move from the ship construction
-                // phase to the ship fixing phase
-
-                // TODO
-            }
-            else {
-                this.ui.receiveTimerDTO(state);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.ui.receiveTimerDTO(state);
     }
 
     @Override
     public void visit(FixShipDTO state) {
-        if (state.getPlayerWithInvalidShip().isEmpty()) {
-            // Go straight ahead to the ship populate screen
-            // but all players must wait for any other ones
-            // to fix their ships before staffing their ships
-
-            // TODO: Make the players with valid ships wait for any others
-            //       that need to repair their own ships before moving on
-
-            this.ui.showShipPopulate();
+        // Set the model state to the ShipConstructionState that will initialize all the components
+        synchronized (this.model) {
+            try {
+                this.model.setState(new ClientFixShipState(this.model, state));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
         }
-        else if (state.getPlayerWithInvalidShip().contains(this.model.getNickname())) {
-            // If this client is a player that needs to fix, then
-            // show him his ships and the commands he can perform to fix it
-            this.ui.showShipFixing();
+
+        try {
+            this.ui.showShipFixing(state);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
     @Override
     public void visit(PopulateShipDTO state) {
+        // Set the model state to the ShipConstructionState that will initialize all the components
+        synchronized (this.model) {
+            try {
+                this.model.setState(new ClientPopulateShipState(this.model, state));
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
 
+        try {
+            this.ui.showShipPopulate(state);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
     public void visit(CardRoundDTO state) {
-
+        System.out.println("MOVE TO CARD ROUND PHASE");
     }
 
     @Override
@@ -207,5 +225,11 @@ public class ViewUpdater implements StateVisitor {
 
     public void commitCommand(String playerNickname) {
         this.ui.commitCommand(playerNickname);
+    }
+
+    public void interruptCurrScreen() {
+        if (this.ui instanceof TUIHandler) {
+            ((TUIHandler) this.ui).interruptCurrScreen();
+        }
     }
 }

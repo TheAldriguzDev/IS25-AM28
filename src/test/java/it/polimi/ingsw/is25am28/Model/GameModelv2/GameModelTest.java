@@ -7,10 +7,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.EventCards.AbandonedShip;
@@ -262,45 +259,35 @@ class GameModelTest {
         // All the player have sent their ship --> We should be in the FixShipState since p3 and p4 have an invalid ship
         assertInstanceOf(FixShipState.class, model.getCurrentState());
 
-        // Player 3 - Player 4:
-        // p3 --> Remove and component and does not fix the ship
-        // p4 --> Remove the wrong component --> should fix his ship
-        // List of components that the players wants to remove
-        List<ComponentHelper<Integer>> p3FixedComponents = new ArrayList<>(); // Player 3 component list
-        List<ComponentHelper<Integer>> p4FixedComponents = new ArrayList<>(); // Player 4 component list
-
-        // Removed the cannon over the core cabin --> is not the invalid component
-        p3FixedComponents.add( new ComponentHelper<Integer>(5, 6));
-        // Removed the wrong component
-        p4FixedComponents.add( new ComponentHelper<Integer>(6, 4));
-
         // Player 1 tries to fix his ship, but since it's valid it should throw an error
         assertThrows(
                 FixNotRequiredError.class,
-                () -> model.fixShip("Player 1", new ArrayList<>()),
+                () -> model.fixShip("Player 1", 6, 4),
                 "Player 1 should already have a valid ship"
         );
 
+        // Player 3 - Player 4:
+        // p3 --> Remove and component and does not fix the ship
+        // p4 --> Remove the wrong component --> should fix his ship
+
+        // Removed the cannon over the core cabin --> is not the invalid component
+        List<StateDTO> fixShipStates = this.model.fixShip("Player 3", 5, 6);
         // The player 3 tries to fix his ship, but he fails :(
-        List<StateDTO> fixShipStates = model.fixShip("Player 3", p3FixedComponents);
         assertEquals(1, fixShipStates.size()); // There is no state transaction
+        FixedComponentDTO fix = (FixedComponentDTO) fixShipStates.getFirst();
+        assertFalse(fix.isShipFixed());
 
-        // Check the new state of players that needs to fix the ship
-        FixShipDTO fixShipDTO = (FixShipDTO) fixShipStates.getFirst();
-        assertEquals(2, fixShipDTO.getPlayerWithInvalidShip().size());
+        this.model.fixShip("Player 4", 5, 6);
+        // Removed the wrong component
+        fixShipStates = this.model.fixShip("Player 4", 6, 4);
+        assertEquals(1, fixShipStates.size()); // There is no state transaction
+        fix = (FixedComponentDTO) fixShipStates.getFirst(); // Player 4 corrects have just corrected ship
+        assertTrue(fix.isShipFixed());
 
-        // Player 4 fixes his ship
-        fixShipStates = model.fixShip("Player 4", p4FixedComponents);
-        assertEquals(1, fixShipStates.size()); // There is no state transaction since the p3 still have an invalid ship
-        fixShipDTO = (FixShipDTO) fixShipStates.getFirst();
-        assertEquals(1, fixShipDTO.getPlayerWithInvalidShip().size()); // Since the p3 has fixed his ship, only the p3 needs to fix it
-
-        // Player 3 fixes his ship
-        fixShipStates = model.fixShip("Player 3", p4FixedComponents);
-        assertEquals(2, fixShipStates.size()); // it also contains the next state (populateShip)
-        fixShipDTO = (FixShipDTO) fixShipStates.getFirst();
-        assertEquals(0, fixShipDTO.getPlayerWithInvalidShip().size()); // No player needs to fix their ship
-
+        fixShipStates = this.model.fixShip("Player 3", 6, 4);
+        assertEquals(2, fixShipStates.size()); // The players have corrected their ship --> transition to PopulateState
+        fix = (FixedComponentDTO) fixShipStates.getFirst(); // Player 3 corrects have just corrected ship
+        assertTrue(fix.isShipFixed());
 
         // ========================================
         // POPULATE SHIP STATE --> THE PLAYERS NEED TO POPULATE THEIR SHIP
@@ -315,31 +302,31 @@ class GameModelTest {
 
         // TODO: Add some errors to test the correct behavior of the model
 
-        List<ComponentHelper<LifeformType>> addAstronauts = new ArrayList<>();
-        addAstronauts.add(new ComponentHelper<LifeformType>(6, 7).addItem(LifeformType.ASTRONAUT));
+        ComponentHelper<LifeformType> addAstronauts = new ComponentHelper<LifeformType>(6, 7).addItem(LifeformType.ASTRONAUT);
 
-        List<ComponentHelper<LifeformType>> addBrownAlien = new ArrayList<>();
-        addBrownAlien.add(new ComponentHelper<LifeformType>(6, 7).addItem(LifeformType.BROWN_ALIEN));
+        ComponentHelper<LifeformType> addBrownAlien = new ComponentHelper<LifeformType>(6, 7).addItem(LifeformType.BROWN_ALIEN);
 
         List<StateDTO> populateStates = model.populateShip("Player 1", addAstronauts);
-        PopulateShipDTO populateShipDTO = (PopulateShipDTO) populateStates.getFirst();
-        assertEquals(1, populateShipDTO.getPlayersReady().size());
+        PopulateShipComponentDTO populateShipDTO = (PopulateShipComponentDTO) populateStates.getFirst();
+        assertTrue(populateShipDTO.isShipPopulated());
         assertEquals(1, populateStates.size());
 
         populateStates = model.populateShip("Player 2", addAstronauts);
-        populateShipDTO = (PopulateShipDTO) populateStates.getFirst();
-        assertEquals(2, populateShipDTO.getPlayersReady().size());
+        populateShipDTO = (PopulateShipComponentDTO) populateStates.getFirst();
+        assertTrue(populateShipDTO.isShipPopulated());
         assertEquals(1, populateStates.size());
 
         populateStates = model.populateShip("Player 3", addBrownAlien);
-        populateShipDTO = (PopulateShipDTO) populateStates.getFirst();
-        assertEquals(3, populateShipDTO.getPlayersReady().size());
+        populateShipDTO = (PopulateShipComponentDTO) populateStates.getFirst();
+        assertTrue(populateShipDTO.isShipPopulated());
         assertEquals(1, populateStates.size());
 
         populateStates = model.populateShip("Player 4", addAstronauts);
-        populateShipDTO = (PopulateShipDTO) populateStates.getFirst();
-        assertEquals(4, populateShipDTO.getPlayersReady().size());
+        populateShipDTO = (PopulateShipComponentDTO) populateStates.getFirst();
+        assertTrue(populateShipDTO.isShipPopulated());
         assertEquals(2, populateStates.size());
+        assertInstanceOf(PopulateShipComponentDTO.class, populateStates.getFirst());
+        assertInstanceOf(CardRoundDTO.class, populateStates.getLast());
 
         // ========================================
         // CARD ROUND STATE --> THE PLAYERS WITH A WRONG SHIP NEEDS TO CORRECT THEM

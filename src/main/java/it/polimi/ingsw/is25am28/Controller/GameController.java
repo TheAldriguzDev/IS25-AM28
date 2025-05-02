@@ -116,13 +116,13 @@ public class GameController {
         }
     }
 
-    public List<StateDTO> fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove) throws IllegalArgumentException, FixNotRequiredError {
+    public List<StateDTO> fixShip(String player, Integer i, Integer j) throws IllegalArgumentException, FixNotRequiredError {
         synchronized (this.model) {
-            return this.model.fixShip(player, componentsToRemove);
+            return this.model.fixShip(player, i, j);
         }
     }
 
-    public List<StateDTO> populateShip(String player, List<ComponentHelper<LifeformType>> lifeFormToAdd) throws IllegalArgumentException, ShipPopulationFailException {
+    public List<StateDTO> populateShip(String player, ComponentHelper<LifeformType> lifeFormToAdd) throws IllegalArgumentException, ShipPopulationFailException {
         synchronized (this.model) {
             return this.model.populateShip(player, lifeFormToAdd);
         }

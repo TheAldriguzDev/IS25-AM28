@@ -1,7 +1,8 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.FixedComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
@@ -10,7 +11,7 @@ import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import java.util.List;
 
 public final class FixShipState extends State {
-    private List<String> playersWithInvalidShip;
+    private final List<String> playersWithInvalidShip;
 
     public FixShipState(GameModel model, List<String> playersWithInvalidShip) {
         super(model);
@@ -18,7 +19,7 @@ public final class FixShipState extends State {
     }
 
     @Override
-    public FixShipDTO fixShip(String player, List<ComponentHelper<Integer>> componentsToRemove) throws IllegalArgumentException, FixNotRequiredError {
+    public FixedComponentDTO fixShip(String player, Integer i, Integer j) throws IllegalArgumentException, FixNotRequiredError {
         if (!playersWithInvalidShip.contains(player)) {
             throw new FixNotRequiredError(player);
         }
@@ -26,20 +27,26 @@ public final class FixShipState extends State {
         Player p = model.getPlayers().get(player);
         Ship pShip = p.getShip();
 
-        for (ComponentHelper<Integer> c : componentsToRemove) {
-            pShip.removeSingleComponent(c.getI(), c.getJ());
-        }
+        pShip.removeSingleComponent(i, j);
+        p.addLostPieces(1);
 
-        p.addLostPieces(componentsToRemove.size());
 
+
+        FixedComponentDTO state = new FixedComponentDTO()
+                .setPlayerNickname(player)
+                .setI(i)
+                .setJ(j);
+
+        // Check if the player ship is not valid
         if (pShip.validateShip()) {
             playersWithInvalidShip.remove(player);
+            state.setShipFixed(true);
+        } else {
+            state.setShipFixed(false);
         }
 
-        FixShipDTO state = new FixShipDTO()
-                .setPlayerWithInvalidShip(this.playersWithInvalidShip);
-
         state.setStateName(this.toString());
+        state.setEventType(ShipConstructionType.TILE_EVENT.toString());
         return state;
     }
 
