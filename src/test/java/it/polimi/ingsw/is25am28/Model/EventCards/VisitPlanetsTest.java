@@ -27,6 +27,10 @@ class VisitPlanetsTest {
     private Board board;
     private VisitPlanets visitPlanets;
     private int movementStep = 5;
+    Player p1;
+    Player p2;
+    Player p3;
+    Player p4;
 
 //    void printAvailableResources(ResourceBank resourceBank) {
 //        System.out.println("\n ==== CURR RESOURCE BANK CONTENTS ====");
@@ -181,10 +185,10 @@ class VisitPlanetsTest {
         Random random = new Random(100);    // Fixed seed for predictable results
         List<Map<String, Integer>> itemsPerPlanet = new ArrayList<>();
 
-        Player p1 = new Player("P1", PlayerColor.BLUE, 2);
-        Player p2 = new Player("P2", PlayerColor.GREEN, 2);
-        Player p3 = new Player("P3", PlayerColor.YELLOW, 2);
-        Player p4 = new Player("P4", PlayerColor.RED, 2);
+        p1 = new Player("P1", PlayerColor.BLUE, 2);
+        p2 = new Player("P2", PlayerColor.GREEN, 2);
+        p3 = new Player("P3", PlayerColor.YELLOW, 2);
+        p4 = new Player("P4", PlayerColor.RED, 2);
 
 
         board.newPlayer(p1);
@@ -663,10 +667,10 @@ class VisitPlanetsTest {
 
         // (FINAL) Check that each player that decided to land got moved backwards
         // A list of the previous positions is needed to confront them with the new positions
-        assertEquals(initialPositions.get(3) - this.movementStep, this.visitPlanets.getBoard().getPlayers().get(3).getCursor());
-        assertEquals(initialPositions.get(2), this.visitPlanets.getBoard().getPlayers().get(2).getCursor());
-        assertEquals(initialPositions.get(1) - this.movementStep - 1, this.visitPlanets.getBoard().getPlayers().get(1).getCursor());
-        assertEquals(initialPositions.get(0) - this.movementStep - 1, this.visitPlanets.getBoard().getPlayers().get(0).getCursor());
+        assertEquals(initialPositions.get(3) - this.movementStep, this.p4.getCursor());
+        assertEquals(initialPositions.get(2), this.p3.getCursor());
+        assertEquals(initialPositions.get(1) - this.movementStep - 1, this.p2.getCursor());
+        assertEquals(initialPositions.get(0) - this.movementStep - 1, this.p1.getCursor());
     }
 
     @Test
@@ -1003,9 +1007,9 @@ class VisitPlanetsTest {
 
         // (FINAL) Check that each player that decided to land got moved backwards
         // A list of the previous positions is needed to confront them with the new positions
-        assertEquals(initialPositions.get(2) - this.movementStep, this.visitPlanets.getBoard().getPlayers().get(2).getCursor());
-        assertEquals(initialPositions.get(1), this.visitPlanets.getBoard().getPlayers().get(1).getCursor());
-        assertEquals(initialPositions.get(0) - this.movementStep - 1, this.visitPlanets.getBoard().getPlayers().get(0).getCursor());
+        assertEquals(initialPositions.get(2) - this.movementStep, this.p3.getCursor());
+        assertEquals(initialPositions.get(1), this.p2.getCursor());
+        assertEquals(initialPositions.get(0) - this.movementStep - 1, this.p1.getCursor());
     }
 
     @Test
@@ -1306,9 +1310,9 @@ class VisitPlanetsTest {
 
         // (FINAL) Check that each player that decided to land got moved backwards
         // A list of the previous positions is needed to confront them with the new positions
-        assertEquals(initialPositions.get(2) - this.movementStep, this.visitPlanets.getBoard().getPlayers().get(2).getCursor());
-        assertEquals(initialPositions.get(1), this.visitPlanets.getBoard().getPlayers().get(1).getCursor());
-        assertEquals(initialPositions.get(0) - this.movementStep - 1, this.visitPlanets.getBoard().getPlayers().get(0).getCursor());
+        assertEquals(initialPositions.get(2) - this.movementStep, this.p3.getCursor());
+        assertEquals(initialPositions.get(1), this.p2.getCursor());
+        assertEquals(initialPositions.get(0) - this.movementStep - 1, this.p1.getCursor());
     }
 
     @Test

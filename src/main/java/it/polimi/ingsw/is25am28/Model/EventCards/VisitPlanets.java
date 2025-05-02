@@ -179,11 +179,11 @@ public class VisitPlanets extends EventCard {
             }
         }
         // TODO: Tests not passed with this
-//        int tmp = getBoard().getEliminatedPlayers().size();
-//        this.getBoard().validatePlayersPosition();
-//        for (int j = 0; j < getBoard().getEliminatedPlayers().size() - tmp; j++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
-//            this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - j - 1).getNickname());
-//        }
+        int tmp = getBoard().getEliminatedPlayers().size();
+        this.getBoard().validatePlayersPosition();
+        for (int j = 0; j < getBoard().getEliminatedPlayers().size() - tmp; j++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
+            this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - j - 1).getNickname());
+        }
     }
 
     @Override
