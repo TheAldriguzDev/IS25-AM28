@@ -15,6 +15,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class EventCard {
     protected final int id;
@@ -209,7 +210,11 @@ public abstract class EventCard {
         if(!updatedPositions.isEmpty()) {
             cardState.setNeedsBoardUpdate(true);
             cardState.setNeedsUpdatedPositions(true);
-            cardState.setUpdatedPositions(new HashMap<>(updatedPositions));
+            cardState.setUpdatedPositions(new HashMap<>(
+                    updatedPositions
+                            .entrySet()
+                            .stream()
+                            .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() % getBoard().getSize()))));
             updatedPositions.clear();
         }
     }
