@@ -115,6 +115,9 @@ class WarZoneTest {
     * the third player (ship 3) should not be affected*/
     @Test
     public void test_against_WarZoneCard_1() {
+
+        // TODO: fix last shootibg sequence generate state (2 times same meteor)
+
         // WarZone card 1 initialization
         List<PlasmaShot> shootingSequence = new ArrayList<>();
         shootingSequence.add(new PlasmaShot(1, 2)); // dal basso, piccolo

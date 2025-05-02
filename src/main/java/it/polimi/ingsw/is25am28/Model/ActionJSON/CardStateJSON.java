@@ -24,6 +24,7 @@ public class CardStateJSON extends ActionJSON {
     private int cardLevel;
     private boolean isCardUsable;
     private boolean hasBeenActivated;
+    private boolean cardEnded;
 
     // ==== CLIENT PLAYER FLAGS/INFORMATION ==== //
     private boolean needsPlayerUpdate;

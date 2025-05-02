@@ -57,6 +57,7 @@ public class ClientWarZone extends ClientEventCard {
             switch (actionAndConsequences.get(currActionIndex).getLast()) {
                 case "RequiredCrew" -> cardInfoWidget.appendString("Required Crew: " + requiredCrew);
                 case "ShootingSequence" -> {
+                    // TODO: Control on Affected Player
                     cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");
                     if (this.currentPlasmaShot != null) {
                         switch (this.currentPlasmaShot.get("shotDirection")) {

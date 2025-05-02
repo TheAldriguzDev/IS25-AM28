@@ -261,8 +261,9 @@ public class VisitPlanets extends EventCard {
                             }
                         }
                     }
-                    this.droppedResources.put(this.getCurrentPlayer().get().getNickname(), this.itemsToDrop);
-
+                    if (!this.itemsToDrop.isEmpty()) {
+                        this.droppedResources.put(this.getCurrentPlayer().get().getNickname(), this.itemsToDrop);
+                    }
                     // (2) - Before withdrawing the requested resources from the planet,
                     //       verify that they are actually present, otherwise consider
                     //       the requested item as unavailable
@@ -290,8 +291,9 @@ public class VisitPlanets extends EventCard {
                             }
                         }
                     }
-                    this.takenResources.put(this.getCurrentPlayer().get().getNickname(), this.itemsToTake);
-
+                    if (!this.itemsToTake.isEmpty()) {
+                        this.takenResources.put(this.getCurrentPlayer().get().getNickname(), this.itemsToTake);
+                    }
                     // Finally, apply all the deposits and withdrawals
                     // that are now considered valid resource transfers
                     this.bonusEffect();

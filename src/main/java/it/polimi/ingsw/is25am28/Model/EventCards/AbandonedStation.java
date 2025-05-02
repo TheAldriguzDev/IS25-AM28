@@ -111,7 +111,9 @@ public class AbandonedStation extends EventCard {
         if (this.getCurrentPlayer().isPresent()) {
             this.cardUsed();
 
-            this.droppedResources.put(this.getCurrentPlayer().get().getNickname(), this.resourceToDropOff);
+            if (!this.resourceToDropOff.isEmpty()) {
+                this.droppedResources.put(this.getCurrentPlayer().get().getNickname(), this.resourceToDropOff);
+            }
 
             // Add the resources from the player to the bank
             for ( ComponentHelper<ItemColor> resourceDrop : this.resourceToDropOff ) {
@@ -123,7 +125,9 @@ public class AbandonedStation extends EventCard {
                                 resourceDrop.getJ()));
             }
 
-            this.takenResources.put(this.getCurrentPlayer().get().getNickname(), this.resourceToTake);
+            if (!this.takenResources.isEmpty()) {
+                this.takenResources.put(this.getCurrentPlayer().get().getNickname(), this.resourceToTake);
+            }
 
             // Add the resources from the bank to the player
             for ( ComponentHelper<ItemColor> resourceTake : this.resourceToTake ) {

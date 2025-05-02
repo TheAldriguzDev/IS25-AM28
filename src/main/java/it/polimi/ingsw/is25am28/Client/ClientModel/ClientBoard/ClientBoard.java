@@ -56,9 +56,7 @@ public class ClientBoard {
         }
     }
 
-
-
-
+    // TODO: see if necessary to delete this
     public int getLevel() { return this.level; }
 
     public List<ClientPlayer> getEliminatedPlayers() { return this.eliminatedPlayers; }
