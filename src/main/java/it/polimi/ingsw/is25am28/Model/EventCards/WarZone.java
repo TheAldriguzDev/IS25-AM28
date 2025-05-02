@@ -86,6 +86,8 @@ public class WarZone extends EventCard {
         this.removedBatteries = new HashMap<>();
         this.removedLifeforms = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
+
+        this.previousPlayerRemovedComponents = new ArrayList<>();
     }
 
     /**
@@ -726,15 +728,17 @@ public class WarZone extends EventCard {
             for (WarZoneActionConsequencePair pair : this.cardActions) {
                 actionsAndConsequences.add(Arrays.asList(pair.getAction().toString(), pair.getConsequence().toString()));
             }
+            cardState.setActionsAndConsequences(actionsAndConsequences);
             cardState.setRequiredCrewMembers(this.requiredCrew);
             cardState.setMovementSteps(this.movementSteps);
             cardState.setRequiredResources(this.requiredItems);
 
 
         }
-
-        PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
-        cardState.setCurrPlasmaShotDescriptor(Map.of("shotSize", currPlasmaShot.getSize(), "shotDirection", currPlasmaShot.getOrientation()));//<>(currPlasmaShot.getSize(), currPlasmaShot.getOrientation()));
+        if (current_plasmaShot < this.shootingSequence.size()) {
+            PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
+            cardState.setCurrPlasmaShotDescriptor(Map.of("shotSize", currPlasmaShot.getSize(), "shotDirection", currPlasmaShot.getOrientation()));//<>(currPlasmaShot.getSize(), currPlasmaShot.getOrientation()));
+        }
         cardState.setDiceThrowResult(this.diceResult);
 
         Map<String, Float> playersFirePowerMap = this.playersFirePower.entrySet().stream()

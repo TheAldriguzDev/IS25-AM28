@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientPirates;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientSmugglers;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON;
@@ -41,6 +43,7 @@ class PiratesTest {
     CardStateJSON cardState;
 
     Pirates pirates;
+    ClientPirates clientPirates;
 
     ArrayList<int[]> ShieldsToActivate;
     ArrayList<int[]> shieldsToActivate1;
@@ -128,14 +131,19 @@ class PiratesTest {
 
         pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board);
 
-
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Non initialized card");
+        clientPirates = new ClientPirates(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         pirates.initCardPlayers();
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 1 input");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         Player eliminatedPlayer = p1;
         ShieldsToActivate = new ArrayList<>();
@@ -144,28 +152,31 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 2 input");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 2
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 3 input");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         actionJSON3 = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
         pirates.useCard(actionJSON3);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 4 input");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         actionJSON4 = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
         pirates.useCard(actionJSON4);
@@ -176,40 +187,44 @@ class PiratesTest {
         // First shot : big from above on column 7
         pirates.setDiceThrowResult(7);
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 1 consequences - 1st plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 2 consequences - 1st plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 3 consequences - 1st plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 4 consequences - 1st plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {5, 7}); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
@@ -222,20 +237,22 @@ class PiratesTest {
 
         // First player should be no more
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 1 consequences - 2nd plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 2 consequences - 2nd plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {8, 5}); // Non lo proteggerà
@@ -243,10 +260,11 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 3 consequences - 2nd plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {8, 5}); // Lo proteggerà
@@ -254,10 +272,11 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 4 consequences - 2nd plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {8, 5});
@@ -265,23 +284,25 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
-
         // Third shot : small from above on column 6
         pirates.setDiceThrowResult(6);
+
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 1 consequences - 3rd plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 1", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 2 consequences - 3rd plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {8, 5});
@@ -289,10 +310,11 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 3 consequences - 3rd plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(new int[] {8, 5});
@@ -300,15 +322,22 @@ class PiratesTest {
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
-        // =======================================================================
-//        cardState = pirates.generateState();
-//        pirates.generateWidget(cardState).printWidget();
-        // =======================================================================
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 4 consequences - 3rd plasmaShot");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
         actionJSON = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertTrue(pirates.hasFinished());
+
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Last State");
+        clientPirates.updateCard(pirates.generateState());
+        clientPirates.generateWidget().printWidget();
+        // ================================ //
 
 
 

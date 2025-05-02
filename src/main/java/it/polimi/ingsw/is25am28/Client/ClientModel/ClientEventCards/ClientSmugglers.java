@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
@@ -29,7 +30,7 @@ public class ClientSmugglers extends ClientEventCard {
         this.blueItems = smugglersState.getBlueItems();
         this.greenItems = smugglersState.getGreenItems();
         this.takenItems = smugglersState.getTakenItems();
-        this.firstRound = smugglersState.getFirstRound();
+        this.firstRound = true;
         this.defeatedPlayers = new ArrayList<>();
     }
 
@@ -52,21 +53,37 @@ public class ClientSmugglers extends ClientEventCard {
 
         cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
-        // TODO: Modify to print the symbol (located in printTest)
+        cardInfoWidget.appendString(ANSIColors.RED + "████                       ████" + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.RED + "  ████                   ████  " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.RED + "    ████               ████    " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.RED +"      █████         █████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.RED +"       █ " + ANSIColors.WHITE + "█████████████" + ANSIColors.RED + " █       " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "         █      ███  █         " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "         █    ███    █         " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "         █  ███      █         " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.RED +"       █ " + ANSIColors.WHITE + "█████████████" + ANSIColors.RED + " █       " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.RED +"      █████         █████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.RED +"    ████               ████    " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.RED +"  ████                   ████  " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.RED +"████                       ████" + ANSIColors.RESET);
+        cardInfoWidget.wrapWidgetWithBorder();
 
         if (firstRound) {
             cardInfoWidget.appendString("Level: " + this.cardLevel);
             cardInfoWidget.appendString("Days: " + this.movementSteps);
-            cardInfoWidget.appendString("Require Firepower: " + this.requiredFirepower);
-            cardInfoWidget.appendString("Red items: " + this.redItems);
-            cardInfoWidget.appendString("Yellow items: " + this.yellowItems);
-            cardInfoWidget.appendString("Blue items: " + this.blueItems);
-            cardInfoWidget.appendString("Green items: " + this.greenItems);
+            cardInfoWidget.appendString("Required Firepower: " + this.requiredFirepower);
+            cardInfoWidget.appendString("available items:");
+            cardInfoWidget.appendString(ANSIColors.RED + " Red: " + ANSIColors.RESET + this.redItems + " |" + ANSIColors.YELLOW + " Yellow: " + ANSIColors.RESET + this.yellowItems);
+            cardInfoWidget.appendString(ANSIColors.BLUE + "Blue: " + ANSIColors.RESET + this.blueItems + " |" + ANSIColors.GREEN + "  Green: " + ANSIColors.RESET + this.greenItems);
             cardInfoWidget.appendString("Taken items: " + this.takenItems);
+            if (this.playerNickname != null) {
+                cardInfoWidget.appendString("Current Player: " + this.playerNickname);
+            }
         } else {
-            cardInfoWidget.appendString("Player: " + this.playerNickname + " has to drop " + this.takenItems + " items");
+            cardInfoWidget.appendString("Number of items remove: " + this.takenItems);
+            cardInfoWidget.appendString("Target: " + this.playerNickname);
         }
-        cardInfoWidget.wrapWidgetWithBorder();
+
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }

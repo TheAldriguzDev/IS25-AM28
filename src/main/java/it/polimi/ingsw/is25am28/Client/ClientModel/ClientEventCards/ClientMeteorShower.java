@@ -56,12 +56,23 @@ public class ClientMeteorShower extends ClientEventCard {
         meteor1.appendString(ANSIColors.BRIGHT_YELLOW + "                ███████████  " + ANSIColors.RESET);
         meteor1.wrapWidgetWithBorder();
 
-        meteor1Info.appendString("==== CURRENT METEOR INFO ====");
-        meteor1Info.appendString("Inbound Direction: LEFT");
-        meteor1Info.appendString("Dice Throw Result: 7");
-        meteor1Info.appendString("Size: BIG METEOR");
-        meteor1Info.appendString("Current Player: " + PrintUtils.addColor("MasterChief216", ANSIColors.RED));
-
+        if (this.playerNickname != null) {
+            meteor1Info.appendString("==== CURRENT METEOR INFO ====");
+            switch (this.currMeteorDescriptor.get("meteorDirection")) {
+                case 0 -> meteor1Info.appendString("Inbound Direction: ABOVE");
+                case 1 -> meteor1Info.appendString("Outbound Direction: RIGHT");
+                case 2 -> meteor1Info.appendString("Outbound Direction: BELOW");
+                case 3 -> meteor1Info.appendString("Inbound Direction: LEFT");
+            }
+            meteor1Info.appendString("Dice Throw Result: " + this.diceThrowResult);
+            if (this.currMeteorDescriptor.get("meteorSize") == 1) {
+                meteor1Info.appendString("Size: SMALL METEOR");
+            } else {
+                meteor1Info.appendString("Size: BIG METEOR");
+            }
+            meteor1Info.appendString("Target: " + this.playerNickname);
+        }
+        // TODO : does the shootingSequence need to be shown to the clients as a whole?
         meteor1Final = WidgetTUI.composeTwoWidgetsVertically(
                 WidgetTUI.composeTwoWidgetsVertically(meteor1Title, meteor1),
                 meteor1Info

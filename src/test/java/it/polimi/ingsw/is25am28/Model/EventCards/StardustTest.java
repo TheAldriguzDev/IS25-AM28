@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientStardust;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON;
@@ -38,6 +39,7 @@ class StardustTest {
 
     Stardust stardust;
     CardStateJSON cardState;
+    ClientStardust clientStardust;
 
     @BeforeEach
     public void init() {
@@ -96,6 +98,10 @@ class StardustTest {
         assertFalse(cardState.getNeedsBoardUpdate());
         assertNull(cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TEST ======== //
+        clientStardust = new ClientStardust(cardState);
+        clientStardust.generateWidget().printWidget();
+        // ============================= //
 
         stardust.initCardPlayers();
 
@@ -106,6 +112,10 @@ class StardustTest {
         assertFalse(cardState.getNeedsBoardUpdate());
         assertEquals("Player 4", cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TEST ======== //
+        clientStardust.updateCard(cardState);
+        clientStardust.generateWidget().printWidget();
+        // ============================= //
 
         stardust.useCard(actionJSON4);
         assertFalse(stardust.hasFinished());
@@ -120,6 +130,10 @@ class StardustTest {
         assertEquals(-4, cardState.getUpdatedPositions().get("Player 4"));
         assertEquals("Player 3", cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TEST ======== //
+        clientStardust.updateCard(cardState);
+        clientStardust.generateWidget().printWidget();
+        // ============================= //
 
         stardust.useCard(actionJSON3);
         assertFalse(stardust.hasFinished());
@@ -134,6 +148,10 @@ class StardustTest {
         assertEquals(-1, cardState.getUpdatedPositions().get("Player 3"));
         assertEquals("Player 2", cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TEST ======== //
+        clientStardust.updateCard(cardState);
+        clientStardust.generateWidget().printWidget();
+        // ============================= //
 
         stardust.useCard(actionJSON2);
         assertFalse(stardust.hasFinished());
@@ -148,6 +166,10 @@ class StardustTest {
         assertEquals(0, cardState.getUpdatedPositions().get("Player 2"));
         assertEquals("Player 1", cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TEST ======== //
+        clientStardust.updateCard(cardState);
+        clientStardust.generateWidget().printWidget();
+        // ============================= //
 
         stardust.useCard(actionJSON1);
         assertTrue(stardust.hasFinished());
@@ -160,6 +182,10 @@ class StardustTest {
         assertFalse(cardState.getNeedsUpdatedPositions());
         assertEquals("Player 1", cardState.getPlayerNickname()); //TODO: Since the card has been used the getNextPlayer was not invoked, see what to do with isCardUsable
         // =============================== //
+        // ======== WIDGET TEST ======== //
+        clientStardust.updateCard(cardState);
+        clientStardust.generateWidget().printWidget();
+        // ============================= //
 
         assertEquals(6, p1.getCursor());
         assertEquals(0, p2.getCursor());

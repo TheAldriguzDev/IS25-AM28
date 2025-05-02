@@ -41,9 +41,13 @@ public class ClientAbandonedShip extends ClientEventCard {
         cardInfoWidget.appendString("Required Crew: " + this.requiredCrew);
         cardInfoWidget.appendString("Given Credits: " + this.givenCredits);
         cardInfoWidget.appendString("Movement Step: " + this.movementStep);
+        if (this.playerNickname != null) {
+            cardInfoWidget.appendString("Current Player: " + this.playerNickname);
+        }
+
 
         cardInfoWidget.wrapWidgetWithBorder();
 
-        return WidgetTUI.composeTwoWidgetsVertically(cardInfoWidget, cardWidget).centerWidgetScreen().wrapWidgetWithBorder();
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 }

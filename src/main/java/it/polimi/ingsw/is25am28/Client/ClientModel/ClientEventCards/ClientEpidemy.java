@@ -23,6 +23,9 @@ public class ClientEpidemy extends ClientEventCard {
 
         cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
+        if (this.playerNickname != null) {
+            cardInfoWidget.appendString("Current Player: " + this.playerNickname);
+        }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }

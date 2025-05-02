@@ -22,6 +22,7 @@ public class Epidemy extends EventCard {
     // Constructor
     public Epidemy(String name, int cardLevel, Board board) {
         super(name, cardLevel, board);
+        this.removedLifeforms = new HashMap<>();
     }
 
     @Override

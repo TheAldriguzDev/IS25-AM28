@@ -51,6 +51,8 @@ public class VisitPlanets extends EventCard {
         this.takenResources = new HashMap<>();
 
         int planetIndex = 0;
+        this.chosenPlanetIndex = -1;
+
 
         for (Map<String, Integer> planetDescriptor : itemsPerPlanet) {
             Map<ItemColor, Integer> formattedPlanetDescriptor = new HashMap<>();
@@ -182,6 +184,7 @@ public class VisitPlanets extends EventCard {
         List<ComponentHelper<ItemColor>> itemsToVerify;
         Map<ItemColor, Integer> planetConfig;
         ItemColor itemToVerify;
+
 
 
         // ActionJSON unpacking

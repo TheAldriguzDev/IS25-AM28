@@ -12,15 +12,12 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected String cardName;
     protected int cardLevel;
     protected boolean hasBeenUsed;
-    protected boolean needsBoardUpdate;
     protected boolean hasBeenActivated; // this flag allows the card to send its full static information (like when only visualized at the start of the game) only when ita has not been used a single time wit useCard()
 
     public ClientEventCard(CardStateJSON cardState) {
         this.id = cardState.getId();
-        this.playerNickname = cardState.getPlayerNickname();
         this.cardName = cardState.getCardName();
         this.cardLevel = cardState.getCardLevel();
-        this.needsBoardUpdate = false;
     }
 
     public abstract void useCard();
@@ -31,4 +28,6 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
 
     /*This method generated a widget with the relevant card's info*/
     public abstract WidgetTUI generateWidget();
+    // TODO: the states need another variable so that the generate widget (and the clients) know to not display/send Input in response to the last state of a card
+    // TODO: Place the current/target palyer in a separated bordered widget
 }

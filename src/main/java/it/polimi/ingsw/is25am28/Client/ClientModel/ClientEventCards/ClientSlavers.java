@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
@@ -22,8 +23,8 @@ public class ClientSlavers extends ClientEventCard {
         this.movementSteps = slaversCardState.getMovementSteps();
         this.givenCredits = slaversCardState.getGivenCredits();
         this.takenCrew = slaversCardState.getTakenCrew();
-        this.firstRound = slaversCardState.getFirstRound();
         this.defeatedPlayers = new ArrayList<>();
+        firstRound = true;
     }
 
     @Override
@@ -47,7 +48,19 @@ public class ClientSlavers extends ClientEventCard {
 
         cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
-        // TODO: Modify to print the symbol (located in printTest)
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██        ██        " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "         ██        ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██       ████       " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██       ████       " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "         ██        ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██        ██        " + ANSIColors.RESET);
+        cardInfoWidget.wrapWidgetWithBorder();
 
         if (this.firstRound) {
             cardInfoWidget.appendString("Level: " + this.cardLevel);
@@ -55,11 +68,13 @@ public class ClientSlavers extends ClientEventCard {
             cardInfoWidget.appendString("Days: " + this.movementSteps);
             cardInfoWidget.appendString("Required Firepower: " + this.requiredFirepower);
             cardInfoWidget.appendString("Taken Crew: " + this.takenCrew);
+            if (this.playerNickname != null) {
+                cardInfoWidget.appendString("Current Player: " + this.playerNickname);
+            }
         } else {
-            cardInfoWidget.appendString("Player: " + this.playerNickname + " has to give up " + this.takenCrew + " crew members");
+            cardInfoWidget.appendString("Crew members to remove: " + this.takenCrew);
+            cardInfoWidget.appendString("Target: " + this.playerNickname);
         }
-        cardInfoWidget.wrapWidgetWithBorder();
-
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 }

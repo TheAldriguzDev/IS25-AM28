@@ -43,9 +43,12 @@ public class ClientAbandonedStation extends ClientEventCard {
         cardInfoWidget.appendString("Required Crew: " + this.requiredCrew);
         cardInfoWidget.appendString("Movement Step: " + this.movementStep);
         cardInfoWidget.appendString("Station Resources: " + this.stationResources);
+        if (this.playerNickname != null) {
+            cardInfoWidget.appendString("Current Player: " + this.playerNickname);
+        }
 
         cardInfoWidget.wrapWidgetWithBorder();
 
-        return WidgetTUI.composeTwoWidgetsVertically(cardInfoWidget, cardWidget).centerWidgetScreen().wrapWidgetWithBorder();
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 }

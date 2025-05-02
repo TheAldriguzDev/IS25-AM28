@@ -53,6 +53,7 @@ public class Pirates extends EventCard {
         this.updatedCredits = new HashMap<>();
         this.removedComponents = new HashMap<>();
         this.removedBatteries = new HashMap<>();
+        this.eliminatedPlayers = new ArrayList<>();
     }
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
@@ -152,6 +153,12 @@ public class Pirates extends EventCard {
                             }
                         } else {
                             this.plasmashotIndex++;
+                            // In the case the index advances, we need to set the new info about the plasmaShot, but only if there is at least one left
+                            if (this.plasmashotIndex < shootingSequence.size()) {
+                                shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
+                                shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
+                                currentPlasmaShot = Map.of("shotSize", shotSize, "shotDirection", shotDirection);
+                            }
                             this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
                         }
                         this.initCardPlayers();
@@ -314,8 +321,12 @@ public class Pirates extends EventCard {
                     }
                     shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
                     shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
-                    //currentPlasmaShot = new ArrayList<>(Arrays.asList(shotSize, shotDirection));
                     currentPlasmaShot = Map.of("shotSize", shotSize, "shotDirection", shotDirection);
+                    //currentPlasmaShot = new ArrayList<>(Arrays.asList(shotSize, shotDirection));
+//                    System.out.println("Parametri shot cambiati! -> pS index : " + plasmashotIndex);
+//                    System.out.println("SIZE: " + shotSize);
+//                    System.out.println("Direction: " + shotDirection);
+
                 }
         );
     }

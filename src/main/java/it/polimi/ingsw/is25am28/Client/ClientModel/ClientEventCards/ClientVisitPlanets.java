@@ -7,7 +7,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.util.Map;
 
 public class ClientVisitPlanets extends ClientEventCard {
-    Map<Integer, Map<ItemColor, Integer>> availablePlanets;
+    Map<Integer, Map<ItemColor, Integer>> availablePlanets; // TODO: a list would serve this role better since the generateWidget needs order
     private int chosenPlanetIndex;
 
     public ClientVisitPlanets(CardStateJSON cardState) {
@@ -36,6 +36,16 @@ public class ClientVisitPlanets extends ClientEventCard {
 
         cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
+        cardInfoWidget.appendString("Card Level: " + this.cardLevel);
+        cardInfoWidget.appendString("Available Planets: ");
+
+        for (Map.Entry<Integer, Map<ItemColor, Integer>> entry : availablePlanets.entrySet()) {
+            cardInfoWidget.appendString(entry.getKey() + ": " + entry.getValue().toString());
+        }
+
+        if (this.playerNickname != null) {
+            cardInfoWidget.appendString("Current Player: " + playerNickname);
+        }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientAbandonedStation;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedStationJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
@@ -216,7 +217,19 @@ class AbandonedStationTest {
                     resourceBank
                 );
 
+        ClientAbandonedStation clientAbandonedStation;
+
+        // ======== WIDGET TESTING ======== //
+        clientAbandonedStation = new ClientAbandonedStation(abandonedStationCard.generateState());
+        clientAbandonedStation.generateWidget().printWidget();
+        // ================================ //
+
         abandonedStationCard.initCardPlayers();
+
+        // ======== WIDGET TESTING ======== //
+        clientAbandonedStation.updateCard(abandonedStationCard.generateState());
+        clientAbandonedStation.generateWidget().printWidget();
+        // ================================ //
 
         List<Player> playerList = new ArrayList<>(board.getPlayers());
         List<Integer> initialCursors = new ArrayList<>();
@@ -271,6 +284,11 @@ class AbandonedStationTest {
 
                 // Use the card
                 abandonedStationCard = (AbandonedStation) abandonedStationCard.useCard(abandonedStationJSON);
+
+                // ======== WIDGET TESTING ======== //
+                clientAbandonedStation.updateCard(abandonedStationCard.generateState());
+                clientAbandonedStation.generateWidget().printWidget();
+                // ================================ //
             }
         }
 

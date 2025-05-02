@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class ClientPirates extends ClientEventCard {
 
     public ClientPirates(CardStateJSON piratesState) {
         super(piratesState);
-        this.firstRound = piratesState.getFirstRound();
+        this.firstRound = true;
         this.requiredFirepower = piratesState.getRequiredFirepower();
         this.givenCredits = piratesState.getGivenCredits();
         this.movementSteps = piratesState.getMovementSteps();
@@ -50,15 +51,61 @@ public class ClientPirates extends ClientEventCard {
         cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
         if (this.firstRound) {
+
+            cardInfoWidget.appendString(ANSIColors.WHITE + "████                       ████" + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "█████                     █████" + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "  ████     " + ANSIColors.RESET + "█████████" + ANSIColors.WHITE +"     ███   " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "    ███ " + ANSIColors.RESET + "███████████████" + ANSIColors.WHITE +" ███    " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "     █ " + ANSIColors.RESET + "█████████████████" + ANSIColors.WHITE + " █     " + ANSIColors.RESET);
+            cardInfoWidget.appendString("      ███      █      ███      " + ANSIColors.RESET);
+            cardInfoWidget.appendString("      ███   " + ANSIColors.RED + "█" + ANSIColors.RESET + "  █  " + ANSIColors.RED +"█" + ANSIColors.RESET + "   ███      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "     █ " + ANSIColors.RESET + "█████████████████" + ANSIColors.WHITE +" █    " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "    ███   " + ANSIColors.RESET + "███████████" + ANSIColors.WHITE +"   ███    " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "  ████   " + ANSIColors.RESET + "█ █ █ █ █ █ █" + ANSIColors.WHITE +"   ████  " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "█████     " + ANSIColors.RESET + "█ █ █ █ █ █" + ANSIColors.WHITE +"     █████" + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "████      " + ANSIColors.RESET + "███████████" + ANSIColors.WHITE +"      ████" + ANSIColors.RESET);
+            cardInfoWidget.wrapWidgetWithBorder();
+
             cardInfoWidget.appendString("Level: " + this.cardLevel);
             cardInfoWidget.appendString("Given credits: " + this.givenCredits);
             cardInfoWidget.appendString("Days: " + this.movementSteps);
             // TODO : does the shootingSequence need to be shown to the clients as a whole?
             cardInfoWidget.appendString("Required Firepower: " + this.requiredFirepower);
+            if (this.playerNickname != null) {
+                cardInfoWidget.appendString("Current Player: " + this.playerNickname);
+            }
         } else {
-            cardInfoWidget.appendString("Dice result: " + this.diceThrowResult);
+            cardInfoWidget.appendString("                 █                ");
+            cardInfoWidget.appendString("                ███               ");
+            cardInfoWidget.appendString("               █████              ");
+            cardInfoWidget.appendString("               █████              ");
+            cardInfoWidget.appendString("              ███████             ");
+            cardInfoWidget.appendString("       █    ███████████    █      ");
+            cardInfoWidget.appendString("       ██  █████████████  ██      ");
+            cardInfoWidget.appendString("  ██    ███████████████████    ██ ");
+            cardInfoWidget.appendString("  ███    █████████████████    ███ ");
+            cardInfoWidget.appendString("   ████ ███████████████████ ████  ");
+            cardInfoWidget.appendString("     █████████████████████████    ");
+            cardInfoWidget.appendString("      ███████████████████████     ");
+            cardInfoWidget.appendString("         █████████████████        ");
+            cardInfoWidget.appendString("            ███████████           ");
+            cardInfoWidget.wrapWidgetWithBorder();
+
+            cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");
+            switch (this.currentPlasmaShot.get("shotDirection")) {
+                case 0 -> cardInfoWidget.appendString("Inbound Direction: ABOVE");
+                case 1 -> cardInfoWidget.appendString("Outbound Direction: RIGHT");
+                case 2 -> cardInfoWidget.appendString("Outbound Direction: BELOW");
+                case 3 -> cardInfoWidget.appendString("Inbound Direction: LEFT");
+            }
+            if (this.currentPlasmaShot.get("shotSize") == 1) {
+                cardInfoWidget.appendString("Size: SMALL PLASMASHOT");
+            } else {
+                cardInfoWidget.appendString("Size: BIG PLASMASHOT");
+            }
+            cardInfoWidget.appendString("Dice Throw Result: " + this.diceThrowResult);
+            cardInfoWidget.appendString("Target: " + this.playerNickname);
         }
-        cardInfoWidget.wrapWidgetWithBorder();
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }

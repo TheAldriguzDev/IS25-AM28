@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientOpenSpace;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
@@ -195,6 +196,7 @@ class OpenSpaceTest {
         // Create the card that will be used in the simulation
         OpenSpace openSpaceCard = new OpenSpace("openSpace", 2, board);
         CardStateJSON cardState;
+        ClientOpenSpace clientOpenSpace;
 
         // ======== STATE TESTING ======== //
         cardState = openSpaceCard.generateState();
@@ -205,6 +207,11 @@ class OpenSpaceTest {
         assertFalse(cardState.getNeedsBoardUpdate());
         assertNull(cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TESTING ======== //
+        clientOpenSpace = new ClientOpenSpace(cardState);
+        clientOpenSpace.generateWidget().printWidget();
+        // ================================ //
+
 
         // Init the players that will use the card
         openSpaceCard.initCardPlayers();
@@ -270,6 +277,10 @@ class OpenSpaceTest {
             assertEquals(player.getNickname(), cardState.getPlayerNickname());
             // =============================== //
             count++;
+            // ======== WIDGET TESTING ======== //
+            clientOpenSpace.updateCard(cardState);
+            clientOpenSpace.generateWidget().printWidget();
+            // ================================ //
 
             // Use the card
             openSpaceCard = (OpenSpace) openSpaceCard.useCard(openSpaceJSON);
@@ -289,6 +300,10 @@ class OpenSpaceTest {
         assertEquals(1, cardState.getRemovedBatteries().get("Player 4"));
         assertFalse(cardState.getNeedsUpdatedEliminatedPlayers());
         // =============================== //
+        // ======== WIDGET TESTING ======== //
+        clientOpenSpace.updateCard(cardState);
+        clientOpenSpace.generateWidget().printWidget();
+        // ================================ //
 
         // All the types of power have been tested
         assertEquals(tmpCursors.get(0) + 7, players.get(0).getCursor());

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientWarZone;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON;
@@ -129,7 +130,21 @@ class WarZoneTest {
 
         // Used energy is the energy use by the double engines
 
+        ClientWarZone clientWarZone;
+
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Before initialization");
+        clientWarZone = new ClientWarZone(warzone.generateState());
+        clientWarZone.generateWidget().printWidget();
+        // ================================ //
+
         warzone.initCardPlayers();
+
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Movement steps will be applied after leader ack");
+        clientWarZone.updateCard(warzone.generateState());
+        clientWarZone.generateWidget().printWidget();
+        // ================================ //
 
         ActionJSON actionJSON;
 
@@ -145,6 +160,12 @@ class WarZoneTest {
             assertFalse(warzone.hasFinished());
             assertEquals(-2, p2.getCursor());
 
+            // ======== WIDGET TESTING ======== //
+            System.out.println("Engine power input p1");
+            clientWarZone.updateCard(warzone.generateState());
+            clientWarZone.generateWidget().printWidget();
+            // ================================ //
+
         // Player order: 1, 3, 4, 2
 
         //Lowest enginePower action : input
@@ -154,10 +175,22 @@ class WarZoneTest {
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
+            // ======== WIDGET TESTING ======== //
+            System.out.println("Engine power input p3");
+            clientWarZone.updateCard(warzone.generateState());
+            clientWarZone.generateWidget().printWidget();
+            // ================================ //
+
             // actionJSON del player 3
             actionJSON = new WarZoneJSON("Player 3", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
+
+            // ======== WIDGET TESTING ======== //
+            System.out.println("Engine power input p2");
+            clientWarZone.updateCard(warzone.generateState());
+            clientWarZone.generateWidget().printWidget();
+            // ================================ //
 
             // actionJSON del player 4
 
@@ -165,34 +198,71 @@ class WarZoneTest {
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
+            // ======== WIDGET TESTING ======== //
+            System.out.println("Engine power input p4");
+            clientWarZone.updateCard(warzone.generateState());
+            clientWarZone.generateWidget().printWidget();
+            // ================================ //
+
             // actionJSON del player 2
             actionJSON = new WarZoneJSON("Player 2", 1, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
+
+            // ======== WIDGET TESTING ======== //
+            System.out.println("Engine power consequence p4");
+            clientWarZone.updateCard(warzone.generateState());
+            clientWarZone.generateWidget().printWidget();
+            // ================================ //
 
             // Player 4 has to send lifeform to remove
             actionJSON = new WarZoneJSON("Player 4", 0, lifeformsToRemove_4, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
+            // ======== WIDGET TESTING ======== //
+            System.out.println("Firepower input p1");
+            clientWarZone.updateCard(warzone.generateState());
+            clientWarZone.generateWidget().printWidget();
+            // ================================ //
+
             assertEquals(1, board.getEliminatedPlayers().size());
             assertEquals(eliminatedPlayers.get(0), board.getEliminatedPlayers().get(0));
 
         //Lowest Firepower action
+
             // actionJson del player 1
             actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_1);
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
+
+            // ======== WIDGET TESTING ======== //
+            System.out.println("Firepower input p3");
+            clientWarZone.updateCard(warzone.generateState());
+            clientWarZone.generateWidget().printWidget();
+            // ================================ //
 
             // actionJSON del player 3
             actionJSON = new WarZoneJSON("Player 3", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_3);
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
+            // ======== WIDGET TESTING ======== //
+            System.out.println("Firepower input p2");
+            clientWarZone.updateCard(warzone.generateState());
+            clientWarZone.generateWidget().printWidget();
+            // ================================ //
+
             // actionJSON del player 2
             actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_2);
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
+
+                // ======== WIDGET TESTING ======== //
+                System.out.println("Shields input p1");
+                clientWarZone.updateCard(warzone.generateState());
+                clientWarZone.generateWidget().printWidget();
+                // ================================ //
 
                 // Player 1 has to send shields to activate for each plasmashot
                 // Player 1 will block the first small plasmashot from behing, the second one, headet to the ship's core, will eliminate him
@@ -201,6 +271,12 @@ class WarZoneTest {
                 warzone.useCard(actionJSON);
                 assertFalse(warzone.hasFinished());
 
+                // ======== WIDGET TESTING ======== //
+                System.out.println("Shields input p1");
+                clientWarZone.updateCard(warzone.generateState());
+                clientWarZone.generateWidget().printWidget();
+                // ================================ //
+
                 assertEquals(1, board.getEliminatedPlayers().size()); // player 1 not eliminated
                 //assertEquals(); for the batteries // Batteries consumed by shields already tested in the other test
 
@@ -208,6 +284,12 @@ class WarZoneTest {
                 actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
                 warzone.useCard(actionJSON);
                 assertTrue(warzone.hasFinished());
+
+                // ======== WIDGET TESTING ======== //
+                System.out.println("Last State");
+                clientWarZone.updateCard(warzone.generateState());
+                clientWarZone.generateWidget().printWidget();
+                // ================================ //
 
         assertEquals(2, board.getEliminatedPlayers().size());
         assertEquals(eliminatedPlayers.get(1), board.getEliminatedPlayers().get(1));

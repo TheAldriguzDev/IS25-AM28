@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientVisitPlanets;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.VisitPlanetsJSON;
@@ -716,6 +717,13 @@ class VisitPlanetsTest {
             this.board
         );
 
+        ClientVisitPlanets clientVisitPlanets;
+
+        // ======== WIDGET TESTING ======== //
+        clientVisitPlanets = new ClientVisitPlanets(visitPlanets.generateState());
+        clientVisitPlanets.generateWidget().printWidget();
+        // ================================ //
+
         // Initializing the internal player list
         this.visitPlanets.initCardPlayers();
 
@@ -729,6 +737,11 @@ class VisitPlanetsTest {
         //     (i.e.: The 2 BLUE items are moved into another storage)
         chosenPlanetIndex = 0;
         cardStateJSON = this.visitPlanets.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Before p1 uses the card");
+        clientVisitPlanets.updateCard(cardStateJSON);
+        clientVisitPlanets.generateWidget().printWidget();
+        // ================================ //
 
         // Verify that all planets are currently available
         // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
@@ -770,6 +783,11 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P1 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Before p2 uses the card");
+        clientVisitPlanets.updateCard(cardStateJSON);
+        clientVisitPlanets.generateWidget().printWidget();
+        // ================================ //
         // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
 //        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
 //        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
@@ -814,7 +832,6 @@ class VisitPlanetsTest {
         // --> P2 will: drop (all) and take (all) from his chosen planer with planetID=3
         //     (HOWEVER: Even if he wants to drop/take stuff, he doesn't want to land, therefore his storage stays the same)
         chosenPlanetIndex = -1; // Doesn't care about landing
-        cardStateJSON = this.visitPlanets.generateState();
 
         itemsToDrop = new ArrayList<>();
         itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
@@ -851,6 +868,11 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P2 is still available,
         // since he specified that he did not want to land
         cardStateJSON = this.visitPlanets.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Before p3 uses the card");
+        clientVisitPlanets.updateCard(cardStateJSON);
+        clientVisitPlanets.generateWidget().printWidget();
+        // ================================ //
         // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
 //        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
 //        assertTrue(cardStateJSON.getAvailablePlanets().containsKey(1));
@@ -894,7 +916,6 @@ class VisitPlanetsTest {
         // --> P3 will: drop (nothing) and take (all) from planet with planetID=2
         //              (NOTE: 1 BLUE and 1 GREEN are reorganized, they're not dropped and thus nor deposited to the resourceBank)
         chosenPlanetIndex = 1;
-        cardStateJSON = this.visitPlanets.generateState();
 
         itemsToDrop = new ArrayList<>();
         itemsToDrop.add(new ComponentHelper<ItemColor>(5, 6).addItem(ItemColor.BLUE));
@@ -935,11 +956,16 @@ class VisitPlanetsTest {
         // Verifying that the planetID chosen by P3 cannot
         // be chosen by the other players
         cardStateJSON = this.visitPlanets.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Last State");
+        clientVisitPlanets.updateCard(cardStateJSON);
+        clientVisitPlanets.generateWidget().printWidget();
+        // ================================ //
         // GLI AVAIABLE PANETS BìNON VENGONO PIU' GENERATI QUANDO LA CARTA ATTIVA, IN MODO DA NON RIMANDARE INFORMAZIONI STATICHE GIA' INVIATE
 //        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(0));
 //        assertFalse(cardStateJSON.getAvailablePlanets().containsKey(1));
 
-        // Verify that, since all planets have been chosen, P4 will not be able to choose, thus
+        // Verify that, since all planets have been chosen, P4 will not be able to choose, thus // TODO: p4 does not exist in this test!
         // he should be skipped and the card should be then marked as used
         //assertFalse(cardStateJSON.getIsCardUsable());
 

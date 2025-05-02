@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientMeteorShower;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
@@ -20,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class MeteorShowerTest {
     Board board = new BoardLevel2();
     MeteorShower meteorShower;
+    ClientMeteorShower clientMeteorShower;
 
 //    /**
 //     * Outputs the given ship to terminal
@@ -221,9 +223,6 @@ class MeteorShowerTest {
                 meteorSequence,
                 board
         );
-
-        // Initializing the internal player list
-        this.meteorShower.initCardPlayers();
     }
 
     /**
@@ -233,6 +232,16 @@ class MeteorShowerTest {
      */
     @Test
     void useCard_goingThroughAnEntireMeteorSequence() {
+
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Non initialized card");
+        clientMeteorShower = new ClientMeteorShower(meteorShower.generateState());
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
+
+        // Initializing the internal player list
+        this.meteorShower.initCardPlayers();
+
         MeteorShowerJSON meteorShowerJSON;
         CardStateJSON meteorShowerStateJSON;
         List<Player> playerList = this.board.getPlayers();
@@ -272,6 +281,11 @@ class MeteorShowerTest {
 
         // Meteor 1 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 1 - Player 1 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 //        assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
 //        assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getValue());
 
@@ -334,6 +348,11 @@ class MeteorShowerTest {
 
         // Meteor 1 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 1 - Player 2 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
         //assertEquals("p1", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertEquals(1, meteorShowerStateJSON.getRemovedComponents().get("p1").size());
 
@@ -393,6 +412,11 @@ class MeteorShowerTest {
 
         // Meteor 2 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 2 - Player 1 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 //        assertEquals("p2", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertEquals(1, meteorShowerStateJSON.getRemovedComponents().get("p2").size());
 
@@ -451,6 +475,11 @@ class MeteorShowerTest {
 
         // Meteor 2 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 2 - Player 2 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 //        assertEquals("p1", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertEquals(1, meteorShowerStateJSON.getRemovedComponents().get("p1").size());
 
@@ -510,6 +539,11 @@ class MeteorShowerTest {
 
         // Meteor 3 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 3 - Player 1 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 //        assertEquals("p2", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertEquals(1, meteorShowerStateJSON.getRemovedComponents().get("p2").size());
 
@@ -569,6 +603,11 @@ class MeteorShowerTest {
 
         // Meteor 3 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 3 - Player 2 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 //        assertEquals("p1", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents());
 
@@ -633,7 +672,11 @@ class MeteorShowerTest {
 
         // Meteor 4 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
-
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 4 - Player 1 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(6);
@@ -690,7 +733,11 @@ class MeteorShowerTest {
 
         // Meteor 4 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
-
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 4 - Player 2 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
@@ -752,7 +799,11 @@ class MeteorShowerTest {
 
         // Meteor 5 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
-
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 5 - Player 1 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(6);
@@ -808,6 +859,11 @@ class MeteorShowerTest {
 
         // Meteor 5 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 5 - Player 2 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -869,6 +925,11 @@ class MeteorShowerTest {
 
         // Meteor 6 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 6 - Player 1 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
@@ -925,6 +986,11 @@ class MeteorShowerTest {
 
         // Meteor 6 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 6 - Player 2 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -982,6 +1048,11 @@ class MeteorShowerTest {
 
         // Meteor 7 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 7 - Player 1 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
@@ -1040,6 +1111,11 @@ class MeteorShowerTest {
 
         // Meteor 7 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 7 - Player 2 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -1098,6 +1174,11 @@ class MeteorShowerTest {
 
         // Meteor 8 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 8 - Player 1 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
@@ -1155,6 +1236,11 @@ class MeteorShowerTest {
 
         // Meteor 8 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 8 - Player 2 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -1218,6 +1304,11 @@ class MeteorShowerTest {
 
         // Meteor 9 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 9 - Player 1 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
@@ -1273,6 +1364,11 @@ class MeteorShowerTest {
 
         // Meteor 9 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 9 - Player 2 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
@@ -1318,10 +1414,20 @@ class MeteorShowerTest {
             }
         );
         assertEquals(expectedShipP2ComponentCount.get(), actualShipP2ComponentCount.get());
+
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Last State");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
     }
 
     @Test
     void useCard_threePlayersButOneIsDisconnected() {
+
+        // Initializing the internal player list
+        this.meteorShower.initCardPlayers();
+
         MeteorShowerJSON meteorShowerJSON;
         CardStateJSON meteorShowerStateJSON;
         List<Player> playerList;

@@ -43,6 +43,8 @@ class SlaversTest {
 
     Slavers slavers;
 
+    ClientSlavers clientSlavers;
+
     ArrayList<ComponentHelper<LifeformType>> crewToRemove1;
     ArrayList<ComponentHelper<LifeformType>>  crewToRemove2;
     ArrayList<ComponentHelper<LifeformType>>  crewToRemove3;
@@ -125,6 +127,10 @@ class SlaversTest {
         assertNull(cardState.getPlayerNickname());
         assertFalse(cardState.getFirstRound());
         // =============================== //
+        // ======== WIDGET TESTING ======== //
+        clientSlavers = new ClientSlavers(cardState);
+        clientSlavers.generateWidget().printWidget();
+        // ================================ //
 
         // ======== DATA NECESSARY TO TEST THE CARD ======== //
         ArrayList<List<Integer>> doubleCannonActivated = new ArrayList<>();
@@ -175,6 +181,10 @@ class SlaversTest {
         assertFalse(cardState.getNeedsBoardUpdate());
         assertEquals("Player 1", cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TESTING ======== //
+        clientSlavers.updateCard(cardState);
+        clientSlavers.generateWidget().printWidget();
+        // ================================ //
 
         // Input gathering phase
         if (!slavers.hasFinished()) {
@@ -190,6 +200,10 @@ class SlaversTest {
         assertFalse(cardState.getNeedsBoardUpdate());
         assertEquals("Player 2", cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TESTING ======== //
+        clientSlavers.updateCard(cardState);
+        clientSlavers.generateWidget().printWidget();
+        // ================================ //
 
         assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
@@ -205,6 +219,10 @@ class SlaversTest {
         assertFalse(cardState.getNeedsBoardUpdate());
         assertEquals("Player 3", cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TESTING ======== //
+        clientSlavers.updateCard(cardState);
+        clientSlavers.generateWidget().printWidget();
+        // ================================ //
 
         assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
@@ -229,6 +247,10 @@ class SlaversTest {
         assertEquals(playerPositionsBefore.get(2) - 2 - 1, cardState.getUpdatedPositions().get("Player 3"));
         assertEquals("Player 4", cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TESTING ======== //
+        clientSlavers.updateCard(cardState);
+        clientSlavers.generateWidget().printWidget();
+        // ================================ //
 
         assertFalse(slavers.hasFinished());
         if (!slavers.hasFinished()) {
@@ -244,6 +266,10 @@ class SlaversTest {
         assertFalse(cardState.getNeedsBoardUpdate());
         assertEquals("Player 1", cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TESTING ======== //
+        clientSlavers.updateCard(cardState);
+        clientSlavers.generateWidget().printWidget();
+        // ================================ //
 
             // Phase in which the defeated players need to send the crew members they want to remove form the ship
             if (!slavers.hasFinished()) {
@@ -262,6 +288,10 @@ class SlaversTest {
         assertFalse(cardState.getNeedsBoardUpdate());
         assertEquals("Player 2", cardState.getPlayerNickname());
         // =============================== //
+        // ======== WIDGET TESTING ======== //
+        clientSlavers.updateCard(cardState);
+        clientSlavers.generateWidget().printWidget();
+        // ================================ //
 
         if (!slavers.hasFinished()) {
             slavers.useCard(new SlaversJSON("Player 2", false, crewToRemove2, new ArrayList<>()));
@@ -282,6 +312,10 @@ class SlaversTest {
         assertEquals("Player 2", cardState.getEliminatedPlayers().getFirst());
         assertEquals("Player 2", cardState.getPlayerNickname()); //TODO: Since the card has been used the getNextPlayer was not invoked, see what to do with isCardUsable
         // =============================== //
+        // ======== WIDGET TESTING ======== //
+        clientSlavers.updateCard(cardState);
+        clientSlavers.generateWidget().printWidget();
+        // ================================ //
 
 
 

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEpidemy;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
@@ -376,14 +377,31 @@ class EpidemyTest {
                 board
         );
 
+        ClientEpidemy clientEpidemy;
+
         assertEquals(6, shipPlayer1.getAllLifeforms().size());
         assertEquals(3, shipPlayer2.getAllLifeforms().size());
         assertEquals(5, shipPlayer3.getAllLifeforms().size());
 
+        // ======== WIDGET TESTING ========= //
+        clientEpidemy = new ClientEpidemy(epidemy.generateState());
+        clientEpidemy.generateWidget().printWidget();
+        // ================================= //
+
         epidemy.initCardPlayers();
+
+        // ======== WIDGET TESTING ========= //
+        clientEpidemy.updateCard(epidemy.generateState());
+        clientEpidemy.generateWidget().printWidget();
+        // ================================= //
 
         // (1.1) - P1 uses the card
         epidemy.useCard();
+
+        // ======== WIDGET TESTING ========= //
+        clientEpidemy.updateCard(epidemy.generateState());
+        clientEpidemy.generateWidget().printWidget();
+        // ================================= //
 
         expectedPlayer1Lifeforms = new ArrayList<>();
         expectedPlayer2Lifeforms = new ArrayList<>();
@@ -411,11 +429,16 @@ class EpidemyTest {
         assertTrue(shipPlayer3.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer3Lifeforms));
 
         // (1.2) - Verify that the card is not used after P2
-        state = epidemy.generateState();
+//        state = epidemy.generateState();
         assertFalse(epidemy.hasFinished());
 
         // (2.1) - P2 uses the card
         epidemy.useCard();
+
+        // ======== WIDGET TESTING ========= //
+        clientEpidemy.updateCard(epidemy.generateState());
+        clientEpidemy.generateWidget().printWidget();
+        // ================================= //
 
         expectedPlayer1Lifeforms = new ArrayList<>();
         expectedPlayer2Lifeforms = new ArrayList<>();
@@ -443,11 +466,17 @@ class EpidemyTest {
         assertTrue(shipPlayer3.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer3Lifeforms));
 
         // (2.2) - Verify that the card is not used after P2
-        state = epidemy.generateState();
+//        state = epidemy.generateState();
         assertFalse(epidemy.hasFinished());
 
         // (3) - P3 uses the card
         epidemy.useCard();
+
+        // ======== WIDGET TESTING ========= //
+        System.out.println("Last State");
+        clientEpidemy.updateCard(epidemy.generateState());
+        clientEpidemy.generateWidget().printWidget();
+        // ================================= //
 
         expectedPlayer1Lifeforms = new ArrayList<>();
         expectedPlayer2Lifeforms = new ArrayList<>();
@@ -472,8 +501,9 @@ class EpidemyTest {
         assertTrue(shipPlayer3.getAllLifeforms().stream().map(Lifeform::getLifeformType).toList().containsAll(expectedPlayer3Lifeforms));
 
         // (3.2) - Verify that the card IS used after P3
-        state = epidemy.generateState();
+//        state = epidemy.generateState();
         assertTrue(epidemy.hasFinished());
+
     }
 
     @Test

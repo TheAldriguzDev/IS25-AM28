@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientAbandonedShip;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedShipJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
@@ -202,8 +203,20 @@ class AbandonedShipTest {
         // Create the card that will be used in the simulation
         AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 5, 1, 3, board);
 
+        ClientAbandonedShip clientAbandonedShip;
+
+        // ======== WIDGET TESTING ======== //
+        clientAbandonedShip = new ClientAbandonedShip(abandonedShipCard.generateState());
+        clientAbandonedShip.generateWidget().printWidget();
+        // ================================ //
+
         // Init the card players
         abandonedShipCard.initCardPlayers();
+
+        // ======== WIDGET TESTING ======== //
+        clientAbandonedShip.updateCard(abandonedShipCard.generateState());
+        clientAbandonedShip.generateWidget().printWidget();
+        // ================================ //
 
         List<Player> playerList = new ArrayList<>(board.getPlayers());
         List<Integer> initialCursors = new ArrayList<>();
@@ -260,6 +273,11 @@ class AbandonedShipTest {
 
                 // Use the card
                 abandonedShipCard = (AbandonedShip) abandonedShipCard.useCard(abandonedShipJSON);
+
+                // ======== WIDGET TESTING ======== //
+                clientAbandonedShip.updateCard(abandonedShipCard.generateState());
+                clientAbandonedShip.generateWidget().printWidget();
+                // ================================ //
             }
         }
 
