@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
+import it.polimi.ingsw.is25am28.Network.Messages.FixShip;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -12,11 +13,18 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.util.HashMap;
 import java.util.Map;
 
+import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.clearTerminal;
+
 public class FixShipScreen extends Screen {
-    private WidgetTUI shipValidityStatusWidget;
+    private ClientShip currPlayerShip;
 
     public FixShipScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
+
+        // Retrieving the player ship
+        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(
+            (ClientShip ship) -> { this.currPlayerShip = ship; }
+        );
     }
 
     /**
@@ -24,19 +32,19 @@ public class FixShipScreen extends Screen {
      * ship's current validity status
      */
     private void printShipStatusWidget(boolean isShipValid) {
-        this.shipValidityStatusWidget = new WidgetTUI();
+        WidgetTUI shipValidityStatusWidget = new WidgetTUI();
 
         if (isShipValid) {
-            this.shipValidityStatusWidget
+            shipValidityStatusWidget
                     .appendString(COMPUTER_MSG_TAG + "Your ship is " + PrintUtils.addColor("VALID", ANSIColors.BRIGHT_GREEN) + "! Please wait for all players to fix theirs.")
-                    .addPadding(3, 3, 3, 3)
+                    .addPadding(1, 1, 1, 1)
                     .wrapWidgetWithBorder()
                     .printWidget();
         }
         else {
-            this.shipValidityStatusWidget
+            shipValidityStatusWidget
                     .appendString(COMPUTER_MSG_TAG + "Your ship is " + PrintUtils.addColor("INVALID", ANSIColors.BRIGHT_RED) + "! Fix your ship.")
-                    .addPadding(0, 1, 0, 1)
+                    .addPadding(1, 1, 1, 1)
                     .wrapWidgetWithBorder()
                     .printWidget();
 
@@ -49,23 +57,36 @@ public class FixShipScreen extends Screen {
      * Asks the player which component he wants to remove to fix his ship
      * and then sends the latter to the server for validation
      */
-    private void removeSingleComponent() {
+    private void removeComponent() throws Exception {
         Map.Entry<Integer, Integer> coordinates;
 
-        System.out.print("Insert coordinates of component to remove: ");
         coordinates = this.getComponentCoordinates();
 
         this.ctx = new CommandCTX(
         "fixShip",
             () -> {
-
+                this.currPlayerShip.removeComponent(
+                    coordinates.getKey(),
+                    coordinates.getValue()
+                );
             },
             () -> {
-
+                try {
+                    this.removeComponent();
+                }
+                catch (Exception e) {
+                    System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" was thrown inside 'removeComponent", ANSIColors.RED));
+                }
             }
         );
 
-        // Send message
+        this.client.sendMessage(
+            new FixShip(
+                this.model.getNickname(),
+                coordinates.getKey(),
+                coordinates.getValue()
+            )
+        );
     }
 
     /**
@@ -89,7 +110,7 @@ public class FixShipScreen extends Screen {
 
         // Getting the row --> i
         do {
-            System.out.print("Insert row where to put the selected component: ");
+            System.out.print("Insert row of the component to remove: ");
             try {
                 line = this.inputThread.waitForInput();
 
@@ -118,7 +139,7 @@ public class FixShipScreen extends Screen {
 
         // Getting the col --> j
         do {
-            System.out.print("Insert column where to put the selected component: ");
+            System.out.print("Insert column of the component to remove: ");
             try {
                 line = this.inputThread.waitForInput();
 
@@ -152,12 +173,30 @@ public class FixShipScreen extends Screen {
     }
 
     @Override
-    public void showShipFixing(FixShipDTO fixShip) {
-        if (fixShip.getPlayerWithInvalidShip().contains(this.model.getNickname())) {
+    public void showShipFixing(FixShipDTO fixShip) throws Exception {
+        System.out.println();
+        clearTerminal();
+
+        String playerNickname = this.model.getNickname();
+        String playerColorString = this.model.getAllClientPlayers().get(this.model.getNickname()).getColor().getColorString();
+
+        new WidgetTUI()
+            .appendString(PrintUtils.addColor(COMPUTER_MSG_TAG, ANSIColors.BRIGHT_CYAN) + "Viewing your ship")
+            .appendString("Player: " + PrintUtils.addColor(playerNickname, playerColorString))
+            .centerWidgetScreen()
+            .addPadding(0, 1, 0, 1)
+            .wrapWidgetWithBorder()
+            .printWidget();
+
+        this.model.getShipOfPlayer(playerNickname).ifPresent(
+            ship -> ship.getShipGridWidget().printWidget()
+        );
+
+        if (fixShip.getPlayerWithInvalidShip().contains(playerNickname)) {
             // This player's ship was deemed as invalid, therefore he must
             // fix it before the game can move on
             this.printShipStatusWidget(false);
-            this.removeSingleComponent();
+            this.removeComponent();
         }
         else {
             // If this player's ship, when validated, results as correct, then

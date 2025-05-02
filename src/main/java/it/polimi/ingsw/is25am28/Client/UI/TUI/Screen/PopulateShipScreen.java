@@ -11,7 +11,7 @@ public class PopulateShipScreen extends Screen {
     }
 
     @Override
-    public void showShipPopulate(PopulateShipDTO populateShip) {
+    public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
         System.out.println("Populate screen");
     }
 

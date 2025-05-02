@@ -101,6 +101,12 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             case SelectDeselectSubdeck data -> {
                 this.selectDeselectSubdeck(data.getPlayerNickname(), data.getSubdeck(), data.isSelectAction(), uuid);
             }
+            case FixShip data -> {
+                this.fixShip(data.getPlayerNickname(), data.getI(), data.getJ(), uuid);
+            }
+            case PopulateShip data -> {
+                this.populateShip(data.getPlayerNickname(), data.getLifeformToAdd(), uuid);
+            }
             default -> {
                 throw new Exception("The given Message is not supported");
             }

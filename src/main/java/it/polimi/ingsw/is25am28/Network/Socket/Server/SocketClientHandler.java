@@ -99,6 +99,12 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case SelectDeselectSubdeck data -> {
                     this.selectDeselectSubdeck(data.getPlayerNickname(), data.getSubdeck(), data.isSelectAction());
                 }
+                case FixShip data -> {
+                    this.fixShip(data.getPlayerNickname(), data.getI(), data.getJ());
+                }
+                case PopulateShip data -> {
+                    this.populateShip(data.getPlayerNickname(), data.getLifeformToAdd());
+                }
                 default -> {
                     throw new Exception("The given Message is not supported");
                 }
@@ -183,7 +189,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
-    public void fixShip(String playerNickname, Integer i, Integer j, UUID uuid) throws Exception {
+    public void fixShip(String playerNickname, Integer i, Integer j) throws Exception {
         try {
             this.controller.fixShip(playerNickname, i, j);
         }
@@ -192,7 +198,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
-    public void populateShip(String playerNickname, ComponentHelper<LifeformType> lifeFormToAdd, UUID uuid) throws Exception {
+    public void populateShip(String playerNickname, ComponentHelper<LifeformType> lifeFormToAdd) throws Exception {
         try {
             this.controller.populateShip(playerNickname, lifeFormToAdd);
         }
@@ -201,7 +207,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
-    public void playCard(String playerNickname, ActionJSON action, UUID uuid) throws Exception {
+    public void playCard(String playerNickname, ActionJSON action) throws Exception {
         try {
             this.controller.playCard(playerNickname, action);
         }

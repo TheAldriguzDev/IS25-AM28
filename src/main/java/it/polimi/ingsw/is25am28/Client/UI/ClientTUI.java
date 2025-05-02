@@ -356,12 +356,12 @@ public class ClientTUI implements ClientUI {
     }
 
     @Override
-    public void showShipFixing(FixShipDTO fixShip) {
+    public void showShipFixing(FixShipDTO fixShip) throws Exception {
 
     }
 
     @Override
-    public void showShipPopulate(PopulateShipDTO populateShip) {
+    public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
 
     }
 

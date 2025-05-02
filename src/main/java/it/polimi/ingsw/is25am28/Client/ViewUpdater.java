@@ -15,9 +15,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.Insuff
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
-import it.polimi.ingsw.is25am28.TUI.ShipConstructionTUIPage;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -104,7 +102,20 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(FixedComponentDTO state) throws Exception {
-        System.out.println("FIXED COMPONENT DTO ARRIVED");
+        synchronized (this.model) {
+            if (state.getPlayerNickname().equals(this.model.getNickname())) {
+                this.model.getState().removeComponentFromShip(
+                        state.getI(),
+                        state.getJ()
+                );
+
+                if (state.isShipFixed()) {
+                    this.model.getState().removePlayerFromFixList(state.getPlayerNickname());
+                }
+
+                this.ui.showShipFixing(this.model.getState().getFixShipDTO());
+            }
+        }
     }
 
     @Override
@@ -156,7 +167,11 @@ public class ViewUpdater implements StateVisitor {
             }
         }
 
-        this.ui.showShipFixing(state);
+        try {
+            this.ui.showShipFixing(state);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
@@ -170,7 +185,11 @@ public class ViewUpdater implements StateVisitor {
             }
         }
 
-        this.ui.showShipPopulate(state);
+        try {
+            this.ui.showShipPopulate(state);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

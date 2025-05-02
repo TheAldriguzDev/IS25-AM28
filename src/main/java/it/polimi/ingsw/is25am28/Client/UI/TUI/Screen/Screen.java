@@ -54,12 +54,12 @@ public class Screen implements ClientUI {
     }
 
     @Override
-    public void showShipFixing(FixShipDTO fixShip) {
+    public void showShipFixing(FixShipDTO fixShip) throws Exception {
         throw new UnsupportedOperationException("The 'showShipFixing' is not supported in the " + this + "screen");
     }
 
     @Override
-    public void showShipPopulate(PopulateShipDTO populateShip) {
+    public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
         throw new UnsupportedOperationException("The 'showShipPopulate' is not supported in the " + this + "screen");
     }
 

@@ -17,8 +17,8 @@ public interface ClientUI {
     void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws Exception;
     void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers);
     void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception;
-    void showShipFixing(FixShipDTO fixShip);
-    void showShipPopulate(PopulateShipDTO populateShip);
+    void showShipFixing(FixShipDTO fixShip) throws Exception;
+    void showShipPopulate(PopulateShipDTO populateShip) throws Exception;
 
     void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer);
 

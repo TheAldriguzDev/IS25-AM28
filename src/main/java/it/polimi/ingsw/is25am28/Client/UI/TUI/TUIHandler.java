@@ -77,7 +77,7 @@ public class TUIHandler implements ClientUI {
     }
 
     @Override
-    public void showShipFixing(FixShipDTO fixShip) {
+    public void showShipFixing(FixShipDTO fixShip) throws Exception {
         // Interrupt the inputThread to prevent actions from the player
         this.inputThread.interruptInputReader();
 
@@ -89,7 +89,7 @@ public class TUIHandler implements ClientUI {
     }
 
     @Override
-    public void showShipPopulate(PopulateShipDTO populateShip) {
+    public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
         // Interrupt the inputThread to prevent actions from the player
         this.inputThread.interruptInputReader();
 

@@ -480,7 +480,17 @@ public class ShipConstructionScreen extends Screen {
             case 3 -> {
                 // (3) - Finish Ship
                 if (!this.model.getState().getPlayerFinishedBuildingShip(this.model.getNickname())) {
-                    if (this.getShipFinishedConfirmation()) {
+                    boolean shipSendConfirmation = false;
+
+                    try {
+                        shipSendConfirmation = this.getShipFinishedConfirmation();
+                    }
+                    catch (InterruptedException e) {
+                        // A forced interrupt arrived
+                        return;
+                    }
+
+                    if (shipSendConfirmation) {
                         try {
                             // Sending the ship to the server
                             this.sendFinishedShip();
@@ -872,7 +882,7 @@ public class ShipConstructionScreen extends Screen {
      * @return TRUE if the current player has confirmed that he wants to send the ship,
      *         FALSE otherwise
      */
-    private boolean getShipFinishedConfirmation() {
+    private boolean getShipFinishedConfirmation() throws InterruptedException {
         boolean sendShip = false;
         boolean choiceMade = false;
         String input;
@@ -885,28 +895,22 @@ public class ShipConstructionScreen extends Screen {
             System.out.println();
             System.out.print("Do you want to send your ship? [" + yesMessage + "/" + noMessage + "] ");
 
-            try {
-                input = this.inputThread.waitForInput();
+            input = this.inputThread.waitForInput();
 
-                if (input == null) {
-                    // A force interrupt arrived
-                    break;
-                }
-
-                if (input.equalsIgnoreCase(yesMessage)) {
-                    sendShip = true;
-                    choiceMade = true;
-                }
-                else if (input.equalsIgnoreCase(noMessage)) {
-                    choiceMade = true;
-                }
-                else {
-                    System.out.println(PrintUtils.addColor(UNKNOWN_COMMAND_ERROR, ANSIColors.RED));
-                }
-            }
-            catch (InterruptedException e) {
+            if (input == null) {
                 // A force interrupt arrived
-                break;
+                throw new InterruptedException();
+            }
+
+            if (input.equalsIgnoreCase(yesMessage)) {
+                sendShip = true;
+                choiceMade = true;
+            }
+            else if (input.equalsIgnoreCase(noMessage)) {
+                choiceMade = true;
+            }
+            else {
+                System.out.println(PrintUtils.addColor(UNKNOWN_COMMAND_ERROR, ANSIColors.RED));
             }
         }
         while (!choiceMade);
@@ -917,44 +921,37 @@ public class ShipConstructionScreen extends Screen {
     /**
      * @return The current player's chosen tile index
      */
-    private int getTileIndex() {
+    private int getTileIndex() throws InterruptedException {
         int selectableComponentsAmount = this.model.getState().getConstructionShipComponents().size();
         String input;
         int idx = -1;
 
         do {
             System.out.print("Enter tile index (between 0 and " + (selectableComponentsAmount - 1) + "): ");
+            input = this.inputThread.waitForInput();
+
+            if (input == null) {
+                // A force interrupt arrived
+                throw new InterruptedException();
+            }
 
             try {
-                input = this.inputThread.waitForInput();
+                int tmpIndex = Integer.parseInt(input);
 
-                if (input == null) {
-                    // A force interrupt arrived
-                    break;
+                if (tmpIndex < 0 || tmpIndex >= selectableComponentsAmount) {
+                    System.out.println(PrintUtils.addColor("ERROR: Given index must be between 0 and " + (selectableComponentsAmount - 1) + ".", ANSIColors.RED));
                 }
-
-                try {
-                    int tmpIndex = Integer.parseInt(input);
-
-                    if (tmpIndex < 0 || tmpIndex >= selectableComponentsAmount) {
-                        System.out.println(PrintUtils.addColor("ERROR: Given index must be between 0 and " + (selectableComponentsAmount - 1) + ".", ANSIColors.RED));
-                    }
-                    else {
-                        idx = tmpIndex;
-                    }
-                }
-                catch (NumberFormatException e) {
-                    System.out.println(PrintUtils.addColor("ERROR: Invalid input. Must insert a number between 0 and " + (selectableComponentsAmount - 1) + " or 'r' to select it at random.", ANSIColors.RED));
-                }
-
-                if (idx >= 0 && !this.model.getState().getConstructionShipComponents().get(idx).isVisible()) {
-                    System.out.println(PrintUtils.addColor("ERROR: This component is already selected by someone else.", ANSIColors.RED));
-                    idx = -1;   // Reset to retry
+                else {
+                    idx = tmpIndex;
                 }
             }
-            catch (InterruptedException e) {
-                // A force interrupt arrived
-                break;
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("ERROR: Invalid input. Must insert a number between 0 and " + (selectableComponentsAmount - 1) + " or 'r' to select it at random.", ANSIColors.RED));
+            }
+
+            if (idx >= 0 && !this.model.getState().getConstructionShipComponents().get(idx).isVisible()) {
+                System.out.println(PrintUtils.addColor("ERROR: This component is already selected by someone else.", ANSIColors.RED));
+                idx = -1;   // Reset to retry
             }
         }
         while (idx < 0);
@@ -1160,7 +1157,7 @@ public class ShipConstructionScreen extends Screen {
      * @return A pair of integers that represents the (row, col) indexes
      *         where the player wants to place the selected component.
      */
-    private Map.Entry<Integer, Integer> getComponentCoordinates() {
+    private Map.Entry<Integer, Integer> getComponentCoordinates() throws InterruptedException {
         Map<Integer, Integer> coordinates = new HashMap<>();
         boolean validCoordinate;
         String line;
@@ -1182,7 +1179,7 @@ public class ShipConstructionScreen extends Screen {
 
                 if (line == null) {
                     // A force interrupt arrived
-                    break;
+                    throw new InterruptedException();
                 }
 
                 i = Integer.parseInt(line);
@@ -1196,10 +1193,6 @@ public class ShipConstructionScreen extends Screen {
                 System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please insert a number.", ANSIColors.RED));
                 validCoordinate = false;
             }
-            catch (InterruptedException e) {
-                // A force interrupt arrived
-                break;
-            }
         }
         while (!validCoordinate);
 
@@ -1211,7 +1204,7 @@ public class ShipConstructionScreen extends Screen {
 
                 if (line == null) {
                     // A force interrupt arrived
-                    break;
+                    throw new InterruptedException();
                 }
 
                 j = Integer.parseInt(line);
@@ -1224,10 +1217,6 @@ public class ShipConstructionScreen extends Screen {
             catch (NumberFormatException e) {
                 System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please insert a number.", ANSIColors.RED));
                 validCoordinate = false;
-            }
-            catch (InterruptedException e) {
-                // A force interrupt arrived
-                break;
             }
         }
         while (!validCoordinate);
