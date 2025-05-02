@@ -263,6 +263,9 @@ public class Smugglers extends EventCard {
             smugglersStateJSON.setBlueItems(blueItems);
             smugglersStateJSON.setGreenItems(greenItems);
         }
+
+        smugglersStateJSON.setCardEnded(this.hasFinished());
+
         return smugglersStateJSON;
     }
 

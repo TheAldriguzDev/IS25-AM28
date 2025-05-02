@@ -195,6 +195,9 @@ public class AbandonedStation extends EventCard {
 
             cardState.setStationResources(itemList);
         }
+
+        cardState.setCardEnded(this.hasFinished());
+
         return cardState;
     }
 

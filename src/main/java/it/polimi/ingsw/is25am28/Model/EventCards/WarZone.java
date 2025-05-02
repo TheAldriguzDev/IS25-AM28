@@ -760,6 +760,8 @@ public class WarZone extends EventCard {
         cardState.setPlayersFirePower(playersFirePowerMap);
         cardState.setPlayersEnginePower(playersEnginePowerMap);
 
+        cardState.setCardEnded(this.hasFinished());
+
         return cardState;
     }
 

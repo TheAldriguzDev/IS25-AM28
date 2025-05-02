@@ -492,6 +492,9 @@ public class MeteorShower extends EventCard {
             cardState.setCardName(this.getCardName());
             cardState.setCardLevel(this.cardLevel);
         }
+
+        cardState.setCardEnded(this.hasFinished());
+
         return cardState;
     }
 

@@ -238,6 +238,9 @@ public class Slavers extends EventCard {
             slaversStateJSON.setMovementSteps(this.movementSteps);
             slaversStateJSON.setTakenCrew(this.takenCrew);
         }
+
+        slaversStateJSON.setCardEnded(this.hasFinished());
+
         return slaversStateJSON;
     }
 

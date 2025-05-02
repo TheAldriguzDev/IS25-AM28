@@ -5,7 +5,6 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
 public abstract class ClientEventCard implements WidgetTUIGenerator {
-    // TODO: need a flag in the majority of the serverEventCards for the sake of not sending the entire card's static information every time that a different player input is required
 
     protected final int id;
     protected String playerNickname;
@@ -29,5 +28,5 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     /*This method generated a widget with the relevant card's info*/
     public abstract WidgetTUI generateWidget();
     // TODO: the states need another variable so that the generate widget (and the clients) know to not display/send Input in response to the last state of a card
-    // TODO: Place the current/target palyer in a separated bordered widget
+    // TODO: Place the current/target player in a separated bordered widget
 }

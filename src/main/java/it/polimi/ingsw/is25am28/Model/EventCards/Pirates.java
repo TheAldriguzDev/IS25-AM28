@@ -394,6 +394,9 @@ public class Pirates extends EventCard {
             piratesStateJSON.setGivenCredits(this.givenCredits);
             piratesStateJSON.setMovementSteps(this.movementSteps);
         }
+
+        piratesStateJSON.setCardEnded(this.hasFinished());
+
         return piratesStateJSON;
     }
 

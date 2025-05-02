@@ -196,6 +196,9 @@ public class AbandonedShip extends EventCard {
             cardState.setGivenCredits(this.givenCredits);
             cardState.setMovementSteps(this.movementStep);
         }
+
+        cardState.setCardEnded(this.hasFinished());
+
         return cardState;
     }
 

@@ -104,6 +104,9 @@ public class Stardust extends EventCard {
             stardustStateJSON.setCardName(getCardName());
             stardustStateJSON.setCardLevel(getCardLevel());
         }
+
+        stardustStateJSON.setCardEnded(this.hasFinished());
+
         return stardustStateJSON;
     }
 
