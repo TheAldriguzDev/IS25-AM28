@@ -88,6 +88,8 @@ public class WarZone extends EventCard {
         this.eliminatedPlayers = new ArrayList<>();
 
         this.previousPlayerRemovedComponents = new ArrayList<>();
+
+        this.droppedResources = new HashMap<>();
     }
 
     /**
@@ -437,7 +439,9 @@ public class WarZone extends EventCard {
     private WarZone handleLossItems(Player player, WarZoneJSON warZoneJSON) throws IllegalArgumentException {
         // Get the list of components and resources to be dropped
         List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>(warZoneJSON.getItemsToBeRemoved());
-        this.droppedResources = Map.of(player.getNickname(), itemsToBeRemoved);
+        if (!itemsToBeRemoved.isEmpty()) {
+            this.droppedResources.put(player.getNickname(), itemsToBeRemoved);
+        }
 
         // This check cannot be made, if the list sent by the player is smaller than requiredItems, the player's batteries must be taken instead
 //        if (itemsToBeRemoved.size() != this.requiredItems) {
@@ -456,10 +460,14 @@ public class WarZone extends EventCard {
 
         // Le batterie da rimuovere solo nel caso la lista di elementi da rimuovere non isa abbastanza grande, il client farà il controllo di fare la lista di elementi da togliore il piu grande possibile se non è possibile raggiungere una grandezza pari a takenItems
         if (player.getShip().getAvailableEnergy() >= (requiredItems - itemsToBeRemoved.size())) {
-            this.removedBatteries = Map.of(player.getNickname(),requiredItems - itemsToBeRemoved.size());
+            if (requiredItems - itemsToBeRemoved.size() > 0) {
+                this.removedBatteries.put(player.getNickname(), requiredItems - itemsToBeRemoved.size());
+            }
             player.getShip().consumeEnergy(requiredItems - itemsToBeRemoved.size());
         } else {
-            this.removedBatteries = Map.of(player.getNickname(),player.getShip().getAvailableEnergy());
+            if (player.getShip().getAvailableEnergy() > 0) {
+                this.removedBatteries.put(player.getNickname(), player.getShip().getAvailableEnergy());
+            }
             player.getShip().consumeEnergy(player.getShip().getAvailableEnergy());
         } // Se viene presa più energia di quanta ne è disponibile semplicemente va a 0
 

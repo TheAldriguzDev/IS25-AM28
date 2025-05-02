@@ -59,7 +59,6 @@ public class ClientWarZone extends ClientEventCard {
                     }
                 }
                 case "ShootingSequence" -> {
-                    // TODO: Control on Affected Player
                     cardInfoWidget.appendString("==== *PLASMASHOT IMAGE* ===="); // ALSO INCLUDE SEQUENCE
                         if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
                             cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");

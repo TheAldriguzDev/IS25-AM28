@@ -305,7 +305,7 @@ class WarZoneTest {
     * The lowest enginePower player should lose 3 items (starting from the most valuable ones) (ship 4)
     * The lowest crewCount player should be exposed to 4 plasmaShots (ship 2)*/
     @Test
-    public void test_against_WarZoneCard_2() {
+    public void test_against_WarZoneCard_2() { // TODO: Test the generateState here
         // WarZone card 2 initialization
         List<PlasmaShot> shootingSequence = new ArrayList<>();
         shootingSequence.add(new PlasmaShot(1, 0)); // dall'alto, piccolo
