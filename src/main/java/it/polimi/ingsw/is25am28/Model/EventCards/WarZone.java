@@ -707,6 +707,10 @@ public class WarZone extends EventCard {
                             cardState.setNeedsUpdatedRemovedComponents(true);
                             cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
                         }
+                        if (current_plasmaShot < this.shootingSequence.size()) {
+                            PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
+                            cardState.setCurrPlasmaShotDescriptor(Map.of("shotSize", currPlasmaShot.getSize(), "shotDirection", currPlasmaShot.getOrientation()));//<>(currPlasmaShot.getSize(), currPlasmaShot.getOrientation()));
+                        }
                         setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
                     }
                     case LOSSITEMS -> {
@@ -739,10 +743,7 @@ public class WarZone extends EventCard {
 
 
         }
-        if (current_plasmaShot < this.shootingSequence.size()) {
-            PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
-            cardState.setCurrPlasmaShotDescriptor(Map.of("shotSize", currPlasmaShot.getSize(), "shotDirection", currPlasmaShot.getOrientation()));//<>(currPlasmaShot.getSize(), currPlasmaShot.getOrientation()));
-        }
+
         cardState.setDiceThrowResult(this.diceResult);
 
         Map<String, Float> playersFirePowerMap = this.playersFirePower.entrySet().stream()

@@ -261,29 +261,31 @@ class WarZoneTest {
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
+                // Player 1 has to send shields to activate for each plasmashot
+                // Player 1 will block the first small plasmashot from behing, the second one, headet to the ship's core, will eliminate him
+                warzone.forceDiceThrow(6); // on column 6 // will be blocked by the shield
+
                 // ======== WIDGET TESTING ======== //
                 System.out.println("Shields input p1");
                 clientWarZone.updateCard(warzone.generateState());
                 clientWarZone.generateWidget().printWidget();
                 // ================================ //
 
-                // Player 1 has to send shields to activate for each plasmashot
-                // Player 1 will block the first small plasmashot from behing, the second one, headet to the ship's core, will eliminate him
-                warzone.forceDiceThrow(6); // on column 6 // will be blocked by the shield
                 actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate1, doubleCannons_empty);
                 warzone.useCard(actionJSON);
                 assertFalse(warzone.hasFinished());
 
+                assertEquals(1, board.getEliminatedPlayers().size()); // player 1 not eliminated
+                //assertEquals(); for the batteries // Batteries consumed by shields already tested in the other test
+                warzone.forceDiceThrow(6);
+
                 // ======== WIDGET TESTING ======== //
                 System.out.println("Shields input p1");
                 clientWarZone.updateCard(warzone.generateState());
                 clientWarZone.generateWidget().printWidget();
                 // ================================ //
 
-                assertEquals(1, board.getEliminatedPlayers().size()); // player 1 not eliminated
-                //assertEquals(); for the batteries // Batteries consumed by shields already tested in the other test
 
-                warzone.forceDiceThrow(6);
                 actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
                 warzone.useCard(actionJSON);
                 assertTrue(warzone.hasFinished());

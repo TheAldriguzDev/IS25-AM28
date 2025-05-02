@@ -27,6 +27,5 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
 
     /*This method generated a widget with the relevant card's info*/
     public abstract WidgetTUI generateWidget();
-    // TODO: the states need another variable so that the generate widget (and the clients) know to not display/send Input in response to the last state of a card
     // TODO: Place the current/target player in a separated bordered widget
 }

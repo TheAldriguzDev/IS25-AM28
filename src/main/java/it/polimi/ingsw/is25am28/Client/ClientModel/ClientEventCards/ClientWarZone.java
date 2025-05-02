@@ -36,8 +36,8 @@ public class ClientWarZone extends ClientEventCard {
         this.playerNickname = cardState.getPlayerNickname(); // If present, the current action (not the general card thumbnail) will be shown
         this.affectedPlayer = cardState.getAffectedPlayer();
         this.currActionIndex = cardState.getCurrActionIndex(); // Will be used in the generateWidget to determine what to display
-        this.currentPlasmaShot = cardState.getCurrPlasmaShotDescriptor(); //NOT DIFFERENTIAL
-        this.diceThrowResult = cardState.getDiceThrowResult(); // NOT DIFFERENTIAL
+        this.currentPlasmaShot = cardState.getCurrPlasmaShotDescriptor();
+        this.diceThrowResult = cardState.getDiceThrowResult();
     }
 
     @Override
@@ -47,35 +47,42 @@ public class ClientWarZone extends ClientEventCard {
 
         cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
-
-
         if (this.playerNickname != null) {
             cardInfoWidget.appendString("Current Player: " + playerNickname);
-            cardWidget.appendString("currActionIndex: " + currActionIndex);
-            cardWidget.appendString("currAction: " + actionAndConsequences.get(currActionIndex).getFirst());
+            cardWidget.appendString("currAction: " + actionAndConsequences.get(currActionIndex).getFirst()); // SWITCH CASE TO WRITE IN A BETTER WAY
             cardWidget.appendString("currConsequence: " + actionAndConsequences.get(currActionIndex).getLast());
             switch (actionAndConsequences.get(currActionIndex).getLast()) {
-                case "RequiredCrew" -> cardInfoWidget.appendString("Required Crew: " + requiredCrew);
+                case "RequiredCrew" -> {
+                    cardInfoWidget.appendString("==== *CHAINS IMAGE* ====");
+                    if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+                        cardInfoWidget.appendString("Required Crew: " + requiredCrew);
+                    }
+                }
                 case "ShootingSequence" -> {
                     // TODO: Control on Affected Player
-                    cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");
-                    if (this.currentPlasmaShot != null) {
-                        switch (this.currentPlasmaShot.get("shotDirection")) {
-                            case 0 -> cardInfoWidget.appendString("Inbound Direction: ABOVE");
-                            case 1 -> cardInfoWidget.appendString("Outbound Direction: RIGHT");
-                            case 2 -> cardInfoWidget.appendString("Outbound Direction: BELOW");
-                            case 3 -> cardInfoWidget.appendString("Inbound Direction: LEFT");
+                    cardInfoWidget.appendString("==== *PLASMASHOT IMAGE* ===="); // ALSO INCLUDE SEQUENCE
+                        if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+                            cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");
+                            switch (this.currentPlasmaShot.get("shotDirection")) {
+
+                                case 0 -> cardInfoWidget.appendString("Inbound Direction: ABOVE");
+                                case 1 -> cardInfoWidget.appendString("Outbound Direction: RIGHT");
+                                case 2 -> cardInfoWidget.appendString("Outbound Direction: BELOW");
+                                case 3 -> cardInfoWidget.appendString("Inbound Direction: LEFT");
+                            }
+                            if (this.currentPlasmaShot.get("shotSize") == 1) {
+                                cardInfoWidget.appendString("Size: SMALL PLASMASHOT");
+                            } else {
+                                cardInfoWidget.appendString("Size: BIG PLASMASHOT");
+                            }
+                            cardInfoWidget.appendString("Dice Throw Result: " + this.diceThrowResult);
                         }
-                        if (this.currentPlasmaShot.get("shotSize") == 1) {
-                            cardInfoWidget.appendString("Size: SMALL PLASMASHOT");
-                        } else {
-                            cardInfoWidget.appendString("Size: BIG PLASMASHOT");
-                        }
-                        cardInfoWidget.appendString("Dice Throw Result: " + this.diceThrowResult);
-                    } // TEMPORARY SOLUTION WHILE THE PLASMASHOT IS NOT DIFFERENTIAL
                 }
                 case "LossItems" -> {
-                    cardInfoWidget.appendString("RequiredResorces: " + requiredResources);
+                    cardInfoWidget.appendString("==== *ITEM IMAGE* ====");
+                    if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+                        cardInfoWidget.appendString("RequiredResorces: " + requiredResources);
+                    }
                 }
             }
         } else {
@@ -83,7 +90,7 @@ public class ClientWarZone extends ClientEventCard {
             cardInfoWidget.appendString("Card Level: " + this.cardLevel);
         }
 
-        if (this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+        if (this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) { // NOT NECESSARY IN PRINT, ONLY IN USECARD
             cardInfoWidget.appendString("Affected Player: " + affectedPlayer);
         }
 

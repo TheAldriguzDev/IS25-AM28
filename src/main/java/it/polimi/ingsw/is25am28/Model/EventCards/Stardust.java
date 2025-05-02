@@ -45,7 +45,7 @@ public class Stardust extends EventCard {
                         this.cardUsed(); // Mark the card as used
                         int tmp = getBoard().getEliminatedPlayers().size();
                         this.getBoard().validatePlayersPosition();
-                        for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
+                        for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // FIXME: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
                             this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
                         }
                     } else {
