@@ -16,6 +16,7 @@ import it.polimi.ingsw.is25am28.Network.VirtualView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Arrays;
 import java.util.UUID;
 
 /**

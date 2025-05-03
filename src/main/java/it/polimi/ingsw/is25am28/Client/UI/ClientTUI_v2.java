@@ -1,13 +1,10 @@
 package it.polimi.ingsw.is25am28.Client.UI;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
@@ -202,6 +199,16 @@ public class ClientTUI_v2 implements ClientUI {
 
     @Override
     public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
+
+    }
+
+    @Override
+    public void showCardRound(CardRoundDTO cardRound) throws Exception {
+
+    }
+
+    @Override
+    public void showEndGame(EndGameDTO endGame) {
 
     }
 

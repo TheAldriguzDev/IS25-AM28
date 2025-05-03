@@ -26,4 +26,13 @@ public enum LifeformType {
     public int getPowerBoost() {
         return powerBoost;
     }
+
+    @Override
+    public String toString() {
+        return switch (this) {
+            case ASTRONAUT -> "ASTRONAUT";
+            case PURPLE_ALIEN -> "PURPLE_ALIEN";
+            case BROWN_ALIEN -> "BROWN_ALIEN";
+        };
+    }
 }

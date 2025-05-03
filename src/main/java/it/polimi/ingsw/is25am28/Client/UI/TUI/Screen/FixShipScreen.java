@@ -31,7 +31,7 @@ public class FixShipScreen extends Screen {
      * Generates a widget that shows to this player his
      * ship's current validity status
      */
-    private void printShipStatusWidget(boolean isShipValid) {
+    private void printShipFixStatusWidget(boolean isShipValid) {
         WidgetTUI shipValidityStatusWidget = new WidgetTUI();
 
         if (isShipValid) {
@@ -188,21 +188,19 @@ public class FixShipScreen extends Screen {
             .wrapWidgetWithBorder()
             .printWidget();
 
-        this.model.getShipOfPlayer(playerNickname).ifPresent(
-            ship -> ship.getShipGridWidget().printWidget()
-        );
+        this.currPlayerShip.getShipGridWidget().printWidget();
 
         if (fixShip.getPlayerWithInvalidShip().contains(playerNickname)) {
             // This player's ship was deemed as invalid, therefore he must
             // fix it before the game can move on
-            this.printShipStatusWidget(false);
+            this.printShipFixStatusWidget(false);
             this.removeComponent();
         }
         else {
             // If this player's ship, when validated, results as correct, then
             // he must wait for all other players (if there are any in the first place)
             // to finish fixing their own ship
-            this.printShipStatusWidget(true);
+            this.printShipFixStatusWidget(true);
         }
     }
 }

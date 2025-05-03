@@ -1,9 +1,9 @@
 package it.polimi.ingsw.is25am28.Network.Messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
@@ -14,6 +14,7 @@ public final class PopulateShip implements Message {
     private String playerNickname;
     private ComponentHelper<LifeformType> lifeformToAdd;
 
+    @JsonCreator
     public PopulateShip(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("lifeformToAdd") ComponentHelper<LifeformType> lifeformToAdd

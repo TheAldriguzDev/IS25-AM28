@@ -22,14 +22,14 @@ public interface StateVisitor {
     void visit (PopulateShipComponentDTO state) throws Exception;
     void visit (PlayerEndedShipDTO state) throws Exception;
     void visit (TimerDTO state) throws Exception;
-    void visit (FixShipDTO state);
-    void visit (PopulateShipDTO state);
+    void visit (FixShipDTO state) throws Exception;
+    void visit (PopulateShipDTO state) throws Exception;
 
     // ===== CARD ROUND ===== //
-    void visit (CardRoundDTO state);
+    void visit (CardRoundDTO state) throws Exception;
 
     // ===== END GAME ===== //
-    void visit (EndGameDTO state);
+    void visit (EndGameDTO state) throws Exception;
 
     // ===== UTILITY ===== //
     void visit (DisconnectedPlayerDTO state);

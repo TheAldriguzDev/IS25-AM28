@@ -16,13 +16,14 @@ public class InsufficientPlayerScreen extends Screen {
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
         WidgetTUI waitingForPlayersWidget = new WidgetTUI();
 
+        System.out.println();
         clearTerminal();
 
         waitingForPlayersWidget.appendString(COMPUTER_MSG_TAG + "Current game is too empty! (Insufficient Players)");
         waitingForPlayersWidget.appendString(COMPUTER_MSG_TAG + "Waiting for players...");
         waitingForPlayersWidget.appendString(COMPUTER_MSG_TAG + "Time until auto-win: " + (insufficientPlayer.getCountdown() / 1000) + "s");
 
-        waitingForPlayersWidget.addPadding(1, 1, 1, 1);
+        waitingForPlayersWidget.addPadding(0, 1, 0, 1);
         waitingForPlayersWidget.wrapWidgetWithBorder();
         waitingForPlayersWidget.printWidget();
     }

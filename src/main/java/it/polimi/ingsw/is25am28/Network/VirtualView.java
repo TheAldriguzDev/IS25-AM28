@@ -11,11 +11,11 @@ import it.polimi.ingsw.is25am28.Network.Messages.Message;
 
 public interface VirtualView {
 
-    public void sendMessage(Message message) throws Exception;
+    void sendMessage(Message message) throws Exception;
 
-    public void updateView(StateDTO state) throws Exception;
+    void updateView(StateDTO state) throws Exception;
 
-    public void updateState(Answer answer) throws Exception;
+    void updateState(Answer answer) throws Exception;
 
-    public void reportError(ErrorAnswer error) throws Exception;
+    void reportError(ErrorAnswer error) throws Exception;
 }

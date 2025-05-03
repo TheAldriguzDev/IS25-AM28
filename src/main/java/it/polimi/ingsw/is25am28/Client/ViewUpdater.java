@@ -1,11 +1,8 @@
 package it.polimi.ingsw.is25am28.Client;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientFixShipState;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPopulateShipState;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
@@ -13,10 +10,18 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.Optional;
+
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen.COMPUTER_MSG_TAG;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
+import static it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType.ASTRONAUT;
 
 /**
  * This class use the VisitorPattern to save useful information of each state and then show this information in
@@ -120,7 +125,38 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(PopulateShipComponentDTO state) throws Exception {
-        System.out.println("POPULATE SHIP COMPONENT DTO ARRIVED");
+        synchronized (this.model) {
+            this.model.getShipOfPlayer(state.getPlayerNickname()).ifPresent(
+                (ClientShip ship) -> {
+                    if (ship.isShipPopulated()) {
+                        this.model.getState().addPlayerToPopulateList(state.getPlayerNickname());
+                    }
+
+                    state.getComponent().getItem().ifPresent(
+                        (LifeformType lfType) -> {
+                            ship.addLifeformToCabin(
+                                state.getComponent().getI(),
+                                state.getComponent().getJ(),
+                                lfType
+                            );
+
+                            // Do it one more time if it's an ASTRONAUT (since they are added in pairs)
+                            if (lfType == ASTRONAUT) {
+                                ship.addLifeformToCabin(
+                                    state.getComponent().getI(),
+                                    state.getComponent().getJ(),
+                                    lfType
+                                );
+                            }
+                        }
+                    );
+                }
+            );
+
+            if (state.isShipPopulated()) {
+                this.model.getState().addPlayerToPopulateList(state.getPlayerNickname());
+            }
+        }
     }
 
     /**
@@ -157,55 +193,54 @@ public class ViewUpdater implements StateVisitor {
     }
 
     @Override
-    public void visit(FixShipDTO state) {
-        // Set the model state to the ShipConstructionState that will initialize all the components
+    public void visit(FixShipDTO state) throws Exception {
+        // Set the model state to the ClientFixShipState
         synchronized (this.model) {
-            try {
-                this.model.setState(new ClientFixShipState(this.model, state));
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+            this.model.setState(new ClientFixShipState(this.model, state));
         }
 
-        try {
-            this.ui.showShipFixing(state);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.ui.showShipFixing(state);
     }
 
     @Override
-    public void visit(PopulateShipDTO state) {
-        // Set the model state to the ShipConstructionState that will initialize all the components
+    public void visit(PopulateShipDTO state) throws Exception {
+        // Set the model state to the ClientPopulateShipState
         synchronized (this.model) {
-            try {
-                this.model.setState(new ClientPopulateShipState(this.model, state));
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+            this.model.setState(new ClientPopulateShipState(this.model, state));
         }
 
-        try {
-            this.ui.showShipPopulate(state);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        this.ui.showShipPopulate(state);
     }
 
     @Override
-    public void visit(CardRoundDTO state) {
+    public void visit(CardRoundDTO state) throws Exception {
+        System.out.println();
         System.out.println("MOVE TO CARD ROUND PHASE");
+        System.out.println();
+
+        synchronized (this.model) {
+            this.model.setState(new ClientCardRoundState(this.model, state));
+        }
+
+        this.ui.showCardRound(state);
     }
 
     @Override
     public void visit(EndGameDTO state) {
-        System.out.println("END GAMEEEEEE");
+        this.ui.showEndGame(state);
     }
 
     // TODO: mark the given player as disconnected
     @Override
     public void visit(DisconnectedPlayerDTO state) {
-        System.out.println("disconnected player updated");
+        System.out.println();
+        clearTerminal();
+
+        new WidgetTUI()
+                .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getNickname() + " disconnected from the game.", ANSIColors.BRIGHT_MAGENTA))
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder()
+                .printWidget();
     }
 
     // TODO: Make the transition to the page where no players are connected --> we are waiting for reconnection

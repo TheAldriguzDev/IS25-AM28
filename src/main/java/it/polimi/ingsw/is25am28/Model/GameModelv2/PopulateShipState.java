@@ -5,10 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PopulateShipComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfShipException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.TooManyAliensException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
@@ -17,15 +14,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class PopulateShipState extends State {
-    private List<String> playersReady;
+    private final List<String> playersReady;
 
     public PopulateShipState(GameModel model) {
         super(model);
-        playersReady = new ArrayList<>();
+        this.playersReady = new ArrayList<>();
+
+        for (Player p : model.getPlayers().values()) {
+            p.getShip().generateComponentSubLists();
+
+            if (p.getShip().isShipPopulated()) {
+                this.playersReady.add(p.getNickname());
+            }
+        }
     }
 
     public PopulateShipComponentDTO populateShip(String player, ComponentHelper<LifeformType> lifeformToAdd) throws IllegalArgumentException, ShipPopulationFailException {
-        if (playersReady.contains(player)) {
+        if (this.playersReady.contains(player)) {
             throw new IllegalArgumentException("The given player has already populated the ship");
         }
 
@@ -40,7 +45,9 @@ public final class PopulateShipState extends State {
         if (lifeformToAdd.getItem().isPresent()) {
             try {
                 pShip.addLifeformToCabin(lifeformToAdd.getI(), lifeformToAdd.getJ(), lifeformToAdd.getItem().get());
-            } catch(TooManyAliensException | OutOfGridException | IllegalArgumentException | OutOfShipException e){
+            }
+            catch (TooManyAliensException | OutOfGridException | IllegalArgumentException | OutOfShipException |
+                   NoSupportVitalFoundException e){
                 throw new ShipPopulationFailException(player);
             }
         }
@@ -57,7 +64,7 @@ public final class PopulateShipState extends State {
         }
 
         state.setStateName(this.toString());
-        state.setEventType(ShipConstructionType.TILE_EVENT.toString());
+        state.setEventType(ShipConstructionType.POPULATE_EVENT.toString());
         return state;
     }
 
@@ -72,7 +79,7 @@ public final class PopulateShipState extends State {
     @Override
     public StateDTO generateState() {
         PopulateShipDTO state = new PopulateShipDTO()
-                .setPlayersReady(playersReady);
+                .setPlayersReady(this.playersReady);
 
         state.setStateName(this.toString());
 

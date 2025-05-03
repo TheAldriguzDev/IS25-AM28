@@ -32,6 +32,10 @@ public final class PopulateShipDTO extends StateDTO implements Serializable  {
 
     @Override
     public void accept(StateVisitor visitor) {
-        visitor.visit(this);
+        try {
+            visitor.visit(this);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

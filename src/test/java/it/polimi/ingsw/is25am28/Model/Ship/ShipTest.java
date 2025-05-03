@@ -1,10 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.Ship;
 
 import it.polimi.ingsw.is25am28.Model.Components.*;
-import it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.InsufficientEnergyException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.NullComponentException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.*;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
@@ -1542,7 +1539,7 @@ class ShipTest {
         ship.addComponent(new Cabin(connectors, false), 6, 8);  // Adding another cabin to the brown vital unit
         ship.generateComponentSubLists();
 
-        ship.addLifeformToCabin(6, 8, PURPLE_ALIEN);
+        NoSupportVitalFoundException nsvfe = assertThrows(NoSupportVitalFoundException.class, () -> { ship.addLifeformToCabin(6, 8, PURPLE_ALIEN); });
         assertEquals(0, ((Cabin) ship.getComponent(6, 8)).getInhabitants().size());
     }
 

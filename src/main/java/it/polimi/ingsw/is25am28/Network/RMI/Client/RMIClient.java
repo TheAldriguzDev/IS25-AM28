@@ -4,13 +4,10 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
@@ -165,7 +162,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
         switch (state) {
             // Update the current state of the game
-            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _ -> { // TODO: Timer should be removed from here
+            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PopulateShipComponentDTO _ -> { // TODO: Timer should be removed from here
                 future = CompletableFuture.runAsync(() -> {
                     try {
                         state.accept(viewUpdater);
@@ -264,7 +261,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                     }
                 });
             }
-            case FixShipDTO _, PopulateShipDTO _ -> {
+            case FixShipDTO _, PopulateShipDTO _, CardRoundDTO _ -> {
                 CompletableFuture<Void> completableFuture;
 
                 completableFuture = CompletableFuture.runAsync(

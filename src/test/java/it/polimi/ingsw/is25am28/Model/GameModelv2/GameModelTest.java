@@ -316,7 +316,10 @@ class GameModelTest {
         assertTrue(populateShipDTO.isShipPopulated());
         assertEquals(1, populateStates.size());
 
-        populateStates = model.populateShip("Player 3", addBrownAlien);
+        // NOTE: P3 cannot add brown aliens since no brown vitals are present on his ship
+        //       or attached to an empty cabin (in the case the former condition was false)
+        // populateStates = model.populateShip("Player 3", addBrownAlien);
+        populateStates = model.populateShip("Player 3", addAstronauts);
         populateShipDTO = (PopulateShipComponentDTO) populateStates.getFirst();
         assertTrue(populateShipDTO.isShipPopulated());
         assertEquals(1, populateStates.size());
