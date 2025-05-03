@@ -16,8 +16,8 @@ public class MeteorShowerJSON extends ActionJSON {
     @JsonCreator
     public MeteorShowerJSON(
             @JsonProperty("playerNickname") String playerNickname,
-            @JsonProperty("currMeteorIndex") int currMeteorIndex,
-            @JsonProperty("diceThrowResult") int diceThrowResult,
+            @JsonProperty("currMeteorIndex") int currMeteorIndex, // FIXME: Remove this field
+            @JsonProperty("diceThrowResult") int diceThrowResult, // FIXME: REMOVE this field
             @JsonProperty("shieldsCoordinates") List<List<Integer>> shieldsCoordinates,
             @JsonProperty("cannonsCoordinates") List<List<Integer>> cannonsCoordinates
     ) {

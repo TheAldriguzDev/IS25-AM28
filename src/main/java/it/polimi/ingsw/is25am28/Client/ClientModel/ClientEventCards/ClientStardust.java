@@ -1,6 +1,10 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
@@ -13,14 +17,22 @@ import java.util.Random;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientStardust extends ClientEventCard {
-    //private Map<String, Integer> updatedPositions;
 
-    public ClientStardust(CardStateJSON StardustCardState) {
-        super(StardustCardState);
+
+
+    public ClientStardust(CardStateJSON StardustCardState, InputThread inputThread, ClientModel model) {
+        super(StardustCardState, inputThread, model);
     }
 
     @Override
-    public void useCard() {}
+    public ActionJSON useCard() { // TODO: NEEDS ACK
+        StardustJSON response = new StardustJSON();
+
+        response.setPlayerNickname(this.playerNickname);
+        this.inputAck();
+
+        return response;
+    }
 
     @Override
     public void updateCard(CardStateJSON cardState) {

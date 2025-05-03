@@ -1,5 +1,8 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -21,8 +24,8 @@ public class ClientSmugglers extends ClientEventCard {
 //    List<String> defeatedPlayers;
 
 
-    public ClientSmugglers(CardStateJSON smugglersState) {
-        super(smugglersState);
+    public ClientSmugglers(CardStateJSON smugglersState, InputThread inputThread, ClientModel model) {
+        super(smugglersState, inputThread, model);
         this.requiredFirepower = smugglersState.getRequiredFirepower();
         this.movementSteps = smugglersState.getMovementSteps();
         this.redItems = smugglersState.getRedItems();
@@ -35,7 +38,9 @@ public class ClientSmugglers extends ClientEventCard {
     }
 
     @Override
-    public void useCard() {}
+    public ActionJSON useCard() {
+        return null;
+    }
 
     @Override
     public void updateCard(CardStateJSON smugglersState) {

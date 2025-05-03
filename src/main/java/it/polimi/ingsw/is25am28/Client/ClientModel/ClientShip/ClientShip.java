@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
+import it.polimi.ingsw.is25am28.Model.Components.Battery;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
@@ -435,6 +436,15 @@ public class ClientShip implements WidgetTUIGenerator {
         return this.cabinList.stream()
                 .flatMap(cabin -> cabin.getInhabitants().stream())
                 .toList();
+    }
+
+    /**
+     * @return The ship's available energy
+     */
+    public int getAvailableEnergy() {
+        return this.batteryList.stream()
+                .mapToInt(ClientBattery::getAvailability)
+                .sum();
     }
 
     /**

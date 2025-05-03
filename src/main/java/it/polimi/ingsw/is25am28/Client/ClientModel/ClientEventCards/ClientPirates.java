@@ -1,7 +1,9 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
@@ -18,8 +20,8 @@ public class ClientPirates extends ClientEventCard {
     Map<String, Integer> currentPlasmaShot;
     private List<String> defeatedPlayers;
 
-    public ClientPirates(CardStateJSON piratesState) {
-        super(piratesState);
+    public ClientPirates(CardStateJSON piratesState, InputThread inputThread, ClientModel model) {
+        super(piratesState, inputThread, model);
         this.firstRound = true;
         this.requiredFirepower = piratesState.getRequiredFirepower();
         this.givenCredits = piratesState.getGivenCredits();
@@ -28,8 +30,8 @@ public class ClientPirates extends ClientEventCard {
     }
 
     @Override
-    public void useCard() {
-
+    public ActionJSON useCard() {
+        return null;
     }
 
     @Override

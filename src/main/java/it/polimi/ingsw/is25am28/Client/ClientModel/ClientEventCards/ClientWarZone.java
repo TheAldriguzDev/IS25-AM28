@@ -1,9 +1,11 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -18,8 +20,8 @@ public class ClientWarZone extends ClientEventCard {
     private int diceThrowResult;
 
 
-    public ClientWarZone(CardStateJSON cardState) {
-        super(cardState);
+    public ClientWarZone(CardStateJSON cardState, InputThread inputThread, ClientModel model) {
+        super(cardState, inputThread, model);
         this.actionAndConsequences = cardState.getActionsAndConsequences();
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementSteps = cardState.getMovementSteps();
@@ -27,8 +29,8 @@ public class ClientWarZone extends ClientEventCard {
     }
 
     @Override
-    public void useCard() {
-
+    public ActionJSON useCard() {
+        return null;
     }
 
     @Override

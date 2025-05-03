@@ -1,15 +1,20 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
@@ -17,12 +22,20 @@ public class ClientOpenSpace extends ClientEventCard {
 //    private Map<String, Integer> updatedPositions;
 //    private List<String> eliminatedPlayers;
 
-    public ClientOpenSpace(CardStateJSON openSpaceState) {
-        super(openSpaceState);
+    public ClientOpenSpace(CardStateJSON openSpaceState, InputThread inputThread, ClientModel model) {
+        super(openSpaceState, inputThread, model);
     }
 
     @Override
-    public void useCard() {}
+    public ActionJSON useCard() {
+        OpenSpaceJSON response = new OpenSpaceJSON();
+
+        response.setPlayerNickname(this.playerNickname);
+
+        response.setUsedEnergy(this.inputUsedEnergy());
+
+        return response;
+    }
 
     @Override
     public void updateCard(CardStateJSON cardState) {
@@ -78,6 +91,43 @@ public class ClientOpenSpace extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, twinkling_space).centerWidgetScreen().wrapWidgetWithBorder();
+    }
 
+    @Override
+    protected int inputUsedEnergy() {
+        String input;
+        int usedEnergy;
+        AtomicInteger totalAvailableEnergy = new AtomicInteger(0);
+        System.out.print("Insert the number of double engines to activate: ");
+        do {
+            try {
+                input = this.inputThread.waitForInput();
+                if (input == null) { return 0;}
+                usedEnergy = Integer.parseInt(input);
+                this.model.getShipOfPlayer(this.playerNickname).ifPresent(
+                        (ship) -> {
+                            totalAvailableEnergy.set(ship.getAvailableEnergy());
+                        }
+                );
+                if (usedEnergy > 0) {
+                    if (usedEnergy <= totalAvailableEnergy.get()) {
+                        return usedEnergy;
+                    } else {
+                        System.out.print(PrintUtils.addColor("Invalid input, you can't consume more energy than you have: ", ANSIColors.RED));
+                    }
+                } else {
+                    System.out.print(PrintUtils.addColor("Invalid input, value must be positive: ", ANSIColors.RED));
+                }
+
+            } catch (InterruptedException e) {
+                return 0;
+            } catch (NumberFormatException e) {
+                System.out.print(PrintUtils.addColor("Invalid input, please insert a number: ", ANSIColors.RED));
+            }
+        } while (true);
     }
 }
+
+
+
+

@@ -1,11 +1,12 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-import java.util.List;
 import java.util.Map;
 
 public class ClientMeteorShower extends ClientEventCard {
@@ -14,14 +15,14 @@ public class ClientMeteorShower extends ClientEventCard {
     private Map<String, Integer> currMeteorDescriptor;
 //    private Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
 
-    public ClientMeteorShower(CardStateJSON cardState) {
-        super(cardState);
+    public ClientMeteorShower(CardStateJSON cardState, InputThread inputThread, ClientModel model) {
+        super(cardState, inputThread, model);
     }
 
 
     @Override
-    public void useCard() {
-        // Needs implementation
+    public ActionJSON useCard() {
+        return null;
     }
 
 

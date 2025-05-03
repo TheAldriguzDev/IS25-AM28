@@ -136,17 +136,17 @@ public class ClientShipConstructionState extends ClientState {
 
         for (CardStateJSON cardState : cards) {
             switch (cardState.getId()) {
-                case 0 -> this.eventCards.add(new ClientAbandonedShip(cardState));
-                case 1 -> this.eventCards.add(new ClientAbandonedStation(cardState));
-                case 2 -> this.eventCards.add(new ClientEpidemy(cardState));
-                case 3 -> this.eventCards.add(new ClientMeteorShower(cardState));
-                case 4 -> this.eventCards.add(new ClientOpenSpace(cardState));
-                case 5 -> this.eventCards.add(new ClientPirates(cardState));
-                case 6 -> this.eventCards.add(new ClientSlavers(cardState));
-                case 7 -> this.eventCards.add(new ClientSmugglers(cardState));
-                case 8 -> this.eventCards.add(new ClientStardust(cardState));
-                case 9 -> this.eventCards.add(new ClientVisitPlanets(cardState));
-                case 10 -> this.eventCards.add(new ClientWarZone(cardState));
+                case 0 -> this.eventCards.add(new ClientAbandonedShip(cardState, null, null));
+                case 1 -> this.eventCards.add(new ClientAbandonedStation(cardState, null, null));
+                case 2 -> this.eventCards.add(new ClientEpidemy(cardState, null, null));
+                case 3 -> this.eventCards.add(new ClientMeteorShower(cardState, null, null));
+                case 4 -> this.eventCards.add(new ClientOpenSpace(cardState, null, null));
+                case 5 -> this.eventCards.add(new ClientPirates(cardState, null, null));
+                case 6 -> this.eventCards.add(new ClientSlavers(cardState, null, null));
+                case 7 -> this.eventCards.add(new ClientSmugglers(cardState, null, null));
+                case 8 -> this.eventCards.add(new ClientStardust(cardState, null, null));
+                case 9 -> this.eventCards.add(new ClientVisitPlanets(cardState, null, null));
+                case 10 -> this.eventCards.add(new ClientWarZone(cardState, null, null));
                 
                 default -> throw new IllegalArgumentException("ERROR: Illegal event card ID");
             }

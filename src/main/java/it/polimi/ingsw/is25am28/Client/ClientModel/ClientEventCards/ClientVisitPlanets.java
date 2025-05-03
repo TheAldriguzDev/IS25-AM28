@@ -1,5 +1,8 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
@@ -11,14 +14,14 @@ public class ClientVisitPlanets extends ClientEventCard {
     Map<Integer, Map<ItemColor, Integer>> availablePlanets; // TODO: a list would serve this role better since the generateWidget needs order
     private int chosenPlanetIndex;
 
-    public ClientVisitPlanets(CardStateJSON cardState) {
-        super(cardState);
+    public ClientVisitPlanets(CardStateJSON cardState, InputThread inputThread, ClientModel model) {
+        super(cardState, inputThread, model);
         this.availablePlanets = cardState.getAvailablePlanets();
     }
 
     @Override
-    public void useCard() {
-
+    public ActionJSON useCard() {
+        return null;
     }
 
     @Override

@@ -789,4 +789,8 @@ public class CardStateJSON extends ActionJSON {
     }
 
     // ======== //
+
+    // ======== VARIABLES, SETTERS AND GETTERS FOR CLIENT RESPONSES ======== //
+
+
 }

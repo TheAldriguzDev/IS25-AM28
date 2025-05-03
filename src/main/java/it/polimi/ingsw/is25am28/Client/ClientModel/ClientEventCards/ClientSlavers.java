@@ -1,5 +1,8 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -17,8 +20,8 @@ public class ClientSlavers extends ClientEventCard {
 
 //    private List<String> defeatedPlayers;
 
-    public ClientSlavers(CardStateJSON slaversCardState) {
-        super(slaversCardState);
+    public ClientSlavers(CardStateJSON slaversCardState, InputThread inputThread, ClientModel model) {
+        super(slaversCardState, inputThread, model);
         this.requiredFirepower = slaversCardState.getRequiredFirepower();
         this.movementSteps = slaversCardState.getMovementSteps();
         this.givenCredits = slaversCardState.getGivenCredits();
@@ -28,8 +31,8 @@ public class ClientSlavers extends ClientEventCard {
     }
 
     @Override
-    public void useCard() {
-
+    public ActionJSON useCard() {
+        return null;
     }
 
     @Override

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class StardustJSON extends ActionJSON {
 
+    public StardustJSON() {}
+
     public StardustJSON (@JsonProperty("playerNickname") String playerNickname) {
         super(playerNickname);
     }
