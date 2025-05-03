@@ -447,10 +447,12 @@ public class Ship implements WidgetTUIGenerator {
      * @throws TooManyAliensException If a player tries to add a second alien of the same type
      * @throws OutOfGridException If the given coordinates fall out of the grid
      * @throws OutOfShipException If the given coordinates fall out of the ship
+     * @throws NoSupportVitalFoundException If the given lifeform is an alien and the cabin has no matching vital units as its neighbours
+     * @throws IllegalArgumentException If other errors arise due to wrong input
      */
     public void addLifeformToCabin(int i, int j, LifeformType lifeformType)
             throws IllegalArgumentException, TooManyAliensException,
-                   OutOfGridException, OutOfShipException
+                   OutOfGridException, OutOfShipException, NoSupportVitalFoundException
     {
         boolean vitalFound;
         Component[] neighbours;

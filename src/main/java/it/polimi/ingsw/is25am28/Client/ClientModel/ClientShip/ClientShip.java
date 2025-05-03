@@ -386,7 +386,7 @@ public class ClientShip implements WidgetTUIGenerator {
 
             // WEST neighbour
             try {
-                neighbours[3] = this.components[clientComponent.getI() - 1][clientComponent.getJ() - 1];
+                neighbours[3] = this.components[clientComponent.getI()][clientComponent.getJ() - 1];
             }
             catch (ArrayIndexOutOfBoundsException e) {
                 neighbours[3] = null;
@@ -490,6 +490,25 @@ public class ClientShip implements WidgetTUIGenerator {
     }
 
     /**
+     * Returns the component that is identified by the coordinates (i, j) in the
+     * ship's component grid, where i is the row index and j is the column index
+     *
+     * @param i The index of the row where the component to retrieve is located
+     * @param j The index of the column where the component to retrieve is located
+     * @return The component at coordinates (i, j)
+     * @throws OutOfGridException If the given coordinates (i, j) fall outside the ship's grid
+     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship's profile,
+     *
+     */
+    public ClientComponent getComponent(int i, int j) throws OutOfGridException {
+        if (i < 0 || j < 0 || i >= grid_rows || j >= grid_cols) {
+            throw new OutOfGridException("Requested component is not in the ship component grid");
+        }
+
+        return this.components[i][j];
+    }
+
+    /**
      * @return A grid of <code>ClientComponent</code> of the given dimensions with all values initialized to <code>null</code>
      */
     private ClientComponent[][] initGrid(int grid_rows, int grid_cols) {
@@ -528,6 +547,86 @@ public class ClientShip implements WidgetTUIGenerator {
         }
 
         return allCabinsFull;
+    }
+
+    /**
+     * @return TRUE if the given lifeform can be added at the given coordinates (i, j),
+     *         FALSE otherwise.
+     */
+    public boolean addLifeformVerifier(int i, int j, LifeformType lifeformType)
+            throws IllegalArgumentException, OutOfGridException, OutOfShipException
+    {
+        ClientComponent[] neighbours;
+        ClientComponent component;
+
+        if (shipProfiles.containsKey(this.difficultyLevel)) {
+            if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
+                throw new OutOfShipException("ERROR: Cannot select a component that is outside the ship");
+            }
+        }
+
+        component = this.getComponent(i, j);
+
+        switch (component) {
+            case ClientCabin cabin -> {
+                // Cannot add any lifeforms to the core
+                // (it already has 2 astronauts, populated automatically)
+                if (cabin.isCore()) {
+                    return false;
+                }
+
+                switch (lifeformType) {
+                    // LifeformType.ASTRONAUT.ordinal() == 0
+                    case ASTRONAUT -> {
+                        if (cabin.getAvailableSpace() > 0) {
+                            return true;
+                        }
+                    }
+                    // LifeformType.PURPLE_ALIEN.ordinal() == 1
+                    case PURPLE_ALIEN -> {
+                        if (this.purpleAlienPosition == null) {
+                            if (cabin.getAvailableSpace() == LifeformType.PURPLE_ALIEN.getRequiredSpace()) {
+                                neighbours = this.getNearestComponents(cabin);
+
+                                for (ClientComponent neighbour : neighbours) {
+                                    switch (neighbour) {
+                                        case ClientVital vital -> {
+                                            if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
+                                                return true;
+                                            }
+                                        }
+                                        case null, default -> {}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    // LifeformType.BROWN_ALIEN.ordinal() == 2
+                    case BROWN_ALIEN -> {
+                        if (this.brownAlienPosition == null) {
+                            if (cabin.getAvailableSpace() == LifeformType.BROWN_ALIEN.getRequiredSpace()) {
+                                neighbours = this.getNearestComponents(cabin);
+
+                                for (ClientComponent neighbour : neighbours) {
+                                    switch (neighbour) {
+                                        case ClientVital vital -> {
+                                            if (vital.getVitalType() == VitalType.BROWN_VITAL) {
+                                                return true;
+                                            }
+                                        }
+                                        case null, default -> {}
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    case null, default -> throw new IllegalArgumentException("ERROR: Given lifeform type is null or invalid");
+                }
+            }
+            case null, default -> throw new IllegalArgumentException("ERROR: Given component is not a cabin");
+        }
+
+        return false;
     }
 
     /**

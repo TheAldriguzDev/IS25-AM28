@@ -38,6 +38,9 @@ public class ClientEpidemy extends ClientEventCard {
         cardInfoWidget.appendString(ANSIColors.MAGENTA + "      ██    ███████    ██      " + ANSIColors.RESET);
         cardInfoWidget.wrapWidgetWithBorder();
 
+        cardInfoWidget.appendString(ANSIColors.MAGENTA + "" + ANSIColors.RESET);
+        cardInfoWidget.wrapWidgetWithBorder();
+
         if (this.playerNickname != null) {
             cardInfoWidget.appendString("Current Player: " + this.playerNickname);
         }

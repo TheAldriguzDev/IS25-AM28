@@ -6,6 +6,8 @@ import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
+import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
+import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfShipException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Network.Messages.PopulateShip;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
@@ -205,11 +207,14 @@ public class PopulateShipScreen extends Screen {
             catch (NumberFormatException e) {
                 // Ask again for a correct value
                 System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
-                continue;
             }
             catch (InterruptedException e) {
                 // A forced interrupt arrived
                 return null;
+            }
+            catch (IndexOutOfBoundsException e) {
+                // Ask again for a correct value
+                System.out.println(UNKNOWN_COMMAND_ERROR);
             }
         }
         while (!lifeformChosen);
@@ -226,13 +231,32 @@ public class PopulateShipScreen extends Screen {
         ComponentHelper<LifeformType> lifeformToAdd;
         Map.Entry<Integer, Integer> coordinates;
         LifeformType lifeformType;
+        boolean isActionValid;
 
-        coordinates = this.getComponentCoordinates();
-        lifeformType = this.getLifeformType();
+        do {
+            coordinates = this.getComponentCoordinates();
+            lifeformType = this.getLifeformType();
 
-        if (lifeformType == null) {
-            return;
+            if (lifeformType == null) {
+                return;
+            }
+
+            try {
+                isActionValid = this.currPlayerShip.addLifeformVerifier(
+                        coordinates.getKey(),
+                        coordinates.getValue(),
+                        lifeformType
+                );
+            }
+            catch (IllegalArgumentException | OutOfGridException | OutOfShipException e) {
+                isActionValid = false;
+            }
+
+            if (!isActionValid) {
+                System.out.println(PrintUtils.addColor("[ERROR] " + lifeformType + " cannot be added at (" + coordinates.getKey() + ", " + coordinates.getValue() + ")." , ANSIColors.RED));
+            }
         }
+        while (!isActionValid);
 
         lifeformToAdd = new ComponentHelper<LifeformType>(
             coordinates.getKey(), coordinates.getValue()
@@ -287,7 +311,6 @@ public class PopulateShipScreen extends Screen {
         this.printShipPopulateStatusWidget();
 
         if (!populateShip.getPlayersReady().contains(this.model.getNickname())) {
-            System.out.println("INIT POPULATE");
             this.populateShip();
         }
     }
