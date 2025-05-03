@@ -18,6 +18,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.ConsoleWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -1921,5 +1922,170 @@ public class PrintTest {
         console.appendString("Testing old log removal").printWidget();
         console.appendString("Testing old log removal of multiple lines when adding long messages").printWidget();
         console.appendString("TestColorUnicodeBetweenLines............." + ANSIColors.RED + "a" + ANSIColors.BLUE + "b" + ANSIColors.RESET).printWidget();
+    }
+
+    @Test
+    void epidemy_icon_test() {
+        // 31 x 12 <- meteorShower reference
+        WidgetTUI bioHazardWidget = new WidgetTUI();
+
+        bioHazardWidget.appendString("                               ");
+        bioHazardWidget.appendString("      ██    ███████    ██      ");
+        bioHazardWidget.appendString("    ██        ███        ██    ");
+        bioHazardWidget.appendString("  ██  ██   █████████   ██  ██  ");
+        bioHazardWidget.appendString("        ██████   ██████        ");
+        bioHazardWidget.appendString("██   ████   ███████   ████   ██");
+        bioHazardWidget.appendString("██████████████   ██████████████");
+        bioHazardWidget.appendString("██   ████   ███████   ████   ██");
+        bioHazardWidget.appendString("        ██████   ██████        ");
+        bioHazardWidget.appendString("  ██  ██   █████████   ██  ██  ");
+        bioHazardWidget.appendString("    ██        ███        ██    ");
+        bioHazardWidget.appendString("      ██    ███████    ██      ");
+
+        bioHazardWidget.printWidget();
+        bioHazardWidget = new WidgetTUI();
+
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "                               " + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "      ██    ███████    ██      " + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "    ██        ███        ██    " + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "  ██  ██   █████████   ██  ██  " + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "        ██████   ██████        " + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "██   ████   ███████   ████   ██" + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "██████████████   ██████████████" + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "██   ████   ███████   ████   ██" + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "        ██████   ██████        " + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "  ██  ██   █████████   ██  ██  " + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "    ██        ███        ██    " + ANSIColors.RESET);
+        bioHazardWidget.appendString(ANSIColors.MAGENTA + "      ██    ███████    ██      " + ANSIColors.RESET);
+
+        bioHazardWidget.printWidget();
+    }
+
+    @Test
+    void abandonedStation_icon_test() {
+        WidgetTUI abandonedStationWidget = new WidgetTUI();
+
+        abandonedStationWidget.appendString(                   "            ██ █     █         "                   );
+        abandonedStationWidget.appendString(                   "              █     █          "                   );
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "        ███████████████        " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "     █████████████████████     " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "   ██████ ██ ██ ██ ██ ██████   " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "       █████████████████       " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "            ███████            " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "  █████    █████████    █████  " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "      █████ ███████ █████      " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "              ███              " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "            █ ███ █            " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "             █ █ █             " + ANSIColors.RESET);
+
+        abandonedStationWidget.appendString("");
+        abandonedStationWidget.printWidget();
+        abandonedStationWidget = new WidgetTUI();
+
+        abandonedStationWidget.appendString(                   "            ██ █     █         "                   );
+        abandonedStationWidget.appendString(                   "              █     █          "                   );
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "        ███████████████        " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "     █████████████████████     " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "   ██████ ██ ██ ██ ██ ██████   " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "       █████████████████       " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "            ███████            " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "  █████    █████████    █████  " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "      █████ ███████ █████      " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(ANSIColors.WHITE + "              ███              " + ANSIColors.RESET);
+        abandonedStationWidget.appendString(                   "            █ " + ANSIColors.WHITE + "███" + ANSIColors.RESET + " █            "                   );
+        abandonedStationWidget.appendString(                   "             █ █ █             "                   );
+
+        abandonedStationWidget.printWidget();
+    }
+
+    @Test
+    void abandonedShip_icon_test() {
+        WidgetTUI abandonedShipWidget= new WidgetTUI();
+
+        abandonedShipWidget.appendString("                               ");
+        abandonedShipWidget.appendString("                               ");
+        abandonedShipWidget.appendString("                               ");
+        abandonedShipWidget.appendString("    ██████████       ████████  ");
+        abandonedShipWidget.appendString("███████████████████████████    ");
+        abandonedShipWidget.appendString(" ███████████████████████       ");
+        abandonedShipWidget.appendString("       █████████████████       ");
+        abandonedShipWidget.appendString("         █████████████████     ");
+        abandonedShipWidget.appendString("                     ████████  ");
+        abandonedShipWidget.appendString("                               ");
+        abandonedShipWidget.appendString("                               ");
+        abandonedShipWidget.appendString("                               ");
+
+        abandonedShipWidget.appendString("");
+        abandonedShipWidget.printWidget();
+        abandonedShipWidget = new WidgetTUI();
+
+        abandonedShipWidget.appendString("                               ");
+        abandonedShipWidget.appendString("                               ");
+        abandonedShipWidget.appendString("                               ");
+        abandonedShipWidget.appendString("  █████████                    ");
+        abandonedShipWidget.appendString("████████████████████     ██████");
+        abandonedShipWidget.appendString("█████████████████████████████  ");
+        abandonedShipWidget.appendString(" ██████████████████████████    ");
+        abandonedShipWidget.appendString("          █████████████████    ");
+        abandonedShipWidget.appendString("            █████████████████  ");
+        abandonedShipWidget.appendString("                         ██████");
+        abandonedShipWidget.appendString("                               ");
+        abandonedShipWidget.appendString("                               ");
+
+        abandonedShipWidget.appendString("");
+        abandonedShipWidget.printWidget();
+        abandonedShipWidget = new WidgetTUI();
+
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "  █████████                    " + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "█████" + ANSIColors.RESET + "███" + ANSIColors.WHITE + "████████████     ██████" + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "████" + ANSIColors.RESET + "████████████" + ANSIColors.WHITE + "█████████████  " + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + " ██████████████████████████    " + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "          ████" + ANSIColors.RESET + "██████████" + ANSIColors.WHITE + "███    " + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "            █████████████████  " + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "                         ██████" + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
+        abandonedShipWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
+
+        abandonedShipWidget.printWidget();
+    }
+
+    @Test
+    public void planet_icon_Test() {
+        WidgetTUI planetWidget = new WidgetTUI();
+
+        planetWidget.appendString(ANSIColors.BLUE + "                               " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ----------███████████████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " --------████████████--------- " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ------██████████------------- " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ----██████████--------------- " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ██████████████--------------- " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " █████████████████------------" + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ███████████████████---------- " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " █████████████████████-------- " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ████-----------██████████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ██---------------████████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + "                               " + ANSIColors.RESET);
+
+        planetWidget.appendString("");
+        planetWidget.printWidget();
+        planetWidget = new WidgetTUI();
+
+        planetWidget.appendString(ANSIColors.BLUE + "                               " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.GREEN + " ██████████" + ANSIColors.BLUE + "███████████████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.GREEN + " ████████" + ANSIColors.BLUE + "████████████" + ANSIColors.GREEN + "█████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.GREEN + " ██████" + ANSIColors.BLUE + "██████████" + ANSIColors.GREEN + "█████████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.GREEN + " ████" + ANSIColors.BLUE + "██████████" + ANSIColors.GREEN + "███████████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ██████████████" + ANSIColors.GREEN + "███████████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " █████████████████" + ANSIColors.GREEN + "████████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ███████████████████" + ANSIColors.GREEN + "██████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " █████████████████████" + ANSIColors.GREEN + "████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ████" + ANSIColors.GREEN + "████████████" + ANSIColors.BLUE + "█████████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + " ██" + ANSIColors.GREEN + "████████████████" + ANSIColors.BLUE + "███████████ " + ANSIColors.RESET);
+        planetWidget.appendString(ANSIColors.BLUE + "                               " + ANSIColors.RESET);
+
+        planetWidget.printWidget();
     }
 }

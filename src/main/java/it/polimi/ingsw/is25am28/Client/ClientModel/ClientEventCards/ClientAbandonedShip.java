@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 public class ClientAbandonedShip extends ClientEventCard {
@@ -37,6 +38,21 @@ public class ClientAbandonedShip extends ClientEventCard {
 
         cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
+        cardInfoWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "  █████████                    " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "███████████████████      ██████" + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "█████████████████████████████  " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + " ██████████████████████████    " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "          █████████████████    " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "            █████████████████  " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "                         ██████" + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
+
+        cardInfoWidget.wrapWidgetWithBorder();
+
         cardInfoWidget.appendString("Level: " + this.cardLevel);
         cardInfoWidget.appendString("Required Crew: " + this.requiredCrew);
         cardInfoWidget.appendString("Given Credits: " + this.givenCredits);
@@ -46,7 +62,6 @@ public class ClientAbandonedShip extends ClientEventCard {
         }
 
 
-        cardInfoWidget.wrapWidgetWithBorder();
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
