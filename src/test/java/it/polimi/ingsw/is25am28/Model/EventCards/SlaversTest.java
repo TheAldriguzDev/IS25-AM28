@@ -128,7 +128,7 @@ class SlaversTest {
         assertFalse(cardState.getFirstRound());
         // =============================== //
         // ======== WIDGET TESTING ======== //
-        clientSlavers = new ClientSlavers(cardState);
+        clientSlavers = new ClientSlavers(cardState, null, null);
         clientSlavers.generateWidget().printWidget();
         // ================================ //
 

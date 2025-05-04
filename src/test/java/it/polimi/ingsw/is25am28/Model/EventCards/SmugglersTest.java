@@ -144,7 +144,7 @@ class SmugglersTest {
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Non initialized card");
-        clientSmugglers = new ClientSmugglers(smugglers.generateState());
+        clientSmugglers = new ClientSmugglers(smugglers.generateState(), null, null);
         clientSmugglers.generateWidget().printWidget();
         // ================================ //
 

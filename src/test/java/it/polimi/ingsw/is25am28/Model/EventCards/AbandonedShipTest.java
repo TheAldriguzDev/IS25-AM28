@@ -206,7 +206,7 @@ class AbandonedShipTest {
         ClientAbandonedShip clientAbandonedShip;
 
         // ======== WIDGET TESTING ======== //
-        clientAbandonedShip = new ClientAbandonedShip(abandonedShipCard.generateState());
+        clientAbandonedShip = new ClientAbandonedShip(abandonedShipCard.generateState(), null, null);
         clientAbandonedShip.generateWidget().printWidget();
         // ================================ //
 

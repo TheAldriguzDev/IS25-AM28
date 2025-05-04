@@ -208,7 +208,7 @@ class OpenSpaceTest {
         assertNull(cardState.getPlayerNickname());
         // =============================== //
         // ======== WIDGET TESTING ======== //
-        clientOpenSpace = new ClientOpenSpace(cardState);
+        clientOpenSpace = new ClientOpenSpace(cardState, null, null);
         clientOpenSpace.generateWidget().printWidget();
         // ================================ //
 

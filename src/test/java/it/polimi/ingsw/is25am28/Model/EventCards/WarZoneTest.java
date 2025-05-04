@@ -137,7 +137,7 @@ class WarZoneTest {
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Before initialization");
-        clientWarZone = new ClientWarZone(warzone.generateState());
+        clientWarZone = new ClientWarZone(warzone.generateState(), null, null);
         clientWarZone.generateWidget().printWidget();
         // ================================ //
 

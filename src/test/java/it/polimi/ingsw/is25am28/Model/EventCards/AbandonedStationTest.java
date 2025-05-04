@@ -220,7 +220,7 @@ class AbandonedStationTest {
         ClientAbandonedStation clientAbandonedStation;
 
         // ======== WIDGET TESTING ======== //
-        clientAbandonedStation = new ClientAbandonedStation(abandonedStationCard.generateState());
+        clientAbandonedStation = new ClientAbandonedStation(abandonedStationCard.generateState(), null, null);
         clientAbandonedStation.generateWidget().printWidget();
         // ================================ //
 

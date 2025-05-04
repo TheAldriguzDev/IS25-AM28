@@ -384,7 +384,7 @@ class EpidemyTest {
         assertEquals(5, shipPlayer3.getAllLifeforms().size());
 
         // ======== WIDGET TESTING ========= //
-        clientEpidemy = new ClientEpidemy(epidemy.generateState());
+        clientEpidemy = new ClientEpidemy(epidemy.generateState(), null, null);
         clientEpidemy.generateWidget().printWidget();
         // ================================= //
 
