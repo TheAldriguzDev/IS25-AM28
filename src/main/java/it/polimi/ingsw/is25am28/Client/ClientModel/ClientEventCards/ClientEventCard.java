@@ -68,8 +68,8 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     }
 
     // VARIOUS FLAGS AND INDEXES
-    public void setTakeLoot(boolean takeLoot) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'setTakeLoot()' is not supported in " + this + " state");
+    public void setTakeReward(boolean takeReward) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setTakeReward()' is not supported in " + this + " state");
     }
 
     public void setChosenPlanetIndex(int chosenPlanetIndex) throws UnsupportedOperationException {

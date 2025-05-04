@@ -4,7 +4,9 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.List;
@@ -102,5 +104,25 @@ public class ClientWarZone extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void setDoubleCannonsToActivate(List<ComponentHelper<Integer>> doubleCannonsToActivate) throws UnsupportedOperationException {
+        this.warZoneJSON.setCannonList(doubleCannonsToActivate);
+    }
+
+    @Override
+    public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
+        this.warZoneJSON.setItemsToBeRemoved(itemsToBeRemoved);
+    }
+
+    @Override
+    public void setUsedEnergy(int usedEnergy) {
+        this.warZoneJSON.setUsedEnergy(usedEnergy);
+    }
+
+    @Override
+    public void setShieldsToActivate(List<ComponentHelper<Integer>> shieldsToActivate) throws UnsupportedOperationException {
+        this.warZoneJSON.setShieldList(shieldsToActivate);
     }
 }

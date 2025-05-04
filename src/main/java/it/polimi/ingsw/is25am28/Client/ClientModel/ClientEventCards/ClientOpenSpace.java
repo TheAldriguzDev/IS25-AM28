@@ -90,6 +90,7 @@ public class ClientOpenSpace extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, twinkling_space).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
+    @Override
     public void setUsedEnergy(int usedEnergy) {
         this.openSpaceJSON.setUsedEnergy(usedEnergy);
     }

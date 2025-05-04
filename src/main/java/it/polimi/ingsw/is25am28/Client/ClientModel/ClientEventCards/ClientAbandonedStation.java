@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedStationJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.EventCards.AbandonedStation;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
@@ -93,7 +94,16 @@ public class ClientAbandonedStation extends ClientEventCard {
             cardInfoWidget.appendString("Current Player: " + this.playerNickname);
         }
 
-
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
+        this.abandonedStationJSON.setItemsToBeRemoved(itemsToBeRemoved);
+    }
+
+    @Override
+    public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) throws UnsupportedOperationException {
+        this.abandonedStationJSON.setItemsToBeTaken(itemsToBeTaken);
     }
 }

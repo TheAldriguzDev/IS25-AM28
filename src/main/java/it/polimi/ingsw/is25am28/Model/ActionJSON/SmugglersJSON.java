@@ -9,16 +9,16 @@ import java.util.List;
 
 public class SmugglersJSON extends ActionJSON {
     private boolean takeLoot;
-    private ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken;
-    private ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved;
+    private List<ComponentHelper<ItemColor>> itemsToBeTaken;
+    private List<ComponentHelper<ItemColor>> itemsToBeRemoved;
     private List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates;
 
     public SmugglersJSON() {}
 
     public SmugglersJSON(@JsonProperty("playerNickname") String playerNickname,
                          @JsonProperty("takeLoot") boolean takeLoot,
-                         @JsonProperty("itemsToBeTaken") ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken,
-                         @JsonProperty("itemsToBeRemoved") ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved,
+                         @JsonProperty("itemsToBeTaken") List<ComponentHelper<ItemColor>> itemsToBeTaken,
+                         @JsonProperty("itemsToBeRemoved") List<ComponentHelper<ItemColor>> itemsToBeRemoved,
                          @JsonProperty("doubleCannonsToActivateCoordinates") List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates) {
         super(playerNickname);
         this.takeLoot = takeLoot;
@@ -38,22 +38,22 @@ public class SmugglersJSON extends ActionJSON {
     }
 
     @JsonGetter("itemsToBeTaken")
-    public ArrayList<ComponentHelper<ItemColor>> getItemsToBeTaken() {
+    public List<ComponentHelper<ItemColor>> getItemsToBeTaken() {
         return itemsToBeTaken;
     }
 
     @JsonSetter("itemsToBeTaken")
-    public void setItemsToBeTaken(ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken) {
+    public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) {
         this.itemsToBeTaken = itemsToBeTaken;
     }
 
     @JsonGetter("itemsToBeRemoved")
-    public ArrayList<ComponentHelper<ItemColor>> getItemsToBeRemoved() {
+    public List<ComponentHelper<ItemColor>> getItemsToBeRemoved() {
         return itemsToBeRemoved;
     }
 
     @JsonSetter("itemsToBeRemoved")
-    public void setItemsToBeRemoved(ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved) {
+    public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) {
         this.itemsToBeRemoved = itemsToBeRemoved;
     }
 

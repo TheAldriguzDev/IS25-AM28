@@ -4,10 +4,12 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.List;
 import java.util.Map;
 
 public class ClientMeteorShower extends ClientEventCard {
@@ -87,5 +89,15 @@ public class ClientMeteorShower extends ClientEventCard {
 
         meteor1Final.centerWidgetScreen();
         return meteor1Final.wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void setShieldsToActivate(List<ComponentHelper<Integer>> shieldsToActivate) throws UnsupportedOperationException {
+        this.meteorShowerJSON.setShieldsCoordinates(shieldsToActivate);
+    }
+
+    @Override
+    public void setDoubleCannonsToActivate(List<ComponentHelper<Integer>> doubleCannonsToActivate) throws UnsupportedOperationException {
+        this.meteorShowerJSON.setCannonsCoordinates(doubleCannonsToActivate);
     }
 }

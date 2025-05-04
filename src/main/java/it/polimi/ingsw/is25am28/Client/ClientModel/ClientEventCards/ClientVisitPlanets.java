@@ -4,11 +4,13 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.VisitPlanetsJSON;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.List;
 import java.util.Map;
 
 public class ClientVisitPlanets extends ClientEventCard {
@@ -74,5 +76,20 @@ public class ClientVisitPlanets extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
+        this.visitPlanetsJSON.setItemsToDrop(itemsToBeRemoved);
+    }
+
+    @Override
+    public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) throws UnsupportedOperationException {
+        this.visitPlanetsJSON.setItemsToDrop(itemsToBeTaken);
+    }
+
+    @Override
+    public void setChosenPlanetIndex(int chosenPlanetIndex) throws UnsupportedOperationException {
+        this.visitPlanetsJSON.setChosenPlanetIndex(chosenPlanetIndex);
     }
 }

@@ -4,7 +4,9 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.SmugglersJSON;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
@@ -119,6 +121,26 @@ public class ClientSmugglers extends ClientEventCard {
                 return false;
             }
         } while (true);
+    }
+
+    @Override
+    public void setDoubleCannonsToActivate(List<ComponentHelper<Integer>> doubleCannonsToActivate) throws UnsupportedOperationException {
+        this.smugglersJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
+    }
+
+    @Override
+    public void setTakeReward(boolean takeReward) {
+        this.smugglersJSON.setTakeLoot(takeReward);
+    }
+
+    @Override
+    public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
+        this.smugglersJSON.setItemsToBeRemoved(itemsToBeRemoved);
+    }
+
+    @Override
+    public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) throws UnsupportedOperationException {
+        this.smugglersJSON.setItemsToBeTaken(itemsToBeTaken);
     }
 
 }
