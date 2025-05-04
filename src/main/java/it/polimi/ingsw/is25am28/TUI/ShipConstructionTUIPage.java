@@ -5,6 +5,8 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventC
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
@@ -1191,6 +1193,16 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
     @Override
     public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
+
+    }
+
+    @Override
+    public void showCardRound(CardRoundDTO cardRound) throws Exception {
+
+    }
+
+    @Override
+    public void showEndGame(EndGameDTO endGame) {
 
     }
 

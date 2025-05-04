@@ -366,6 +366,16 @@ public class ClientTUI implements ClientUI {
     }
 
     @Override
+    public void showCardRound(CardRoundDTO cardRound) throws Exception {
+
+    }
+
+    @Override
+    public void showEndGame(EndGameDTO endGame) {
+
+    }
+
+    @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
 
     }

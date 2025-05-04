@@ -256,12 +256,17 @@ class EpidemyTest {
                                 case Vital vital -> {
                                     if (vital.getVitalType() == VitalType.BROWN_VITAL) {
                                         if (shipPlayer2.getBrownAlienPosition() == null) {
-                                            shipPlayer2.addLifeformToCabin(
-                                                    c.getPosition()[0],
-                                                    c.getPosition()[1],
-                                                    BROWN_ALIEN
-                                            );
-                                            alienPlaced = true;
+                                            try {
+                                                shipPlayer2.addLifeformToCabin(
+                                                        c.getPosition()[0],
+                                                        c.getPosition()[1],
+                                                        BROWN_ALIEN
+                                                );
+                                                alienPlaced = true;
+                                            }
+                                            catch (Exception e) {
+                                                // Refuse to add
+                                            }
                                         }
                                         else {
                                             System.out.println("BROWN ALIEN already there!!!");
@@ -269,12 +274,17 @@ class EpidemyTest {
                                     }
                                     else if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
                                         if (shipPlayer2.getPurpleAlienPosition() == null) {
-                                            shipPlayer2.addLifeformToCabin(
-                                                    c.getPosition()[0],
-                                                    c.getPosition()[1],
-                                                    PURPLE_ALIEN
-                                            );
-                                            alienPlaced = true;
+                                            try {
+                                                shipPlayer2.addLifeformToCabin(
+                                                        c.getPosition()[0],
+                                                        c.getPosition()[1],
+                                                        PURPLE_ALIEN
+                                                );
+                                                alienPlaced = true;
+                                            }
+                                            catch (Exception e) {
+                                                // Refuse to add
+                                            }
                                         }
                                         else {
                                             System.out.println("PURPLE ALIEN already there!!!");
@@ -318,12 +328,17 @@ class EpidemyTest {
                                 case Vital vital -> {
                                     if (vital.getVitalType() == VitalType.BROWN_VITAL) {
                                         if (shipPlayer3.getBrownAlienPosition() == null) {
-                                            shipPlayer3.addLifeformToCabin(
-                                                    c.getPosition()[0],
-                                                    c.getPosition()[1],
-                                                    BROWN_ALIEN
-                                            );
-                                            alienPlaced = true;
+                                            try {
+                                                shipPlayer3.addLifeformToCabin(
+                                                        c.getPosition()[0],
+                                                        c.getPosition()[1],
+                                                        BROWN_ALIEN
+                                                );
+                                                alienPlaced = true;
+                                            }
+                                            catch (Exception e) {
+                                                // Refuse to add
+                                            }
                                         }
                                         else {
                                             System.out.println("BROWN ALIEN already there!!!");
@@ -331,12 +346,17 @@ class EpidemyTest {
                                     }
                                     else if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
                                         if (shipPlayer3.getPurpleAlienPosition() == null) {
-                                            shipPlayer3.addLifeformToCabin(
-                                                    c.getPosition()[0],
-                                                    c.getPosition()[1],
-                                                    PURPLE_ALIEN
-                                            );
-                                            alienPlaced = true;
+                                            try {
+                                                shipPlayer3.addLifeformToCabin(
+                                                        c.getPosition()[0],
+                                                        c.getPosition()[1],
+                                                        PURPLE_ALIEN
+                                                );
+                                                alienPlaced = true;
+                                            }
+                                            catch (Exception e) {
+                                                // Refuse to add
+                                            }
                                         }
                                         else {
                                             System.out.println("PURPLE ALIEN already there!!!");

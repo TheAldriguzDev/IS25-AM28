@@ -2,10 +2,8 @@ package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
 import java.util.List;
@@ -90,6 +88,22 @@ public class ClientState {
      */
     public FixShipDTO getFixShipDTO() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'getFixShipDTO' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used to add a player from the ClientPopulateShipState when
+     * the received PopulateShipComponentDTO has the isShipPopulated flag to TRUE
+     */
+    public void addPlayerToPopulateList(String playerNickname) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'removePlayerFromPopulateList' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used to add a lifeform to the ship of the player that
+     * added it, so that all clients have all players' updated ships
+     */
+    public PopulateShipDTO getPopulateShipDTO() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'getPopulateShipDTO' is not supported in the " + this + " state");
     }
 
     /**

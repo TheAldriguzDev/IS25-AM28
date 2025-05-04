@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
 import java.util.Optional;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 
@@ -10,19 +11,19 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
  * This class helps use to deal with the JSON data to take / drop resources from / to a user
  * */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
-public class ComponentHelper<T> {
+public class ComponentHelper<T> implements Serializable {
     private int i;
     private int j;
 
     @JsonProperty
-    private Optional<T> helper;
+    private T helper;
 
     public ComponentHelper() {}
 
     public ComponentHelper(int i, int j) {
         this.i = i;
         this.j = j;
-        this.helper = Optional.empty();
+        this.helper = null;
     }
 
     public int getI() {
@@ -34,16 +35,11 @@ public class ComponentHelper<T> {
     }
 
     public Optional<T> getItem() {
-        return this.helper;
+        return Optional.ofNullable(this.helper);
     }
 
     public ComponentHelper<T> addItem(T item) {
-        if (item != null) {
-            this.helper = Optional.of(item);
-        } else {
-            this.helper = Optional.empty();
-        }
-
+        this.helper = item;
         return this;
     }
 }

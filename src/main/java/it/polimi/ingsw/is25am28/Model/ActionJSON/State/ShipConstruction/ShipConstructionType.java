@@ -5,7 +5,8 @@ public enum ShipConstructionType {
     PLACE_EVENT,
     SHIP_EVENT,
     DECK_EVENT,
-    TIMER_EVENT;
+    TIMER_EVENT,
+    POPULATE_EVENT;
 
     @Override
     public String toString() {
@@ -15,6 +16,7 @@ public enum ShipConstructionType {
             case SHIP_EVENT -> "SHIP_EVENT";
             case DECK_EVENT -> "DECK_EVENT";
             case TIMER_EVENT -> "TIMER_EVENT";
+            case POPULATE_EVENT -> "POPULATE_EVENT";
         };
     }
 }

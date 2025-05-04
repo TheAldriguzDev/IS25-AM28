@@ -72,7 +72,7 @@ public final class Cabin extends Component {
      * @param lifeform The lifeform that will be removed from the current cabin
      */
     public void removeInhabitant(Lifeform lifeform) {
-        inhabitants.remove(lifeform);
+        this.inhabitants.remove(lifeform);
     }
 
     @Override

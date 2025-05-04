@@ -19,7 +19,8 @@ public final class EndGameDTO extends StateDTO {
     public EndGameDTO(
             @JsonProperty("winner") String winner,
             @JsonProperty("playersCredits") Map<String, Integer> playersCredits,
-            @JsonProperty("playersPositionResult") Map<String, Integer> playersPositionResult ) {
+            @JsonProperty("playersPositionResult") Map<String, Integer> playersPositionResult
+    ) {
         this.playersCredits = playersCredits;
         this.playersPositionResult = playersPositionResult;
         this.winner = winner;

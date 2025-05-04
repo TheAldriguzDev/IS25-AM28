@@ -300,7 +300,13 @@ public class LobbyScreen extends Screen {
                     // (0) - Quit game
                     // Return nothing and the program stops
                     System.out.println();
-                    System.out.println(COMPUTER_MSG_TAG + "Bye bye!");
+
+                    new WidgetTUI()
+                            .appendString(COMPUTER_MSG_TAG + "Bye bye!")
+                            .addPadding(1, 1, 1, 1)
+                            .wrapWidgetWithBorder()
+                            .printWidget();
+
                     System.exit(0);
                 }
                 case 1 -> {

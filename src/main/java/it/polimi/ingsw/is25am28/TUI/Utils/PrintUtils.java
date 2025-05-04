@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.TUI.Utils;
 
 public class PrintUtils {
     public static final String SPACE = " ";
+    public static final String TAB = SPACE.repeat(8);
 
     /**
      * Applies a REGEX to remove UNICODE strings, needed in cases where we want

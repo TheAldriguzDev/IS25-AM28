@@ -8,7 +8,6 @@ import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI;
-import it.polimi.ingsw.is25am28.Network.Server.GameInstance;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
 import it.polimi.ingsw.is25am28.Network.Server.ServerLogger;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
@@ -18,6 +17,7 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * RMIServer implements the VirtualViewRMI interface

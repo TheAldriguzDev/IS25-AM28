@@ -13,7 +13,9 @@ public final class DisconnectedPlayerDTO extends StateDTO {
 
     public DisconnectedPlayerDTO() {}
 
-    public DisconnectedPlayerDTO(@JsonProperty("nickname") String nickname) {
+    public DisconnectedPlayerDTO(
+            @JsonProperty("nickname") String nickname
+    ) {
         this.nickname = nickname;
     }
 

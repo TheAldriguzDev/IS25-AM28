@@ -45,4 +45,7 @@ public class UnicodeCharacters {
 
     // Space Background Symbols
     public static final String[] SPACE_SYMBOLS = {"\u22C6", "+", "*"};
+
+    // Miscellaneous
+    public static final String CIRCLED_STAR= "✪";
 }

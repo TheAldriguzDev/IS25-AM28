@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.*;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen.COMPUTER_MSG_TAG;
 
 public final class GameMenuTUIPage extends TUIPage {
     // Command grouping values for the input widgets below
@@ -147,7 +148,13 @@ public final class GameMenuTUIPage extends TUIPage {
                 () -> {
                     // Return nothing and the program stops
                     System.out.println();
-                    System.out.println(PrintUtils.addColor("[COMPUTER] Bye bye!", ANSIColors.BRIGHT_CYAN));
+
+                    new WidgetTUI()
+                            .appendString(COMPUTER_MSG_TAG + "Bye bye!")
+                            .addPadding(1, 1, 1, 1)
+                            .wrapWidgetWithBorder()
+                            .printWidget();
+
                     System.exit(0);
                 }
             );
@@ -539,6 +546,16 @@ public final class GameMenuTUIPage extends TUIPage {
 
     @Override
     public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
+
+    }
+
+    @Override
+    public void showCardRound(CardRoundDTO cardRound) throws Exception {
+
+    }
+
+    @Override
+    public void showEndGame(EndGameDTO endGame) {
 
     }
 

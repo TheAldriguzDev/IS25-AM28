@@ -20,17 +20,18 @@ public final class FixShipState extends State {
 
     @Override
     public FixedComponentDTO fixShip(String player, Integer i, Integer j) throws IllegalArgumentException, FixNotRequiredError {
-        if (!playersWithInvalidShip.contains(player)) {
+        if (!this.playersWithInvalidShip.contains(player)) {
             throw new FixNotRequiredError(player);
         }
 
-        Player p = model.getPlayers().get(player);
+        Player p = this.model.getPlayers().get(player);
         Ship pShip = p.getShip();
 
         pShip.removeSingleComponent(i, j);
         p.addLostPieces(1);
 
-
+        // Updating all components sublists
+        pShip.generateComponentSubLists();
 
         FixedComponentDTO state = new FixedComponentDTO()
                 .setPlayerNickname(player)
@@ -39,7 +40,7 @@ public final class FixShipState extends State {
 
         // Check if the player ship is not valid
         if (pShip.validateShip()) {
-            playersWithInvalidShip.remove(player);
+            this.playersWithInvalidShip.remove(player);
             state.setShipFixed(true);
         } else {
             state.setShipFixed(false);

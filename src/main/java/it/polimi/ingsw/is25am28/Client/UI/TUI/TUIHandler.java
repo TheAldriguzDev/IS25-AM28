@@ -1,19 +1,19 @@
 package it.polimi.ingsw.is25am28.Client.UI.TUI;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.*;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
+
+import javax.smartcardio.Card;
 
 public class TUIHandler implements ClientUI {
     private ClientModel model;
@@ -34,6 +34,21 @@ public class TUIHandler implements ClientUI {
         this.inputThread.setDaemon(true); // set the thread as daemon = true to avoid his termination
         this.inputThread.start();
         this.ioLock = new Object();
+    }
+
+    /**
+     * Clears the terminal from previous input.
+     * <p>
+     *     <b>NOTE on its functionality:</b>
+     *     <ul>
+     *         <li>This <b>will</b> work on terminals that support ANSI escape codes</li>
+     *         <li>It <b>will not</b> work on Windows' CMD</li>
+     *         <li>It <b>will not</b> work in the IDE's terminal</li>
+     *     </ul>
+     * </p>
+     */
+    public static void clearTerminal() {
+        System.out.print("\033[H\033[2J");
     }
 
     private void setScreen(Screen screen) {
@@ -98,6 +113,30 @@ public class TUIHandler implements ClientUI {
         }
 
         this.screen.showShipPopulate(populateShip);
+    }
+
+    @Override
+    public void showCardRound(CardRoundDTO cardRound) throws Exception {
+        // Interrupt the inputThread to prevent actions from the player
+        this.inputThread.interruptInputReader();
+
+        synchronized (this.ioLock) {
+            this.setScreen(new CardRoundScreen(this.model, this.inputThread));
+        }
+
+        this.screen.showCardRound(cardRound);
+    }
+
+    @Override
+    public void showEndGame(EndGameDTO endGame) {
+        // Interrupt the inputThread to prevent actions from the player
+        this.inputThread.interruptInputReader();
+
+        synchronized (this.ioLock) {
+            this.setScreen(new EndGameScreen(this.model, this.inputThread));
+        }
+
+        this.screen.showEndGame(endGame);
     }
 
     @Override

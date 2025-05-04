@@ -21,6 +21,11 @@ public final class ClientCabin extends ClientComponent {
         super(id, sides);
         this.isCore = isCore;
         this.inhabitants = new ArrayList<>();
+
+        if (isCore) {
+            this.inhabitants.add(new Lifeform(LifeformType.ASTRONAUT));
+            this.inhabitants.add(new Lifeform(LifeformType.ASTRONAUT));
+        }
     }
 
     /**
@@ -61,6 +66,13 @@ public final class ClientCabin extends ClientComponent {
         }
 
         inhabitants.add(lifeform);
+    }
+
+    /**
+     * @param lifeform The lifeform that will be removed from the current cabin
+     */
+    public void removeInhabitant(Lifeform lifeform) {
+        this.inhabitants.remove(lifeform);
     }
 
     @Override

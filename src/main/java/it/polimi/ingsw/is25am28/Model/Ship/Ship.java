@@ -435,6 +435,7 @@ public class Ship implements WidgetTUIGenerator {
     }
 
     /**
+     *
      * Adds the given lifeform to the given cabin. If an alien is added, it also
      * checks whether the given cabin has a matching vital unit attached
      *
@@ -446,10 +447,12 @@ public class Ship implements WidgetTUIGenerator {
      * @throws TooManyAliensException If a player tries to add a second alien of the same type
      * @throws OutOfGridException If the given coordinates fall out of the grid
      * @throws OutOfShipException If the given coordinates fall out of the ship
+     * @throws NoSupportVitalFoundException If the given lifeform is an alien and the cabin has no matching vital units as its neighbours
+     * @throws IllegalArgumentException If other errors arise due to wrong input
      */
     public void addLifeformToCabin(int i, int j, LifeformType lifeformType)
             throws IllegalArgumentException, TooManyAliensException,
-                   OutOfGridException, OutOfShipException
+                   OutOfGridException, OutOfShipException, NoSupportVitalFoundException
     {
         boolean vitalFound;
         Component[] neighbours;
@@ -494,6 +497,12 @@ public class Ship implements WidgetTUIGenerator {
                                     cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
                                     this.purpleAlienPosition = cabin;
                                 }
+                                else {
+                                    throw new NoSupportVitalFoundException("ERROR: Cannot place purple alien since no purple vital is neighbouring this cabin");
+                                }
+                            }
+                            else {
+                                throw new IllegalArgumentException("ERROR: Cabin has " + cabin.getAvailableSpace() + " slot(s) occupied out of 2 (cannot insert purple alien (no space left))");
                             }
                         }
                         else {
@@ -522,6 +531,12 @@ public class Ship implements WidgetTUIGenerator {
                                     cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
                                     this.brownAlienPosition = cabin;
                                 }
+                                else {
+                                    throw new NoSupportVitalFoundException("ERROR: Cannot place brown alien since no brown vital is neighbouring this cabin");
+                                }
+                            }
+                            else {
+                                throw new IllegalArgumentException("ERROR: Cabin has " + cabin.getAvailableSpace() + " slot(s) occupied out of 2 (cannot insert brown alien (no space left))");
                             }
                         }
                         else {
