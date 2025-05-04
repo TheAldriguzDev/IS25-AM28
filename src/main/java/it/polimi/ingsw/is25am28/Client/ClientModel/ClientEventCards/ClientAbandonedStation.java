@@ -16,8 +16,8 @@ public class ClientAbandonedStation extends ClientEventCard {
     private List<ItemColor> stationResources;
     private boolean isCardUsable;
 
-    public ClientAbandonedStation(CardStateJSON cardState, InputThread inputThread, ClientModel model) {
-        super(cardState, inputThread, model);
+    public ClientAbandonedStation(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementStep = cardState.getMovementSteps();
         this.hasBeenUsed = cardState.getIsCardUsable();

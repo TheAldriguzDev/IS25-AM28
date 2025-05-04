@@ -99,7 +99,7 @@ class StardustTest {
         assertNull(cardState.getPlayerNickname());
         // =============================== //
         // ======== WIDGET TEST ======== //
-        clientStardust = new ClientStardust(cardState, null, null);
+        clientStardust = new ClientStardust(null, null, cardState);
         clientStardust.generateWidget().printWidget();
         // ============================= //
 

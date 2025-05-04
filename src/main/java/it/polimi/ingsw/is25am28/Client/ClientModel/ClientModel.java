@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard.ClientBoard;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
@@ -21,11 +23,15 @@ public class ClientModel {
 
     // Map that stores the client nicknames with their ClientPlayer data structure
     private final Map<String, ClientPlayer> players;
+    private final List<ClientEventCard> eventCards;
+    private ClientBoard board;
 
     // TODO: ClientBoard - ClientShip - ClientComponent --> For ships and playerColor i would store them inside Maps to identify each user data
 
     public ClientModel() {
         this.players = new HashMap<>();
+        this.eventCards = new ArrayList<>();
+        this.board = null;
     }
 
     public String getNickname() {
@@ -106,6 +112,27 @@ public class ClientModel {
      */
     public TimerDTO getTimerDTO() {
         return this.timerDTO;
+    }
+
+    /**
+     * @return All client event cards
+     */
+    public List<ClientEventCard> getClientEventCards() {
+        return this.eventCards;
+    }
+
+    /**
+     * @return The client model board
+     */
+    public ClientBoard getClientBoard() {
+        return this.board;
+    }
+
+    /**
+     * Sets the current client board to the given one
+     */
+    public void setClientBoard(ClientBoard board) {
+        this.board = board;
     }
 
     /**

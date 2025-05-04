@@ -22,8 +22,8 @@ public class ClientOpenSpace extends ClientEventCard {
 //    private Map<String, Integer> updatedPositions;
 //    private List<String> eliminatedPlayers;
 
-    public ClientOpenSpace(CardStateJSON openSpaceState, InputThread inputThread, ClientModel model) {
-        super(openSpaceState, inputThread, model);
+    public ClientOpenSpace(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
     }
 
     @Override
@@ -31,7 +31,6 @@ public class ClientOpenSpace extends ClientEventCard {
         OpenSpaceJSON response = new OpenSpaceJSON();
 
         response.setPlayerNickname(this.playerNickname);
-
         response.setUsedEnergy(this.inputUsedEnergy());
 
         return response;
@@ -95,34 +94,46 @@ public class ClientOpenSpace extends ClientEventCard {
 
     @Override
     protected int inputUsedEnergy() {
-        String input;
+        AtomicInteger totalAvailableEnergy;
         int usedEnergy;
-        AtomicInteger totalAvailableEnergy = new AtomicInteger(0);
-        System.out.print("Insert the number of double engines to activate: ");
+        String input;
+
+        totalAvailableEnergy = new AtomicInteger(0);
+
         do {
+            System.out.print("Insert the number of double engines to activate: ");
+
             try {
                 input = this.inputThread.waitForInput();
-                if (input == null) { return 0;}
+
+                if (input == null) return 0;
+
                 usedEnergy = Integer.parseInt(input);
+
                 this.model.getShipOfPlayer(this.playerNickname).ifPresent(
-                        (ship) -> {
-                            totalAvailableEnergy.set(ship.getAvailableEnergy());
-                        }
+                    (ship) -> {
+                        totalAvailableEnergy.set(ship.getAvailableEnergy());
+                    }
                 );
+
                 if (usedEnergy > 0) {
                     if (usedEnergy <= totalAvailableEnergy.get()) {
                         return usedEnergy;
-                    } else {
-                        System.out.print(PrintUtils.addColor("Invalid input, you can't consume more energy than you have: ", ANSIColors.RED));
                     }
-                } else {
-                    System.out.print(PrintUtils.addColor("Invalid input, value must be positive: ", ANSIColors.RED));
+                    else {
+                        System.out.println(PrintUtils.addColor("Invalid input, you can't consume more energy than you have: ", ANSIColors.RED));
+                    }
+                }
+                else {
+                    System.out.println(PrintUtils.addColor("Invalid input, value must be positive: ", ANSIColors.RED));
                 }
 
-            } catch (InterruptedException e) {
+            }
+            catch (InterruptedException e) {
                 return 0;
-            } catch (NumberFormatException e) {
-                System.out.print(PrintUtils.addColor("Invalid input, please insert a number: ", ANSIColors.RED));
+            }
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("Invalid input, please insert a number: ", ANSIColors.RED));
             }
         } while (true);
     }

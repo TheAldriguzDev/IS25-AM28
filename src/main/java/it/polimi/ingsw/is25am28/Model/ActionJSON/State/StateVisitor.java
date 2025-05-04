@@ -22,6 +22,7 @@ public interface StateVisitor {
     void visit (PopulateShipComponentDTO state) throws Exception;
     void visit (PlayerEndedShipDTO state) throws Exception;
     void visit (TimerDTO state) throws Exception;
+    void visit (ConstructionDeckDTO state) throws Exception;
     void visit (FixShipDTO state) throws Exception;
     void visit (PopulateShipDTO state) throws Exception;
 

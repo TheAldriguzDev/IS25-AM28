@@ -381,7 +381,7 @@ public final class ShipConstructionTUIPage extends TUIPage {
         CommandWidgetTUI deckCommand;
         int subdeckAmount = 4;
         int visibleSubdecks = subdeckAmount - 1;
-        int subdeckSize = this.clientTUI.getModel().getState().getEventCards().size() / subdeckAmount;
+        int subdeckSize = this.clientTUI.getModel().getClientEventCards().size() / subdeckAmount;
 
         if (this.cardDeckSelectionWidget == null) {
             // Initializing a new card deck selection command input widget
@@ -417,7 +417,7 @@ public final class ShipConstructionTUIPage extends TUIPage {
                     int end = start + subdeckSize;
 
                     // View of only the cards belonging to that subdeck
-                    this.selectedSubdeck = this.clientTUI.getModel().getState().getEventCards().subList(start, end);
+                    this.selectedSubdeck = this.clientTUI.getModel().getClientEventCards().subList(start, end);
                 }
             );
             deckCommand.appendString("Select subdeck #" + (i + 1));

@@ -15,8 +15,8 @@ public class ClientMeteorShower extends ClientEventCard {
     private Map<String, Integer> currMeteorDescriptor;
 //    private Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
 
-    public ClientMeteorShower(CardStateJSON cardState, InputThread inputThread, ClientModel model) {
-        super(cardState, inputThread, model);
+    public ClientMeteorShower(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
     }
 
 

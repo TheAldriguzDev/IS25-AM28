@@ -24,15 +24,15 @@ public class ClientSmugglers extends ClientEventCard {
 //    List<String> defeatedPlayers;
 
 
-    public ClientSmugglers(CardStateJSON smugglersState, InputThread inputThread, ClientModel model) {
-        super(smugglersState, inputThread, model);
-        this.requiredFirepower = smugglersState.getRequiredFirepower();
-        this.movementSteps = smugglersState.getMovementSteps();
-        this.redItems = smugglersState.getRedItems();
-        this.yellowItems = smugglersState.getYellowItems();
-        this.blueItems = smugglersState.getBlueItems();
-        this.greenItems = smugglersState.getGreenItems();
-        this.takenItems = smugglersState.getTakenItems();
+    public ClientSmugglers(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
+        this.requiredFirepower = cardState.getRequiredFirepower();
+        this.movementSteps = cardState.getMovementSteps();
+        this.redItems = cardState.getRedItems();
+        this.yellowItems = cardState.getYellowItems();
+        this.blueItems = cardState.getBlueItems();
+        this.greenItems = cardState.getGreenItems();
+        this.takenItems = cardState.getTakenItems();
         this.firstRound = true;
         this.defeatedPlayers = new ArrayList<>();
     }

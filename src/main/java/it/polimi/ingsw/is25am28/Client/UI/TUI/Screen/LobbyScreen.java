@@ -22,6 +22,7 @@ public class LobbyScreen extends Screen {
     private WidgetTUI availableGamesWidget;
     private WidgetTUI lobbyCommandsWidget;
 
+    // Constructor
     public LobbyScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
         this.initLobbyCommandsWidget();
@@ -255,19 +256,20 @@ public class LobbyScreen extends Screen {
      * Refreshes the currently available games
      */
     private void refreshGames() throws Exception {
-        System.out.println(COMPUTER_MSG_TAG + "Refreshing games...");
+        System.out.println();
         this.client.sendMessage(new RefreshGames());
-        System.out.println(COMPUTER_MSG_TAG + "Available games are now up to date!");
+
+        new WidgetTUI()
+                .appendString(COMPUTER_MSG_TAG + "Refreshing games...")
+                .appendString(COMPUTER_MSG_TAG + "Available games are now up to date!")
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder()
+                .printWidget();
     }
 
     /**
-     * This method is used to display the possibles options that the player can make when connect to the game.
-     *  0) Quit game
-     *  1) Create new game
-     *  2) Join an existing game
-     *  3) Reconnect to an existing game
-     *  4) Refresh the lobbies
-     * */
+     * TUI screen entry point for the game menu
+     */
     @Override
     public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
         boolean commandExecuted;

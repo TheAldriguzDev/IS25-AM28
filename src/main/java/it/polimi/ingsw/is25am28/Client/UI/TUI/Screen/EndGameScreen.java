@@ -14,10 +14,14 @@ import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class EndGameScreen extends Screen {
 
+    // Constructor
     public EndGameScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
     }
 
+    /**
+     * TUI screen entry point for the end game phase
+     */
     @Override
     public void showEndGame(EndGameDTO endGame) {
         WidgetTUI endGameWidget = new WidgetTUI();

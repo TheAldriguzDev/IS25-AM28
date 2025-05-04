@@ -1,9 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.UI.TUI;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
-import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
@@ -13,20 +11,15 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
-import javax.smartcardio.Card;
-
 public class TUIHandler implements ClientUI {
-    private ClientModel model;
+    private final ClientModel model;
     private Screen screen;
 
     // If the screen needs to be force quit, we can save it to resume it --> TODO: Probably not useful
     private Screen prevScreen;
     private final InputThread inputThread;
     private final Object ioLock;
-
     private VirtualView virtualClient;
-    private CommandCTX commandCTX;
-
 
     public TUIHandler(ClientModel model) {
         this.model = model;
@@ -42,8 +35,8 @@ public class TUIHandler implements ClientUI {
      *     <b>NOTE on its functionality:</b>
      *     <ul>
      *         <li>This <b>will</b> work on terminals that support ANSI escape codes</li>
-     *         <li>It <b>will not</b> work on Windows' CMD</li>
-     *         <li>It <b>will not</b> work in the IDE's terminal</li>
+     *         <li>It <b>will NOT</b> work on Windows' CMD</li>
+     *         <li>It <b>will NOT</b> work in the IDE's terminal</li>
      *     </ul>
      * </p>
      */

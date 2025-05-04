@@ -14,7 +14,7 @@ import java.util.Map;
 public final class CardRoundDTO extends StateDTO {
     private int round;
     private BoardJSON board;
-    private Map<String, PlayerJSON> playersInfo;
+    private Map<String, PlayerJSON> playersInfo;    // Already in ClientModel
     private CardStateJSON cardInfo;
     private boolean isCardNew;
 

@@ -20,14 +20,14 @@ public class ClientSlavers extends ClientEventCard {
 
 //    private List<String> defeatedPlayers;
 
-    public ClientSlavers(CardStateJSON slaversCardState, InputThread inputThread, ClientModel model) {
-        super(slaversCardState, inputThread, model);
-        this.requiredFirepower = slaversCardState.getRequiredFirepower();
-        this.movementSteps = slaversCardState.getMovementSteps();
-        this.givenCredits = slaversCardState.getGivenCredits();
-        this.takenCrew = slaversCardState.getTakenCrew();
+    public ClientSlavers(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
+        this.requiredFirepower = cardState.getRequiredFirepower();
+        this.movementSteps = cardState.getMovementSteps();
+        this.givenCredits = cardState.getGivenCredits();
+        this.takenCrew = cardState.getTakenCrew();
         this.defeatedPlayers = new ArrayList<>();
-        firstRound = true;
+        this.firstRound = true;
     }
 
     @Override

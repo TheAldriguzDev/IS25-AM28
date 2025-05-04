@@ -10,11 +10,9 @@ import it.polimi.ingsw.is25am28.Network.VirtualView;
 import java.util.Scanner;
 import java.util.UUID;
 
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
+
 public class Client {
-
-    // TODO: Attributes that are needed to handle the information that we need to store client-side for the game
-
-    // TODO: Understand where we need to store the information about the Game
 
     public static void main(String[] args) throws Exception {
         // Will store the specific network implementation (RMI / Socket)
@@ -49,7 +47,7 @@ public class Client {
             }
         } while (uiType == -1);
 
-        System.out.print("\033[H\033[2J");
+        clearTerminal();
         System.out.flush();
 
         // ================= CREATE THE CLIENT ================= //
@@ -59,7 +57,6 @@ public class Client {
         ClientModel model = new ClientModel();
 
         if (uiType == 1) {
-//            clientUI = new ClientTUI(model);
             clientUI = new TUIHandler(model);
         } else {
             throw new RuntimeException("UI Type not yet supported");

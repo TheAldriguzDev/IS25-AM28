@@ -724,7 +724,7 @@ class VisitPlanetsTest {
         ClientVisitPlanets clientVisitPlanets;
 
         // ======== WIDGET TESTING ======== //
-        clientVisitPlanets = new ClientVisitPlanets(visitPlanets.generateState(), null, null);
+        clientVisitPlanets = new ClientVisitPlanets(null, null, visitPlanets.generateState());
         clientVisitPlanets.generateWidget().printWidget();
         // ================================ //
 

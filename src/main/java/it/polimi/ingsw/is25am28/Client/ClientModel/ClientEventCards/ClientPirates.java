@@ -20,12 +20,12 @@ public class ClientPirates extends ClientEventCard {
     Map<String, Integer> currentPlasmaShot;
     private List<String> defeatedPlayers;
 
-    public ClientPirates(CardStateJSON piratesState, InputThread inputThread, ClientModel model) {
-        super(piratesState, inputThread, model);
+    public ClientPirates(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
         this.firstRound = true;
-        this.requiredFirepower = piratesState.getRequiredFirepower();
-        this.givenCredits = piratesState.getGivenCredits();
-        this.movementSteps = piratesState.getMovementSteps();
+        this.requiredFirepower = cardState.getRequiredFirepower();
+        this.givenCredits = cardState.getGivenCredits();
+        this.movementSteps = cardState.getMovementSteps();
         this.defeatedPlayers = new ArrayList<>();
     }
 

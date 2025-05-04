@@ -22,7 +22,7 @@ import java.util.List;
         @JsonSubTypes.Type(value = PopulateShip.class, name = "PopulateShip")
 })
 
-public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FixShip, FlipTimer, NewPlayer, Ping, PlaceTile, PopulateShip, Reconnect, RefreshGames, SelectDeselectSubdeck, SelectTile, SendShipConfirmation {
+public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FixShip, FlipTimer, NewPlayer, Ping, PlaceTile, PlayCard, PopulateShip, Reconnect, RefreshGames, SelectDeselectSubdeck, SelectTile, SendShipConfirmation {
 
     /**
      * @return true if the message it's correct, otherwise it will return false

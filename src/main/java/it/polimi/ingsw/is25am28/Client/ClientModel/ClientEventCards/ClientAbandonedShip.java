@@ -13,8 +13,8 @@ public class ClientAbandonedShip extends ClientEventCard {
     private final int givenCredits;
     private boolean isCardUsable;
 
-    public ClientAbandonedShip(CardStateJSON cardState, InputThread inputThread, ClientModel model) {
-        super(cardState, inputThread, model);
+    public ClientAbandonedShip(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementStep = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();

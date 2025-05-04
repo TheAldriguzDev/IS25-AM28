@@ -18,6 +18,7 @@ import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.clearTerminal;
 public class FixShipScreen extends Screen {
     private ClientShip currPlayerShip;
 
+    // Constructor
     public FixShipScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
 
@@ -172,6 +173,9 @@ public class FixShipScreen extends Screen {
         return coordinates.entrySet().stream().toList().getFirst();
     }
 
+    /**
+     * TUI screen entry point for the ship fix phase
+     */
     @Override
     public void showShipFixing(FixShipDTO fixShip) throws Exception {
         System.out.println();

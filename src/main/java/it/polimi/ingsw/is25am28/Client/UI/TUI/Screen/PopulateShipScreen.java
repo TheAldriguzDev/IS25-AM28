@@ -301,6 +301,9 @@ public class PopulateShipScreen extends Screen {
         );
     }
 
+    /**
+     * TUI screen entry point for the ship populate phase
+     */
     @Override
     public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
         System.out.println();

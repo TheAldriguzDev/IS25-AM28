@@ -20,8 +20,8 @@ public class ClientStardust extends ClientEventCard {
 
 
 
-    public ClientStardust(CardStateJSON StardustCardState, InputThread inputThread, ClientModel model) {
-        super(StardustCardState, inputThread, model);
+    public ClientStardust(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
     }
 
     @Override

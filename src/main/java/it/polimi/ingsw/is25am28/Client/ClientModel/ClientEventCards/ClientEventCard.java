@@ -22,25 +22,32 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected boolean hasBeenUsed;
     protected boolean hasBeenActivated; // this flag allows the card to send its full static information (like when only visualized at the start of the game) only when ita has not been used a single time wit useCard()
 
+    protected ClientModel model;
     protected InputThread inputThread;
 
-    protected ClientModel model;
-
-    public ClientEventCard(CardStateJSON cardState, InputThread inputThread, ClientModel model) {
+    public ClientEventCard(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        this.model = model;
+        this.inputThread = inputThread;
         this.id = cardState.getId();
         this.cardName = cardState.getCardName();
         this.cardLevel = cardState.getCardLevel();
-        this.inputThread = inputThread;
-        this.model = model;
     }
 
     public abstract ActionJSON useCard();
 
-    /*
-    * This method is in charge of updating the card's data as the round goes on*/
+    public int getId() {
+        return this.id;
+    }
+
+    /**
+     * This method is in charge of updating the card's data as the round goes on
+     */
     public abstract void updateCard(CardStateJSON cardState);
 
-    /*This method generated a widget with the relevant card's info*/
+    /**
+     * @return The client event card's widget containing
+     *         all the relevant information
+     */
     public abstract WidgetTUI generateWidget();
     // TODO: Place the current/target player in a separated bordered widget
 
@@ -114,11 +121,13 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
 
     // ACK METHOD
     protected void inputAck() {
-        System.out.print("Press any key to continue...");
+        System.out.print("Press any key and then press [ENTER] to continue...");
+
         try {
             this.inputThread.waitForInput();
-        } catch (InterruptedException e) {
-            return;
+        }
+        catch (InterruptedException e) {
+            // A forced interrupt arrived
         }
     }
 }

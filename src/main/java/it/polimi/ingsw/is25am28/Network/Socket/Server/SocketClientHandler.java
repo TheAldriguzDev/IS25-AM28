@@ -106,6 +106,9 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case PopulateShip data -> {
                     this.populateShip(data.getPlayerNickname(), data.getLifeformToAdd());
                 }
+                case PlayCard data -> {
+                    this.playCard(data.getPlayerNickname(), data.getActionJSON());
+                }
                 default -> {
                     throw new Exception("The given Message is not supported");
                 }

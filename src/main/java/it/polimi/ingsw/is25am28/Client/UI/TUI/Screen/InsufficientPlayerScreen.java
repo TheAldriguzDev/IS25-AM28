@@ -8,10 +8,15 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.clearTerminal;
 
 public class InsufficientPlayerScreen extends Screen {
+
+    // Constructor
     public InsufficientPlayerScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
     }
 
+    /**
+     * TUI screen entry point for the insufficient players condition
+     */
     @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
         WidgetTUI waitingForPlayersWidget = new WidgetTUI();

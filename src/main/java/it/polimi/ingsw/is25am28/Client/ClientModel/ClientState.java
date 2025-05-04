@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
@@ -21,14 +22,6 @@ public class ClientState {
 
     public List<ClientComponent> getReservedComponents() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'getReservedComponents' is not supported in the " + this + " state");
-    }
-
-    /**
-     * Method used to return all client event cards that players can see
-     * during the ship construction phase
-     */
-    public List<ClientEventCard> getEventCards() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The 'getEventCards' is not supported in the " + this + " state");
     }
 
     public boolean getPlayerFinishedBuildingShip(String playerNickname) throws UnsupportedOperationException {
@@ -83,8 +76,7 @@ public class ClientState {
     }
 
     /**
-     * Command used to remove a player from the ClientFixShipState when
-     * the received FixedComponentDTO has the isShipFixed flag to TRUE
+     * Command used to retrieve the FixShipDTO when inside the ClientFixShipState
      */
     public FixShipDTO getFixShipDTO() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'getFixShipDTO' is not supported in the " + this + " state");
@@ -99,11 +91,17 @@ public class ClientState {
     }
 
     /**
-     * Command used to add a lifeform to the ship of the player that
-     * added it, so that all clients have all players' updated ships
+     * Command used to retrieve the PopulateShipDTO when inside the ClientPopulateShipState
      */
     public PopulateShipDTO getPopulateShipDTO() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'getPopulateShipDTO' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used to retrieve the CardRoundDTO when inside the ClientCardRoundState
+     */
+    public CardRoundDTO getCardRoundDTO() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'getCardRoundDTO' is not supported in the " + this + " state");
     }
 
     /**

@@ -147,7 +147,9 @@ public class ClientBoard {
         }
 
         // Finally, wrap the board info widget with the default border
-        boardInfoWidget.wrapWidgetWithBorder();
+        boardInfoWidget
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder();
 
         return boardInfoWidget;
     }
@@ -245,8 +247,10 @@ public class ClientBoard {
             widgetList.add(boardWidget);
             widgetList.add(this.getBoardInfoWidget());
 
-            boardWidget = WidgetTUI.composeWidgetsVertically(widgetList);
-            boardWidget.wrapWidgetWithBorder();
+            boardWidget =
+                    WidgetTUI.composeWidgetsVertically(widgetList)
+                    .centerWidgetScreen()
+                    .wrapWidgetWithBorder();
 
             return boardWidget;
         }

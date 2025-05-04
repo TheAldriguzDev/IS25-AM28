@@ -20,10 +20,6 @@ public class ClientShipConstructionState extends ClientState {
     private List<ClientComponent> currentShip;
     private boolean isTimeRunning;
 
-    // List containing all cards from all decks
-    // (each sub-deck can be extracted from the difficulty level)
-    private List<ClientEventCard> eventCards;
-
     // (NOT HERE --> IN THE CORRECT STATES
     // TODO: Add the list for the removedComponents to support the FIX SHIP PHASE
     // TODO: Add the list for the populateShipComponent to support the POPULATE SHIP PHASE
@@ -38,7 +34,6 @@ public class ClientShipConstructionState extends ClientState {
         this.components = new ArrayList<>();
         this.reservedComponents = new ArrayList<>();
         this.currentShip = new ArrayList<>();
-        this.eventCards = new ArrayList<>();
 
         // Initialize the timer state at the beginning
         // of the ship building phase
@@ -122,31 +117,27 @@ public class ClientShipConstructionState extends ClientState {
     }
 
     /**
-     * Generates all client event cards from the given list
-     * of card states sent by the server
+     * Generates all client event cards from the given list of card
+     * states sent by the server and stores them in the client model
      */
     private void generateClientEventCards(List<CardStateJSON> cards) {
         if (cards == null || cards.isEmpty()) {
             throw new IllegalArgumentException("ERROR: Cannot construct all client event cards without the data");
         }
 
-        if (this.eventCards == null) {
-            this.eventCards = new ArrayList<>();
-        }
-
         for (CardStateJSON cardState : cards) {
             switch (cardState.getId()) {
-                case 0 -> this.eventCards.add(new ClientAbandonedShip(cardState, null, null));
-                case 1 -> this.eventCards.add(new ClientAbandonedStation(cardState, null, null));
-                case 2 -> this.eventCards.add(new ClientEpidemy(cardState, null, null));
-                case 3 -> this.eventCards.add(new ClientMeteorShower(cardState, null, null));
-                case 4 -> this.eventCards.add(new ClientOpenSpace(cardState, null, null));
-                case 5 -> this.eventCards.add(new ClientPirates(cardState, null, null));
-                case 6 -> this.eventCards.add(new ClientSlavers(cardState, null, null));
-                case 7 -> this.eventCards.add(new ClientSmugglers(cardState, null, null));
-                case 8 -> this.eventCards.add(new ClientStardust(cardState, null, null));
-                case 9 -> this.eventCards.add(new ClientVisitPlanets(cardState, null, null));
-                case 10 -> this.eventCards.add(new ClientWarZone(cardState, null, null));
+                case 0 -> this.model.getClientEventCards().add(new ClientAbandonedShip(model, null, cardState));
+                case 1 -> this.model.getClientEventCards().add(new ClientAbandonedStation(model, null, cardState));
+                case 2 -> this.model.getClientEventCards().add(new ClientEpidemy(model, null, cardState));
+                case 3 -> this.model.getClientEventCards().add(new ClientMeteorShower(model, null, cardState));
+                case 4 -> this.model.getClientEventCards().add(new ClientOpenSpace(model, null, cardState));
+                case 5 -> this.model.getClientEventCards().add(new ClientPirates(model, null, cardState));
+                case 6 -> this.model.getClientEventCards().add(new ClientSlavers(model, null, cardState));
+                case 7 -> this.model.getClientEventCards().add(new ClientSmugglers(model, null, cardState));
+                case 8 -> this.model.getClientEventCards().add(new ClientStardust(model, null, cardState));
+                case 9 -> this.model.getClientEventCards().add(new ClientVisitPlanets(model, null, cardState));
+                case 10 -> this.model.getClientEventCards().add(new ClientWarZone(model, null, cardState));
                 
                 default -> throw new IllegalArgumentException("ERROR: Illegal event card ID");
             }
@@ -161,16 +152,6 @@ public class ClientShipConstructionState extends ClientState {
     @Override
     public List<ClientComponent> getReservedComponents() throws UnsupportedOperationException {
         return this.reservedComponents;
-    }
-
-    /**
-     * @return The list of all client event cards that compose
-     *         the 4 decks that the player can see during the
-     *         ship construction phase
-     */
-    @Override
-    public List<ClientEventCard> getEventCards() throws UnsupportedOperationException {
-        return this.eventCards;
     }
 
     /**

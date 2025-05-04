@@ -133,7 +133,7 @@ class PiratesTest {
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Non initialized card");
-        clientPirates = new ClientPirates(pirates.generateState(), null, null);
+        clientPirates = new ClientPirates(null, null, pirates.generateState());
         clientPirates.generateWidget().printWidget();
         // ================================ //
 

@@ -14,8 +14,8 @@ public class ClientVisitPlanets extends ClientEventCard {
     Map<Integer, Map<ItemColor, Integer>> availablePlanets; // TODO: a list would serve this role better since the generateWidget needs order
     private int chosenPlanetIndex;
 
-    public ClientVisitPlanets(CardStateJSON cardState, InputThread inputThread, ClientModel model) {
-        super(cardState, inputThread, model);
+    public ClientVisitPlanets(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
         this.availablePlanets = cardState.getAvailablePlanets();
     }
 

@@ -193,6 +193,15 @@ public class ViewUpdater implements StateVisitor {
     }
 
     @Override
+    public void visit(ConstructionDeckDTO state) throws Exception {
+        synchronized (this.model) {
+            // TODO: Set the flat isSelected for the particular deck in the model
+            //      + Modify the screen to check this list first
+            // this.model.getState()
+        }
+    }
+
+    @Override
     public void visit(FixShipDTO state) throws Exception {
         // Set the model state to the ClientFixShipState
         synchronized (this.model) {
@@ -214,10 +223,6 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(CardRoundDTO state) throws Exception {
-        System.out.println();
-        System.out.println("MOVE TO CARD ROUND PHASE");
-        System.out.println();
-
         synchronized (this.model) {
             this.model.setState(new ClientCardRoundState(this.model, state));
         }

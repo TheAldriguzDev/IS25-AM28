@@ -19,9 +19,8 @@ public class ClientWarZone extends ClientEventCard {
     private Map<String, Integer> currentPlasmaShot;
     private int diceThrowResult;
 
-
-    public ClientWarZone(CardStateJSON cardState, InputThread inputThread, ClientModel model) {
-        super(cardState, inputThread, model);
+    public ClientWarZone(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
         this.actionAndConsequences = cardState.getActionsAndConsequences();
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementSteps = cardState.getMovementSteps();

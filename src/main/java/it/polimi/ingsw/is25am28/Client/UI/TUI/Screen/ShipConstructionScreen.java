@@ -15,11 +15,11 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 
-import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.clearTerminal;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ShipConstructionScreen extends Screen {
-    // Default component matrix (row, col) dimensions
+    // Default component selection matrix (row, col) dimensions
     public static final int DEFAULT_COMPONENT_ROWS = 8;
     public static final int DEFAULT_COMPONENT_COLS = 19;
 
@@ -43,8 +43,8 @@ public class ShipConstructionScreen extends Screen {
     private ClientComponent selectedComponent;
     private ClientShip currPlayerShip;
     private boolean isSelectedTileReserved;
-    private int selectedSubdeckIndex;
 
+    // Constructor
     public ShipConstructionScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
 
@@ -56,7 +56,6 @@ public class ShipConstructionScreen extends Screen {
         // Other initializations
         this.selectedComponent = null;
         this.isSelectedTileReserved = false;
-        this.selectedSubdeckIndex = -1;
 
         // Creating the covered and empty component widgets
         this.generateCoveredComponentWidget();
@@ -345,7 +344,7 @@ public class ShipConstructionScreen extends Screen {
             tmpCardWidget.setScreen(WidgetTUI.composeScreensHorizontally(allCardsScreens));
 
             // Adding a centered title
-            this.cardSubdeckWidget.appendString("==== SELECTED SUBDECK ====");
+            this.cardSubdeckWidget.appendString("[SELECTED SUBDECK]");
             this.cardSubdeckWidget.setWidth(tmpCardWidget.getWidth());
             this.cardSubdeckWidget.centerWidgetScreen();
 
@@ -673,7 +672,7 @@ public class ShipConstructionScreen extends Screen {
         int subdeckId, subdeckSize, visibleSubdecks;
         String line;
 
-        subdeckSize = this.model.getState().getEventCards().size() / 4;
+        subdeckSize = this.model.getClientEventCards().size() / 4;
         visibleSubdecks = 3;
 
         do {
@@ -723,7 +722,7 @@ public class ShipConstructionScreen extends Screen {
                 // When the server gives the OK to lock the subdeck, then
                 // proceed to generate and show the corresponding widget
                 this.generateCardSubdeckWidget(
-                    this.model.getState().getEventCards().subList(start, end)
+                    this.model.getClientEventCards().subList(start, end)
                 );
 
                 clearTerminal();
@@ -860,10 +859,14 @@ public class ShipConstructionScreen extends Screen {
             clearTerminal();
             this.otherPlayerShipWidget.printWidget();
 
-            System.out.println(COMPUTER_MSG_TAG + "You're now viewing \"" + this.model.getAllPlayersNicknames().get(chosenShip) + "\"'s ship");
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + "You're now viewing \"" + this.model.getAllPlayersNicknames().get(chosenShip) + "\"'s ship")
+                    .addPadding(1, 1, 1, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
 
             try {
-                System.out.print(COMPUTER_MSG_TAG + "Press any key and then press [ENTER] to go back...");
+                System.out.print("Press any key and then press [ENTER] to go back...");
                 line = this.inputThread.waitForInput();
 
                 // A forced interrupt arrived
@@ -1347,8 +1350,7 @@ public class ShipConstructionScreen extends Screen {
     }
 
     /**
-     * Shows to this player the available commands and all the component
-     * he can choose from to build his ship
+     * TUI screen entry point for the ship construction phase
      */
     @Override
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {

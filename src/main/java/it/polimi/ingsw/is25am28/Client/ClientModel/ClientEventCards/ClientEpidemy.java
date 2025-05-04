@@ -8,8 +8,9 @@ import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 public class ClientEpidemy extends ClientEventCard {
-    public ClientEpidemy(CardStateJSON cardState, InputThread inputThread, ClientModel model) {
-        super(cardState, inputThread, model);
+
+    public ClientEpidemy(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
+        super(model, inputThread, cardState);
     }
 
     @Override
