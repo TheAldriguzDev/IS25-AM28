@@ -1,37 +1,31 @@
 package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Network.Messages.PlayCard;
-import it.polimi.ingsw.is25am28.Network.Messages.SelectDeselectSubdeck;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.ConsoleWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
-
-// TODO: Fix the following bugs:
-//      - (1) (ShipConstructionScreen) When the ViewUpdater receives a ConstructionDeckDTO, it needs to set
-//        a flag inside the ClientShipConstructionState of all players to indicate that a certain subdeck
-//        is either being observer or free to watch (thus avoiding to send a message to the server)
-//        .
-//      - (2) (ShipConstructionScreen) Subdeck widgets are centered somewhere and leads to teared card widgets
-//        .
-//      - (3) If two or more players have their ships that are both validated and already full, the GameModel
-//        apparently doesn't set the new state, which in turn doesn't invoke the ViewUpdater and thus the
-//        entry point "showCardRound" is not invoked, leaving the TUI hanging.
-//        .
-//      - (4) Sometimes the action of populating gets stuck (mostly with Astronauts)
 
 public class CardRoundScreen extends Screen {
     private static final int CONSOLE_WIDGET_MAX_HEIGHT = 6;
@@ -43,26 +37,32 @@ public class CardRoundScreen extends Screen {
     private WidgetTUI shipStatsWidget;
     private WidgetTUI playerNameWidget;
 
+    private WidgetTUI availableLifeforms;
+    private WidgetTUI availableItemColors;
+
     private WidgetTUI otherPlayerShipWidget;
     private WidgetTUI otherPlayerShipCommandsWidget;
-
-    private WidgetTUI cardSubdeckWidget;
-    private WidgetTUI cardSubdeckCommandsWidget;
 
     private WidgetTUI cardRoundCommandsWidget;
     private ConsoleWidgetTUI consoleWidget;
 
     private ClientEventCard currEventCard;
 
+    private Map<String, Pair<Boolean, Callable<Object>>> indexedCardInputMethods;
+
     // Constructor
     public CardRoundScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
 
+        // Initializing the map of available input methods
+        this.generateIndexedCardInputMethods();
+
         // Widgets initializations
+        this.generateAvailableLifeformsWidget();
+        this.generateAvailableItemColorsWidget();
         this.generatePlayerNameWidget();
         this.generateShipWidgets();
         this.generateCardRoundCommandsWidget();
-        this.generateCardSubdeckCommandsWidget();
         this.generateOtherPlayerShipCommandsWidget();
 
         this.boardWidget = this.model.getClientBoard().generateWidget();
@@ -71,6 +71,449 @@ public class CardRoundScreen extends Screen {
             CONSOLE_WIDGET_MAX_HEIGHT,
             CONSOLE_WIDGET_MAX_WIDTH
         );
+    }
+
+    /**
+     * Initializes the map of available input methods to provide to the
+     * client event card the player's interaction and relative data
+     */
+    private void generateIndexedCardInputMethods() {
+        this.indexedCardInputMethods = new HashMap<>();
+
+        this.indexedCardInputMethods.put("setCrewToRemove",             new Pair<>(false, this::getCrewToRemove));
+        this.indexedCardInputMethods.put("setItemsToBeRemoved",         new Pair<>(false, this::getItemToBeTakenOrRemoved));
+        this.indexedCardInputMethods.put("setItemsToBeTaken",           new Pair<>(false, this::getItemToBeTakenOrRemoved));
+        this.indexedCardInputMethods.put("setTakeReward",               new Pair<>(false, this::getTakeReward));
+        this.indexedCardInputMethods.put("setChosenPlanetIndex",        new Pair<>(false, this::getChosenPlanetIndex));
+        this.indexedCardInputMethods.put("setWantsToVisit",             new Pair<>(false, this::getWantsToVisit));
+        this.indexedCardInputMethods.put("setShieldsToActivate",         new Pair<>(false, this::getShieldToActivate));
+        this.indexedCardInputMethods.put("setDoubleCannonsToActivate",   new Pair<>(false, this::getDoubleCannonToActivate));
+        this.indexedCardInputMethods.put("setDoubleEnginesToActivate",   new Pair<>(false, this::getDoubleEnginesToActivate));
+
+        ClientEventCard.setAvailableCommands(this.indexedCardInputMethods);
+    }
+
+    /**
+     * @return A component helper containing the lifeform the player
+     *         wants to remove and the relative cabin coordinates
+     *         of where it's located.
+     */
+    private ComponentHelper<LifeformType> getCrewToRemove() {
+        ComponentHelper<LifeformType> lifeformPosition;
+        Map.Entry<Integer, Integer> componentCoordinates;
+        AtomicReference<ClientShip> ship;
+        ClientComponent component;
+        boolean correctInput;
+        LifeformType lfType;
+        String line;
+        int lfIndex;
+
+        // Getting the player's ship
+        ship = new AtomicReference<>();
+        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(ship::set);
+
+        // Getting the lifeform type to remove
+        do {
+            System.out.print("Available lifeforms to remove:");
+            availableLifeforms.printWidget();
+            System.out.print(DEFAULT_COMMAND_PREFIX);
+
+            correctInput = false;
+            lfType = null;
+
+            try {
+                line = this.inputThread.waitForInput();
+
+                // A forced interrupt arrived
+                if (line == null) return null;
+
+                lfIndex = Integer.parseInt(line);
+                correctInput = true;
+
+                try {
+                    lfType = LifeformType.values()[lfIndex];
+                }
+                catch (IndexOutOfBoundsException e) {
+                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please select a valid lifeform.", ANSIColors.RED));
+                    correctInput = false;
+                }
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return null;
+            }
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
+            }
+        }
+        while (!correctInput);
+
+        correctInput = false;
+
+        // Getting the component coordinates
+        do {
+            try {
+                componentCoordinates = this.getComponentCoordinates();
+                Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
+
+                component = ship.get().getComponent(
+                    finalComponentCoordinates.getKey(),
+                    finalComponentCoordinates.getValue()
+                );
+
+                switch (component) {
+                    case ClientCabin cabin -> { correctInput = true; }
+                    case null, default -> {
+                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentCoordinates.getKey() + ", " + componentCoordinates.getValue() + ") is not a cabin.", ANSIColors.RED));
+                    }
+                }
+            }
+            catch (InterruptedException e) {
+                return null;
+            }
+        }
+        while (!correctInput);
+
+        // Assembling all together
+        lifeformPosition = new ComponentHelper<LifeformType>(
+            componentCoordinates.getKey(),
+            componentCoordinates.getValue()
+        ).addItem(lfType);
+
+        return lifeformPosition;
+    }
+
+    /**
+     * @return A component helper containing the item color the player
+     *         wants to remove or take (depends on where the method it's used)
+     *         and the relative storage coordinates of where it's located.
+     */
+    private ComponentHelper<ItemColor> getItemToBeTakenOrRemoved() {
+        ComponentHelper<ItemColor> itemPosition;
+        Map.Entry<Integer, Integer> componentCoordinates;
+        AtomicReference<ClientShip> ship;
+        ClientComponent component;
+        boolean correctInput;
+        ItemColor itemColor;
+        String line;
+        int itemIndex;
+
+        // Getting the player's ship
+        ship = new AtomicReference<>();
+        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(ship::set);
+
+        // Getting the items to remove or take
+        do {
+            System.out.print("Available item colors:");
+            availableItemColors.printWidget();
+            System.out.print(DEFAULT_COMMAND_PREFIX);
+
+            correctInput = false;
+            itemColor = null;
+
+            try {
+                line = this.inputThread.waitForInput();
+
+                // A forced interrupt arrived
+                if (line == null) return null;
+
+                itemIndex = Integer.parseInt(line);
+                correctInput = true;
+
+                try {
+                    itemColor = ItemColor.values()[itemIndex];
+                }
+                catch (IndexOutOfBoundsException e) {
+                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please select a valid item color.", ANSIColors.RED));
+                    correctInput = false;
+                }
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return null;
+            }
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
+            }
+        }
+        while (!correctInput);
+
+        correctInput = false;
+
+        // Getting the component coordinates
+        do {
+            try {
+                componentCoordinates = this.getComponentCoordinates();
+                Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
+
+                component = ship.get().getComponent(
+                    finalComponentCoordinates.getKey(),
+                    finalComponentCoordinates.getValue()
+                );
+
+                switch (component) {
+                    case ClientStorage storage -> { correctInput = true; }
+                    case null, default -> {
+                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentCoordinates.getKey() + ", " + componentCoordinates.getValue() + ") is not a storage.", ANSIColors.RED));
+                    }
+                }
+            }
+            catch (InterruptedException e) {
+                return null;
+            }
+        }
+        while (!correctInput);
+
+        // Assembling all together
+        itemPosition = new ComponentHelper<ItemColor>(
+            componentCoordinates.getKey(),
+            componentCoordinates.getValue()
+        ).addItem(itemColor);
+
+        return itemPosition;
+    }
+
+    /**
+     * @return TRUE if the current player wants to take the resources of a
+     *         card that poses this question, FALSE otherwise
+     */
+    public boolean getTakeReward() {
+        return this.getBooleanAnswerToQuestion("Do you want to take the reward?");
+    }
+
+    /**
+     * @return The player's chosen planet index to land on
+     */
+    public int getChosenPlanetIndex() {
+        WidgetTUI availablePlanetsWidget = new WidgetTUI();
+        boolean correctInput = false;
+        int chosenIndex = 0;
+        String line;
+
+        List<Integer> availablePlanetIndexes =
+                this.model.getState()
+                    .getCardRoundDTO()
+                    .getCardInfo()
+                    .getAvailablePlanets()
+                    .keySet().stream().toList();
+
+        for (Integer planetIdx : availablePlanetIndexes) {
+            availablePlanetsWidget.appendString("(" + planetIdx + ") Planet #" + planetIdx);
+        }
+
+        availablePlanetsWidget
+                .addPadding(0, 1 , 0, 1)
+                .wrapWidgetWithBorder();
+
+        do {
+            System.out.print("Available planets to choose:");
+            availablePlanetsWidget.printWidget();
+            System.out.print(DEFAULT_COMMAND_PREFIX);
+
+            try {
+                line = this.inputThread.waitForInput();
+                if (line == null) return 0;
+
+                chosenIndex = Integer.parseInt(line);
+
+                if (availablePlanetIndexes.contains(chosenIndex)) {
+                    correctInput = true;
+                }
+                else {
+                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Planet with index " + chosenIndex + " does not exist.", ANSIColors.RED));
+                }
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+            }
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
+            }
+        }
+        while (!correctInput);
+
+        return chosenIndex;
+    }
+
+    /**
+     * @return TRUE if the player wants to visit the POI (Point of Interest)
+     *         offered by the current card, FALSE otherwise
+     */
+    public boolean getWantsToVisit() {
+        return this.getBooleanAnswerToQuestion("Do you want to visit it?");
+    }
+
+    /**
+     * @return A component helper containing the coordinates of
+     *         the current player's chosen shield to activate
+     */
+    public ComponentHelper<Void> getShieldToActivate() {
+        ComponentHelper<Void> componentHelper;
+        AtomicReference<ClientShip> shipRef;
+        ClientComponent component;
+        boolean correctInput;
+
+        // Getting the ship
+        shipRef = new AtomicReference<ClientShip>(null);
+        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(shipRef::set);
+
+        correctInput = false;
+
+        // Verify that the selected component is a shield
+        do {
+            componentHelper = this.getComponentHelperOfComponent();
+            component = shipRef.get().getComponent(
+                componentHelper.getI(),
+                componentHelper.getJ()
+            );
+
+            switch (component) {
+                case ClientShield shield -> {
+                    correctInput = true;
+                }
+                case null, default -> {
+                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentHelper.getI() + ", " + componentHelper.getJ() + ") is not a shield.", ANSIColors.RED));
+                }
+            }
+        }
+        while (!correctInput);
+
+        return new ComponentHelper<Void>(
+            componentHelper.getI(),
+            componentHelper.getJ()
+        );
+    }
+
+    /**
+     * @return A component helper containing the coordinates of
+     *         the current player's chosen double cannon to activate
+     */
+    public ComponentHelper<Void> getDoubleCannonToActivate() {
+        ComponentHelper<Void> componentHelper;
+        AtomicReference<ClientShip> shipRef;
+        ClientComponent component;
+        boolean correctInput;
+
+        // Getting the ship
+        shipRef = new AtomicReference<ClientShip>(null);
+        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(shipRef::set);
+
+        correctInput = false;
+
+        // Verify that the selected component is a cannon
+        do {
+            componentHelper = this.getComponentHelperOfComponent();
+
+            component = shipRef.get().getComponent(
+                    componentHelper.getI(),
+                    componentHelper.getJ()
+            );
+
+            switch (component) {
+                case ClientCannon cannon -> {
+                    // Verify that it's also a double cannon and
+                    // not just a single cannon
+                    if (cannon.requireEnergy()) {
+                        correctInput = true;
+                    }
+                }
+                case null, default -> {
+                }
+            }
+
+            if (!correctInput) {
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentHelper.getI() + ", " + componentHelper.getJ() + ") is not a double cannon.", ANSIColors.RED));
+            }
+        }
+        while (!correctInput);
+
+        return new ComponentHelper<Void>(
+            componentHelper.getI(),
+            componentHelper.getJ()
+        );
+    }
+
+    /**
+     * @return The amount of double engines the player wants to activate
+     * <br>
+     * NOTE: If the player's chosen amount exceeds the actual amount of double engines, then
+     *       server-side this is equivalent to activating all double engines (input saturation)
+     */
+    public int getDoubleEnginesToActivate() {
+        AtomicReference<ClientShip> shipRef;
+        int doubleEnginesToActivate;
+        boolean correctInput;
+        String line;
+
+        // Getting the ship
+        shipRef = new AtomicReference<ClientShip>(null);
+        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(shipRef::set);
+
+        doubleEnginesToActivate = 0;
+        correctInput = false;
+
+        // Verify that the selected component is a cannon
+        do {
+            try {
+                System.out.print("Insert amount of double engines to activate: ");
+                line = this.inputThread.waitForInput();
+
+                if (line == null) return 0;
+
+                doubleEnginesToActivate = Integer.parseInt(line);
+
+                if (doubleEnginesToActivate > 0) {
+                    correctInput = true;
+                }
+                else {
+                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Amount must be greater than 0.", ANSIColors.RED));
+                }
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return 0;
+            }
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
+            }
+        }
+        while (!correctInput);
+
+        return doubleEnginesToActivate;
+    }
+
+    /**
+     * Generates the available lifeforms widget with the relative
+     * value the player needs to insert to select it
+     */
+    private void generateAvailableLifeformsWidget() {
+        this.availableLifeforms = new WidgetTUI();
+        int len = LifeformType.values().length;
+
+        for (int i = 0; i < len; i++) {
+            this.availableLifeforms.appendString(LifeformType.values()[i].toString());
+        }
+
+        this.availableLifeforms
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder();
+    }
+
+    /**
+     * Generates the available item colors widget with the relative
+     * value the player needs to insert to select it
+     */
+    private void generateAvailableItemColorsWidget() {
+        this.availableItemColors = new WidgetTUI();
+        int len = ItemColor.values().length;
+
+        for (int i = 0; i < len; i++) {
+            this.availableItemColors.appendString(ItemColor.values()[i].toString());
+        }
+
+        this.availableItemColors
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder();
     }
 
     /**
@@ -102,44 +545,6 @@ public class CardRoundScreen extends Screen {
     }
 
     /**
-     * Generates the widget that contains all the given subdeck cards' widgets
-     */
-    private void generateCardSubdeckWidget(List<ClientEventCard> selectedSubdeck) {
-        // Only generate the widget if the subdeck was chosen
-        if (selectedSubdeck != null && !selectedSubdeck.isEmpty()) {
-            List<List<String>> allCardsScreens;
-            WidgetTUI tmpCardWidget;
-
-            // Initializations
-            this.cardSubdeckWidget = new WidgetTUI();
-            allCardsScreens = new ArrayList<>();
-            tmpCardWidget = new WidgetTUI();
-
-            for (ClientEventCard card : selectedSubdeck) {
-                allCardsScreens.add(
-                        card.generateWidget()
-                                .addPadding(0, 1, 0, 0)
-                                .getScreen()
-                );
-            }
-
-            // Composing all card widget's screens into one
-            tmpCardWidget.setScreen(WidgetTUI.composeScreensHorizontally(allCardsScreens));
-
-            // Adding a centered title
-            this.cardSubdeckWidget.appendString("[SELECTED SUBDECK]");
-            this.cardSubdeckWidget.setWidth(tmpCardWidget.getWidth());
-            this.cardSubdeckWidget.centerWidgetScreen();
-
-            // Adding the widget screen of all the cards
-            // that belong to the selected subdeck
-            this.cardSubdeckWidget.appendScreen(tmpCardWidget.getScreen());
-            this.cardSubdeckWidget.addPadding(0, 0, 0, 1);
-            this.cardSubdeckWidget.wrapWidgetWithBorder();
-        }
-    }
-
-    /**
      * Generates a widget containing all available commands
      * that each player can choose from
      */
@@ -161,22 +566,6 @@ public class CardRoundScreen extends Screen {
     private void generateCurrEventCardWidget() {
         this.getCurrEventCard();
         this.currEventCardWidget = this.currEventCard.generateWidget();
-    }
-
-    /**
-     * Initializes the widget containing all the available
-     * subdecks that a player can choose from
-     */
-    private void generateCardSubdeckCommandsWidget() {
-        this.cardSubdeckCommandsWidget = new WidgetTUI();
-
-        this.cardSubdeckCommandsWidget.appendString("(1) Select deck #1");
-        this.cardSubdeckCommandsWidget.appendString("(2) Select deck #2");
-        this.cardSubdeckCommandsWidget.appendString("(3) Select deck #3");
-        this.cardSubdeckCommandsWidget.appendString("(-1) Go back");
-
-        this.cardSubdeckCommandsWidget.addPadding(0, 1, 0, 1);
-        this.cardSubdeckCommandsWidget.wrapWidgetWithBorder();
     }
 
     /**
@@ -300,7 +689,7 @@ public class CardRoundScreen extends Screen {
 
         switch (choice) {
             case 1 -> {
-                // (1) - Play card
+                // (1) - Play card (submits the player's input)
                 try {
                     this.playCard();
                 }
@@ -309,18 +698,7 @@ public class CardRoundScreen extends Screen {
                 }
             }
             case 2 -> {
-                // (2) - Visualize subdecks
-                try {
-                    // Getting the player's chosen subdeck and
-                    // prints it directly to terminal
-                    this.getCardSubdeckCommand();
-                }
-                catch (Exception e) {
-                    System.out.println(PrintUtils.addColor("ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.", ANSIColors.RED));
-                }
-            }
-            case 3 -> {
-                // (3) - Visualize ships
+                // (2) - Visualize ships
                 this.getOtherShipCommand();
                 this.getCardRoundCommand();
             }
@@ -413,140 +791,145 @@ public class CardRoundScreen extends Screen {
     }
 
     /**
-     * Books a subdeck to observe and prints it
-     * to the user that requests it
+     * @return A pair of integers that represents the (row, col) indexes
+     *         where the player wants to place the selected component.
      */
-    private void getCardSubdeckCommand() throws Exception {
-        int subdeckId, subdeckSize, visibleSubdecks;
+    private Map.Entry<Integer, Integer> getComponentCoordinates() throws InterruptedException {
+        Map<Integer, Integer> coordinates = new HashMap<>();
+        boolean validCoordinate;
         String line;
 
-        subdeckSize = this.model.getClientEventCards().size() / 4;
-        visibleSubdecks = 3;
+        int i = 0;
+        int j = 0;
 
+        int minRowValue = ClientShip.shipOffsets.get(this.model.getDifficultyLevel()).getKey();
+        int maxRowValue = ClientShip.shipDimensions.get(this.model.getDifficultyLevel()).getKey() + minRowValue + 1;
+
+        int minColValue = ClientShip.shipOffsets.get(this.model.getDifficultyLevel()).getValue();
+        int maxColValue = ClientShip.shipDimensions.get(this.model.getDifficultyLevel()).getValue() + minColValue + 1;
+
+        // Getting the row --> i
         do {
-            subdeckId = -1;
-
-            System.out.println();
-            System.out.println("Choose a subdeck to view:");
-            this.cardSubdeckCommandsWidget.printWidget();
-
+            System.out.print("Insert component row: ");
             try {
-                System.out.print(DEFAULT_COMMAND_PREFIX);
                 line = this.inputThread.waitForInput();
 
-                // A force interrupt arrived
-                if (line == null) return;
-
-                subdeckId = Integer.parseInt(line);
-
-                if (subdeckId == -1) {
-                    // Go back to the card round screen
-                    this.getCardRoundCommand();
-                    return;
+                if (line == null) {
+                    // A force interrupt arrived
+                    throw new InterruptedException();
                 }
 
-                if (subdeckId < 1 || subdeckId > visibleSubdecks) {
-                    System.out.println(UNKNOWN_COMMAND_ERROR);
-                    subdeckId = -1;
+                i = Integer.parseInt(line);
+                validCoordinate = (i > minRowValue && i < maxRowValue);
+
+                if (!validCoordinate) {
+                    System.out.println(PrintUtils.addColor("ERROR: Given row is out of the ship boundaries (range is [" + (minRowValue + 1) + ", " + (maxRowValue - 1) + "])", ANSIColors.RED));
                 }
             }
             catch (NumberFormatException e) {
-                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
-            }
-            catch (InterruptedException e) {
-                // A force interrupt arrived
-                return;
+                System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please insert a number.", ANSIColors.RED));
+                validCoordinate = false;
             }
         }
-        while (subdeckId < 1 || subdeckId > visibleSubdecks);
+        while (!validCoordinate);
 
-        int subdeckIndex = subdeckId - 1;
-        int start = (subdeckIndex * subdeckSize);
-        int end = (start + subdeckSize);
+        // Getting the col --> j
+        do {
+            System.out.print("Insert component column: ");
+            try {
+                line = this.inputThread.waitForInput();
 
-        this.ctx = new CommandCTX(
-                "selectDeselectSubdeck",
-                () -> {
-                    // When the server gives the OK to lock the subdeck, then
-                    // proceed to generate and show the corresponding widget
-                    this.generateCardSubdeckWidget(
-                        this.model.getClientEventCards().subList(start, end)
-                    );
-
-                    clearTerminal();
-                    this.cardSubdeckWidget.printWidget();
-
-                    try {
-                        this.deselectSubdeck(subdeckIndex);
-                    }
-                    catch (Exception e) {
-                        System.out.println(PrintUtils.addColor("[ERROR] Couldn't deselect subdeck #" + (subdeckIndex + 1), ANSIColors.RED));
-                    }
-                },
-                () -> {
-                    // Show an error if the selected subdeck is
-                    // currently in the hands of another player
-                    System.out.println(PrintUtils.addColor("[ERROR] Selected deck #" + (subdeckIndex + 1) + " is currently observed by another player. You must wait.", ANSIColors.RED));
-
-                    // Go back to the card round screen
-                    this.getCardRoundCommand();
+                if (line == null) {
+                    // A force interrupt arrived
+                    throw new InterruptedException();
                 }
-        );
 
-        this.client.sendMessage(
-            new SelectDeselectSubdeck(
-                this.model.getNickname(),
-                subdeckIndex,
-                true
-            )
-        );
+                j = Integer.parseInt(line);
+                validCoordinate = (j > minColValue && j < maxColValue);
+
+                if (!validCoordinate) {
+                    System.out.println(PrintUtils.addColor("ERROR: Given column is out of the ship boundaries (range is [" + (minRowValue + 1) + ", " + (maxColValue - 1) + "])", ANSIColors.RED));
+                }
+            }
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please insert a number.", ANSIColors.RED));
+                validCoordinate = false;
+            }
+        }
+        while (!validCoordinate);
+
+        // Reducing both by 1 since they will then be used as
+        // indexes inside the client ship component matrix
+        coordinates.put(--i, --j);
+        return coordinates.entrySet().stream().toList().getFirst();
     }
 
     /**
-     * Asks the current player to insert any key and then press [ENTER]
-     * to go back to the component selection screen, thus ending the
-     * selected subdeck visualization
+     * @return TRUE if the current player answers YES to the
+     *         given YES/NO question, FALSE otherwise
      */
-    private void deselectSubdeck(int subdeckIndex) throws Exception {
-        // The user can observe his chosen subdeck for as much as
-        // he wants (unless a forced interrupt arrives)
-        try {
-            System.out.print("Press any key and then press [ENTER] to go back...");
-            String line = this.inputThread.waitForInput();
+    public boolean getBooleanAnswerToQuestion(String question) {
+        boolean playerChoice = false;
+        boolean choiceMade = false;
+        String input;
 
-            // A forced interrupt arrived
-            if (line == null) return;
-        }
-        catch (InterruptedException e) {
-            // A forced interrupt arrived
-            return;
-        }
+        String yesMessage = "Y";
+        String noMessage = "N";
 
-        // Dereferencing the subdeck widget
-        this.cardSubdeckWidget = null;
+        do {
+            System.out.println();
+            System.out.print(question + " [" + yesMessage + "/" + noMessage + "] ");
 
-        // Deselect the deck by sending a message to the server
-        this.ctx = new CommandCTX(
-            "selectDeselectSubdeck",
-            this::getCardRoundCommand,
-            () -> {
-                // Make the user choose another subdeck command
-                try {
-                    this.getCardSubdeckCommand();
+            try {
+                input = this.inputThread.waitForInput();
+
+                // A forced interrupt arrived
+                if (input == null) return false;
+
+                if (input.equalsIgnoreCase(yesMessage)) {
+                    playerChoice = true;
+                    choiceMade = true;
                 }
-                catch (Exception e) {
-                    System.out.println(PrintUtils.addColor("[ERROR] getCardSubdeckCommand::sendMessage threw \"" + e.getClass().getSimpleName() + "\"", ANSIColors.RED));
+                else if (input.equalsIgnoreCase(noMessage)) {
+                    choiceMade = true;
+                }
+                else {
+                    System.out.println(PrintUtils.addColor(UNKNOWN_COMMAND_ERROR, ANSIColors.RED));
                 }
             }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return false;
+            }
+        }
+        while (!choiceMade);
+
+        return playerChoice;
+    }
+
+    /**
+     * @return A component helper containing the coordinates of a component
+     *         chosen by the player
+     */
+    public ComponentHelper<Void> getComponentHelperOfComponent() {
+        Map.Entry<Integer, Integer> componentCoordinates;
+        ComponentHelper<Void> componentHelper;
+
+        // Getting the component coordinates
+        try {
+            componentCoordinates = this.getComponentCoordinates();
+        }
+        catch (InterruptedException e) {
+            return null;
+        }
+
+        // Assembling all together
+        componentHelper = new ComponentHelper<Void>(
+            componentCoordinates.getKey(),
+            componentCoordinates.getValue()
         );
 
-        this.client.sendMessage(
-            new SelectDeselectSubdeck(
-                this.model.getNickname(),
-                subdeckIndex,
-                false
-            )
-        );
+        return componentHelper;
     }
 
     /**
@@ -564,7 +947,8 @@ public class CardRoundScreen extends Screen {
                   // TODO: Implement onSuccess (if it needs to do something)
             },
             () -> {
-                  // TODO: Implement onError (if it needs to do something)
+                System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
+                this.getCardRoundCommand();
             }
         );
 

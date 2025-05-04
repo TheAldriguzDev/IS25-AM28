@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -13,6 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientWarZone extends ClientEventCard {
+    // Commands that this card will enable are added here
+    static {
+        ClientEventCard.enabledCommands.add("setItemsToBeRemoved");
+        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
+        ClientEventCard.enabledCommands.add("setDoubleEnginesToActivate");
+        ClientEventCard.enabledCommands.add("setShieldsToActivate");
+    }
+
     private List<List<String>> actionAndConsequences;
     private final int requiredCrew;
     private final int movementSteps;
@@ -24,8 +30,8 @@ public class ClientWarZone extends ClientEventCard {
 
     private WarZoneJSON warZoneJSON;
 
-    public ClientWarZone(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
-        super(model, inputThread, cardState);
+    public ClientWarZone(CardStateJSON cardState) {
+        super(cardState);
         this.actionAndConsequences = cardState.getActionsAndConsequences();
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementSteps = cardState.getMovementSteps();
@@ -35,9 +41,9 @@ public class ClientWarZone extends ClientEventCard {
 
     @Override
     public ActionJSON useCard() {
-        this.warZoneJSON = new WarZoneJSON();
         WarZoneJSON tmp = this.warZoneJSON;
         this.warZoneJSON = new WarZoneJSON();
+
         return tmp;
     }
 
@@ -61,29 +67,35 @@ public class ClientWarZone extends ClientEventCard {
             cardInfoWidget.appendString("Current Player: " + playerNickname);
             cardWidget.appendString("currAction: " + actionAndConsequences.get(currActionIndex).getFirst()); // SWITCH CASE TO WRITE IN A BETTER WAY
             cardWidget.appendString("currConsequence: " + actionAndConsequences.get(currActionIndex).getLast());
+
             switch (actionAndConsequences.get(currActionIndex).getLast()) {
                 case "RequiredCrew" -> {
                     cardInfoWidget.appendString("==== *CHAINS IMAGE* ====");
+
                     if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
                         cardInfoWidget.appendString("Required Crew: " + requiredCrew);
                     }
                 }
                 case "ShootingSequence" -> {
                     cardInfoWidget.appendString("==== *PLASMASHOT IMAGE* ===="); // ALSO INCLUDE SEQUENCE
+
                         if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
                             cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");
-                            switch (this.currentPlasmaShot.get("shotDirection")) {
 
+                            switch (this.currentPlasmaShot.get("shotDirection")) {
                                 case 0 -> cardInfoWidget.appendString("Inbound Direction: ABOVE");
                                 case 1 -> cardInfoWidget.appendString("Outbound Direction: RIGHT");
                                 case 2 -> cardInfoWidget.appendString("Outbound Direction: BELOW");
                                 case 3 -> cardInfoWidget.appendString("Inbound Direction: LEFT");
                             }
+
                             if (this.currentPlasmaShot.get("shotSize") == 1) {
                                 cardInfoWidget.appendString("Size: SMALL PLASMASHOT");
-                            } else {
+                            }
+                            else {
                                 cardInfoWidget.appendString("Size: BIG PLASMASHOT");
                             }
+
                             cardInfoWidget.appendString("Dice Throw Result: " + this.diceThrowResult);
                         }
                 }
@@ -94,7 +106,8 @@ public class ClientWarZone extends ClientEventCard {
                     }
                 }
             }
-        } else {
+        }
+        else {
             cardInfoWidget.appendString("CurrActionsAndConsequences: " + actionAndConsequences);
             cardInfoWidget.appendString("Card Level: " + this.cardLevel);
         }
@@ -103,7 +116,9 @@ public class ClientWarZone extends ClientEventCard {
             cardInfoWidget.appendString("Affected Player: " + affectedPlayer);
         }
 
-        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget)
+                .centerWidgetScreen()
+                .wrapWidgetWithBorder();
     }
 
     @Override
@@ -117,8 +132,8 @@ public class ClientWarZone extends ClientEventCard {
     }
 
     @Override
-    public void setUsedEnergy(int usedEnergy) {
-        this.warZoneJSON.setUsedEnergy(usedEnergy);
+    public void setDoubleEnginesToActivate(int doubleEnginesToActivate) {
+        this.warZoneJSON.setUsedEnergy(doubleEnginesToActivate);
     }
 
     @Override

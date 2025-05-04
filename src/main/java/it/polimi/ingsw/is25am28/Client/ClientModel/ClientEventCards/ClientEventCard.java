@@ -9,11 +9,19 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Callable;
 
 public abstract class ClientEventCard implements WidgetTUIGenerator {
+    protected static final List<String> enabledCommands;
+
+    static {
+        enabledCommands = new ArrayList<>();
+    }
 
     protected final int id;
     protected String playerNickname;
@@ -25,19 +33,39 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected ClientModel model;
     protected InputThread inputThread;
 
-    public ClientEventCard(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
-        this.model = model;
-        this.inputThread = inputThread;
+    public ClientEventCard(CardStateJSON cardState) {
         this.id = cardState.getId();
         this.cardName = cardState.getCardName();
         this.cardLevel = cardState.getCardLevel();
     }
 
-    public abstract ActionJSON useCard();
+    /**
+     * Each card will set to TRUE only the input methods it needs inside
+     * its own ActionJSON to provide the server the player's choices.
+     */
+    public static void setAvailableCommands(Map<String, Pair<Boolean, Callable<Object>>> indexedCardInputMethods) {
+        // First put to false all flags
+        for (Map.Entry<String, Pair<Boolean, Callable<Object>>> entry : indexedCardInputMethods.entrySet()) {
+            entry.getValue().setKey(false);
+        }
 
+        // Then activate only the ones specified by the current event card
+        for (String command : enabledCommands) {
+            indexedCardInputMethods.get(command).setKey(true);
+        }
+    }
+
+    /**
+     * @return This client card's ID
+     */
     public int getId() {
         return this.id;
     }
+
+    /**
+     * @return An ActionJSON compiled with the user input, ready to be sent.
+     */
+    public abstract ActionJSON useCard();
 
     /**
      * This method is in charge of updating the card's data as the round goes on
@@ -49,9 +77,8 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
      *         all the relevant information
      */
     public abstract WidgetTUI generateWidget();
-    // TODO: Place the current/target player in a separated bordered widget
 
-    // ======== Input From Player ======== //
+    // ======== Players' ActionJSON Compilation Methods ======== //
 
     // LIFEFORMS
     public void setCrewToRemove(List<ComponentHelper<LifeformType>> crewToRemove) throws UnsupportedOperationException {
@@ -76,12 +103,8 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'setChosenPlanetIndex()' is not supported in " + this + " state");
     }
 
-    public void setWantsToVisitShip(boolean wantsToVisitShip) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'setWantsToVisitShip()' is not supported in " + this + " state");
-    }
-
-    public void setWantsToVisitStation(boolean wantsToVisitStation) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'setWantsToVisitStation()' is not supported in " + this + " state");
+    public void setWantsToVisit(boolean wantsToVisitShip) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setWantsToVisit()' is not supported in " + this + " state");
     }
 
     // SHIELDS
@@ -95,12 +118,12 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     }
 
     // ENGINES
-    public void setUsedEnergy(int usedEnergy) throws UnsupportedOperationException {
+    public void setDoubleEnginesToActivate(int doubleEnginesToActivate) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setUsedEnergy()' is not supported in " + this + " state");
     }
 
     // ACK METHOD
-    protected void inputAck() {
+    public void getPlayerAck() {
         System.out.print("Press any key and then press [ENTER] to continue...");
 
         try {

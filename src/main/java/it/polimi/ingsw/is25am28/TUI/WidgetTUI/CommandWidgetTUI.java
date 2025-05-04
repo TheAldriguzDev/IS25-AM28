@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import java.util.List;
+
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class CommandWidgetTUI extends WidgetTUI {
     private final String commandId;
@@ -38,14 +40,25 @@ public class CommandWidgetTUI extends WidgetTUI {
     }
 
     @Override
-    public WidgetTUI appendString(String string) {
-        if (this.screen.size() == 1) {
-            // Enables adding a description to the command right after its ID
-            // without having to put it right underneath it
-            this.screen.set(0, "(" + this.commandId + ")" + PrintUtils.SPACE + string);
+    public WidgetTUI appendScreen(List<String> screen) {
+        if (screen != null && !screen.isEmpty()) {
+            this.appendString(screen.getFirst());
         }
-        else {
-            super.appendString(string);
+
+        return this;
+    }
+
+    @Override
+    public WidgetTUI appendString(String string) {
+        if (string != null) {
+            if (this.screen.size() == 1) {
+                // Enables adding a description to the command right after its ID
+                // without having to put it right underneath it
+                this.screen.set(0, "(" + this.commandId + ")" + SPACE + string);
+            }
+            else {
+                super.appendString("(" + ")" + SPACE + string);
+            }
         }
 
         return this;

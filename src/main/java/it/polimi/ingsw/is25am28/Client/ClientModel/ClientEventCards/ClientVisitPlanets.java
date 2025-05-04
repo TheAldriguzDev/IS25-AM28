@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -14,13 +12,21 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientVisitPlanets extends ClientEventCard {
-    Map<Integer, Map<ItemColor, Integer>> availablePlanets; // TODO: a list would serve this role better since the generateWidget needs order
+    // Commands that this card will enable are added here
+    static {
+        ClientEventCard.enabledCommands.add("getPlayerAck");
+        ClientEventCard.enabledCommands.add("setItemsToBeRemoved");
+        ClientEventCard.enabledCommands.add("setItemsToBeTaken");
+        ClientEventCard.enabledCommands.add("setChosenPlanetIndex");
+    }
+
+    private Map<Integer, Map<ItemColor, Integer>> availablePlanets; // TODO: a list would serve this role better since the generateWidget needs order
     private int chosenPlanetIndex;
 
     private VisitPlanetsJSON visitPlanetsJSON;
 
-    public ClientVisitPlanets(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
-        super(model, inputThread, cardState);
+    public ClientVisitPlanets(CardStateJSON cardState) {
+        super(cardState);
         this.availablePlanets = cardState.getAvailablePlanets();
         this.visitPlanetsJSON = new VisitPlanetsJSON();
     }
@@ -30,6 +36,7 @@ public class ClientVisitPlanets extends ClientEventCard {
         this.visitPlanetsJSON.setPlayerNickname(this.playerNickname);
         VisitPlanetsJSON tmp = this.visitPlanetsJSON;
         this.visitPlanetsJSON = new VisitPlanetsJSON();
+
         return tmp;
     }
 
@@ -85,7 +92,7 @@ public class ClientVisitPlanets extends ClientEventCard {
 
     @Override
     public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) throws UnsupportedOperationException {
-        this.visitPlanetsJSON.setItemsToDrop(itemsToBeTaken);
+        this.visitPlanetsJSON.setItemsToTake(itemsToBeTaken);
     }
 
     @Override

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -13,6 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientSlavers extends ClientEventCard {
+    // Commands that this card will enable are added here
+    static {
+        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
+        ClientEventCard.enabledCommands.add("setTakeReward");
+    }
+
     private final int requiredFirepower;
     private final int movementSteps;
     private final int givenCredits;
@@ -22,8 +26,8 @@ public class ClientSlavers extends ClientEventCard {
 
     private SlaversJSON slaversJSON;
 
-    public ClientSlavers(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
-        super(model, inputThread, cardState);
+    public ClientSlavers(CardStateJSON cardState) {
+        super(cardState);
         this.requiredFirepower = cardState.getRequiredFirepower();
         this.movementSteps = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();
@@ -38,6 +42,7 @@ public class ClientSlavers extends ClientEventCard {
         this.slaversJSON.setPlayerNickname(this.playerNickname);
         SlaversJSON tmp = this.slaversJSON;
         this.slaversJSON = new SlaversJSON();
+
         return tmp;
     }
 
@@ -45,6 +50,7 @@ public class ClientSlavers extends ClientEventCard {
     public void updateCard(CardStateJSON slaversCardState) {
         this.playerNickname = slaversCardState.getPlayerNickname();
         this.firstRound = slaversCardState.getFirstRound();
+
         if (!this.firstRound) {
             this.defeatedPlayers = slaversCardState.getDefeatedPlayers();
         }
@@ -85,30 +91,6 @@ public class ClientSlavers extends ClientEventCard {
             cardInfoWidget.appendString("Target: " + this.playerNickname);
         }
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
-    }
-
-    // Invoke this method only if the firepower is enough to defeat the slavers?
-    public boolean inputTakeLoot() {
-        String input;
-
-        System.out.print("Do you want to take the credits? (YES/NO): ");
-
-        do {
-            try {
-                input = this.inputThread.waitForInput();
-                if (input == null) { return false; }
-
-                if (input.equalsIgnoreCase("YES")) {
-                    return true;
-                } else if (input.equalsIgnoreCase("NO")) {
-                    return false;
-                } else {
-                    System.out.print("Invalid input, try again: ");
-                }
-            } catch (InterruptedException e){
-                return false;
-            }
-        } while (true);
     }
 
     @Override

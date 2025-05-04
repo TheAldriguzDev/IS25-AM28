@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON;
@@ -17,15 +15,20 @@ import java.util.Random;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientStardust extends ClientEventCard {
+    // Commands that this card will enable are added here
+    static {
+        ClientEventCard.enabledCommands.add("getPlayerAck");
+    }
+
     private StardustJSON stardustJSON;
 
-    public ClientStardust(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
-        super(model, inputThread, cardState);
+    public ClientStardust(CardStateJSON cardState) {
+        super(cardState);
         this.stardustJSON = new StardustJSON();
     }
 
     @Override
-    public ActionJSON useCard() { // TODO: NEEDS ACK
+    public ActionJSON useCard() {
         this.stardustJSON.setPlayerNickname(this.playerNickname);
         StardustJSON tmp = this.stardustJSON;
         this.stardustJSON = new StardustJSON();
@@ -41,7 +44,6 @@ public class ClientStardust extends ClientEventCard {
     public WidgetTUI generateWidget() {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI twinkling_space = new WidgetTUI();
-        WidgetTUI cardInfoWidget = new WidgetTUI();
 
         cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
@@ -81,11 +83,13 @@ public class ClientStardust extends ClientEventCard {
         }
         twinkling_space.wrapWidgetWithBorder();
         twinkling_space.appendString("Level: " + this.cardLevel);
+
         if(this.playerNickname != null) {
             twinkling_space.appendString("Current player: " + this.playerNickname);
         }
 
-        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, twinkling_space).centerWidgetScreen().wrapWidgetWithBorder();
-
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, twinkling_space)
+                .centerWidgetScreen()
+                .wrapWidgetWithBorder();
     }
 }

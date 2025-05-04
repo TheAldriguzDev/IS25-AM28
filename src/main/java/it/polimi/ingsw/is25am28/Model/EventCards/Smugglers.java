@@ -146,8 +146,8 @@ public class Smugglers extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
                 (Player player) -> {
-                    ArrayList<ComponentHelper<ItemColor>> resourcesToLoad = smugglersData.getItemsToBeTaken();
-                    ArrayList<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
+                    List<ComponentHelper<ItemColor>> resourcesToLoad = smugglersData.getItemsToBeTaken();
+                    List<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
                     if (!resourcesToDrop.isEmpty()) {
                         this.droppedResources.put(player.getNickname(), resourcesToDrop);
                     }
@@ -177,7 +177,7 @@ public class Smugglers extends EventCard {
         playerOptional.ifPresent(
                 (Player player) -> {
 
-                    ArrayList<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
+                    List<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
 
                     // Item da lasciare
                     for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {

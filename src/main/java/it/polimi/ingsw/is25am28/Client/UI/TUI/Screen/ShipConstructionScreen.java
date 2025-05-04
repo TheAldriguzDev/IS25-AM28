@@ -18,6 +18,15 @@ import java.util.*;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
+// TODO: Fix the following bugs:
+//      - (1) (ShipConstructionScreen) When the ViewUpdater receives a ConstructionDeckDTO, it needs to set
+//        a flag inside the ClientShipConstructionState of all players to indicate that a certain subdeck
+//        is either being observer or free to watch (thus avoiding to send a message to the server)
+//        .
+//      - (2) (ShipConstructionScreen) Subdeck widgets are centered somewhere and leads to teared card widgets
+//        .
+//      - (4) Sometimes the action of populating gets stuck (mostly with Astronauts)
+
 public class ShipConstructionScreen extends Screen {
     // Default component selection matrix (row, col) dimensions
     public static final int DEFAULT_COMPONENT_ROWS = 8;

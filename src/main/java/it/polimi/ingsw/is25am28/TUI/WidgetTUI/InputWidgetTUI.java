@@ -1,6 +1,6 @@
 package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
 
-import java.io.*;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 
 import java.util.*;
 
@@ -9,24 +9,25 @@ public class InputWidgetTUI extends WidgetTUI {
 
     private Map<String, CommandWidgetTUI> commands;
     private int commandsPerCol;
-    private BufferedReader reader;
+    private InputThread inputThread;
 
     // Constructor
     public InputWidgetTUI() {
         super();
         this.commands = null;
         this.commandsPerCol = DEFAULT_GROUPING_FACTOR;
-        this.reader = null;
+        this.inputThread = null;
     }
 
     /**
-     * Sets a new scanner for this widget as well as the stream
-     * from which that scanner will retrieve data
-     *
-     * @param stream The stream that the new scanner will observe
+     * Sets this input widget's input thread
      */
-    public void setNewReader(InputStream stream) {
-        this.reader = new BufferedReader(new InputStreamReader(stream));
+    public void setInputThread(InputThread inputThread) {
+        this.inputThread = inputThread;
+
+        if (!this.inputThread.isAlive()) {
+            this.inputThread.start();
+        }
     }
 
     /**
@@ -101,19 +102,23 @@ public class InputWidgetTUI extends WidgetTUI {
             }
 
             try {
-                input = this.reader.readLine().trim();
-                commandWidget = this.commands.get(input);
+                input = this.inputThread.waitForInput();
 
-                if (commandWidget != null) {
-                    commandWidget.runCommand();
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            } catch (IOException e) {
-                // If an exception is thrown, then signal to whoever is
-                // using this method that a command was not selected.
+                // A forced interrupt arrived
+                if (input == null) return false;
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return false;
+            }
+
+            commandWidget = this.commands.get(input);
+
+            if (commandWidget != null) {
+                commandWidget.runCommand();
+                return true;
+            }
+            else {
                 return false;
             }
         }

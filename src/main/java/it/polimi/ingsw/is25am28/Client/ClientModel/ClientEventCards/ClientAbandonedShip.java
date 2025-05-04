@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedShipJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
@@ -13,6 +11,11 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.util.List;
 
 public class ClientAbandonedShip extends ClientEventCard {
+    // Commands that this card will enable are added here
+    static {
+        ClientEventCard.enabledCommands.add("setCrewToRemove");
+    }
+
     private final int requiredCrew;
     private final int movementStep;
     private final int givenCredits;
@@ -20,8 +23,8 @@ public class ClientAbandonedShip extends ClientEventCard {
 
     private AbandonedShipJSON abandonedShipJSON;
 
-    public ClientAbandonedShip(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
-        super(model, inputThread, cardState);
+    public ClientAbandonedShip(CardStateJSON cardState) {
+        super(cardState);
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementStep = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();
@@ -30,9 +33,10 @@ public class ClientAbandonedShip extends ClientEventCard {
 
     @Override
     public ActionJSON useCard() {
-        this.abandonedShipJSON.setPlayerNickname(this.playerNickname);
         AbandonedShipJSON tmp = this.abandonedShipJSON;
+        this.abandonedShipJSON.setPlayerNickname(this.playerNickname);
         this.abandonedShipJSON = new AbandonedShipJSON();
+
         return tmp;
     }
 
@@ -42,6 +46,7 @@ public class ClientAbandonedShip extends ClientEventCard {
         this.isCardUsable = cardState.getIsCardUsable();
     }
 
+    // TODO: Remake the widget into something that makes sense
     @Override
     public WidgetTUI generateWidget() {
         WidgetTUI cardWidget = new WidgetTUI();

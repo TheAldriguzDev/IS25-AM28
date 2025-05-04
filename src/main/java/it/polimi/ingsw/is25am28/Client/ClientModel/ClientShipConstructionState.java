@@ -138,17 +138,17 @@ public class ClientShipConstructionState extends ClientState {
 
         for (CardStateJSON cardState : cards) {
             switch (cardState.getId()) {
-                case 0 -> this.model.getClientEventCards().add(new ClientAbandonedShip(model, null, cardState));
-                case 1 -> this.model.getClientEventCards().add(new ClientAbandonedStation(model, null, cardState));
-                case 2 -> this.model.getClientEventCards().add(new ClientEpidemy(model, null, cardState));
-                case 3 -> this.model.getClientEventCards().add(new ClientMeteorShower(model, null, cardState));
-                case 4 -> this.model.getClientEventCards().add(new ClientOpenSpace(model, null, cardState));
-                case 5 -> this.model.getClientEventCards().add(new ClientPirates(model, null, cardState));
-                case 6 -> this.model.getClientEventCards().add(new ClientSlavers(model, null, cardState));
-                case 7 -> this.model.getClientEventCards().add(new ClientSmugglers(model, null, cardState));
-                case 8 -> this.model.getClientEventCards().add(new ClientStardust(model, null, cardState));
-                case 9 -> this.model.getClientEventCards().add(new ClientVisitPlanets(model, null, cardState));
-                case 10 -> this.model.getClientEventCards().add(new ClientWarZone(model, null, cardState));
+                case 0 -> this.model.getClientEventCards().add(new ClientAbandonedShip(cardState));
+                case 1 -> this.model.getClientEventCards().add(new ClientAbandonedStation(cardState));
+                case 2 -> this.model.getClientEventCards().add(new ClientEpidemy(cardState));
+                case 3 -> this.model.getClientEventCards().add(new ClientMeteorShower(cardState));
+                case 4 -> this.model.getClientEventCards().add(new ClientOpenSpace(cardState));
+                case 5 -> this.model.getClientEventCards().add(new ClientPirates(cardState));
+                case 6 -> this.model.getClientEventCards().add(new ClientSlavers(cardState));
+                case 7 -> this.model.getClientEventCards().add(new ClientSmugglers(cardState));
+                case 8 -> this.model.getClientEventCards().add(new ClientStardust(cardState));
+                case 9 -> this.model.getClientEventCards().add(new ClientVisitPlanets(cardState));
+                case 10 -> this.model.getClientEventCards().add(new ClientWarZone(cardState));
 
                 default -> throw new IllegalArgumentException("ERROR: Illegal event card ID");
             }

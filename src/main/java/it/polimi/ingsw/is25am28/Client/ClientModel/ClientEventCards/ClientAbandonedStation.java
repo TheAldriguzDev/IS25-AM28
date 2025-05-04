@@ -1,12 +1,9 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedStationJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.EventCards.AbandonedStation;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -14,6 +11,12 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.util.List;
 
 public class ClientAbandonedStation extends ClientEventCard {
+    // Commands that this card will enable are added here
+    static {
+        ClientEventCard.enabledCommands.add("setItemsToBeRemoved");
+        ClientEventCard.enabledCommands.add("setItemsToBeTaken");
+    }
+
     private final int requiredCrew;
     private final int movementStep;
     private List<ItemColor> stationResources;
@@ -21,8 +24,8 @@ public class ClientAbandonedStation extends ClientEventCard {
 
     private AbandonedStationJSON abandonedStationJSON;
 
-    public ClientAbandonedStation(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
-        super(model, inputThread, cardState);
+    public ClientAbandonedStation(CardStateJSON cardState) {
+        super(cardState);
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementStep = cardState.getMovementSteps();
         this.hasBeenUsed = cardState.getIsCardUsable();
@@ -35,6 +38,7 @@ public class ClientAbandonedStation extends ClientEventCard {
         this.abandonedStationJSON.setPlayerNickname(this.playerNickname);
         AbandonedStationJSON tmp = abandonedStationJSON;
         abandonedStationJSON = new AbandonedStationJSON();
+
         return tmp;
     }
 

@@ -85,19 +85,19 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
         // Initializing the component selection command widget
         this.componentSelectionCommandsWidget = new InputWidgetTUI();
-        this.componentSelectionCommandsWidget.setNewReader(System.in);
+        // this.componentSelectionCommandsWidget.setNewReader(System.in);
         this.componentSelectionCommandsWidget.setColumnGroupingAmount(COMMANDS_PER_COLUMN);
         this.initComponentSelectionCommands();
 
         // Initializing the ship construction command widget
         this.shipConstructionCommandsWidget = new InputWidgetTUI();
-        this.shipConstructionCommandsWidget.setNewReader(System.in);
+        // this.shipConstructionCommandsWidget.setNewReader(System.in);
         this.shipConstructionCommandsWidget.setColumnGroupingAmount(COMMANDS_PER_COLUMN);
         this.initShipConstructionCommands();
 
         // Initializing the card deck selection command widget
         this.cardDeckSelectionWidget = new InputWidgetTUI();
-        this.cardDeckSelectionWidget.setNewReader(System.in);
+        // this.cardDeckSelectionWidget.setNewReader(System.in);
         this.cardDeckSelectionWidget.setColumnGroupingAmount(COMMANDS_PER_COLUMN);
         this.initCardDeckSelectionCommands();
     }

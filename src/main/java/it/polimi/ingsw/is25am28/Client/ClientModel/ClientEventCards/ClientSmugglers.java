@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -14,6 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientSmugglers extends ClientEventCard {
+    // Commands that this card will enable are added here
+    static {
+        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
+        ClientEventCard.enabledCommands.add("setTakeReward");
+        ClientEventCard.enabledCommands.add("setItemsToBeRemoved");
+        ClientEventCard.enabledCommands.add("setItemsToBeTaken");
+    }
+
     private final int requiredFirepower;
     private final int movementSteps;
     private final int redItems;
@@ -26,8 +32,8 @@ public class ClientSmugglers extends ClientEventCard {
 
     private SmugglersJSON smugglersJSON;
 
-    public ClientSmugglers(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
-        super(model, inputThread, cardState);
+    public ClientSmugglers(CardStateJSON cardState) {
+        super(cardState);
         this.requiredFirepower = cardState.getRequiredFirepower();
         this.movementSteps = cardState.getMovementSteps();
         this.redItems = cardState.getRedItems();
@@ -45,6 +51,7 @@ public class ClientSmugglers extends ClientEventCard {
         this.smugglersJSON.setPlayerNickname(this.playerNickname);
         SmugglersJSON tmp = this.smugglersJSON;
         this.smugglersJSON = new SmugglersJSON();
+
         return tmp;
     }
 
@@ -52,6 +59,7 @@ public class ClientSmugglers extends ClientEventCard {
     public void updateCard(CardStateJSON smugglersState) {
         this.playerNickname = smugglersState.getPlayerNickname();
         this.firstRound = smugglersState.getFirstRound();
+
         if (this.firstRound) {
             this.defeatedPlayers = smugglersState.getDefeatedPlayers();
         }
@@ -87,40 +95,17 @@ public class ClientSmugglers extends ClientEventCard {
             cardInfoWidget.appendString(ANSIColors.RED + " Red: " + ANSIColors.RESET + this.redItems + " |" + ANSIColors.YELLOW + " Yellow: " + ANSIColors.RESET + this.yellowItems);
             cardInfoWidget.appendString(ANSIColors.BLUE + "Blue: " + ANSIColors.RESET + this.blueItems + " |" + ANSIColors.GREEN + "  Green: " + ANSIColors.RESET + this.greenItems);
             cardInfoWidget.appendString("Taken items: " + this.takenItems);
+
             if (this.playerNickname != null) {
                 cardInfoWidget.appendString("Current Player: " + this.playerNickname);
             }
-        } else {
+        }
+        else {
             cardInfoWidget.appendString("Number of items remove: " + this.takenItems);
             cardInfoWidget.appendString("Target: " + this.playerNickname);
         }
 
-
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
-    }
-
-    // Invoke this method only if the firepower is enough to defeat the smugglers?
-    public boolean inputTakeLoot() {
-        String input;
-
-        System.out.print("Do you want to take the credits? (YES/NO): ");
-
-        do {
-            try {
-                input = this.inputThread.waitForInput();
-                if (input == null) { return false; }
-
-                if (input.equalsIgnoreCase("YES")) {
-                    return true;
-                } else if (input.equalsIgnoreCase("NO")) {
-                    return false;
-                } else {
-                    System.out.print("Invalid input, try again: ");
-                }
-            } catch (InterruptedException e){
-                return false;
-            }
-        } while (true);
     }
 
     @Override
@@ -142,5 +127,4 @@ public class ClientSmugglers extends ClientEventCard {
     public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) throws UnsupportedOperationException {
         this.smugglersJSON.setItemsToBeTaken(itemsToBeTaken);
     }
-
 }

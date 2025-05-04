@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -13,26 +11,31 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientMeteorShower extends ClientEventCard {
+    // Commands that this card will enable are added here
+    static {
+        ClientEventCard.enabledCommands.add("setShieldsToActivate");
+        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
+    }
+
     private int currMeteorIndex;
     private int diceThrowResult;
     private Map<String, Integer> currMeteorDescriptor;
 
     private MeteorShowerJSON meteorShowerJSON;
 
-    public ClientMeteorShower(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
-        super(model, inputThread, cardState);
+    public ClientMeteorShower(CardStateJSON cardState) {
+        super(cardState);
         this.meteorShowerJSON = new MeteorShowerJSON();
     }
-
 
     @Override
     public ActionJSON useCard() {
         this.meteorShowerJSON.setPlayerNickname(this.playerNickname);
         MeteorShowerJSON tmp = this.meteorShowerJSON;
         this.meteorShowerJSON = new MeteorShowerJSON();
+
         return tmp;
     }
-
 
     @Override
     public void updateCard(CardStateJSON cardState) {
@@ -83,8 +86,8 @@ public class ClientMeteorShower extends ClientEventCard {
         }
         // TODO : does the shootingSequence need to be shown to the clients as a whole?
         meteor1Final = WidgetTUI.composeTwoWidgetsVertically(
-                WidgetTUI.composeTwoWidgetsVertically(meteor1Title, meteor1),
-                meteor1Info
+            WidgetTUI.composeTwoWidgetsVertically(meteor1Title, meteor1),
+            meteor1Info
         );
 
         meteor1Final.centerWidgetScreen();

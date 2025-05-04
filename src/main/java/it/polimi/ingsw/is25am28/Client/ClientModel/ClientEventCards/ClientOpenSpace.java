@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
@@ -9,20 +7,23 @@ import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-import org.json.simple.parser.ParseException;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientOpenSpace extends ClientEventCard {
-    OpenSpaceJSON openSpaceJSON;
+    // Commands that this card will enable are added here
+    static {
+        ClientEventCard.enabledCommands.add("setDoubleEnginesToActivate");
+    }
 
-    public ClientOpenSpace(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
-        super(model, inputThread, cardState);
+    private OpenSpaceJSON openSpaceJSON;
+
+    public ClientOpenSpace(CardStateJSON cardState) {
+        super(cardState);
         openSpaceJSON = new OpenSpaceJSON();
     }
 
@@ -31,6 +32,7 @@ public class ClientOpenSpace extends ClientEventCard {
         this.openSpaceJSON.setPlayerNickname(this.playerNickname);
         OpenSpaceJSON tmp = openSpaceJSON;
         this.openSpaceJSON = new OpenSpaceJSON();
+
         return tmp;
     }
 
@@ -43,7 +45,6 @@ public class ClientOpenSpace extends ClientEventCard {
     public WidgetTUI generateWidget() {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI twinkling_space = new WidgetTUI();
-        WidgetTUI cardInfoWidget = new WidgetTUI();
 
         cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
@@ -91,50 +92,7 @@ public class ClientOpenSpace extends ClientEventCard {
     }
 
     @Override
-    public void setUsedEnergy(int usedEnergy) {
-        this.openSpaceJSON.setUsedEnergy(usedEnergy);
-    }
-
-
-    protected int inputUsedEnergy() {
-        AtomicInteger totalAvailableEnergy;
-        int usedEnergy;
-        String input;
-
-        totalAvailableEnergy = new AtomicInteger(0);
-
-        this.model.getShipOfPlayer(this.playerNickname).ifPresent(
-                (ship) -> {
-                    totalAvailableEnergy.set(ship.getAvailableEnergy());
-                }
-        );
-
-        System.out.print("Insert the number of double engines to activate: ");
-
-        do {
-            try {
-                input = this.inputThread.waitForInput();
-                if (input == null) return 0;
-                usedEnergy = Integer.parseInt(input);
-
-                if (usedEnergy >= 0) {
-                    if (usedEnergy <= totalAvailableEnergy.get()) {
-                        return usedEnergy;
-                    }
-                    else {
-                        System.out.print(PrintUtils.addColor("Invalid input, you can't consume more energy than you have: ", ANSIColors.RED));
-                    }
-                }
-                else {
-                    System.out.print(PrintUtils.addColor("Invalid input, value must be positive: ", ANSIColors.RED));
-                }
-            }
-            catch (InterruptedException e) {
-                return 0;
-            }
-            catch (NumberFormatException e) {
-                System.out.print(PrintUtils.addColor("Invalid input, please insert a number: ", ANSIColors.RED));
-            }
-        } while (true);
+    public void setDoubleEnginesToActivate(int doubleEnginesToActivate) {
+        this.openSpaceJSON.setUsedEnergy(doubleEnginesToActivate);
     }
 }

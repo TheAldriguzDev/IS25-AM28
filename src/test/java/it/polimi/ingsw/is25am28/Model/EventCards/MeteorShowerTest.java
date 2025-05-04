@@ -236,7 +236,7 @@ class MeteorShowerTest {
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Non initialized card");
-        clientMeteorShower = new ClientMeteorShower(null, null, meteorShower.generateState());
+        clientMeteorShower = new ClientMeteorShower(meteorShower.generateState());
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
 
