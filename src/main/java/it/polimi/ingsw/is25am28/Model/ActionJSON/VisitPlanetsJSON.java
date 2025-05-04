@@ -14,6 +14,8 @@ public class VisitPlanetsJSON extends ActionJSON {
     private List<ComponentHelper<ItemColor>> itemsToDrop;
     private List<ComponentHelper<ItemColor>> itemsToTake;
 
+    public VisitPlanetsJSON() {}
+
     @JsonCreator
     public VisitPlanetsJSON(
             @JsonProperty("chosenPlanetIndex") int chosenPlanetIndex,

@@ -13,6 +13,8 @@ public class MeteorShowerJSON extends ActionJSON {
     private List<ComponentHelper<Integer>>  shieldsCoordinates;
     private List<ComponentHelper<Integer>> cannonsCoordinates;
 
+    public MeteorShowerJSON() {}
+
     @JsonCreator
     public MeteorShowerJSON(
             @JsonProperty("playerNickname") String playerNickname,

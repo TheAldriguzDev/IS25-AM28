@@ -17,21 +17,19 @@ import java.util.Random;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientStardust extends ClientEventCard {
-
-
+    private StardustJSON stardustJSON;
 
     public ClientStardust(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
         super(model, inputThread, cardState);
+        this.stardustJSON = new StardustJSON();
     }
 
     @Override
     public ActionJSON useCard() { // TODO: NEEDS ACK
-        StardustJSON response = new StardustJSON();
-
-        response.setPlayerNickname(this.playerNickname);
-        this.inputAck();
-
-        return response;
+        this.stardustJSON.setPlayerNickname(this.playerNickname);
+        StardustJSON tmp = this.stardustJSON;
+        this.stardustJSON = new StardustJSON();
+        return tmp;
     }
 
     @Override

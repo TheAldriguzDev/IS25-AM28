@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
@@ -27,6 +28,8 @@ public class ClientPirates extends ClientEventCard {
     Map<String, Integer> currentPlasmaShot;
     private List<String> defeatedPlayers;
 
+    private PiratesJSON piratesJSON;
+
     public ClientPirates(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
         super(model, inputThread, cardState);
         this.firstRound = true;
@@ -34,11 +37,15 @@ public class ClientPirates extends ClientEventCard {
         this.givenCredits = cardState.getGivenCredits();
         this.movementSteps = cardState.getMovementSteps();
         this.defeatedPlayers = new ArrayList<>();
+        this.piratesJSON = new PiratesJSON();
     }
 
     @Override
     public ActionJSON useCard() {
-        return null;
+        this.piratesJSON.setPlayerNickname(this.playerNickname);
+        PiratesJSON tmp = this.piratesJSON;
+        this.piratesJSON = new PiratesJSON();
+        return tmp;
     }
 
     @Override

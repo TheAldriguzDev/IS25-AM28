@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.List;
@@ -19,17 +20,23 @@ public class ClientWarZone extends ClientEventCard {
     private Map<String, Integer> currentPlasmaShot;
     private int diceThrowResult;
 
+    private WarZoneJSON warZoneJSON;
+
     public ClientWarZone(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
         super(model, inputThread, cardState);
         this.actionAndConsequences = cardState.getActionsAndConsequences();
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementSteps = cardState.getMovementSteps();
         this.requiredResources = cardState.getRequiredResources();
+        this.warZoneJSON = new WarZoneJSON();
     }
 
     @Override
     public ActionJSON useCard() {
-        return null;
+        this.warZoneJSON = new WarZoneJSON();
+        WarZoneJSON tmp = this.warZoneJSON;
+        this.warZoneJSON = new WarZoneJSON();
+        return tmp;
     }
 
     @Override

@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.SmugglersJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
@@ -21,8 +22,7 @@ public class ClientSmugglers extends ClientEventCard {
     private boolean firstRound;
     private List<String> defeatedPlayers;
 
-//    List<String> defeatedPlayers;
-
+    private SmugglersJSON smugglersJSON;
 
     public ClientSmugglers(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
         super(model, inputThread, cardState);
@@ -35,11 +35,15 @@ public class ClientSmugglers extends ClientEventCard {
         this.takenItems = cardState.getTakenItems();
         this.firstRound = true;
         this.defeatedPlayers = new ArrayList<>();
+        this.smugglersJSON = new SmugglersJSON();
     }
 
     @Override
     public ActionJSON useCard() {
-        return null;
+        this.smugglersJSON.setPlayerNickname(this.playerNickname);
+        SmugglersJSON tmp = this.smugglersJSON;
+        this.smugglersJSON = new SmugglersJSON();
+        return tmp;
     }
 
     @Override

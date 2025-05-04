@@ -28,9 +28,9 @@ public class ClientOpenSpace extends ClientEventCard {
 
     @Override
     public ActionJSON useCard() {
-        openSpaceJSON.setPlayerNickname(this.playerNickname);
+        this.openSpaceJSON.setPlayerNickname(this.playerNickname);
         OpenSpaceJSON tmp = openSpaceJSON;
-        openSpaceJSON = new OpenSpaceJSON();
+        this.openSpaceJSON = new OpenSpaceJSON();
         return tmp;
     }
 

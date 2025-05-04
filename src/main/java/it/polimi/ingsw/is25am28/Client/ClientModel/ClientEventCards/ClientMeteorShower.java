@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
@@ -13,16 +14,21 @@ public class ClientMeteorShower extends ClientEventCard {
     private int currMeteorIndex;
     private int diceThrowResult;
     private Map<String, Integer> currMeteorDescriptor;
-//    private Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
+
+    private MeteorShowerJSON meteorShowerJSON;
 
     public ClientMeteorShower(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
         super(model, inputThread, cardState);
+        this.meteorShowerJSON = new MeteorShowerJSON();
     }
 
 
     @Override
     public ActionJSON useCard() {
-        return null;
+        this.meteorShowerJSON.setPlayerNickname(this.playerNickname);
+        MeteorShowerJSON tmp = this.meteorShowerJSON;
+        this.meteorShowerJSON = new MeteorShowerJSON();
+        return tmp;
     }
 
 

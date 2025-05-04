@@ -1,15 +1,19 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SlaversJSON extends ActionJSON {
-    private final boolean takeCredits;
-    private final ArrayList<ComponentHelper<LifeformType>> crewToRemove;
-   private final List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates;
+    private boolean takeCredits;
+    private ArrayList<ComponentHelper<LifeformType>> crewToRemove;
+    private List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates;
+
+    public SlaversJSON() {}
 
     public SlaversJSON (@JsonProperty("playerNickname") String playerNickname,
                         @JsonProperty("takeCredits") boolean takeCredits,
@@ -21,16 +25,33 @@ public class SlaversJSON extends ActionJSON {
         this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
 
+    @JsonGetter("takeCredits")
     public boolean getTakeCredits() {
         return takeCredits;
     }
 
+    @JsonSetter("takeCredits")
+    public void setTakeCredits(boolean takeCredits) {
+        this.takeCredits = takeCredits;
+    }
+
+    @JsonGetter("crewToRemove")
     public ArrayList<ComponentHelper<LifeformType>> getCrewToRemove() {
         return crewToRemove;
     }
 
+    @JsonSetter("crewToRemove")
+    public void setCrewToRemove(ArrayList<ComponentHelper<LifeformType>> crewToRemove) {
+        this.crewToRemove = crewToRemove;
+    }
 
+    @JsonGetter("doubleCannonsToActivateCoordinates")
     public List<ComponentHelper<Integer>> getDoubleCannonsToActivateCoordinates() {
         return doubleCannonsToActivateCoordinates;
+    }
+
+    @JsonSetter("doubleCannonsToActivateCoordinates")
+    public void setDoubleCannonsToActivateCoordinates(List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates) {
+        this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
 }

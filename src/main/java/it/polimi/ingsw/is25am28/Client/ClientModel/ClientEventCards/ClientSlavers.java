@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.SlaversJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
@@ -18,7 +19,7 @@ public class ClientSlavers extends ClientEventCard {
     private boolean firstRound;
     private List<String> defeatedPlayers;
 
-//    private List<String> defeatedPlayers;
+    private SlaversJSON slaversJSON;
 
     public ClientSlavers(ClientModel model, InputThread inputThread, CardStateJSON cardState) {
         super(model, inputThread, cardState);
@@ -28,11 +29,15 @@ public class ClientSlavers extends ClientEventCard {
         this.takenCrew = cardState.getTakenCrew();
         this.defeatedPlayers = new ArrayList<>();
         this.firstRound = true;
+        this.slaversJSON = new SlaversJSON();
     }
 
     @Override
     public ActionJSON useCard() {
-        return null;
+        this.slaversJSON.setPlayerNickname(this.playerNickname);
+        SlaversJSON tmp = this.slaversJSON;
+        this.slaversJSON = new SlaversJSON();
+        return tmp;
     }
 
     @Override
