@@ -7,13 +7,13 @@ import java.util.List;
 
 public class PiratesJSON extends ActionJSON {
     private final boolean takeCredits;
-    private final ArrayList<int []> shieldsActivatedCoordinates;
-    private final ArrayList<List<Integer>> doubleCannonsToActivateCoordinates;
+    private final List<ComponentHelper<Integer>> shieldsActivatedCoordinates;
+    private final List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates;
 
     public PiratesJSON(@JsonProperty("PlayerNickname") String playerNickname,
                        @JsonProperty("takeCredits") boolean takeCredits,
-                       @JsonProperty("shieldsActivatedCoordinates") ArrayList<int[]> shieldsActivatedCoordinates,
-                       @JsonProperty("doubleCannonsToActivateCoordinates") ArrayList<List<Integer>> doubleCannonsToActivateCoordinates) {
+                       @JsonProperty("shieldsActivatedCoordinates") List<ComponentHelper<Integer>> shieldsActivatedCoordinates,
+                       @JsonProperty("doubleCannonsToActivateCoordinates") List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates) {
         super(playerNickname);
         this.takeCredits = takeCredits;
         this.shieldsActivatedCoordinates = shieldsActivatedCoordinates;
@@ -24,11 +24,11 @@ public class PiratesJSON extends ActionJSON {
         return takeCredits;
     }
 
-    public ArrayList<int[]> getShieldsActivatedCoordinates() {
+    public List<ComponentHelper<Integer>> getShieldsActivatedCoordinates() {
         return shieldsActivatedCoordinates;
     }
 
-    public List<List<Integer>> getDoubleCannonsToActivateCoordinates() {
+    public List<ComponentHelper<Integer>> getDoubleCannonsToActivateCoordinates() {
         return doubleCannonsToActivateCoordinates;
     }
 }

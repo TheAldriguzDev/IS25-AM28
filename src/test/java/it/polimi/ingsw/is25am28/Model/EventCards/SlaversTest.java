@@ -133,9 +133,10 @@ class SlaversTest {
         // ================================ //
 
         // ======== DATA NECESSARY TO TEST THE CARD ======== //
-        ArrayList<List<Integer>> doubleCannonActivated = new ArrayList<>();
+        List<ComponentHelper<Integer>> doubleCannonActivated = new ArrayList<>();
 
-        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(7, 9)));
+//        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(7, 9)));
+        doubleCannonActivated.add(new ComponentHelper<>(7, 9));
 
         actionJSON1 = new SlaversJSON("Player 1", false, crewToRemove1, new ArrayList<>()); // Total FirePower: 3
         actionJSON2 = new SlaversJSON("Player 2", false, crewToRemove2, new ArrayList<>()); // Total FirePower: 3
@@ -343,14 +344,15 @@ class SlaversTest {
     public void test_first_three_players_tie_fourth_one_wins() {
         slavers = new Slavers("Slavers", 2, 3, 2, 4, 6, board);
 
-        ArrayList<List<Integer>> doubleCannonActivated = new ArrayList<>();
+        List<ComponentHelper<Integer>> doubleCannonActivated = new ArrayList<>();
 //        List<Integer> x = new ArrayList<>();
 //        List<Integer> y = new ArrayList<>();
 //        x.add(7);
 //        y.add(9);
 //        doubleCannonActivated.add(x);
 //        doubleCannonActivated.add(y);
-        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(7, 9)));
+//        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(7, 9)));
+        doubleCannonActivated.add(new ComponentHelper<>(7, 9));
 
         actionJSON1 = new SlaversJSON("Player 1", false, crewToRemove1, new ArrayList<>()); // Total FirePower: 3
         actionJSON2 = new SlaversJSON("Player 2", false, crewToRemove2, new ArrayList<>()); // Total FirePower: 3

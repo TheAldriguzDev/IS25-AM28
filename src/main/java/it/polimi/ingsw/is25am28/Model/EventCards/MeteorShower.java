@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.Cannon;
@@ -121,8 +122,8 @@ public class MeteorShower extends EventCard {
         boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
-        List<List<Integer>> shieldCoordsList;
-        List<List<Integer>> cannonCoordsList;
+        List<ComponentHelper<Integer>> shieldCoordsList;
+        List<ComponentHelper<Integer>> cannonCoordsList;
         Component toHit;
         Ship shipPtr;
 
@@ -253,11 +254,11 @@ public class MeteorShower extends EventCard {
                 // => Check if it can bounce on toHit or a shield is required
                 if (sideToHit != ZERO_PIPES.ordinal()) {
                     if (shieldCoordsList != null) {
-                        for (List<Integer> shieldCoords : shieldCoordsList) {
+                        for (ComponentHelper<Integer> shieldCoords : shieldCoordsList) {
                             if (shieldCoords != null) {
                                 Component component = shipPtr.getComponent(
-                                        shieldCoords.get(0),
-                                        shieldCoords.get(1)
+                                        shieldCoords.getI(),
+                                        shieldCoords.getJ()
                                 );
 
                                 // Safe cast of Component to Shield
@@ -294,11 +295,11 @@ public class MeteorShower extends EventCard {
                 // Case 2 - Big Meteor
                 // => Check if there are cannons that can destroy it
                 if (cannonCoordsList != null) {
-                    for (List<Integer> cannonCoords : cannonCoordsList) {
+                    for (ComponentHelper<Integer> cannonCoords : cannonCoordsList) {
                         if (cannonCoords != null) {
                             Component component = shipPtr.getComponent(
-                                    cannonCoords.get(0),
-                                    cannonCoords.get(1)
+                                    cannonCoords.getI(),
+                                    cannonCoords.getJ()
                             );
 
                             // Safe cast of Component to Cannon

@@ -80,4 +80,28 @@ public class ClientSlavers extends ClientEventCard {
         }
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
+
+    // Invoke this method only if the firepower is enough to defeat the slavers?
+    public boolean inputTakeLoot() {
+        String input;
+
+        System.out.print("Do you want to take the credits? (YES/NO): ");
+
+        do {
+            try {
+                input = this.inputThread.waitForInput();
+                if (input == null) { return false; }
+
+                if (input.equalsIgnoreCase("YES")) {
+                    return true;
+                } else if (input.equalsIgnoreCase("NO")) {
+                    return false;
+                } else {
+                    System.out.print("Invalid input, try again: ");
+                }
+            } catch (InterruptedException e){
+                return false;
+            }
+        } while (true);
+    }
 }

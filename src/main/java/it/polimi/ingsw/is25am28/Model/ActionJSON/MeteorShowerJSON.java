@@ -10,16 +10,16 @@ import java.util.List;
 public class MeteorShowerJSON extends ActionJSON {
     private int currMeteorIndex;
     private int diceThrowResult;
-    private List<List<Integer>>  shieldsCoordinates;
-    private List<List<Integer>> cannonsCoordinates;
+    private List<ComponentHelper<Integer>>  shieldsCoordinates;
+    private List<ComponentHelper<Integer>> cannonsCoordinates;
 
     @JsonCreator
     public MeteorShowerJSON(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("currMeteorIndex") int currMeteorIndex, // FIXME: Remove this field
             @JsonProperty("diceThrowResult") int diceThrowResult, // FIXME: REMOVE this field
-            @JsonProperty("shieldsCoordinates") List<List<Integer>> shieldsCoordinates,
-            @JsonProperty("cannonsCoordinates") List<List<Integer>> cannonsCoordinates
+            @JsonProperty("shieldsCoordinates") List<ComponentHelper<Integer>> shieldsCoordinates,
+            @JsonProperty("cannonsCoordinates") List<ComponentHelper<Integer>> cannonsCoordinates
     ) {
         super(playerNickname);
         this.currMeteorIndex = currMeteorIndex;
@@ -49,22 +49,22 @@ public class MeteorShowerJSON extends ActionJSON {
     }
 
     @JsonGetter("shieldsCoordinates")
-    public List<List<Integer>> getShieldsCoordinates() {
+    public List<ComponentHelper<Integer>> getShieldsCoordinates() {
         return this.shieldsCoordinates;
     }
 
     @JsonSetter("shieldsCoordinates")
-    public void setShieldsCoordinates(List<List<Integer>> shieldsCoordinates) {
+    public void setShieldsCoordinates(List<ComponentHelper<Integer>> shieldsCoordinates) {
         this.shieldsCoordinates = shieldsCoordinates;
     }
 
     @JsonGetter("cannonsCoordinates")
-    public List<List<Integer>> getCannonsCoordinates() {
+    public List<ComponentHelper<Integer>> getCannonsCoordinates() {
         return this.cannonsCoordinates;
     }
 
     @JsonSetter("cannonsCoordinates")
-    public void setCannonsCoordinates(List<List<Integer>> cannonsCoordinates) {
+    public void setCannonsCoordinates(List<ComponentHelper<Integer>> cannonsCoordinates) {
         this.cannonsCoordinates = cannonsCoordinates;
     }
 }

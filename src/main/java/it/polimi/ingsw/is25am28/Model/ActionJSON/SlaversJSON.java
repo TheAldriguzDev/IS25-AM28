@@ -9,12 +9,12 @@ import java.util.List;
 public class SlaversJSON extends ActionJSON {
     private final boolean takeCredits;
     private final ArrayList<ComponentHelper<LifeformType>> crewToRemove;
-   private final ArrayList<List<Integer>> doubleCannonsToActivateCoordinates;
+   private final List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates;
 
     public SlaversJSON (@JsonProperty("playerNickname") String playerNickname,
                         @JsonProperty("takeCredits") boolean takeCredits,
                         @JsonProperty("crewToRemove") ArrayList<ComponentHelper<LifeformType>> crewToRemove,
-                        @JsonProperty("doubleCannonsToActivateCoordinates") ArrayList<List<Integer>> doubleCannonsToActivateCoordinates) {
+                        @JsonProperty("doubleCannonsToActivateCoordinates") List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates) {
         super(playerNickname);
         this.takeCredits = takeCredits;
         this.crewToRemove = crewToRemove;
@@ -30,7 +30,7 @@ public class SlaversJSON extends ActionJSON {
     }
 
 
-    public List<List<Integer>> getDoubleCannonsToActivateCoordinates() {
+    public List<ComponentHelper<Integer>> getDoubleCannonsToActivateCoordinates() {
         return doubleCannonsToActivateCoordinates;
     }
 }

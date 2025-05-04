@@ -54,69 +54,49 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     // ======== Input From Player ======== //
 
     // LIFEFORMS
-    protected List<ComponentHelper<LifeformType>> inputLifeformsToBeRemoved() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputLifeformsToBeRemoved()' is not supported in " + this + " state");
-    }
-
-    protected boolean inputWantsToVisitStation() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputWantsToVisitStation()' is not supported in " + this + " state");
+    public void setCrewToRemove(List<ComponentHelper<LifeformType>> crewToRemove) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setCrewToRemove()' is not supported in " + this + " state");
     }
 
     // ITEMS
-    protected List<ComponentHelper<ItemColor>> inputItemsToBeRemoved() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputItemsToBeRemoved()' is not supported in " + this + " state");
+    public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setItemsToBeRemoved()' is not supported in " + this + " state");
     }
 
-    protected List<ComponentHelper<ItemColor>> inputItemsToBeTaken() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputItemsToBeTaken()' is not supported in " + this + " state");
-    }
-
-    protected ArrayList<ComponentHelper<LifeformType>> inputCrewToRemove() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputCrewToRemove()' is not supported in " + this + " state");
+    public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setItemsToBeTaken()' is not supported in " + this + " state");
     }
 
     // VARIOUS FLAGS AND INDEXES
-    protected boolean inputTakeLoot() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputTakeLoot()' is not supported in " + this + " state");
+    public void setTakeLoot(boolean takeLoot) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setTakeLoot()' is not supported in " + this + " state");
     }
 
-    protected int inputChosenPlanetIndex() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputChosenPlanetIndex()' is not supported in " + this + " state");
+    public void setChosenPlanetIndex(int chosenPlanetIndex) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setChosenPlanetIndex()' is not supported in " + this + " state");
     }
 
-    protected boolean inputTakeCredits() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputTakeCredits()' is not supported in " + this + " state");
+    public void setWantsToVisitShip(boolean wantsToVisitShip) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setWantsToVisitShip()' is not supported in " + this + " state");
     }
 
-    protected boolean inputWantsToVisitShip() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputWantsToVisitShip()' is not supported in " + this + " state");
+    public void setWantsToVisitStation(boolean wantsToVisitStation) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setWantsToVisitStation()' is not supported in " + this + " state");
     }
 
     // SHIELDS
-    protected List<List<Integer>> inputShieldsCoordinates() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputShieldsCoordinates()' is not supported in " + this + " state");
-    }
-
-    protected List<ComponentHelper<Integer>> inputShieldList() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputShieldList()' is not supported in " + this + " state");
-    }
-
-    protected ArrayList<int []> inputShieldsActivatedCoordinates() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputShieldsActivatedCoordinates()' is not supported in " + this + " state");
+    public void setShieldsToActivate(List<ComponentHelper<Integer>> shieldsToActivate) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setShieldsToActivate()' is not supported in " + this + " state");
     }
 
     // CANNONS
-    protected List<ComponentHelper<Integer>> inputCannonList() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputCannonList()' is not supported in " + this + " state");
-    }
-
-    protected List<List<Integer>> inputDoubleCannonsToActivateCoordinates() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputDoubleCannonsToActivateCoordinates()' is not supported in " + this + " state");
+    public void setDoubleCannonsToActivate(List<ComponentHelper<Integer>> doubleCannonsToActivate) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setDoubleCannonsToActivate()' is not supported in " + this + " state");
     }
 
     // ENGINES
-    protected int inputUsedEnergy() throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'inputUsedEnergy()' is not supported in " + this + " state");
+    public void setUsedEnergy(int usedEnergy) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setUsedEnergy()' is not supported in " + this + " state");
     }
 
     // ACK METHOD

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.Ship;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.Exceptions.*;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
@@ -532,7 +533,7 @@ class ShipTest {
 
     @Test
     void getFirePower() {
-        List<List<Integer>> doubleCannonCoords;
+        List<ComponentHelper<Integer>> doubleCannonCoords;
         int expectedFirePower;
         Ship ship;
 
@@ -585,9 +586,11 @@ class ShipTest {
         // Case 4 - total engine power + purple alien on board
         doubleCannonCoords = new ArrayList<>();
         //doubleCannonCoords.add(new Pair<>(4, 6));
-        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(4, 6)));
+//        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(4, 6)));
+        doubleCannonCoords.add(new ComponentHelper<>(4, 6));
         //doubleCannonCoords.add(new Pair<>(6, 8));
-        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(6, 8)));
+//        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(6, 8)));
+        doubleCannonCoords.add(new ComponentHelper<>(6, 8));
         expectedFirePower = 8;
         assertEquals(expectedFirePower, ship.getFirePower(doubleCannonCoords));
 
@@ -597,9 +600,11 @@ class ShipTest {
         // Case 5 - no energy available + purple alien on board
         doubleCannonCoords = new ArrayList<>();
         //doubleCannonCoords.add(new Pair<>(4, 6));
-        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(4, 6)));
+//        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(4, 6)));
+        doubleCannonCoords.add(new ComponentHelper<>(4, 6));
         //doubleCannonCoords.add(new Pair<>(6, 8));
-        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(6, 8)));
+//        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(6, 8)));
+        doubleCannonCoords.add(new ComponentHelper<>(6, 8));
         expectedFirePower = 4;
         assertEquals(expectedFirePower, ship.getFirePower(doubleCannonCoords));
     }

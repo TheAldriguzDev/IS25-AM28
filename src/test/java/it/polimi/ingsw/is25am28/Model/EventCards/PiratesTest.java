@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientPirate
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientSmugglers;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
@@ -45,11 +46,11 @@ class PiratesTest {
     Pirates pirates;
     ClientPirates clientPirates;
 
-    ArrayList<int[]> ShieldsToActivate;
-    ArrayList<int[]> shieldsToActivate1;
-    ArrayList<int[]> shieldsToActivate2;
-    ArrayList<int[]> shieldsToActivate3;
-    ArrayList<int[]> shieldsToActivate4;
+    List<ComponentHelper<Integer>> ShieldsToActivate;
+    List<ComponentHelper<Integer>> shieldsToActivate1;
+    List<ComponentHelper<Integer>> shieldsToActivate2;
+    List<ComponentHelper<Integer>> shieldsToActivate3;
+    List<ComponentHelper<Integer>> shieldsToActivate4;
 
     ArrayList<Integer> dicesResults;
 
@@ -227,7 +228,8 @@ class PiratesTest {
         // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
-        ShieldsToActivate.add(new int[] {5, 7}); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
+        ShieldsToActivate.add(new ComponentHelper<>(5, 7)); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
+        //ShieldsToActivate.add(new int[] {5, 7}); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
         actionJSON = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
@@ -255,7 +257,8 @@ class PiratesTest {
         // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
-        ShieldsToActivate.add(new int[] {8, 5}); // Non lo proteggerà
+        ShieldsToActivate.add(new ComponentHelper<>(8, 5)); // Non lo proteggerà
+//        ShieldsToActivate.add(new int[] {8, 5}); // Non lo proteggerà
         actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
@@ -267,7 +270,8 @@ class PiratesTest {
         // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
-        ShieldsToActivate.add(new int[] {8, 5}); // Lo proteggerà
+        ShieldsToActivate.add(new ComponentHelper<>(8, 5)); // Lo proteggerà
+//        ShieldsToActivate.add(new int[] {8, 5}); // Lo proteggerà
         actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
@@ -279,7 +283,8 @@ class PiratesTest {
         // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
-        ShieldsToActivate.add(new int[] {8, 5});
+        ShieldsToActivate.add(new ComponentHelper<>(8, 5));
+//        ShieldsToActivate.add(new int[] {8, 5});
         actionJSON = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
@@ -305,7 +310,8 @@ class PiratesTest {
         // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
-        ShieldsToActivate.add(new int[] {8, 5});
+        ShieldsToActivate.add(new ComponentHelper<>(8, 5));
+//        ShieldsToActivate.add(new int[] {8, 5});
         actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
@@ -317,7 +323,8 @@ class PiratesTest {
         // ================================ //
 
         ShieldsToActivate = new ArrayList<>();
-        ShieldsToActivate.add(new int[] {8, 5});
+        ShieldsToActivate.add(new ComponentHelper<>(8, 5));
+//        ShieldsToActivate.add(new int[] {8, 5});
         actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
@@ -405,10 +412,11 @@ class PiratesTest {
 
         ShieldsToActivate = new ArrayList<>();
 
-        ArrayList<List<Integer>> doubleCannonActivated = new ArrayList<>();
+        List<ComponentHelper<Integer>> doubleCannonActivated = new ArrayList<>();
 //        x.add(5);
 //        y.add(6);
-        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(5, 6)));
+//        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(5, 6)));
+        doubleCannonActivated.add(new ComponentHelper<>(5, 6));
 //        doubleCannonActivated.add(y);
 
 
@@ -749,7 +757,8 @@ class PiratesTest {
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 //        ship.getCabinList().getFirst().addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        shieldsToActivate3.add(new int[] {8, 5});
+//        shieldsToActivate3.add(new int[] {8, 5});
+        shieldsToActivate3.add(new ComponentHelper<>(8, 5));
 
     }
 

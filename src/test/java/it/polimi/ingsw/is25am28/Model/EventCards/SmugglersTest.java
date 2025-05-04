@@ -275,14 +275,15 @@ class SmugglersTest {
         itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
         itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
 
-        ArrayList<List<Integer>> doubleCannonActivated = new ArrayList<>();
+        List<ComponentHelper<Integer>> doubleCannonActivated = new ArrayList<>();
 //        List<Integer> x = new ArrayList<>();
 //        List<Integer> y = new ArrayList<>();
 //        x.add(7);
 //        y.add(9);
 //        doubleCannonActivated.add(x);
 //        doubleCannonActivated.add(y);
-        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(7, 9)));
+//        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(7, 9)));
+        doubleCannonActivated.add(new ComponentHelper<>(7, 9));
 
         actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>()); // Total FirePower: 2
         actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>()); // Total FirePower: 3

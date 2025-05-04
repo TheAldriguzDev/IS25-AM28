@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientMeteorShower;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
@@ -245,8 +246,8 @@ class MeteorShowerTest {
         MeteorShowerJSON meteorShowerJSON;
         CardStateJSON meteorShowerStateJSON;
         List<Player> playerList = this.board.getPlayers();
-        List<List<Integer>> shieldsCoordinates;
-        List<List<Integer>> cannonsCoordinates;
+        List<ComponentHelper<Integer>> shieldsCoordinates;
+        List<ComponentHelper<Integer>> cannonsCoordinates;
         int energyP1 = playerList.get(0).getShip().getAvailableEnergy();
         int energyP2 = playerList.get(1).getShip().getAvailableEnergy();
         int currMeteorIndex = 0;
@@ -301,9 +302,11 @@ class MeteorShowerTest {
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         //shieldsCoordinates.add(new Pair<>(6, 4));   // Shield, 1 energy should be consumed
-        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // Shield, 1 energy should be consumed
+//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // Shield, 1 energy should be consumed
+        shieldsCoordinates.add(new ComponentHelper<>(6, 4));   // Shield, 1 energy should be consumed
         //shieldsCoordinates.add(new Pair<>(0, 0));   // Wrong component, no energy should be consumed
-        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(0, 0)));   // Wrong component, no energy should be consumed
+//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(0, 0)));   // Wrong component, no energy should be consumed
+        shieldsCoordinates.add(new ComponentHelper<>(0, 0));   // Wrong component, no energy should be consumed
         cannonsCoordinates.add(null);
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
@@ -559,7 +562,8 @@ class MeteorShowerTest {
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         //shieldsCoordinates.add(new Pair<>(6, 4));   // P1 activates shield
-        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P1 activates shield
+//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P1 activates shield
+        shieldsCoordinates.add(new ComponentHelper<Integer>(6, 4));   // P1 activates shield
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
@@ -617,11 +621,14 @@ class MeteorShowerTest {
         // Player 2 response
         shieldsCoordinates.add(null);   // P2 no shields selected
         //cannonsCoordinates.add(new Pair<>(6, 4));   // P2 chooses 3 non-cannon components, equivalent to doing nothing
-        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P2 chooses 3 non-cannon components, equivalent to doing nothing
+//        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P2 chooses 3 non-cannon components, equivalent to doing nothing
+        cannonsCoordinates.add(new ComponentHelper<>(6, 4));   // P2 chooses 3 non-cannon components, equivalent to doing nothing
         //cannonsCoordinates.add(new Pair<>(0, 0));
-        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(0, 0)));
+//        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(0, 0)));
+        cannonsCoordinates.add(new ComponentHelper<>(0, 0));
         //cannonsCoordinates.add(new Pair<>(6, 6));
-        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(6, 6)));
+//        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(6, 6)));
+        cannonsCoordinates.add(new ComponentHelper<>(6, 6));
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
                 meteorShowerStateJSON.getCurrMeteorIndex(),
@@ -689,7 +696,8 @@ class MeteorShowerTest {
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         //shieldsCoordinates.add(new Pair<>(6, 4));   // P1 activates the shield
-        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P1 activates the shield
+//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P1 activates the shield
+        shieldsCoordinates.add(new ComponentHelper<>(6, 4));   // P1 activates the shield
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
@@ -743,11 +751,14 @@ class MeteorShowerTest {
 
         // Player 2 response
         //shieldsCoordinates.add(new Pair<>(6, 4));   // P2 activates the shield
-        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P2 activates the shield
+//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P2 activates the shield
+        shieldsCoordinates.add(new ComponentHelper<>(6, 4));   // P2 activates the shield
         //cannonsCoordinates.add(new Pair<>(5, 7));   // P2 activates a single and a double cannon for no reason, thus wasting 1 energy
-        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(5, 7)));   // P2 activates a single and a double cannon for no reason, thus wasting 1 energy
+//        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(5, 7)));   // P2 activates a single and a double cannon for no reason, thus wasting 1 energy
+        cannonsCoordinates.add(new ComponentHelper<>(5, 7));   // P2 activates a single and a double cannon for no reason, thus wasting 1 energy
         //cannonsCoordinates.add(new Pair<>(6, 8));
-        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(6, 8)));
+//        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(6, 8)));
+        cannonsCoordinates.add(new ComponentHelper<>(6, 8));
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
                 meteorShowerStateJSON.getCurrMeteorIndex(),
@@ -1066,7 +1077,8 @@ class MeteorShowerTest {
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         //shieldsCoordinates.add(new Pair<>(6, 4));   // P1 activates the shield
-        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P1 activates the shield
+//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P1 activates the shield
+        shieldsCoordinates.add(new ComponentHelper<>(6, 4));   // P1 activates the shield
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
@@ -1122,7 +1134,8 @@ class MeteorShowerTest {
 
         // Player 2 response
         //shieldsCoordinates.add(new Pair<>(6, 4));   // P2 activates the shield
-        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P2 activates the shield
+//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P2 activates the shield
+        shieldsCoordinates.add(new ComponentHelper<>(6, 4));   // P2 activates the shield
         cannonsCoordinates.add(null);   // P2 no cannons activated
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
@@ -1193,7 +1206,8 @@ class MeteorShowerTest {
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         shieldsCoordinates.add(null);   // P1 no shield activated
         //cannonsCoordinates.add(new Pair<>(7, 9));   // P1 shoots at meteor with single cannon
-        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(7, 9)));   // P1 shoots at meteor with single cannon
+//        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(7, 9)));   // P1 shoots at meteor with single cannon
+        cannonsCoordinates.add(new ComponentHelper<>(7, 9));   // P1 shoots at meteor with single cannon
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
                 meteorShowerStateJSON.getCurrMeteorIndex(),
@@ -1252,7 +1266,8 @@ class MeteorShowerTest {
         // Player 2 response
         shieldsCoordinates.add(null);   // P2 no shield activated
         //cannonsCoordinates.add(new Pair<>(6, 8));   // P2 shoots at meteor with double cannon, but it gets destroyed due to no energy left
-        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(6, 8)));   // P2 shoots at meteor with double cannon, but it gets destroyed due to no energy left
+//        cannonsCoordinates.add(new ArrayList<>(Arrays.asList(6, 8)));   // P2 shoots at meteor with double cannon, but it gets destroyed due to no energy left
+        cannonsCoordinates.add(new ComponentHelper<>(6, 8));   // P2 shoots at meteor with double cannon, but it gets destroyed due to no energy left
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
                 meteorShowerStateJSON.getCurrMeteorIndex(),
@@ -1431,8 +1446,8 @@ class MeteorShowerTest {
         MeteorShowerJSON meteorShowerJSON;
         CardStateJSON meteorShowerStateJSON;
         List<Player> playerList;
-        List<List<Integer>> shieldsCoordinates;
-        List<List<Integer>> cannonsCoordinates;
+        List<ComponentHelper<Integer>> shieldsCoordinates;
+        List<ComponentHelper<Integer>> cannonsCoordinates;
 
         Player player3 = new Player("p3", PlayerColor.RED, 2);
         this.board.newPlayer(player3);
@@ -1496,9 +1511,11 @@ class MeteorShowerTest {
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         //shieldsCoordinates.add(new Pair<>(6, 4));   // Shield, 1 energy should be consumed
-        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // Shield, 1 energy should be consumed
+//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // Shield, 1 energy should be consumed
+        shieldsCoordinates.add(new ComponentHelper<>(6, 4));   // Shield, 1 energy should be consumed
         //shieldsCoordinates.add(new Pair<>(0, 0));   // Wrong component, no energy should be consumed
-        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(0, 0)));   // Wrong component, no energy should be consumed
+//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(0, 0)));   // Wrong component, no energy should be consumed
+        shieldsCoordinates.add(new ComponentHelper<>(0, 0));   // Wrong component, no energy should be consumed
         cannonsCoordinates.add(null);
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),

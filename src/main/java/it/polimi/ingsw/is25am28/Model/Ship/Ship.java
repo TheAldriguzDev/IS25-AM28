@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.Ship;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.Exceptions.*;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
@@ -613,7 +614,7 @@ public class Ship implements WidgetTUIGenerator {
      *
      * @return The current ship's total firepower
      */
-    public float getFirePower(List<List<Integer>> doubleCannonsToActivate) {
+    public float getFirePower(List<ComponentHelper<Integer>> doubleCannonsToActivate) {
         float totalFirePower;
         boolean allEnergyConsumed;
 
@@ -628,11 +629,11 @@ public class Ship implements WidgetTUIGenerator {
 
         // Adding the firepower of only the double cannons (if there are any)
         if (doubleCannonsToActivate != null) {
-            for (List<Integer> doubleCannonCoords : doubleCannonsToActivate) {
+            for (ComponentHelper<Integer> doubleCannonCoords : doubleCannonsToActivate) {
                 if (doubleCannonCoords != null) {
                     Component component = this.getComponent(
-                        doubleCannonCoords.get(0),
-                        doubleCannonCoords.get(1)
+                        doubleCannonCoords.getI(),
+                        doubleCannonCoords.getJ()
                     );
 
                     switch (component) {
