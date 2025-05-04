@@ -43,7 +43,7 @@ public class ClientShipConstructionState extends ClientState {
         this.initPlayersFinishedBuildingShip();
 
         // Initialize all client components
-        this.generateClientComponents(shipConstructionDTO.getAllComponents());
+        this.generateClientComponents(shipConstructionDTO.getAllComponents(), shipConstructionDTO.getFlippedComponents(), shipConstructionDTO.getSelectedComponents());
 
         // Initialize all client cards
         this.generateClientEventCards(shipConstructionDTO.getCards());
@@ -53,7 +53,7 @@ public class ClientShipConstructionState extends ClientState {
      * Generates the corresponding client components from the list
      * found in the ShipConstructionDTO
      */
-    private void generateClientComponents(List<Map<String, Object>> componentList) {
+    private void generateClientComponents(List<Map<String, Object>> componentList, List<Integer> flippedComponents, List<Integer> selectedComponents) {
         for (Map<String, Object> map : componentList) {
             int id = (int) map.get("id");
             int typeId = (int) map.get("tid");
@@ -113,6 +113,17 @@ public class ClientShipConstructionState extends ClientState {
                     throw new RuntimeException("The given component is not recognised.");
                 }
             }
+
+            // Update the components that are already either selected or flipped
+            ClientComponent component = this.components.getLast();
+
+            if (flippedComponents.contains(component.getID())) {
+                component.setAsFlipped();
+            }
+
+            if (selectedComponents.contains(component.getID())) {
+                component.setIsVisible(false);
+            }
         }
     }
 
@@ -138,7 +149,7 @@ public class ClientShipConstructionState extends ClientState {
                 case 8 -> this.model.getClientEventCards().add(new ClientStardust(model, null, cardState));
                 case 9 -> this.model.getClientEventCards().add(new ClientVisitPlanets(model, null, cardState));
                 case 10 -> this.model.getClientEventCards().add(new ClientWarZone(model, null, cardState));
-                
+
                 default -> throw new IllegalArgumentException("ERROR: Illegal event card ID");
             }
         }
