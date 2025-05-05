@@ -13,7 +13,12 @@ public class SmugglersJSON extends ActionJSON {
     private List<ComponentHelper<ItemColor>> itemsToBeRemoved;
     private List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates;
 
-    public SmugglersJSON() {}
+    public SmugglersJSON() {
+        this.takeLoot = false;
+        this.itemsToBeTaken = new ArrayList<>();
+        this.itemsToBeRemoved = new ArrayList<>();
+        this.doubleCannonsToActivateCoordinates = new ArrayList<>();
+    }
 
     public SmugglersJSON(@JsonProperty("playerNickname") String playerNickname,
                          @JsonProperty("takeLoot") boolean takeLoot,

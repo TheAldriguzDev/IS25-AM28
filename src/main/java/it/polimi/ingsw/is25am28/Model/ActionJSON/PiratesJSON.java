@@ -12,7 +12,11 @@ public class PiratesJSON extends ActionJSON {
     private List<ComponentHelper<Void>> shieldsActivatedCoordinates;
     private List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates;
 
-    public PiratesJSON() {}
+    public PiratesJSON() {
+        this.takeCredits = false;
+        this.shieldsActivatedCoordinates = new ArrayList<>();
+        this.doubleCannonsToActivateCoordinates = new ArrayList<>();
+    }
 
     public PiratesJSON(@JsonProperty("PlayerNickname") String playerNickname,
                        @JsonProperty("takeCredits") boolean takeCredits,

@@ -13,7 +13,11 @@ public class SlaversJSON extends ActionJSON {
     private List<ComponentHelper<LifeformType>> crewToRemove;
     private List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates;
 
-    public SlaversJSON() {}
+    public SlaversJSON() {
+        this.takeCredits = false;
+        this.crewToRemove = new ArrayList<>();
+        this.doubleCannonsToActivateCoordinates = new ArrayList<>();
+    }
 
     public SlaversJSON (@JsonProperty("playerNickname") String playerNickname,
                         @JsonProperty("takeCredits") boolean takeCredits,

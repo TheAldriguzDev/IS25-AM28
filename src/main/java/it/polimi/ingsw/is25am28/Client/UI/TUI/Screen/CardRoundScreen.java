@@ -1,13 +1,13 @@
 package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
@@ -59,7 +59,6 @@ public class CardRoundScreen extends Screen {
         this.generateAvailableLifeformsWidget();
         this.generateAvailableItemColorsWidget();
         this.generatePlayerNameWidget();
-        this.generateShipWidgets();
         this.generateOtherPlayerShipCommandsWidget();
 
         this.boardWidget = this.model.getClientBoard().generateWidget();
@@ -240,7 +239,7 @@ public class CardRoundScreen extends Screen {
 
         // Getting the lifeform type to remove
         do {
-            System.out.print("Available lifeforms to remove:");
+            System.out.println("Available lifeforms to remove:");
             availableLifeforms.printWidget();
             System.out.print(DEFAULT_COMMAND_PREFIX);
 
@@ -696,7 +695,7 @@ public class CardRoundScreen extends Screen {
         doubleEnginesToActivate = 0;
         correctInput = false;
 
-        // Verify that the selected component is a cannon
+        // Verify that the selected component is an engine
         do {
             try {
                 System.out.print("Insert amount of double engines to activate: ");
@@ -750,7 +749,7 @@ public class CardRoundScreen extends Screen {
         int len = LifeformType.values().length;
 
         for (int i = 0; i < len; i++) {
-            this.availableLifeforms.appendString(LifeformType.values()[i].toString());
+            this.availableLifeforms.appendString("(" + i + ")" + SPACE + LifeformType.values()[i].toString());
         }
 
         this.availableLifeforms
@@ -767,7 +766,7 @@ public class CardRoundScreen extends Screen {
         int len = ItemColor.values().length;
 
         for (int i = 0; i < len; i++) {
-            this.availableItemColors.appendString(ItemColor.values()[i].toString());
+            this.availableItemColors.appendString("(" + i + ")" + SPACE + ItemColor.values()[i].toString());
         }
 
         this.availableItemColors
@@ -821,7 +820,6 @@ public class CardRoundScreen extends Screen {
                     this.playCard();
                 }
                 catch (Exception e) {
-                    e.printStackTrace();
                     System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" thrown by method 'playCard'.", ANSIColors.RED));
                 }
 
@@ -859,7 +857,7 @@ public class CardRoundScreen extends Screen {
      * Generates the widget of the current event card
      */
     private void generateCurrEventCardWidget() {
-        this.getCurrEventCard();
+        this.getCurrEventCard(this.currEventCardState);
         this.currEventCardWidget = this.currEventCard.generateWidget();
     }
 
@@ -902,7 +900,7 @@ public class CardRoundScreen extends Screen {
      * Sets the currEventCard parameter to the one communicated
      * by the server through the CardRoundDTO
      */
-    private void getCurrEventCard() {
+    private void getCurrEventCard(CardStateJSON cardState) {
         int cardId;
 
         cardId = this.model.getState().getCardRoundDTO().getCardInfo().getId();
@@ -1209,10 +1207,14 @@ public class CardRoundScreen extends Screen {
         this.ctx = new CommandCTX(
             "playCard",
             () -> {
+                System.out.println("onSuccess");
+
                 // TODO: Implement onSuccess (if it needs to do something)
                 // TODO: view a screen saying that your turn is over
             },
             () -> {
+                System.out.println("onError");
+
                 System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
                 this.getCardRoundCommand();
             }
@@ -1231,20 +1233,18 @@ public class CardRoundScreen extends Screen {
      */
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
-        int cardId;
+        this.currEventCardState = cardRound.getCardInfo();
 
-        cardId = cardRound.getCardInfo().getId();
-        for (ClientEventCard card : this.model.getClientEventCards()) {
-            if (card.getId() == cardId) {
-                this.currEventCard = card;
-            }
-        }
+        // Updating this player's ship widget and
+        // getting the current event card
+        this.getCurrEventCard(this.currEventCardState);
+        this.generateShipWidgets();
 
+        // Updating the current event card
         this.currEventCard.updateCard(cardRound.getCardInfo());
 
-        System.out.println(cardRound.getCardInfo().getCardName());
-
-        // Initializing the map of available input methods
+        // Filtering only the commands that the
+        // current event card is enabling
         this.generateIndexedCardInputMethodsMap();
         this.generateCardRoundCommandsWidget();
 

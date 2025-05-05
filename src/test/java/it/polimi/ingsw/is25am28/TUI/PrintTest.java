@@ -2216,4 +2216,58 @@ public class PrintTest {
 
         planetWidget.printWidget();
     }
+
+    @Test
+    public void warZone_icon_test() {
+        WidgetTUI warZoneWidget = new WidgetTUI();
+
+        warZoneWidget.appendString("          ███████████          ");
+        warZoneWidget.appendString("        ███████████████        ");
+        warZoneWidget.appendString("      ███████████████████      ");
+        warZoneWidget.appendString("      ███████████████████      ");
+        warZoneWidget.appendString("      ███████████████████      ");
+        warZoneWidget.appendString("      ███████████████████      ");
+        warZoneWidget.appendString("       █████████████████       ");
+        warZoneWidget.appendString("        ███████████████        ");
+        warZoneWidget.appendString("         █████████████         ");
+        warZoneWidget.appendString("            ███████            ");
+        warZoneWidget.appendString("      ███████████████████      ");
+        warZoneWidget.appendString("      ██  ██  ███  ██  ██      ");
+
+        warZoneWidget.appendString("");
+        warZoneWidget.printWidget();
+        warZoneWidget = new WidgetTUI();
+
+        warZoneWidget.appendString("      ██  ██  ███  ██  ██      ");
+        warZoneWidget.appendString("      ███████████████████      ");
+        warZoneWidget.appendString("            ███████            ");
+        warZoneWidget.appendString("         █████████████         ");
+        warZoneWidget.appendString("        ███████████████        ");
+        warZoneWidget.appendString("       █████████████████       ");
+        warZoneWidget.appendString("      ███████████████████      ");
+        warZoneWidget.appendString("      ███████████████████      ");
+        warZoneWidget.appendString("      ███████████████████      ");
+        warZoneWidget.appendString("      ███████████████████      ");
+        warZoneWidget.appendString("        ███████████████        ");
+        warZoneWidget.appendString("          ███████████          ");
+
+        warZoneWidget.appendString("");
+        warZoneWidget.printWidget();
+        warZoneWidget = new WidgetTUI();
+
+        warZoneWidget.appendString(ANSIColors.WHITE + "      ██  ██  ███  ██  ██      " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.WHITE + "      ███████████████████      " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.WHITE + "            ███████            " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.GREEN + "         █████████████         " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.GREEN + "        ███████████████        " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.GREEN + "       █████████████████       " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.GREEN + "      ███████████████████      " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.GREEN + "      ███████████████████      " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.GREEN + "      ███████████████████      " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.RED   + "      ███████████████████      " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.RED   + "        ███████████████        " + ANSIColors.RESET);
+        warZoneWidget.appendString(ANSIColors.RED   + "          ███████████          " + ANSIColors.RESET);
+
+        warZoneWidget.printWidget();
+    }
 }

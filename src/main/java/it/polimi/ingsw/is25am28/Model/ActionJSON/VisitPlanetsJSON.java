@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class VisitPlanetsJSON extends ActionJSON {
@@ -14,7 +15,11 @@ public class VisitPlanetsJSON extends ActionJSON {
     private List<ComponentHelper<ItemColor>> itemsToDrop;
     private List<ComponentHelper<ItemColor>> itemsToTake;
 
-    public VisitPlanetsJSON() {}
+    public VisitPlanetsJSON() {
+        this.chosenPlanetIndex = -1;
+        this.itemsToDrop = new ArrayList<>();
+        this.itemsToTake = new ArrayList<>();
+    }
 
     @JsonCreator
     public VisitPlanetsJSON(
