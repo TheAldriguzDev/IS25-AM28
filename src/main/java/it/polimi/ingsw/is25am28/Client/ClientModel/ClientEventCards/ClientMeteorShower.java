@@ -100,7 +100,17 @@ public class ClientMeteorShower extends ClientEventCard {
     }
 
     @Override
+    public List<ComponentHelper<Integer>> getShieldsToActivate() throws UnsupportedOperationException {
+        return this.meteorShowerJSON.getShieldsCoordinates();
+    }
+
+    @Override
     public void setDoubleCannonsToActivate(List<ComponentHelper<Integer>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.meteorShowerJSON.setCannonsCoordinates(doubleCannonsToActivate);
+    }
+
+    @Override
+    public List<ComponentHelper<Integer>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+        return this.meteorShowerJSON.getCannonsCoordinates();
     }
 }

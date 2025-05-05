@@ -99,7 +99,17 @@ public class ClientSlavers extends ClientEventCard {
     }
 
     @Override
+    public List<ComponentHelper<Integer>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+        return this.slaversJSON.getDoubleCannonsToActivateCoordinates();
+    }
+
+    @Override
     public void setTakeReward(boolean takeReward) {
         this.slaversJSON.setTakeCredits(takeReward);
+    }
+
+    @Override
+    public boolean getTakeReward() {
+        return this.slaversJSON.getTakeCredits();
     }
 }
