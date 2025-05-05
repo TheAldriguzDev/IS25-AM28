@@ -114,8 +114,38 @@ public class PrintTest {
         inputWidget.addCommand(command7);
         inputWidget.addCommand(command8);
 
-        inputWidget.setInputThread(new InputThread());
+        InputThread inputThread = new InputThread();
+
+        inputWidget.setInputThread(inputThread);
+
+        new Thread(
+                () -> {
+                    try {
+                        Thread.sleep(5000);
+                        inputThread.interruptInputReader();
+                        System.out.println("AFTER INTERRUPT");
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        ).start();
+
         System.out.println("selected? => " + inputWidget.selectCommand("Select an option: "));
+
+        new Thread(
+                () -> {
+                    try {
+                        Thread.sleep(5000);
+                        inputThread.interruptInputReader();
+                        System.out.println("AFTER INTERRUPT");
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        ).start();
+
+        System.out.println("selected? => " + inputWidget.selectCommand("Select an option: "));
+
 
         System.exit(0);
     }
