@@ -28,7 +28,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected String cardName;
     protected int cardLevel;
     protected boolean hasBeenUsed;
-    protected boolean hasBeenActivated; // this flag allows the card to send its full static information (like when only visualized at the start of the game) only when ita has not been used a single time wit useCard()
+    protected boolean hasBeenActivated; // this flag allows the card to send its full static information (like when only visualized at the start of the game) only when it hsa has not been used a single time with useCard()
 
     protected ClientModel model;
     protected InputThread inputThread;
