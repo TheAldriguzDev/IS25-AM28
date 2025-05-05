@@ -12,11 +12,14 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientPirates extends ClientEventCard {
+    private static final List<String> enabledCommands;
+
     // Commands that this card will enable are added here
     static {
-        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
-        ClientEventCard.enabledCommands.add("setShieldsToActivate");
-        ClientEventCard.enabledCommands.add("setTakeReward");
+        enabledCommands = new ArrayList<>();
+        enabledCommands.add("setDoubleCannonsToActivate");
+        enabledCommands.add("setShieldsToActivate");
+        enabledCommands.add("setTakeReward");
     }
 
     private int diceThrowResult;
@@ -37,6 +40,11 @@ public class ClientPirates extends ClientEventCard {
         this.movementSteps = cardState.getMovementSteps();
         this.defeatedPlayers = new ArrayList<>();
         this.piratesJSON = new PiratesJSON();
+    }
+
+    @Override
+    public List<String> getEnabledCommands() {
+        return enabledCommands;
     }
 
     @Override

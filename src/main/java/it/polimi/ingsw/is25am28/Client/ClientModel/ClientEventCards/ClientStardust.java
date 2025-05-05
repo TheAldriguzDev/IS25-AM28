@@ -15,9 +15,12 @@ import java.util.Random;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientStardust extends ClientEventCard {
+    private static final List<String> enabledCommands;
+
     // Commands that this card will enable are added here
     static {
-        ClientEventCard.enabledCommands.add("getPlayerAck");
+        enabledCommands = new ArrayList<>();
+        enabledCommands.add("getPlayerAck");
     }
 
     private StardustJSON stardustJSON;
@@ -25,6 +28,11 @@ public class ClientStardust extends ClientEventCard {
     public ClientStardust(CardStateJSON cardState) {
         super(cardState);
         this.stardustJSON = new StardustJSON();
+    }
+
+    @Override
+    public List<String> getEnabledCommands() {
+        return enabledCommands;
     }
 
     @Override

@@ -7,16 +7,20 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ClientWarZone extends ClientEventCard {
+    private static final List<String> enabledCommands;
+
     // Commands that this card will enable are added here
     static {
-        ClientEventCard.enabledCommands.add("setItemsToBeRemoved");
-        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
-        ClientEventCard.enabledCommands.add("setDoubleEnginesToActivate");
-        ClientEventCard.enabledCommands.add("setShieldsToActivate");
+        enabledCommands = new ArrayList<>();
+        enabledCommands.add("setItemsToBeRemoved");
+        enabledCommands.add("setDoubleCannonsToActivate");
+        enabledCommands.add("setDoubleEnginesToActivate");
+        enabledCommands.add("setShieldsToActivate");
     }
 
     private List<List<String>> actionAndConsequences;
@@ -37,6 +41,11 @@ public class ClientWarZone extends ClientEventCard {
         this.movementSteps = cardState.getMovementSteps();
         this.requiredResources = cardState.getRequiredResources();
         this.warZoneJSON = new WarZoneJSON();
+    }
+
+    @Override
+    public List<String> getEnabledCommands() {
+        return enabledCommands;
     }
 
     @Override

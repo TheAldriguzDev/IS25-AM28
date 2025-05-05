@@ -8,13 +8,17 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientAbandonedStation extends ClientEventCard {
+    private static final List<String> enabledCommands;
+
     // Commands that this card will enable are added here
     static {
-        ClientEventCard.enabledCommands.add("setItemsToBeRemoved");
-        ClientEventCard.enabledCommands.add("setItemsToBeTaken");
+        enabledCommands = new ArrayList<>();
+        enabledCommands.add("setItemsToBeRemoved");
+        enabledCommands.add("setItemsToBeTaken");
     }
 
     private final int requiredCrew;
@@ -31,6 +35,11 @@ public class ClientAbandonedStation extends ClientEventCard {
         this.hasBeenUsed = cardState.getIsCardUsable();
         this.stationResources = cardState.getStationResources();
         this.abandonedStationJSON = new AbandonedStationJSON();
+    }
+
+    @Override
+    public List<String> getEnabledCommands() {
+        return enabledCommands;
     }
 
     @Override

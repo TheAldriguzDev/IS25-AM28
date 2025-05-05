@@ -8,12 +8,17 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientAbandonedShip extends ClientEventCard {
+    private static final List<String> enabledCommands;
+
     // Commands that this card will enable are added here
     static {
-        ClientEventCard.enabledCommands.add("setCrewToRemove");
+        enabledCommands = new ArrayList<>();
+        enabledCommands.add("setCrewToRemove");
+        enabledCommands.add("setWantsToVisit");
     }
 
     private final int requiredCrew;
@@ -29,6 +34,11 @@ public class ClientAbandonedShip extends ClientEventCard {
         this.movementStep = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();
         this.abandonedShipJSON = new AbandonedShipJSON();
+    }
+
+    @Override
+    public List<String> getEnabledCommands() {
+        return enabledCommands;
     }
 
     @Override

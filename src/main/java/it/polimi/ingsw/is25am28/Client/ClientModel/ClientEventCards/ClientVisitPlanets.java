@@ -8,16 +8,20 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ClientVisitPlanets extends ClientEventCard {
+    private static final List<String> enabledCommands;
+
     // Commands that this card will enable are added here
     static {
-        ClientEventCard.enabledCommands.add("getPlayerAck");
-        ClientEventCard.enabledCommands.add("setItemsToBeRemoved");
-        ClientEventCard.enabledCommands.add("setItemsToBeTaken");
-        ClientEventCard.enabledCommands.add("setChosenPlanetIndex");
+        enabledCommands = new ArrayList<>();
+        enabledCommands.add("getPlayerAck");
+        enabledCommands.add("setItemsToBeRemoved");
+        enabledCommands.add("setItemsToBeTaken");
+        enabledCommands.add("setChosenPlanetIndex");
     }
 
     private Map<Integer, Map<ItemColor, Integer>> availablePlanets; // TODO: a list would serve this role better since the generateWidget needs order
@@ -29,6 +33,11 @@ public class ClientVisitPlanets extends ClientEventCard {
         super(cardState);
         this.availablePlanets = cardState.getAvailablePlanets();
         this.visitPlanetsJSON = new VisitPlanetsJSON();
+    }
+
+    @Override
+    public List<String> getEnabledCommands() {
+        return enabledCommands;
     }
 
     @Override

@@ -6,10 +6,16 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.EpidemyJSON;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ClientEpidemy extends ClientEventCard {
+    private static final List<String> enabledCommands;
+
     // Commands that this card will enable are added here
     static {
-        ClientEventCard.enabledCommands.add("getPlayerAck");
+        enabledCommands = new ArrayList<>();
+        enabledCommands.add("getPlayerAck");
     }
 
     private EpidemyJSON epidemyJSON;
@@ -17,6 +23,11 @@ public class ClientEpidemy extends ClientEventCard {
     public ClientEpidemy(CardStateJSON cardState) {
         super(cardState);
         this.epidemyJSON = new EpidemyJSON();
+    }
+
+    @Override
+    public List<String> getEnabledCommands() {
+        return enabledCommands;
     }
 
     @Override
