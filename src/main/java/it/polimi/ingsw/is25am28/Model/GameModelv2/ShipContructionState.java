@@ -308,15 +308,27 @@ public final class ShipContructionState extends State implements TimerObserver {
             // if all the ships are valid go to PopulateShipState
             // otherwise go to the FixShipState
             List<String> playersWithInvalidShip = new ArrayList<>();
+            // Store the players that needs to populate the ship
+            List<String> playerWithoutPopulatedShip = new ArrayList<>();
 
             for (Player p : model.getPlayers().values()) {
+                // Check if the player has an invalid ship
                 if (!p.getShip().validateShip()) {
                     playersWithInvalidShip.add(p.getNickname());
+                }
+
+                // Check if the player needs to populate the ship
+                if (!p.getShip().isShipPopulated()) {
+                    playerWithoutPopulatedShip.add(p.getNickname());
                 }
             }
 
             if (playersWithInvalidShip.isEmpty()) {
-                this.model.setCurrentState(new PopulateShipState(model));
+                if (playerWithoutPopulatedShip.isEmpty()) {
+                    this.model.setCurrentState(new CardRoundState(model));
+                } else {
+                    this.model.setCurrentState(new PopulateShipState(model));
+                }
             } else {
                 this.model.setCurrentState(new FixShipState(model, playersWithInvalidShip));
             }
