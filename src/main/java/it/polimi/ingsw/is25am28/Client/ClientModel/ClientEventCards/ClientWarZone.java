@@ -159,7 +159,19 @@ public class ClientWarZone extends ClientEventCard {
             cardInfoWidget.wrapWidgetWithBorder();
 
             for (List<String> pair : actionAndConsequences) {
-                cardInfoWidget.appendString(pair.get(0) + " --> " + pair.get(1));
+//                cardInfoWidget.appendString(pair.get(0) + " --> " + pair.get(1));
+                switch (pair.getFirst()) {
+                    case "Humans" -> tmpAction = "Crew";
+                    case "Enginepower" -> tmpAction = "EnginePower";
+                    case "Firepower" -> tmpAction = "FirePower";
+                }
+                switch (pair.getLast()) {
+                    case "RequiredCrew" -> tmpConsequence = "Taken Crew";
+                    case "MovementSteps" ->tmpConsequence = "Days";
+                    case "ShootingSequence" -> tmpConsequence = "PlasmaShots";
+                    case "LossItems" -> tmpConsequence = "Taken Items";
+                }
+                cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
             }
 //            cardInfoWidget.appendString("CurrActionsAndConsequences: " + actionAndConsequences);
         }
