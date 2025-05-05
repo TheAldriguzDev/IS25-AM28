@@ -12,16 +12,19 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public abstract class ClientEventCard implements WidgetTUIGenerator {
+    protected final List<String> enabledCommands = new ArrayList<>();
+
     protected final int id;
     protected String playerNickname;
     protected String cardName;
     protected int cardLevel;
     protected boolean hasBeenUsed;
-    protected boolean hasBeenActivated; // this flag allows the card to send its full static information (like when only visualized at the start of the game) only when it hsa has not been used a single time with useCard()
+    protected boolean hasBeenActivated; // this flag allows the card to send its full static information (like when only visualized at the start of the game) only when ita has not been used a single time wit useCard()
 
     protected ClientModel model;
     protected InputThread inputThread;
@@ -36,22 +39,17 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
      * Each card will set to TRUE only the input methods it needs inside
      * its own ActionJSON to provide the server the player's choices.
      */
-    public static void setAvailableCommands(List<String> enabledCommands, Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods) {
-        // First put to false all flags
+    public void setAvailableCommands(Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods) {
         for (Map.Entry<String, Pair<Boolean, CommandWidgetTUI>> entry : indexedCardInputMethods.entrySet()) {
             entry.getValue().setKey(false);
         }
 
-        // Then activate only the ones specified by the current event card
         for (String command : enabledCommands) {
-            indexedCardInputMethods.get(command).setKey(true);
+            if (indexedCardInputMethods.containsKey(command)) {
+                indexedCardInputMethods.get(command).setKey(true);
+            }
         }
     }
-
-    /**
-     * Returns each card's list of commands to enable
-     */
-    public abstract List<String> getEnabledCommands();
 
     /**
      * @return This client card's ID
@@ -121,7 +119,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'getChosenPlanetIndex()' is not supported in " + this + " state");
     }
 
-    public void setWantsToVisit(boolean wantsToVisit) throws UnsupportedOperationException {
+    public void setWantsToVisit(boolean wantsToVisitShip) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setWantsToVisit()' is not supported in " + this + " state");
     }
 

@@ -12,17 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientSmugglers extends ClientEventCard {
-    private static final List<String> enabledCommands;
-
-    // Commands that this card will enable are added here
-    static {
-        enabledCommands = new ArrayList<>();
-        enabledCommands.add("setDoubleCannonsToActivate");
-        enabledCommands.add("setTakeReward");
-        enabledCommands.add("setItemsToBeRemoved");
-        enabledCommands.add("setItemsToBeTaken");
-    }
-
     private final int requiredFirepower;
     private final int movementSteps;
     private final int redItems;
@@ -47,11 +36,11 @@ public class ClientSmugglers extends ClientEventCard {
         this.firstRound = true;
         this.defeatedPlayers = new ArrayList<>();
         this.smugglersJSON = new SmugglersJSON();
-    }
 
-    @Override
-    public List<String> getEnabledCommands() {
-        return enabledCommands;
+        enabledCommands.add("setDoubleCannonsToActivate");
+        enabledCommands.add("setTakeReward");
+        enabledCommands.add("setItemsToBeRemoved");
+        enabledCommands.add("setItemsToBeTaken");
     }
 
     @Override
@@ -78,7 +67,7 @@ public class ClientSmugglers extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
+        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
         cardInfoWidget.appendString(ANSIColors.RED + "████                       ████" + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.RED + "  ████                   ████  " + ANSIColors.RESET);
@@ -96,17 +85,15 @@ public class ClientSmugglers extends ClientEventCard {
         cardInfoWidget.wrapWidgetWithBorder();
 
         if (firstRound) {
-            cardInfoWidget.appendString("Days: " + this.movementSteps + "      Firepower: " + this.requiredFirepower);
-//            cardInfoWidget.appendString("Days: " + this.movementSteps);
-//            cardInfoWidget.appendString("Required Firepower: " + this.requiredFirepower);
-            cardInfoWidget.appendString("───────────────────────────────");
-            cardInfoWidget.appendString("Available ╿ " + ANSIColors.RED + "R: " + ANSIColors.RESET + redItems + "," + ANSIColors.YELLOW + " Y: " + ANSIColors.RESET + yellowItems);
-            cardInfoWidget.appendString("Resources ╽ " + ANSIColors.BLUE + "B: " + ANSIColors.RESET + blueItems + "," + ANSIColors.GREEN + " G: " + ANSIColors.RESET + greenItems);
-            cardInfoWidget.appendString("───────────────────────────────");
+            cardInfoWidget.appendString("Level: " + this.cardLevel);
+            cardInfoWidget.appendString("Days: " + this.movementSteps);
+            cardInfoWidget.appendString("Required Firepower: " + this.requiredFirepower);
+            cardInfoWidget.appendString("available items:");
+            cardInfoWidget.appendString(ANSIColors.RED + " Red: " + ANSIColors.RESET + this.redItems + " |" + ANSIColors.YELLOW + " Yellow: " + ANSIColors.RESET + this.yellowItems);
+            cardInfoWidget.appendString(ANSIColors.BLUE + "Blue: " + ANSIColors.RESET + this.blueItems + " |" + ANSIColors.GREEN + "  Green: " + ANSIColors.RESET + this.greenItems);
             cardInfoWidget.appendString("Taken items: " + this.takenItems);
 
             if (this.playerNickname != null) {
-                cardInfoWidget.appendString("───────────────────────────────");
                 cardInfoWidget.appendString("Current Player: " + this.playerNickname);
             }
         }

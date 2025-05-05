@@ -22,8 +22,8 @@ public class OpenSpace extends EventCard {
     // TODO : modify the system to update from time to time, not at the end
 
     // TODO: Implement the specific constructor to build the card with the necessary data
-    public OpenSpace(String name, int level, Board board) {
-        super(name, level, board);
+    public OpenSpace(String name, int level, Board board, int cardID) {
+        super(name, level, board, cardID);
         this.playerPowerResult = new HashMap<>();
         this.updatedPositions = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();

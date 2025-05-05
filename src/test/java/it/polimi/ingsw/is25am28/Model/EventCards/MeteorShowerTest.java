@@ -222,7 +222,8 @@ class MeteorShowerTest {
                 "Meteor Shower",
                 2,
                 meteorSequence,
-                board
+                board,
+                0
         );
     }
 

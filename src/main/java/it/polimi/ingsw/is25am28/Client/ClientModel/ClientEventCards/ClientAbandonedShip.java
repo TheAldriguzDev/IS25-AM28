@@ -8,19 +8,9 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ClientAbandonedShip extends ClientEventCard {
-    private static final List<String> enabledCommands;
-
-    // Commands that this card will enable are added here
-    static {
-        enabledCommands = new ArrayList<>();
-        enabledCommands.add("setCrewToRemove");
-        enabledCommands.add("setWantsToVisit");
-    }
-
     private final int requiredCrew;
     private final int movementStep;
     private final int givenCredits;
@@ -34,11 +24,8 @@ public class ClientAbandonedShip extends ClientEventCard {
         this.movementStep = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();
         this.abandonedShipJSON = new AbandonedShipJSON();
-    }
 
-    @Override
-    public List<String> getEnabledCommands() {
-        return enabledCommands;
+        enabledCommands.add("setCrewToRemove");
     }
 
     @Override
@@ -62,7 +49,7 @@ public class ClientAbandonedShip extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
+        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
         cardInfoWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
@@ -79,11 +66,11 @@ public class ClientAbandonedShip extends ClientEventCard {
 
         cardInfoWidget.wrapWidgetWithBorder();
 
-        cardInfoWidget.appendString("Days: " + this.movementStep + "      Crew: " + this.requiredCrew);
-        cardInfoWidget.appendString("───────────────────────────────");
+        cardInfoWidget.appendString("Level: " + this.cardLevel);
+        cardInfoWidget.appendString("Required Crew: " + this.requiredCrew);
         cardInfoWidget.appendString("Given Credits: " + this.givenCredits);
+        cardInfoWidget.appendString("Movement Step: " + this.movementStep);
         if (this.playerNickname != null) {
-            cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Current Player: " + this.playerNickname);
         }
 
@@ -92,16 +79,12 @@ public class ClientAbandonedShip extends ClientEventCard {
 
     @Override
     public void setCrewToRemove(List<ComponentHelper<LifeformType>> crewToRemove) {
+        this.abandonedShipJSON.setWantToVisitShip(true);
         this.abandonedShipJSON.setLifeformsToBeRemoved(crewToRemove);
     }
 
     @Override
     public List<ComponentHelper<LifeformType>> getCrewToRemove() {
         return this.abandonedShipJSON.getLifeformsToBeRemoved();
-    }
-
-    @Override
-    public void setWantsToVisit(boolean wantsToVisit) throws UnsupportedOperationException {
-        this.abandonedShipJSON.setWantToVisitShip(wantsToVisit);
     }
 }

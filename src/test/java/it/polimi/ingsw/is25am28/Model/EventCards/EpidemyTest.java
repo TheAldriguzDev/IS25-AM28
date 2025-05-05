@@ -395,6 +395,7 @@ class EpidemyTest {
                 "Epidemy",
                 board.getLevel(),
                 board
+                ,0
         );
 
         ClientEpidemy clientEpidemy;
@@ -582,7 +583,8 @@ class EpidemyTest {
         Epidemy epidemy = new Epidemy(
                 "Epidemy",
                 board.getLevel(),
-                board
+                board,
+                0
         );
 
         List<LifeformType> expectedPlayer1Lifeforms;
@@ -679,7 +681,8 @@ class EpidemyTest {
         Epidemy epidemy = new Epidemy(
                 "Epidemy",
                 board.getLevel(),
-                board
+                board,
+                0
         );
 
         List<LifeformType> expectedPlayer1Lifeforms;
@@ -796,7 +799,8 @@ class EpidemyTest {
         Epidemy epidemy = new Epidemy(
                 "Epidemy",
                 board.getLevel(),
-                board
+                board,
+                0
         );
 
         List<LifeformType> expectedLifeformsP1;

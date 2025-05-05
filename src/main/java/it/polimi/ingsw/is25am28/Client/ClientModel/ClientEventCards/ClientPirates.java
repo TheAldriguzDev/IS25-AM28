@@ -12,16 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientPirates extends ClientEventCard {
-    private static final List<String> enabledCommands;
-
-    // Commands that this card will enable are added here
-    static {
-        enabledCommands = new ArrayList<>();
-        enabledCommands.add("setDoubleCannonsToActivate");
-        enabledCommands.add("setShieldsToActivate");
-        enabledCommands.add("setTakeReward");
-    }
-
     private int diceThrowResult;
     private boolean firstRound;
     private final int requiredFirepower;
@@ -40,11 +30,10 @@ public class ClientPirates extends ClientEventCard {
         this.movementSteps = cardState.getMovementSteps();
         this.defeatedPlayers = new ArrayList<>();
         this.piratesJSON = new PiratesJSON();
-    }
 
-    @Override
-    public List<String> getEnabledCommands() {
-        return enabledCommands;
+        enabledCommands.add("setDoubleCannonsToActivate");
+        enabledCommands.add("setShieldsToActivate");
+        enabledCommands.add("setTakeReward");
     }
 
     @Override

@@ -214,7 +214,8 @@ class AbandonedStationTest {
                     1,
                     givenItems,
                     board,
-                    resourceBank
+                    resourceBank,
+                0
                 );
 
         ClientAbandonedStation clientAbandonedStation;
@@ -328,7 +329,8 @@ class AbandonedStationTest {
                 1,
                 givenItems,
                 board,
-                resourceBank
+                resourceBank,
+                0
         );
 
         abandonedStationCard.initCardPlayers();
@@ -445,7 +447,8 @@ class AbandonedStationTest {
                 1,
                 givenItems,
                 board,
-                resourceBank
+                resourceBank,
+                0
         );
 
         abandonedStationCard.initCardPlayers();

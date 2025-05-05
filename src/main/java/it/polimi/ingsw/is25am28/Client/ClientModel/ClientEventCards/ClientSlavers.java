@@ -11,15 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientSlavers extends ClientEventCard {
-    private static final List<String> enabledCommands;
-
-    // Commands that this card will enable are added here
-    static {
-        enabledCommands = new ArrayList<>();
-        enabledCommands.add("setDoubleCannonsToActivate");
-        enabledCommands.add("setTakeReward");
-    }
-
     private final int requiredFirepower;
     private final int movementSteps;
     private final int givenCredits;
@@ -38,11 +29,9 @@ public class ClientSlavers extends ClientEventCard {
         this.defeatedPlayers = new ArrayList<>();
         this.firstRound = true;
         this.slaversJSON = new SlaversJSON();
-    }
 
-    @Override
-    public List<String> getEnabledCommands() {
-        return enabledCommands;
+        enabledCommands.add("setDoubleCannonsToActivate");
+        enabledCommands.add("setTakeReward");
     }
 
     @Override
@@ -69,31 +58,29 @@ public class ClientSlavers extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
+        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
-        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "        ██        ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██       ████       " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██       ████       " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "        ██        ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██        ██        " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "         ██        ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██       ████       " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██       ████       " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "         ██        ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██        ██        " + ANSIColors.RESET);
         cardInfoWidget.wrapWidgetWithBorder();
 
         if (this.firstRound) {
-//            cardInfoWidget.appendString("─────────PREREQUISITES─────────");
-            cardInfoWidget.appendString("Days: " + this.movementSteps + "      Firepower: " + this.requiredFirepower);
-            cardInfoWidget.appendString("───────────────────────────────");
-            cardInfoWidget.appendString("Given credits: " + this.givenCredits);
-            cardInfoWidget.appendString("───────────────────────────────");
+            cardInfoWidget.appendString("Level: " + this.cardLevel);
+            cardInfoWidget.appendString("Given Credits: " + this.givenCredits);
+            cardInfoWidget.appendString("Days: " + this.movementSteps);
+            cardInfoWidget.appendString("Required Firepower: " + this.requiredFirepower);
             cardInfoWidget.appendString("Taken Crew: " + this.takenCrew);
             if (this.playerNickname != null) {
-                cardInfoWidget.appendString("───────────────────────────────");
                 cardInfoWidget.appendString("Current Player: " + this.playerNickname);
             }
         } else {

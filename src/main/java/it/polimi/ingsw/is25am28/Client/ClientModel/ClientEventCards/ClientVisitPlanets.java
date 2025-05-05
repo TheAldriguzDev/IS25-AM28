@@ -8,23 +8,10 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public class ClientVisitPlanets extends ClientEventCard {
-    private static final List<String> enabledCommands;
-
-    // Commands that this card will enable are added here
-    static {
-        enabledCommands = new ArrayList<>();
-        enabledCommands.add("getPlayerAck");
-        enabledCommands.add("setItemsToBeRemoved");
-        enabledCommands.add("setItemsToBeTaken");
-        enabledCommands.add("setChosenPlanetIndex");
-    }
-
-    private int movementSteps;
     private Map<Integer, Map<ItemColor, Integer>> availablePlanets; // TODO: a list would serve this role better since the generateWidget needs order
     private int chosenPlanetIndex;
 
@@ -32,14 +19,13 @@ public class ClientVisitPlanets extends ClientEventCard {
 
     public ClientVisitPlanets(CardStateJSON cardState) {
         super(cardState);
-        this.movementSteps = cardState.getMovementSteps();
         this.availablePlanets = cardState.getAvailablePlanets();
         this.visitPlanetsJSON = new VisitPlanetsJSON();
-    }
 
-    @Override
-    public List<String> getEnabledCommands() {
-        return enabledCommands;
+        enabledCommands.add("getPlayerAck");
+        enabledCommands.add("setItemsToBeRemoved");
+        enabledCommands.add("setItemsToBeTaken");
+        enabledCommands.add("setChosenPlanetIndex");
     }
 
     @Override
@@ -65,12 +51,7 @@ public class ClientVisitPlanets extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        int redItems = 0;
-        int yellowItems = 0;
-        int blueItems = 0;
-        int greenItems = 0;
-
-        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
+        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
         cardInfoWidget.appendString(ANSIColors.BLUE + "                               " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.GREEN + " ██████████" + ANSIColors.BLUE + "███████████████████ " + ANSIColors.RESET);
@@ -87,22 +68,14 @@ public class ClientVisitPlanets extends ClientEventCard {
 
         cardInfoWidget.wrapWidgetWithBorder();
 
-//        cardInfoWidget.appendString("Available Planets: ");
-        cardInfoWidget.appendString("Days: " + this.movementSteps);
+        cardInfoWidget.appendString("Card Level: " + this.cardLevel);
+        cardInfoWidget.appendString("Available Planets: ");
 
         for (Map.Entry<Integer, Map<ItemColor, Integer>> entry : availablePlanets.entrySet()) {
-//            cardInfoWidget.appendString(entry.getKey() + ": " + entry.getValue().toString());
-            redItems = (entry.getValue().get(ItemColor.RED));
-            yellowItems = (entry.getValue().get(ItemColor.YELLOW));
-            blueItems = (entry.getValue().get(ItemColor.BLUE));
-            greenItems = (entry.getValue().get(ItemColor.GREEN));
-            cardInfoWidget.appendString("───────────────────────────────");
-            cardInfoWidget.appendString("Planet ╿ Available ╿ " + ANSIColors.RED + "R: " + ANSIColors.RESET + redItems + "," + ANSIColors.YELLOW + " Y: " + ANSIColors.RESET + yellowItems);
-            cardInfoWidget.appendString("Num: " + entry.getKey() + " ╽ Resources ╽ " + ANSIColors.BLUE + "B: " + ANSIColors.RESET + blueItems + "," + ANSIColors.GREEN + " G: " + ANSIColors.RESET + greenItems);
+            cardInfoWidget.appendString(entry.getKey() + ": " + entry.getValue().toString());
         }
 
         if (this.playerNickname != null) {
-            cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Current Player: " + playerNickname);
         }
 

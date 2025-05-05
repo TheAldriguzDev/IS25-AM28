@@ -31,6 +31,8 @@ public final class CardRoundState extends State {
 
         // Initialize the first card players
         this.deck.getFirst().initCardPlayers();
+
+        System.out.println(this.deck.getFirst().getCardName());
         this.refreshPlayersShip();
     }
 
@@ -150,7 +152,7 @@ public final class CardRoundState extends State {
         isFirstState = false;
 
         state.setRound(this.round);
-        state.setCardInfo(this.deck.get(this.round).generateState());
+        state.setCardInfo(this.deck.getFirst().generateState());
         state.setStateName(this.toString());
 
         return state;

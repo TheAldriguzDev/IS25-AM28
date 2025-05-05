@@ -25,8 +25,8 @@ public class Slavers extends EventCard {
     private Map<String, Integer> removedBatteries; // TODO: Implement in the state
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
-    public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board) {
-        super(name, cardLevel, board);
+    public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board, int cardID) {
+        super(name, cardLevel, board, cardID);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.givenCredits = givenCredits;

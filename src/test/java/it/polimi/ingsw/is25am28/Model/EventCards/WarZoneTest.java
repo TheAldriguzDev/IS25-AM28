@@ -128,8 +128,7 @@ class WarZoneTest {
         consequencePairs.add(new WarZoneActionConsequencePair(WarZoneAction.fromInteger(1), WarZoneConsequence.fromInteger(0))); // LowestEnginePower -> removeCrew
         consequencePairs.add(new WarZoneActionConsequencePair(WarZoneAction.fromInteger(0), WarZoneConsequence.fromInteger(2))); // LowestFirepower -> PlasmaShots
 
-        warzone = new WarZone("WarZone", 2, board, resourceBank, 3, 2, 0, shootingSequence, consequencePairs);
-        // end of WarZone Card 1 Initialization
+        warzone = new WarZone("WarZone", 2, board, resourceBank, 3, 2, 0, shootingSequence, consequencePairs, 0);        // end of WarZone Card 1 Initialization
 
         // Used energy is the energy use by the double engines
 
@@ -318,7 +317,7 @@ class WarZoneTest {
         consequencePairs.add(new WarZoneActionConsequencePair(WarZoneAction.fromInteger(1), WarZoneConsequence.fromInteger(3))); // enginePower -> items
         consequencePairs.add(new WarZoneActionConsequencePair(WarZoneAction.fromInteger(2), WarZoneConsequence.fromInteger(2))); // crewCount -> shootingSequence
 
-        warzone = new WarZone("WarZone", 2, board, resourceBank, 4, 0, 3, shootingSequence, consequencePairs);
+        warzone = new WarZone("WarZone", 2, board, resourceBank, 4, 0, 3, shootingSequence, consequencePairs, 0);
         // end of WarZone card 2 initialization
 
         warzone.initCardPlayers();

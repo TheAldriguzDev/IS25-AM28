@@ -13,8 +13,8 @@ public class Stardust extends EventCard {
     private Map<String, Integer> updatedPositions;
     private List<String> eliminatedPlayers;
 
-    public Stardust(String name, int cardLevel, Board board) {
-        super(name, cardLevel, board);
+    public Stardust(String name, int cardLevel, Board board, int cardID) {
+        super(name, cardLevel, board, cardID);
         this.updatedPositions = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
     }

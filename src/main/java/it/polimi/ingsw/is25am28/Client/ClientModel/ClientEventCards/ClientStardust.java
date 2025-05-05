@@ -15,24 +15,13 @@ import java.util.Random;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientStardust extends ClientEventCard {
-    private static final List<String> enabledCommands;
-
-    // Commands that this card will enable are added here
-    static {
-        enabledCommands = new ArrayList<>();
-        enabledCommands.add("getPlayerAck");
-    }
-
     private StardustJSON stardustJSON;
 
     public ClientStardust(CardStateJSON cardState) {
         super(cardState);
         this.stardustJSON = new StardustJSON();
-    }
 
-    @Override
-    public List<String> getEnabledCommands() {
-        return enabledCommands;
+        enabledCommands.add("getPlayerAck");
     }
 
     @Override
@@ -53,7 +42,7 @@ public class ClientStardust extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI twinkling_space = new WidgetTUI();
 
-        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
+        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
         List<String> colorPool = new ArrayList<>();
         Random rand = new Random();

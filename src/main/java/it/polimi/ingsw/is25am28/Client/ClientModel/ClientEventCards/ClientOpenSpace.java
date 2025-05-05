@@ -15,24 +15,13 @@ import java.util.Random;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientOpenSpace extends ClientEventCard {
-    private static final List<String> enabledCommands;
-
-    // Commands that this card will enable are added here
-    static {
-        enabledCommands = new ArrayList<>();
-        enabledCommands.add("setDoubleEnginesToActivate");
-    }
-
     private OpenSpaceJSON openSpaceJSON;
 
     public ClientOpenSpace(CardStateJSON cardState) {
         super(cardState);
         openSpaceJSON = new OpenSpaceJSON();
-    }
 
-    @Override
-    public List<String> getEnabledCommands() {
-        return enabledCommands;
+        enabledCommands.add("setDoubleEnginesToActivate");
     }
 
     @Override
@@ -54,7 +43,7 @@ public class ClientOpenSpace extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI twinkling_space = new WidgetTUI();
 
-        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
+        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
 
         List<String> colorPool = new ArrayList<>();
         Random rand = new Random();
@@ -91,6 +80,7 @@ public class ClientOpenSpace extends ClientEventCard {
             twinkling_space.appendString(spaceString.toString());
         }
         twinkling_space.wrapWidgetWithBorder();
+        twinkling_space.appendString("Level: " + this.cardLevel);
         if(this.playerNickname != null) {
             twinkling_space.appendString("Current player: " + this.playerNickname);
         }

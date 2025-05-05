@@ -78,7 +78,7 @@ class StardustTest {
         board.addPlayerToBoard(p3);
         board.addPlayerToBoard(p4);
 
-        stardust = new Stardust("Stardust", 2, board);
+        stardust = new Stardust("Stardust", 2, board, 0);
 
     }
 
