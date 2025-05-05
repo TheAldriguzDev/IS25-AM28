@@ -5,16 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
@@ -150,7 +144,8 @@ public class TCPClient implements VirtualViewSocket {
 
         switch (state) {
             // Update the current state of the game
-            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PlayerEndedShipDTO _ -> { // TODO: Timer should be removed from here
+            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PlayerEndedShipDTO _,
+                 ConstructionDeckDTO _ -> { // TODO: Timer should be removed from here
                 future = CompletableFuture.runAsync(() -> {
                     try {
                         state.accept(viewUpdater);
@@ -226,6 +221,25 @@ public class TCPClient implements VirtualViewSocket {
                         throw new RuntimeException("Error while executing the next state: ", e);
                     }
                 });
+            }
+            case FixShipDTO _, PopulateShipDTO _, CardRoundDTO _ -> {
+                CompletableFuture<Void> completableFuture;
+
+                completableFuture = CompletableFuture.runAsync(
+                        this.viewUpdater::interruptCurrScreen,
+                        forceThread
+                );
+
+                completableFuture = completableFuture.thenRunAsync(
+                    () -> {
+                        try {
+                            nextState.accept(viewUpdater);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Error while executing the next state: ", e);
+                        }
+                    },
+                    inputThread
+                );
             }
             case null -> {}
             default -> {

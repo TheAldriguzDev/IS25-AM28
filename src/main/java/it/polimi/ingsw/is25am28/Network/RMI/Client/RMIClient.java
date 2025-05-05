@@ -162,7 +162,8 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
         switch (state) {
             // Update the current state of the game
-            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PopulateShipComponentDTO _ -> { // TODO: Timer should be removed from here
+            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PopulateShipComponentDTO _,
+                 ConstructionDeckDTO _ -> { // TODO: Timer should be removed from here
                 future = CompletableFuture.runAsync(() -> {
                     try {
                         state.accept(viewUpdater);

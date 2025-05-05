@@ -61,6 +61,21 @@ public class ClientState {
     }
 
     /**
+     * Command used to query if the subdeck with the given index is currently
+     * being selected by another player.
+     */
+    public boolean isSubdeckSelected(Integer subdeckIndex) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'isSubdeckSelected' is not supported in the " + this + " state");
+    }
+
+    /**
+     * Command used to set the given subdeck to the given status (SELECTED/NOT SELECTED)
+     */
+    public void setSubdeckStatus(Integer subdeckIndex, boolean selected) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The 'setSubdeckStatus' is not supported in the " + this + " state");
+    }
+
+    /**
      * Command used by the player when he wants to remove a component in the FixShipState
      * */
     public void removeComponentFromShip(int i, int j) throws UnsupportedOperationException {
