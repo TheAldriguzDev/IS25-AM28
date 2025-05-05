@@ -1,12 +1,13 @@
 package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
@@ -48,6 +49,7 @@ public class CardRoundScreen extends Screen {
     private ConsoleWidgetTUI consoleWidget;
 
     private ClientEventCard currEventCard;
+    private CardStateJSON currEventCardState;
     private Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods;
 
     // Constructor
@@ -851,7 +853,7 @@ public class CardRoundScreen extends Screen {
      * Generates the widget of the current event card
      */
     private void generateCurrEventCardWidget() {
-        this.getCurrEventCard();
+        this.getCurrEventCard(this.currEventCardState);
         this.currEventCardWidget = this.currEventCard.generateWidget();
     }
 
@@ -894,7 +896,7 @@ public class CardRoundScreen extends Screen {
      * Sets the currEventCard parameter to the one communicated
      * by the server through the CardRoundDTO
      */
-    private void getCurrEventCard() {
+    private void getCurrEventCard(CardStateJSON cardState) {
         int cardId;
 
         cardId = this.model.getState().getCardRoundDTO().getCardInfo().getId();
@@ -1201,10 +1203,14 @@ public class CardRoundScreen extends Screen {
         this.ctx = new CommandCTX(
             "playCard",
             () -> {
+                System.out.println("onSuccess");
+
                 // TODO: Implement onSuccess (if it needs to do something)
                 // TODO: view a screen saying that your turn is over
             },
             () -> {
+                System.out.println("onError");
+
                 System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
                 this.getCardRoundCommand();
             }
@@ -1223,9 +1229,11 @@ public class CardRoundScreen extends Screen {
      */
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
+        this.currEventCardState = cardRound.getCardInfo();
+
         // Updating this player's ship widget and
         // getting the current event card
-        this.getCurrEventCard();
+        this.getCurrEventCard(this.currEventCardState);
         this.generateShipWidgets();
 
         // Updating the current event card
