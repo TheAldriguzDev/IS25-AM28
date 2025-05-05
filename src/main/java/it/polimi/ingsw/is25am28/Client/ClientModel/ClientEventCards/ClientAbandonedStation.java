@@ -115,4 +115,9 @@ public class ClientAbandonedStation extends ClientEventCard {
     public List<ComponentHelper<ItemColor>> getItemsToBeTaken() throws UnsupportedOperationException {
         return this.abandonedStationJSON.getItemsToBeTaken();
     }
+
+    @Override
+    public void setWantsToVisit(boolean wantsToVisit) throws UnsupportedOperationException {
+        this.abandonedStationJSON.setWantToVisitStation(wantsToVisit);
+    }
 }

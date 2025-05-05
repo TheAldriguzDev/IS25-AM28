@@ -123,7 +123,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'getChosenPlanetIndex()' is not supported in " + this + " state");
     }
 
-    public void setWantsToVisit(boolean wantsToVisitShip) throws UnsupportedOperationException {
+    public void setWantsToVisit(boolean wantsToVisit) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setWantsToVisit()' is not supported in " + this + " state");
     }
 

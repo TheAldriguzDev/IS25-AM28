@@ -33,8 +33,8 @@ public class ClientAbandonedShip extends ClientEventCard {
 
     @Override
     public ActionJSON useCard() {
-        AbandonedShipJSON tmp = this.abandonedShipJSON;
         this.abandonedShipJSON.setPlayerNickname(this.playerNickname);
+        AbandonedShipJSON tmp = this.abandonedShipJSON;
         this.abandonedShipJSON = new AbandonedShipJSON();
 
         return tmp;
@@ -88,5 +88,10 @@ public class ClientAbandonedShip extends ClientEventCard {
     @Override
     public List<ComponentHelper<LifeformType>> getCrewToRemove() {
         return this.abandonedShipJSON.getLifeformsToBeRemoved();
+    }
+
+    @Override
+    public void setWantsToVisit(boolean wantsToVisit) throws UnsupportedOperationException {
+        this.abandonedShipJSON.setWantToVisitShip(wantsToVisit);
     }
 }
