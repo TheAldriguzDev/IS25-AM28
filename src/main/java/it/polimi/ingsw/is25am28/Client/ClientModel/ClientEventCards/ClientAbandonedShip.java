@@ -52,7 +52,7 @@ public class ClientAbandonedShip extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
 
         cardInfoWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.WHITE + "                               " + ANSIColors.RESET);
@@ -69,11 +69,11 @@ public class ClientAbandonedShip extends ClientEventCard {
 
         cardInfoWidget.wrapWidgetWithBorder();
 
-        cardInfoWidget.appendString("Level: " + this.cardLevel);
-        cardInfoWidget.appendString("Required Crew: " + this.requiredCrew);
+        cardInfoWidget.appendString("Days: " + this.movementStep + "      Crew: " + this.requiredCrew);
+        cardInfoWidget.appendString("───────────────────────────────");
         cardInfoWidget.appendString("Given Credits: " + this.givenCredits);
-        cardInfoWidget.appendString("Movement Step: " + this.movementStep);
         if (this.playerNickname != null) {
+            cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Current Player: " + this.playerNickname);
         }
 

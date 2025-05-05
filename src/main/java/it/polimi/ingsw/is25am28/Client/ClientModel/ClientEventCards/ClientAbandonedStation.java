@@ -86,13 +86,8 @@ public class ClientAbandonedStation extends ClientEventCard {
 
         cardInfoWidget.appendString("Days: " + this.movementStep + "      Crew: " + this.requiredCrew);
         cardInfoWidget.appendString("───────────────────────────────");
-//        cardInfoWidget.appendString("Required Crew: " + this.requiredCrew);
-//        cardInfoWidget.appendString("Days: " + this.movementStep);
-//        cardInfoWidget.appendString("Available Resources:");
         cardInfoWidget.appendString("Available ╿ " + ANSIColors.RED + "R: " + ANSIColors.RESET + redItems + "," + ANSIColors.YELLOW + " Y: " + ANSIColors.RESET + yellowItems);
         cardInfoWidget.appendString("Resources ╽ " + ANSIColors.BLUE + "B: " + ANSIColors.RESET + blueItems + "," + ANSIColors.GREEN + " G: " + ANSIColors.RESET + greenItems);
-//        cardInfoWidget.appendString(ANSIColors.RED + " Red: " + ANSIColors.RESET + redItems + " │" + ANSIColors.YELLOW + " Yellow: " + ANSIColors.RESET + yellowItems);
-//        cardInfoWidget.appendString(ANSIColors.BLUE + "Blue: " + ANSIColors.RESET + blueItems + " │" + ANSIColors.GREEN + "  Green: " + ANSIColors.RESET + greenItems);
         if (this.playerNickname != null) {
             cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Current Player: " + this.playerNickname);

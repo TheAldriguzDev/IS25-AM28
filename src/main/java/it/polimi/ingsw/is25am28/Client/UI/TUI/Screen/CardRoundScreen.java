@@ -452,7 +452,7 @@ public class CardRoundScreen extends Screen {
         doubleEnginesToActivate = 0;
         correctInput = false;
 
-        // Verify that the selected component is a cannon
+        // Verify that the selected component is an engine
         do {
             try {
                 System.out.print("Insert amount of double engines to activate: ");

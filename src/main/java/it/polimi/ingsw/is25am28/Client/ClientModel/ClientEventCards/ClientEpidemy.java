@@ -24,7 +24,6 @@ public class ClientEpidemy extends ClientEventCard {
         this.epidemyJSON.setPlayerNickname(this.playerNickname);
         EpidemyJSON tmp = this.epidemyJSON;
         this.epidemyJSON = new EpidemyJSON();
-
         return tmp;
     }
 
@@ -38,7 +37,7 @@ public class ClientEpidemy extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
 
         cardInfoWidget.appendString(ANSIColors.MAGENTA + "                               " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.MAGENTA + "      ██    ███████    ██      " + ANSIColors.RESET);
