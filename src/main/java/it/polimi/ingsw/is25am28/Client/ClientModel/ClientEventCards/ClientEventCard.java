@@ -12,17 +12,10 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public abstract class ClientEventCard implements WidgetTUIGenerator {
-    protected static final List<String> enabledCommands;
-
-    static {
-        enabledCommands = new ArrayList<>();
-    }
-
     protected final int id;
     protected String playerNickname;
     protected String cardName;
@@ -43,7 +36,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
      * Each card will set to TRUE only the input methods it needs inside
      * its own ActionJSON to provide the server the player's choices.
      */
-    public static void setAvailableCommands(Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods) {
+    public static void setAvailableCommands(List<String> enabledCommands, Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods) {
         // First put to false all flags
         for (Map.Entry<String, Pair<Boolean, CommandWidgetTUI>> entry : indexedCardInputMethods.entrySet()) {
             entry.getValue().setKey(false);
@@ -54,6 +47,11 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
             indexedCardInputMethods.get(command).setKey(true);
         }
     }
+
+    /**
+     * Returns each card's list of commands to enable
+     */
+    public abstract List<String> getEnabledCommands();
 
     /**
      * @return This client card's ID

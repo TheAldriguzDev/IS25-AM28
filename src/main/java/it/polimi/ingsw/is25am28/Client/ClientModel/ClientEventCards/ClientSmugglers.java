@@ -12,12 +12,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientSmugglers extends ClientEventCard {
+    private static final List<String> enabledCommands;
+
     // Commands that this card will enable are added here
     static {
-        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
-        ClientEventCard.enabledCommands.add("setTakeReward");
-        ClientEventCard.enabledCommands.add("setItemsToBeRemoved");
-        ClientEventCard.enabledCommands.add("setItemsToBeTaken");
+        enabledCommands = new ArrayList<>();
+        enabledCommands.add("setDoubleCannonsToActivate");
+        enabledCommands.add("setTakeReward");
+        enabledCommands.add("setItemsToBeRemoved");
+        enabledCommands.add("setItemsToBeTaken");
     }
 
     private final int requiredFirepower;
@@ -44,6 +47,11 @@ public class ClientSmugglers extends ClientEventCard {
         this.firstRound = true;
         this.defeatedPlayers = new ArrayList<>();
         this.smugglersJSON = new SmugglersJSON();
+    }
+
+    @Override
+    public List<String> getEnabledCommands() {
+        return enabledCommands;
     }
 
     @Override

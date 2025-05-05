@@ -4,7 +4,6 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
@@ -59,7 +58,6 @@ public class CardRoundScreen extends Screen {
         this.generateAvailableLifeformsWidget();
         this.generateAvailableItemColorsWidget();
         this.generatePlayerNameWidget();
-        this.generateShipWidgets();
         this.generateOtherPlayerShipCommandsWidget();
 
         this.boardWidget = this.model.getClientBoard().generateWidget();
@@ -209,7 +207,7 @@ public class CardRoundScreen extends Screen {
         command.appendString("Acknowledge and continue");
         this.indexedCardInputMethods.put("getPlayerAck", new Pair<>(false, command));
 
-        ClientEventCard.setAvailableCommands(this.indexedCardInputMethods);
+        ClientEventCard.setAvailableCommands(this.currEventCard.getEnabledCommands(), this.indexedCardInputMethods);
     }
 
     /**
@@ -235,7 +233,7 @@ public class CardRoundScreen extends Screen {
 
         // Getting the lifeform type to remove
         do {
-            System.out.print("Available lifeforms to remove:");
+            System.out.println("Available lifeforms to remove:");
             availableLifeforms.printWidget();
             System.out.print(DEFAULT_COMMAND_PREFIX);
 
@@ -745,7 +743,7 @@ public class CardRoundScreen extends Screen {
         int len = LifeformType.values().length;
 
         for (int i = 0; i < len; i++) {
-            this.availableLifeforms.appendString(LifeformType.values()[i].toString());
+            this.availableLifeforms.appendString("(" + i + ")" + SPACE + LifeformType.values()[i].toString());
         }
 
         this.availableLifeforms
@@ -762,7 +760,7 @@ public class CardRoundScreen extends Screen {
         int len = ItemColor.values().length;
 
         for (int i = 0; i < len; i++) {
-            this.availableItemColors.appendString(ItemColor.values()[i].toString());
+            this.availableItemColors.appendString("(" + i + ")" + SPACE + ItemColor.values()[i].toString());
         }
 
         this.availableItemColors
@@ -1225,7 +1223,16 @@ public class CardRoundScreen extends Screen {
      */
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
-        // Initializing the map of available input methods
+        // Updating this player's ship widget and
+        // getting the current event card
+        this.getCurrEventCard();
+        this.generateShipWidgets();
+
+        // Updating the current event card
+        this.currEventCard.updateCard(cardRound.getCardInfo());
+
+        // Filtering only the commands that the
+        // current event card is enabling
         this.generateIndexedCardInputMethodsMap();
         this.generateCardRoundCommandsWidget();
 

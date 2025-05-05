@@ -11,10 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientSlavers extends ClientEventCard {
+    private static final List<String> enabledCommands;
+
     // Commands that this card will enable are added here
     static {
-        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
-        ClientEventCard.enabledCommands.add("setTakeReward");
+        enabledCommands = new ArrayList<>();
+        enabledCommands.add("setDoubleCannonsToActivate");
+        enabledCommands.add("setTakeReward");
     }
 
     private final int requiredFirepower;
@@ -35,6 +38,11 @@ public class ClientSlavers extends ClientEventCard {
         this.defeatedPlayers = new ArrayList<>();
         this.firstRound = true;
         this.slaversJSON = new SlaversJSON();
+    }
+
+    @Override
+    public List<String> getEnabledCommands() {
+        return enabledCommands;
     }
 
     @Override
