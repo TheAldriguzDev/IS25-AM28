@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
@@ -21,8 +22,7 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Objects;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
@@ -47,15 +47,14 @@ public class CardRoundScreen extends Screen {
     private ConsoleWidgetTUI consoleWidget;
 
     private ClientEventCard currEventCard;
-
-    private Map<String, Pair<Boolean, Callable<Object>>> indexedCardInputMethods;
+    private Map<String, Pair<Boolean, Runnable>> indexedCardInputMethods;
 
     // Constructor
     public CardRoundScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
 
         // Initializing the map of available input methods
-        this.generateIndexedCardInputMethods();
+        this.generateIndexedCardInputMethodsMap();
 
         // Widgets initializations
         this.generateAvailableLifeformsWidget();
@@ -77,7 +76,7 @@ public class CardRoundScreen extends Screen {
      * Initializes the map of available input methods to provide to the
      * client event card the player's interaction and relative data
      */
-    private void generateIndexedCardInputMethods() {
+    private void generateIndexedCardInputMethodsMap() {
         this.indexedCardInputMethods = new HashMap<>();
 
         this.indexedCardInputMethods.put("setCrewToRemove",             new Pair<>(false, this::getCrewToRemove));
@@ -86,31 +85,34 @@ public class CardRoundScreen extends Screen {
         this.indexedCardInputMethods.put("setTakeReward",               new Pair<>(false, this::getTakeReward));
         this.indexedCardInputMethods.put("setChosenPlanetIndex",        new Pair<>(false, this::getChosenPlanetIndex));
         this.indexedCardInputMethods.put("setWantsToVisit",             new Pair<>(false, this::getWantsToVisit));
-        this.indexedCardInputMethods.put("setShieldsToActivate",         new Pair<>(false, this::getShieldToActivate));
-        this.indexedCardInputMethods.put("setDoubleCannonsToActivate",   new Pair<>(false, this::getDoubleCannonToActivate));
-        this.indexedCardInputMethods.put("setDoubleEnginesToActivate",   new Pair<>(false, this::getDoubleEnginesToActivate));
+        this.indexedCardInputMethods.put("setShieldsToActivate",        new Pair<>(false, this::getShieldToActivate));
+        this.indexedCardInputMethods.put("setDoubleCannonsToActivate",  new Pair<>(false, this::getDoubleCannonToActivate));
+        this.indexedCardInputMethods.put("setDoubleEnginesToActivate",  new Pair<>(false, this::getDoubleEnginesToActivate));
+        this.indexedCardInputMethods.put("getPlayerAck",                new Pair<>(false, this::getPlayerAck));
 
         ClientEventCard.setAvailableCommands(this.indexedCardInputMethods);
     }
 
     /**
-     * @return A component helper containing the lifeform the player
-     *         wants to remove and the relative cabin coordinates
-     *         of where it's located.
+     * Adds component helper containing the lifeform the player
+     * wants to remove and the relative cabin coordinates
+     * of where it's located to the corresponding ActionJSON
      */
-    private ComponentHelper<LifeformType> getCrewToRemove() {
+    private void getCrewToRemove() {
+        List<ComponentHelper<LifeformType>> crewToRemove;
         ComponentHelper<LifeformType> lifeformPosition;
         Map.Entry<Integer, Integer> componentCoordinates;
-        AtomicReference<ClientShip> ship;
         ClientComponent component;
         boolean correctInput;
         LifeformType lfType;
+        ClientShip ship;
         String line;
         int lfIndex;
 
-        // Getting the player's ship
-        ship = new AtomicReference<>();
-        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(ship::set);
+        crewToRemove = this.currEventCard.getCrewToRemove();
+        ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+
+        if (ship == null) return;
 
         // Getting the lifeform type to remove
         do {
@@ -125,22 +127,30 @@ public class CardRoundScreen extends Screen {
                 line = this.inputThread.waitForInput();
 
                 // A forced interrupt arrived
-                if (line == null) return null;
+                if (line == null) return;
 
                 lfIndex = Integer.parseInt(line);
-                correctInput = true;
 
                 try {
                     lfType = LifeformType.values()[lfIndex];
+
+                    if (lfType == LifeformType.PURPLE_ALIEN && ship.getPurpleAlienPosition() == null) {
+                        System.out.println(PrintUtils.addColor("[ERROR] You don't have a purple alien onboard! Select another lifeform.", ANSIColors.RED));
+                    }
+                    else if (lfType == LifeformType.BROWN_ALIEN && ship.getBrownAlienPosition() == null) {
+                        System.out.println(PrintUtils.addColor("[ERROR] You don't have a brown alien onboard! Select another lifeform.", ANSIColors.RED));
+                    }
+                    else {
+                        correctInput = true;
+                    }
                 }
                 catch (IndexOutOfBoundsException e) {
                     System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please select a valid lifeform.", ANSIColors.RED));
-                    correctInput = false;
                 }
             }
             catch (InterruptedException e) {
                 // A forced interrupt arrived
-                return null;
+                return;
             }
             catch (NumberFormatException e) {
                 System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
@@ -156,20 +166,28 @@ public class CardRoundScreen extends Screen {
                 componentCoordinates = this.getComponentCoordinates();
                 Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
 
-                component = ship.get().getComponent(
+                component = ship.getComponent(
                     finalComponentCoordinates.getKey(),
                     finalComponentCoordinates.getValue()
                 );
 
                 switch (component) {
-                    case ClientCabin cabin -> { correctInput = true; }
+                    case ClientCabin cabin -> {
+                        if (cabin.getAvailableSpace() <= 1) {
+                            correctInput = true;
+                        }
+                        else {
+                            System.out.println(PrintUtils.addColor("[ERROR] Selected cabin is empty.", ANSIColors.RED));
+                        }
+                    }
                     case null, default -> {
                         System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentCoordinates.getKey() + ", " + componentCoordinates.getValue() + ") is not a cabin.", ANSIColors.RED));
                     }
                 }
             }
             catch (InterruptedException e) {
-                return null;
+                // A forced interrupt arrived
+                return;
             }
         }
         while (!correctInput);
@@ -180,27 +198,30 @@ public class CardRoundScreen extends Screen {
             componentCoordinates.getValue()
         ).addItem(lfType);
 
-        return lifeformPosition;
+        crewToRemove.add(lifeformPosition);
+        this.currEventCard.setCrewToRemove(crewToRemove);
     }
 
     /**
-     * @return A component helper containing the item color the player
-     *         wants to remove or take (depends on where the method it's used)
-     *         and the relative storage coordinates of where it's located.
+     * Adds a component helper containing the item color the player
+     * wants to remove or take (depends on where the method it's used)
+     * and the relative storage coordinates of where it's located.
      */
-    private ComponentHelper<ItemColor> getItemToBeTakenOrRemoved() {
+    private void getItemToBeTakenOrRemoved() {
+        List<ComponentHelper<ItemColor>> itemsToBeTaken;
         ComponentHelper<ItemColor> itemPosition;
         Map.Entry<Integer, Integer> componentCoordinates;
-        AtomicReference<ClientShip> ship;
         ClientComponent component;
         boolean correctInput;
         ItemColor itemColor;
-        String line;
+        ClientShip ship;
         int itemIndex;
+        String line;
 
-        // Getting the player's ship
-        ship = new AtomicReference<>();
-        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(ship::set);
+        itemsToBeTaken = this.currEventCard.getItemsToBeTaken();
+        ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+
+        if (ship == null) return;
 
         // Getting the items to remove or take
         do {
@@ -215,7 +236,7 @@ public class CardRoundScreen extends Screen {
                 line = this.inputThread.waitForInput();
 
                 // A forced interrupt arrived
-                if (line == null) return null;
+                if (line == null) return;
 
                 itemIndex = Integer.parseInt(line);
                 correctInput = true;
@@ -230,7 +251,7 @@ public class CardRoundScreen extends Screen {
             }
             catch (InterruptedException e) {
                 // A forced interrupt arrived
-                return null;
+                return;
             }
             catch (NumberFormatException e) {
                 System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
@@ -246,7 +267,7 @@ public class CardRoundScreen extends Screen {
                 componentCoordinates = this.getComponentCoordinates();
                 Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
 
-                component = ship.get().getComponent(
+                component = ship.getComponent(
                     finalComponentCoordinates.getKey(),
                     finalComponentCoordinates.getValue()
                 );
@@ -259,7 +280,7 @@ public class CardRoundScreen extends Screen {
                 }
             }
             catch (InterruptedException e) {
-                return null;
+                return;
             }
         }
         while (!correctInput);
@@ -270,7 +291,8 @@ public class CardRoundScreen extends Screen {
             componentCoordinates.getValue()
         ).addItem(itemColor);
 
-        return itemPosition;
+        itemsToBeTaken.add(itemPosition);
+        this.currEventCard.setItemsToBeTaken(itemsToBeTaken);
     }
 
     /**
@@ -349,20 +371,18 @@ public class CardRoundScreen extends Screen {
      */
     public ComponentHelper<Void> getShieldToActivate() {
         ComponentHelper<Void> componentHelper;
-        AtomicReference<ClientShip> shipRef;
         ClientComponent component;
         boolean correctInput;
+        ClientShip ship;
 
         // Getting the ship
-        shipRef = new AtomicReference<ClientShip>(null);
-        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(shipRef::set);
-
+        ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
         correctInput = false;
 
         // Verify that the selected component is a shield
         do {
             componentHelper = this.getComponentHelperOfComponent();
-            component = shipRef.get().getComponent(
+            component = ship.getComponent(
                 componentHelper.getI(),
                 componentHelper.getJ()
             );
@@ -390,13 +410,12 @@ public class CardRoundScreen extends Screen {
      */
     public ComponentHelper<Void> getDoubleCannonToActivate() {
         ComponentHelper<Void> componentHelper;
-        AtomicReference<ClientShip> shipRef;
         ClientComponent component;
         boolean correctInput;
+        ClientShip ship;
 
         // Getting the ship
-        shipRef = new AtomicReference<ClientShip>(null);
-        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(shipRef::set);
+        ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
 
         correctInput = false;
 
@@ -404,9 +423,9 @@ public class CardRoundScreen extends Screen {
         do {
             componentHelper = this.getComponentHelperOfComponent();
 
-            component = shipRef.get().getComponent(
-                    componentHelper.getI(),
-                    componentHelper.getJ()
+            component = ship.getComponent(
+                componentHelper.getI(),
+                componentHelper.getJ()
             );
 
             switch (component) {
@@ -440,14 +459,9 @@ public class CardRoundScreen extends Screen {
      *       server-side this is equivalent to activating all double engines (input saturation)
      */
     public int getDoubleEnginesToActivate() {
-        AtomicReference<ClientShip> shipRef;
         int doubleEnginesToActivate;
         boolean correctInput;
         String line;
-
-        // Getting the ship
-        shipRef = new AtomicReference<ClientShip>(null);
-        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(shipRef::set);
 
         doubleEnginesToActivate = 0;
         correctInput = false;
@@ -480,6 +494,21 @@ public class CardRoundScreen extends Screen {
         while (!correctInput);
 
         return doubleEnginesToActivate;
+    }
+
+    /**
+     * Method used to make the player aware that the current operation
+     * is automatic, and he just has to acknowledge it.
+     */
+    public void getPlayerAck() {
+        System.out.print("Press any key and then press [ENTER] to continue...");
+
+        try {
+            this.inputThread.waitForInput();
+        }
+        catch (InterruptedException e) {
+            // A forced interrupt arrived
+        }
     }
 
     /**
@@ -944,7 +973,8 @@ public class CardRoundScreen extends Screen {
         this.ctx = new CommandCTX(
             "playCard",
             () -> {
-                  // TODO: Implement onSuccess (if it needs to do something)
+                // TODO: Implement onSuccess (if it needs to do something)
+                // TODO: view a screen saying that your turn is over
             },
             () -> {
                 System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));

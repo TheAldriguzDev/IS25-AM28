@@ -91,12 +91,27 @@ public class ClientVisitPlanets extends ClientEventCard {
     }
 
     @Override
+    public List<ComponentHelper<ItemColor>> getItemsToBeRemoved() throws UnsupportedOperationException {
+        return this.visitPlanetsJSON.getItemsToDrop();
+    }
+
+    @Override
     public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) throws UnsupportedOperationException {
         this.visitPlanetsJSON.setItemsToTake(itemsToBeTaken);
     }
 
     @Override
+    public List<ComponentHelper<ItemColor>> getItemsToBeTaken() throws UnsupportedOperationException {
+        return this.visitPlanetsJSON.getItemsToTake();
+    }
+
+    @Override
     public void setChosenPlanetIndex(int chosenPlanetIndex) throws UnsupportedOperationException {
         this.visitPlanetsJSON.setChosenPlanetIndex(chosenPlanetIndex);
+    }
+
+    @Override
+    public int getChosenPlanetIndex() throws UnsupportedOperationException {
+        return this.visitPlanetsJSON.getChosenPlanetIndex();
     }
 }

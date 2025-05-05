@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MeteorShowerJSON extends ActionJSON {
@@ -13,7 +14,12 @@ public class MeteorShowerJSON extends ActionJSON {
     private List<ComponentHelper<Integer>>  shieldsCoordinates;
     private List<ComponentHelper<Integer>> cannonsCoordinates;
 
-    public MeteorShowerJSON() {}
+    public MeteorShowerJSON() {
+        this.currMeteorIndex = 0;
+        this.diceThrowResult = 0;
+        this.shieldsCoordinates = new ArrayList<>();
+        this.cannonsCoordinates = new ArrayList<>();
+    }
 
     @JsonCreator
     public MeteorShowerJSON(

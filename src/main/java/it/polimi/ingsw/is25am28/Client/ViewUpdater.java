@@ -195,9 +195,7 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(ConstructionDeckDTO state) throws Exception {
         synchronized (this.model) {
-            // TODO: Set the flat isSelected for the particular deck in the model
-            //      + Modify the screen to check this list first
-            // this.model.getState()
+            this.model.getState().setSubdeckStatus(state.getSubDeck(), state.isSelected());
         }
     }
 

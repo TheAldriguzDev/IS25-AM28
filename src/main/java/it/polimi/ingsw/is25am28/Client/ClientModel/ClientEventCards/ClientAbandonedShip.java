@@ -84,4 +84,9 @@ public class ClientAbandonedShip extends ClientEventCard {
     public void setCrewToRemove(List<ComponentHelper<LifeformType>> crewToRemove) {
         this.abandonedShipJSON.setLifeformsToBeRemoved(crewToRemove);
     }
+
+    @Override
+    public List<ComponentHelper<LifeformType>> getCrewToRemove() {
+        return this.abandonedShipJSON.getLifeformsToBeRemoved();
+    }
 }

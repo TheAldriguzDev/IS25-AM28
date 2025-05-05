@@ -94,4 +94,9 @@ public class ClientOpenSpace extends ClientEventCard {
     public void setDoubleEnginesToActivate(int doubleEnginesToActivate) {
         this.openSpaceJSON.setUsedEnergy(doubleEnginesToActivate);
     }
+
+    @Override
+    public int getDoubleEnginesToActivate() {
+        return this.openSpaceJSON.getUsedEnergy();
+    }
 }

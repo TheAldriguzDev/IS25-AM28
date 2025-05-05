@@ -43,9 +43,9 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
      * Each card will set to TRUE only the input methods it needs inside
      * its own ActionJSON to provide the server the player's choices.
      */
-    public static void setAvailableCommands(Map<String, Pair<Boolean, Callable<Object>>> indexedCardInputMethods) {
+    public static void setAvailableCommands(Map<String, Pair<Boolean, Runnable>> indexedCardInputMethods) {
         // First put to false all flags
-        for (Map.Entry<String, Pair<Boolean, Callable<Object>>> entry : indexedCardInputMethods.entrySet()) {
+        for (Map.Entry<String, Pair<Boolean, Runnable>> entry : indexedCardInputMethods.entrySet()) {
             entry.getValue().setKey(false);
         }
 
@@ -85,13 +85,25 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'setCrewToRemove()' is not supported in " + this + " state");
     }
 
+    public List<ComponentHelper<LifeformType>> getCrewToRemove() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getCrewToRemove()' is not supported in " + this + " state");
+    }
+
     // ITEMS
     public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setItemsToBeRemoved()' is not supported in " + this + " state");
     }
 
+    public List<ComponentHelper<ItemColor>> getItemsToBeRemoved() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getItemsToBeRemoved()' is not supported in " + this + " state");
+    }
+
     public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setItemsToBeTaken()' is not supported in " + this + " state");
+    }
+
+    public List<ComponentHelper<ItemColor>> getItemsToBeTaken() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getItemsToBeTaken()' is not supported in " + this + " state");
     }
 
     // VARIOUS FLAGS AND INDEXES
@@ -99,12 +111,24 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'setTakeReward()' is not supported in " + this + " state");
     }
 
+    public boolean getTakeReward() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getTakeReward()' is not supported in " + this + " state");
+    }
+
     public void setChosenPlanetIndex(int chosenPlanetIndex) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setChosenPlanetIndex()' is not supported in " + this + " state");
     }
 
+    public int getChosenPlanetIndex() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getChosenPlanetIndex()' is not supported in " + this + " state");
+    }
+
     public void setWantsToVisit(boolean wantsToVisitShip) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setWantsToVisit()' is not supported in " + this + " state");
+    }
+
+    public boolean getWantsToVisit() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getWantsToVisit()' is not supported in " + this + " state");
     }
 
     // SHIELDS
@@ -112,25 +136,25 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'setShieldsToActivate()' is not supported in " + this + " state");
     }
 
+    public List<ComponentHelper<Integer>> getShieldsToActivate() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getShieldsToActivate()' is not supported in " + this + " state");
+    }
+
     // CANNONS
     public void setDoubleCannonsToActivate(List<ComponentHelper<Integer>> doubleCannonsToActivate) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setDoubleCannonsToActivate()' is not supported in " + this + " state");
     }
 
-    // ENGINES
-    public void setDoubleEnginesToActivate(int doubleEnginesToActivate) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'setUsedEnergy()' is not supported in " + this + " state");
+    public List<ComponentHelper<Integer>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getDoubleCannonsToActivate()' is not supported in " + this + " state");
     }
 
-    // ACK METHOD
-    public void getPlayerAck() {
-        System.out.print("Press any key and then press [ENTER] to continue...");
+    // ENGINES
+    public void setDoubleEnginesToActivate(int doubleEnginesToActivate) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setDoubleEnginesToActivate()' is not supported in " + this + " state");
+    }
 
-        try {
-            this.inputThread.waitForInput();
-        }
-        catch (InterruptedException e) {
-            // A forced interrupt arrived
-        }
+    public int getDoubleEnginesToActivate() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getDoubleEnginesToActivate()' is not supported in " + this + " state");
     }
 }

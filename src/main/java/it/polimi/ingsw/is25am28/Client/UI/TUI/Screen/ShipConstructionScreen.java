@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCompone
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
@@ -18,14 +19,15 @@ import java.util.*;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
-// TODO: Fix the following bugs:
-//      - (1) (ShipConstructionScreen) When the ViewUpdater receives a ConstructionDeckDTO, it needs to set
-//        a flag inside the ClientShipConstructionState of all players to indicate that a certain subdeck
-//        is either being observer or free to watch (thus avoiding to send a message to the server)
-//        .
-//      - (2) (ShipConstructionScreen) Subdeck widgets are centered somewhere and leads to teared card widgets
-//        .
-//      - (4) Sometimes the action of populating gets stuck (mostly with Astronauts)
+// TODO: screen stuck bug after populating (HOW TO REPRODUCE)
+//      - P1's SHIP --> (7,6)#56, (7,8)#55, (7,5)#58 cabins ; (6,6)#120 brown vital ; (6,8)#125 purple vital
+//        P1's POPULATE --> BROWN_ALIEN@(7,6), PURPLE_ALIEN@(7,8), ASTRONAUT@(7,5)
+//      .
+//      - P2's SHIP --> (7,6), (8,7) cabins ; (7,5) brown vital
+//        P2's POPULATE --> ASTRONAUT@(8,7), ASTRONAUT@(7,6)
+//      .
+//      - NOTE: All populate actions were performed by first trying all wrong possibilities, then
+//        at the end the correct populate command was sent
 
 public class ShipConstructionScreen extends Screen {
     // Default component selection matrix (row, col) dimensions
@@ -333,24 +335,20 @@ public class ShipConstructionScreen extends Screen {
     private void generateCardSubdeckWidget(List<ClientEventCard> selectedSubdeck) {
         // Only generate the widget if the subdeck was chosen
         if (selectedSubdeck != null && !selectedSubdeck.isEmpty()) {
-            List<List<String>> allCardsScreens;
             WidgetTUI tmpCardWidget;
 
             // Initializations
             this.cardSubdeckWidget = new WidgetTUI();
-            allCardsScreens = new ArrayList<>();
             tmpCardWidget = new WidgetTUI();
 
             for (ClientEventCard card : selectedSubdeck) {
-                allCardsScreens.add(
-                    card.generateWidget()
-                        .addPadding(0, 1, 0, 0)
-                        .getScreen()
+                tmpCardWidget = WidgetTUI.fillScreenWithSpaces(
+                    WidgetTUI.composeTwoWidgetsHorizontally(
+                        tmpCardWidget,
+                        card.generateWidget().addPadding(0, 1, 0, 0)
+                    )
                 );
             }
-
-            // Composing all card widget's screens into one
-            tmpCardWidget.setScreen(WidgetTUI.composeScreensHorizontally(allCardsScreens));
 
             // Adding a centered title
             this.cardSubdeckWidget.appendString("[SELECTED SUBDECK]");
@@ -682,7 +680,7 @@ public class ShipConstructionScreen extends Screen {
         String line;
 
         subdeckSize = this.model.getClientEventCards().size() / 4;
-        visibleSubdecks = 3;
+        visibleSubdecks = ClientShipConstructionState.SELECTABLE_SUBDECK_AMOUNT;
 
         do {
             subdeckId = -1;
@@ -708,6 +706,11 @@ public class ShipConstructionScreen extends Screen {
 
                 if (subdeckId < 1 || subdeckId > visibleSubdecks) {
                     System.out.println(UNKNOWN_COMMAND_ERROR);
+                    continue;
+                }
+
+                if (this.model.getState().isSubdeckSelected(subdeckId - 1)) {
+                    System.out.println(PrintUtils.addColor("[ERROR] Given subdeck is currently being viewed by another player.", ANSIColors.RED));
                     subdeckId = -1;
                 }
             }
@@ -731,7 +734,7 @@ public class ShipConstructionScreen extends Screen {
                 // When the server gives the OK to lock the subdeck, then
                 // proceed to generate and show the corresponding widget
                 this.generateCardSubdeckWidget(
-                    this.model.getClientEventCards().subList(start, end)
+                        this.model.getClientEventCards().subList(start, end)
                 );
 
                 clearTerminal();
@@ -761,6 +764,7 @@ public class ShipConstructionScreen extends Screen {
                 true
             )
         );
+
     }
 
     /**

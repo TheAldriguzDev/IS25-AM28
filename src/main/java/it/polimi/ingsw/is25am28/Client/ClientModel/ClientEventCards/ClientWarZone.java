@@ -127,8 +127,18 @@ public class ClientWarZone extends ClientEventCard {
     }
 
     @Override
+    public List<ComponentHelper<Integer>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+        return this.warZoneJSON.getCannonList();
+    }
+
+    @Override
     public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
         this.warZoneJSON.setItemsToBeRemoved(itemsToBeRemoved);
+    }
+
+    @Override
+    public List<ComponentHelper<ItemColor>> getItemsToBeRemoved() throws UnsupportedOperationException {
+        return this.warZoneJSON.getItemsToBeRemoved();
     }
 
     @Override
@@ -137,7 +147,17 @@ public class ClientWarZone extends ClientEventCard {
     }
 
     @Override
+    public int getDoubleEnginesToActivate() {
+        return this.warZoneJSON.getUsedEnergy();
+    }
+
+    @Override
     public void setShieldsToActivate(List<ComponentHelper<Integer>> shieldsToActivate) throws UnsupportedOperationException {
         this.warZoneJSON.setShieldList(shieldsToActivate);
+    }
+
+    @Override
+    public List<ComponentHelper<Integer>> getShieldsToActivate() throws UnsupportedOperationException {
+        return this.warZoneJSON.getShieldList();
     }
 }

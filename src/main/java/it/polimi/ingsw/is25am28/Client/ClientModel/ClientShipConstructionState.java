@@ -8,9 +8,12 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipCons
 import java.util.*;
 
 public class ClientShipConstructionState extends ClientState {
+    public static final int SELECTABLE_SUBDECK_AMOUNT = 3;
+
     // Components represent the tiles that the players can use to build their ship
     private final List<ClientComponent> components;
     private final List<ClientComponent> reservedComponents;
+    private final Map<Integer, Boolean> currentlySelectedSubdecks;
 
     // Map each player nickname to a flag that is TRUE if
     // the respective player has finished building his ship
@@ -33,11 +36,17 @@ public class ClientShipConstructionState extends ClientState {
         // Initializations
         this.components = new ArrayList<>();
         this.reservedComponents = new ArrayList<>();
+        this.currentlySelectedSubdecks = new HashMap<>();
         this.currentShip = new ArrayList<>();
 
         // Initialize the timer state at the beginning
         // of the ship building phase
         this.isTimeRunning = true;
+
+        // Initialize the map that stores for each subdeck a flag tha
+        // is TRUE if the corresponding deck can be viewed, or FALSE
+        // if there's currently a player that's viewing the subdeck
+        this.initCurrentlySelectedSubdecksMap();
 
         // Initialize the map with all players and set all of them to false
         this.initPlayersFinishedBuildingShip();
@@ -47,6 +56,36 @@ public class ClientShipConstructionState extends ClientState {
 
         // Initialize all client cards
         this.generateClientEventCards(shipConstructionDTO.getCards());
+    }
+
+    /**
+     * Initializes the map that stores for each subdeck a boolean flag
+     * indicating if that particular deck is currently being selected by
+     * a player or not, enabling client-side evaluation thus saving the
+     * trouble of asking the server directly
+     */
+    private void initCurrentlySelectedSubdecksMap() {
+        this.currentlySelectedSubdecks.clear();
+
+        for (int i = 0; i < SELECTABLE_SUBDECK_AMOUNT; i++) {
+            this.currentlySelectedSubdecks.put(i, false);
+        }
+    }
+
+    /**
+     * @return TRUE if the subdeck with the given index is selected by
+     *         a player, FALSE otherwise (i.e.: if it's "up for grabs").
+     */
+    public boolean isSubdeckSelected(Integer subdeckIndex) {
+        return this.currentlySelectedSubdecks.get(subdeckIndex);
+    }
+
+    /**
+     * Enables an external actor to set the given subdeck status
+     * to the given boolean flag.
+     */
+    public void setSubdeckStatus(Integer subdeckIndex, boolean selected) {
+        this.currentlySelectedSubdecks.put(subdeckIndex, selected);
     }
 
     /**

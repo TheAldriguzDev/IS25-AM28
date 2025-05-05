@@ -114,8 +114,18 @@ public class ClientSmugglers extends ClientEventCard {
     }
 
     @Override
+    public List<ComponentHelper<Integer>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+        return this.smugglersJSON.getDoubleCannonsToActivateCoordinates();
+    }
+
+    @Override
     public void setTakeReward(boolean takeReward) {
         this.smugglersJSON.setTakeLoot(takeReward);
+    }
+
+    @Override
+    public boolean getTakeReward() {
+        return this.smugglersJSON.getTakeLoot();
     }
 
     @Override
@@ -124,7 +134,17 @@ public class ClientSmugglers extends ClientEventCard {
     }
 
     @Override
+    public List<ComponentHelper<ItemColor>> getItemsToBeRemoved() throws UnsupportedOperationException {
+        return this.smugglersJSON.getItemsToBeRemoved();
+    }
+
+    @Override
     public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) throws UnsupportedOperationException {
         this.smugglersJSON.setItemsToBeTaken(itemsToBeTaken);
+    }
+
+    @Override
+    public List<ComponentHelper<ItemColor>> getItemsToBeTaken() throws UnsupportedOperationException {
+        return this.smugglersJSON.getItemsToBeTaken();
     }
 }
