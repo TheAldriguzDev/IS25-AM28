@@ -43,6 +43,10 @@ public abstract class EventCard {
         this.cardID = cardID;
     }
 
+    public int getCardID() {
+        return cardID;
+    }
+
     /**
      * @return This event card's unique identifier
      */

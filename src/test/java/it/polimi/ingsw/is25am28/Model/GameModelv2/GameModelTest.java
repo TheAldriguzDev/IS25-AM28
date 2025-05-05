@@ -422,14 +422,14 @@ class GameModelTest {
     private List<EventCard> getFakeDeck() {
         List<EventCard> deck = new ArrayList<>();
         Board board = model.getBoard();
-        deck.add(new AbandonedShip("Abandoned Ship", 2, 1, 2, 4, board));
-        deck.add(new AbandonedShip("Abandoned Ship", 2, 1, 2, 3, board));
-        deck.add(new AbandonedShip("Abandoned Ship", 2, 1, 2, 2, board));
-        deck.add(new AbandonedShip("Abandoned Ship", 2, 1, 2, 1, board));
-        deck.add(new AbandonedShip("Abandoned Ship", 2, 6, 2, 2, board));
-        deck.add(new AbandonedShip("Abandoned Ship", 2, 6, 2, 2, board));
-        deck.add(new AbandonedShip("Abandoned Ship", 2, 6, 2, 2, board));
-        deck.add(new AbandonedShip("Abandoned Ship", 2, 6, 2, 2, board));
+        deck.add(new AbandonedShip("Abandoned Ship", 2, 1, 2, 4, board, 0));
+        deck.add(new AbandonedShip("Abandoned Ship", 2, 1, 2, 3, board, 0));
+        deck.add(new AbandonedShip("Abandoned Ship", 2, 1, 2, 2, board, 0));
+        deck.add(new AbandonedShip("Abandoned Ship", 2, 1, 2, 1, board, 0));
+        deck.add(new AbandonedShip("Abandoned Ship", 2, 6, 2, 2, board, 0));
+        deck.add(new AbandonedShip("Abandoned Ship", 2, 6, 2, 2, board, 0));
+        deck.add(new AbandonedShip("Abandoned Ship", 2, 6, 2, 2, board, 0));
+        deck.add(new AbandonedShip("Abandoned Ship", 2, 6, 2, 2, board, 0));
 
         // Initialize the first card player (same logic used by the CardRoundState)
         deck.getFirst().initCardPlayers();

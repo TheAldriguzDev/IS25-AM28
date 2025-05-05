@@ -194,7 +194,7 @@ class OpenSpaceTest {
     @Test
     void test_open_space_with_1_players_eliminated_and_3_players_with_all_the_engines_supply() {
         // Create the card that will be used in the simulation
-        OpenSpace openSpaceCard = new OpenSpace("openSpace", 2, board);
+        OpenSpace openSpaceCard = new OpenSpace("openSpace", 2, board, 0);
         CardStateJSON cardState;
         ClientOpenSpace clientOpenSpace;
 

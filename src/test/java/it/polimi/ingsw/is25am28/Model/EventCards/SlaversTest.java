@@ -112,7 +112,7 @@ class SlaversTest {
         System.out.println("======================== SLAVERS PRINT AND FUNCTION (1) TEST ==========================");
 
 
-        slavers = new Slavers("Slavers", 2, 4, 2, 4, 6, board);
+        slavers = new Slavers("Slavers", 2, 4, 2, 4, 6, board, 0);
         // ======== STATE TESTING ======== //
         cardState = slavers.generateState();
         assertEquals("Slavers", cardState.getCardName());
@@ -342,7 +342,7 @@ class SlaversTest {
 
     @Test
     public void test_first_three_players_tie_fourth_one_wins() {
-        slavers = new Slavers("Slavers", 2, 3, 2, 4, 6, board);
+        slavers = new Slavers("Slavers", 2, 3, 2, 4, 6, board, 0);
 
         List<ComponentHelper<Void>> doubleCannonActivated = new ArrayList<>();
 //        List<Integer> x = new ArrayList<>();

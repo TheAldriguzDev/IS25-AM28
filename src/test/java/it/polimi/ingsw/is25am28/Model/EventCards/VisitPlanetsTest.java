@@ -232,7 +232,8 @@ class VisitPlanetsTest {
             this.movementStep,
             itemsPerPlanet,
             this.resourceBank,
-            this.board
+            this.board,
+            0
         );
 
 
@@ -718,7 +719,8 @@ class VisitPlanetsTest {
             this.movementStep,
             itemsPerPlanet,
             this.resourceBank,
-            this.board
+            this.board,
+                0
         );
 
         ClientVisitPlanets clientVisitPlanets;
@@ -1059,7 +1061,8 @@ class VisitPlanetsTest {
                 this.movementStep,
                 itemsPerPlanet,
                 this.resourceBank,
-                this.board
+                this.board,
+                0
         );
 
         // Disconnecting P2

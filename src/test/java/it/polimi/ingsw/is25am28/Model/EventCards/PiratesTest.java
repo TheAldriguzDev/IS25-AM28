@@ -130,7 +130,7 @@ class PiratesTest {
 
 
 
-        pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board);
+        pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board, 0);
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Non initialized card");
@@ -425,7 +425,7 @@ class PiratesTest {
         actionJSON3 = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
         actionJSON4 = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
 
-        pirates = new Pirates("Pirates", 2, 3, 4, 4, shootingSequence, board);
+        pirates = new Pirates("Pirates", 2, 3, 4, 4, shootingSequence, board, 0);
 
         pirates.initCardPlayers();
 

@@ -49,6 +49,7 @@ public class CardRoundScreen extends Screen {
     private ConsoleWidgetTUI consoleWidget;
 
     private ClientEventCard currEventCard;
+    private CardStateJSON currEventCardState;
     private Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods;
 
     // Constructor
@@ -64,8 +65,8 @@ public class CardRoundScreen extends Screen {
         this.boardWidget = this.model.getClientBoard().generateWidget();
 
         this.consoleWidget = new ConsoleWidgetTUI(
-            CONSOLE_WIDGET_MAX_HEIGHT,
-            CONSOLE_WIDGET_MAX_WIDTH
+                CONSOLE_WIDGET_MAX_HEIGHT,
+                CONSOLE_WIDGET_MAX_WIDTH
         );
     }
 
@@ -80,135 +81,134 @@ public class CardRoundScreen extends Screen {
 
         // (2) - Add crew to remove
         command = new CommandWidgetTUI(
-            "2",
-            () -> {
-                this.getCrewToRemove();
+                "2",
+                () -> {
+                    this.getCrewToRemove();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Add crew to remove");
         this.indexedCardInputMethods.put("setCrewToRemove", new Pair<>(false, command));
 
         // (3) - Add items to remove
         command = new CommandWidgetTUI(
-            "3",
-            () -> {
-                this.getItemToBeRemoved();
+                "3",
+                () -> {
+                    this.getItemToBeRemoved();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Add item to remove");
         this.indexedCardInputMethods.put("setItemsToBeRemoved", new Pair<>(false, command));
 
         // (4) - Add item to take
         command = new CommandWidgetTUI(
-            "4",
-            () -> {
-                this.getItemToBeTaken();
+                "4",
+                () -> {
+                    this.getItemToBeTaken();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Add item to take");
         this.indexedCardInputMethods.put("setItemsToBeTaken", new Pair<>(false, command));
 
         // (5) - Take reward?
         command = new CommandWidgetTUI(
-            "5",
-            () -> {
-                this.getTakeReward();
+                "5",
+                () -> {
+                    this.getTakeReward();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Take reward?");
         this.indexedCardInputMethods.put("setTakeReward", new Pair<>(false, command));
 
         // (6) - Choose planet
         command = new CommandWidgetTUI(
-            "6",
-            () -> {
-                this.getChosenPlanetIndex();
+                "6",
+                () -> {
+                    this.getChosenPlanetIndex();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Choose planet");
         this.indexedCardInputMethods.put("setChosenPlanetIndex", new Pair<>(false, command));
 
         // (7) - Visit the POI?
         command = new CommandWidgetTUI(
-            "7",
-            () -> {
-                this.getWantsToVisit();
+                "7",
+                () -> {
+                    this.getWantsToVisit();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Visit the POI?");
         this.indexedCardInputMethods.put("setWantsToVisit", new Pair<>(false, command));
 
         // (8) - Add shield to activate
         command = new CommandWidgetTUI(
-            "8",
-            () -> {
-                this.getShieldToActivate();
+                "8",
+                () -> {
+                    this.getShieldToActivate();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Add shield to activate");
         this.indexedCardInputMethods.put("setShieldsToActivate", new Pair<>(false, command));
 
         // (9) - Add double cannon to activate
         command = new CommandWidgetTUI(
-            "9",
-            () -> {
-                this.getDoubleCannonToActivate();
+                "9",
+                () -> {
+                    this.getDoubleCannonToActivate();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Add double cannon to activate");
         this.indexedCardInputMethods.put("setDoubleCannonsToActivate", new Pair<>(false, command));
 
         // (10) - Set double engines to activate
         command = new CommandWidgetTUI(
-            "10",
-            () -> {
-                this.getDoubleEnginesToActivate();
+                "10",
+                () -> {
+                    this.getDoubleEnginesToActivate();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Set double engines to activate");
         this.indexedCardInputMethods.put("setDoubleEnginesToActivate", new Pair<>(false, command));
 
         // (11) - Acknowledge and continue
         command = new CommandWidgetTUI(
-            "11",
-            () -> {
-                this.getPlayerAck();
+                "11",
+                () -> {
+                    this.getPlayerAck();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Acknowledge and continue");
         this.indexedCardInputMethods.put("getPlayerAck", new Pair<>(false, command));
 
-        this.getCurrEventCard();
         try {
             this.currEventCard.setAvailableCommands(this.indexedCardInputMethods);
         } catch (Exception e) {
@@ -290,8 +290,8 @@ public class CardRoundScreen extends Screen {
                 Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
 
                 component = ship.getComponent(
-                    finalComponentCoordinates.getKey(),
-                    finalComponentCoordinates.getValue()
+                        finalComponentCoordinates.getKey(),
+                        finalComponentCoordinates.getValue()
                 );
 
                 switch (component) {
@@ -317,8 +317,8 @@ public class CardRoundScreen extends Screen {
 
         // Assembling all together
         lifeformPosition = new ComponentHelper<LifeformType>(
-            componentCoordinates.getKey(),
-            componentCoordinates.getValue()
+                componentCoordinates.getKey(),
+                componentCoordinates.getValue()
         ).addItem(lfType);
 
         crewToRemove.add(lifeformPosition);
@@ -484,8 +484,8 @@ public class CardRoundScreen extends Screen {
                 Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
 
                 component = ship.getComponent(
-                    finalComponentCoordinates.getKey(),
-                    finalComponentCoordinates.getValue()
+                        finalComponentCoordinates.getKey(),
+                        finalComponentCoordinates.getValue()
                 );
 
                 switch (component) {
@@ -503,8 +503,8 @@ public class CardRoundScreen extends Screen {
 
         // Assembling all together
         itemPosition = new ComponentHelper<ItemColor>(
-            componentCoordinates.getKey(),
-            componentCoordinates.getValue()
+                componentCoordinates.getKey(),
+                componentCoordinates.getValue()
         ).addItem(itemColor);
 
         itemsToBeTaken.add(itemPosition);
@@ -531,10 +531,10 @@ public class CardRoundScreen extends Screen {
 
         List<Integer> availablePlanetIndexes =
                 this.model.getState()
-                    .getCardRoundDTO()
-                    .getCardInfo()
-                    .getAvailablePlanets()
-                    .keySet().stream().toList();
+                        .getCardRoundDTO()
+                        .getCardInfo()
+                        .getAvailablePlanets()
+                        .keySet().stream().toList();
 
         for (Integer planetIdx : availablePlanetIndexes) {
             availablePlanetsWidget.appendString("(" + planetIdx + ") Planet #" + planetIdx);
@@ -580,7 +580,7 @@ public class CardRoundScreen extends Screen {
      * visit the POI (Point of Interest) offered by the card, FALSE otherwise.
      */
     public void getWantsToVisit() {
-         this.currEventCard.setWantsToVisit(this.getBooleanAnswerToQuestion("Do you want to visit it?"));
+        this.currEventCard.setWantsToVisit(this.getBooleanAnswerToQuestion("Do you want to visit it?"));
     }
 
     /**
@@ -604,8 +604,8 @@ public class CardRoundScreen extends Screen {
         do {
             componentHelper = this.getComponentHelperOfComponent();
             component = ship.getComponent(
-                componentHelper.getI(),
-                componentHelper.getJ()
+                    componentHelper.getI(),
+                    componentHelper.getJ()
             );
 
             switch (component) {
@@ -620,8 +620,8 @@ public class CardRoundScreen extends Screen {
         while (!correctInput);
 
         componentHelper = new ComponentHelper<Void>(
-            componentHelper.getI(),
-            componentHelper.getJ()
+                componentHelper.getI(),
+                componentHelper.getJ()
         );
 
         componentHelperList.add(componentHelper);
@@ -650,8 +650,8 @@ public class CardRoundScreen extends Screen {
             componentHelper = this.getComponentHelperOfComponent();
 
             component = ship.getComponent(
-                componentHelper.getI(),
-                componentHelper.getJ()
+                    componentHelper.getI(),
+                    componentHelper.getJ()
             );
 
             switch (component) {
@@ -673,8 +673,8 @@ public class CardRoundScreen extends Screen {
         while (!correctInput);
 
         componentHelper = new ComponentHelper<Void>(
-            componentHelper.getI(),
-            componentHelper.getJ()
+                componentHelper.getI(),
+                componentHelper.getJ()
         );
 
         componentHelperList.add(componentHelper);
@@ -795,10 +795,10 @@ public class CardRoundScreen extends Screen {
      */
     private void generateShipWidgets() {
         this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(
-            (ClientShip ship) -> {
-                this.shipStatsWidget = ship.getShipStatsWidget();
-                this.shipGridWidget = ship.getShipGridWidget();
-            }
+                (ClientShip ship) -> {
+                    this.shipStatsWidget = ship.getShipStatsWidget();
+                    this.shipGridWidget = ship.getShipGridWidget();
+                }
         );
     }
 
@@ -814,31 +814,31 @@ public class CardRoundScreen extends Screen {
 
         // (0) - Play card
         command = new CommandWidgetTUI(
-            "0",
-            () -> {
-                try {
-                    this.playCard();
-                }
-                catch (Exception e) {
-                    System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" thrown by method 'playCard'.", ANSIColors.RED));
-                }
+                "0",
+                () -> {
+                    try {
+                        this.playCard();
+                    }
+                    catch (Exception e) {
+                        System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" thrown by method 'playCard'.", ANSIColors.RED));
+                    }
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Play card");
         this.cardRoundCommandsWidget.addCommand(command);
 
         // (1) - Visualize ship
         command = new CommandWidgetTUI(
-            "1",
-            () -> {
-                this.getOtherShipCommand();
+                "1",
+                () -> {
+                    this.getOtherShipCommand();
 
-                // Go back to the card round available commands
-                this.getCardRoundCommand();
-            }
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Visualize ship");
         this.cardRoundCommandsWidget.addCommand(command);
@@ -846,10 +846,10 @@ public class CardRoundScreen extends Screen {
         // Adding all other commands whose flag is set to TRUE by
         // the currently active event card
         this.cardRoundCommandsWidget.setCommands(
-            this.indexedCardInputMethods.values().stream()
-                .filter(Pair::getKey)
-                .map(Pair::getValue)
-                .toList()
+                this.indexedCardInputMethods.values().stream()
+                        .filter(pair -> (pair.getKey() == true))
+                        .map(Pair::getValue)
+                        .toList()
         );
     }
 
@@ -877,12 +877,12 @@ public class CardRoundScreen extends Screen {
 
             if (allNicknames.get(i).equals(this.model.getNickname())) {
                 this.otherPlayerShipCommandsWidget.appendString(
-                    s + SPACE + PrintUtils.addColor(
-                        "(YOU)",
-                        this.model.getAllClientPlayers().get(allNicknames.get(i))
-                            .getColor()
-                            .getColorString()
-                    )
+                        s + SPACE + PrintUtils.addColor(
+                                "(YOU)",
+                                this.model.getAllClientPlayers().get(allNicknames.get(i))
+                                        .getColor()
+                                        .getColorString()
+                        )
                 );
             }
             else {
@@ -926,18 +926,18 @@ public class CardRoundScreen extends Screen {
         this.playerNameWidget.printWidget();
 
         WidgetTUI.composeTwoWidgetsHorizontally(
-            WidgetTUI.fillScreenWithSpaces(
-                WidgetTUI.composeTwoWidgetsVertically(
-                    this.boardWidget.addPadding(0, 0, 1, 0),
-                    this.shipStatsWidget
+                WidgetTUI.fillScreenWithSpaces(
+                        WidgetTUI.composeTwoWidgetsVertically(
+                                        this.boardWidget.addPadding(0, 0, 1, 0),
+                                        this.shipStatsWidget
+                                )
+                                .centerWidgetScreen()
+                                .addPadding(0, 1, 0, 0)
+                ),
+                WidgetTUI.composeTwoWidgetsHorizontally(
+                        this.shipGridWidget.addPadding(0, 1, 0, 0),
+                        this.currEventCardWidget
                 )
-                .centerWidgetScreen()
-                .addPadding(0, 1, 0, 0)
-            ),
-            WidgetTUI.composeTwoWidgetsHorizontally(
-                this.shipGridWidget.addPadding(0, 1, 0, 0),
-                this.currEventCardWidget
-            )
         ).printWidget();
     }
 
@@ -1188,8 +1188,8 @@ public class CardRoundScreen extends Screen {
 
         // Assembling all together
         componentHelper = new ComponentHelper<Void>(
-            componentCoordinates.getKey(),
-            componentCoordinates.getValue()
+                componentCoordinates.getKey(),
+                componentCoordinates.getValue()
         );
 
         return componentHelper;
@@ -1205,26 +1205,26 @@ public class CardRoundScreen extends Screen {
         ActionJSON response = this.currEventCard.useCard();
 
         this.ctx = new CommandCTX(
-            "playCard",
-            () -> {
-                System.out.println("onSuccess");
+                "playCard",
+                () -> {
+                    System.out.println("onSuccess");
 
-                // TODO: Implement onSuccess (if it needs to do something)
-                // TODO: view a screen saying that your turn is over
-            },
-            () -> {
-                System.out.println("onError");
+                    // TODO: Implement onSuccess (if it needs to do something)
+                    // TODO: view a screen saying that your turn is over
+                },
+                () -> {
+                    System.out.println("onError");
 
-                System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
-                this.getCardRoundCommand();
-            }
+                    System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
+                    this.getCardRoundCommand();
+                }
         );
 
         this.client.sendMessage(
-            new PlayCard(
-                this.model.getNickname(),
-                response
-            )
+                new PlayCard(
+                        this.model.getNickname(),
+                        response
+                )
         );
     }
 

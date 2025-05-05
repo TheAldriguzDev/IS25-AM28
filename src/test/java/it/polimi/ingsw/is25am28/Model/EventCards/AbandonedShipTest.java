@@ -201,7 +201,7 @@ class AbandonedShipTest {
     @Test
     void test_abandoned_ship_with_only_three_players_that_can_use_the_card_and_the_third_player_will_use_it() {
         // Create the card that will be used in the simulation
-        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 5, 1, 3, board);
+        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 5, 1, 3, board, 0);
 
         ClientAbandonedShip clientAbandonedShip;
 
@@ -311,7 +311,7 @@ class AbandonedShipTest {
     @Test
     void test_player_elimination_when_astronauts_are_finished() {
         // Create the card that will be used in the simulation
-        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 6, 1, 3, board);
+        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 6, 1, 3, board, 0);
 
         // Init the card players
         abandonedShipCard.initCardPlayers();
@@ -410,7 +410,7 @@ class AbandonedShipTest {
     @Test
     void test_no_players_want_use_the_card() {
         // Create the card that will be used in the simulation
-        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 6, 1, 3, board);
+        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 6, 1, 3, board, 0);
 
         // Init the card players
         abandonedShipCard.initCardPlayers();
