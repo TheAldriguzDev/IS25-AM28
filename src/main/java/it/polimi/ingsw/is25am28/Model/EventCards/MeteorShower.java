@@ -122,8 +122,8 @@ public class MeteorShower extends EventCard {
         boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
-        List<ComponentHelper<Integer>> shieldCoordsList;
-        List<ComponentHelper<Integer>> cannonCoordsList;
+        List<ComponentHelper<Void>> shieldCoordsList;
+        List<ComponentHelper<Void>> cannonCoordsList;
         Component toHit;
         Ship shipPtr;
 
@@ -254,7 +254,7 @@ public class MeteorShower extends EventCard {
                 // => Check if it can bounce on toHit or a shield is required
                 if (sideToHit != ZERO_PIPES.ordinal()) {
                     if (shieldCoordsList != null) {
-                        for (ComponentHelper<Integer> shieldCoords : shieldCoordsList) {
+                        for (ComponentHelper<Void> shieldCoords : shieldCoordsList) {
                             if (shieldCoords != null) {
                                 Component component = shipPtr.getComponent(
                                         shieldCoords.getI(),
@@ -295,7 +295,7 @@ public class MeteorShower extends EventCard {
                 // Case 2 - Big Meteor
                 // => Check if there are cannons that can destroy it
                 if (cannonCoordsList != null) {
-                    for (ComponentHelper<Integer> cannonCoords : cannonCoordsList) {
+                    for (ComponentHelper<Void> cannonCoords : cannonCoordsList) {
                         if (cannonCoords != null) {
                             Component component = shipPtr.getComponent(
                                     cannonCoords.getI(),

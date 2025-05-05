@@ -246,8 +246,8 @@ class MeteorShowerTest {
         MeteorShowerJSON meteorShowerJSON;
         CardStateJSON meteorShowerStateJSON;
         List<Player> playerList = this.board.getPlayers();
-        List<ComponentHelper<Integer>> shieldsCoordinates;
-        List<ComponentHelper<Integer>> cannonsCoordinates;
+        List<ComponentHelper<Void>> shieldsCoordinates;
+        List<ComponentHelper<Void>> cannonsCoordinates;
         int energyP1 = playerList.get(0).getShip().getAvailableEnergy();
         int energyP2 = playerList.get(1).getShip().getAvailableEnergy();
         int currMeteorIndex = 0;
@@ -563,7 +563,7 @@ class MeteorShowerTest {
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
         //shieldsCoordinates.add(new Pair<>(6, 4));   // P1 activates shield
 //        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // P1 activates shield
-        shieldsCoordinates.add(new ComponentHelper<Integer>(6, 4));   // P1 activates shield
+        shieldsCoordinates.add(new ComponentHelper<>(6, 4));   // P1 activates shield
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
@@ -1446,8 +1446,8 @@ class MeteorShowerTest {
         MeteorShowerJSON meteorShowerJSON;
         CardStateJSON meteorShowerStateJSON;
         List<Player> playerList;
-        List<ComponentHelper<Integer>> shieldsCoordinates;
-        List<ComponentHelper<Integer>> cannonsCoordinates;
+        List<ComponentHelper<Void>> shieldsCoordinates;
+        List<ComponentHelper<Void>> cannonsCoordinates;
 
         Player player3 = new Player("p3", PlayerColor.RED, 2);
         this.board.newPlayer(player3);

@@ -130,7 +130,12 @@ public class PrintTest {
                 }
         ).start();
 
-        System.out.println("selected? => " + inputWidget.selectCommand("Select an option: "));
+        try {
+            System.out.println("selected? => " + inputWidget.selectCommand("Select an option: "));
+        }
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
         new Thread(
                 () -> {
@@ -144,7 +149,12 @@ public class PrintTest {
                 }
         ).start();
 
-        System.out.println("selected? => " + inputWidget.selectCommand("Select an option: "));
+        try {
+            System.out.println("selected? => " + inputWidget.selectCommand("Select an option: "));
+        }
+        catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
 
 
         System.exit(0);

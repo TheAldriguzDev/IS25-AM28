@@ -11,8 +11,8 @@ import java.util.List;
 public class MeteorShowerJSON extends ActionJSON {
     private int currMeteorIndex;
     private int diceThrowResult;
-    private List<ComponentHelper<Integer>>  shieldsCoordinates;
-    private List<ComponentHelper<Integer>> cannonsCoordinates;
+    private List<ComponentHelper<Void>>  shieldsCoordinates;
+    private List<ComponentHelper<Void>> cannonsCoordinates;
 
     public MeteorShowerJSON() {
         this.currMeteorIndex = 0;
@@ -26,8 +26,8 @@ public class MeteorShowerJSON extends ActionJSON {
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("currMeteorIndex") int currMeteorIndex, // FIXME: Remove this field
             @JsonProperty("diceThrowResult") int diceThrowResult, // FIXME: REMOVE this field
-            @JsonProperty("shieldsCoordinates") List<ComponentHelper<Integer>> shieldsCoordinates,
-            @JsonProperty("cannonsCoordinates") List<ComponentHelper<Integer>> cannonsCoordinates
+            @JsonProperty("shieldsCoordinates") List<ComponentHelper<Void>> shieldsCoordinates,
+            @JsonProperty("cannonsCoordinates") List<ComponentHelper<Void>> cannonsCoordinates
     ) {
         super(playerNickname);
         this.currMeteorIndex = currMeteorIndex;
@@ -57,22 +57,22 @@ public class MeteorShowerJSON extends ActionJSON {
     }
 
     @JsonGetter("shieldsCoordinates")
-    public List<ComponentHelper<Integer>> getShieldsCoordinates() {
+    public List<ComponentHelper<Void>> getShieldsCoordinates() {
         return this.shieldsCoordinates;
     }
 
     @JsonSetter("shieldsCoordinates")
-    public void setShieldsCoordinates(List<ComponentHelper<Integer>> shieldsCoordinates) {
+    public void setShieldsCoordinates(List<ComponentHelper<Void>> shieldsCoordinates) {
         this.shieldsCoordinates = shieldsCoordinates;
     }
 
     @JsonGetter("cannonsCoordinates")
-    public List<ComponentHelper<Integer>> getCannonsCoordinates() {
+    public List<ComponentHelper<Void>> getCannonsCoordinates() {
         return this.cannonsCoordinates;
     }
 
     @JsonSetter("cannonsCoordinates")
-    public void setCannonsCoordinates(List<ComponentHelper<Integer>> cannonsCoordinates) {
+    public void setCannonsCoordinates(List<ComponentHelper<Void>> cannonsCoordinates) {
         this.cannonsCoordinates = cannonsCoordinates;
     }
 }

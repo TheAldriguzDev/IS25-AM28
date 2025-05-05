@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -14,7 +15,6 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Callable;
 
 public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected static final List<String> enabledCommands;
@@ -43,9 +43,9 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
      * Each card will set to TRUE only the input methods it needs inside
      * its own ActionJSON to provide the server the player's choices.
      */
-    public static void setAvailableCommands(Map<String, Pair<Boolean, Runnable>> indexedCardInputMethods) {
+    public static void setAvailableCommands(Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods) {
         // First put to false all flags
-        for (Map.Entry<String, Pair<Boolean, Runnable>> entry : indexedCardInputMethods.entrySet()) {
+        for (Map.Entry<String, Pair<Boolean, CommandWidgetTUI>> entry : indexedCardInputMethods.entrySet()) {
             entry.getValue().setKey(false);
         }
 
@@ -132,20 +132,20 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     }
 
     // SHIELDS
-    public void setShieldsToActivate(List<ComponentHelper<Integer>> shieldsToActivate) throws UnsupportedOperationException {
+    public void setShieldsToActivate(List<ComponentHelper<Void>> shieldsToActivate) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setShieldsToActivate()' is not supported in " + this + " state");
     }
 
-    public List<ComponentHelper<Integer>> getShieldsToActivate() throws UnsupportedOperationException {
+    public List<ComponentHelper<Void>> getShieldsToActivate() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getShieldsToActivate()' is not supported in " + this + " state");
     }
 
     // CANNONS
-    public void setDoubleCannonsToActivate(List<ComponentHelper<Integer>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setDoubleCannonsToActivate()' is not supported in " + this + " state");
     }
 
-    public List<ComponentHelper<Integer>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<ComponentHelper<Void>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getDoubleCannonsToActivate()' is not supported in " + this + " state");
     }
 

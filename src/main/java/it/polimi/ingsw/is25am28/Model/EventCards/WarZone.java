@@ -223,8 +223,8 @@ public class WarZone extends EventCard {
                 totalPower += p.getShip().getFirePower(new ArrayList<>()); // replaced 0 with an empty arrayList to now work with the new version of getFirepower
 
                 // Get the cannonList (double cannons that gets activated) to compute the power
-                List<ComponentHelper<Integer>> cannonList = warZoneJSON.getCannonList();
-                for (ComponentHelper<Integer> c : cannonList) {
+                List<ComponentHelper<Void>> cannonList = warZoneJSON.getCannonList();
+                for (ComponentHelper<Void> c : cannonList) {
                     Cannon tmpCannon = (Cannon) p.getShip().getComponent(c.getI(), c.getJ());
 
                     totalPower += tmpCannon.getFirePower();
@@ -512,7 +512,7 @@ public class WarZone extends EventCard {
         boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
-        List<ComponentHelper<Integer>> shieldList;
+        List<ComponentHelper<Void>> shieldList;
         Component toHit;
         Ship shipPtr;
         PlasmaShot currPlasmaShot;
@@ -603,7 +603,7 @@ public class WarZone extends EventCard {
         // If a component has been found
         if (toHit != null) {
             if (shieldList != null) {
-                for (ComponentHelper<Integer> shieldCoords : shieldList) {
+                for (ComponentHelper<Void> shieldCoords : shieldList) {
                     if (shieldCoords != null) {
                         Component component = shipPtr.getComponent(
                                 shieldCoords.getI(),

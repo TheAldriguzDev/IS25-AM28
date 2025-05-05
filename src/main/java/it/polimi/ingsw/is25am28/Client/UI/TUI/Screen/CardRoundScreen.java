@@ -15,14 +15,15 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Network.Messages.PlayCard;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.ConsoleWidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
@@ -30,6 +31,7 @@ import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 public class CardRoundScreen extends Screen {
     private static final int CONSOLE_WIDGET_MAX_HEIGHT = 6;
     private static final int CONSOLE_WIDGET_MAX_WIDTH = 40;
+    private static final int COMMAND_GROUPING_FACTOR = 2;
 
     private WidgetTUI boardWidget;
     private WidgetTUI currEventCardWidget;
@@ -43,25 +45,21 @@ public class CardRoundScreen extends Screen {
     private WidgetTUI otherPlayerShipWidget;
     private WidgetTUI otherPlayerShipCommandsWidget;
 
-    private WidgetTUI cardRoundCommandsWidget;
+    private InputWidgetTUI cardRoundCommandsWidget;
     private ConsoleWidgetTUI consoleWidget;
 
     private ClientEventCard currEventCard;
-    private Map<String, Pair<Boolean, Runnable>> indexedCardInputMethods;
+    private Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods;
 
     // Constructor
     public CardRoundScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
-
-        // Initializing the map of available input methods
-        this.generateIndexedCardInputMethodsMap();
 
         // Widgets initializations
         this.generateAvailableLifeformsWidget();
         this.generateAvailableItemColorsWidget();
         this.generatePlayerNameWidget();
         this.generateShipWidgets();
-        this.generateCardRoundCommandsWidget();
         this.generateOtherPlayerShipCommandsWidget();
 
         this.boardWidget = this.model.getClientBoard().generateWidget();
@@ -77,18 +75,139 @@ public class CardRoundScreen extends Screen {
      * client event card the player's interaction and relative data
      */
     private void generateIndexedCardInputMethodsMap() {
+        CommandWidgetTUI command;
+
         this.indexedCardInputMethods = new HashMap<>();
 
-        this.indexedCardInputMethods.put("setCrewToRemove",             new Pair<>(false, this::getCrewToRemove));
-        this.indexedCardInputMethods.put("setItemsToBeRemoved",         new Pair<>(false, this::getItemToBeTakenOrRemoved));
-        this.indexedCardInputMethods.put("setItemsToBeTaken",           new Pair<>(false, this::getItemToBeTakenOrRemoved));
-        this.indexedCardInputMethods.put("setTakeReward",               new Pair<>(false, this::getTakeReward));
-        this.indexedCardInputMethods.put("setChosenPlanetIndex",        new Pair<>(false, this::getChosenPlanetIndex));
-        this.indexedCardInputMethods.put("setWantsToVisit",             new Pair<>(false, this::getWantsToVisit));
-        this.indexedCardInputMethods.put("setShieldsToActivate",        new Pair<>(false, this::getShieldToActivate));
-        this.indexedCardInputMethods.put("setDoubleCannonsToActivate",  new Pair<>(false, this::getDoubleCannonToActivate));
-        this.indexedCardInputMethods.put("setDoubleEnginesToActivate",  new Pair<>(false, this::getDoubleEnginesToActivate));
-        this.indexedCardInputMethods.put("getPlayerAck",                new Pair<>(false, this::getPlayerAck));
+        // (2) - Add crew to remove
+        command = new CommandWidgetTUI(
+            "2",
+            () -> {
+                this.getCrewToRemove();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Add crew to remove");
+        this.indexedCardInputMethods.put("setCrewToRemove", new Pair<>(false, command));
+
+        // (3) - Add items to remove
+        command = new CommandWidgetTUI(
+            "3",
+            () -> {
+                this.getItemToBeRemoved();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Add item to remove");
+        this.indexedCardInputMethods.put("setItemsToBeRemoved", new Pair<>(false, command));
+
+        // (4) - Add item to take
+        command = new CommandWidgetTUI(
+            "4",
+            () -> {
+                this.getItemToBeTaken();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Add item to take");
+        this.indexedCardInputMethods.put("setItemsToBeTaken", new Pair<>(false, command));
+
+        // (5) - Take reward?
+        command = new CommandWidgetTUI(
+            "5",
+            () -> {
+                this.getTakeReward();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Take reward?");
+        this.indexedCardInputMethods.put("setTakeReward", new Pair<>(false, command));
+
+        // (6) - Choose planet
+        command = new CommandWidgetTUI(
+            "6",
+            () -> {
+                this.getChosenPlanetIndex();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Choose planet");
+        this.indexedCardInputMethods.put("setChosenPlanetIndex", new Pair<>(false, command));
+
+        // (7) - Visit the POI?
+        command = new CommandWidgetTUI(
+            "7",
+            () -> {
+                this.getWantsToVisit();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Visit the POI?");
+        this.indexedCardInputMethods.put("setWantsToVisit", new Pair<>(false, command));
+
+        // (8) - Add shield to activate
+        command = new CommandWidgetTUI(
+            "8",
+            () -> {
+                this.getShieldToActivate();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Add shield to activate");
+        this.indexedCardInputMethods.put("setShieldsToActivate", new Pair<>(false, command));
+
+        // (9) - Add double cannon to activate
+        command = new CommandWidgetTUI(
+            "9",
+            () -> {
+                this.getDoubleCannonToActivate();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Add double cannon to activate");
+        this.indexedCardInputMethods.put("setDoubleCannonsToActivate", new Pair<>(false, command));
+
+        // (10) - Set double engines to activate
+        command = new CommandWidgetTUI(
+            "10",
+            () -> {
+                this.getDoubleEnginesToActivate();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Set double engines to activate");
+        this.indexedCardInputMethods.put("setDoubleEnginesToActivate", new Pair<>(false, command));
+
+        // (11) - Acknowledge and continue
+        command = new CommandWidgetTUI(
+            "11",
+            () -> {
+                this.getPlayerAck();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Acknowledge and continue");
+        this.indexedCardInputMethods.put("getPlayerAck", new Pair<>(false, command));
 
         ClientEventCard.setAvailableCommands(this.indexedCardInputMethods);
     }
@@ -204,10 +323,103 @@ public class CardRoundScreen extends Screen {
 
     /**
      * Adds a component helper containing the item color the player
-     * wants to remove or take (depends on where the method it's used)
+     * wants to remove (depends on where the method it's used)
      * and the relative storage coordinates of where it's located.
      */
-    private void getItemToBeTakenOrRemoved() {
+    private void getItemToBeRemoved() {
+        List<ComponentHelper<ItemColor>> itemsToBeRemoved;
+        ComponentHelper<ItemColor> itemPosition;
+        Map.Entry<Integer, Integer> componentCoordinates;
+        ClientComponent component;
+        boolean correctInput;
+        ItemColor itemColor;
+        ClientShip ship;
+        int itemIndex;
+        String line;
+
+        itemsToBeRemoved = this.currEventCard.getItemsToBeTaken();
+        ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+
+        if (ship == null) return;
+
+        // Getting the items to remove or take
+        do {
+            System.out.print("Available item colors:");
+            availableItemColors.printWidget();
+            System.out.print(DEFAULT_COMMAND_PREFIX);
+
+            correctInput = false;
+            itemColor = null;
+
+            try {
+                line = this.inputThread.waitForInput();
+
+                // A forced interrupt arrived
+                if (line == null) return;
+
+                itemIndex = Integer.parseInt(line);
+                correctInput = true;
+
+                try {
+                    itemColor = ItemColor.values()[itemIndex];
+                }
+                catch (IndexOutOfBoundsException e) {
+                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please select a valid item color.", ANSIColors.RED));
+                    correctInput = false;
+                }
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return;
+            }
+            catch (NumberFormatException e) {
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
+            }
+        }
+        while (!correctInput);
+
+        correctInput = false;
+
+        // Getting the component coordinates
+        do {
+            try {
+                componentCoordinates = this.getComponentCoordinates();
+                Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
+
+                component = ship.getComponent(
+                        finalComponentCoordinates.getKey(),
+                        finalComponentCoordinates.getValue()
+                );
+
+                switch (component) {
+                    case ClientStorage storage -> { correctInput = true; }
+                    case null, default -> {
+                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentCoordinates.getKey() + ", " + componentCoordinates.getValue() + ") is not a storage.", ANSIColors.RED));
+                    }
+                }
+            }
+            catch (InterruptedException e) {
+                return;
+            }
+        }
+        while (!correctInput);
+
+        // Assembling all together
+        itemPosition = new ComponentHelper<ItemColor>(
+                componentCoordinates.getKey(),
+                componentCoordinates.getValue()
+        ).addItem(itemColor);
+
+        itemsToBeRemoved.add(itemPosition);
+        this.currEventCard.setItemsToBeRemoved(itemsToBeRemoved);
+    }
+
+    /**
+     * Adds a component helper containing the item color the player
+     * wants to take (depends on where the method it's used)
+     * and the relative storage coordinates of where to put them
+     */
+    private void getItemToBeTaken() {
         List<ComponentHelper<ItemColor>> itemsToBeTaken;
         ComponentHelper<ItemColor> itemPosition;
         Map.Entry<Integer, Integer> componentCoordinates;
@@ -296,17 +508,18 @@ public class CardRoundScreen extends Screen {
     }
 
     /**
-     * @return TRUE if the current player wants to take the resources of a
-     *         card that poses this question, FALSE otherwise
+     * Sets the relative JSON flag to TRUE if the current player wants to take
+     * the resources of a card that poses this question, FALSE otherwise.
      */
-    public boolean getTakeReward() {
-        return this.getBooleanAnswerToQuestion("Do you want to take the reward?");
+    public void getTakeReward() {
+        this.currEventCard.setTakeReward(this.getBooleanAnswerToQuestion("Do you want to take the reward?"));
     }
 
     /**
-     * @return The player's chosen planet index to land on
+     * Sets the relative JSON attribute to the player's
+     * chosen planet index to land on.
      */
-    public int getChosenPlanetIndex() {
+    public void getChosenPlanetIndex() {
         WidgetTUI availablePlanetsWidget = new WidgetTUI();
         boolean correctInput = false;
         int chosenIndex = 0;
@@ -334,7 +547,7 @@ public class CardRoundScreen extends Screen {
 
             try {
                 line = this.inputThread.waitForInput();
-                if (line == null) return 0;
+                if (line == null) return;
 
                 chosenIndex = Integer.parseInt(line);
 
@@ -347,6 +560,7 @@ public class CardRoundScreen extends Screen {
             }
             catch (InterruptedException e) {
                 // A forced interrupt arrived
+                return;
             }
             catch (NumberFormatException e) {
                 System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
@@ -354,30 +568,33 @@ public class CardRoundScreen extends Screen {
         }
         while (!correctInput);
 
-        return chosenIndex;
+        this.currEventCard.setChosenPlanetIndex(chosenIndex);
     }
 
     /**
-     * @return TRUE if the player wants to visit the POI (Point of Interest)
-     *         offered by the current card, FALSE otherwise
+     * Sets the relative JSON flag to TRUE if the current player wants to
+     * visit the POI (Point of Interest) offered by the card, FALSE otherwise.
      */
-    public boolean getWantsToVisit() {
-        return this.getBooleanAnswerToQuestion("Do you want to visit it?");
+    public void getWantsToVisit() {
+         this.currEventCard.setWantsToVisit(this.getBooleanAnswerToQuestion("Do you want to visit it?"));
     }
 
     /**
-     * @return A component helper containing the coordinates of
-     *         the current player's chosen shield to activate
+     * Adds a component helper with coordinates pointing to
+     * a shield that the player wants to activate.
      */
-    public ComponentHelper<Void> getShieldToActivate() {
+    public void getShieldToActivate() {
+        List<ComponentHelper<Void>> componentHelperList;
         ComponentHelper<Void> componentHelper;
         ClientComponent component;
         boolean correctInput;
         ClientShip ship;
 
-        // Getting the ship
+        componentHelperList = this.currEventCard.getShieldsToActivate();
         ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
         correctInput = false;
+
+        if (ship == null) return;
 
         // Verify that the selected component is a shield
         do {
@@ -398,26 +615,31 @@ public class CardRoundScreen extends Screen {
         }
         while (!correctInput);
 
-        return new ComponentHelper<Void>(
+        componentHelper = new ComponentHelper<Void>(
             componentHelper.getI(),
             componentHelper.getJ()
         );
+
+        componentHelperList.add(componentHelper);
+        this.currEventCard.setShieldsToActivate(componentHelperList);
     }
 
     /**
-     * @return A component helper containing the coordinates of
-     *         the current player's chosen double cannon to activate
+     * Adds a component helper with coordinates pointing to
+     * a double cannon that the player wants to activate.
      */
-    public ComponentHelper<Void> getDoubleCannonToActivate() {
+    public void getDoubleCannonToActivate() {
+        List<ComponentHelper<Void>> componentHelperList;
         ComponentHelper<Void> componentHelper;
         ClientComponent component;
         boolean correctInput;
         ClientShip ship;
 
-        // Getting the ship
+        componentHelperList = this.currEventCard.getDoubleCannonsToActivate();
         ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
-
         correctInput = false;
+
+        if (ship == null) return;
 
         // Verify that the selected component is a cannon
         do {
@@ -446,19 +668,22 @@ public class CardRoundScreen extends Screen {
         }
         while (!correctInput);
 
-        return new ComponentHelper<Void>(
+        componentHelper = new ComponentHelper<Void>(
             componentHelper.getI(),
             componentHelper.getJ()
         );
+
+        componentHelperList.add(componentHelper);
+        this.currEventCard.setDoubleCannonsToActivate(componentHelperList);
     }
 
     /**
-     * @return The amount of double engines the player wants to activate
+     * Sets the amount of double engines the player wants to activate.
      * <br>
      * NOTE: If the player's chosen amount exceeds the actual amount of double engines, then
      *       server-side this is equivalent to activating all double engines (input saturation)
      */
-    public int getDoubleEnginesToActivate() {
+    public void getDoubleEnginesToActivate() {
         int doubleEnginesToActivate;
         boolean correctInput;
         String line;
@@ -472,7 +697,7 @@ public class CardRoundScreen extends Screen {
                 System.out.print("Insert amount of double engines to activate: ");
                 line = this.inputThread.waitForInput();
 
-                if (line == null) return 0;
+                if (line == null) return;
 
                 doubleEnginesToActivate = Integer.parseInt(line);
 
@@ -485,7 +710,7 @@ public class CardRoundScreen extends Screen {
             }
             catch (InterruptedException e) {
                 // A forced interrupt arrived
-                return 0;
+                return;
             }
             catch (NumberFormatException e) {
                 System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
@@ -493,7 +718,7 @@ public class CardRoundScreen extends Screen {
         }
         while (!correctInput);
 
-        return doubleEnginesToActivate;
+        this.currEventCard.setDoubleEnginesToActivate(doubleEnginesToActivate);
     }
 
     /**
@@ -578,15 +803,50 @@ public class CardRoundScreen extends Screen {
      * that each player can choose from
      */
     private void generateCardRoundCommandsWidget() {
-        this.cardRoundCommandsWidget = new WidgetTUI();
+        CommandWidgetTUI command;
 
-        this.cardRoundCommandsWidget.appendString("(1) Use current card");
-        this.cardRoundCommandsWidget.appendString("(2) Visualize subdecks");
-        this.cardRoundCommandsWidget.appendString("(3) Visualize ships");
+        this.cardRoundCommandsWidget = new InputWidgetTUI(this.inputThread);
+        this.cardRoundCommandsWidget.setColumnGroupingAmount(COMMAND_GROUPING_FACTOR);
 
-        this.cardRoundCommandsWidget
-                .addPadding(0, 1, 0, 1)
-                .wrapWidgetWithBorder();
+        // (0) - Play card
+        command = new CommandWidgetTUI(
+            "0",
+            () -> {
+                try {
+                    this.playCard();
+                }
+                catch (Exception e) {
+                    System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" thrown by method 'playCard'.", ANSIColors.RED));
+                }
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Play card");
+        this.cardRoundCommandsWidget.addCommand(command);
+
+        // (1) - Visualize ship
+        command = new CommandWidgetTUI(
+            "1",
+            () -> {
+                this.getOtherShipCommand();
+
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
+        );
+        command.appendString("Visualize ship");
+        this.cardRoundCommandsWidget.addCommand(command);
+
+        // Adding all other commands whose flag is set to TRUE by
+        // the currently active event card
+        this.cardRoundCommandsWidget.setCommands(
+            this.indexedCardInputMethods.values().stream()
+                .filter(pair -> (pair.getKey() == true))
+                .map(Pair::getValue)
+                .toList()
+        );
     }
 
     /**
@@ -613,12 +873,12 @@ public class CardRoundScreen extends Screen {
 
             if (allNicknames.get(i).equals(this.model.getNickname())) {
                 this.otherPlayerShipCommandsWidget.appendString(
-                        s + SPACE + PrintUtils.addColor(
-                                "(YOU)",
-                                this.model.getAllClientPlayers().get(allNicknames.get(i))
-                                        .getColor()
-                                        .getColorString()
-                        )
+                    s + SPACE + PrintUtils.addColor(
+                        "(YOU)",
+                        this.model.getAllClientPlayers().get(allNicknames.get(i))
+                            .getColor()
+                            .getColorString()
+                    )
                 );
             }
             else {
@@ -682,61 +942,31 @@ public class CardRoundScreen extends Screen {
      * the available commands
      */
     private void getCardRoundCommand() {
-        String line;
-        int choice;
+        boolean commandSelected;
 
         System.out.println();
         clearTerminal();
 
-        // Printing the entire card round TUI
-        this.printCardRoundWidgets();
+        do {
+            // Printing the entire card round TUI
+            this.printCardRoundWidgets();
 
-        System.out.println();
-        System.out.println("Available commands:");
-        this.cardRoundCommandsWidget.printWidget();
+            // Showing currently available commands
+            System.out.println();
+            System.out.println("Available commands:");
 
-        try {
-            System.out.print(DEFAULT_COMMAND_PREFIX);
-            line = this.inputThread.waitForInput();
-
-            // A forced interrupt arrived
-            if (line == null) return;
-        }
-        catch (InterruptedException e) {
-            // A forced interrupt arrived
-            return;
-        }
-
-        try {
-            choice = Integer.parseInt(line);
-        }
-        catch (NumberFormatException e) {
-            System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
-            this.getCardRoundCommand();
-            return;
-        }
-
-        switch (choice) {
-            case 1 -> {
-                // (1) - Play card (submits the player's input)
-                try {
-                    this.playCard();
-                }
-                catch (Exception e) {
-                    System.out.println(PrintUtils.addColor("[ERROR] playCard::sendMessage threw \"" + e.getClass().getSimpleName() + "\"", ANSIColors.RED));
-                }
+            try {
+                commandSelected = this.cardRoundCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
             }
-            case 2 -> {
-                // (2) - Visualize ships
-                this.getOtherShipCommand();
-                this.getCardRoundCommand();
+            catch (InterruptedException e) {
+                return;
             }
-            default -> {
-                // Loopback and ask for a valid command
+
+            if (!commandSelected) {
                 System.out.println(UNKNOWN_COMMAND_ERROR);
-                this.getCardRoundCommand();
             }
         }
+        while (!commandSelected);
     }
 
     /**
@@ -995,6 +1225,14 @@ public class CardRoundScreen extends Screen {
      */
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
+        // Initializing the map of available input methods
+        this.generateIndexedCardInputMethodsMap();
+        this.generateCardRoundCommandsWidget();
+
+        System.out.println();
+        System.out.println(ANSIColors.BRIGHT_CYAN + "[!] CardRoundDTO has arrived [!]" + ANSIColors.RESET);
+        System.out.println();
+
         // Prints the card round TUI and asks the user for a command
         this.getCardRoundCommand();
     }

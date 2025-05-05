@@ -46,11 +46,11 @@ class PiratesTest {
     Pirates pirates;
     ClientPirates clientPirates;
 
-    List<ComponentHelper<Integer>> ShieldsToActivate;
-    List<ComponentHelper<Integer>> shieldsToActivate1;
-    List<ComponentHelper<Integer>> shieldsToActivate2;
-    List<ComponentHelper<Integer>> shieldsToActivate3;
-    List<ComponentHelper<Integer>> shieldsToActivate4;
+    List<ComponentHelper<Void>> ShieldsToActivate;
+    List<ComponentHelper<Void>> shieldsToActivate1;
+    List<ComponentHelper<Void>> shieldsToActivate2;
+    List<ComponentHelper<Void>> shieldsToActivate3;
+    List<ComponentHelper<Void>> shieldsToActivate4;
 
     ArrayList<Integer> dicesResults;
 
@@ -412,7 +412,7 @@ class PiratesTest {
 
         ShieldsToActivate = new ArrayList<>();
 
-        List<ComponentHelper<Integer>> doubleCannonActivated = new ArrayList<>();
+        List<ComponentHelper<Void>> doubleCannonActivated = new ArrayList<>();
 //        x.add(5);
 //        y.add(6);
 //        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(5, 6)));

@@ -1124,7 +1124,12 @@ public final class ShipConstructionTUIPage extends TUIPage {
                 System.out.println();
                 System.out.println("Available component selection commands:");
 
-                existingCommandSelected = this.cardDeckSelectionWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                try {
+                    existingCommandSelected = this.cardDeckSelectionWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                }
+                catch (InterruptedException e) {
+                    return;
+                }
 
                 if (!existingCommandSelected) {
                     System.out.println(UNKNOWN_COMMAND_ERROR);
@@ -1145,7 +1150,12 @@ public final class ShipConstructionTUIPage extends TUIPage {
                 System.out.println();
                 System.out.println("Available component selection commands:");
 
-                existingCommandSelected = this.componentSelectionCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                try {
+                    existingCommandSelected = this.componentSelectionCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                }
+                catch (InterruptedException e) {
+                    return;
+                }
 
                 if (!existingCommandSelected) {
                     System.out.println(UNKNOWN_COMMAND_ERROR);
@@ -1166,7 +1176,12 @@ public final class ShipConstructionTUIPage extends TUIPage {
                 System.out.println();
                 System.out.println("Available ship construction commands:");
 
-                existingCommandSelected = this.shipConstructionCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                try {
+                    existingCommandSelected = this.shipConstructionCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                }
+                catch (InterruptedException e) {
+                    return;
+                }
 
                 if (!existingCommandSelected) {
                     System.out.println(UNKNOWN_COMMAND_ERROR);

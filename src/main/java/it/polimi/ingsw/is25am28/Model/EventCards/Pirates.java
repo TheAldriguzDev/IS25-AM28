@@ -211,7 +211,7 @@ public class Pirates extends EventCard {
 //                    Pair<Integer, Integer> currentPlasmaShot = new Pair<>(shotSize, shotDirection);
 
                     // Impostazione dei lati protetti della ship
-                    for (ComponentHelper<Integer> coordinates : piratesData.getShieldsActivatedCoordinates()) {
+                    for (ComponentHelper<Void> coordinates : piratesData.getShieldsActivatedCoordinates()) {
                         Shield shield = (Shield) player.getShip().getComponent(coordinates.getI(), coordinates.getJ());
                         if (player.getShip().getAvailableEnergy() > 0) {
                             player.getShip().consumeEnergy(1);

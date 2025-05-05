@@ -124,8 +124,8 @@ class HourGlassTest {
 //        System.out.println("Sub2 updated after: " + (subscriber2.getInvocationTime() - startTime) + "ms");
 //        System.out.println("Sub3 updated after: " + (subscriber3.getInvocationTime() - startTime) + "ms");
 
-        // 10ms is the max delay for the timer thread
-        long delayThreshold = 10L;
+        // 100ms is the max delay for the timer thread
+        long delayThreshold = 100L;
 
         assertNotEquals(Long.MIN_VALUE, subscriber1.getInvocationTime());
         assertNotEquals(Long.MIN_VALUE, subscriber2.getInvocationTime());

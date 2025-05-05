@@ -129,17 +129,22 @@ public class ClientPirates extends ClientEventCard {
     }
 
     @Override
-    public void setShieldsToActivate(List<ComponentHelper<Integer>> shieldsToActivate) throws UnsupportedOperationException {
+    public void setShieldsToActivate(List<ComponentHelper<Void>> shieldsToActivate) throws UnsupportedOperationException {
         this.piratesJSON.setShieldsActivatedCoordinates(shieldsToActivate);
     }
 
     @Override
-    public List<ComponentHelper<Integer>> getShieldsToActivate() throws UnsupportedOperationException {
+    public List<ComponentHelper<Void>> getShieldsToActivate() throws UnsupportedOperationException {
         return this.piratesJSON.getShieldsActivatedCoordinates();
     }
 
     @Override
-    public List<ComponentHelper<Integer>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
+        this.piratesJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
+    }
+
+    @Override
+    public List<ComponentHelper<Void>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         return this.piratesJSON.getDoubleCannonsToActivateCoordinates();
     }
 

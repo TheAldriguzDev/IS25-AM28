@@ -691,6 +691,27 @@ public class ClientShip implements WidgetTUIGenerator {
     }
 
     /**
+     * @return This ship's baseline firepower
+     */
+    public float getBaselineFirepower() {
+        // Adding the firepower of only the single cannons
+        return (float) this.cannonList.stream()
+                .filter((ClientCannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
+                .mapToDouble(ClientCannon::getFirePower)
+                .sum();
+    }
+
+    /**
+     * @return This ship's baseline engine power
+     */
+    public int getBaselineEnginePower() {
+        // Adding the engine power of only the single engines
+        return (int) this.engineList.stream()
+                .filter(e -> (e.getSpeed() == 1))
+                .count();
+    }
+
+    /**
      * @return The widget containing all of this ship's component's widgets
      *         as they are put inside this ship's grid
      */
@@ -788,8 +809,8 @@ public class ClientShip implements WidgetTUIGenerator {
         //       use or they can just be ported from Ship into ClientShip without changing anything
         // Getting all the ship's stats
         shipStatsScreen.add("Total Crew: " + this.getAllLifeforms().size());
-        shipStatsScreen.add("Firepower: " + "WIP" /* this.getFirePower(null) */);
-        shipStatsScreen.add("EnginePower: " + "WIP" /* this.getEnginePower(0) */);
+        shipStatsScreen.add("Firepower: " + this.getBaselineFirepower());
+        shipStatsScreen.add("EnginePower: " + this.getBaselineEnginePower());
 
         shipStatsWidget.appendScreen(shipStatsScreen);
         shipStatsWidget.centerWidgetScreen();

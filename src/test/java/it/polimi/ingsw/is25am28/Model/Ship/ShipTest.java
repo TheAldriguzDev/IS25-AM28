@@ -533,7 +533,7 @@ class ShipTest {
 
     @Test
     void getFirePower() {
-        List<ComponentHelper<Integer>> doubleCannonCoords;
+        List<ComponentHelper<Void>> doubleCannonCoords;
         int expectedFirePower;
         Ship ship;
 
