@@ -45,7 +45,7 @@ public class ClientStardust extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI twinkling_space = new WidgetTUI();
 
-        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
 
         List<String> colorPool = new ArrayList<>();
         Random rand = new Random();

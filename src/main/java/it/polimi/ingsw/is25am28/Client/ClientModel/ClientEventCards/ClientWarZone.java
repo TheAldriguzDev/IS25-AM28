@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.List;
@@ -61,20 +62,51 @@ public class ClientWarZone extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+        String tmpAction = null;
+        String tmpConsequence = null;
+        switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
+            case "Humans" -> tmpAction = "Crew";
+            case "Enginepower" -> tmpAction = "EnginePower";
+            case "Firepower" -> tmpAction = "FirePower";
+        }
+        switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
+            case "RequiredCrew" -> tmpConsequence = "Taken Crew";
+            case "MovementSteps" ->tmpConsequence = "Days";
+            case "ShootingSequence" -> tmpConsequence = "PlasmaShots";
+            case "LossItems" -> tmpConsequence = "Taken Items";
+        }
+
+        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
 
         if (this.playerNickname != null) {
             cardInfoWidget.appendString("Current Player: " + playerNickname);
-            cardWidget.appendString("currAction: " + actionAndConsequences.get(currActionIndex).getFirst()); // SWITCH CASE TO WRITE IN A BETTER WAY
-            cardWidget.appendString("currConsequence: " + actionAndConsequences.get(currActionIndex).getLast());
+//            cardWidget.appendString("currAction: " + actionAndConsequences.get(currActionIndex).getFirst()); // SWITCH CASE TO WRITE IN A BETTER WAY
+//            cardWidget.appendString("currConsequence: " + actionAndConsequences.get(currActionIndex).getLast());
 
-            switch (actionAndConsequences.get(currActionIndex).getLast()) {
+            switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
                 case "RequiredCrew" -> {
-                    cardInfoWidget.appendString("==== *CHAINS IMAGE* ====");
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "        ██        ██    ██     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██       ████       " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██       ████       " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "        ██        ██    ██     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
+                    cardInfoWidget.wrapWidgetWithBorder();
 
                     if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
                         cardInfoWidget.appendString("Required Crew: " + requiredCrew);
+                    } else {
+                        cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
                     }
+
+//                    cardInfoWidget.appendString(this.actionAndConsequences.get(currActionIndex).getFirst() + " --> " + this.actionAndConsequences.get(currActionIndex).getLast());
+
                 }
                 case "ShootingSequence" -> {
                     cardInfoWidget.appendString("==== *PLASMASHOT IMAGE* ===="); // ALSO INCLUDE SEQUENCE
@@ -102,14 +134,34 @@ public class ClientWarZone extends ClientEventCard {
                 case "LossItems" -> {
                     cardInfoWidget.appendString("==== *ITEM IMAGE* ====");
                     if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
-                        cardInfoWidget.appendString("RequiredResorces: " + requiredResources);
+                        cardInfoWidget.appendString("RequiredResources: " + requiredResources);
+                    } else {
+                        cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
                     }
                 }
             }
+
+
         }
         else {
-            cardInfoWidget.appendString("CurrActionsAndConsequences: " + actionAndConsequences);
-            cardInfoWidget.appendString("Card Level: " + this.cardLevel);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "      ██  ██  ███  ██  ██      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "      ███████████████████      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "            ███████            " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "         █████████████         " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "        ███████████████        " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "       █████████████████       " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "      ███████████████████      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "      ███████████████████      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "      ███████████████████      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.RED   + "      ███████████████████      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.RED   + "        ███████████████        " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.RED   + "          ███████████          " + ANSIColors.RESET);
+            cardInfoWidget.wrapWidgetWithBorder();
+
+            for (List<String> pair : actionAndConsequences) {
+                cardInfoWidget.appendString(pair.get(0) + " --> " + pair.get(1));
+            }
+//            cardInfoWidget.appendString("CurrActionsAndConsequences: " + actionAndConsequences);
         }
 
         if (this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) { // NOT NECESSARY IN PRINT, ONLY IN USECARD

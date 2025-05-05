@@ -23,6 +23,7 @@ public enum WarZoneConsequence {
             case REQUIREDCREW -> "RequiredCrew";
             case MOVEMENTSTEPS -> "MovementSteps";
             case SHOOTINGSEQUENCE -> "ShootingSequence";
+            case LOSSITEMS -> "LossItems";
             default -> throw new IllegalArgumentException("Unknown action consequence: " + this);
         };
     }

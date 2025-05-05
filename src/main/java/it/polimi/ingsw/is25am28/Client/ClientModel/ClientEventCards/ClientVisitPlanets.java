@@ -20,6 +20,7 @@ public class ClientVisitPlanets extends ClientEventCard {
         ClientEventCard.enabledCommands.add("setChosenPlanetIndex");
     }
 
+    private int movementSteps;
     private Map<Integer, Map<ItemColor, Integer>> availablePlanets; // TODO: a list would serve this role better since the generateWidget needs order
     private int chosenPlanetIndex;
 
@@ -27,6 +28,7 @@ public class ClientVisitPlanets extends ClientEventCard {
 
     public ClientVisitPlanets(CardStateJSON cardState) {
         super(cardState);
+        this.movementSteps = cardState.getMovementSteps();
         this.availablePlanets = cardState.getAvailablePlanets();
         this.visitPlanetsJSON = new VisitPlanetsJSON();
     }
@@ -54,7 +56,12 @@ public class ClientVisitPlanets extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+        int redItems = 0;
+        int yellowItems = 0;
+        int blueItems = 0;
+        int greenItems = 0;
+
+        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
 
         cardInfoWidget.appendString(ANSIColors.BLUE + "                               " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.GREEN + " ██████████" + ANSIColors.BLUE + "███████████████████ " + ANSIColors.RESET);
@@ -71,14 +78,22 @@ public class ClientVisitPlanets extends ClientEventCard {
 
         cardInfoWidget.wrapWidgetWithBorder();
 
-        cardInfoWidget.appendString("Card Level: " + this.cardLevel);
-        cardInfoWidget.appendString("Available Planets: ");
+//        cardInfoWidget.appendString("Available Planets: ");
+        cardInfoWidget.appendString("Days: " + this.movementSteps);
 
         for (Map.Entry<Integer, Map<ItemColor, Integer>> entry : availablePlanets.entrySet()) {
-            cardInfoWidget.appendString(entry.getKey() + ": " + entry.getValue().toString());
+//            cardInfoWidget.appendString(entry.getKey() + ": " + entry.getValue().toString());
+            redItems = (entry.getValue().get(ItemColor.RED));
+            yellowItems = (entry.getValue().get(ItemColor.YELLOW));
+            blueItems = (entry.getValue().get(ItemColor.BLUE));
+            greenItems = (entry.getValue().get(ItemColor.GREEN));
+            cardInfoWidget.appendString("───────────────────────────────");
+            cardInfoWidget.appendString("Planet ╿ Available ╿ " + ANSIColors.RED + "R: " + ANSIColors.RESET + redItems + "," + ANSIColors.YELLOW + " Y: " + ANSIColors.RESET + yellowItems);
+            cardInfoWidget.appendString("Num: " + entry.getKey() + " ╽ Resources ╽ " + ANSIColors.BLUE + "B: " + ANSIColors.RESET + blueItems + "," + ANSIColors.GREEN + " G: " + ANSIColors.RESET + greenItems);
         }
 
         if (this.playerNickname != null) {
+            cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Current Player: " + playerNickname);
         }
 

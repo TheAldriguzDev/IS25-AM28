@@ -61,29 +61,31 @@ public class ClientSlavers extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
 
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██        ██        " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "         ██        ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██       ████       " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██       ████       " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "       ██████      ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "         ██        ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██      ██████      " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██    ██        ██        " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "        ██        ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██       ████       " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██       ████       " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "        ██        ██    ██     " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
         cardInfoWidget.wrapWidgetWithBorder();
 
         if (this.firstRound) {
-            cardInfoWidget.appendString("Level: " + this.cardLevel);
-            cardInfoWidget.appendString("Given Credits: " + this.givenCredits);
-            cardInfoWidget.appendString("Days: " + this.movementSteps);
-            cardInfoWidget.appendString("Required Firepower: " + this.requiredFirepower);
+//            cardInfoWidget.appendString("─────────PREREQUISITES─────────");
+            cardInfoWidget.appendString("Days: " + this.movementSteps + "      Firepower: " + this.requiredFirepower);
+            cardInfoWidget.appendString("───────────────────────────────");
+            cardInfoWidget.appendString("Given credits: " + this.givenCredits);
+            cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Taken Crew: " + this.takenCrew);
             if (this.playerNickname != null) {
+                cardInfoWidget.appendString("───────────────────────────────");
                 cardInfoWidget.appendString("Current Player: " + this.playerNickname);
             }
         } else {

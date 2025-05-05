@@ -363,6 +363,7 @@ public class VisitPlanets extends EventCard {
             cardState.setCardLevel(this.getCardLevel());
             cardState.setCardIsUsable( !this.hasFinished());
 
+            cardState.setMovementSteps(this.movementSteps);
             availablePlanets = new HashMap<>(this.itemsPerPlanet);
             cardState.setAvailablePlanets(availablePlanets);
         }
