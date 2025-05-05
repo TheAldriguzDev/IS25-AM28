@@ -19,6 +19,7 @@ public class ClientAbandonedStation extends ClientEventCard {
         enabledCommands = new ArrayList<>();
         enabledCommands.add("setItemsToBeRemoved");
         enabledCommands.add("setItemsToBeTaken");
+        enabledCommands.add("setWantsToVisit");
     }
 
     private final int requiredCrew;
