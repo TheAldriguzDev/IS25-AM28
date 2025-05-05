@@ -9,8 +9,8 @@ import java.util.List;
 
 public class PiratesJSON extends ActionJSON {
     private boolean takeCredits;
-    private List<ComponentHelper<Integer>> shieldsActivatedCoordinates;
-    private List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates;
+    private List<ComponentHelper<Void>> shieldsActivatedCoordinates;
+    private List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates;
 
     public PiratesJSON() {
         this.takeCredits = false;
@@ -20,8 +20,8 @@ public class PiratesJSON extends ActionJSON {
 
     public PiratesJSON(@JsonProperty("PlayerNickname") String playerNickname,
                        @JsonProperty("takeCredits") boolean takeCredits,
-                       @JsonProperty("shieldsActivatedCoordinates") List<ComponentHelper<Integer>> shieldsActivatedCoordinates,
-                       @JsonProperty("doubleCannonsToActivateCoordinates") List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates) {
+                       @JsonProperty("shieldsActivatedCoordinates") List<ComponentHelper<Void>> shieldsActivatedCoordinates,
+                       @JsonProperty("doubleCannonsToActivateCoordinates") List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates) {
         super(playerNickname);
         this.takeCredits = takeCredits;
         this.shieldsActivatedCoordinates = shieldsActivatedCoordinates;
@@ -39,22 +39,22 @@ public class PiratesJSON extends ActionJSON {
     }
 
     @JsonGetter("shieldsActivatedCoordinates")
-    public List<ComponentHelper<Integer>> getShieldsActivatedCoordinates() {
+    public List<ComponentHelper<Void>> getShieldsActivatedCoordinates() {
         return shieldsActivatedCoordinates;
     }
 
     @JsonSetter("shieldsActivatedCoordinates")
-    public void setShieldsActivatedCoordinates(List<ComponentHelper<Integer>> shieldsActivatedCoordinates) {
+    public void setShieldsActivatedCoordinates(List<ComponentHelper<Void>> shieldsActivatedCoordinates) {
         this.shieldsActivatedCoordinates = shieldsActivatedCoordinates;
     }
 
     @JsonGetter("doubleCannonsToActivateCoordinates")
-    public List<ComponentHelper<Integer>> getDoubleCannonsToActivateCoordinates() {
+    public List<ComponentHelper<Void>> getDoubleCannonsToActivateCoordinates() {
         return doubleCannonsToActivateCoordinates;
     }
 
     @JsonSetter("doubleCannonsToActivateCoordinates")
-    public void setDoubleCannonsToActivateCoordinates(List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates) {
+    public void setDoubleCannonsToActivateCoordinates(List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates) {
         this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
 

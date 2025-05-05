@@ -13,8 +13,8 @@ public class WarZoneJSON extends ActionJSON {
     private int usedEnergy;
     private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
     private List<ComponentHelper<ItemColor>> itemsToBeRemoved;
-    private List<ComponentHelper<Integer>> shieldList;
-    private List<ComponentHelper<Integer>> cannonList;
+    private List<ComponentHelper<Void>> shieldList;
+    private List<ComponentHelper<Void>> cannonList;
 
     /**
      * Default constructor
@@ -32,8 +32,8 @@ public class WarZoneJSON extends ActionJSON {
             @JsonProperty("usedEnergy") int usedEnergy,
             @JsonProperty("lifeformsToBeRemoved") List<ComponentHelper<LifeformType>> lifeformsToBeRemoved,
             @JsonProperty("itemsToBeRemoved") List<ComponentHelper<ItemColor>> itemsToBeRemoved,
-            @JsonProperty("shieldList") List<ComponentHelper<Integer>> shieldList,
-            @JsonProperty("cannonList") List<ComponentHelper<Integer>> cannonList
+            @JsonProperty("shieldList") List<ComponentHelper<Void>> shieldList,
+            @JsonProperty("cannonList") List<ComponentHelper<Void>> cannonList
     ) {
         this.playerNickname = playerNickname;
         this.usedEnergy = usedEnergy;
@@ -78,22 +78,22 @@ public class WarZoneJSON extends ActionJSON {
     }
 
     @JsonGetter("shieldList")
-    public List<ComponentHelper<Integer>> getShieldList() {
+    public List<ComponentHelper<Void>> getShieldList() {
         return this.shieldList;
     }
 
     @JsonSetter("shieldList")
-    public void setShieldList(List<ComponentHelper<Integer>> shieldList) {
+    public void setShieldList(List<ComponentHelper<Void>> shieldList) {
         this.shieldList = shieldList;
     }
 
     @JsonGetter("cannonList")
-    public List<ComponentHelper<Integer>> getCannonList() {
+    public List<ComponentHelper<Void>> getCannonList() {
         return this.cannonList;
     }
 
     @JsonSetter("cannonList")
-    public void setCannonList(List<ComponentHelper<Integer>> cannonList) {
+    public void setCannonList(List<ComponentHelper<Void>> cannonList) {
         this.cannonList = cannonList;
     }
 }

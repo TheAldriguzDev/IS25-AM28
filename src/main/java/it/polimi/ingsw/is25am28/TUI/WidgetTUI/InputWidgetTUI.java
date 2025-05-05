@@ -19,6 +19,14 @@ public class InputWidgetTUI extends WidgetTUI {
         this.inputThread = null;
     }
 
+    // Constructor
+    public InputWidgetTUI(InputThread inputThread) {
+        super();
+        this.commands = null;
+        this.commandsPerCol = DEFAULT_GROUPING_FACTOR;
+        this.inputThread = inputThread;
+    }
+
     /**
      * Sets this input widget's input thread
      */
@@ -89,7 +97,7 @@ public class InputWidgetTUI extends WidgetTUI {
      * @return A <code>Future</code> of <code>Boolean</code> that contains whether
      *         the user input resulted in the selection of a command or not.
      */
-    public boolean selectCommand(String prefix) {
+    public boolean selectCommand(String prefix) throws InterruptedException {
         CommandWidgetTUI commandWidget;
         String input;
 
@@ -101,15 +109,11 @@ public class InputWidgetTUI extends WidgetTUI {
                 System.out.print(prefix);
             }
 
-            try {
-                input = this.inputThread.waitForInput();
+            input = this.inputThread.waitForInput();
 
-                // A forced interrupt arrived
-                if (input == null) return false;
-            }
-            catch (InterruptedException e) {
-                // A forced interrupt arrived
-                return false;
+            // A forced interrupt arrived
+            if (input == null) {
+                throw new InterruptedException();
             }
 
             commandWidget = this.commands.get(input);

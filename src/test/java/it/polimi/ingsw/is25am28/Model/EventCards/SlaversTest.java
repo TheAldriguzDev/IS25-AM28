@@ -133,7 +133,7 @@ class SlaversTest {
         // ================================ //
 
         // ======== DATA NECESSARY TO TEST THE CARD ======== //
-        List<ComponentHelper<Integer>> doubleCannonActivated = new ArrayList<>();
+        List<ComponentHelper<Void>> doubleCannonActivated = new ArrayList<>();
 
 //        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(7, 9)));
         doubleCannonActivated.add(new ComponentHelper<>(7, 9));
@@ -344,7 +344,7 @@ class SlaversTest {
     public void test_first_three_players_tie_fourth_one_wins() {
         slavers = new Slavers("Slavers", 2, 3, 2, 4, 6, board);
 
-        List<ComponentHelper<Integer>> doubleCannonActivated = new ArrayList<>();
+        List<ComponentHelper<Void>> doubleCannonActivated = new ArrayList<>();
 //        List<Integer> x = new ArrayList<>();
 //        List<Integer> y = new ArrayList<>();
 //        x.add(7);

@@ -42,10 +42,10 @@ class WarZoneTest {
     // All THREE_PIPES connectors
     List<Integer> connectorsThree = new ArrayList<Integer>();
 
-    List<ComponentHelper<Integer>> doubleCannons_1 = new ArrayList<>();
-    List<ComponentHelper<Integer>> doubleCannons_2 = new ArrayList<>();
-    List<ComponentHelper<Integer>> doubleCannons_3 = new ArrayList<>();
-    List<ComponentHelper<Integer>> doubleCannons_4 = new ArrayList<>();
+    List<ComponentHelper<Void>> doubleCannons_1 = new ArrayList<>();
+    List<ComponentHelper<Void>> doubleCannons_2 = new ArrayList<>();
+    List<ComponentHelper<Void>> doubleCannons_3 = new ArrayList<>();
+    List<ComponentHelper<Void>> doubleCannons_4 = new ArrayList<>();
 
     List<ComponentHelper<LifeformType>> lifeformsToRemove_empty = new ArrayList<>();
     List<ComponentHelper<LifeformType>> lifeformsToRemove_4;
@@ -53,11 +53,11 @@ class WarZoneTest {
     List<ComponentHelper<LifeformType>> lifeformsToRemove_2;
     List<ComponentHelper<LifeformType>> lifeformsToRemove_1;
 
-    List<ComponentHelper<Integer>> getShieldsToActivate_empty = new ArrayList<>();
-    List<ComponentHelper<Integer>> shieldsToActivate1;
-    List<ComponentHelper<Integer>> shieldsToActivate2;
+    List<ComponentHelper<Void>> getShieldsToActivate_empty = new ArrayList<>();
+    List<ComponentHelper<Void>> shieldsToActivate1;
+    List<ComponentHelper<Void>> shieldsToActivate2;
 
-    List<ComponentHelper<Integer>> doubleCannons_empty = new ArrayList<>();
+    List<ComponentHelper<Void>> doubleCannons_empty = new ArrayList<>();
 
     ResourceBank resourceBank;
 

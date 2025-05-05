@@ -436,7 +436,11 @@ public final class GameMenuTUIPage extends TUIPage {
                 System.out.println();
                 System.out.println("Available menu commands:");
 
-                existingCommandSelected = this.menuCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                try {
+                    existingCommandSelected = this.menuCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                } catch (InterruptedException e) {
+                    return;
+                }
 
                 if (!existingCommandSelected) {
                     System.out.println(UNKNOWN_COMMAND_ERROR);
@@ -457,7 +461,11 @@ public final class GameMenuTUIPage extends TUIPage {
                 System.out.println();
                 System.out.println("Currently Available Games:");
 
-                existingCommandSelected = this.gameListInputWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                try {
+                    existingCommandSelected = this.gameListInputWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                } catch (InterruptedException e) {
+                    return;
+                }
 
                 if (!existingCommandSelected) {
                     System.out.println(UNKNOWN_COMMAND_ERROR);

@@ -111,12 +111,12 @@ public class ClientSmugglers extends ClientEventCard {
     }
 
     @Override
-    public void setDoubleCannonsToActivate(List<ComponentHelper<Integer>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.smugglersJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
     }
 
     @Override
-    public List<ComponentHelper<Integer>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<ComponentHelper<Void>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         return this.smugglersJSON.getDoubleCannonsToActivateCoordinates();
     }
 

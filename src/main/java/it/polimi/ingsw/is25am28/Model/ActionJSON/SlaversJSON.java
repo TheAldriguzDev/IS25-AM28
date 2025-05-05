@@ -10,8 +10,8 @@ import java.util.List;
 
 public class SlaversJSON extends ActionJSON {
     private boolean takeCredits;
-    private ArrayList<ComponentHelper<LifeformType>> crewToRemove;
-    private List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates;
+    private List<ComponentHelper<LifeformType>> crewToRemove;
+    private List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates;
 
     public SlaversJSON() {
         this.takeCredits = false;
@@ -21,8 +21,8 @@ public class SlaversJSON extends ActionJSON {
 
     public SlaversJSON (@JsonProperty("playerNickname") String playerNickname,
                         @JsonProperty("takeCredits") boolean takeCredits,
-                        @JsonProperty("crewToRemove") ArrayList<ComponentHelper<LifeformType>> crewToRemove,
-                        @JsonProperty("doubleCannonsToActivateCoordinates") List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates) {
+                        @JsonProperty("crewToRemove") List<ComponentHelper<LifeformType>> crewToRemove,
+                        @JsonProperty("doubleCannonsToActivateCoordinates") List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates) {
         super(playerNickname);
         this.takeCredits = takeCredits;
         this.crewToRemove = crewToRemove;
@@ -40,22 +40,22 @@ public class SlaversJSON extends ActionJSON {
     }
 
     @JsonGetter("crewToRemove")
-    public ArrayList<ComponentHelper<LifeformType>> getCrewToRemove() {
+    public List<ComponentHelper<LifeformType>> getCrewToRemove() {
         return crewToRemove;
     }
 
     @JsonSetter("crewToRemove")
-    public void setCrewToRemove(ArrayList<ComponentHelper<LifeformType>> crewToRemove) {
+    public void setCrewToRemove(List<ComponentHelper<LifeformType>> crewToRemove) {
         this.crewToRemove = crewToRemove;
     }
 
     @JsonGetter("doubleCannonsToActivateCoordinates")
-    public List<ComponentHelper<Integer>> getDoubleCannonsToActivateCoordinates() {
+    public List<ComponentHelper<Void>> getDoubleCannonsToActivateCoordinates() {
         return doubleCannonsToActivateCoordinates;
     }
 
     @JsonSetter("doubleCannonsToActivateCoordinates")
-    public void setDoubleCannonsToActivateCoordinates(List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates) {
+    public void setDoubleCannonsToActivateCoordinates(List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates) {
         this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
 }

@@ -11,7 +11,7 @@ public class SmugglersJSON extends ActionJSON {
     private boolean takeLoot;
     private List<ComponentHelper<ItemColor>> itemsToBeTaken;
     private List<ComponentHelper<ItemColor>> itemsToBeRemoved;
-    private List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates;
+    private List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates;
 
     public SmugglersJSON() {
         this.takeLoot = false;
@@ -24,7 +24,7 @@ public class SmugglersJSON extends ActionJSON {
                          @JsonProperty("takeLoot") boolean takeLoot,
                          @JsonProperty("itemsToBeTaken") List<ComponentHelper<ItemColor>> itemsToBeTaken,
                          @JsonProperty("itemsToBeRemoved") List<ComponentHelper<ItemColor>> itemsToBeRemoved,
-                         @JsonProperty("doubleCannonsToActivateCoordinates") List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates) {
+                         @JsonProperty("doubleCannonsToActivateCoordinates") List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates) {
         super(playerNickname);
         this.takeLoot = takeLoot;
         this.itemsToBeTaken = itemsToBeTaken;
@@ -63,12 +63,12 @@ public class SmugglersJSON extends ActionJSON {
     }
 
     @JsonGetter("doubleCannonsToActivateCoordinates")
-    public List<ComponentHelper<Integer>> getDoubleCannonsToActivateCoordinates() {
+    public List<ComponentHelper<Void>> getDoubleCannonsToActivateCoordinates() {
         return doubleCannonsToActivateCoordinates;
     }
 
     @JsonSetter("doubleCannonsToActivateCoordinates")
-    public void setDoubleCannonsToActivateCoordinates(List<ComponentHelper<Integer>> doubleCannonsToActivateCoordinates) {
+    public void setDoubleCannonsToActivateCoordinates(List<ComponentHelper<Void>> doubleCannonsToActivateCoordinates) {
         this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
 
