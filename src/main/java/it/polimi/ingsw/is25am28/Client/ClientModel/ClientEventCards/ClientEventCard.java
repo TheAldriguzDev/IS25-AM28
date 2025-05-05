@@ -17,11 +17,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class ClientEventCard implements WidgetTUIGenerator {
-    protected static final List<String> enabledCommands;
-
-    static {
-        enabledCommands = new ArrayList<>();
-    }
+    protected final List<String> enabledCommands = new ArrayList<>();
 
     protected final int id;
     protected String playerNickname;
@@ -43,15 +39,15 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
      * Each card will set to TRUE only the input methods it needs inside
      * its own ActionJSON to provide the server the player's choices.
      */
-    public static void setAvailableCommands(Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods) {
-        // First put to false all flags
+    public void setAvailableCommands(Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods) {
         for (Map.Entry<String, Pair<Boolean, CommandWidgetTUI>> entry : indexedCardInputMethods.entrySet()) {
             entry.getValue().setKey(false);
         }
 
-        // Then activate only the ones specified by the current event card
         for (String command : enabledCommands) {
-            indexedCardInputMethods.get(command).setKey(true);
+            if (indexedCardInputMethods.containsKey(command)) {
+                indexedCardInputMethods.get(command).setKey(true);
+            }
         }
     }
 

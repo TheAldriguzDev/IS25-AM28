@@ -36,12 +36,13 @@ public class MeteorShower extends EventCard {
 
 
     public MeteorShower(
-            @JsonProperty("cardName") String cardName,
-            @JsonProperty("cardLevel") int cardLevel,
-            @JsonProperty("meteorSequence") List<List<Integer>> meteorSequence,
-            Board board
+            String cardName,
+            int cardLevel,
+            List<List<Integer>> meteorSequence,
+            Board board,
+            int cardID
     ) {
-        super(cardName, cardLevel, board);
+        super(cardName, cardLevel, board, cardID);
 
         this.currMeteorIndex = 0;
         this.diceThrowResult = -1;

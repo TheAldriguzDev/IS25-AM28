@@ -209,7 +209,12 @@ public class CardRoundScreen extends Screen {
         command.appendString("Acknowledge and continue");
         this.indexedCardInputMethods.put("getPlayerAck", new Pair<>(false, command));
 
-        ClientEventCard.setAvailableCommands(this.indexedCardInputMethods);
+        this.getCurrEventCard();
+        try {
+            this.currEventCard.setAvailableCommands(this.indexedCardInputMethods);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -816,6 +821,7 @@ public class CardRoundScreen extends Screen {
                     this.playCard();
                 }
                 catch (Exception e) {
+                    e.printStackTrace();
                     System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" thrown by method 'playCard'.", ANSIColors.RED));
                 }
 
@@ -843,7 +849,7 @@ public class CardRoundScreen extends Screen {
         // the currently active event card
         this.cardRoundCommandsWidget.setCommands(
             this.indexedCardInputMethods.values().stream()
-                .filter(pair -> (pair.getKey() == true))
+                .filter(Pair::getKey)
                 .map(Pair::getValue)
                 .toList()
         );
@@ -1225,6 +1231,19 @@ public class CardRoundScreen extends Screen {
      */
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
+        int cardId;
+
+        cardId = cardRound.getCardInfo().getId();
+        for (ClientEventCard card : this.model.getClientEventCards()) {
+            if (card.getId() == cardId) {
+                this.currEventCard = card;
+            }
+        }
+
+        this.currEventCard.updateCard(cardRound.getCardInfo());
+
+        System.out.println(cardRound.getCardInfo().getCardName());
+
         // Initializing the map of available input methods
         this.generateIndexedCardInputMethodsMap();
         this.generateCardRoundCommandsWidget();

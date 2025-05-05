@@ -37,9 +37,10 @@ public class VisitPlanets extends EventCard {
             @JsonProperty("movementSteps") int movementSteps,
             @JsonProperty("itemsPerPlanet") List<Map<String, Integer>> itemsPerPlanet,
             ResourceBank resourceBank,
-            Board board
+            Board board,
+            int cardID
     ) {
-        super(cardName, cardLevel, board);
+        super(cardName, cardLevel, board, cardID);
 
         updatedPositions = new HashMap<>();
 

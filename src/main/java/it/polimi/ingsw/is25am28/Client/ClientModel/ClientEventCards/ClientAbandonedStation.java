@@ -11,12 +11,6 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.util.List;
 
 public class ClientAbandonedStation extends ClientEventCard {
-    // Commands that this card will enable are added here
-    static {
-        ClientEventCard.enabledCommands.add("setItemsToBeRemoved");
-        ClientEventCard.enabledCommands.add("setItemsToBeTaken");
-    }
-
     private final int requiredCrew;
     private final int movementStep;
     private List<ItemColor> stationResources;
@@ -31,6 +25,9 @@ public class ClientAbandonedStation extends ClientEventCard {
         this.hasBeenUsed = cardState.getIsCardUsable();
         this.stationResources = cardState.getStationResources();
         this.abandonedStationJSON = new AbandonedStationJSON();
+
+        enabledCommands.add("setItemsToBeRemoved");
+        enabledCommands.add("setItemsToBeTaken");
     }
 
     @Override

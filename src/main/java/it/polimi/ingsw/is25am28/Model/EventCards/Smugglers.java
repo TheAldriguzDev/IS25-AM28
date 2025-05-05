@@ -30,8 +30,8 @@ public class Smugglers extends EventCard {
     private Map<String, Integer> removedBatteries; // TODO: missing implementation on firepower
     private List<String> eliminatedPlayers;
 
-    public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank) {
-        super(name, cardLevel, board);
+    public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank, int cardID) {
+        super(name, cardLevel, board, cardID);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.redItems = redItems;

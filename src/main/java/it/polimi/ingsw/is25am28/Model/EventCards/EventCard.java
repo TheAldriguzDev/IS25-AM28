@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 
 public abstract class EventCard {
     protected final int id;
+    private final int cardID;
     protected String name;
     protected int cardLevel;
     protected List<Player> players;
@@ -31,7 +32,7 @@ public abstract class EventCard {
     /**
      * General constructor shared between the classes
      * */
-    protected EventCard(String name, int cardLevel, Board board) {
+    protected EventCard(String name, int cardLevel, Board board, int cardID) {
         this.id = this.getId();
         this.name = name;
         this.cardLevel = cardLevel;
@@ -39,6 +40,7 @@ public abstract class EventCard {
         this.hasBeenUsed = false;
         this.currentPlayer = Optional.empty();
         this.hasBeenActivated = false;
+        this.cardID = cardID;
     }
 
     /**

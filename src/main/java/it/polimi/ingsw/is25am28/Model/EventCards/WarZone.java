@@ -62,9 +62,10 @@ public class WarZone extends EventCard {
             int requiredCrew,
             int requiredItems,
             List<PlasmaShot> shootingSequence,
-            List<WarZoneActionConsequencePair> cardActions
+            List<WarZoneActionConsequencePair> cardActions,
+            int cardID
     ) {
-        super(name, level, board);
+        super(name, level, board, cardID);
         this.resourceBank = resourceBank;
         this.movementSteps = movementSteps;
         this.requiredCrew = requiredCrew;

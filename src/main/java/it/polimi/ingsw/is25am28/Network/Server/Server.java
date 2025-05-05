@@ -283,7 +283,12 @@ public class Server {
             int gameID = this.clientToGame.get(playerNickname);
             GameInstance game = this.gameInstances.get(gameID);
 
-            game.playCard(playerNickname, action);
+            try {
+                game.playCard(playerNickname, action);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw e;
+            }
             ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " played the card");
         }
     }

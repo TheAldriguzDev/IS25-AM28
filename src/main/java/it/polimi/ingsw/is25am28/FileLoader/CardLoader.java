@@ -24,6 +24,7 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class CardLoader extends FileLoader {
       private static CardLoader instance;
@@ -40,6 +41,7 @@ public class CardLoader extends FileLoader {
 
       public List<EventCard> read( Board board, ResourceBank bank, int level ){
             final List<EventCard> deck = new ArrayList<>();
+            AtomicInteger counter = new AtomicInteger(0);
             Map<String,List<Map<String,Object>>> json = getJSONObject();
 
             json.get("abandonedShip" ).forEach( map -> {
@@ -49,8 +51,10 @@ public class CardLoader extends FileLoader {
                         (Integer)map.get("people"),
                         (Integer)map.get("days"),
                         (Integer)map.get("credits"),
-                        board
+                        board,
+                        counter.get()
                   ));
+                  counter.incrementAndGet();
             });
 
 
@@ -88,8 +92,10 @@ public class CardLoader extends FileLoader {
                         (Integer)map.get("days"),
                         items,      // REQUIRES AN ARRAY LIST OF ITEMS
                         board,
-                        bank
+                        bank,
+                        counter.get()
                   ));
+                  counter.incrementAndGet();
             });
 
             json.get("meteors" ).forEach( map -> {
@@ -97,8 +103,10 @@ public class CardLoader extends FileLoader {
                         "Meteor Shower",
                         (Integer)map.get("level"),
                         ((List<List<Integer>>)map.get("meteors")),
-                        board
+                        board,
+                        counter.get()
                   ));
+                  counter.incrementAndGet();
             });
 
             json.get("pirates" ).forEach( map -> {
@@ -109,8 +117,10 @@ public class CardLoader extends FileLoader {
                         (Integer)map.get("credits"),
                         (Integer)map.get("days"),
                         ((List<List<Integer>>)map.get("shoots")),
-                        board
+                        board,
+                        counter.get()
                   ));
+                  counter.incrementAndGet();
             });
 
             json.get("planets" ).forEach( map -> {
@@ -120,24 +130,30 @@ public class CardLoader extends FileLoader {
                         (Integer)map.get("days"),
                         (List<Map<String,Integer>>)map.get("planets"),
                         bank,
-                        board
+                        board,
+                        counter.get()
                   ));
+                  counter.incrementAndGet();
             });
 
             json.get("space" ).forEach( map -> {
                   deck.add(new OpenSpace(
                           "Open Space",
                           (Integer)map.get("level"),
-                          board
+                          board,
+                          counter.get()
                   ));
+                  counter.incrementAndGet();
             });
 
             json.get("epidemic" ).forEach( map -> {
                   deck.add(new Epidemy(
                         "Epidemy",
                         (Integer)map.get("level"),
-                        board
+                        board,
+                        counter.get()
                   ));
+                  counter.incrementAndGet();
             });
 
             json.get("smugglers" ).forEach( map -> {
@@ -152,8 +168,10 @@ public class CardLoader extends FileLoader {
                         ((Map<String,Integer>)map.get("storage")).get("green"),
                         ((Map<String,Integer>)map.get("storage")).get("blue"),
                         board,
-                        bank
+                        bank,
+                        counter.get()
                   ));
+                  counter.incrementAndGet();
             });
 
             json.get("slavers" ).forEach( map -> {
@@ -164,16 +182,20 @@ public class CardLoader extends FileLoader {
                         (Integer)map.get("days"),
                         (Integer)map.get("credits"),
                         (Integer)map.get("penalty"),
-                        board
+                        board,
+                        counter.get()
                   ));
+                  counter.incrementAndGet();
             });
 
             json.get("stardust" ).forEach( map -> {
                   deck.add(new Stardust(
                           "Stardust",
                           (Integer)map.get("level"),
-                          board
+                          board,
+                          counter.get()
                   ));
+                  counter.incrementAndGet();
             });
 
             json.get("warzone" ).forEach( map -> {
@@ -199,8 +221,10 @@ public class CardLoader extends FileLoader {
                         (Integer)map.get("peoples"),
                         (Integer)map.get("items"),
                         shoots,
-                        actions
-                  )); 
+                        actions,
+                        counter.get()
+                  ));
+                  counter.incrementAndGet();
             });
 
             deck.removeIf( card -> card.getCardLevel() > level );

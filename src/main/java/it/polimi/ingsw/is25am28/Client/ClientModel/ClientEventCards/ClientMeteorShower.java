@@ -11,12 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientMeteorShower extends ClientEventCard {
-    // Commands that this card will enable are added here
-    static {
-        ClientEventCard.enabledCommands.add("setShieldsToActivate");
-        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
-    }
-
     private int currMeteorIndex;
     private int diceThrowResult;
     private Map<String, Integer> currMeteorDescriptor;
@@ -26,6 +20,9 @@ public class ClientMeteorShower extends ClientEventCard {
     public ClientMeteorShower(CardStateJSON cardState) {
         super(cardState);
         this.meteorShowerJSON = new MeteorShowerJSON();
+
+        enabledCommands.add("setShieldsToActivate");
+        enabledCommands.add("setDoubleCannonsToActivate");
     }
 
     @Override

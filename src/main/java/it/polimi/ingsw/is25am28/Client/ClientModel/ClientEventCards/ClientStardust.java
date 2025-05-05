@@ -15,16 +15,13 @@ import java.util.Random;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientStardust extends ClientEventCard {
-    // Commands that this card will enable are added here
-    static {
-        ClientEventCard.enabledCommands.add("getPlayerAck");
-    }
-
     private StardustJSON stardustJSON;
 
     public ClientStardust(CardStateJSON cardState) {
         super(cardState);
         this.stardustJSON = new StardustJSON();
+
+        enabledCommands.add("getPlayerAck");
     }
 
     @Override

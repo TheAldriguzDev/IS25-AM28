@@ -11,11 +11,6 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.util.List;
 
 public class ClientAbandonedShip extends ClientEventCard {
-    // Commands that this card will enable are added here
-    static {
-        ClientEventCard.enabledCommands.add("setCrewToRemove");
-    }
-
     private final int requiredCrew;
     private final int movementStep;
     private final int givenCredits;
@@ -29,12 +24,14 @@ public class ClientAbandonedShip extends ClientEventCard {
         this.movementStep = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();
         this.abandonedShipJSON = new AbandonedShipJSON();
+
+        enabledCommands.add("setCrewToRemove");
     }
 
     @Override
     public ActionJSON useCard() {
-        AbandonedShipJSON tmp = this.abandonedShipJSON;
         this.abandonedShipJSON.setPlayerNickname(this.playerNickname);
+        AbandonedShipJSON tmp = this.abandonedShipJSON;
         this.abandonedShipJSON = new AbandonedShipJSON();
 
         return tmp;
@@ -82,6 +79,7 @@ public class ClientAbandonedShip extends ClientEventCard {
 
     @Override
     public void setCrewToRemove(List<ComponentHelper<LifeformType>> crewToRemove) {
+        this.abandonedShipJSON.setWantToVisitShip(true);
         this.abandonedShipJSON.setLifeformsToBeRemoved(crewToRemove);
     }
 

@@ -25,8 +25,8 @@ public class AbandonedShip extends EventCard {
 
     private List<String> playersThatCanUseTheCard;
 
-    public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits, Board board) {
-        super(name, cardLevel, board);
+    public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits, Board board, int cardID) {
+        super(name, cardLevel, board, cardID);
         this.requiredCrew = requireCrew;
         this.movementStep = movementStep;
         this.givenCredits = givenCredits;
@@ -106,7 +106,6 @@ public class AbandonedShip extends EventCard {
             } else {
                 this.getNextPlayer();
             }
-
         } else {
             throw new IllegalArgumentException("The given player does not match with the current one!");
         }

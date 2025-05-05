@@ -36,8 +36,8 @@ public class Pirates extends EventCard {
     private Map<String, List<Map<String, Object>>> removedComponents;
     private Map<String, Integer> removedBatteries; // TODO: Implement in the state (both firepower and shields)
 
-    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board) {
-        super(name, cardLevel, board);
+    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board, int cardID) {
+        super(name, cardLevel, board, cardID);
         this.requiredFirepower = requiredFirepower;
         this.givenCredits = givenCredits;
         this.movementSteps = movementSteps;

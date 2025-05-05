@@ -11,12 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClientSlavers extends ClientEventCard {
-    // Commands that this card will enable are added here
-    static {
-        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
-        ClientEventCard.enabledCommands.add("setTakeReward");
-    }
-
     private final int requiredFirepower;
     private final int movementSteps;
     private final int givenCredits;
@@ -35,6 +29,9 @@ public class ClientSlavers extends ClientEventCard {
         this.defeatedPlayers = new ArrayList<>();
         this.firstRound = true;
         this.slaversJSON = new SlaversJSON();
+
+        enabledCommands.add("setDoubleCannonsToActivate");
+        enabledCommands.add("setTakeReward");
     }
 
     @Override

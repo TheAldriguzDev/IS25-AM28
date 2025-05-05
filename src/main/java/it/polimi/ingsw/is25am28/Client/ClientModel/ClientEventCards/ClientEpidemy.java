@@ -7,16 +7,13 @@ import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 public class ClientEpidemy extends ClientEventCard {
-    // Commands that this card will enable are added here
-    static {
-        ClientEventCard.enabledCommands.add("getPlayerAck");
-    }
-
     private EpidemyJSON epidemyJSON;
 
     public ClientEpidemy(CardStateJSON cardState) {
         super(cardState);
         this.epidemyJSON = new EpidemyJSON();
+
+        enabledCommands.add("getPlayerAck");
     }
 
     @Override

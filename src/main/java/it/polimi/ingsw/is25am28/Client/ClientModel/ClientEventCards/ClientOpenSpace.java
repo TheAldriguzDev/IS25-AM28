@@ -15,16 +15,13 @@ import java.util.Random;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientOpenSpace extends ClientEventCard {
-    // Commands that this card will enable are added here
-    static {
-        ClientEventCard.enabledCommands.add("setDoubleEnginesToActivate");
-    }
-
     private OpenSpaceJSON openSpaceJSON;
 
     public ClientOpenSpace(CardStateJSON cardState) {
         super(cardState);
         openSpaceJSON = new OpenSpaceJSON();
+
+        enabledCommands.add("setDoubleEnginesToActivate");
     }
 
     @Override

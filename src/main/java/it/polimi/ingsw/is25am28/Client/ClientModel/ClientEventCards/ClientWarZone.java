@@ -11,14 +11,6 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientWarZone extends ClientEventCard {
-    // Commands that this card will enable are added here
-    static {
-        ClientEventCard.enabledCommands.add("setItemsToBeRemoved");
-        ClientEventCard.enabledCommands.add("setDoubleCannonsToActivate");
-        ClientEventCard.enabledCommands.add("setDoubleEnginesToActivate");
-        ClientEventCard.enabledCommands.add("setShieldsToActivate");
-    }
-
     private List<List<String>> actionAndConsequences;
     private final int requiredCrew;
     private final int movementSteps;
@@ -37,6 +29,11 @@ public class ClientWarZone extends ClientEventCard {
         this.movementSteps = cardState.getMovementSteps();
         this.requiredResources = cardState.getRequiredResources();
         this.warZoneJSON = new WarZoneJSON();
+
+        enabledCommands.add("setItemsToBeRemoved");
+        enabledCommands.add("setDoubleCannonsToActivate");
+        enabledCommands.add("setDoubleEnginesToActivate");
+        enabledCommands.add("setShieldsToActivate");
     }
 
     @Override
