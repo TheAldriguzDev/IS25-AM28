@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Components.Battery;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.NullComponentException;
@@ -711,6 +712,24 @@ public class ClientShip implements WidgetTUIGenerator {
                 .count();
     }
 
+    public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
+        int availableEnergy;
+
+        // Consuming the given amount of energy
+        for (ClientBattery battery : this.batteryList) {
+            availableEnergy = battery.getAvailability();
+
+            if (availableEnergy < energyToConsume) {
+                energyToConsume -= availableEnergy;
+                battery.setAvailability(0);
+            }
+            else {
+                battery.setAvailability(availableEnergy - energyToConsume);
+                break;
+            }
+        }
+    }
+
     /**
      * @return The widget containing all of this ship's component's widgets
      *         as they are put inside this ship's grid
@@ -1048,5 +1067,7 @@ public class ClientShip implements WidgetTUIGenerator {
         return shipGridWidget;
     }
 
-    // TODO: Update Ship Function
+//    public void updateShip(CardStateJSON cardStateJSON) {
+//
+//    }
 }

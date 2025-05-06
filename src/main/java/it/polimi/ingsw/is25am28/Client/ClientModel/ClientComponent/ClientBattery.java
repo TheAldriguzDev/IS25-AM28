@@ -36,6 +36,13 @@ public final class ClientBattery extends ClientComponent {
         return maxAvailability;
     }
 
+    /**
+     * @return Sets the battery's availability
+     */
+    public void setAvailability(int energyLevel) throws IllegalArgumentException {
+            available = energyLevel;
+    }
+
     @Override
     public List<String> getComponentScreen() {
         // TODO: Understand better these indexes

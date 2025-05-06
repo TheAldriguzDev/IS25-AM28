@@ -1,11 +1,17 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard.ClientBoard;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStorage;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
+import it.polimi.ingsw.is25am28.Model.Components.Storage;
+import it.polimi.ingsw.is25am28.Model.Items.Item;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.util.*;
@@ -146,5 +152,81 @@ public class ClientModel {
                 this.players.get(playerNickname).setCredits(cardStateJSON.getUpdatedCredits().get(playerNickname));
             }
         }
+    }
+
+    public void updateShips(CardStateJSON cardStateJSON) {
+        // Removes the destroyed components from the specified ship
+        if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
+            for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
+                for (Map<String, Object> componentToRemove : cardStateJSON.getRemovedComponents().get(playerNickname)) {
+                    this.getShipOfPlayer(playerNickname).ifPresent(
+                            ship -> {
+                                ship.removeComponent((int) componentToRemove.get("row"), (int) componentToRemove.get("col"));
+                            }
+                    );
+                }
+            }
+        }
+
+        // Removes the specified lifeForms from the specified ships
+        if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
+            Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms = cardStateJSON.getRemovedLifeforms();
+            for (String playerNickname : removedLifeforms.keySet()) {
+                for (ComponentHelper<LifeformType> lifeFormToRemove : removedLifeforms.get(playerNickname)) {
+                    this.getShipOfPlayer(playerNickname).ifPresent(
+                            ship -> {
+                                ship.removeLifeformFromCabin(lifeFormToRemove.getI(), lifeFormToRemove.getJ(), lifeFormToRemove.getItem().orElse(null));
+                            }
+                    );
+                }
+            }
+        }
+
+        // Removes the specified resources from the specified ships
+        if (cardStateJSON.getNeedsUpdatedDroppedResources()) {
+            for (String playerNickname : cardStateJSON.getDroppedResources().keySet()) {
+                for(ComponentHelper<ItemColor> itemToDrop : cardStateJSON.getDroppedResources().get(playerNickname)) {
+                    this.getShipOfPlayer(playerNickname).ifPresent(
+                            ship -> {
+                                ClientStorage s = (ClientStorage) ship.getComponent(itemToDrop.getI(), itemToDrop.getJ());
+                                ItemColor color = itemToDrop.getItem().orElse(null);
+                                Optional<Item> foundItem = s.getStoredItems().stream()
+                                        .filter( item -> item.getColor().equals(color))
+                                        .findFirst();
+                                // Remove the resource from the player
+                                foundItem.ifPresent(s::removeItem);
+                            }
+                    );
+                }
+            }
+        }
+
+        // Adds the specified resources to the specified ships
+        if (cardStateJSON.getNeedsUpdatedTakenResources()) {
+            for (String playerNickname : cardStateJSON.getTakenResources().keySet()) {
+                for(ComponentHelper<ItemColor> itemToTake : cardStateJSON.getTakenResources().get(playerNickname)) {
+                    this.getShipOfPlayer(playerNickname).ifPresent(
+                            ship -> {
+                                ClientStorage s = (ClientStorage) ship.getComponent(itemToTake.getI(), itemToTake.getJ());
+                                ItemColor color = itemToTake.getItem().orElse(null);
+                                // Add resource to the player
+                                s.storeItem(new Item(color));
+                            }
+                    );
+                }
+            }
+        }
+
+        // Removes the specified amount of batteries form the specified ships
+        if (cardStateJSON.getNeedsUpdatedBatteries()) {
+            for (String playerNickname : cardStateJSON.getRemovedBatteries().keySet()) {
+                this.getShipOfPlayer(playerNickname).ifPresent(
+                    ship -> {
+                        ship.consumeEnergy(cardStateJSON.getRemovedBatteries().get(playerNickname));
+                    }
+                );
+            }
+        }
+
     }
 }

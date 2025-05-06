@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent;
 import it.polimi.ingsw.is25am28.Model.Components.Storage;
 import it.polimi.ingsw.is25am28.Model.Connector;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
@@ -36,6 +37,25 @@ public final class ClientStorage extends ClientComponent {
 
     public List<Item> getStoredItems() {
         return storedItems;
+    }
+
+    /**
+     * @param item The item to store inside this Storage component
+     */
+    public void storeItem(Item item) throws IllegalArgumentException{
+        // Store the items in order of value
+        int idx = 0;
+        while (idx < storedItems.size() && item.getValue() < storedItems.get(idx).getValue()) {
+            idx++;
+        }
+        storedItems.add(idx, item);
+    }
+
+    /**
+     * @param item The item to remove from this storage component
+     */
+    public void removeItem(Item item) {
+        storedItems.remove(item);
     }
 
     @Override
