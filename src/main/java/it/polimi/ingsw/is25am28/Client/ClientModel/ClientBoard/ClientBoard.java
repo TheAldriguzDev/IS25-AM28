@@ -24,8 +24,6 @@ public class ClientBoard {
 
     private final Map<String, ClientPlayer> players;
 
-
-
     public ClientBoard(BoardJSON BoardJSON, ClientModel clientModel) {
         this.size = BoardJSON.getSize();
         this.level = BoardJSON.getLevel();

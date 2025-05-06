@@ -82,6 +82,17 @@ public class ClientModel {
     }
 
     /**
+     * Add the given player to the game
+     * */
+    public void addNewPlayer(String nickname, PlayerColor color, List<Map<String, Object>> ship) {
+        synchronized (this.players) {
+            if (!this.players.containsKey(nickname)) {
+                this.players.put(nickname, new ClientPlayer(nickname, color, this.difficultyLevel, ship));
+            }
+        }
+    }
+
+    /**
      * @return The ship belonging to the given player
      */
     public Optional<ClientShip> getShipOfPlayer(String playerNickname) {

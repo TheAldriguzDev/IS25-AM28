@@ -9,6 +9,8 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfShipException;
 import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.Exceptions.*;
+import it.polimi.ingsw.is25am28.Model.Items.Item;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
@@ -219,6 +221,141 @@ public class ClientShip implements WidgetTUIGenerator {
         this.shieldList = new ArrayList<ClientShield>();
         this.storageList = new ArrayList<ClientStorage>();
         this.vitalList = new ArrayList<ClientVital>();
+    }
+
+    /**
+     * Constructor used when a player reconnect to the game --> in this way we will be able to re-create the client
+     * ship
+     * */
+    public ClientShip(int difficultyLevel, List<Map<String, Object>> initialShip) {
+        this.difficultyLevel = difficultyLevel;
+        this.components = initGrid(grid_rows, grid_cols);
+
+        // Initializing the connectors of the core cabin
+        List<Integer> coreConnectors = new ArrayList<Integer>();
+        for (int i = 0; i < 4; i++) {
+            coreConnectors.add(THREE_PIPES.ordinal());
+        }
+
+        this.core = new ClientCabin(-1, coreConnectors,true);
+
+        // No aliens are present at the beginning
+        this.purpleAlienPosition = null;
+        this.brownAlienPosition = null;
+
+        // Adding the core component as the first component in the ship's grid
+        this.addComponent(this.core, grid_rows/2, grid_cols/2);
+
+        // Instantiating each component list as an empty list
+        this.batteryList = new ArrayList<ClientBattery>();
+        this.cabinList = new ArrayList<ClientCabin>();
+        this.cannonList = new ArrayList<ClientCannon>();
+        this.engineList = new ArrayList<ClientEngine>();
+        this.shieldList = new ArrayList<ClientShield>();
+        this.storageList = new ArrayList<ClientStorage>();
+        this.vitalList = new ArrayList<ClientVital>();
+
+        for (Map<String, Object> map : initialShip) {
+            int id = (int) map.get("id");
+            int typeId = (int) map.get("tid");
+
+            int i = (int) map.get("row");
+            int j = (int ) map.get("col");
+
+            Object connectorsObj = map.get("connectors");
+            List<Integer> connectorOrdinals = null;
+
+            if (connectorsObj != null) {
+                try {
+                    connectorOrdinals = (List<Integer>) connectorsObj;
+                } catch (ClassCastException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            // Create the components
+            switch (typeId) {
+                // Cannon
+                case 0 -> {
+                    int force = (int) map.get("force");
+
+                    ClientCannon component = new ClientCannon(id, connectorOrdinals, force);
+
+                    this.addComponent(component, i, j);
+                }
+                // Cabin
+                case 1 -> {
+                    List<LifeformType> lifeform = (List<LifeformType>) map.get("inhabitants");
+                    ClientCabin component = new ClientCabin(id, connectorOrdinals, false);
+
+                    for (LifeformType lifeformType : lifeform) {
+                        component.addInhabitant(new Lifeform(lifeformType));
+                    }
+
+                    this.addComponent(component, i, j);
+                }
+                // Storage
+                case 2 -> {
+                    int capacity = (int) map.get("capacity");
+                    boolean isSpecial = (boolean) map.get("special");
+
+                    List<Integer> storedItems = (List<Integer>) map.get("storedItems");
+                    ClientStorage component = new ClientStorage(id, connectorOrdinals, capacity, isSpecial);
+
+                    for (Integer storedItem : storedItems) {
+                        switch (storedItem) {
+                            case 1 -> {
+                                component.storeItem(new Item(ItemColor.BLUE));
+                            }
+                            case 2 -> {
+                                component.storeItem(new Item(ItemColor.GREEN));
+                            }
+                            case 3 -> {
+                                component.storeItem(new Item(ItemColor.YELLOW));
+                            }
+                            case 4 -> {
+                                component.storeItem(new Item(ItemColor.RED));
+                            }
+                        }
+                    }
+
+                    this.addComponent(component, i, j);
+                }
+                // Vital
+                case 3 -> {
+                    int type = (int) map.get("type");
+                    this.addComponent(new ClientVital(id, connectorOrdinals, type), i, j);
+                }
+                // Engine
+                case 4 -> {
+                    int speed = (int) map.get("speed");
+                    this.addComponent(new ClientEngine(id, connectorOrdinals, speed), i, j);
+                }
+                // Battery
+                case 5 -> {
+                    int capacity = (int) map.get("capacity");
+                    int available = (int) map.get("available");
+
+                    ClientBattery component = new ClientBattery(id, connectorOrdinals, capacity);
+                    component.setAvailability(available);
+
+                    this.addComponent(component, i, j);
+                }
+                // Shield
+                case 6 -> {
+                    this.addComponent(new ClientShield(id, connectorOrdinals), i, j);
+                }
+                // Structural
+                case 7 -> {
+                    this.addComponent(new ClientStructural(id, connectorOrdinals), i, j);
+                }
+                default -> {
+                    throw new RuntimeException("The given component is not recognised.");
+                }
+            }
+        }
+
+        this.generateComponentSubLists();
     }
 
     /**

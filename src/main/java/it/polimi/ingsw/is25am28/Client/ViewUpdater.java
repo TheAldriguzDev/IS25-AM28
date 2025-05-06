@@ -1,23 +1,28 @@
 package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.*;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard.ClientBoard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
+import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.TUI.GameMenuTUIPage;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen.COMPUTER_MSG_TAG;
@@ -62,6 +67,11 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(WaitPlayersStateDTO state) throws Exception {
+        // Creating the ship of the newly connected player in all clients
+        for (Map.Entry<String, PlayerColor> playerEntry : state.getUsedNicknames().entrySet()) {
+            this.model.addNewPlayer(playerEntry.getKey(), playerEntry.getValue());
+        }
+
         this.ui.showWaitingForPlayers(state);
     }
 
@@ -69,19 +79,15 @@ public class ViewUpdater implements StateVisitor {
     public void visit(ReconnectDTO state) throws Exception {
         System.out.println("Reconnect player to the game lessgooooo");
 
-        if (this.model.getNickname().equals(state.getTargetNickname())) {
-
-
-
-
-
-
-
+        // 1. Create the players --> and set their ship
+        List<PlayerJSON> players = state.getPlayers();
+        for (PlayerJSON player : players) {
+            this.model.addNewPlayer(player.getNickname(), PlayerColor.valueOf(player.getColor()), player.getShip());
         }
 
+        // 2. Create the board
+        BoardJSON board = state.getBoard();
 
-        // TODO: IMPORTANT: RECREATE THE DATA BEFORE ACCEPTING THE STATE
-        // TODO: --> Recreate the board | Set the players with their information and resume the state
 
         // state.getCurrentState().accept(this);
     }
