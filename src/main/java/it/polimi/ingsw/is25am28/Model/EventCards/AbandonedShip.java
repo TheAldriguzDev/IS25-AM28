@@ -174,6 +174,7 @@ public class AbandonedShip extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
 
         if (hasBeenActivated()) {
             initStateFlags(cardState);

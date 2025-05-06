@@ -199,6 +199,8 @@ public class Slavers extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON slaversStateJSON = new CardStateJSON();
 
+        slaversStateJSON.setCardID(this.getCardID());
+
         if (hasBeenActivated()) {
             // Initializing the state flags
             initStateFlags(slaversStateJSON);

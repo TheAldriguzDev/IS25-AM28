@@ -460,6 +460,7 @@ public class MeteorShower extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
 
         // The dice throw is performed by generateState only at the beginning
         // since the card hasn't been used yet
