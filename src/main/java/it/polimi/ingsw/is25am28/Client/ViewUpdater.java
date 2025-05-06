@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.*;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard.ClientBoard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
@@ -67,6 +68,17 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(ReconnectDTO state) throws Exception {
         System.out.println("Reconnect player to the game lessgooooo");
+
+        if (this.model.getNickname().equals(state.getTargetNickname())) {
+
+
+
+
+
+
+
+        }
+
 
         // TODO: IMPORTANT: RECREATE THE DATA BEFORE ACCEPTING THE STATE
         // TODO: --> Recreate the board | Set the players with their information and resume the state

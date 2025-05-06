@@ -39,7 +39,8 @@ public class BoardJSON implements Serializable {
     public BoardJSON(
             @JsonProperty("size") int size,
             @JsonProperty("level") int level,
-            @JsonProperty("startingPlayerPositions") Map<String, Integer> startingPlayerPositions
+            @JsonProperty("startingPlayerPositions") Map<String, Integer> startingPlayerPositions,
+            @JsonProperty("EliminatedPlayers") List<String> eliminatedPlayersNickname
     ) {
         this.size = size;
         this.level = level;
@@ -86,7 +87,8 @@ public class BoardJSON implements Serializable {
         return new BoardJSON(
                 board.getSize(),
                 board.getLevel(),
-                currPlayerPositions
+                currPlayerPositions,
+                eliminatedPlayersNickname
         );
     }
 
