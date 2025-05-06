@@ -140,6 +140,8 @@ public final class CardRoundState extends State {
         return state;
     }
 
+    // TODO: Use this method to substitute the deck with
+    //       a fake one only during testing
     public void setFakeDeck(List<EventCard> deck) {
         this.deck = deck;
     }
