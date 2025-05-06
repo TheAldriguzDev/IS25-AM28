@@ -395,11 +395,6 @@ public class LobbyScreen extends Screen {
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
         WidgetTUI waitingForPlayersWidget = new WidgetTUI();
 
-        // Creating the ship of the newly connected player in all clients
-        for (Map.Entry<String, PlayerColor> playerEntry : waitingForPlayers.getUsedNicknames().entrySet()) {
-            this.model.addNewPlayer(playerEntry.getKey(), playerEntry.getValue());
-        }
-
         if (this.model.getNickname() != null) {
             int connected = waitingForPlayers.getLobbyTotalSpot() - waitingForPlayers.getAvailableSpots();
             int total = waitingForPlayers.getLobbyTotalSpot();

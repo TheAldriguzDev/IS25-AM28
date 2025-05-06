@@ -4,6 +4,9 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
+import java.util.List;
+import java.util.Map;
+
 public class ClientPlayer {
     private final String nickname;
     private final PlayerColor color;
@@ -20,6 +23,16 @@ public class ClientPlayer {
         this.cursor = 0;
 
         this.ship = new ClientShip(level);
+    }
+
+    public ClientPlayer(String nickname, PlayerColor color, int level, List<Map<String, Object>> ship) {
+        this.nickname = nickname;
+        this.color = color;
+        this.credits = 0;
+        this.lostComponents = 0;
+        this.cursor = 0;
+
+        this.ship = new ClientShip(level, ship);
     }
 
     /**

@@ -83,7 +83,6 @@ public final class Storage extends Component {
         map.put("special", isSpecialStorage);
         map.put("storedItems", storedItems.stream().map(Item::getValue).toList());
 
-
         return map;
     }
 

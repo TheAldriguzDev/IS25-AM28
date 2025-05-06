@@ -21,11 +21,6 @@ public class BoardJSON implements Serializable {
     private Map<Integer, String> boardCells;
     private Map<String, Integer> startingPlayerPositions = new HashMap<>();
 
-
-
-    /**
-     * Default constructor, used by Jackson
-     * */
     /**
      * Default constructor used client side
      */
@@ -71,8 +66,7 @@ public class BoardJSON implements Serializable {
 
     public static BoardJSON fromBoard(Board board) {
         Map<String, Integer> currPlayerPositions = new HashMap<>();
-        List<String> eliminatedPlayersNickname = board.getEliminatedPlayers().stream().map(Player::getNickname).toList();
-
+        // List<String> eliminatedPlayersNickname = board.getEliminatedPlayers().stream().map(Player::getNickname).toList();
 
         Cell head = board.getHead();
         Cell curr = board.getHead();
