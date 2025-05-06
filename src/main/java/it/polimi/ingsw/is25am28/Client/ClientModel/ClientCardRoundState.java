@@ -15,7 +15,6 @@ public class ClientCardRoundState extends ClientState {
         this.cardRoundDTO = cardRoundDTO;
         this.model.setClientBoard(new ClientBoard(cardRoundDTO.getBoard(), model));
 
-        // Ensuring all component sublists are up to date
         for (Map.Entry<String, ClientPlayer> entry : this.model.getAllClientPlayers().entrySet()) {
             entry.getValue().getShip().generateWidget();
         }
