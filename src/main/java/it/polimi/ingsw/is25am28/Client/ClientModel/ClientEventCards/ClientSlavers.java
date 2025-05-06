@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.SlaversJSON;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
@@ -32,6 +33,7 @@ public class ClientSlavers extends ClientEventCard {
 
         enabledCommands.add("setDoubleCannonsToActivate");
         enabledCommands.add("setTakeReward");
+        enabledCommands.add("setCrewToRemove");
     }
 
     @Override
@@ -108,5 +110,15 @@ public class ClientSlavers extends ClientEventCard {
     @Override
     public boolean getTakeReward() {
         return this.slaversJSON.getTakeCredits();
+    }
+
+    @Override
+    public void setCrewToRemove(List<ComponentHelper<LifeformType>> crewToRemove) throws UnsupportedOperationException {
+        this.slaversJSON.setCrewToRemove(crewToRemove);
+    }
+
+    @Override
+    public List<ComponentHelper<LifeformType>> getCrewToRemove() throws UnsupportedOperationException {
+        return this.slaversJSON.getCrewToRemove();
     }
 }

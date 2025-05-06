@@ -35,7 +35,6 @@ public class ClientAbandonedStation extends ClientEventCard {
         this.abandonedStationJSON.setPlayerNickname(this.playerNickname);
         AbandonedStationJSON tmp = abandonedStationJSON;
         abandonedStationJSON = new AbandonedStationJSON();
-
         return tmp;
     }
 
