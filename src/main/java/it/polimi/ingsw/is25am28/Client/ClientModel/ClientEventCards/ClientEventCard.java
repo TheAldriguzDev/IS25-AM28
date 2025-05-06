@@ -19,6 +19,7 @@ import java.util.Map;
 public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected final List<String> enabledCommands = new ArrayList<>();
 
+    protected final int cardID;
     protected final int id;
     protected String playerNickname;
     protected String cardName;
@@ -30,9 +31,12 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected InputThread inputThread;
 
     public ClientEventCard(CardStateJSON cardState) {
+        this.cardID = cardState.getCardID();
         this.id = cardState.getId();
         this.cardName = cardState.getCardName();
         this.cardLevel = cardState.getCardLevel();
+
+        enabledCommands.add("playCard");
     }
 
     /**
@@ -52,10 +56,17 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     }
 
     /**
-     * @return This client card's ID
+     * @return This client card's ID (the type of the card)
      */
     public int getId() {
         return this.id;
+    }
+
+    /**
+     * @return This client card's unique ID (progressive number)
+     */
+    public int getCardID() {
+        return this.cardID;
     }
 
     /**

@@ -27,7 +27,8 @@ public final class CardRoundDTO extends StateDTO {
             @JsonProperty("board") BoardJSON board,
             @JsonProperty("playersInfo") Map<String, PlayerJSON> playersInfo,
             @JsonProperty("cardInfo") CardStateJSON cardInfo,
-            @JsonProperty("isCardNew") boolean isCardNew ) {
+            @JsonProperty("isCardNew") boolean isCardNew
+    ) {
         this.round = round;
         this.board = board;
         this.playersInfo = playersInfo;

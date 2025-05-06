@@ -8,7 +8,6 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
-import it.polimi.ingsw.is25am28.Model.Components.Storage;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
@@ -171,9 +170,9 @@ public class ClientModel {
             for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
                 for (Map<String, Object> componentToRemove : cardStateJSON.getRemovedComponents().get(playerNickname)) {
                     this.getShipOfPlayer(playerNickname).ifPresent(
-                            ship -> {
-                                ship.removeComponent((int) componentToRemove.get("row"), (int) componentToRemove.get("col"));
-                            }
+                        (ship) -> {
+                            ship.removeComponent((int) componentToRemove.get("row"), (int) componentToRemove.get("col"));
+                        }
                     );
                 }
             }
@@ -185,9 +184,9 @@ public class ClientModel {
             for (String playerNickname : removedLifeforms.keySet()) {
                 for (ComponentHelper<LifeformType> lifeFormToRemove : removedLifeforms.get(playerNickname)) {
                     this.getShipOfPlayer(playerNickname).ifPresent(
-                            ship -> {
-                                ship.removeLifeformFromCabin(lifeFormToRemove.getI(), lifeFormToRemove.getJ(), lifeFormToRemove.getItem().orElse(null));
-                            }
+                        (ship) -> {
+                            ship.removeLifeformFromCabin(lifeFormToRemove.getI(), lifeFormToRemove.getJ(), lifeFormToRemove.getItem().orElse(null));
+                        }
                     );
                 }
             }
@@ -198,15 +197,15 @@ public class ClientModel {
             for (String playerNickname : cardStateJSON.getDroppedResources().keySet()) {
                 for(ComponentHelper<ItemColor> itemToDrop : cardStateJSON.getDroppedResources().get(playerNickname)) {
                     this.getShipOfPlayer(playerNickname).ifPresent(
-                            ship -> {
-                                ClientStorage s = (ClientStorage) ship.getComponent(itemToDrop.getI(), itemToDrop.getJ());
-                                ItemColor color = itemToDrop.getItem().orElse(null);
-                                Optional<Item> foundItem = s.getStoredItems().stream()
-                                        .filter( item -> item.getColor().equals(color))
-                                        .findFirst();
-                                // Remove the resource from the player
-                                foundItem.ifPresent(s::removeItem);
-                            }
+                        (ship) -> {
+                            ClientStorage s = (ClientStorage) ship.getComponent(itemToDrop.getI(), itemToDrop.getJ());
+                            ItemColor color = itemToDrop.getItem().orElse(null);
+                            Optional<Item> foundItem = s.getStoredItems().stream()
+                                    .filter( item -> item.getColor().equals(color))
+                                    .findFirst();
+                            // Remove the resource from the player
+                            foundItem.ifPresent(s::removeItem);
+                        }
                     );
                 }
             }
@@ -217,12 +216,12 @@ public class ClientModel {
             for (String playerNickname : cardStateJSON.getTakenResources().keySet()) {
                 for(ComponentHelper<ItemColor> itemToTake : cardStateJSON.getTakenResources().get(playerNickname)) {
                     this.getShipOfPlayer(playerNickname).ifPresent(
-                            ship -> {
-                                ClientStorage s = (ClientStorage) ship.getComponent(itemToTake.getI(), itemToTake.getJ());
-                                ItemColor color = itemToTake.getItem().orElse(null);
-                                // Add resource to the player
-                                s.storeItem(new Item(color));
-                            }
+                        (ship) -> {
+                            ClientStorage s = (ClientStorage) ship.getComponent(itemToTake.getI(), itemToTake.getJ());
+                            ItemColor color = itemToTake.getItem().orElse(null);
+                            // Add resource to the player
+                            s.storeItem(new Item(color));
+                        }
                     );
                 }
             }
@@ -232,12 +231,11 @@ public class ClientModel {
         if (cardStateJSON.getNeedsUpdatedBatteries()) {
             for (String playerNickname : cardStateJSON.getRemovedBatteries().keySet()) {
                 this.getShipOfPlayer(playerNickname).ifPresent(
-                    ship -> {
+                    (ship) -> {
                         ship.consumeEnergy(cardStateJSON.getRemovedBatteries().get(playerNickname));
                     }
                 );
             }
         }
-
     }
 }

@@ -12,6 +12,7 @@ import java.util.List;
         @JsonSubTypes.Type(value = NewPlayer.class, name = "NewPlayer"),
         @JsonSubTypes.Type(value = SelectTile.class, name = "SelectTile"),
         @JsonSubTypes.Type(value = DeselectTile.class, name = "DeselectTile"),
+        @JsonSubTypes.Type(value = SelectDeselectSubdeck.class, name = "SelectDeselectSubdeck"),
         @JsonSubTypes.Type(value = Ping.class, name = "Ping"),
         @JsonSubTypes.Type(value = RefreshGames.class, name = "RefreshGames"),
         @JsonSubTypes.Type(value = Reconnect.class, name = "Reconnect"),
@@ -19,7 +20,8 @@ import java.util.List;
         @JsonSubTypes.Type(value = SendShipConfirmation.class, name = "SendShipConfirmation"),
         @JsonSubTypes.Type(value = FlipTimer.class, name = "FlipTimer"),
         @JsonSubTypes.Type(value = FixShip.class, name = "FixShip"),
-        @JsonSubTypes.Type(value = PopulateShip.class, name = "PopulateShip")
+        @JsonSubTypes.Type(value = PopulateShip.class, name = "PopulateShip"),
+        @JsonSubTypes.Type(value = PlayCard.class, name = "PlayCard")
 })
 
 public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FixShip, FlipTimer, NewPlayer, Ping, PlaceTile, PlayCard, PopulateShip, Reconnect, RefreshGames, SelectDeselectSubdeck, SelectTile, SendShipConfirmation {

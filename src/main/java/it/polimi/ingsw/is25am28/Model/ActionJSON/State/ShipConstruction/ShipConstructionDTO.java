@@ -11,6 +11,8 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 import java.util.List;
 import java.util.Map;
 
+
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ShipConstructionDTO extends StateDTO {
     private List<Map<String, Object>> all_components;

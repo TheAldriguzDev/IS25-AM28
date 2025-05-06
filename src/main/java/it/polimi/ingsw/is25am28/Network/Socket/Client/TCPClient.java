@@ -174,6 +174,37 @@ public class TCPClient implements VirtualViewSocket {
                     }
                 }, updateThread);
             }
+            case CardRoundDTO _ -> {
+                future = CompletableFuture.runAsync(() -> {
+                    try {
+                        viewUpdater.interruptCurrScreen();
+                    }
+                    catch (Exception e) {
+                        throw e;
+                    }
+                });
+
+                // If the nickname is present, commit the command first
+                if (nickname != null && viewUpdater.isCTXAvailable()) {
+                    future = future.thenRunAsync(() -> {
+                        try {
+                            viewUpdater.commitCommand(nickname);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Error while commiting the command: ", e);
+                        }
+                    }, inputThread);
+                } else {
+                    future = CompletableFuture.completedFuture(null);
+                }
+
+                future = future.thenRunAsync(() -> {
+                    try {
+                        state.accept(viewUpdater);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error while executing the state: ", e);
+                    }
+                }, inputThread);
+            }
             case null -> {
                 // If the nickname is present, commit the command first
                 if (nickname != null && viewUpdater.isCTXAvailable()) {

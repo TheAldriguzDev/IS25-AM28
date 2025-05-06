@@ -20,6 +20,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
@@ -213,6 +214,58 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                         throw new RuntimeException(e);
                     }
                 }, updateThread);
+            }
+            case CardRoundDTO data -> {
+                if (nextState != null) {
+                    future = CompletableFuture.runAsync(() -> {
+                        try {
+                            viewUpdater.updateCardResult(data);
+                        }
+                        catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    });
+
+                    future = future.thenRunAsync(() -> {
+                        try {
+                            viewUpdater.interruptCurrScreen();
+                        }
+                        catch (Exception e) {
+                            throw e;
+                        }
+                    });
+                }
+                else {
+                    future = CompletableFuture.runAsync(() -> {
+                        try {
+                            viewUpdater.interruptCurrScreen();
+                        }
+                        catch (Exception e) {
+                            throw e;
+                        }
+                    });
+                }
+
+                // If the nickname is present, commit the command first
+                if (nickname != null && viewUpdater.isCTXAvailable()) {
+                    future = future.thenRunAsync(() -> {
+                        try {
+                            viewUpdater.commitCommand(nickname);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Error while commiting the command: ", e);
+                        }
+                    }, inputThread);
+                } else {
+                    future = CompletableFuture.completedFuture(null);
+                }
+
+                future = future.thenRunAsync(() -> {
+                    try {
+                        Objects.requireNonNullElse(nextState, state).accept(viewUpdater);
+                    } catch (Exception e) {
+                        throw new RuntimeException("Error while executing the state: ", e);
+                    }
+                }, inputThread);
             }
             case null -> {
                 // If the nickname is present, commit the command first

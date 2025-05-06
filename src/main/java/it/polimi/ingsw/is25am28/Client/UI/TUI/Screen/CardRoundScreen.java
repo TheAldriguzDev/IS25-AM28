@@ -38,6 +38,7 @@ public class CardRoundScreen extends Screen {
     private WidgetTUI shipGridWidget;
     private WidgetTUI shipStatsWidget;
     private WidgetTUI playerNameWidget;
+    private WidgetTUI playerTurnWidget;
 
     private WidgetTUI availableLifeforms;
     private WidgetTUI availableItemColors;
@@ -65,8 +66,8 @@ public class CardRoundScreen extends Screen {
         this.boardWidget = this.model.getClientBoard().generateWidget();
 
         this.consoleWidget = new ConsoleWidgetTUI(
-                CONSOLE_WIDGET_MAX_HEIGHT,
-                CONSOLE_WIDGET_MAX_WIDTH
+            CONSOLE_WIDGET_MAX_HEIGHT,
+            CONSOLE_WIDGET_MAX_WIDTH
         );
     }
 
@@ -78,6 +79,21 @@ public class CardRoundScreen extends Screen {
         CommandWidgetTUI command;
 
         this.indexedCardInputMethods = new HashMap<>();
+
+        // (1) - Play card
+        command = new CommandWidgetTUI(
+                "1",
+                () -> {
+                    try {
+                        this.playCard();
+                    }
+                    catch (Exception e) {
+                        System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" thrown by method 'playCard'.", ANSIColors.RED));
+                    }
+                }
+        );
+        command.appendString("Play card");
+        this.indexedCardInputMethods.put("playCard", new Pair<>(false, command));
 
         // (2) - Add crew to remove
         command = new CommandWidgetTUI(
@@ -195,6 +211,19 @@ public class CardRoundScreen extends Screen {
         );
         command.appendString("Set double engines to activate");
         this.indexedCardInputMethods.put("setDoubleEnginesToActivate", new Pair<>(false, command));
+
+        // (11) - Acknowledge and continue
+        command = new CommandWidgetTUI(
+                "11",
+                () -> {
+                    this.getPlayerAck();
+
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
+        );
+        command.appendString("Acknowledge and continue");
+        this.indexedCardInputMethods.put("getPlayerAck", new Pair<>(false, command));
     }
 
     /**
@@ -793,33 +822,15 @@ public class CardRoundScreen extends Screen {
         this.cardRoundCommandsWidget = new InputWidgetTUI(this.inputThread);
         this.cardRoundCommandsWidget.setColumnGroupingAmount(COMMAND_GROUPING_FACTOR);
 
-        // (0) - Play card
+        // (0) - Visualize ship
         command = new CommandWidgetTUI(
-                "0",
-                () -> {
-                    try {
-                        this.playCard();
-                    }
-                    catch (Exception e) {
-                        System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" thrown by method 'playCard'.", ANSIColors.RED));
-                    }
+            "0",
+            () -> {
+                this.getOtherShipCommand();
 
-                    // Go back to the card round available commands
-                    this.getCardRoundCommand();
-                }
-        );
-        command.appendString("Play card");
-        this.cardRoundCommandsWidget.addCommand(command);
-
-        // (1) - Visualize ship
-        command = new CommandWidgetTUI(
-                "1",
-                () -> {
-                    this.getOtherShipCommand();
-
-                    // Go back to the card round available commands
-                    this.getCardRoundCommand();
-                }
+                // Go back to the card round available commands
+                this.getCardRoundCommand();
+            }
         );
         command.appendString("Visualize ship");
         this.cardRoundCommandsWidget.addCommand(command);
@@ -828,9 +839,9 @@ public class CardRoundScreen extends Screen {
         // the currently active event card
         this.cardRoundCommandsWidget.setCommands(
                 this.indexedCardInputMethods.values().stream()
-                        .filter(pair -> (pair.getKey() == true))
-                        .map(Pair::getValue)
-                        .toList()
+                    .filter(pair -> (pair.getKey() == true))
+                    .map(Pair::getValue)
+                    .toList()
         );
     }
 
@@ -838,7 +849,7 @@ public class CardRoundScreen extends Screen {
      * Generates the widget of the current event card
      */
     private void generateCurrEventCardWidget() {
-        this.getCurrEventCard(this.currEventCardState);
+        this.getCurrEventCard();
         this.currEventCardWidget = this.currEventCard.generateWidget();
     }
 
@@ -878,16 +889,38 @@ public class CardRoundScreen extends Screen {
     }
 
     /**
+     * Generates a widget that shows the current player if it's
+     * his turn or, in the other case, whose turn it is to play.
+     */
+    private void generatePlayerTurnWidget(String playingPlayer) {
+        this.playerTurnWidget = new WidgetTUI();
+
+        if (playingPlayer.equals(this.model.getNickname())) {
+            this.playerTurnWidget
+                    .appendString(COMPUTER_MSG_TAG + "It's " + PrintUtils.addColor("YOUR TURN", ANSIColors.BRIGHT_GREEN) + " to play");
+        }
+        else {
+            this.playerTurnWidget
+                    .appendString(COMPUTER_MSG_TAG + "It's " + PrintUtils.addColor("NOT YOUR TURN", ANSIColors.BRIGHT_RED) + " to play")
+                    .appendString("Current player is: " + playingPlayer);
+        }
+
+        this.playerTurnWidget
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder();
+    }
+
+    /**
      * Sets the currEventCard parameter to the one communicated
      * by the server through the CardRoundDTO
      */
-    private void getCurrEventCard(CardStateJSON cardState) {
+    private void getCurrEventCard() {
         int cardId;
 
-        cardId = this.model.getState().getCardRoundDTO().getCardInfo().getId();
+        cardId = this.currEventCardState.getCardID();
 
         for (ClientEventCard card : this.model.getClientEventCards()) {
-            if (card.getId() == cardId) {
+            if (card.getCardID() == cardId) {
                 this.currEventCard = card;
                 return;
             }
@@ -920,6 +953,8 @@ public class CardRoundScreen extends Screen {
                         this.currEventCardWidget
                 )
         ).printWidget();
+
+        this.playerTurnWidget.printWidget();
     }
 
     /**
@@ -1186,26 +1221,26 @@ public class CardRoundScreen extends Screen {
         ActionJSON response = this.currEventCard.useCard();
 
         this.ctx = new CommandCTX(
-                "playCard",
-                () -> {
-                    System.out.println("onSuccess");
+            "playCard",
+            () -> {
+                System.out.println("onSuccess");
 
-                    // TODO: Implement onSuccess (if it needs to do something)
-                    // TODO: view a screen saying that your turn is over
-                },
-                () -> {
-                    System.out.println("onError");
+                // TODO: Implement onSuccess (if it needs to do something)
+                // TODO: view a screen saying that your turn is over
+            },
+            () -> {
+                System.out.println("onError");
 
-                    System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
-                    this.getCardRoundCommand();
-                }
+                System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
+                this.getCardRoundCommand();
+            }
         );
 
         this.client.sendMessage(
-                new PlayCard(
-                        this.model.getNickname(),
-                        response
-                )
+            new PlayCard(
+                this.model.getNickname(),
+                response
+            )
         );
     }
 
@@ -1214,26 +1249,37 @@ public class CardRoundScreen extends Screen {
      */
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
-        this.currEventCardState = cardRound.getCardInfo();
+        this.forceStopScreen();
 
-        // Updating this player's ship widget and
-        // getting the current event card
-        this.getCurrEventCard(this.currEventCardState);
-        this.generateShipWidgets();
+        try {
+            // Storing the current event card's card state
+            this.currEventCardState = cardRound.getCardInfo();
 
-        // Updating the current event card
-        this.currEventCard.updateCard(cardRound.getCardInfo());
+            // Updating this player's ship widget and
+            // getting the current event card
+            this.getCurrEventCard();
+            this.generateShipWidgets();
+            this.generatePlayerTurnWidget(cardRound.getCardInfo().getPlayerNickname());
 
-        // Filtering only the commands that the
-        // current event card is enabling
-        this.generateIndexedCardInputMethodsMap();
-        this.generateCardRoundCommandsWidget();
+            // Updating the current event card
+            this.currEventCard.updateCard(cardRound.getCardInfo());
 
-        System.out.println();
-        System.out.println(ANSIColors.BRIGHT_CYAN + "[!] CardRoundDTO has arrived [!]" + ANSIColors.RESET);
-        System.out.println();
+            this.generateIndexedCardInputMethodsMap();
 
-        // Prints the card round TUI and asks the user for a command
-        this.getCardRoundCommand();
+            // Available commands will be shown only to the
+            // player that the card expects to see
+            if (cardRound.getCardInfo().getPlayerNickname().equals(this.model.getNickname())) {
+                // Filtering only the commands that the current event card is enabling
+                this.currEventCard.setAvailableCommands(this.indexedCardInputMethods);
+            }
+
+            this.generateCardRoundCommandsWidget();
+
+            // Prints the card round TUI and asks the user for a command
+            this.getCardRoundCommand();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

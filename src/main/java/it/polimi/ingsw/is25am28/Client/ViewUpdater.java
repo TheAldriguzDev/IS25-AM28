@@ -13,7 +13,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
-import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -89,7 +88,6 @@ public class ViewUpdater implements StateVisitor {
         // 2. Create the board
         BoardJSON board = state.getBoard();
         this.model.setClientBoard(new ClientBoard(board, this.model));
-
 
         state.getCurrentState().accept(this);
     }
@@ -265,6 +263,11 @@ public class ViewUpdater implements StateVisitor {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    // TODO: Implement
+    public void updateCardResult(CardRoundDTO state) throws Exception {
+        System.out.println("updateCardResult with PREV_STATE");
     }
 
     @Override
