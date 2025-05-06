@@ -342,6 +342,7 @@ public class Pirates extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON piratesStateJSON = new CardStateJSON();
+        piratesStateJSON.setCardID(this.getCardID());
 
         // The dice throw is performed by generateState only at the beginning
         // since the card hasn't been used yet

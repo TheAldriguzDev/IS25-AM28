@@ -86,6 +86,7 @@ public class Stardust extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON stardustStateJSON = new CardStateJSON();
+        stardustStateJSON.setCardID(this.getCardID());
 
         if (hasBeenActivated()) {
             // Initializing the state flags

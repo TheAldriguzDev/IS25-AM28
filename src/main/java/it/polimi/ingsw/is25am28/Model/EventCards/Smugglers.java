@@ -212,6 +212,7 @@ public class Smugglers extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON smugglersStateJSON = new CardStateJSON();
+        smugglersStateJSON.setCardID(this.getCardID());
 
         if (hasBeenActivated()) {
             // Initializing the state flags
