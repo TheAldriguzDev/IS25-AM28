@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.TUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
+import it.polimi.ingsw.is25am28.Model.Board.BoardTestFlight;
 import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
@@ -2269,5 +2270,14 @@ public class PrintTest {
         warZoneWidget.appendString(ANSIColors.RED   + "          ███████████          " + ANSIColors.RESET);
 
         warZoneWidget.printWidget();
+    }
+
+    @Test
+    void testFlightShipAndBoardWidgetsPrintTest() {
+        Board board_zero = new BoardTestFlight();
+        Ship ship = new Ship(0);
+
+        ship.generateWidget().printWidget();
+        board_zero.generateWidget().printWidget();
     }
 }

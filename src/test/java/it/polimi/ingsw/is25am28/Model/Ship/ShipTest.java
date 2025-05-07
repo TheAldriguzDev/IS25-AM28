@@ -168,7 +168,7 @@ class ShipTest {
 
     @Test
     void generateComponentSubLists() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -381,7 +381,7 @@ class ShipTest {
 
     @Test
     void getAllDoubleComponents() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -443,7 +443,7 @@ class ShipTest {
 
     @Test
     void getAvailableEnergyBeforeAndAfterConsumption() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -545,7 +545,7 @@ class ShipTest {
         }
 
         // Case 0 - No cannons + no purple alien on board
-        ship = new Ship(0);
+        ship = new Ship(-1);
         expectedFirePower = 0;
         assertEquals(expectedFirePower, ship.getFirePower(null));
 
@@ -622,7 +622,7 @@ class ShipTest {
         }
 
         // Case 0 - No engines + no brown alien on board
-        ship = new Ship(0);
+        ship = new Ship(-1);
         batteries = 0;
         expectedEnginePower = 0;
         assertEquals(expectedEnginePower, ship.getEnginePower(batteries));
@@ -688,7 +688,7 @@ class ShipTest {
 
     @Test
     void getExposedConnectorAmount() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -739,7 +739,7 @@ class ShipTest {
 
     @Test
     void getAllItemsAndTheirValue() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -800,7 +800,7 @@ class ShipTest {
 
     @Test
     void getWrongComponents() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
 
         List<Integer> connectors = new ArrayList<>();
@@ -918,7 +918,7 @@ class ShipTest {
 
     @Test
     void getGridRow() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -984,7 +984,7 @@ class ShipTest {
 
     @Test
     void getGridColumn() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -1051,7 +1051,7 @@ class ShipTest {
 
     @Test
     void validateShip() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         assertTrue(ship.validateShip());
 
@@ -1062,7 +1062,7 @@ class ShipTest {
 
     @Test
     void traverse() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
         int i;
@@ -1132,7 +1132,7 @@ class ShipTest {
 
     @Test
     void traverseInTheCorrectOrder() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -1203,7 +1203,7 @@ class ShipTest {
 
     @Test
     void getNearestComponents() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -1263,7 +1263,7 @@ class ShipTest {
 
     @Test
     void addComponentThenGetComponent() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -1382,7 +1382,7 @@ class ShipTest {
 
     @Test
     void removeComponent() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -1555,7 +1555,7 @@ class ShipTest {
         // now have any other neighbouring vital units of their same type, otherwise
         // they cannot live in their cabins anymore and thus will be removed
 
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -1625,7 +1625,7 @@ class ShipTest {
 
     @Test
     void removingVitalUnitDoesNotRemoveHumans() {
-        Ship ship = new Ship(0);
+        Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
 

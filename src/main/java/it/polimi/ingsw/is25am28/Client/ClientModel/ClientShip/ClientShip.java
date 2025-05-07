@@ -13,6 +13,7 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
@@ -39,7 +40,7 @@ public class ClientShip implements WidgetTUIGenerator {
         int[][] levelOneMatrix;
         int row, col;
 
-        // (1.1) - Difficulty level 1 ship layout
+        // (1.1) - Difficulty level 0 and 1 ship layout
         // Starting from scratch
         matrix = new int[12][12];
 
@@ -50,7 +51,7 @@ public class ClientShip implements WidgetTUIGenerator {
             }
         }
 
-        // Filling the level 1 ship profile by hand
+        // Filling the level 0 and 1 ship profile by hand
         // Starting from the top
         matrix[4][6] = 1;   // Row #5
 
@@ -75,6 +76,8 @@ public class ClientShip implements WidgetTUIGenerator {
         matrix[8][7] = 1;   // Row #9
         matrix[8][8] = 1;   // Row #9
 
+        // NOTE: Both level 0 (test flight) and level 1 have the same ship profile
+        shipProfiles.put(0, matrix);
         shipProfiles.put(1, matrix);
 
         // Saving the level 1 matrix as a baseline for
@@ -160,6 +163,7 @@ public class ClientShip implements WidgetTUIGenerator {
 
         // (2) - Setting the Ship dimensions per difficultyLevel
         // --> Dimensions per difficultyLevel represent the smallest square/rectangle that wraps the entire ship
+        shipDimensions.put(0, new Pair<Integer, Integer>(5, 5));
         shipDimensions.put(1, new Pair<Integer, Integer>(5, 5));
         shipDimensions.put(2, new Pair<Integer, Integer>(5, 7));
         shipDimensions.put(3, new Pair<Integer, Integer>(6, 9));
@@ -168,6 +172,7 @@ public class ClientShip implements WidgetTUIGenerator {
         // --> Offsets are between the 12x12 grid and the actual ship placement (just like in the cardboard version)
         // --> When scanning the 12x12 grid, you add these values to the respective row and column iterators
         //     to start scanning the ship from the top-left corner of the square/rectangle that wraps the entire ship
+        shipOffsets.put(0, new Pair<Integer, Integer>(4, 4));
         shipOffsets.put(1, new Pair<Integer, Integer>(4, 4));
         shipOffsets.put(2, new Pair<Integer, Integer>(4, 3));
         shipOffsets.put(3, new Pair<Integer, Integer>(3, 2));
@@ -877,26 +882,39 @@ public class ClientShip implements WidgetTUIGenerator {
         List<List<String>> screenRowList;
         List<List<String>> mergedWidgetRowList;
 
+        int scale = 3;
+        int height = scale;
+        int width = 3 * scale + 2;
+
+        int shipRows, shipCols;
+        int rowOffset, colOffset;
+        int shipRowRange, shipColRange;
+
         // Initializations
         shipGridWidget = new WidgetTUI();
         tmpComponentWidget = new WidgetTUI();
         mergedWidgetRowList = new ArrayList<>();
 
-        int scale = 3;
-        int height = scale;
-        int width = 3 * scale + 2;
-
         tmpComponentWidget.setHeight(height);
         tmpComponentWidget.setWidth(width);
 
-        int shipRows = ClientShip.shipDimensions.get(this.difficultyLevel).getKey();
-        int shipCols= ClientShip.shipDimensions.get(this.difficultyLevel).getValue();
+        if (shipDimensions.containsKey(this.difficultyLevel) && shipOffsets.containsKey(this.difficultyLevel)) {
+            shipRows = shipDimensions.get(this.difficultyLevel).getKey();
+            shipCols = shipDimensions.get(this.difficultyLevel).getValue();
 
-        int rowOffset = ClientShip.shipOffsets.get(this.difficultyLevel).getKey();
-        int colOffset = ClientShip.shipOffsets.get(this.difficultyLevel).getValue();
+            rowOffset = shipOffsets.get(this.difficultyLevel).getKey();
+            colOffset = shipOffsets.get(this.difficultyLevel).getValue();
+        }
+        else {
+            shipRows = grid_rows;
+            shipCols = grid_cols;
 
-        int shipRowRange = rowOffset + shipRows;
-        int shipColRange = colOffset + shipCols;
+            rowOffset = 0;
+            colOffset = 0;
+        }
+
+        shipRowRange = rowOffset + shipRows;
+        shipColRange = colOffset + shipCols;
 
         // Generating the ship's widget screen by composing each row of the ship
         // horizontally first, and then compose each row horizontally, thus
@@ -938,12 +956,17 @@ public class ClientShip implements WidgetTUIGenerator {
         // Wrapping the ship's grid widget with the default border
         shipGridWidget.wrapWidgetWithBorder();
 
-        // Wrapping the ship's grid widget with the indexed border
-        shipGridWidget = ClientShip.wrapShipWidgetWithCoordinatesBorder(
-                shipGridWidget,
-                ClientShip.shipOffsets.get(this.difficultyLevel).getKey() + 1,
-                ClientShip.shipOffsets.get(this.difficultyLevel).getValue() + 1
-        );
+        if (ClientShip.shipOffsets.containsKey(this.difficultyLevel)) {
+            // Wrapping the ship's grid widget with the indexed border
+            shipGridWidget = ClientShip.wrapShipWidgetWithCoordinatesBorder(
+                    shipGridWidget,
+                    ClientShip.shipOffsets.get(this.difficultyLevel).getKey() + 1,
+                    ClientShip.shipOffsets.get(this.difficultyLevel).getValue() + 1
+            );
+        }
+        else {
+            shipGridWidget = ClientShip.wrapShipWidgetWithCoordinatesBorder(shipGridWidget, 1, 1);
+        }
 
         return shipGridWidget;
     }

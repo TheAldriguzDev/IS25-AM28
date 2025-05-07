@@ -173,7 +173,7 @@ class VisitPlanetsTest {
 //            System.out.println(" - (isSpecialStorage=" + storage.isSpecialStorage() + ")");
 //            System.out.println(" - (" + storage.getPosition()[0] + ", " + storage.getPosition()[1] + ")");
 //            System.out.println(" - (maxCapacity=" + storage.getCapacity() + ", occupied=" + storage.getStoredItems().size() + ")");
-//            System.out.println(" - stored = " + storage.getStoredItems().stream().map(Item::getColor).toList() + "\n");
+//            System.out.println(" - stored = " + storage.getStoredItems().stream().map(Item::getColorToString).toList() + "\n");
 //        }
 //        System.out.println(" ========================== \n");
 //    }

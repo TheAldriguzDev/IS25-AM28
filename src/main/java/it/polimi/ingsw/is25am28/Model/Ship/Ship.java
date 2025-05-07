@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.Ship;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStructural;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.Exceptions.*;
@@ -35,7 +37,7 @@ public class Ship implements WidgetTUIGenerator {
         int[][] levelOneMatrix;
         int row, col;
 
-        // (1.1) - Difficulty level 1 ship layout
+        // (1.1) - Difficulty level 0 and 1 ship layout
         // Starting from scratch
         matrix = new int[12][12];
 
@@ -46,7 +48,7 @@ public class Ship implements WidgetTUIGenerator {
             }
         }
 
-        // Filling the level 1 ship profile by hand
+        // Filling the level 0 and 1 ship profile by hand
         // Starting from the top
         matrix[4][6] = 1;   // Row #5
 
@@ -71,6 +73,8 @@ public class Ship implements WidgetTUIGenerator {
         matrix[8][7] = 1;   // Row #9
         matrix[8][8] = 1;   // Row #9
 
+        // NOTE: Both level 0 (test flight) and level 1 have the same ship profile
+        shipProfiles.put(0, matrix);
         shipProfiles.put(1, matrix);
 
         // Saving the level 1 matrix as a baseline for
@@ -156,6 +160,7 @@ public class Ship implements WidgetTUIGenerator {
 
         // (2) - Setting the Ship dimensions per difficultyLevel
         // --> Dimensions per difficultyLevel represent the smallest square/rectangle that wraps the entire ship
+        shipDimensions.put(0, new Pair<Integer, Integer>(5, 5));
         shipDimensions.put(1, new Pair<Integer, Integer>(5, 5));
         shipDimensions.put(2, new Pair<Integer, Integer>(5, 7));
         shipDimensions.put(3, new Pair<Integer, Integer>(6, 9));
@@ -164,6 +169,7 @@ public class Ship implements WidgetTUIGenerator {
         // --> Offsets are between the 12x12 grid and the actual ship placement (just like in the cardboard version)
         // --> When scanning the 12x12 grid, you add these values to the respective row and column iterators
         //     to start scanning the ship from the top-left corner of the square/rectangle that wraps the entire ship
+        shipOffsets.put(0, new Pair<Integer, Integer>(4, 4));
         shipOffsets.put(1, new Pair<Integer, Integer>(4, 4));
         shipOffsets.put(2, new Pair<Integer, Integer>(4, 3));
         shipOffsets.put(3, new Pair<Integer, Integer>(3, 2));
@@ -1120,7 +1126,7 @@ public class Ship implements WidgetTUIGenerator {
      * @return The components removed from the ship, which are the selected one at coordinates (i, j) and any components
      *         that were left hanging from the ship as a consequence of the removal of the selected component.
      */
-    public List<Component> removeComponent(int i, int j) throws OutOfGridException, CoreDeletionAttemptException, CoreDeletionAttemptException {
+    public List<Component> removeComponent(int i, int j) throws OutOfGridException, CoreDeletionAttemptException {
         Component[][] previousShip;
         List<Component> removedComponents;
 
@@ -1279,26 +1285,39 @@ public class Ship implements WidgetTUIGenerator {
         List<List<String>> screenRowList;
         List<List<String>> mergedWidgetRowList;
 
+        int scale = 3;
+        int height = scale;
+        int width = 3 * scale + 2;
+
+        int shipRows, shipCols;
+        int rowOffset, colOffset;
+        int shipRowRange, shipColRange;
+
         // Initializations
         shipGridWidget = new WidgetTUI();
         tmpComponentWidget = new WidgetTUI();
         mergedWidgetRowList = new ArrayList<>();
 
-        int scale = 3;
-        int height = scale;
-        int width = 3 * scale + 2;
-
         tmpComponentWidget.setHeight(height);
         tmpComponentWidget.setWidth(width);
 
-        int shipRows= Ship.shipDimensions.get(this.difficultyLevel).getKey();
-        int shipCols= Ship.shipDimensions.get(this.difficultyLevel).getValue();
+        if (shipDimensions.containsKey(this.difficultyLevel) && shipOffsets.containsKey(this.difficultyLevel)) {
+            shipRows = shipDimensions.get(this.difficultyLevel).getKey();
+            shipCols = shipDimensions.get(this.difficultyLevel).getValue();
 
-        int rowOffset = Ship.shipOffsets.get(this.difficultyLevel).getKey();
-        int colOffset = Ship.shipOffsets.get(this.difficultyLevel).getValue();
+            rowOffset = shipOffsets.get(this.difficultyLevel).getKey();
+            colOffset = shipOffsets.get(this.difficultyLevel).getValue();
+        }
+        else {
+            shipRows = grid_rows;
+            shipCols = grid_cols;
 
-        int shipRowRange = rowOffset + shipRows;
-        int shipColRange = colOffset + shipCols;
+            rowOffset = 0;
+            colOffset = 0;
+        }
+
+        shipRowRange = rowOffset + shipRows;
+        shipColRange = colOffset + shipCols;
 
         // Generating the ship's widget screen by composing each row of the ship
         // horizontally first, and then compose each row horizontally, thus
@@ -1327,7 +1346,19 @@ public class Ship implements WidgetTUIGenerator {
         shipGridWidget.setScreen(WidgetTUI.composeScreensVertically(mergedWidgetRowList));
 
         // Wrapping the ship's grid widget with the default border
-        shipGridWidget.wrapWidgetWithBorder();
+        // shipGridWidget.wrapWidgetWithBorder();
+
+        // Wrapping the ship's grid widget with the indexed border
+        if (Ship.shipOffsets.containsKey(this.difficultyLevel)) {
+            shipGridWidget = Ship.wrapShipWidgetWithCoordinatesBorder(
+                    shipGridWidget,
+                    Ship.shipOffsets.get(this.difficultyLevel).getKey() + 1,
+                    Ship.shipOffsets.get(this.difficultyLevel).getValue() + 1
+            );
+        }
+        else {
+            shipGridWidget = Ship.wrapShipWidgetWithCoordinatesBorder(shipGridWidget, 1, 1);
+        }
 
         return shipGridWidget;
     }
@@ -1429,5 +1460,143 @@ public class Ship implements WidgetTUIGenerator {
         }
 
         return emptySpaceScreen;
+    }
+
+    /**
+     * @return The widget containing all of this ship's component's widgets
+     *         as they are put inside this ship's grid and also adds a custom
+     *         border with row and column indexes to locate a component with ease
+     *         (just like in the actual board game)
+     */
+    private static WidgetTUI wrapShipWidgetWithCoordinatesBorder(WidgetTUI shipGridWidget, int startRowIndex, int startColIndex) {
+        if (shipGridWidget != null) {
+            StringBuilder tmpString;
+            int index, i;
+
+            // Storing the old screen and clearing the previous one
+            // since it's not wrapped
+            List<String> unwrappedScreen = shipGridWidget.unwrapWidgetFromBorder().getScreen();;
+
+            // Generating a mockup component to get its dimensions
+            ClientStructural clientStructural = new ClientStructural(-1, Arrays.asList(0, 0, 0, 0));
+            WidgetTUI widget = clientStructural.generateWidget();
+            int componentHeight = widget.getHeight();
+            int componentWidth = widget.getWidth();
+
+            int middleSidesStrlen = 2;
+            int shipHeight = shipGridWidget.getHeight();
+            int shipWidth = shipGridWidget.getWidth();
+
+            // Resetting the ship widget's screen
+            shipGridWidget.resetScreenAndDimensions();
+
+            // Increase the border counter by one
+            shipGridWidget.setBorderCount(shipGridWidget.getBorderCount() + 1);
+
+            // Top Left Corner
+            tmpString = new StringBuilder(UnicodeCharacters.SINGLE_LINE_TL_CORNER);
+
+            // Upper border
+            tmpString.append(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE.repeat(middleSidesStrlen - 1));
+            index = startColIndex;
+            i = 0;
+            while (i < shipWidth) {
+                if ((i % componentWidth) == (componentWidth / 2)) {
+                    tmpString.append(index);
+                    index++;
+
+                    i += Integer.toString(index).length();
+                }
+                else {
+                    tmpString.append(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE);
+                    i++;
+                }
+            }
+            tmpString.append(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE.repeat(middleSidesStrlen - 1));
+
+            // Top Right Corner
+            tmpString.append(UnicodeCharacters.SINGLE_LINE_TR_CORNER);
+            shipGridWidget.appendString(tmpString.toString());
+
+            // Middle
+            index = startRowIndex;
+            for (i = 0; i < shipHeight; i++) {
+                tmpString = new StringBuilder();
+
+                if (i % componentHeight == (componentHeight / 2)) {
+                    String leftAlignedIndexString = String.format("%-" + middleSidesStrlen + "d", index);
+
+                    // Left side index
+                    tmpString.append(leftAlignedIndexString);
+
+                    // Old unwrapped screen goes in the middle
+                    String oldLine = unwrappedScreen.get(i);
+                    tmpString.append(oldLine);
+
+                    int oldLineLen = PrintUtils.removeUnicodeFromString(oldLine).length();
+
+                    // Adding right-side padding
+                    if (oldLineLen < shipWidth - 2) {
+                        tmpString.append(SPACE.repeat(shipWidth - (2 * middleSidesStrlen) - oldLineLen));
+                    }
+
+                    // Right side index
+                    tmpString.append(leftAlignedIndexString);
+                    index++;
+                }
+                else {
+                    // Left side
+                    tmpString.append(UnicodeCharacters.VERTICAL_LEFT_SINGLE_LINE + SPACE);
+
+                    // Old unwrapped screen goes in the middle
+                    String oldLine = unwrappedScreen.get(i);
+                    tmpString.append(oldLine);
+
+                    int oldLineLen = PrintUtils.removeUnicodeFromString(oldLine).length();
+
+                    // Adding right-side padding
+                    if (oldLineLen < shipWidth - 2) {
+                        tmpString.append(SPACE.repeat(shipWidth - (2 * middleSidesStrlen) - oldLineLen));
+                    }
+
+                    // Right side
+                    tmpString.append(UnicodeCharacters.VERTICAL_RIGHT_SINGLE_LINE + SPACE);
+                }
+
+                // Finally, add the wrapped line to the new screen
+                shipGridWidget.appendString(tmpString.toString());
+            }
+
+            // Bottom Left Corner
+            tmpString = new StringBuilder(UnicodeCharacters.SINGLE_LINE_BL_CORNER);
+
+            // Lower border
+            tmpString.append(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE.repeat(middleSidesStrlen - 1));
+            index = startColIndex;
+            i = 0;
+            while (i < shipWidth) {
+                if ((i % componentWidth) == (componentWidth / 2)) {
+                    tmpString.append(index);
+                    index++;
+
+                    i += Integer.toString(index).length();
+                }
+                else {
+                    tmpString.append(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE);
+                    i++;
+                }
+            }
+            tmpString.append(UnicodeCharacters.HORIZONTAL_TOP_SINGLE_LINE.repeat(middleSidesStrlen - 1));
+
+            // Bottom Right Corner
+            tmpString.append(UnicodeCharacters.SINGLE_LINE_BR_CORNER);
+            shipGridWidget.appendString(tmpString.toString());
+
+            // Adding the thickness of the borders
+            shipGridWidget.setHeight(shipHeight);
+            shipGridWidget.setWidth(shipWidth);
+        }
+
+        return shipGridWidget;
     }
 }

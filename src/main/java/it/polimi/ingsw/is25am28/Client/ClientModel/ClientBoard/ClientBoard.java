@@ -8,19 +8,32 @@ import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientBoard {
+    private static final Map<Integer, Pair<Integer, Integer>> boardDimensions;
+
+    static {
+        boardDimensions = new HashMap<>();
+
+        // Adding board widget dimensions for all levels (0,1,2,3)
+        // NOTE: Pair is (height, width)
+        boardDimensions.put(0, new Pair<>(5, 6));
+        boardDimensions.put(1, new Pair<>(5, 6));
+        boardDimensions.put(2, new Pair<>(6, 8));
+        boardDimensions.put(3, new Pair<>(9, 10));
+    }
+
     private final int size;
     private final int level;
-//    private List<String> playerNicknames;
+    // private List<String> playerNicknames;
     private List<ClientPlayer> eliminatedPlayers;
-    //private Map<String, Integer> currPlayersPositions;
-
-    //private final List<ClientPlayer> eliminatedPlayers;
+    // private Map<String, Integer> currPlayersPositions;
+    // private final List<ClientPlayer> eliminatedPlayers;
 
     private final Map<String, ClientPlayer> players;
 
@@ -68,15 +81,13 @@ public class ClientBoard {
         return this.players.values().stream().toList();
     }
 
-//    public Cell getHead() { return this.head; }
-
     /**
      * @return A widget containing this board title (optional)
      */
     private WidgetTUI getBoardTitleWidget() {
         WidgetTUI boardTitleWidget = new WidgetTUI();
 
-        boardTitleWidget.appendString(" ==== LEVEL " + this.getLevel() + " BOARD ==== ");
+        boardTitleWidget.appendString("[LEVEL " + this.getLevel() + " BOARD]");
 
         return boardTitleWidget;
     }
@@ -166,35 +177,26 @@ public class ClientBoard {
             List<WidgetTUI> widgetList = new ArrayList<>();
             StringBuilder boardLine;
 
-            int height = 6;
-            int width = 8;
-
-            // Throws an error if the set dimensions cannot be used to draw
-            // a closed shape of the same perimeter as this board's size
-            if ((height * 2) + (width * 2) - 4 != this.getSize()) {
-                throw new IllegalArgumentException("ERROR: Cannot draw board with dimensions (height=" + height + ", width=" + width + ")");
-            }
-
             List<String> allCells = new ArrayList<>();
-//            Cell currCell = this.getHead();
+
+            int height = boardDimensions.get(this.level).getKey();
+            int width = boardDimensions.get(this.level).getValue();
 
             // Sets which blocks need to be colored
             Map<Integer, String> coloredCells = new HashMap<>();
             for (ClientPlayer player : this.players.values()) {
                 coloredCells.put(player.getCursor(), player.getColor().getColorString());
-                //System.out.println("put color: " + player.getColor().getColorString() + "COLOR " + ANSIColors.RESET + "of player:" + player.getNickname() + " cursor: " + player.getCursor());
+                //System.out.println("put color: " + player.getColorToString().getColorString() + "COLOR " + ANSIColors.RESET + "of player:" + player.getNickname() + " cursor: " + player.getCursor());
             }
 
-
-                for (int i = 0; i < this.getSize(); i++) {
-                    if (coloredCells.containsKey(i)) {
-                        allCells.add(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, coloredCells.get(i)));
-                        //System.out.println("Added cell number " + i + " COLOR " + ANSIColors.RESET);
-                    } else {
-                        allCells.add(UnicodeCharacters.FULL_BLOCK);
-                    }
+            for (int i = 0; i < this.getSize(); i++) {
+                if (coloredCells.containsKey(i)) {
+                    allCells.add(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, coloredCells.get(i)));
+                    //System.out.println("Added cell number " + i + " COLOR " + ANSIColors.RESET);
+                } else {
+                    allCells.add(UnicodeCharacters.FULL_BLOCK);
                 }
-
+            }
 
             List<String> topSide = new ArrayList<>(allCells.subList(0, width));
             List<String> rightSide = new ArrayList<>(allCells.subList(width, width + height - 1));
@@ -258,6 +260,4 @@ public class ClientBoard {
 
         return null;
     }
-
-
 }

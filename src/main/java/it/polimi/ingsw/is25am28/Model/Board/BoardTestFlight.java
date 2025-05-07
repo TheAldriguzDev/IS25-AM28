@@ -28,9 +28,4 @@ public class BoardTestFlight extends Board {
 
         this.setInitialCells(initialCells);
     }
-
-    @Override
-    public WidgetTUI generateWidget() {
-        return null;
-    }
 }

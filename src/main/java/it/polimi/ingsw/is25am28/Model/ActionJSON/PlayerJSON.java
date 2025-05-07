@@ -55,7 +55,7 @@ public class PlayerJSON implements Serializable {
         if (withShip) {
             return new PlayerJSON(
                     player.getNickname(),
-                    player.getColor(),
+                    player.getColorToString(),
                     player.getCursor(),
                     player.getCredits(),
                     player.getLostPieces(),
@@ -66,7 +66,7 @@ public class PlayerJSON implements Serializable {
         } else {
             return new PlayerJSON(
                     player.getNickname(),
-                    player.getColor(),
+                    player.getColorToString(),
                     player.getCursor(),
                     player.getCredits(),
                     player.getLostPieces(),

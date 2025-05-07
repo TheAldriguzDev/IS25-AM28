@@ -25,8 +25,12 @@ public class Player {
             return nickname;
       }
 
-      public String getColor(){
+      public String getColorToString() {
             return color.toString();
+      }
+
+      public PlayerColor getColor() {
+            return this.color;
       }
 
       public int getCursor(){
