@@ -27,13 +27,13 @@ In the project we implemented all the requirements plus we decide to develop thr
 |:-----------------------------|:-----------:|
 | Complete rules               |      🟢       |
 | TUI                          |      🟡      |
-| GUI                          |      🔴      |
+| GUI                          |      🟡      |
 | Socket                       |      🟢      |
 | RMI                          |      🟢      |
 | Multiple games               |      🟢      |
 | Persitency                   |      🔴      |
 | Resilience to disconnections |      🟡      |
-| Test flight                  |      🟢      |
+| Test flight                  |      🟡      |
 
 Legend: 
 - 🔴 Not implemented

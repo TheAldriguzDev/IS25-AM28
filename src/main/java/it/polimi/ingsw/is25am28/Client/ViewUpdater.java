@@ -241,26 +241,30 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(CardRoundDTO state) throws Exception {
-        synchronized (this.model) {
-            // Updates the ClientBoard if necessary (Positions, EliminatedPlayers)
-            if(state.getCardInfo().getNeedsBoardUpdate()) {
-                this.model.getClientBoard().updateBoard(state.getCardInfo());
+        try {
+            synchronized (this.model) {
+                // Updates the ClientBoard if necessary (Positions, EliminatedPlayers)
+                if(state.getCardInfo().getNeedsBoardUpdate()) {
+                    this.model.getClientBoard().updateBoard(state.getCardInfo());
+                }
+
+                // Updates the ClientShips if necessary (Removed Components, Batteries, Dropped/Taken Resources, Removed Lifeforms)
+                if (state.getCardInfo().getNeedsShipUpdate()) {
+                    this.model.updateShips(state.getCardInfo());
+                }
+
+                // Updates the ClientPlayers' info if necessary (Credits)
+                if(state.getCardInfo().getNeedsPlayerUpdate()) {
+                    this.model.updatePlayers(state.getCardInfo());
+                }
+
+                this.model.setState(new ClientCardRoundState(this.model, state));
             }
 
-            // Updates the ClientShips if necessary (Removed Components, Batteries, Dropped/Taken Resources, Removed Lifeforms)
-            if (state.getCardInfo().getNeedsShipUpdate()) {
-                this.model.updateShips(state.getCardInfo());
-            }
-
-            // Updates the ClientPlayers' info if necessary (Credits)
-            if(state.getCardInfo().getNeedsPlayerUpdate()) {
-                this.model.updatePlayers(state.getCardInfo());
-            }
-
-            this.model.setState(new ClientCardRoundState(this.model, state));
+            this.ui.showCardRound(state);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
-        this.ui.showCardRound(state);
     }
 
     @Override
