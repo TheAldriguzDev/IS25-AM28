@@ -6,10 +6,16 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 public class ClientWarZone extends ClientEventCard {
     private List<List<String>> actionAndConsequences;
@@ -60,59 +66,183 @@ public class ClientWarZone extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+        String tmpAction = null;
+        String tmpConsequence = null;
+        switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
+            case "Humans" -> tmpAction = "Crew";
+            case "Enginepower" -> tmpAction = "EnginePower";
+            case "Firepower" -> tmpAction = "FirePower";
+        }
+        switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
+            case "RequiredCrew" -> tmpConsequence = "Taken Crew";
+            case "MovementSteps" ->tmpConsequence = "Days";
+            case "ShootingSequence" -> tmpConsequence = "PlasmaShots";
+            case "LossItems" -> tmpConsequence = "Taken Items";
+        }
+
+        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
 
         if (this.playerNickname != null) {
-            cardInfoWidget.appendString("Current Player: " + playerNickname);
-            cardWidget.appendString("currAction: " + actionAndConsequences.get(currActionIndex).getFirst()); // SWITCH CASE TO WRITE IN A BETTER WAY
-            cardWidget.appendString("currConsequence: " + actionAndConsequences.get(currActionIndex).getLast());
 
-            switch (actionAndConsequences.get(currActionIndex).getLast()) {
+            switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
                 case "RequiredCrew" -> {
-                    cardInfoWidget.appendString("==== *CHAINS IMAGE* ====");
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "        ██        ██    ██     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██       ████       " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██       ████       " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "        ██        ██    ██     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
+                    cardInfoWidget.wrapWidgetWithBorder();
 
                     if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
                         cardInfoWidget.appendString("Required Crew: " + requiredCrew);
+                    } else {
+                        cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
                     }
+                    cardInfoWidget.appendString("───────────────────────────────");
                 }
                 case "ShootingSequence" -> {
-                    cardInfoWidget.appendString("==== *PLASMASHOT IMAGE* ===="); // ALSO INCLUDE SEQUENCE
+                    cardInfoWidget.appendString("                 █                ");
+                    cardInfoWidget.appendString("                ███               ");
+                    cardInfoWidget.appendString("               █████              ");
+                    cardInfoWidget.appendString("               █████              ");
+                    cardInfoWidget.appendString("              ███████             ");
+                    cardInfoWidget.appendString("       █    ███████████    █      ");
+                    cardInfoWidget.appendString("       ██  █████████████  ██      ");
+                    cardInfoWidget.appendString("  ██    ███████████████████    ██ ");
+                    cardInfoWidget.appendString("  ███    █████████████████    ███ ");
+                    cardInfoWidget.appendString("   ████ ███████████████████ ████  ");
+                    cardInfoWidget.appendString("     █████████████████████████    ");
+                    cardInfoWidget.appendString("      ███████████████████████     ");
+                    cardInfoWidget.appendString("         █████████████████        ");
+                    cardInfoWidget.appendString("            ███████████           ");
+                    cardInfoWidget.wrapWidgetWithBorder();
 
-                        if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
-                            cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");
+                    if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+                        cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");
 
-                            switch (this.currentPlasmaShot.get("shotDirection")) {
-                                case 0 -> cardInfoWidget.appendString("Inbound Direction: ABOVE");
-                                case 1 -> cardInfoWidget.appendString("Outbound Direction: RIGHT");
-                                case 2 -> cardInfoWidget.appendString("Outbound Direction: BELOW");
-                                case 3 -> cardInfoWidget.appendString("Inbound Direction: LEFT");
-                            }
-
-                            if (this.currentPlasmaShot.get("shotSize") == 1) {
-                                cardInfoWidget.appendString("Size: SMALL PLASMASHOT");
-                            }
-                            else {
-                                cardInfoWidget.appendString("Size: BIG PLASMASHOT");
-                            }
-
-                            cardInfoWidget.appendString("Dice Throw Result: " + this.diceThrowResult);
+                        switch (this.currentPlasmaShot.get("shotDirection")) {
+                            case 0 -> cardInfoWidget.appendString("Inbound Direction: ABOVE");
+                            case 1 -> cardInfoWidget.appendString("Outbound Direction: RIGHT");
+                            case 2 -> cardInfoWidget.appendString("Outbound Direction: BELOW");
+                            case 3 -> cardInfoWidget.appendString("Inbound Direction: LEFT");
                         }
+
+                        if (this.currentPlasmaShot.get("shotSize") == 1) {
+                            cardInfoWidget.appendString("Size: SMALL PLASMASHOT");
+                        }
+                        else {
+                            cardInfoWidget.appendString("Size: BIG PLASMASHOT");
+                        }
+
+                        cardInfoWidget.appendString("Dice Throw Result: " + this.diceThrowResult);
+                    } else {
+                        cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
+                        // TODO: INCLUDE SEQUENCE ONY WHEN THE AFFECTED PLAYER HAS NOT BEEN DETERMINED YET
+
+                    }
+                    cardInfoWidget.appendString("───────────────────────────────");
                 }
                 case "LossItems" -> {
-                    cardInfoWidget.appendString("==== *ITEM IMAGE* ====");
+                    cardInfoWidget.appendString(ANSIColors.RED + "████                       ████" + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.RED + "  ████                   ████  " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.RED + "    ████               ████    " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.RED +"      █████         █████      " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.RED +"       █ " + ANSIColors.WHITE + "█████████████" + ANSIColors.RED + " █       " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "         █      ███  █         " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "         █    ███    █         " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.WHITE + "         █  ███      █         " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.RED +"       █ " + ANSIColors.WHITE + "█████████████" + ANSIColors.RED + " █       " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.RED +"      █████         █████      " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.RED +"    ████               ████    " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.RED +"  ████                   ████  " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.RED +"████                       ████" + ANSIColors.RESET);
+                    cardInfoWidget.wrapWidgetWithBorder();
+
                     if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
-                        cardInfoWidget.appendString("RequiredResorces: " + requiredResources);
+                        cardInfoWidget.appendString("RequiredResources: " + requiredResources);
+                    } else {
+                        cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
                     }
+                    cardInfoWidget.appendString("───────────────────────────────");
+                }
+                case "MovementSteps" -> {
+                    List<String> colorPool = new ArrayList<>();
+                    Random rand = new Random();
+                    StringBuilder spaceString;
+                    int randIndex, randColor;
+
+                    int height = 12;
+                    int width = 31;
+
+                    // Aggregates all the possible colors that the space symbols can have
+                    colorPool.add(ANSIColors.MAGENTA);
+                    colorPool.add(ANSIColors.RED);
+                    colorPool.add(ANSIColors.YELLOW);
+                    colorPool.add(ANSIColors.CYAN);
+
+                    // Indicates how much the stars should be spread apart
+                    int spreadFactor = 60;
+                    int symbolPoolSize = UnicodeCharacters.SPACE_SYMBOLS.length + spreadFactor;
+
+                    for (int i = 0; i < height; i++) {
+                        spaceString = new StringBuilder();
+
+                        for (int j = 0; j < width; j++) {
+                            randIndex = rand.nextInt(0, symbolPoolSize);
+                            randColor = rand.nextInt(0, colorPool.size());
+
+                            if (randIndex < UnicodeCharacters.SPACE_SYMBOLS.length) {
+                                spaceString.append(PrintUtils.addColor(UnicodeCharacters.SPACE_SYMBOLS[randIndex], colorPool.get(randColor)));
+                            }
+                            else {
+                                spaceString.append(SPACE);
+                            }
+                        }
+                        cardInfoWidget.appendString(spaceString.toString());
+                    }
+                    cardInfoWidget.wrapWidgetWithBorder();
                 }
             }
+
+            cardInfoWidget.appendString("Current Player: " + this.playerNickname);
+
         }
         else {
-            cardInfoWidget.appendString("CurrActionsAndConsequences: " + actionAndConsequences);
-            cardInfoWidget.appendString("Card Level: " + this.cardLevel);
-        }
+            cardInfoWidget.appendString(ANSIColors.WHITE + "      ██  ██  ███  ██  ██      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "      ███████████████████      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.WHITE + "            ███████            " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "         █████████████         " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "        ███████████████        " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "       █████████████████       " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "      ███████████████████      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "      ███████████████████      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.GREEN + "      ███████████████████      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.RED   + "      ███████████████████      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.RED   + "        ███████████████        " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.RED   + "          ███████████          " + ANSIColors.RESET);
+            cardInfoWidget.wrapWidgetWithBorder();
 
-        if (this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) { // NOT NECESSARY IN PRINT, ONLY IN USECARD
-            cardInfoWidget.appendString("Affected Player: " + affectedPlayer);
+            for (List<String> pair : actionAndConsequences) {
+                switch (pair.getFirst()) {
+                    case "Humans" -> tmpAction = "Crew";
+                    case "Enginepower" -> tmpAction = "EnginePower";
+                    case "Firepower" -> tmpAction = "FirePower";
+                }
+                switch (pair.getLast()) {
+                    case "RequiredCrew" -> tmpConsequence = "Taken Crew";
+                    case "MovementSteps" ->tmpConsequence = "Days";
+                    case "ShootingSequence" -> tmpConsequence = "PlasmaShots";
+                    case "LossItems" -> tmpConsequence = "Taken Items";
+                }
+                cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
+            }
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget)

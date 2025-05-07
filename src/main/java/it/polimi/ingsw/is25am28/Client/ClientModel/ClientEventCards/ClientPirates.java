@@ -63,7 +63,7 @@ public class ClientPirates extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
 
         if (this.firstRound) {
 
@@ -81,7 +81,6 @@ public class ClientPirates extends ClientEventCard {
             cardInfoWidget.appendString(ANSIColors.WHITE + "████      " + ANSIColors.RESET + "███████████" + ANSIColors.WHITE +"      ████" + ANSIColors.RESET);
             cardInfoWidget.wrapWidgetWithBorder();
 
-            cardInfoWidget.appendString("Level: " + this.cardLevel);
             cardInfoWidget.appendString("Given credits: " + this.givenCredits);
             cardInfoWidget.appendString("Days: " + this.movementSteps);
             // TODO : does the shootingSequence need to be shown to the clients as a whole?

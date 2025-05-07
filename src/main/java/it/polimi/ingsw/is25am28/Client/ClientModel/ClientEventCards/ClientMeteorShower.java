@@ -83,8 +83,8 @@ public class ClientMeteorShower extends ClientEventCard {
         }
         // TODO : does the shootingSequence need to be shown to the clients as a whole?
         meteor1Final = WidgetTUI.composeTwoWidgetsVertically(
-            WidgetTUI.composeTwoWidgetsVertically(meteor1Title, meteor1),
-            meteor1Info
+                WidgetTUI.composeTwoWidgetsVertically(meteor1Title, meteor1),
+                meteor1Info
         );
 
         meteor1Final.centerWidgetScreen();

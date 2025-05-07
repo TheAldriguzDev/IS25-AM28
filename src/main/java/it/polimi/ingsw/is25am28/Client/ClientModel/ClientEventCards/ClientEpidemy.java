@@ -34,7 +34,7 @@ public class ClientEpidemy extends ClientEventCard {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        cardWidget.appendString("====" + this.cardName.toUpperCase() + "====");
+        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
 
         cardInfoWidget.appendString(ANSIColors.MAGENTA + "                               " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.MAGENTA + "      ██    ███████    ██      " + ANSIColors.RESET);
