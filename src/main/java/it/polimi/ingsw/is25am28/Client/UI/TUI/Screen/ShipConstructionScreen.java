@@ -423,7 +423,11 @@ public class ShipConstructionScreen extends Screen {
         // If it's not null, it means that it's available to be flipped
         if (this.model.getTimerDTO() != null) {
             if (this.model.getTimerDTO().getIsServerAction()) {
-                System.out.println(COMPUTER_MSG_TAG + PrintUtils.addColor("Hourglass can now be flipped!", ANSIColors.BRIGHT_MAGENTA));
+                new WidgetTUI()
+                        .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor("Hourglass can now be flipped!", ANSIColors.BRIGHT_MAGENTA))
+                        .addPadding(1, 1, 1, 1)
+                        .wrapWidgetWithBorder()
+                        .printWidget();
             }
         }
 
@@ -1294,7 +1298,12 @@ public class ShipConstructionScreen extends Screen {
         this.ctx = new CommandCTX(
             "flipTimer",
             () -> {
-                System.out.println(COMPUTER_MSG_TAG + PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA));
+                new WidgetTUI()
+                        .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor("Timer flipped successfully!", ANSIColors.BRIGHT_MAGENTA))
+                        .addPadding(1, 1, 1, 1)
+                        .wrapWidgetWithBorder()
+                        .printWidget();
+
                 this.getComponentSelectionCommand();
             },
             this::getComponentSelectionCommand

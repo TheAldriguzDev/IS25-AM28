@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 
 import com.fasterxml.jackson.annotation.*;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.CardRoundScreen;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
@@ -27,7 +28,8 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = PopulateShipComponentDTO.class, name = "PopulateShipComponentDTO"),
         @JsonSubTypes.Type(value = ConstructionDeckDTO.class, name = "ConstructionDeckDTO"),
         @JsonSubTypes.Type(value = DisconnectedPlayerDTO.class, name = "DisconnectedPlayerDTO"),
-        @JsonSubTypes.Type(value = InsufficientPlayerDTO.class, name = "InsufficientPlayerDTO")
+        @JsonSubTypes.Type(value = InsufficientPlayerDTO.class, name = "InsufficientPlayerDTO"),
+        @JsonSubTypes.Type(value = CardRoundDTO.class, name = "CardRoundDTO")
 })
 
 @JsonInclude(JsonInclude.Include.NON_NULL)

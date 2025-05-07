@@ -715,11 +715,11 @@ public class CardRoundScreen extends Screen {
 
                 doubleEnginesToActivate = Integer.parseInt(line);
 
-                if (doubleEnginesToActivate > 0) {
+                if (doubleEnginesToActivate >= 0) {
                     correctInput = true;
                 }
                 else {
-                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Amount must be greater than 0.", ANSIColors.RED));
+                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Amount must be greater than or equal to 0.", ANSIColors.RED));
                 }
             }
             catch (InterruptedException e) {

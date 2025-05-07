@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.Ship;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStructural;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.Exceptions.*;

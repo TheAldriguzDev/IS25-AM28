@@ -1,8 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.Components.Battery;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
@@ -13,7 +11,6 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
@@ -23,7 +20,6 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 import javafx.util.Pair;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 import static it.polimi.ingsw.is25am28.Model.Connector.THREE_PIPES;
@@ -207,9 +203,8 @@ public class ClientShip implements WidgetTUIGenerator {
             coreConnectors.add(THREE_PIPES.ordinal());
         }
 
-        // TODO: Fix the id, since the cores are not in the selectable components list
         // Creating the ship's core cabin
-        this.core = new ClientCabin(-1, coreConnectors,true);
+        this.core = new ClientCabin(1, coreConnectors,true);
 
         // No aliens are present at the beginning
         this.purpleAlienPosition = null;
