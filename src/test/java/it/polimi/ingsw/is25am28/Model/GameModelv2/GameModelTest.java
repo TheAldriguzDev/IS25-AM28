@@ -4,14 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedShipJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.EventCards.AbandonedShip;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Model.EventCards.OpenSpace;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
@@ -145,7 +144,7 @@ class GameModelTest {
         // ========================================
         assertInstanceOf(ShipContructionState.class, model.getCurrentState());
         json = mapper.writeValueAsString(model.getCurrentState().generateState());
-        // System.out.println(json);
+        System.out.println(json);
 
         // Select the tile
         ConstructionComponentDTO tileState = model.selectTile("Player 1", 1, 9);
@@ -356,7 +355,7 @@ class GameModelTest {
 
         // In this test the first 4 cards are playable, the others one are not since the players does not have the requirements
 
-        // Play the first round --> all the player could play this card, HP: the first player will use it
+        // Play the card, without any power --> the player should be eliminated
         for (int i = 0; i < 4; i++) {
             AbandonedShipJSON actionData = new AbandonedShipJSON();
             actionData.setPlayerNickname("Player " + (i + 1));
@@ -435,6 +434,251 @@ class GameModelTest {
         deck.getFirst().initCardPlayers();
 
         return deck;
+    }
+
+    private List<EventCard> getFakeDeck2() {
+        List<EventCard> deck = new ArrayList<>();
+        Board board = model.getBoard();
+        deck.add(new OpenSpace("Open Space", 2, board, 0));
+        deck.add(new OpenSpace("Open Space", 2, board, 0));
+        deck.add(new OpenSpace("Open Space", 2, board, 0));
+        deck.add(new OpenSpace("Open Space", 2, board, 0));
+        deck.add(new OpenSpace("Open Space", 2, board, 0));
+        deck.add(new OpenSpace("Open Space", 2, board, 0));
+        deck.add(new OpenSpace("Open Space", 2, board, 0));
+        deck.add(new OpenSpace("Open Space", 2, board, 0));
+
+        // Initialize the first card player (same logic used by the CardRoundState)
+        deck.getFirst().initCardPlayers();
+        return deck;
+    }
+
+
+    @Test
+    public void test_game_model_when_players_got_eliminated_except_for_one() throws JsonProcessingException, SelectedConcurrencyException, ShipPopulationFailException, FixNotRequiredError {
+        // ========================================
+        // NEW GAME HAS BEEN CREATED
+        // ========================================
+        assertInstanceOf(CreateGameState.class, model.getCurrentState());
+
+        // Check if the output of the game is about the game configuration
+        String json = mapper.writeValueAsString(model.generateState());
+        String expectedState = "{\"type\":\"CreateGameStateDTO\",\"availableColors\":[\"GREEN\",\"RED\",\"BLUE\",\"YELLOW\"],\"usedNicknames\":[],\"stateName\":\"CreateGameState\"}";
+        assertEquals(expectedState, json);
+
+        // ========================================
+        // GAME CONFIGURATION
+        // ========================================
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.gameConfig("", PlayerColor.RED, 2, 4, null),
+                "The player nickname should not be empty"
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.gameConfig(null, PlayerColor.RED, 2, 4, null),
+                "The player nickname should not be null"
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.gameConfig("Player 1", PlayerColor.RED, -1, 4, null),
+                "The model level should not be negative"
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.gameConfig("Player 1", PlayerColor.RED, 10, 4, null),
+                "The model level should not be grader than 3"
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.gameConfig("Player 1", PlayerColor.RED, 2, 1, null),
+                "The numPlayer should not be lower than 2"
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.gameConfig("Player 1", PlayerColor.RED, 2, 5, null),
+                "The numPlayer should not be greater than 4"
+        );
+
+        // 2.1. The leader execute the command to configure the game
+        int gameLevel = 0;
+        StateDTO state = model.gameConfig("Player 1", PlayerColor.RED, gameLevel, 4, null);
+
+        assertEquals(gameLevel, model.getGameLevel());
+        assertEquals(4, model.getNumPlayers());
+        assertEquals(1, model.getPlayers().size());
+        assertEquals(3, model.getAvailableColors().size());
+
+        // ========================================
+        // WAIT PLAYERS STATE --> THE GAME ACCEPT CONNECTION FROM NEW PLAYERS
+        // ========================================
+        assertInstanceOf(WaitPlayersState.class, model.getCurrentState());
+
+        // Check if the output of the match is about the waiting for players state
+        json = mapper.writeValueAsString(state);
+
+        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\",\"BLUE\",\"YELLOW\"],\"usedNicknames\":{\"Player 1\":\"RED\"},\"lobbyTotalSpot\":4,\"availableSpots\":3,\"stateName\":\"WaitPlayersState\"}";
+        assertEquals(expectedState, json);
+
+        // 3.1 Test invalid newPlayerInput
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.addNewPlayer("Player 1", PlayerColor.YELLOW, null),
+                "The nickname should be different from another player"
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.addNewPlayer("Player 2", PlayerColor.RED, null),
+                "The color should be different from another player"
+        );
+
+        // Add three player to the game --> the state should change to the ship construction session
+        List<StateDTO> states = model.addNewPlayer("Player 2", PlayerColor.YELLOW, null);
+        assertEquals(1, states.size());
+
+        json = mapper.writeValueAsString(states.getFirst());
+        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\",\"BLUE\"],\"usedNicknames\":{\"Player 2\":\"YELLOW\",\"Player 1\":\"RED\"},\"lobbyTotalSpot\":4,\"availableSpots\":2,\"stateName\":\"WaitPlayersState\"}";
+        assertEquals(expectedState, json);
+
+        states = model.addNewPlayer("Player 3", PlayerColor.BLUE, null);
+        assertEquals(1, states.size());
+
+        json = mapper.writeValueAsString(states.getFirst());
+        expectedState = "{\"type\":\"WaitPlayersStateDTO\",\"availableColors\":[\"GREEN\"],\"usedNicknames\":{\"Player 3\":\"BLUE\",\"Player 2\":\"YELLOW\",\"Player 1\":\"RED\"},\"lobbyTotalSpot\":4,\"availableSpots\":1,\"stateName\":\"WaitPlayersState\"}";
+        assertEquals(expectedState, json);
+
+        states = model.addNewPlayer("Player 4", PlayerColor.GREEN, null);
+        assertEquals(2, states.size());
+
+        // ========================================
+        // SHIP CONSTRUCTION STATE --> THE PLAYERS WILL BE ABLE TO CREATE THEIR SHIP
+        // ========================================
+        assertInstanceOf(ShipContructionState.class, model.getCurrentState());
+        json = mapper.writeValueAsString(model.getCurrentState().generateState());
+        // System.out.println(json);
+
+        // Select the tile
+        ConstructionComponentDTO tileState = model.selectTile("Player 1", 1, 9);
+
+        assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
+        assertEquals(tileState.getPlayerNickname(), "Player 1");
+        assertTrue(tileState.isSelected());
+
+        ConstructionDeckDTO deckState = model.selectDeselectSubdeck("Player 1", 1, true);
+
+        // Try to select the tile while is already selected by another player --> should throw an error
+        assertThrows(
+                IllegalStateException.class,
+                () -> model.selectDeselectSubdeck("Player 2", 1, true),
+                "The selected sub-deck should not be available for a select"
+        );
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> model.selectDeselectSubdeck("Player 2", 1, false),
+                "The selected sub-deck should not be deselected from other players"
+        );
+
+        assertDoesNotThrow(
+                () -> model.selectDeselectSubdeck("Player 1", 1, false)
+        );
+
+        assertDoesNotThrow(
+                () -> model.selectDeselectSubdeck("Player 2", 1, true)
+        );
+
+        // Try to select the tile while is already selected by another player --> should throw an error
+        assertThrows(
+                IllegalStateException.class,
+                () -> model.selectTile("Player 2", 1, 9),
+                "The selected tile should not be available for a select"
+        );
+
+        // Deselect the tile
+        tileState = model.deselectTile("Player 1", 1, 9);
+
+        assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
+        assertEquals(tileState.getPlayerNickname(), "Player 1");
+        assertFalse(tileState.isSelected());
+
+        // Select again the tile
+        tileState = model.selectTile("Player 2", 1, 9);
+
+        assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
+        assertEquals(tileState.getPlayerNickname(), "Player 2");
+        assertTrue(tileState.isSelected());
+
+        // TODO: Test flip timer
+
+        // Create the ship for each player: all the players will only have the core cabin --> all valid ships
+        List<StateDTO> playerEndedShipStates = model.playerEndedSendShip("Player 1", 2);
+        assertEquals(1, playerEndedShipStates.size());
+
+        // Try to send another time the ship --> should throw an error
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> model.playerEndedSendShip("Player 1", 0),
+                "The player should have already sent the ship"
+        );
+
+        playerEndedShipStates = model.playerEndedSendShip("Player 2", 0);
+        assertEquals(1, playerEndedShipStates.size());
+
+        playerEndedShipStates = model.playerEndedSendShip("Player 3", 1);
+        assertEquals(1, playerEndedShipStates.size());
+
+        this.model.placeTile("Player 4", 71, 7, 6, 0);
+        playerEndedShipStates = model.playerEndedSendShip("Player 4", 0);
+
+        // We should have two states since the state should change in CardRound because all the
+        // players have valid and populated ships
+        assertEquals(2, playerEndedShipStates.size());
+
+        // ========================================
+        // CARD ROUND STATE --> THE PLAYERS WITH A WRONG SHIP NEEDS TO CORRECT THEM
+        // ========================================
+        assertInstanceOf(CardRoundState.class, model.getCurrentState());
+
+        StateDTO firstRoundState = new StateDTO();
+
+        switch (model.getCurrentState()) {
+            case CardRoundState cardState -> {
+                cardState.setFakeDeck(getFakeDeck2());
+                firstRoundState = cardState.generateFirstState();
+            }
+            default -> {
+                System.out.println("ERROR: THE MODEL IS NOT IN THE CardRoundState");
+            }
+        }
+
+        assertInstanceOf(CardRoundDTO.class, firstRoundState);
+        CardRoundDTO cardRoundDTO = (CardRoundDTO) firstRoundState;
+        assertEquals("Player 1", cardRoundDTO.getCardInfo().getPlayerNickname(), "Player 1 should be the leader");
+
+        List<StateDTO> cardRoundStates = new ArrayList<>();
+
+        // All the players will play the card. 1, 2 ,3 will be eliminated since they do not declare any power, instead
+        // the last player will survive
+        for (int i = 0; i < 4; i++) {
+            OpenSpaceJSON actionData = new OpenSpaceJSON();
+            actionData.setPlayerNickname("Player " + (i + 1));
+
+            cardRoundStates = model.playCard(actionData);
+        }
+
+        // The first State is about the response of the command --> it has the information about the usage of the card
+        // the secondo State is about the new card
+        assertEquals(2, cardRoundStates.size());
+        assertInstanceOf(EndGameState.class, model.getCurrentState());
+
+        json = mapper.writeValueAsString(this.model.generateState());
+        // System.out.println(json);
     }
 
     // TODO (NOTE: This test is best ran after reducing the hourglass duration)

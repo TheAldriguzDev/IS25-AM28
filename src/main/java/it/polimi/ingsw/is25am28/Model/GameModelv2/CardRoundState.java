@@ -31,8 +31,6 @@ public final class CardRoundState extends State {
 
         // Initialize the first card players
         this.deck.getFirst().initCardPlayers();
-
-        System.out.println(this.deck.getFirst().getCardName());
         this.refreshPlayersShip();
     }
 
@@ -55,7 +53,7 @@ public final class CardRoundState extends State {
         // with just one player.
         // Otherwise, we can init the card players.
         if (this.model.getBoard().getPlayers().size() == 1) {
-            this.round = this.board.getSize();
+            this.round = this.deck.size();
             return null;
         }
 
