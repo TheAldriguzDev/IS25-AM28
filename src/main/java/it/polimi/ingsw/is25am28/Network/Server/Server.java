@@ -188,25 +188,25 @@ public class Server {
         }
     }
 
-    public void selectTile(String playerNickname, int i, int j) throws Exception {
+    public void selectTile(String playerNickname, int id) throws Exception {
         synchronized (this.gameInstances) {
             // Get the game where the player is playing
             int gameID = this.clientToGame.get(playerNickname);
             GameInstance game = this.gameInstances.get(gameID);
 
-            game.selectTile(playerNickname, i, j);
-            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " selected the (" + i + "," + j + ") tile");
+            game.selectTile(playerNickname, id);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " selected the tile with ID=" + id);
         }
     }
 
-    public void deselectTile(String playerNickname, int i, int j) throws Exception {
+    public void deselectTile(String playerNickname, int id) throws Exception {
         synchronized (this.gameInstances) {
             // Get the game where the player is playing
             int gameID = this.clientToGame.get(playerNickname);
             GameInstance game = this.gameInstances.get(gameID);
 
-            game.deselectTile(playerNickname, i, j);
-            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " deselected the (" + i + "," + j + ") tile");
+            game.deselectTile(playerNickname, id);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " deselected the tile with ID=" + id);
         }
     }
 

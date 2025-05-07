@@ -3,8 +3,6 @@ package it.polimi.ingsw.is25am28.Model.GameModelv2;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
@@ -34,11 +32,11 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
         throw new IllegalStateException("The 'selectDeselectSubdeck' command is not allowed in the " + this + " state");
     }
 
-    public synchronized ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {
+    public synchronized ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalStateException, SelectedConcurrencyException {
         throw new IllegalStateException("The 'selectTile' command is not allowed in the " + this + " state");
     }
 
-    public synchronized ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {
+    public synchronized ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalStateException, SelectedConcurrencyException {
         throw new IllegalStateException("The 'deselectTile' command is not allowed in the " + this + " state");
     }
 

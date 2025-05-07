@@ -488,14 +488,10 @@ public final class ShipConstructionTUIPage extends TUIPage {
             )
         );
 
-        int construction_i = idx / DEFAULT_COMPONENT_COLS;
-        int construction_j = idx % DEFAULT_COMPONENT_COLS;
-
         this.clientTUI.getVirtualView().sendMessage(
             new SelectTile(
                 this.clientTUI.getPlayerNickname(),
-                construction_i,
-                construction_j
+                this.selectedComponent.getID()
             )
         );
     }
@@ -529,15 +525,10 @@ public final class ShipConstructionTUIPage extends TUIPage {
             )
         );
 
-        int id = this.selectedComponent.getID();
-        int construction_i = id / 19;
-        int construction_j = id % 19;
-
         this.clientTUI.getVirtualView().sendMessage(
             new DeselectTile(
                 this.clientTUI.getPlayerNickname(),
-                construction_i,
-                construction_j
+                this.selectedComponent.getID()
             )
         );
     }

@@ -18,7 +18,7 @@ public final class CreateGameState extends State {
             String playerNickname,
             PlayerColor playerColor,
             int level,
-            int numPlayers ) throws IllegalStateException, IllegalArgumentException {
+            int numPlayers) throws IllegalStateException, IllegalArgumentException {
 
         if (level != 0 && level != 2) {
             throw new IllegalArgumentException("The given level is not supported: " + level);

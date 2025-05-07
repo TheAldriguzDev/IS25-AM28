@@ -78,10 +78,10 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
                 this.ping(uuid);
             }
             case SelectTile data -> {
-                this.selectTile(data.getPlayerNickname(), data.getI(), data.getJ(), uuid);
+                this.selectTile(data.getPlayerNickname(), data.getId(), uuid);
             }
             case DeselectTile data -> {
-                this.deselectTile(data.getPlayerNickname(), data.getI(), data.getJ(), uuid);
+                this.deselectTile(data.getPlayerNickname(), data.getId(), uuid);
             }
             case Reconnect data -> {
                 this.reconnectClient(data.getNickname(), uuid);
@@ -146,21 +146,21 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
-    public void selectTile(String playerNickname, int i, int j, UUID uuid) throws Exception {
+    public void selectTile(String playerNickname, int id, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
         try {
-            this.controller.selectTile(playerNickname, i, j);
+            this.controller.selectTile(playerNickname, id);
         } catch (Exception e) {
             this.reportError(client, new ErrorAnswer(e.getMessage()));
         }
     }
 
-    public void deselectTile(String playerNickname, int i, int j, UUID uuid) throws Exception {
+    public void deselectTile(String playerNickname, int id, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
         try {
-            this.controller.deselectTile(playerNickname, i, j);
+            this.controller.deselectTile(playerNickname, id);
         } catch (Exception e) {
             this.reportError(client, new ErrorAnswer(e.getMessage()));
         }

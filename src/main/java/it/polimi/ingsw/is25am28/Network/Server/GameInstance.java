@@ -131,8 +131,8 @@ public class GameInstance {
         this.currentPlayers++;
     }
 
-    public void selectTile(String playerNickname, int i, int j) throws Exception {
-        ConstructionComponentDTO state = this.controller.selectTile(playerNickname, i, j);
+    public void selectTile(String playerNickname, int id) throws Exception {
+        ConstructionComponentDTO state = this.controller.selectTile(playerNickname, id);
 
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)
@@ -141,8 +141,8 @@ public class GameInstance {
         this.broadCastUpdate(answer);
     }
 
-    public void deselectTile(String playerNickname, int i, int j) throws Exception {
-        ConstructionComponentDTO state = this.controller.deselectTile(playerNickname, i, j);
+    public void deselectTile(String playerNickname, int id) throws Exception {
+        ConstructionComponentDTO state = this.controller.deselectTile(playerNickname, id);
 
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)

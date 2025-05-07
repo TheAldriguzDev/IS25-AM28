@@ -225,16 +225,18 @@ public class ShipConstructionScreen extends Screen {
         int availableComponents = clientComponents.size();
         int iteratedComponents = 0;
 
-        for (int i = 0; i < it.polimi.ingsw.is25am28.TUI.ShipConstructionTUIPage.DEFAULT_COMPONENT_ROWS; i++) {
-            for (int j = 0; j < it.polimi.ingsw.is25am28.TUI.ShipConstructionTUIPage.DEFAULT_COMPONENT_COLS; j++) {
-                currComponent = clientComponents.get((i * DEFAULT_COMPONENT_COLS) + j);
+        for (int i = 0; i < DEFAULT_COMPONENT_ROWS; i++) {
+            for (int j = 0; j < DEFAULT_COMPONENT_COLS; j++) {
+                int index = (i * DEFAULT_COMPONENT_COLS) + j;
+                currComponent = clientComponents.get(index);
 
                 // Only adding something to print if the component is visible
                 if (currComponent.isVisible()) {
                     List<String> screen = new ArrayList<>();
 
                     // Adding the current component ID at the top of the screen
-                    screen.add("(" + currComponent.getID() + ")");
+                    // screen.add("(" + currComponent.getID() + ")");
+                    screen.add("(" + index + ")");
 
                     if (currComponent.isFlipped()) {
                         screen.addAll(currComponent.generateWidget().getScreen());
@@ -1014,14 +1016,10 @@ public class ShipConstructionScreen extends Screen {
             }
         );
 
-        int construction_i = idx / DEFAULT_COMPONENT_COLS;
-        int construction_j = idx % DEFAULT_COMPONENT_COLS;
-
         this.client.sendMessage(
             new SelectTile(
                 this.model.getNickname(),
-                construction_i,
-                construction_j
+                this.selectedComponent.getID()
             )
         );
     }
@@ -1047,14 +1045,13 @@ public class ShipConstructionScreen extends Screen {
         );
 
         int id = this.selectedComponent.getID();
-        int construction_i = id / 19;
-        int construction_j = id % 19;
+        int construction_i = id / DEFAULT_COMPONENT_COLS;
+        int construction_j = id % DEFAULT_COMPONENT_COLS;
 
         this.client.sendMessage(
             new DeselectTile(
                 this.model.getNickname(),
-                construction_i,
-                construction_j
+                this.selectedComponent.getID()
             )
         );
     }

@@ -9,22 +9,19 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ConstructionComponentDTO extends ShipConstructionEventDTO {
     private String playerNickname;
-    private int i;
-    private int j;
-    private int rotation;
+    private Integer id;
+    private Integer rotation;
     boolean isSelected;
 
     public ConstructionComponentDTO() {}
 
     public ConstructionComponentDTO(
             @JsonProperty("playerNickname") String playerNickname,
-            @JsonProperty("i") int i,
-            @JsonProperty("j") int j,
-            @JsonProperty("rotation") int rotation,
+            @JsonProperty("id") Integer id,
+            @JsonProperty("rotation") Integer rotation,
             @JsonProperty("isSelected") boolean isSelected ) {
         this.playerNickname = playerNickname;
-        this.i = i;
-        this.j = j;
+        this.id = id;
         this.rotation = rotation;
         this.isSelected = isSelected;
     }
@@ -40,35 +37,24 @@ public final class ConstructionComponentDTO extends ShipConstructionEventDTO {
         return this;
     }
 
-    @JsonGetter("i")
-    public int getI() {
-        return this.i;
+    @JsonGetter("id")
+    public Integer getId() {
+        return this.id;
     }
 
-    @JsonSetter("i")
-    public ConstructionComponentDTO setI(int i) {
-        this.i = i;
-        return this;
-    }
-
-    @JsonGetter("j")
-    public int getJ() {
-        return this.j;
-    }
-
-    @JsonSetter("j")
-    public ConstructionComponentDTO setJ(int j) {
-        this.j = j;
+    @JsonSetter("id")
+    public ConstructionComponentDTO setId(Integer id) {
+        this.id = id;
         return this;
     }
 
     @JsonGetter("rotation")
-    public int getRotation() {
+    public Integer getRotation() {
         return this.rotation;
     }
 
     @JsonSetter("rotation")
-    public ConstructionComponentDTO setRotation(int rotation) {
+    public ConstructionComponentDTO setRotation(Integer rotation) {
         this.rotation = rotation;
         return this;
     }

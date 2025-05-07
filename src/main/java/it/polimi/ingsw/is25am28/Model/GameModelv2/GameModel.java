@@ -22,7 +22,6 @@ import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
-import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.*;
@@ -272,8 +271,8 @@ public class GameModel {
      * @return the ConstructionComponentDTO that represent the selectedTile. The behavior of the communication sendTo / sendToAll
      * is left to the controller
      * */
-    public ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws SelectedConcurrencyException {
-        return currentState.selectTile(player, i, j);
+    public ConstructionComponentDTO selectTile(String player, Integer id) throws SelectedConcurrencyException {
+        return currentState.selectTile(player, id);
     }
 
     /**
@@ -281,8 +280,8 @@ public class GameModel {
      * @return the ConstructionComponentDTO that represent the selectedTile. The behavior of the communication sendTo / sendToAll
      * is left to the controller
      * */
-    public ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws SelectedConcurrencyException {
-        return currentState.deselectTile(player, i, j);
+    public ConstructionComponentDTO deselectTile(String player, Integer id) throws SelectedConcurrencyException {
+        return currentState.deselectTile(player, id);
     }
 
     /**

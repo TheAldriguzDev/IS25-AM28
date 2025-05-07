@@ -50,7 +50,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         // Load the tiles
         this.all_components = TileLoader.get().read();
-        // Collections.shuffle(this.all_components);
+        Collections.shuffle(this.all_components);
         this.selected = new HashSet<>();
         this.flipped = new HashSet<>();
 
@@ -130,12 +130,10 @@ public final class ShipContructionState extends State implements TimerObserver {
      * Select the given tile
      * @return the Component Data Object Transfer needed to update the client with the selectComponent event
      * */
-    public ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {
+    public ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalStateException, SelectedConcurrencyException {
         if (shipConfigEnded) {
             throw new IllegalStateException("The time to select the tiles has ended");
         }
-
-        Integer id = i * DEFAULT_COMPONENT_COLS + j;
 
         // TODO: Understand if we need to put the player name in the Exception
         if (selected.contains(id)) {
@@ -148,8 +146,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         ConstructionComponentDTO state = new ConstructionComponentDTO()
                 .setPlayerNickname(player)
-                .setI(i)
-                .setJ(j)
+                .setId(id)
                 .setSelected(true);
 
         state.setStateName(this.toString());
@@ -162,12 +159,10 @@ public final class ShipContructionState extends State implements TimerObserver {
      * Deselect the given tile
      * @return the Component Data Object Transfer needed to update the client with the deselectComponent event
      * */
-    public ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws IllegalStateException, SelectedConcurrencyException {
+    public ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalStateException, SelectedConcurrencyException {
         if (shipConfigEnded) {
             throw new IllegalStateException("The time to deselected the tiles has ended");
         }
-
-        Integer id = i * DEFAULT_COMPONENT_COLS + j;
 
         if (!selected.contains(id)) {
             throw new SelectedConcurrencyException(player);
@@ -177,8 +172,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         ConstructionComponentDTO state = new ConstructionComponentDTO()
                 .setPlayerNickname(player)
-                .setI(i)
-                .setJ(j)
+                .setId(id)
                 .setSelected(false);
 
         state.setStateName(this.toString());

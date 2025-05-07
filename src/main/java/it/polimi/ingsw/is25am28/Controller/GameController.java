@@ -86,15 +86,15 @@ public class GameController {
         }
     }
 
-    public ConstructionComponentDTO selectTile(String player, Integer i, Integer j) throws SelectedConcurrencyException {
+    public ConstructionComponentDTO selectTile(String player, Integer id) throws SelectedConcurrencyException {
         synchronized (this.model) {
-            return this.model.selectTile(player, i, j);
+            return this.model.selectTile(player, id);
         }
     }
 
-    public ConstructionComponentDTO deselectTile(String player, Integer i, Integer j) throws SelectedConcurrencyException {
+    public ConstructionComponentDTO deselectTile(String player, Integer id) throws SelectedConcurrencyException {
         synchronized (this.model) {
-            return this.model.deselectTile(player, i, j);
+            return this.model.deselectTile(player, id);
         }
     }
 

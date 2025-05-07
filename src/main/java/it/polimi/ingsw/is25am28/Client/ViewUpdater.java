@@ -114,11 +114,15 @@ public class ViewUpdater implements StateVisitor {
     public void visit(ConstructionComponentDTO state) throws Exception {
         synchronized (this.model) {
             if (state.getEventType().equals(ShipConstructionType.TILE_EVENT.toString())) {
-                int idx = (state.getI() * 19) + state.getJ();
-
-                ClientComponent comp = this.model.getState().getConstructionShipComponents().get(idx);
-                comp.setAsFlipped();
-                comp.setIsVisible(!state.isSelected());
+                this.model.getState().getConstructionShipComponents().stream()
+                        .filter(c -> c.getID() == state.getId())
+                        .findFirst()
+                        .ifPresent(
+                            (c) -> {
+                                c.setAsFlipped();
+                                c.setIsVisible(!state.isSelected());
+                            }
+                        );
             }
         }
     }

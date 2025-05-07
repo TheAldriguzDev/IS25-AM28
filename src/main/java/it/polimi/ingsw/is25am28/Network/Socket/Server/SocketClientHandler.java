@@ -74,10 +74,10 @@ public class SocketClientHandler implements VirtualViewSocket {
                     this.joinGame(data.getPlayerNickname(), data.getPlayerColor(), data.getGameID());
                 }
                 case SelectTile data -> {
-                    this.selectTile(data.getPlayerNickname(), data.getI(), data.getJ());
+                    this.selectTile(data.getPlayerNickname(), data.getId());
                 }
                 case DeselectTile data -> {
-                    this.deselectTile(data.getPlayerNickname(), data.getI(), data.getJ());
+                    this.deselectTile(data.getPlayerNickname(), data.getId());
                 }
                 case Ping ignored -> {
                     this.ping();
@@ -144,17 +144,17 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
-    public void selectTile(String playerNickname, int i, int j) throws Exception {
+    public void selectTile(String playerNickname, int id) throws Exception {
         try {
-            this.controller.selectTile(playerNickname, i, j);
+            this.controller.selectTile(playerNickname, id);
         } catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }
     }
 
-    public void deselectTile(String playerNickname, int i, int j) throws Exception {
+    public void deselectTile(String playerNickname, int id) throws Exception {
         try {
-            this.controller.deselectTile(playerNickname, i, j);
+            this.controller.deselectTile(playerNickname, id);
         } catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }

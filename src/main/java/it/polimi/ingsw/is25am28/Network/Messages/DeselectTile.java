@@ -8,19 +8,16 @@ import java.util.List;
 
 public final class DeselectTile implements Message {
     private String playerNickname;
-    private int i;
-    private int j;
+    private Integer id;
 
     public DeselectTile() {}
 
     public DeselectTile(
             @JsonProperty("playerNickname") String playerNickname,
-            @JsonProperty("i") int i,
-            @JsonProperty("j") int j
+            @JsonProperty("id") Integer id
     ) {
         this.playerNickname = playerNickname;
-        this.i = i;
-        this.j = j;
+        this.id = id;
     }
 
     @JsonGetter("playerNickname")
@@ -33,24 +30,14 @@ public final class DeselectTile implements Message {
         this.playerNickname = playerNickname;
     }
 
-    @JsonGetter("i")
-    public int getI() {
-        return i;
+    @JsonGetter("id")
+    public int getId() {
+        return this.id;
     }
 
-    @JsonSetter("i")
-    public void setI(int i) {
-        this.i = i;
-    }
-
-    @JsonGetter("j")
-    public int getJ() {
-        return j;
-    }
-
-    @JsonSetter("j")
-    public void setJ(int j) {
-        this.j = j;
+    @JsonSetter("id")
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override

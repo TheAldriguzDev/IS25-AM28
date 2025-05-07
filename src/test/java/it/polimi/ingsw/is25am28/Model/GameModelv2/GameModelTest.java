@@ -147,7 +147,7 @@ class GameModelTest {
         System.out.println(json);
 
         // Select the tile
-        ConstructionComponentDTO tileState = model.selectTile("Player 1", 1, 9);
+        ConstructionComponentDTO tileState = model.selectTile("Player 1", 21);
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 1");
@@ -179,19 +179,19 @@ class GameModelTest {
         // Try to select the tile while is already selected by another player --> should throw an error
         assertThrows(
                 IllegalStateException.class,
-                () -> model.selectTile("Player 2", 1, 9),
+                () -> model.selectTile("Player 2", 21),
                 "The selected tile should not be available for a select"
         );
 
         // Deselect the tile
-        tileState = model.deselectTile("Player 1", 1, 9);
+        tileState = model.deselectTile("Player 1", 21);
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 1");
         assertFalse(tileState.isSelected());
 
         // Select again the tile
-        tileState = model.selectTile("Player 2", 1, 9);
+        tileState = model.selectTile("Player 2", 21);
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 2");
@@ -564,7 +564,7 @@ class GameModelTest {
         // System.out.println(json);
 
         // Select the tile
-        ConstructionComponentDTO tileState = model.selectTile("Player 1", 1, 9);
+        ConstructionComponentDTO tileState = model.selectTile("Player 1", 21);
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 1");
@@ -596,19 +596,19 @@ class GameModelTest {
         // Try to select the tile while is already selected by another player --> should throw an error
         assertThrows(
                 IllegalStateException.class,
-                () -> model.selectTile("Player 2", 1, 9),
+                () -> model.selectTile("Player 2", 21),
                 "The selected tile should not be available for a select"
         );
 
         // Deselect the tile
-        tileState = model.deselectTile("Player 1", 1, 9);
+        tileState = model.deselectTile("Player 1", 21);
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 1");
         assertFalse(tileState.isSelected());
 
         // Select again the tile
-        tileState = model.selectTile("Player 2", 1, 9);
+        tileState = model.selectTile("Player 2", 21);
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 2");

@@ -88,7 +88,7 @@ public class ClientBoard {
     private WidgetTUI getBoardTitleWidget() {
         WidgetTUI boardTitleWidget = new WidgetTUI();
 
-        boardTitleWidget.appendString("[LEVEL " + this.getLevel() + " BOARD]");
+        boardTitleWidget.appendString("[BOARD - LVL: " + this.getLevel() + "]");
 
         return boardTitleWidget;
     }

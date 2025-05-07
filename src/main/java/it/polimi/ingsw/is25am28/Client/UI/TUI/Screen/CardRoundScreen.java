@@ -554,7 +554,7 @@ public class CardRoundScreen extends Screen {
                 .wrapWidgetWithBorder();
 
         do {
-            System.out.print("Available planets to choose:");
+            System.out.println("Available planets to choose:");
             availablePlanetsWidget.printWidget();
             System.out.print(DEFAULT_COMMAND_PREFIX);
 

@@ -543,10 +543,7 @@ public class ClientTUI implements ClientUI {
                 }
         );
 
-        int construction_i = idx / 19;
-        int construction_j = idx % 19;
-
-        this.client.sendMessage(new SelectTile(this.playerNickname, construction_i, construction_j));
+        this.client.sendMessage(new SelectTile(this.playerNickname, this.model.getState().getConstructionShipComponents().get(idx).getID()));
     }
 
     /**
@@ -640,11 +637,7 @@ public class ClientTUI implements ClientUI {
                         }
                 );
 
-                int id = selectedComponent.getID();
-                int construction_i = id / 19;
-                int construction_j = id % 19;
-
-                this.client.sendMessage(new DeselectTile(this.playerNickname, construction_i, construction_j));
+                this.client.sendMessage(new DeselectTile(this.playerNickname, selectedComponent.getID()));
             }
             // Reserve the tile
             case 5 -> {

@@ -21,6 +21,7 @@ import javafx.util.Pair;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.is25am28.Model.Connector.THREE_PIPES;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
@@ -677,6 +678,15 @@ public class ClientShip implements WidgetTUIGenerator {
     }
 
     /**
+     * @return All the ship's stored <code>Item</code>s
+     */
+    public List<Item> getAllItems() {
+        return this.storageList.stream()
+                .flatMap(storage -> storage.getStoredItems().stream())
+                .collect(Collectors.toList());
+    }
+
+    /**
      * @return The ship's available energy
      */
     public int getAvailableEnergy() {
@@ -976,15 +986,27 @@ public class ClientShip implements WidgetTUIGenerator {
 
         WidgetTUI shipStatsTitle = new WidgetTUI();
         shipStatsTitle.appendString("SHIP STATS");
+        shipStatsTitle.addPadding(0, 1, 0, 1);
         shipStatsTitle.wrapWidgetWithBorder();
         shipStatsWidget.setScreen(shipStatsTitle.getScreen());
 
-        // TODO: See if there's the need to reimplement/modify getFirePower and getEnginePower for client-side
-        //       use or they can just be ported from Ship into ClientShip without changing anything
+        List<Item> storedItems = this.getAllItems();
+        long totalRedItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
+        long totalYellowItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
+        long totalGreenItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
+        long totalBlueItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
+
+        String redItemsString = totalRedItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.RED) + SPACE;
+        String yellowItemsString = totalYellowItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.YELLOW) + SPACE;
+        String greenItemsString = totalGreenItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.GREEN) + SPACE;
+        String blueItemsString = totalBlueItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BLUE) + SPACE;
+
         // Getting all the ship's stats
         shipStatsScreen.add("Total Crew: " + this.getAllLifeforms().size());
         shipStatsScreen.add("Firepower: " + this.getBaselineFirepower());
-        shipStatsScreen.add("EnginePower: " + this.getBaselineEnginePower());
+        shipStatsScreen.add("Engine Power: " + this.getBaselineEnginePower());
+        shipStatsScreen.add("Total Batteries: " + this.getAvailableEnergy());
+        shipStatsScreen.add("Total Items: " + redItemsString + yellowItemsString + greenItemsString + blueItemsString);
 
         shipStatsWidget.appendScreen(shipStatsScreen);
         shipStatsWidget.centerWidgetScreen();
