@@ -536,13 +536,11 @@ public class CardRoundScreen extends Screen {
     public void getChosenPlanetIndex() {
         WidgetTUI availablePlanetsWidget = new WidgetTUI();
         boolean correctInput = false;
-        int chosenIndex = 0;
+        int chosenIndex = -1;
         String line;
 
         List<Integer> availablePlanetIndexes =
-                this.model.getState()
-                        .getCardRoundDTO()
-                        .getCardInfo()
+                ((ClientVisitPlanets) this.currEventCard)
                         .getAvailablePlanets()
                         .keySet().stream().toList();
 

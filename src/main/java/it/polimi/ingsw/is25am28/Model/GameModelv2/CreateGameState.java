@@ -27,9 +27,9 @@ public final class CreateGameState extends State {
             throw new IllegalArgumentException("The given totalPlayer is not valid: " + numPlayers);
         }
 
-        model.addPlayer(playerNickname, playerColor);
         model.setGameLevel(level);
         model.setGamePlayersNumber(numPlayers);
+        model.addPlayer(playerNickname, playerColor);
     }
 
     @Override

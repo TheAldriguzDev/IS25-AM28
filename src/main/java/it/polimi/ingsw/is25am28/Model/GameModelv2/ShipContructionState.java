@@ -326,7 +326,6 @@ public final class ShipContructionState extends State implements TimerObserver {
             }
 
             if (playersWithInvalidShip.isEmpty()) {
-                System.out.println("CONTENUTO LISTA: " + playersWithInvalidShip);
                 if (playerWithoutPopulatedShip.isEmpty()) {
                     this.model.setCurrentState(new CardRoundState(model));
                 } else {

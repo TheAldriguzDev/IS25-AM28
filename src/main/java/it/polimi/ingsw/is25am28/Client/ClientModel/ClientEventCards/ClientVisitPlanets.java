@@ -127,4 +127,12 @@ public class ClientVisitPlanets extends ClientEventCard {
     public int getChosenPlanetIndex() throws UnsupportedOperationException {
         return this.visitPlanetsJSON.getChosenPlanetIndex();
     }
+
+
+
+    //
+
+    public Map<Integer, Map<ItemColor, Integer>> getAvailablePlanets() {
+        return this.availablePlanets;
+    }
 }
