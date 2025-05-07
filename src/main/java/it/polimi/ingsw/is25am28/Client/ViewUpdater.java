@@ -241,24 +241,8 @@ public class ViewUpdater implements StateVisitor {
     public void visit(CardRoundDTO state) throws Exception {
         try {
             synchronized (this.model) {
-                // Updates the ClientBoard if necessary (Positions, EliminatedPlayers)
-                if(state.getCardInfo().getNeedsBoardUpdate()) {
-                    this.model.getClientBoard().updateBoard(state.getCardInfo());
-                }
+                this.update(state);
 
-                // Updates the ClientShips if necessary (Removed Components, Batteries, Dropped/Taken Resources, Removed Lifeforms)
-                if (state.getCardInfo().getNeedsShipUpdate()) {
-                    this.model.updateShips(state.getCardInfo());
-                }
-
-                // Updates the ClientPlayers' info if necessary (Credits)
-                if(state.getCardInfo().getNeedsPlayerUpdate()) {
-                    this.model.updatePlayers(state.getCardInfo());
-                }
-
-                if (!(this.model.getState() instanceof ClientCardRoundState)) {
-                    this.model.setClientBoard(new ClientBoard(state.getBoard(), model));
-                }
                 this.model.setState(new ClientCardRoundState(this.model, state));
 
             }
@@ -272,6 +256,31 @@ public class ViewUpdater implements StateVisitor {
     // TODO: Implement
     public void updateCardResult(CardRoundDTO state) throws Exception {
         System.out.println("updateCardResult with PREV_STATE");
+        this.update(state);
+    }
+
+    private void update(CardRoundDTO state) {
+        synchronized (this.model) {
+            // Updates the ClientBoard if necessary (Positions, EliminatedPlayers)
+            if(state.getCardInfo().getNeedsBoardUpdate()) {
+                this.model.getClientBoard().updateBoard(state.getCardInfo());
+            }
+
+            // Updates the ClientShips if necessary (Removed Components, Batteries, Dropped/Taken Resources, Removed Lifeforms)
+            if (state.getCardInfo().getNeedsShipUpdate()) {
+                this.model.updateShips(state.getCardInfo());
+            }
+
+            // Updates the ClientPlayers' info if necessary (Credits)
+            if(state.getCardInfo().getNeedsPlayerUpdate()) {
+                this.model.updatePlayers(state.getCardInfo());
+            }
+
+            if (!(this.model.getState() instanceof ClientCardRoundState)) {
+                this.model.setClientBoard(new ClientBoard(state.getBoard(), model));
+            }
+
+        }
     }
 
     @Override
