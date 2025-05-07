@@ -27,12 +27,15 @@ public class ClientBoard {
     public ClientBoard(BoardJSON BoardJSON, ClientModel clientModel) {
         this.size = BoardJSON.getSize();
         this.level = BoardJSON.getLevel();
-        //this.currPlayersPositions = BoardJSON.getStartingPlayerPositions();
         this.players = clientModel.getAllClientPlayers();
-        this.eliminatedPlayers = new ArrayList<>();
         // Setting the starting players' positions
         for (String playerNickName : BoardJSON.getStartingPlayerPositions().keySet()) {
             this.players.get(playerNickName).setCursor(BoardJSON.getStartingPlayerPositions().get(playerNickName));
+        }
+        this.eliminatedPlayers = new ArrayList<>();
+        for (String playerNickName : BoardJSON.getEliminatedPlayersNickname()) {
+            this.eliminatedPlayers.add(this.players.get(playerNickName));
+            this.players.remove(playerNickName);
         }
     }
 

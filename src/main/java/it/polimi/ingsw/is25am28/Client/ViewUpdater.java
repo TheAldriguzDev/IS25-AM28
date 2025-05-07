@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.*;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard.ClientBoard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
@@ -82,14 +83,15 @@ public class ViewUpdater implements StateVisitor {
         // 1. Create the players --> and set their ship
         List<PlayerJSON> players = state.getPlayers();
         for (PlayerJSON player : players) {
-            this.model.addNewPlayer(player.getNickname(), PlayerColor.valueOf(player.getColor()), player.getShip());
+            this.model.addNewPlayer(player.getNickname(), PlayerColor.valueOf(player.getColor()), player.getCredits(), player.getLostPieces(), player.getShip());
         }
 
         // 2. Create the board
         BoardJSON board = state.getBoard();
+        this.model.setClientBoard(new ClientBoard(board, this.model));
 
 
-        // state.getCurrentState().accept(this);
+        state.getCurrentState().accept(this);
     }
 
     @Override

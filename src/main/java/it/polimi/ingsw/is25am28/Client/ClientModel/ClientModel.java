@@ -84,10 +84,10 @@ public class ClientModel {
     /**
      * Add the given player to the game
      * */
-    public void addNewPlayer(String nickname, PlayerColor color, List<Map<String, Object>> ship) {
+    public void addNewPlayer(String nickname, PlayerColor color, int credits, int lostPieces, List<Map<String, Object>> ship) {
         synchronized (this.players) {
             if (!this.players.containsKey(nickname)) {
-                this.players.put(nickname, new ClientPlayer(nickname, color, this.difficultyLevel, ship));
+                this.players.put(nickname, new ClientPlayer(nickname, color, this.difficultyLevel, credits, lostPieces, ship));
             }
         }
     }

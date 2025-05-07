@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Model.Board.Cell;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,11 +35,13 @@ public class BoardJSON implements Serializable {
     public BoardJSON(
             @JsonProperty("size") int size,
             @JsonProperty("level") int level,
-            @JsonProperty("startingPlayerPositions") Map<String, Integer> startingPlayerPositions
+            @JsonProperty("startingPlayerPositions") Map<String, Integer> startingPlayerPositions,
+            @JsonProperty("EliminatedPlayers") List<String> eliminatedPlayersNickname
     ) {
         this.size = size;
         this.level = level;
         this.startingPlayerPositions = startingPlayerPositions;
+        this.eliminatedPlayersNickname = eliminatedPlayersNickname;
     }
 
 //    public static BoardJSON fromBoard(Board board) {
@@ -66,7 +69,7 @@ public class BoardJSON implements Serializable {
 
     public static BoardJSON fromBoard(Board board) {
         Map<String, Integer> currPlayerPositions = new HashMap<>();
-        // List<String> eliminatedPlayersNickname = board.getEliminatedPlayers().stream().map(Player::getNickname).toList();
+        List<String> eliminatedPlayersNickname = board.getEliminatedPlayers().stream().map(Player::getNickname).toList();
 
         Cell head = board.getHead();
         Cell curr = board.getHead();
@@ -80,7 +83,8 @@ public class BoardJSON implements Serializable {
         return new BoardJSON(
                 board.getSize(),
                 board.getLevel(),
-                currPlayerPositions
+                currPlayerPositions,
+                eliminatedPlayersNickname
         );
     }
 

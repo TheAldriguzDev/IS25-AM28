@@ -26,6 +26,7 @@ public class ClientAbandonedShip extends ClientEventCard {
         this.abandonedShipJSON = new AbandonedShipJSON();
 
         enabledCommands.add("setCrewToRemove");
+        enabledCommands.add("setWantsToVisit");
     }
 
     @Override
@@ -77,6 +78,7 @@ public class ClientAbandonedShip extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
+    // CrewToRemove
     @Override
     public void setCrewToRemove(List<ComponentHelper<LifeformType>> crewToRemove) {
         this.abandonedShipJSON.setWantToVisitShip(true);
@@ -86,5 +88,11 @@ public class ClientAbandonedShip extends ClientEventCard {
     @Override
     public List<ComponentHelper<LifeformType>> getCrewToRemove() {
         return this.abandonedShipJSON.getLifeformsToBeRemoved();
+    }
+
+    // WantsToVisit
+    @Override
+    public void setWantsToVisit(boolean wantsToVisitShip) throws UnsupportedOperationException {
+        this.abandonedShipJSON.setWantToVisitShip(wantsToVisitShip);
     }
 }
