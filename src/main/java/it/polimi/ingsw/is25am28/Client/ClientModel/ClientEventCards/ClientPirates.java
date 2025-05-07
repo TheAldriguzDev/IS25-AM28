@@ -31,9 +31,9 @@ public class ClientPirates extends ClientEventCard {
         this.defeatedPlayers = new ArrayList<>();
         this.piratesJSON = new PiratesJSON();
 
-        enabledCommands.add("setDoubleCannonsToActivate");
-        enabledCommands.add("setShieldsToActivate");
-        enabledCommands.add("setTakeReward");
+//        enabledCommands.add("setDoubleCannonsToActivate");
+//        enabledCommands.add("setShieldsToActivate");
+//        enabledCommands.add("setTakeReward");
     }
 
     @Override
@@ -50,10 +50,16 @@ public class ClientPirates extends ClientEventCard {
         this.playerNickname = piratesState.getPlayerNickname();
         this.firstRound = piratesState.getFirstRound();
 
+        enabledCommands.clear();
         if (!this.firstRound) {
             this.diceThrowResult = piratesState.getDiceThrowResult();
             this.currentPlasmaShot = piratesState.getCurrPlasmaShotDescriptor();
             this.defeatedPlayers = piratesState.getDefeatedPlayers();
+
+            enabledCommands.add("setShieldsToActivate");
+        } else {
+            enabledCommands.add("setShieldsToActivate");
+            enabledCommands.add("setTakeReward");
         }
     }
 

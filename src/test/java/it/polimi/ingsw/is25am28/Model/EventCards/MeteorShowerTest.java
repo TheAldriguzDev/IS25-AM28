@@ -543,11 +543,7 @@ class MeteorShowerTest {
 
         // Meteor 3 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
-        // ======== WIDGET TESTING ======== //
-        System.out.println("Meteor 3 - Player 1 card state");
-        clientMeteorShower .updateCard(meteorShowerStateJSON);
-        clientMeteorShower.generateWidget().printWidget();
-        // ================================ //
+
 //        assertEquals("p2", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertEquals(1, meteorShowerStateJSON.getRemovedComponents().get("p2").size());
 
@@ -555,6 +551,11 @@ class MeteorShowerTest {
         // coming from the top with a single cannon
         meteorShowerStateJSON.setDiceThrowResult(6);
 
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 3 - Player 1 card state");
+        clientMeteorShower .updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
 //        System.out.println("\n\t ======== STATE - Meteor 3 ========");
 //        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
 //        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());

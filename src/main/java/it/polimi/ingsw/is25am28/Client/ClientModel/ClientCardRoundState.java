@@ -13,11 +13,7 @@ public class ClientCardRoundState extends ClientState {
         super(model);
 
         this.cardRoundDTO = cardRoundDTO;
-        this.model.setClientBoard(new ClientBoard(cardRoundDTO.getBoard(), model));
 
-        for (Map.Entry<String, ClientPlayer> entry : this.model.getAllClientPlayers().entrySet()) {
-            entry.getValue().getShip().generateWidget();
-        }
     }
 
     @Override

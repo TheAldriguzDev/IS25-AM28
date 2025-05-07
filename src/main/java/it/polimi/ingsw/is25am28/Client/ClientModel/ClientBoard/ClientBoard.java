@@ -40,7 +40,7 @@ public class ClientBoard {
     public ClientBoard(BoardJSON BoardJSON, ClientModel clientModel) {
         this.size = BoardJSON.getSize();
         this.level = BoardJSON.getLevel();
-        this.players = clientModel.getAllClientPlayers();
+        this.players = new HashMap<>(clientModel.getAllClientPlayers());
         // Setting the starting players' positions
         for (String playerNickName : BoardJSON.getStartingPlayerPositions().keySet()) {
             this.players.get(playerNickName).setCursor(BoardJSON.getStartingPlayerPositions().get(playerNickName));
@@ -53,7 +53,8 @@ public class ClientBoard {
     }
 
     /**
-     * This method updates only what has been changed (regarding players' info)*/
+     * This method updates only what has been changed (regarding players' info)
+     * */
     public void updateBoard(CardStateJSON cardState) {
         // If a player's position has been changed we need to set it again
         if (cardState.getNeedsUpdatedPositions()) {
@@ -183,6 +184,7 @@ public class ClientBoard {
             int width = boardDimensions.get(this.level).getValue();
 
             // Sets which blocks need to be colored
+//            Map<String, ClientPlayer> players = new HashMap<>(this.players);
             Map<Integer, String> coloredCells = new HashMap<>();
             for (ClientPlayer player : this.players.values()) {
                 coloredCells.put(player.getCursor(), player.getColor().getColorString());

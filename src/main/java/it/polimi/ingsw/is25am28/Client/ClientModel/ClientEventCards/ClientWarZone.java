@@ -40,8 +40,8 @@ public class ClientWarZone extends ClientEventCard {
         enabledCommands.add("setItemsToBeRemoved");
         enabledCommands.add("setDoubleCannonsToActivate");
         enabledCommands.add("setDoubleEnginesToActivate");
-        enabledCommands.add("setShieldsToActivate");
-        enabledCommands.add("setCrewToRemove");
+
+
     }
 
     @Override
@@ -59,6 +59,32 @@ public class ClientWarZone extends ClientEventCard {
         this.currActionIndex = cardState.getCurrActionIndex(); // Will be used in the generateWidget to determine what to display
         this.currentPlasmaShot = cardState.getCurrPlasmaShotDescriptor();
         this.diceThrowResult = cardState.getDiceThrowResult();
+
+        enabledCommands.clear();
+        if (this.affectedPlayer == null) { // Sets the commands relative to the Actions
+            switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
+                case "Enginepower" -> {
+                    enabledCommands.add("setDoubleEnginesToActivate");
+                }
+                case "Firepower" -> {
+                    enabledCommands.add("setDoubleCannonsToActivate");
+                }
+                default -> {} // "Humans" does not need user input
+            }
+        } else { // Sets the commands relative to the Consequences
+            switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
+                case "RequiredCrew" -> {
+                    enabledCommands.add("setCrewToRemove");
+                }
+                case "ShootingSequence" -> {
+                    enabledCommands.add("setShieldsToActivate");
+                }
+                case "LossItems" -> {
+                    enabledCommands.add("setItemsToBeRemoved");
+                }
+                default -> {} // MovementSteps does not need user input
+            }
+        }
     }
 
     @Override
@@ -75,7 +101,7 @@ public class ClientWarZone extends ClientEventCard {
         }
         switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
             case "RequiredCrew" -> tmpConsequence = "Taken Crew";
-            case "MovementSteps" ->tmpConsequence = "Days";
+            case "MovementSteps" -> tmpConsequence = "Days";
             case "ShootingSequence" -> tmpConsequence = "PlasmaShots";
             case "LossItems" -> tmpConsequence = "Taken Items";
         }
@@ -237,7 +263,7 @@ public class ClientWarZone extends ClientEventCard {
                 }
                 switch (pair.getLast()) {
                     case "RequiredCrew" -> tmpConsequence = "Taken Crew";
-                    case "MovementSteps" ->tmpConsequence = "Days";
+                    case "MovementSteps" -> tmpConsequence = "Days";
                     case "ShootingSequence" -> tmpConsequence = "PlasmaShots";
                     case "LossItems" -> tmpConsequence = "Taken Items";
                 }

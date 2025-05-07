@@ -256,7 +256,11 @@ public class ViewUpdater implements StateVisitor {
                     this.model.updatePlayers(state.getCardInfo());
                 }
 
+                if (!(this.model.getState() instanceof ClientCardRoundState)) {
+                    this.model.setClientBoard(new ClientBoard(state.getBoard(), model));
+                }
                 this.model.setState(new ClientCardRoundState(this.model, state));
+
             }
 
             this.ui.showCardRound(state);
