@@ -49,6 +49,16 @@ public final class CardRoundState extends State {
         if (round >= deck.size()) return null;
 
         EventCard card = deck.get(round);
+
+        // If all the players got eliminated except one we set the round equal to the deck size and return null.
+        // In this way the game will transit to the EndGameState. This is due to the impossibility of playing the game
+        // with just one player.
+        // Otherwise, we can init the card players.
+        if (this.model.getBoard().getPlayers().size() == 1) {
+            this.round = this.board.getSize();
+            return null;
+        }
+
         card.initCardPlayers();
 
         return card;
