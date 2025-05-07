@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
@@ -11,7 +10,6 @@ import it.polimi.ingsw.is25am28.FileLoader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
-import it.polimi.ingsw.is25am28.Network.VirtualView;
 import it.polimi.ingsw.is25am28.Timer.HourGlass;
 import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
@@ -20,7 +18,9 @@ import java.util.*;
 // TODO: Implement the HourGlass here (the state contains the HourGlass instance and implements the onTimerEnd method)
 
 public final class ShipContructionState extends State implements TimerObserver {
-    private final static int SHIP_GRID_SIZE = 12;
+    // Default component selection matrix (row, col) dimensions
+    public static final int DEFAULT_COMPONENT_ROWS = 8;
+    public static final int DEFAULT_COMPONENT_COLS = 19;
 
     private final HourGlass hourGlass;
     // TODO: private final SessionSubscriber controller;
@@ -135,7 +135,7 @@ public final class ShipContructionState extends State implements TimerObserver {
             throw new IllegalStateException("The time to select the tiles has ended");
         }
 
-        Integer id = i * SHIP_GRID_SIZE + j;
+        Integer id = i * DEFAULT_COMPONENT_COLS + j;
 
         // TODO: Understand if we need to put the player name in the Exception
         if (selected.contains(id)) {
@@ -167,7 +167,7 @@ public final class ShipContructionState extends State implements TimerObserver {
             throw new IllegalStateException("The time to deselected the tiles has ended");
         }
 
-        Integer id = i * SHIP_GRID_SIZE + j;
+        Integer id = i * DEFAULT_COMPONENT_COLS + j;
 
         if (!selected.contains(id)) {
             throw new SelectedConcurrencyException(player);

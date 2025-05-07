@@ -1068,7 +1068,7 @@ public class Ship implements WidgetTUIGenerator {
         }
         if (shipProfiles.containsKey(this.difficultyLevel)) {
             if (shipProfiles.get(this.difficultyLevel)[i][j] == 0) {
-                throw new OutOfShipException("ERROR: Cannot insert given component outside the ship");
+                throw new OutOfShipException("ERROR: Cannot insert given component outside the ship (i=" + i + ", j=" + j + ")");
             }
         }
 

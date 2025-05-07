@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
@@ -805,10 +806,10 @@ public class CardRoundScreen extends Screen {
      */
     private void generateShipWidgets() {
         this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(
-                (ClientShip ship) -> {
-                    this.shipStatsWidget = ship.getShipStatsWidget();
-                    this.shipGridWidget = ship.getShipGridWidget();
-                }
+            (ClientShip ship) -> {
+                this.shipStatsWidget = ship.getShipStatsWidget();
+                this.shipGridWidget = ship.getShipGridWidget();
+            }
         );
     }
 
@@ -893,21 +894,34 @@ public class CardRoundScreen extends Screen {
      * his turn or, in the other case, whose turn it is to play.
      */
     private void generatePlayerTurnWidget(String playingPlayer) {
+        boolean isEliminated;
+
         this.playerTurnWidget = new WidgetTUI();
 
-        if (playingPlayer.equals(this.model.getNickname())) {
+        isEliminated = this.model.getClientBoard().getEliminatedPlayers().stream()
+                .map(ClientPlayer::getNickname)
+                .toList()
+                .contains(this.model.getNickname());
+
+        if (isEliminated) {
             this.playerTurnWidget
-                    .appendString(COMPUTER_MSG_TAG + "It's " + PrintUtils.addColor("YOUR TURN", ANSIColors.BRIGHT_GREEN) + " to play");
+                    .appendString(COMPUTER_MSG_TAG + "You've been " + PrintUtils.addColor("ELIMINATED", ANSIColors.BRIGHT_RED));
         }
         else {
-            this.playerTurnWidget
-                    .appendString(COMPUTER_MSG_TAG + "It's " + PrintUtils.addColor("NOT YOUR TURN", ANSIColors.BRIGHT_RED) + " to play")
-                    .appendString("Current player is: " + playingPlayer);
-        }
+            if (playingPlayer.equals(this.model.getNickname())) {
+                this.playerTurnWidget
+                        .appendString(COMPUTER_MSG_TAG + "It's " + PrintUtils.addColor("YOUR TURN", ANSIColors.BRIGHT_GREEN) + " to play");
+            }
+            else {
+                this.playerTurnWidget
+                        .appendString(COMPUTER_MSG_TAG + "It's " + PrintUtils.addColor("NOT YOUR TURN", ANSIColors.BRIGHT_RED) + " to play")
+                        .appendString("Current player is: " + playingPlayer);
+            }
 
-        this.playerTurnWidget
-                .addPadding(0, 1, 0, 1)
-                .wrapWidgetWithBorder();
+            this.playerTurnWidget
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder();
+        }
     }
 
     /**

@@ -23,16 +23,16 @@ import static it.polimi.ingsw.is25am28.Model.Connector.ZERO_PIPES;
 
 public class MeteorShower extends EventCard {
     private final List<Meteor> meteorSequence;
+    private final Random random;
     private int currMeteorIndex;
     private int diceThrowResult;
-    private final Random random;
 
     private List<Component> prevPlayerRemovedComponents;
     private String prevPlayer;
 
     private Map<String, List<Map<String, Object>>> removedComponents;
-    private Map<String, Integer> removedBatteries; // TODO: Implement in the state
-    private List<String> eliminatedPlayers;
+    private final Map<String, Integer> removedBatteries; // TODO: Implement in the state
+    private final List<String> eliminatedPlayers;
 
 
     public MeteorShower(
@@ -44,12 +44,12 @@ public class MeteorShower extends EventCard {
     ) {
         super(cardName, cardLevel, board, cardID);
 
-        this.currMeteorIndex = 0;
-        this.diceThrowResult = -1;
         this.meteorSequence = new ArrayList<Meteor>();
         this.random = new Random();
-        this.prevPlayer = null;
+        this.currMeteorIndex = 0;
+        this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
         this.prevPlayerRemovedComponents = new ArrayList<>();
+        this.prevPlayer = null;
         this.removedComponents = new HashMap<>();
         this.removedBatteries = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
@@ -140,7 +140,7 @@ public class MeteorShower extends EventCard {
         try {
             // ActionJSON unpacking
             meteorShowerJSON = ((MeteorShowerJSON) data);
-            this.diceThrowResult = meteorShowerJSON.getDiceThrowResult();
+//            this.diceThrowResult = meteorShowerJSON.getDiceThrowResult();
             shieldCoordsList = meteorShowerJSON.getShieldsCoordinates();
             cannonCoordsList = meteorShowerJSON.getCannonsCoordinates();
 
@@ -150,9 +150,9 @@ public class MeteorShower extends EventCard {
             if ( !this.currentPlayer.get().getNickname().equals(meteorShowerJSON.getPlayerNickname())) {
                 throw new IllegalArgumentException("ERROR: Current player and player in meteorShowerJSON do not match (wrong arguments)");
             }
-            if (this.diceThrowResult < 2 || this.diceThrowResult > 12) {
-                throw new IllegalArgumentException("ERROR: Dice throw result cannot be outside of the range [2, 12]");
-            }
+//            if (this.diceThrowResult < 2 || this.diceThrowResult > 12) {
+//                throw new IllegalArgumentException("ERROR: Dice throw result cannot be outside of the range [2, 12]");
+//            }
         }
         catch (Exception e) {
             throw new IllegalArgumentException("[MeteorShower::useCard] " + e.getMessage());
@@ -172,10 +172,6 @@ public class MeteorShower extends EventCard {
             // The meteor descriptor already has as its orientation the
             // side from which the ship sees that meteor come from
             inboundDirection = currMeteor.getOrientation();
-
-            // Adding +2 to the currMeteor's pointing direction gets the
-            // side from where the ship will see it arrive from
-            // inboundDirection = (currMeteor.getOrientation() + 2) % 4;
 
             switch (inboundDirection) {
                 // Case 1 - Meteor arrives from the TOP
@@ -254,7 +250,7 @@ public class MeteorShower extends EventCard {
                 // Case 1 - Small Meteor
                 // => Check if it can bounce on toHit or a shield is required
                 if (sideToHit != ZERO_PIPES.ordinal()) {
-                    if (shieldCoordsList != null) {
+                    if (!shieldCoordsList.isEmpty()) {
                         for (ComponentHelper<Void> shieldCoords : shieldCoordsList) {
                             if (shieldCoords != null) {
                                 Component component = shipPtr.getComponent(
@@ -295,7 +291,7 @@ public class MeteorShower extends EventCard {
 
                 // Case 2 - Big Meteor
                 // => Check if there are cannons that can destroy it
-                if (cannonCoordsList != null) {
+                if (!cannonCoordsList.isEmpty()) {
                     for (ComponentHelper<Void> cannonCoords : cannonCoordsList) {
                         if (cannonCoords != null) {
                             Component component = shipPtr.getComponent(
@@ -462,12 +458,6 @@ public class MeteorShower extends EventCard {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
 
-        // The dice throw is performed by generateState only at the beginning
-        // since the card hasn't been used yet
-        if (this.diceThrowResult == -1) {
-            this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
-        }
-
         if (hasBeenActivated()) {
             initStateFlags(cardState);
 
@@ -499,6 +489,11 @@ public class MeteorShower extends EventCard {
         cardState.setCardEnded(this.hasFinished());
 
         return cardState;
+    }
+
+    // Only for testing
+    void setDiceThrowResult(int diceThrowResult) {
+        this.diceThrowResult = diceThrowResult;
     }
 
     public WidgetTUI generateWidget(CardStateJSON meteorShowerJSON) {

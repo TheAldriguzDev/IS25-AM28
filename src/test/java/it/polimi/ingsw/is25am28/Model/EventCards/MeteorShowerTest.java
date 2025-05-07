@@ -281,19 +281,21 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
-        // Meteor 1 - Player 1 card state
-        meteorShowerStateJSON = meteorShower.generateState();
-        // ======== WIDGET TESTING ======== //
-        System.out.println("Meteor 1 - Player 1 card state");
-        clientMeteorShower .updateCard(meteorShowerStateJSON);
-        clientMeteorShower.generateWidget().printWidget();
-        // ================================ //
-//        assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
-//        assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getValue());
-
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
+        meteorShower.setDiceThrowResult(6);
+
+        // Meteor 1 - Player 1 card state
+        meteorShowerStateJSON = meteorShower.generateState();
+
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Meteor 1 - Player 1 card state");
+        clientMeteorShower.updateCard(meteorShowerStateJSON);
+        clientMeteorShower.generateWidget().printWidget();
+        // ================================ //
+
+//        assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
+//        assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getValue());
 
 //        System.out.println("\n\t ======== STATE - Meteor 1 ========");
 //        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
@@ -302,11 +304,11 @@ class MeteorShowerTest {
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
-        //shieldsCoordinates.add(new Pair<>(6, 4));   // Shield, 1 energy should be consumed
-//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // Shield, 1 energy should be consumed
+        // shieldsCoordinates.add(new Pair<>(6, 4));   // Shield, 1 energy should be consumed
+        // shieldsCoordinates.add(new ArrayList<>(Arrays.asList(6, 4)));   // Shield, 1 energy should be consumed
         shieldsCoordinates.add(new ComponentHelper<>(6, 4));   // Shield, 1 energy should be consumed
-        //shieldsCoordinates.add(new Pair<>(0, 0));   // Wrong component, no energy should be consumed
-//        shieldsCoordinates.add(new ArrayList<>(Arrays.asList(0, 0)));   // Wrong component, no energy should be consumed
+        // shieldsCoordinates.add(new Pair<>(0, 0));   // Wrong component, no energy should be consumed
+        // shieldsCoordinates.add(new ArrayList<>(Arrays.asList(0, 0)));   // Wrong component, no energy should be consumed
         shieldsCoordinates.add(new ComponentHelper<>(0, 0));   // Wrong component, no energy should be consumed
         cannonsCoordinates.add(null);
         meteorShowerJSON = new MeteorShowerJSON(
@@ -352,11 +354,13 @@ class MeteorShowerTest {
 
         // Meteor 1 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 1 - Player 2 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
+
         //assertEquals("p1", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertEquals(1, meteorShowerStateJSON.getRemovedComponents().get("p1").size());
 
@@ -414,19 +418,21 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShower.setDiceThrowResult(6);
+
         // Meteor 2 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 2 - Player 1 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
+
 //        assertEquals("p2", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertEquals(1, meteorShowerStateJSON.getRemovedComponents().get("p2").size());
-
-        // Altering the seed result to try to shoot a big meteor
-        // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
 
 //        System.out.println("\n\t ======== STATE - Meteor 2 ========");
 //        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
@@ -479,11 +485,13 @@ class MeteorShowerTest {
 
         // Meteor 2 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 2 - Player 2 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
+
 //        assertEquals("p1", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertEquals(1, meteorShowerStateJSON.getRemovedComponents().get("p1").size());
 
@@ -541,21 +549,22 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShower.setDiceThrowResult(6);
+
         // Meteor 3 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
 
 //        assertEquals("p2", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertEquals(1, meteorShowerStateJSON.getRemovedComponents().get("p2").size());
 
-        // Altering the seed result to try to shoot a big meteor
-        // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
-
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 3 - Player 1 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
+
 //        System.out.println("\n\t ======== STATE - Meteor 3 ========");
 //        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
 //        System.out.println("\t\t diceThrowResult = " + meteorShowerStateJSON.getDiceThrowResult());
@@ -609,11 +618,13 @@ class MeteorShowerTest {
 
         // Meteor 3 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 3 - Player 2 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
+
 //        assertEquals("p1", meteorShowerStateJSON.getPreviousPlayerRemovedComponents().getKey());
         assertNull(meteorShowerStateJSON.getPreviousPlayerRemovedComponents());
 
@@ -679,16 +690,18 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShower.setDiceThrowResult(6);
+
         // Meteor 4 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 4 - Player 1 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
-        // Altering the seed result to try to shoot a big meteor
-        // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
 
 //        System.out.println("\n\t ======== STATE - Meteor 4 ========");
 //        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
@@ -743,11 +756,13 @@ class MeteorShowerTest {
 
         // Meteor 4 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 4 - Player 2 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
+
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
@@ -810,16 +825,18 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShower.setDiceThrowResult(6);
+
         // Meteor 5 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 5 - Player 1 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
-        // Altering the seed result to try to shoot a big meteor
-        // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
 
 //        System.out.println("\n\t ======== STATE - Meteor 5 ========");
 //        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
@@ -872,6 +889,7 @@ class MeteorShowerTest {
 
         // Meteor 5 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 5 - Player 2 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
@@ -936,17 +954,18 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShower.setDiceThrowResult(6);
+
         // Meteor 6 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 6 - Player 1 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
-
-        // Altering the seed result to try to shoot a big meteor
-        // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
 
 //        System.out.println("\n\t ======== STATE - Meteor 6 ========");
 //        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
@@ -999,6 +1018,7 @@ class MeteorShowerTest {
 
         // Meteor 6 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 6 - Player 2 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
@@ -1059,17 +1079,18 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShower.setDiceThrowResult(8);
+
         // Meteor 7 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 7 - Player 1 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
-
-        // Altering the seed result to try to shoot a big meteor
-        // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(8);
 
 //        System.out.println("\n\t ======== STATE - Meteor 7 ========");
 //        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
@@ -1125,6 +1146,7 @@ class MeteorShowerTest {
 
         // Meteor 7 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 7 - Player 2 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
@@ -1187,17 +1209,18 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShower.setDiceThrowResult(9);
+
         // Meteor 8 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 8 - Player 1 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
-
-        // Altering the seed result to try to shoot a big meteor
-        // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(9);
 
 //        System.out.println("\n\t ======== STATE - Meteor 8 ========");
 //        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
@@ -1252,6 +1275,7 @@ class MeteorShowerTest {
 
         // Meteor 8 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 8 - Player 2 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
@@ -1319,17 +1343,18 @@ class MeteorShowerTest {
         shieldsCoordinates = new ArrayList<>();
         cannonsCoordinates = new ArrayList<>();
 
+        // Altering the seed result to try to shoot a big meteor
+        // coming from the top with a single cannon
+        meteorShower.setDiceThrowResult(6);
+
         // Meteor 9 - Player 1 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 9 - Player 1 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
         clientMeteorShower.generateWidget().printWidget();
         // ================================ //
-
-        // Altering the seed result to try to shoot a big meteor
-        // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
 
 //        System.out.println("\n\t ======== STATE - Meteor 9 ========");
 //        System.out.println("\t\t currMeteorIndex = " + meteorShowerStateJSON.getCurrMeteorIndex());
@@ -1381,6 +1406,7 @@ class MeteorShowerTest {
 
         // Meteor 9 - Player 2 card state
         meteorShowerStateJSON = meteorShower.generateState();
+
         // ======== WIDGET TESTING ======== //
         System.out.println("Meteor 9 - Player 2 card state");
         clientMeteorShower .updateCard(meteorShowerStateJSON);
@@ -1508,7 +1534,7 @@ class MeteorShowerTest {
 
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
+        meteorShower.setDiceThrowResult(6);
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -1615,7 +1641,7 @@ class MeteorShowerTest {
 
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
+        meteorShower.setDiceThrowResult(6);
 
         // Player 3 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -1681,7 +1707,7 @@ class MeteorShowerTest {
 
         // Altering the seed result to try to shoot a big meteor
         // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
+        meteorShower.setDiceThrowResult(6);
 
         // Player 1 response
         currMeteorIndex = meteorShowerStateJSON.getCurrMeteorIndex();
@@ -1778,7 +1804,7 @@ class MeteorShowerTest {
 
         // Altering the seed result to try to shoot a big meteor\
         // coming from the top with a single cannon
-        meteorShowerStateJSON.setDiceThrowResult(6);
+        meteorShower.setDiceThrowResult(6);
 
         // Since P3 is disconnected, the meteorIndex should go to the next meteor
         currMeteorIndex++;
