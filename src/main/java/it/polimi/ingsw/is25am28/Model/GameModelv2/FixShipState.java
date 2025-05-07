@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public final class FixShipState extends State {
@@ -53,9 +54,26 @@ public final class FixShipState extends State {
 
     @Override
     public void onComplete() {
+        // Store the players that needs to populate the ship
+        List<String> playerWithoutPopulatedShip = new ArrayList<>();
+
+        for (Player p : model.getPlayers().values()) {
+            p.getShip().generateComponentSubLists();
+
+            // Check if the player needs to populate the ship
+            if (!p.getShip().isShipPopulated()) {
+                playerWithoutPopulatedShip.add(p.getNickname());
+            }
+        }
+
         // If all the players have fixed their ship we can go to the PopulateShipState
         if (playersWithInvalidShip.isEmpty()) {
-            this.model.setCurrentState(new PopulateShipState(model));
+
+            if (playerWithoutPopulatedShip.isEmpty()) {
+                this.model.setCurrentState(new CardRoundState(model));
+            } else {
+                this.model.setCurrentState(new PopulateShipState(model));
+            }
         }
     }
 

@@ -312,6 +312,8 @@ public final class ShipContructionState extends State implements TimerObserver {
             List<String> playerWithoutPopulatedShip = new ArrayList<>();
 
             for (Player p : model.getPlayers().values()) {
+                p.getShip().generateComponentSubLists();
+
                 // Check if the player has an invalid ship
                 if (!p.getShip().validateShip()) {
                     playersWithInvalidShip.add(p.getNickname());
@@ -324,6 +326,7 @@ public final class ShipContructionState extends State implements TimerObserver {
             }
 
             if (playersWithInvalidShip.isEmpty()) {
+                System.out.println("CONTENUTO LISTA: " + playersWithInvalidShip);
                 if (playerWithoutPopulatedShip.isEmpty()) {
                     this.model.setCurrentState(new CardRoundState(model));
                 } else {
