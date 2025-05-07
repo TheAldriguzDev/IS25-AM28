@@ -253,7 +253,7 @@ public class PopulateShipScreen extends Screen {
             }
 
             if (!isActionValid) {
-                System.out.println(PrintUtils.addColor("[ERROR] " + lifeformType + " cannot be added at (" + coordinates.getKey() + ", " + coordinates.getValue() + ")." , ANSIColors.RED));
+                System.out.println(PrintUtils.addColor("[ERROR] " + lifeformType + " cannot be added at (" + (coordinates.getKey() + 1)+ ", " + (coordinates.getValue() + 1) + ")." , ANSIColors.RED));
             }
         }
         while (!isActionValid);
