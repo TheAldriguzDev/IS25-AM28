@@ -21,7 +21,6 @@ public class ClientStardust extends ClientEventCard {
         super(cardState);
         this.stardustJSON = new StardustJSON();
 
-        enabledCommands.add("getPlayerAck");
     }
 
     @Override

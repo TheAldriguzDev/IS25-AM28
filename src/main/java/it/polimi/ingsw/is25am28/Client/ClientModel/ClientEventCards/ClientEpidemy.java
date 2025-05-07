@@ -13,7 +13,6 @@ public class ClientEpidemy extends ClientEventCard {
         super(cardState);
         this.epidemyJSON = new EpidemyJSON();
 
-        enabledCommands.add("getPlayerAck");
     }
 
     @Override

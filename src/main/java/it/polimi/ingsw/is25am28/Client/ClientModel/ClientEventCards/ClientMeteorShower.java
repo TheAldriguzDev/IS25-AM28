@@ -91,6 +91,7 @@ public class ClientMeteorShower extends ClientEventCard {
         return meteor1Final.wrapWidgetWithBorder();
     }
 
+    // Shields
     @Override
     public void setShieldsToActivate(List<ComponentHelper<Void>> shieldsToActivate) throws UnsupportedOperationException {
         this.meteorShowerJSON.setShieldsCoordinates(shieldsToActivate);
@@ -101,6 +102,7 @@ public class ClientMeteorShower extends ClientEventCard {
         return this.meteorShowerJSON.getShieldsCoordinates();
     }
 
+    // Cannons
     @Override
     public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.meteorShowerJSON.setCannonsCoordinates(doubleCannonsToActivate);

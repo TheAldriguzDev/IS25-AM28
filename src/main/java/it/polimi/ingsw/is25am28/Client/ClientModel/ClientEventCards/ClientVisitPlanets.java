@@ -22,7 +22,6 @@ public class ClientVisitPlanets extends ClientEventCard {
         this.availablePlanets = cardState.getAvailablePlanets();
         this.visitPlanetsJSON = new VisitPlanetsJSON();
 
-        enabledCommands.add("getPlayerAck");
         enabledCommands.add("setItemsToBeRemoved");
         enabledCommands.add("setItemsToBeTaken");
         enabledCommands.add("setChosenPlanetIndex");
@@ -82,6 +81,7 @@ public class ClientVisitPlanets extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
+    // Items
     @Override
     public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
         this.visitPlanetsJSON.setItemsToDrop(itemsToBeRemoved);
@@ -102,6 +102,7 @@ public class ClientVisitPlanets extends ClientEventCard {
         return this.visitPlanetsJSON.getItemsToTake();
     }
 
+    // Planet Index
     @Override
     public void setChosenPlanetIndex(int chosenPlanetIndex) throws UnsupportedOperationException {
         this.visitPlanetsJSON.setChosenPlanetIndex(chosenPlanetIndex);

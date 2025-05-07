@@ -92,6 +92,7 @@ public class ClientSlavers extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
+    // Cannons
     @Override
     public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.slaversJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
@@ -102,6 +103,7 @@ public class ClientSlavers extends ClientEventCard {
         return this.slaversJSON.getDoubleCannonsToActivateCoordinates();
     }
 
+    // Reward
     @Override
     public void setTakeReward(boolean takeReward) {
         this.slaversJSON.setTakeCredits(takeReward);
@@ -112,6 +114,7 @@ public class ClientSlavers extends ClientEventCard {
         return this.slaversJSON.getTakeCredits();
     }
 
+    // Crew
     @Override
     public void setCrewToRemove(List<ComponentHelper<LifeformType>> crewToRemove) throws UnsupportedOperationException {
         this.slaversJSON.setCrewToRemove(crewToRemove);

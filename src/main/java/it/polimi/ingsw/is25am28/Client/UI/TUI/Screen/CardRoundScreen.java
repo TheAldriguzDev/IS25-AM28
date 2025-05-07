@@ -195,25 +195,6 @@ public class CardRoundScreen extends Screen {
         );
         command.appendString("Set double engines to activate");
         this.indexedCardInputMethods.put("setDoubleEnginesToActivate", new Pair<>(false, command));
-
-        // (11) - Acknowledge and continue
-        command = new CommandWidgetTUI(
-                "11",
-                () -> {
-                    this.getPlayerAck();
-
-                    // Go back to the card round available commands
-                    this.getCardRoundCommand();
-                }
-        );
-        command.appendString("Acknowledge and continue");
-        this.indexedCardInputMethods.put("getPlayerAck", new Pair<>(false, command));
-
-        try {
-            this.currEventCard.setAvailableCommands(this.indexedCardInputMethods);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     /**

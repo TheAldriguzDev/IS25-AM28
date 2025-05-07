@@ -88,6 +88,7 @@ public class ClientOpenSpace extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, twinkling_space).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
+    // Engines
     @Override
     public void setDoubleEnginesToActivate(int doubleEnginesToActivate) {
         this.openSpaceJSON.setUsedEnergy(doubleEnginesToActivate);

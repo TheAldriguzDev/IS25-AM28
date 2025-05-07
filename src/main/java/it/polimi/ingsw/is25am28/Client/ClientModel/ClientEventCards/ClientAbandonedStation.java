@@ -28,6 +28,7 @@ public class ClientAbandonedStation extends ClientEventCard {
 
         enabledCommands.add("setItemsToBeRemoved");
         enabledCommands.add("setItemsToBeTaken");
+        enabledCommands.add("setWantsToVisit");
     }
 
     @Override
@@ -97,6 +98,7 @@ public class ClientAbandonedStation extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
+    // Items
     @Override
     public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
         this.abandonedStationJSON.setItemsToBeRemoved(itemsToBeRemoved);
@@ -115,5 +117,11 @@ public class ClientAbandonedStation extends ClientEventCard {
     @Override
     public List<ComponentHelper<ItemColor>> getItemsToBeTaken() throws UnsupportedOperationException {
         return this.abandonedStationJSON.getItemsToBeTaken();
+    }
+
+    // WantsToVisit
+    @Override
+    public void setWantsToVisit(boolean wantsToVisit) throws UnsupportedOperationException {
+        this.abandonedStationJSON.setWantToVisitStation(wantsToVisit);
     }
 }

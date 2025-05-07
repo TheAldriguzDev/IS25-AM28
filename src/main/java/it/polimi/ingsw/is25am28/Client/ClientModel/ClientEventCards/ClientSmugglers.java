@@ -105,6 +105,7 @@ public class ClientSmugglers extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
+    // Cannons
     @Override
     public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.smugglersJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
@@ -115,6 +116,7 @@ public class ClientSmugglers extends ClientEventCard {
         return this.smugglersJSON.getDoubleCannonsToActivateCoordinates();
     }
 
+    // Reward
     @Override
     public void setTakeReward(boolean takeReward) {
         this.smugglersJSON.setTakeLoot(takeReward);
@@ -125,6 +127,7 @@ public class ClientSmugglers extends ClientEventCard {
         return this.smugglersJSON.getTakeLoot();
     }
 
+    // Items
     @Override
     public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
         this.smugglersJSON.setItemsToBeRemoved(itemsToBeRemoved);

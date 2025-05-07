@@ -125,6 +125,7 @@ public class ClientPirates extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
+    // Shields
     @Override
     public void setShieldsToActivate(List<ComponentHelper<Void>> shieldsToActivate) throws UnsupportedOperationException {
         this.piratesJSON.setShieldsActivatedCoordinates(shieldsToActivate);
@@ -135,6 +136,7 @@ public class ClientPirates extends ClientEventCard {
         return this.piratesJSON.getShieldsActivatedCoordinates();
     }
 
+    // Cannons
     @Override
     public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.piratesJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
@@ -145,6 +147,7 @@ public class ClientPirates extends ClientEventCard {
         return this.piratesJSON.getDoubleCannonsToActivateCoordinates();
     }
 
+    // Reward
     @Override
     public void setTakeReward(boolean takeReward) {
         this.piratesJSON.setTakeCredits(takeReward);
