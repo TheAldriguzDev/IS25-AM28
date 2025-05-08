@@ -16,7 +16,8 @@ public class ClientSlavers extends ClientEventCard {
     private final int movementSteps;
     private final int givenCredits;
     private final int takenCrew;
-    private boolean firstRound;
+//    private boolean firstRound;
+    private boolean isPlayerDefeated;
     private List<String> defeatedPlayers;
 
     private SlaversJSON slaversJSON;
@@ -28,12 +29,12 @@ public class ClientSlavers extends ClientEventCard {
         this.givenCredits = cardState.getGivenCredits();
         this.takenCrew = cardState.getTakenCrew();
         this.defeatedPlayers = new ArrayList<>();
-        this.firstRound = true;
+//        this.firstRound = true;
+        this.isPlayerDefeated = false;
         this.slaversJSON = new SlaversJSON();
 
-        enabledCommands.add("setDoubleCannonsToActivate");
-        enabledCommands.add("setTakeReward");
-        enabledCommands.add("setCrewToRemove");
+
+
     }
 
     @Override
@@ -48,11 +49,22 @@ public class ClientSlavers extends ClientEventCard {
     @Override
     public void updateCard(CardStateJSON slaversCardState) {
         this.playerNickname = slaversCardState.getPlayerNickname();
-        this.firstRound = slaversCardState.getFirstRound();
+//        this.firstRound = slaversCardState.getFirstRound();
+        this.isPlayerDefeated = slaversCardState.getIsPlayerDefeated();
+        enabledCommands.clear();
+        if (this.isPlayerDefeated) {
 
-        if (!this.firstRound) {
-            this.defeatedPlayers = slaversCardState.getDefeatedPlayers();
+            enabledCommands.add("setCrewToRemove");
+        } else {
+            enabledCommands.add("setDoubleCannonsToActivate");
+            enabledCommands.add("setTakeReward");
         }
+
+
+
+//        if (!this.firstRound) {
+//            this.defeatedPlayers = slaversCardState.getDefeatedPlayers();
+//        }
     }
 
     @Override
@@ -76,7 +88,7 @@ public class ClientSlavers extends ClientEventCard {
         cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
         cardInfoWidget.wrapWidgetWithBorder();
 
-        if (this.firstRound) {
+        if (!this.isPlayerDefeated) {
 //            cardInfoWidget.appendString("─────────PREREQUISITES─────────");
             cardInfoWidget.appendString("Days: " + this.movementSteps + "      Firepower: " + this.requiredFirepower);
             cardInfoWidget.appendString("───────────────────────────────");

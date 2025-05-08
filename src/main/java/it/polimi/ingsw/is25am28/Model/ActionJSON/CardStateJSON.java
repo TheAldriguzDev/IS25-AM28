@@ -25,6 +25,7 @@ public class CardStateJSON extends ActionJSON {
     private int cardLevel;
     private boolean isCardUsable;
     private boolean hasBeenActivated;
+    private boolean isPlayerDefeated;
 
     private boolean cardEnded; // WHEN THIS FLAG IS SET TO TRUE THE CURRENT CLIENT CARD MUST NOT BE UPDATED, NOR PRINTED, ONLY THE GENERATE STATE (TO UPDATE THE LAST DATA SENT) IS NECESSARY
 
@@ -441,6 +442,16 @@ public class CardStateJSON extends ActionJSON {
     @JsonGetter("hasBeenActivated")
     public boolean getHasBeenActivated() {
         return this.hasBeenActivated;
+    }
+
+    @JsonGetter("isPlayerDefeated")
+    public boolean getIsPlayerDefeated() {
+        return isPlayerDefeated;
+    }
+
+    @JsonSetter("isPlayerDefeated")
+    public void setIsPlayerDefeated(boolean isPlayerDefeated) {
+        this.isPlayerDefeated = isPlayerDefeated;
     }
 
 
