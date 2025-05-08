@@ -16,7 +16,6 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import java.util.*;
 
 public class Epidemy extends EventCard {
-    private List<ComponentHelper<LifeformType>> previousPlayeRemovedLifeforms;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
     // Constructor
@@ -74,18 +73,20 @@ public class Epidemy extends EventCard {
                     }
                 }
             }
-            previousPlayeRemovedLifeforms = new ArrayList<>();
+            List<ComponentHelper<LifeformType>> previousPlayerRemovedLifeforms = new ArrayList<>();
+
             // Removing a lifeform for each cabin placed in quarantine
             for (Cabin cabin : alreadyQuarantined) {
-                previousPlayeRemovedLifeforms.add(new ComponentHelper<LifeformType>(cabin.getPosition()[0], cabin.getPosition()[1]).addItem(cabin.getInhabitants().getFirst().getLifeformType()));
+                previousPlayerRemovedLifeforms.add(new ComponentHelper<LifeformType>(cabin.getPosition()[0], cabin.getPosition()[1]).addItem(cabin.getInhabitants().getFirst().getLifeformType()));
                 shipPtr.removeLifeformFromCabin(
                         cabin.getPosition()[0],
                         cabin.getPosition()[1],
                         cabin.getInhabitants().getFirst().getLifeformType()
                 );
             }
-            removedLifeforms = new HashMap<>();
-            removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), previousPlayeRemovedLifeforms);
+
+            this.removedLifeforms = new HashMap<>();
+            this.removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), previousPlayerRemovedLifeforms);
         }
 
         // Getting the next player (in order of leaderboard placements)

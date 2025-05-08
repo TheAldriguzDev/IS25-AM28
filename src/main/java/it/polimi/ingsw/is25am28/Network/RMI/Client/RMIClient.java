@@ -161,6 +161,13 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
         CompletableFuture<Void> future = new CompletableFuture<>();
 
+//        if (state != null) {
+//            System.out.println("STATE: " + state.getStateName() + " (" + state + ")");
+//        }
+//        if (nextState != null) {
+//            System.out.println("NEXT_STATE: " + nextState.getStateName() + " (" + nextState + ")");
+//        }
+
         switch (state) {
             // Update the current state of the game
             case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PopulateShipComponentDTO _,
@@ -315,7 +322,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                     }
                 });
             }
-            case FixShipDTO _, PopulateShipDTO _, CardRoundDTO _ -> {
+            case FixShipDTO _, PopulateShipDTO _, CardRoundDTO _, EndGameDTO _ -> {
                 CompletableFuture<Void> completableFuture;
 
                 completableFuture = CompletableFuture.runAsync(

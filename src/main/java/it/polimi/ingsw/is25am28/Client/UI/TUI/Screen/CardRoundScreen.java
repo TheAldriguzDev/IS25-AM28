@@ -1099,11 +1099,11 @@ public class CardRoundScreen extends Screen {
                         .appendString(COMPUTER_MSG_TAG + "It's " + PrintUtils.addColor("NOT YOUR TURN", ANSIColors.BRIGHT_RED) + " to play")
                         .appendString("Current player is: " + PrintUtils.addColor(this.currPlayerNickname, this.model.getAllClientPlayers().get(this.currPlayerNickname).getColor().getColorString()));
             }
-
-            this.playerTurnWidget
-                    .addPadding(0, 1, 0, 1)
-                    .wrapWidgetWithBorder();
         }
+
+        this.playerTurnWidget
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder();
     }
 
     /**
@@ -1133,7 +1133,6 @@ public class CardRoundScreen extends Screen {
         // Updating all widgets before using them
         this.generateCurrEventCardWidget();
         this.generateShipWidgets();
-        this.generatePlayerActionsRecapWidget();
         this.boardWidget = this.model.getClientBoard().generateWidget();
 
         this.playerNameWidget.printWidget();
@@ -1141,6 +1140,8 @@ public class CardRoundScreen extends Screen {
         // Show the current actions only to the
         // player that is currently playing
         if (this.currPlayerNickname.equals(this.model.getNickname())) {
+            this.generatePlayerActionsRecapWidget();
+
             currCardAndPlayerActions = WidgetTUI.composeTwoWidgetsHorizontally(
                     this.currEventCardWidget,
                     this.playerActionsRecapWidget
@@ -1439,7 +1440,6 @@ public class CardRoundScreen extends Screen {
                 System.out.println("onSuccess");
 
                 // TODO: Implement onSuccess (if it needs to do something)
-                // TODO: view a screen saying that your turn is over
             },
             () -> {
                 System.out.println("onError");
@@ -1468,6 +1468,8 @@ public class CardRoundScreen extends Screen {
             // Storing the current event card's card state and the currently playing player
             this.currEventCardState = cardRound.getCardInfo();
             this.currPlayerNickname = cardRound.getCardInfo().getPlayerNickname();
+
+            System.out.println("CURR_PLAYER=" + this.currPlayerNickname);
 
             // Updating this player's ship widget and
             // getting the current event card
