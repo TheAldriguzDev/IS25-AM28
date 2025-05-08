@@ -19,9 +19,10 @@ public class Smugglers extends EventCard {
     private final int greenItems;
     private final ResourceBank resourceBank;
     private final int takenItems;
-    private boolean hasBeenDefeated;
+    //private boolean hasBeenDefeated;
     private ArrayList<String> defeatedPlayers;
-    private boolean firstRound;
+    //private boolean firstRound;
+    private boolean isPlayerDefeated;
     private ArrayList<Player> playersToTakeItemsFrom;
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
@@ -40,9 +41,10 @@ public class Smugglers extends EventCard {
         this.greenItems = greenItems;
         this.resourceBank = resourceBank;
         this.takenItems = takenItems;
-        this.hasBeenDefeated = false;
+        //this.hasBeenDefeated = false;
         this.defeatedPlayers = new ArrayList<>();
-        this.firstRound = true;
+        //this.firstRound = true;
+        this.isPlayerDefeated = false;
         this.playersToTakeItemsFrom = new ArrayList<>();
         this.updatedPositions = new HashMap<>();
         this.droppedResources = new HashMap<>();
@@ -56,22 +58,22 @@ public class Smugglers extends EventCard {
      * lancia un'eccezione di tipo ClassCastException
      * */
 
-    @Override
-    public void initCardPlayers() throws IllegalArgumentException {
-        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
-            throw new IllegalArgumentException("The player list is null or contains less than two player");
-        } else {
-            if (firstRound) {
-                this.players = new ArrayList<>(this.getBoard().getPlayers());
-            } else {
-                if (!playersToTakeItemsFrom.isEmpty()) {
-                    this.players = new ArrayList<>(this.playersToTakeItemsFrom);
-                }
-            }
-            currentPlayer = Optional.of(players.getFirst());
-        }
-        cardActivated();
-    }
+//    @Override
+//    public void initCardPlayers() throws IllegalArgumentException {
+//        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
+//            throw new IllegalArgumentException("The player list is null or contains less than two player");
+//        } else {
+//            if (firstRound) {
+//                this.players = new ArrayList<>(this.getBoard().getPlayers());
+//            } else {
+//                if (!playersToTakeItemsFrom.isEmpty()) {
+//                    this.players = new ArrayList<>(this.playersToTakeItemsFrom);
+//                }
+//            }
+//            currentPlayer = Optional.of(players.getFirst());
+//        }
+//        cardActivated();
+//    }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         SmugglersJSON smugglersData;
@@ -89,16 +91,14 @@ public class Smugglers extends EventCard {
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
-                    if (firstRound) {
+                    if (!this.isPlayerDefeated) {
                         // Power consumed by the DoubleCannons
                         if (!smugglersData.getDoubleCannonsToActivateCoordinates().isEmpty()) {
                             this.removedBatteries.put(playerNickname, smugglersData.getDoubleCannonsToActivateCoordinates().size());
                         }
                         float playerFirepower = player.getShip().getFirePower(smugglersData.getDoubleCannonsToActivateCoordinates());
                         if (playerFirepower > requiredFirepower) {
-                            // // Pirates defeated, even if the player who defeated them does not take the resources, the card won't be used by other players
-                            hasBeenDefeated = true;
-                            //cardUsed();
+                            cardUsed();
                             if (smugglersData.getTakeLoot()) {
                                 bonusEffect(data);
                                 getBoard().movePlayerBackwards(player, movementSteps);
@@ -110,28 +110,20 @@ public class Smugglers extends EventCard {
                                 }
                             }
                         } else if (playerFirepower < requiredFirepower) {
-                            playersToTakeItemsFrom.add(player);
+                            this.isPlayerDefeated = true;
+                            //playersToTakeItemsFrom.add(player);
                             //malusEffect(smugglersData);
                         }
-                    }
-                    if (!firstRound) {
-                        if (playersToTakeItemsFrom.contains(player)) {
-                            malusEffect(smugglersData);
-                        }
-                    }
-                    if (player.equals(players.getLast())) {
-                        if (firstRound) {
-                            firstRound = false;
-                            if (playersToTakeItemsFrom.isEmpty()) {
-                                cardUsed();
-                            } else {
-                                initCardPlayers();
-                            }
-                        } else {
-                            cardUsed();
-                        }
                     } else {
-                        getNextPlayer();
+                        malusEffect(data);
+                        this.isPlayerDefeated = false;
+                    }
+                    if (!isPlayerDefeated) { // If the player has been defeated the current player does not change, and the game does not end
+                        if (player.equals(players.getLast())) {
+                            cardUsed();
+                        } else {
+                            getNextPlayer();
+                        }
                     }
                 },
                 () -> {
@@ -222,14 +214,16 @@ public class Smugglers extends EventCard {
             playerOptional.ifPresent(player -> smugglersStateJSON.setPlayerNickname(player.getNickname()));
 
             // The clients need to know when to update the right parameters
-            smugglersStateJSON.setFirstRound(this.firstRound);
+//            smugglersStateJSON.setFirstRound(this.firstRound);
 
             // If the first round is finished, send the dynamic info to the players
-            if (!firstRound) {
-                ArrayList<String> defeatedPlayers = new ArrayList<>();
-                for (Player player : playersToTakeItemsFrom) {
-                    defeatedPlayers.add(player.getNickname());
-                }
+//            if (!firstRound) {
+//                ArrayList<String> defeatedPlayers = new ArrayList<>();
+//                for (Player player : playersToTakeItemsFrom) {
+//                    defeatedPlayers.add(player.getNickname());
+//                }
+
+            smugglersStateJSON.setIsPlayerDefeated(this.isPlayerDefeated);
 
                 // This field is necessary to the clients to know if they need to send additional info
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO: Need more thinking on this
@@ -239,17 +233,16 @@ public class Smugglers extends EventCard {
 
                 // Sets the removed batteries (if there are any), due to the smugglers
                 setUpdatedRemovedBatteriesIfNecessary(smugglersStateJSON, removedBatteries);
-            } else {
+//            } else {
                 // Batteries consumed due to the double cannons
                 setUpdatedRemovedBatteriesIfNecessary(smugglersStateJSON, removedBatteries);
-            }
+//            }
             // if the smugglers have been defeated we need to set the rewards (if taken)
-            if (this.hasBeenDefeated) {
-                setUpdatedPositionsIfNecessary(smugglersStateJSON, updatedPositions);
-                setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, droppedResources);
-                setUpdatedTakenResourcesIfNecessary(smugglersStateJSON, takenResources);
-                setUpdatedEliminatedPlayersIfNecessary(smugglersStateJSON, this.eliminatedPlayers);
-            }
+            setUpdatedPositionsIfNecessary(smugglersStateJSON, updatedPositions);
+            setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, droppedResources);
+            setUpdatedTakenResourcesIfNecessary(smugglersStateJSON, takenResources);
+            setUpdatedEliminatedPlayersIfNecessary(smugglersStateJSON, this.eliminatedPlayers);
+
         } else {
             // Setting the card's static data
             smugglersStateJSON.setId(this.id);
@@ -271,27 +264,7 @@ public class Smugglers extends EventCard {
     }
 
     public WidgetTUI generateWidget(CardStateJSON smugglersStateJSON) {
-        WidgetTUI cardWidget = new WidgetTUI();
-        WidgetTUI cardInfoWidget = new WidgetTUI();
-
-        cardWidget.appendString("====" + smugglersStateJSON.getCardName().toUpperCase() + "====");
-
-        if (firstRound) {
-            cardInfoWidget.appendString("Level: " + smugglersStateJSON.getCardLevel());
-            cardInfoWidget.appendString("Days: " + smugglersStateJSON.getMovementSteps());
-            cardInfoWidget.appendString("Require Firepower: " + smugglersStateJSON.getRequiredFirepower());
-            cardInfoWidget.appendString("Red items: " + smugglersStateJSON.getRedItems());
-            cardInfoWidget.appendString("Yellow items: " + smugglersStateJSON.getYellowItems());
-            cardInfoWidget.appendString("Blue items: " + smugglersStateJSON.getBlueItems());
-            cardInfoWidget.appendString("Green items: " + smugglersStateJSON.getGreenItems());
-            cardInfoWidget.appendString("Taken items: " + smugglersStateJSON.getTakenItems());
-        }
-        else {
-            cardInfoWidget.appendString("Player: " + smugglersStateJSON.getPlayerNickname() + " has to drop " + smugglersStateJSON.getTakenItems() + " items");
-        }
-        cardInfoWidget.wrapWidgetWithBorder();
-
-        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+        return null;
     }
 }
 

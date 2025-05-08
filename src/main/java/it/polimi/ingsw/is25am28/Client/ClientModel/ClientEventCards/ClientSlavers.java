@@ -18,7 +18,7 @@ public class ClientSlavers extends ClientEventCard {
     private final int takenCrew;
 //    private boolean firstRound;
     private boolean isPlayerDefeated;
-    private List<String> defeatedPlayers;
+    //private List<String> defeatedPlayers;
 
     private SlaversJSON slaversJSON;
 
@@ -28,7 +28,7 @@ public class ClientSlavers extends ClientEventCard {
         this.movementSteps = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();
         this.takenCrew = cardState.getTakenCrew();
-        this.defeatedPlayers = new ArrayList<>();
+        //this.defeatedPlayers = new ArrayList<>();
 //        this.firstRound = true;
         this.isPlayerDefeated = false;
         this.slaversJSON = new SlaversJSON();
@@ -53,7 +53,6 @@ public class ClientSlavers extends ClientEventCard {
         this.isPlayerDefeated = slaversCardState.getIsPlayerDefeated();
         enabledCommands.clear();
         if (this.isPlayerDefeated) {
-
             enabledCommands.add("setCrewToRemove");
         } else {
             enabledCommands.add("setDoubleCannonsToActivate");

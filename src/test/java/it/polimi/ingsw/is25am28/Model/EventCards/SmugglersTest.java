@@ -155,74 +155,89 @@ class SmugglersTest {
         clientSmugglers.updateCard(smugglers.generateState());
         clientSmugglers.generateWidget().printWidget();
         // ================================ //
-
-        //Input gathering phase
+        // Player 1 sends input
         smugglers.useCard(new SmugglersJSON("Player 1", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
+
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 1 consequence");
+        clientSmugglers.updateCard(smugglers.generateState());
+        clientSmugglers.generateWidget().printWidget();
+        // ================================ //
+        // Player 1 sends items
+        smugglers.useCard(actionJSON1);
+        assertFalse(smugglers.hasFinished());
+
+
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Player 2 input");
         clientSmugglers.updateCard(smugglers.generateState());
         clientSmugglers.generateWidget().printWidget();
         // ================================ //
-
+        // Player 2 sends input
         smugglers.useCard(new SmugglersJSON("Player 2", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
+
+
+
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 2 consequence");
+        clientSmugglers.updateCard(smugglers.generateState());
+        clientSmugglers.generateWidget().printWidget();
+        // ================================ //
+        // Player 2 sends items
+        smugglers.useCard(actionJSON2);
+        assertFalse(smugglers.hasFinished());
+
+
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Player 3 input");
         clientSmugglers.updateCard(smugglers.generateState());
         clientSmugglers.generateWidget().printWidget();
         // ================================ //
-
+        // Player 3 sends input
         smugglers.useCard(new SmugglersJSON("Player 3", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
+
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 3 consequence");
+        clientSmugglers.updateCard(smugglers.generateState());
+        clientSmugglers.generateWidget().printWidget();
+        // ================================ //
+        // Player 3 sends items
+        smugglers.useCard(actionJSON3);
+        assertFalse(smugglers.hasFinished());
+
+
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Player 4 input");
         clientSmugglers.updateCard(smugglers.generateState());
         clientSmugglers.generateWidget().printWidget();
         // ================================ //
-
+        // Player 4 sends input
         smugglers.useCard(new SmugglersJSON("Player 4", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
-            // ======== WIDGET TESTING ======== //
-            System.out.println("Player 1 consequence");
-            clientSmugglers.updateCard(smugglers.generateState());
-            clientSmugglers.generateWidget().printWidget();
-            // ================================ //
+        // ======== WIDGET TESTING ======== //
+        System.out.println("Player 4 consequence");
+        clientSmugglers.updateCard(smugglers.generateState());
+        clientSmugglers.generateWidget().printWidget();
+        // ================================ //
+        // Player 4 sends items
+        smugglers.useCard(actionJSON4);
+        assertTrue(smugglers.hasFinished());
 
             // The defeated players now need to specify what resources to get rid of
-            smugglers.useCard(actionJSON1);
-            assertFalse(smugglers.hasFinished());
 
-            // ======== WIDGET TESTING ======== //
-            System.out.println("Player 2 consequence");
-            clientSmugglers.updateCard(smugglers.generateState());
-            clientSmugglers.generateWidget().printWidget();
-            // ================================ //
 
-            smugglers.useCard(actionJSON2);
-            assertFalse(smugglers.hasFinished());
 
-            // ======== WIDGET TESTING ======== //
-            System.out.println("Player 3 consequence");
-            clientSmugglers.updateCard(smugglers.generateState());
-            clientSmugglers.generateWidget().printWidget();
-            // ================================ //
 
-            smugglers.useCard(actionJSON3);
-            assertFalse(smugglers.hasFinished());
 
-            // ======== WIDGET TESTING ======== //
-            System.out.println("Player 4 consequence");
-            clientSmugglers.updateCard(smugglers.generateState());
-            clientSmugglers.generateWidget().printWidget();
-            // ================================ //
 
-            smugglers.useCard(actionJSON4);
-            assertTrue(smugglers.hasFinished());
+
 
         assertEquals(0, ship_1.getAvailableEnergy()); // Non avendo items, subisce -4 alle batterie -> -3 in quanto ne ha solo 3
 
@@ -303,18 +318,20 @@ class SmugglersTest {
         smugglers.useCard(new SmugglersJSON("Player 1", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
+        // The defeated players now need to specify what resources to get rid of
+        smugglers.useCard(actionJSON1);
+        assertFalse(smugglers.hasFinished());
+
         smugglers.useCard(new SmugglersJSON("Player 2", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
-        smugglers.useCard(actionJSON3);
-        assertFalse(smugglers.hasFinished());
-
-        smugglers.useCard(new SmugglersJSON("Player 4", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
-        assertFalse(smugglers.hasFinished());
-
-        // The defeated players now need to specify what resources to get rid of
-        smugglers.useCard(actionJSON1);
+        smugglers.useCard(actionJSON3); // P3
         assertTrue(smugglers.hasFinished());
+
+//        smugglers.useCard(new SmugglersJSON("Player 4", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+//        assertFalse(smugglers.hasFinished());
+
+
 
 
 
