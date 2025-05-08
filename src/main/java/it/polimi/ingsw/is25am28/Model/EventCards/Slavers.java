@@ -22,7 +22,7 @@ public class Slavers extends EventCard {
     private List<String> eliminatedPlayers;
     private Map<String, Integer> updatedPositions;
     private Map<String, Integer> updatedCredits;
-    private Map<String, Integer> removedBatteries; // TODO: Implement in the state
+    private Map<String, Integer> removedBatteries;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
     public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board, int cardID) {

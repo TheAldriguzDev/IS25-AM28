@@ -50,7 +50,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         // Load the tiles
         this.all_components = TileLoader.get().read();
-        Collections.shuffle(this.all_components);
+        //Collections.shuffle(this.all_components);
         this.selected = new HashSet<>();
         this.flipped = new HashSet<>();
 

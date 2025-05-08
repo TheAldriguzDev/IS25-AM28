@@ -452,7 +452,7 @@ public class CardRoundScreen extends Screen {
 
         // Getting the items to remove or take
         do {
-            System.out.print("Available item colors:");
+            System.out.println("Available item colors:");
             availableItemColors.printWidget();
             System.out.print(DEFAULT_COMMAND_PREFIX);
 
