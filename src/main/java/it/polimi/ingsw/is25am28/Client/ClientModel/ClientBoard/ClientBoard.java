@@ -255,6 +255,7 @@ public class ClientBoard {
             boardWidget =
                     WidgetTUI.composeWidgetsVertically(widgetList)
                     .centerWidgetScreen()
+                    .addPadding(0, 1, 0, 1)
                     .wrapWidgetWithBorder();
 
             return boardWidget;

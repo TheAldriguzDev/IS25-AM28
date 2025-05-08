@@ -984,11 +984,6 @@ public class ClientShip implements WidgetTUIGenerator {
         WidgetTUI shipStatsWidget = new WidgetTUI();
         List<String> shipStatsScreen = new ArrayList<String>();
 
-        WidgetTUI shipStatsTitle = new WidgetTUI();
-        shipStatsTitle.appendString("[SHIP STATS]");
-        shipStatsTitle.addPadding(0, 0, 1, 0);
-        shipStatsWidget.setScreen(shipStatsTitle.getScreen());
-
         List<Item> storedItems = this.getAllItems();
         long totalRedItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
         long totalYellowItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
@@ -1024,9 +1019,17 @@ public class ClientShip implements WidgetTUIGenerator {
         shipStatsScreen.add("Total Batteries: " + this.getAvailableEnergy());
         shipStatsScreen.add("Total Items: " + redItemsString + yellowItemsString + greenItemsString + blueItemsString);
 
-        shipStatsWidget.appendScreen(shipStatsScreen);
-        shipStatsWidget.centerWidgetScreen();
-        shipStatsWidget.wrapWidgetWithBorder();
+        WidgetTUI tmp = shipStatsWidget.setScreen(shipStatsScreen);
+        shipStatsWidget = new WidgetTUI();
+
+        shipStatsWidget
+                .setWidth(tmp.getWidth())
+                .appendString("[SHIP STATS]")
+                .addPadding(0, 0, 1, 0)
+                .centerWidgetScreen()
+                .appendScreen(tmp.getScreen())
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder();
 
         return shipStatsWidget;
     }
