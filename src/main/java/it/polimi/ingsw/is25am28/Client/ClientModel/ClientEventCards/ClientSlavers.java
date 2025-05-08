@@ -112,7 +112,7 @@ public class ClientSlavers extends ClientEventCard {
     }
 
     @Override
-    public boolean getTakeReward() {
+    public Boolean getTakeReward() {
         return this.slaversJSON.getTakeCredits();
     }
 

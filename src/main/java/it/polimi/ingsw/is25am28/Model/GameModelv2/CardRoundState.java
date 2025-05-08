@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.EventCards.Epidemy;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
@@ -28,6 +29,12 @@ public final class CardRoundState extends State {
         this.deck = this.model.getGameDeck();
         this.board = this.model.getBoard();
         this.isFirstState = true;
+
+        // TODO: Remove the fake deck after testing
+//        List<EventCard> fakeDeck = new ArrayList<>();
+//        fakeDeck.add(new Epidemy("Epidemy", 2, this.board, 0));
+//        fakeDeck.add(new Epidemy("Epidemy", 2, this.board, 1));
+//        this.setFakeDeck(fakeDeck);
 
         // Initialize the first card players
         this.deck.getFirst().initCardPlayers();

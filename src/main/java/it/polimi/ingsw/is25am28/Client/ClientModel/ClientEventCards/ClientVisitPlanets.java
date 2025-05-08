@@ -124,11 +124,9 @@ public class ClientVisitPlanets extends ClientEventCard {
     }
 
     @Override
-    public int getChosenPlanetIndex() throws UnsupportedOperationException {
+    public Integer getChosenPlanetIndex() throws UnsupportedOperationException {
         return this.visitPlanetsJSON.getChosenPlanetIndex();
     }
-
-
 
     //
 

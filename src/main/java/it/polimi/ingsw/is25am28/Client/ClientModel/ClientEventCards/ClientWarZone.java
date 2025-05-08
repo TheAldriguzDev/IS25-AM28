@@ -305,7 +305,7 @@ public class ClientWarZone extends ClientEventCard {
     }
 
     @Override
-    public int getDoubleEnginesToActivate() {
+    public Integer getDoubleEnginesToActivate() {
         return this.warZoneJSON.getUsedEnergy();
     }
 

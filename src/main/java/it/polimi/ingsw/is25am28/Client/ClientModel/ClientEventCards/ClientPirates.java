@@ -159,7 +159,7 @@ public class ClientPirates extends ClientEventCard {
     }
 
     @Override
-    public boolean getTakeReward() {
+    public Boolean getTakeReward() {
         return this.piratesJSON.getTakeCredits();
     }
 }
