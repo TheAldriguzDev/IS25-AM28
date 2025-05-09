@@ -31,21 +31,23 @@ public final class CardRoundState extends State {
 
         this.round = 0;
         this.deck = this.model.getGameDeck();
-        //List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(), model.getGameLevel());
-        //List<EventCard> fakeDeck = new ArrayList<>();
+
+//        List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(), model.getGameLevel());
+//        List<EventCard> fakeDeck = new ArrayList<>();
 //        fakeDeck.add(AllCards.get(0)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(5)); // AbandonedStation
-        //fakeDeck.add(AllCards.get(8)); // MeteorSHower
-//        fakeDeck.add(AllCards.get(14));
-//        fakeDeck.add(AllCards.get(16));
-//        fakeDeck.add(AllCards.get(24));
-//        fakeDeck.add(AllCards.get(31));
-//        fakeDeck.add(AllCards.get(32));
-//        fakeDeck.add(AllCards.get(34));
-//        fakeDeck.add(AllCards.get(36));
-//        fakeDeck.add(AllCards.get(38));
-//        fakeDeck.add(AllCards.get(30));
-        //this.deck = fakeDeck;
+//        fakeDeck.add(AllCards.get(8)); // MeteorShower
+//        fakeDeck.add(AllCards.get(14)); // Pirates
+//        fakeDeck.add(AllCards.get(16)); // VisitPlanets
+//        fakeDeck.add(AllCards.get(24)); // OpenSpace
+//        fakeDeck.add(AllCards.get(31)); // Epidemy
+//        fakeDeck.add(AllCards.get(32)); // Smugglers
+//        fakeDeck.add(AllCards.get(34)); // Slavers
+//        fakeDeck.add(AllCards.get(36)); // Stardust
+//        fakeDeck.add(AllCards.get(38)); // WarZone
+//        fakeDeck.add(AllCards.get(30)); // OpenSpace
+//        this.deck = fakeDeck;
+
         this.board = this.model.getBoard();
         this.isFirstState = true;
 

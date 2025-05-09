@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientMeteorShower;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -1130,12 +1131,11 @@ class MeteorShowerTest {
             assertEquals(energyP1, playerList.get(0).getShip().getAvailableEnergy());
         }
 
-        // Player1 - Meteor 7 aftermath --> Shield doesn't stop big meteor; a component is destroyed
+        // Player1 - Meteor 7 aftermath --> Shield doesn't stop big meteor, but a single cannon destroys the meteor
 //        System.out.println("\n\t ==== SHIP Player1 after Meteor 7 ====");
 //        printShipGrid(playerList.get(0).getShip());
 
-        // Checking that Player1's ship has a component removed
-        expectedShipP1ComponentCount.getAndDecrement();
+        // Checking that Player1's ship has the same components
         actualShipP1ComponentCount.set(0);
         playerList.get(0).getShip().traverse(
                 (Component c) -> {
@@ -1188,12 +1188,11 @@ class MeteorShowerTest {
             assertEquals(energyP2, playerList.get(1).getShip().getAvailableEnergy());
         }
 
-        // Player2 - Meteor 7 aftermath --> Shield doesn't stop big meteor; a component is destroyed
+        // Player2 - Meteor 7 aftermath --> Shield doesn't stop big meteor, but a single cannon destroys it
 //        System.out.println("\n\t ==== SHIP Player2 after Meteor 7 ====");
 //        printShipGrid(playerList.get(1).getShip());
 
-        // Checking that Player2's ship has a component removed
-        expectedShipP2ComponentCount.getAndDecrement();
+        // Checking that Player2's ship has the same component amount
         actualShipP2ComponentCount.set(0);
         playerList.get(1).getShip().traverse(
                 (Component c) -> {
@@ -1391,11 +1390,12 @@ class MeteorShowerTest {
             assertEquals(energyP1, playerList.get(0).getShip().getAvailableEnergy());
         }
 
-        // Player1 - Meteor 9 aftermath --> Meteor misses
+        // Player1 - Meteor 9 aftermath --> Meteor destroys a component
 //        System.out.println("\n\t ==== SHIP Player1 after Meteor 9 ====");
 //        printShipGrid(playerList.get(0).getShip());
 
-        // Checking that Player1's ship has the same component amount
+        // Checking that Player1's ship has a component removed
+        expectedShipP1ComponentCount.getAndDecrement();
         actualShipP1ComponentCount.set(0);
         playerList.get(0).getShip().traverse(
                 (Component c) -> {
@@ -1445,11 +1445,12 @@ class MeteorShowerTest {
             assertEquals(energyP2, playerList.get(1).getShip().getAvailableEnergy());
         }
 
-        // Player2 - Meteor 9 aftermath --> Meteor misses
+        // Player2 - Meteor 9 aftermath --> Meteor hits a component
 //        System.out.println("\n\t ==== SHIP Player2 after Meteor 9 ====");
 //        printShipGrid(playerList.get(1).getShip());
 
-        // Checking that Player2's ship has the same component amount
+        // Checking that Player2's ship has a component removed
+        expectedShipP2ComponentCount.getAndDecrement();
         actualShipP2ComponentCount.set(0);
         playerList.get(1).getShip().traverse(
             (Component c) -> {

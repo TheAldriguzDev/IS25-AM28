@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Components.Battery;
 import it.polimi.ingsw.is25am28.Model.Components.Cannon;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Components.Shield;
@@ -128,19 +129,13 @@ public class MeteorShower extends EventCard {
         Component toHit;
         Ship shipPtr;
 
-        int energyConsumedByShields = 0;
-        int energyConsumedByCannons = 0;
-        int totalBatteriesConsumed = 0;
-
         // Initializing variables
         toHit = null;
-        threatDestroyed = false;
         sideToHit = -1;
 
         try {
             // ActionJSON unpacking
             meteorShowerJSON = ((MeteorShowerJSON) data);
-//            this.diceThrowResult = meteorShowerJSON.getDiceThrowResult();
             shieldCoordsList = meteorShowerJSON.getShieldsCoordinates();
             cannonCoordsList = meteorShowerJSON.getCannonsCoordinates();
 
@@ -150,9 +145,6 @@ public class MeteorShower extends EventCard {
             if ( !this.currentPlayer.get().getNickname().equals(meteorShowerJSON.getPlayerNickname())) {
                 throw new IllegalArgumentException("ERROR: Current player and player in meteorShowerJSON do not match (wrong arguments)");
             }
-//            if (this.diceThrowResult < 2 || this.diceThrowResult > 12) {
-//                throw new IllegalArgumentException("ERROR: Dice throw result cannot be outside of the range [2, 12]");
-//            }
         }
         catch (Exception e) {
             throw new IllegalArgumentException("[MeteorShower::useCard] " + e.getMessage());
@@ -163,11 +155,6 @@ public class MeteorShower extends EventCard {
             // Other initializations
             shipPtr = this.currentPlayer.get().getShip();
             Meteor currMeteor = this.meteorSequence.get(this.currMeteorIndex);
-
-            energyConsumedByShields = shieldCoordsList.size();
-            energyConsumedByCannons = cannonCoordsList.size();
-            totalBatteriesConsumed = energyConsumedByShields + energyConsumedByCannons;
-            this.removedBatteries.put(this.currentPlayer.get().getNickname(), totalBatteriesConsumed);
 
             // The meteor descriptor already has as its orientation the
             // side from which the ship sees that meteor come from
@@ -245,162 +232,139 @@ public class MeteorShower extends EventCard {
                 default -> throw new IllegalStateException("ERROR: Only 4 directions allowed");
             }
 
-            // If there's a component in the path of the meteor, then elaborate further
-            if (toHit != null) {
-                // Case 1 - Small Meteor
-                // => Check if it can bounce on toHit or a shield is required
-                if (sideToHit != ZERO_PIPES.ordinal()) {
-                    if (!shieldCoordsList.isEmpty()) {
-                        for (ComponentHelper<Void> shieldCoords : shieldCoordsList) {
-                            if (shieldCoords != null) {
-                                Component component = shipPtr.getComponent(
-                                        shieldCoords.getI(),
-                                        shieldCoords.getJ()
-                                );
+            // If a small meteor will hit a smooth side, then it'll bounce
+            threatDestroyed = ((currMeteor.getSize() == 1) && (sideToHit == ZERO_PIPES.ordinal()));
 
-                                // Safe cast of Component to Shield
-                                switch (component) {
-                                    case Shield shield -> {
-                                        int[] shieldCoverage = shield.getCoveredSide();
-                                        try {
-                                            // Consume energy only if there's enough energy available
-
-                                            shipPtr.consumeEnergy(1);
-                                            for (int j : shieldCoverage) {
-                                                if (currMeteor.getSize() == 1 && j == inboundDirection) {
-                                                    // Checking if the shield selected for activation
-                                                    // can actually defend the ship from the small meteor
-                                                    // by checking if it's correctly oriented towards the threat
-                                                    threatDestroyed = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        catch (InsufficientEnergyException e) {
-                                            // Otherwise the ship depleted its energy reserve and the selected shields
-                                            // cannot be activated, therefore the meteor will not be deflected
-                                            threatDestroyed = false;
-                                        }
-                                    }
-                                    case null, default -> {}
-                                }
-                            }
-                        }
-                    }
+            // Activate all shields chosen by the player (even if unnecessary)
+            if (!shieldCoordsList.isEmpty()) {
+                if (currMeteor.getSize() != 1) {
+                    // If it's a big meteor, then just activate all shields but
+                    // the meteor will not be stopped as per game rules, therefore
+                    // any shields activated in this case are simply wasted energy.
+                    shipPtr.consumeEnergy(Math.min(shipPtr.getAvailableEnergy(), (int) shieldCoordsList.stream().filter(Objects::nonNull).count()));
                 }
                 else {
-                    // Small meteor is destroyed since it bouces on a smooth side
-                    threatDestroyed = true;
-                }
-
-                // Case 2 - Big Meteor
-                // => Check if there are cannons that can destroy it
-                if (!cannonCoordsList.isEmpty()) {
-                    for (ComponentHelper<Void> cannonCoords : cannonCoordsList) {
-                        if (cannonCoords != null) {
+                    for (ComponentHelper<Void> shieldCoords : shieldCoordsList) {
+                        if (shieldCoords != null) {
                             Component component = shipPtr.getComponent(
-                                    cannonCoords.getI(),
-                                    cannonCoords.getJ()
+                                    shieldCoords.getI(),
+                                    shieldCoords.getJ()
                             );
 
-                            // Safe cast of Component to Cannon
+                            // Safe cast of Component to Shield
                             switch (component) {
-                                case Cannon cannon -> {
-                                    if ((cannon.getFirePower() == 2 && cannon.getDirection() == 0) || (cannon.getFirePower() == 1 && cannon.getDirection() != 0)) {
-                                        try {
-                                            // Consume energy only if the selected cannon is a double cannon
-                                            // and if there's energy available
-                                            shipPtr.consumeEnergy(1);
-                                            if (currMeteor.getSize() == 2 && cannon.getDirection() == inboundDirection) {
-                                                switch (inboundDirection) {
-                                                    // Case 1 - Cannon must be aligned to the COLUMN from which the currMeteor is coming from
-                                                    //          in order to be able to shoot it (if it was enabled)
-                                                    case 0 -> {
-                                                        // The front cannons can only destroy the meteor if it is directly on the same column
-                                                        threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
-                                                    }
-                                                    case 2 -> {
-                                                        // For higher levels (>2), a meteor COMING FROM THE BOTTOM can also be destroyed
-                                                        // if it's traveling on a COLUMN adjacent to the one where this cannon is places
-                                                        if (this.getBoard().getLevel() > 2) {
-                                                            threatDestroyed =
-                                                                    (cannon.getPosition()[1] == this.diceThrowResult - 2)
-                                                                            || (cannon.getPosition()[1] == this.diceThrowResult - 1)
-                                                                            || (cannon.getPosition()[1] == this.diceThrowResult);
-                                                        }
-                                                        else {
-                                                            threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
-                                                        }
-                                                    }
+                                case Shield shield -> {
+                                    int[] shieldCoverage = shield.getCoveredSide();
+                                    try {
+                                        // Consume energy only if there's enough energy available
+                                        shipPtr.consumeEnergy(1);
 
-                                                    // Case 2 - Cannon must be aligned to the ROW from which the currMeteor is coming from
-                                                    //          in order to be able to shoot it (if it was enabled)
-                                                    case 1, 3 -> {
-                                                        // For higher levels (>1), a meteor COMING FROM THE SIDES can also be destroyed
-                                                        // if it's traveling on a ROW adjacent to the one where this cannon is places
-                                                        if (this.getBoard().getLevel() > 1) {
-                                                            threatDestroyed =
-                                                                    (cannon.getPosition()[0] == this.diceThrowResult - 2)
-                                                                            || (cannon.getPosition()[0] == this.diceThrowResult - 1)
-                                                                            || (cannon.getPosition()[0] == this.diceThrowResult);
-                                                        }
-                                                        else {
-                                                            threatDestroyed = (cannon.getPosition()[0] == this.diceThrowResult - 1);
-                                                        }
-                                                    }
-                                                    default -> throw new IllegalStateException("ERROR: inboundDirection must be between 0 and 3 (extremes included)");
-                                                }
+                                        for (int j : shieldCoverage) {
+                                            if (j == inboundDirection) {
+                                                // Checking if the shield selected for activation
+                                                // can actually defend the ship from the small meteor
+                                                // by checking if it's correctly oriented towards the threat
+                                                threatDestroyed = true;
+                                                break;
                                             }
-                                        }
-                                        catch (InsufficientEnergyException e) {
-                                            // Otherwise the ship depleted its energy reserve and the selected cannons
-                                            // cannot be activated, therefore the meteor will not be destroyed
-                                            threatDestroyed = false;
                                         }
                                     }
-                                    else if (currMeteor.getSize() == 2 && cannon.getDirection() == inboundDirection) {
-                                        switch (inboundDirection) {
-                                            // Case 1 - Cannon must be aligned to the COLUMN from which the currMeteor is coming from
-                                            //          in order to be able to shoot it (if it was enabled)
-                                            case 0 -> {
-                                                // The front cannons can only destroy the meteor if it is directly on the same column
-                                                threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
-                                            }
-                                            case 2 -> {
-                                                // For higher levels (>2), a meteor COMING FROM THE BOTTOM can also be destroyed
-                                                // if it's traveling on a COLUMN adjacent to the one where this cannon is places
-                                                if (this.getBoard().getLevel() > 2) {
-                                                    threatDestroyed =
-                                                            (cannon.getPosition()[1] == this.diceThrowResult - 2)
-                                                                    || (cannon.getPosition()[1] == this.diceThrowResult - 1)
-                                                                    || (cannon.getPosition()[1] == this.diceThrowResult);
-                                                }
-                                                else {
-                                                    threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
-                                                }
-                                            }
-
-                                            // Case 2 - Cannon must be aligned to the ROW from which the currMeteor is coming from
-                                            //          in order to be able to shoot it (if it was enabled)
-                                            case 1, 3 -> {
-                                                // For higher levels (>1), a meteor COMING FROM THE SIDES can also be destroyed
-                                                // if it's traveling on a ROW adjacent to the one where this cannon is places
-                                                if (this.getBoard().getLevel() > 1) {
-                                                    threatDestroyed =
-                                                            (cannon.getPosition()[0] == this.diceThrowResult - 2)
-                                                                    || (cannon.getPosition()[0] == this.diceThrowResult - 1)
-                                                                    || (cannon.getPosition()[0] == this.diceThrowResult);
-                                                }
-                                                else {
-                                                    threatDestroyed = (cannon.getPosition()[0] == this.diceThrowResult - 1);
-                                                }
-                                            }
-                                            default -> throw new IllegalStateException("ERROR: inboundDirection must be between 0 and 3 (extremes included)");
-                                        }
+                                    catch (InsufficientEnergyException e) {
+                                        // Otherwise the ship depleted its energy reserve and the selected shields
+                                        // cannot be activated, therefore the meteor will not be deflected
                                     }
                                 }
                                 case null, default -> {}
                             }
+                        }
+                    }
+                }
+            }
+
+            // Considering all single cannons on the ship in
+            // addition to the double cannons that the player
+            // chose to activate
+            List<Cannon> mixedCannons = new ArrayList<>(
+                shipPtr.getCannonList().stream()
+                    .filter(c -> !c.requireEnergy())
+                    .toList()
+            );
+
+            // Adding all double cannons selected by the player to
+            // the mixed cannons list
+            for (ComponentHelper<Void> cannonCoords : cannonCoordsList) {
+                if (cannonCoords != null) {
+                    Component component = shipPtr.getComponent(
+                            cannonCoords.getI(),
+                            cannonCoords.getJ()
+                    );
+
+                    switch (component) {
+                        case Cannon cannon -> mixedCannons.add(cannon);
+                        case null, default -> {}
+                    }
+                }
+            }
+
+            // Check if the meteor can be destroyed by at least one of the
+            // cannons found in the mixed cannons list, and also activate all
+            // double cannons chosen by the player (even if unnecessary)
+            if (!mixedCannons.isEmpty() && !mixedCannons.contains(null)) {
+                for (Cannon cannon : mixedCannons) {
+                    // If the current cannon is a DoubleCannon, then consume a battery
+                    if (cannon.requireEnergy()) {
+                        try {
+                            // Consume energy only if the selected cannon is a double cannon
+                            // and if there's energy available
+                            shipPtr.consumeEnergy(1);
+                        }
+                        catch (InsufficientEnergyException e) {
+                            // Otherwise the ship depleted its energy reserve and the selected cannons
+                            // cannot be activated, therefore the meteor will not be destroyed by this cannon
+                            continue;
+                        }
+                    }
+
+                    // NOTE: Only big meteors can be destroyed by a cannon, thus there's no need to
+                    //       perform the following checks if it's a small meteor.
+                    if (!threatDestroyed && currMeteor.getSize() == 2 && cannon.getDirection() == inboundDirection) {
+                        switch (inboundDirection) {
+                            // Case 1 - Cannon must be aligned to the COLUMN from which the currMeteor is coming from
+                            //          in order to be able to shoot it (if it was enabled)
+                            case 0 -> {
+                                // The front cannons can only destroy the meteor if it is directly on the same column
+                                threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
+                            }
+                            case 2 -> {
+                                // For higher levels (>2), a meteor COMING FROM THE BOTTOM can also be destroyed
+                                // if it's traveling on a COLUMN adjacent to the one where this cannon is places
+                                if (this.getBoard().getLevel() > 2) {
+                                    threatDestroyed =
+                                            (cannon.getPosition()[1] == this.diceThrowResult - 2)
+                                                    || (cannon.getPosition()[1] == this.diceThrowResult - 1)
+                                                    || (cannon.getPosition()[1] == this.diceThrowResult);
+                                }
+                                else {
+                                    threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
+                                }
+                            }
+
+                            // Case 2 - Cannon must be aligned to the ROW from which the currMeteor is coming from
+                            //          in order to be able to shoot it (if it was enabled)
+                            case 1, 3 -> {
+                                // For higher levels (>1), a meteor COMING FROM THE SIDES can also be destroyed
+                                // if it's traveling on a ROW adjacent to the one where this cannon is places
+                                if (this.getBoard().getLevel() > 1) {
+                                    threatDestroyed =
+                                            (cannon.getPosition()[0] == this.diceThrowResult - 2)
+                                                    || (cannon.getPosition()[0] == this.diceThrowResult - 1)
+                                                    || (cannon.getPosition()[0] == this.diceThrowResult);
+                                }
+                                else {
+                                    threatDestroyed = (cannon.getPosition()[0] == this.diceThrowResult - 1);
+                                }
+                            }
+                            default -> throw new IllegalStateException("ERROR: inboundDirection must be between 0 and 3 (extremes included)");
                         }
                     }
                 }
@@ -416,12 +380,15 @@ public class MeteorShower extends EventCard {
                     // perform a differential update, we need to store the effects of the meteor
                     // on the current player before the card moves to the next player.
                     this.prevPlayer = this.currentPlayer.get().getNickname();
+
                     this.prevPlayerRemovedComponents = shipPtr.removeComponent(
                             toHit.getPosition()[0],
                             toHit.getPosition()[1]
                     );
+
                     this.removedComponents.put(this.prevPlayer, this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList());
-                } catch (CoreDeletionAttemptException e) {
+                }
+                catch (CoreDeletionAttemptException e) {
                     this.eliminatedPlayers.add(this.currentPlayer.get().getNickname());
                     this.getBoard().eliminatePlayer(this.currentPlayer.get());
                 }
@@ -431,7 +398,6 @@ public class MeteorShower extends EventCard {
                 // by setting the prevPlayerRemovedComponents list to null
                 // (since, again, the current player wasn't hit by any meteors)
                 this.prevPlayer = this.currentPlayer.get().getNickname();
-                //this.prevPlayerRemovedComponents = null;
             }
         }
 
