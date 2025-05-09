@@ -990,7 +990,7 @@ public class ClientShip implements WidgetTUIGenerator {
         long totalRedItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
         long totalYellowItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.YELLOW)).count();
         long totalGreenItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.GREEN)).count();
-        long totalBlueItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor\.BLUE)).count();
+        long totalBlueItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.BLUE)).count();
 
         String redItemsString = totalRedItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.RED) + SPACE;
         String yellowItemsString = totalYellowItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.YELLOW) + SPACE;
