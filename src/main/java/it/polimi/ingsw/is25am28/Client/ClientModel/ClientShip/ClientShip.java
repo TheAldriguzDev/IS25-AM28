@@ -12,13 +12,12 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
-
-import javafx.util.Pair;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -29,158 +28,7 @@ import static it.polimi.ingsw.is25am28.Model.Connector.ONE_PIPE;
 import static it.polimi.ingsw.is25am28.Model.Connector.TWO_PIPES;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
-public class ClientShip implements WidgetTUIGenerator {
-    public final static Map<Integer, int[][]> shipProfiles = new HashMap<>();
-    public final static Map<Integer, Pair<Integer, Integer>> shipDimensions = new HashMap<>();
-    public final static Map<Integer, Pair<Integer, Integer>> shipOffsets = new HashMap<>();
-
-    static {
-        // (1) - Setting the Ship Profile Matrices
-        int[][] matrix;
-        int[][] levelOneMatrix;
-        int row, col;
-
-        // (1.1) - Difficulty level 0 and 1 ship layout
-        // Starting from scratch
-        matrix = new int[12][12];
-
-        // Zeroing the matrix
-        for (row = 0; row < 12; row++) {
-            for (col = 0; col < 12; col++) {
-                matrix[row][col] = 0;
-            }
-        }
-
-        // Filling the level 0 and 1 ship profile by hand
-        // Starting from the top
-        matrix[4][6] = 1;   // Row #5
-
-        matrix[5][5] = 1;   // Row #6
-        matrix[5][6] = 1;   // Row #6
-        matrix[5][7] = 1;   // Row #6
-
-        matrix[6][4] = 1;   // Row #7
-        matrix[6][5] = 1;   // Row #7
-        matrix[6][6] = 1;   // Row #7
-        matrix[6][7] = 1;   // Row #7
-        matrix[6][8] = 1;   // Row #7
-
-        matrix[7][4] = 1;   // Row #8
-        matrix[7][5] = 1;   // Row #8
-        matrix[7][6] = 1;   // Row #8
-        matrix[7][7] = 1;   // Row #8
-        matrix[7][8] = 1;   // Row #8
-
-        matrix[8][4] = 1;   // Row #9
-        matrix[8][5] = 1;   // Row #9
-        matrix[8][7] = 1;   // Row #9
-        matrix[8][8] = 1;   // Row #9
-
-        // NOTE: Both level 0 (test flight) and level 1 have the same ship profile
-        shipProfiles.put(0, matrix);
-        shipProfiles.put(1, matrix);
-
-        // Saving the level 1 matrix as a baseline for
-        // building the other 2 ship profiles
-        levelOneMatrix = shipProfiles.get(1);
-
-        // (1.2) - Difficulty level 2 ship layout
-        // Creating the level 2 layout by starting from the level 1 layout
-        matrix = new int[12][12];
-
-        // Initializing the level 2 ship profile with the level 1
-        // ship profile as a starting point
-        for (row = 0; row < 12; row++) {
-            for (col = 0; col < 12; col++) {
-                matrix[row][col] = levelOneMatrix[row][col];
-            }
-        }
-
-        // Shaping the level 2 ship profile starting from the
-        // level 1 ship profile as the baseline
-        // Starting from the top
-        matrix[4][5] = 1;   // Row #5
-        matrix[4][6] = 0;   // Row #5
-        matrix[4][7] = 1;   // Row #5
-
-        matrix[5][4] = 1;   // Row #6
-        matrix[5][8] = 1;   // Row #6
-
-        matrix[6][3] = 1;   // Row #7
-        matrix[6][9] = 1;   // Row #7
-
-        matrix[7][3] = 1;   // Row #8
-        matrix[7][9] = 1;   // Row #8
-
-        matrix[8][3] = 1;   // Row #9
-        matrix[8][9] = 1;   // Row #9
-
-        shipProfiles.put(2, matrix);
-
-        // (1.3) - Difficulty level 3 ship layout
-        // Creating the level 3 layout by starting from the level 1 layout
-        matrix = new int[12][12];
-
-        // Initializing the level 3 ship profile with the level 1
-        // ship profile as a starting point
-        for (row = 0; row < 12; row++) {
-            for (col = 0; col < 12; col++) {
-                matrix[row][col] = levelOneMatrix[row][col];
-            }
-        }
-
-        // Shaping the level 3 ship profile starting from the
-        // level 1 ship profile as the baseline
-        // Starting from the top
-        matrix[3][6] = 1;   // Row #4
-
-        matrix[4][5] = 1;   // Row #5
-        matrix[4][7] = 1;   // Row #5
-
-        matrix[5][2] = 1;   // Row #6
-        matrix[5][4] = 1;   // Row #6
-        matrix[5][8] = 1;   // Row #6
-        matrix[5][10] = 1;  // Row #6
-
-        matrix[6][2] = 1;   // Row #7
-        matrix[6][3] = 1;   // Row #7
-        matrix[6][9] = 1;   // Row #7
-        matrix[6][10] = 1;  // Row #7
-
-        matrix[7][2] = 1;   // Row #8
-        matrix[7][3] = 1;   // Row #8
-        matrix[7][9] = 1;   // Row #8
-        matrix[7][10] = 1;  // Row #8
-
-        matrix[8][2] = 1;   // Row #9
-        matrix[8][3] = 1;   // Row #9
-        matrix[8][4] = 0;   // Row #9
-        matrix[8][8] = 0;   // Row #9
-        matrix[8][9] = 1;   // Row #9
-        matrix[8][10] = 1;  // Row #9
-
-        shipProfiles.put(3, matrix);
-
-        // (2) - Setting the Ship dimensions per difficultyLevel
-        // --> Dimensions per difficultyLevel represent the smallest square/rectangle that wraps the entire ship
-        shipDimensions.put(0, new Pair<Integer, Integer>(5, 5));
-        shipDimensions.put(1, new Pair<Integer, Integer>(5, 5));
-        shipDimensions.put(2, new Pair<Integer, Integer>(5, 7));
-        shipDimensions.put(3, new Pair<Integer, Integer>(6, 9));
-
-        // (3) - Setting the Ship's offsets per difficultyLevel
-        // --> Offsets are between the 12x12 grid and the actual ship placement (just like in the cardboard version)
-        // --> When scanning the 12x12 grid, you add these values to the respective row and column iterators
-        //     to start scanning the ship from the top-left corner of the square/rectangle that wraps the entire ship
-        shipOffsets.put(0, new Pair<Integer, Integer>(4, 4));
-        shipOffsets.put(1, new Pair<Integer, Integer>(4, 4));
-        shipOffsets.put(2, new Pair<Integer, Integer>(4, 3));
-        shipOffsets.put(3, new Pair<Integer, Integer>(3, 2));
-    }
-
-    private final int difficultyLevel;
-    private static final int grid_rows = 12;
-    private static final int grid_cols = 12;
+public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
     private ClientComponent[][] components;
     private final ClientCabin core;
     private ClientCabin purpleAlienPosition;
@@ -199,7 +47,7 @@ public class ClientShip implements WidgetTUIGenerator {
     // Constructor
     public ClientShip(int difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
-        this.components = initGrid(grid_rows, grid_cols);
+        this.components = initGrid();
 
         // Initializing the connectors of the core cabin
         List<Integer> coreConnectors = new ArrayList<Integer>();
@@ -233,7 +81,7 @@ public class ClientShip implements WidgetTUIGenerator {
      * */
     public ClientShip(int difficultyLevel, List<Map<String, Object>> initialShip) {
         this.difficultyLevel = difficultyLevel;
-        this.components = initGrid(grid_rows, grid_cols);
+        this.components = initGrid();
 
         // Initializing the connectors of the core cabin
         List<Integer> coreConnectors = new ArrayList<Integer>();
@@ -589,16 +437,6 @@ public class ClientShip implements WidgetTUIGenerator {
     }
 
     /**
-     * @return TRUE if the given connectors are compatible, FALSE otherwise.
-     */
-    private boolean areSidesConnected(Connector a, Connector b) {
-        return (a == THREE_PIPES && b != ZERO_PIPES)
-                || (a != ZERO_PIPES && b == THREE_PIPES)
-                || (a == ONE_PIPE && b == ONE_PIPE)
-                || (a == TWO_PIPES && b == TWO_PIPES);
-    }
-
-    /**
      * Uses an adapted version of the BFS algorithm to iterate over each component of the
      * ship's grid and also applies the given lambda function to each component that it encounters
      *
@@ -700,7 +538,6 @@ public class ClientShip implements WidgetTUIGenerator {
      * @param j The index of the column where the component to retrieve is located
      * @return The component at coordinates (i, j)
      * @throws OutOfGridException If the given coordinates (i, j) fall outside the ship's grid
-     * @throws OutOfShipException If the given coordinates (i, j) fall outside the ship's profile,
      *
      */
     public ClientComponent getComponent(int i, int j) throws OutOfGridException {
@@ -714,7 +551,7 @@ public class ClientShip implements WidgetTUIGenerator {
     /**
      * @return A grid of <code>ClientComponent</code> of the given dimensions with all values initialized to <code>null</code>
      */
-    private ClientComponent[][] initGrid(int grid_rows, int grid_cols) {
+    private ClientComponent[][] initGrid() {
         ClientComponent[][] grid = new ClientComponent[grid_rows][grid_cols];
 
         for (int i = 0; i < grid_rows; i++) {
@@ -920,6 +757,10 @@ public class ClientShip implements WidgetTUIGenerator {
                 + (this.brownAlienPosition != null ? LifeformType.BROWN_ALIEN.getPowerBoost() : 0);
     }
 
+    /**
+     * @param energyToConsume The energy to consume
+     * @throws InsufficientEnergyException If this ship has less energy than the one to consume
+     */
     public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
         int availableEnergy;
 
@@ -936,6 +777,80 @@ public class ClientShip implements WidgetTUIGenerator {
                 break;
             }
         }
+    }
+
+    /**
+     * @return A screen containing a randomly selected star pattern
+     *         which come in a few colors, that will make the ship look
+     *         like it is actually traversing an actual cosmic scenario
+     */
+    private List<String> generateEmptySpaceScreen(int scale) {
+        List<String> emptySpaceScreen = new ArrayList<>();
+        List<String> colorPool = new ArrayList<>();
+        Random rand = new Random();
+        StringBuilder spaceString;
+        int randIndex, randColor;
+
+        // TODO: Figure out where to put these values
+        // int scale = 3;
+        int height = scale;
+        int width = 3 * scale + 2;
+
+        // Aggregates all the possible colors that the space symbols can have
+        colorPool.add(ANSIColors.MAGENTA);
+        colorPool.add(ANSIColors.RED);
+        colorPool.add(ANSIColors.YELLOW);
+        colorPool.add(ANSIColors.CYAN);
+
+        // Indicates how much the stars should be spread apart
+        int spreadFactor = 80;
+        int symbolPoolSize = UnicodeCharacters.SPACE_SYMBOLS.length + spreadFactor;
+
+        height += 2;
+        width += 2;
+
+        // Generating the empty screen that will act as a spacer
+        // when the current component at coords (i, j) is null
+        for (int i = 0; i < height; i++) {
+            spaceString = new StringBuilder();
+
+            for (int j = 0; j < width; j++) {
+                randIndex = rand.nextInt(0, symbolPoolSize);
+                randColor = rand.nextInt(0, colorPool.size());
+
+                if (randIndex < UnicodeCharacters.SPACE_SYMBOLS.length) {
+                    spaceString.append(
+                            PrintUtils.addColor(
+                                    UnicodeCharacters.SPACE_SYMBOLS[randIndex],
+                                    colorPool.get(randColor)
+                            )
+                    );
+                }
+                else {
+                    spaceString.append(SPACE);
+                }
+            }
+
+            emptySpaceScreen.add(spaceString.toString());
+        }
+
+        return emptySpaceScreen;
+    }
+
+    /**
+     * @return A widget of the same dimensions of any client component widget
+     *         but with its screen filled with Space.
+     *         This is needed to outline the ship profile for the current level
+     */
+    private WidgetTUI generateComponentPlaceholderWidget() {
+        WidgetTUI componentPlaceholder = new WidgetTUI();
+
+        componentPlaceholder.setScreen(this.generateEmptySpaceScreen(1));
+        componentPlaceholder.setHeight(3);
+        componentPlaceholder.setWidth(3 * 3 + 2);
+        componentPlaceholder.wrapWidgetWithBorder();
+
+        return componentPlaceholder;
     }
 
     /**
@@ -1113,80 +1028,6 @@ public class ClientShip implements WidgetTUIGenerator {
     }
 
     /**
-     * @return A screen containing a randomly selected star pattern
-     *         which come in a few colors, that will make the ship look
-     *         like it is actually traversing an actual cosmic scenario
-     */
-    private List<String> generateEmptySpaceScreen(int scale) {
-        List<String> emptySpaceScreen = new ArrayList<>();
-        List<String> colorPool = new ArrayList<>();
-        Random rand = new Random();
-        StringBuilder spaceString;
-        int randIndex, randColor;
-
-        // TODO: Figure out where to put these values
-        // int scale = 3;
-        int height = scale;
-        int width = 3 * scale + 2;
-
-        // Aggregates all the possible colors that the space symbols can have
-        colorPool.add(ANSIColors.MAGENTA);
-        colorPool.add(ANSIColors.RED);
-        colorPool.add(ANSIColors.YELLOW);
-        colorPool.add(ANSIColors.CYAN);
-
-        // Indicates how much the stars should be spread apart
-        int spreadFactor = 80;
-        int symbolPoolSize = UnicodeCharacters.SPACE_SYMBOLS.length + spreadFactor;
-
-        height += 2;
-        width += 2;
-
-        // Generating the empty screen that will act as a spacer
-        // when the current component at coords (i, j) is null
-        for (int i = 0; i < height; i++) {
-            spaceString = new StringBuilder();
-
-            for (int j = 0; j < width; j++) {
-                randIndex = rand.nextInt(0, symbolPoolSize);
-                randColor = rand.nextInt(0, colorPool.size());
-
-                if (randIndex < UnicodeCharacters.SPACE_SYMBOLS.length) {
-                    spaceString.append(
-                            PrintUtils.addColor(
-                                    UnicodeCharacters.SPACE_SYMBOLS[randIndex],
-                                    colorPool.get(randColor)
-                            )
-                    );
-                }
-                else {
-                    spaceString.append(SPACE);
-                }
-            }
-
-            emptySpaceScreen.add(spaceString.toString());
-        }
-
-        return emptySpaceScreen;
-    }
-
-    /**
-     * @return A widget of the same dimensions of any client component widget
-     *         but with its screen filled with Space.
-     *         This is needed to outline the ship profile for the current level
-     */
-    private WidgetTUI generateComponentPlaceholderWidget() {
-        WidgetTUI componentPlaceholder = new WidgetTUI();
-
-        componentPlaceholder.setScreen(this.generateEmptySpaceScreen(1));
-        componentPlaceholder.setHeight(3);
-        componentPlaceholder.setWidth(3 * 3 + 2);
-        componentPlaceholder.wrapWidgetWithBorder();
-
-        return componentPlaceholder;
-    }
-
-    /**
      * @return The widget containing all of this ship's component's widgets
      *         as they are put inside this ship's grid and also adds a custom
      *         border with row and column indexes to locate a component with ease
@@ -1323,8 +1164,4 @@ public class ClientShip implements WidgetTUIGenerator {
 
         return shipGridWidget;
     }
-
-//    public void updateShip(CardStateJSON cardStateJSON) {
-//
-//    }
 }
