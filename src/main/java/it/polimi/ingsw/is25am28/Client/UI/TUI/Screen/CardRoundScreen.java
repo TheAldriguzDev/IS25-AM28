@@ -22,12 +22,14 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.TAB;
 
 public class CardRoundScreen extends Screen {
     private static final int CONSOLE_WIDGET_MAX_HEIGHT = 6;
@@ -47,11 +49,14 @@ public class CardRoundScreen extends Screen {
     private WidgetTUI otherPlayerShipWidget;
     private WidgetTUI otherPlayerShipCommandsWidget;
 
+    private WidgetTUI playerActionsRecapWidget;
+
     private InputWidgetTUI cardRoundCommandsWidget;
     private ConsoleWidgetTUI consoleWidget;
 
     private ClientEventCard currEventCard;
     private CardStateJSON currEventCardState;
+    private String currPlayerNickname;
     private Map<String, Pair<Boolean, CommandWidgetTUI>> indexedCardInputMethods;
 
     // Constructor
@@ -70,6 +75,185 @@ public class CardRoundScreen extends Screen {
             CONSOLE_WIDGET_MAX_HEIGHT,
             CONSOLE_WIDGET_MAX_WIDTH
         );
+    }
+
+    /**
+     * Prints the current ActionJSON giving the current player
+     * an overview of the changes he's staging for submission when
+     * he'll play the current event card.
+     */
+    private void generatePlayerActionsRecapWidget() {
+        String playerNickname = PrintUtils.addColor(this.currPlayerNickname, this.model.getAllClientPlayers().get(this.currPlayerNickname).getColor().getColorString());
+
+        this.playerActionsRecapWidget = new WidgetTUI();
+
+        // (1) - Crew to remove
+        try {
+            List<ComponentHelper<LifeformType>> crewToRemove = this.currEventCard.getCrewToRemove();
+
+            if (crewToRemove != null && !crewToRemove.isEmpty()) {
+                this.playerActionsRecapWidget.appendString("Crew to remove:");
+
+                for (ComponentHelper<LifeformType> lfToRemove : crewToRemove) {
+                    lfToRemove.getItem().ifPresent(
+                        (LifeformType lfType) -> {
+                            this.playerActionsRecapWidget
+                                    .appendString(TAB + lfType + " @ (row=" + (lfToRemove.getI() + 1) + ", col=" + (lfToRemove.getJ() + 1) + ")");
+                        }
+                    );
+                }
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (2) - Items to remove
+        try {
+            List<ComponentHelper<ItemColor>> itemsToRemove = this.currEventCard.getItemsToBeRemoved();
+
+            if (itemsToRemove != null && !itemsToRemove.isEmpty()) {
+                this.playerActionsRecapWidget.appendString("Items to removal:");
+
+                for (ComponentHelper<ItemColor> itemToRemove : itemsToRemove) {
+                    itemToRemove.getItem().ifPresent(
+                        (ItemColor itemColor) -> {
+                            this.playerActionsRecapWidget
+                                    .appendString(TAB + itemColor + " @ (row=" + (itemToRemove.getI() + 1) + ", col=" + (itemToRemove.getJ() + 1) + ")");
+                        }
+                    );
+                }
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (3) - Items to take
+        try {
+            List<ComponentHelper<ItemColor>> itemsToTake = this.currEventCard.getItemsToBeTaken();
+
+            if (itemsToTake != null && !itemsToTake.isEmpty()) {
+                this.playerActionsRecapWidget.appendString("Items to take:");
+
+                for (ComponentHelper<ItemColor> itemToTake : itemsToTake) {
+                    itemToTake.getItem().ifPresent(
+                        (ItemColor itemColor) -> {
+                            this.playerActionsRecapWidget
+                                    .appendString(TAB + itemColor + " @ (row=" + (itemToTake.getI() + 1) + ", col=" + (itemToTake.getJ() + 1) + ")");
+                        }
+                    );
+                }
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (4) - Take reward?
+        try {
+            Boolean takeReward = this.currEventCard.getTakeReward();
+
+            if (takeReward != null) {
+                this.playerActionsRecapWidget
+                        .appendString("Take reward?: " + (takeReward ? "Yes" : "No"));
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (5) - Chosen planet index
+        try {
+            Integer chosenPlanetIndex = this.currEventCard.getChosenPlanetIndex();
+
+            if (chosenPlanetIndex != null) {
+                this.playerActionsRecapWidget
+                        .appendString("Chosen planet index: " + chosenPlanetIndex);
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (6) - Visit the POI?
+        try {
+            Boolean wantsToVisit = this.currEventCard.getWantsToVisit();
+
+            if (wantsToVisit != null) {
+                this.playerActionsRecapWidget
+                        .appendString("Visit the POI?: " + (wantsToVisit ? "Yes" : "No"));
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (7) - Shields to activate
+        try {
+            List<ComponentHelper<Void>> shieldsToActivate = this.currEventCard.getShieldsToActivate();
+
+            if (shieldsToActivate != null && !shieldsToActivate.isEmpty()) {
+                this.playerActionsRecapWidget.appendString("Shields to activate:");
+
+                for (ComponentHelper<Void> shieldToActivate : shieldsToActivate) {
+                    this.playerActionsRecapWidget
+                            .appendString(TAB + "Shield @ (row=" + (shieldToActivate.getI() + 1) + ", col=" + (shieldToActivate.getJ() + 1) + ")");
+                }
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (8) - Double cannons to activate
+        try {
+            List<ComponentHelper<Void>> doubleCannonsToActivate = this.currEventCard.getDoubleCannonsToActivate();
+
+            if (doubleCannonsToActivate != null && !doubleCannonsToActivate.isEmpty()) {
+                this.playerActionsRecapWidget.appendString("Double cannons to activate:");
+
+                for (ComponentHelper<Void> doubleCannonToActivate : doubleCannonsToActivate) {
+                    this.playerActionsRecapWidget
+                            .appendString(TAB + "DoubleCannon @ (row=" + (doubleCannonToActivate.getI() + 1) + ", col=" + (doubleCannonToActivate.getJ() + 1) + ")");
+                }
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (9) - Double engines to activate
+        try {
+            Integer doubleEnginesToActivate = this.currEventCard.getDoubleEnginesToActivate();
+
+            if (doubleEnginesToActivate != null) {
+                this.playerActionsRecapWidget
+                        .appendString("Double engines to activate: " + doubleEnginesToActivate);
+
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        WidgetTUI actionsScreen = this.playerActionsRecapWidget;
+        this.playerActionsRecapWidget = new WidgetTUI();
+
+        if (actionsScreen.getScreen().isEmpty()) {
+            actionsScreen.appendString("No actions selected");
+        }
+
+        this.playerActionsRecapWidget
+                .setWidth(actionsScreen.getWidth())
+                .appendString("[YOUR ACTIONS]")
+                .centerWidgetScreen()
+                .addPadding(0, 0, 1, 0)
+                .appendScreen(actionsScreen.getScreen());
+
+        this.playerActionsRecapWidget
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder();
     }
 
     /**
@@ -891,7 +1075,7 @@ public class CardRoundScreen extends Screen {
      * Generates a widget that shows the current player if it's
      * his turn or, in the other case, whose turn it is to play.
      */
-    private void generatePlayerTurnWidget(String playingPlayer) {
+    private void generatePlayerTurnWidget() {
         boolean isEliminated;
 
         this.playerTurnWidget = new WidgetTUI();
@@ -906,20 +1090,20 @@ public class CardRoundScreen extends Screen {
                     .appendString(COMPUTER_MSG_TAG + "You've been " + PrintUtils.addColor("ELIMINATED", ANSIColors.BRIGHT_RED));
         }
         else {
-            if (playingPlayer.equals(this.model.getNickname())) {
+            if (this.currPlayerNickname.equals(this.model.getNickname())) {
                 this.playerTurnWidget
                         .appendString(COMPUTER_MSG_TAG + "It's " + PrintUtils.addColor("YOUR TURN", ANSIColors.BRIGHT_GREEN) + " to play");
             }
             else {
                 this.playerTurnWidget
                         .appendString(COMPUTER_MSG_TAG + "It's " + PrintUtils.addColor("NOT YOUR TURN", ANSIColors.BRIGHT_RED) + " to play")
-                        .appendString("Current player is: " + playingPlayer);
+                        .appendString("Current player is: " + PrintUtils.addColor(this.currPlayerNickname, this.model.getAllClientPlayers().get(this.currPlayerNickname).getColor().getColorString()));
             }
-
-            this.playerTurnWidget
-                    .addPadding(0, 1, 0, 1)
-                    .wrapWidgetWithBorder();
         }
+
+        this.playerTurnWidget
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder();
     }
 
     /**
@@ -944,6 +1128,8 @@ public class CardRoundScreen extends Screen {
      * of all widgets belonging to the card round phase
      */
     private void printCardRoundWidgets() {
+        WidgetTUI currCardAndPlayerActions;
+
         // Updating all widgets before using them
         this.generateCurrEventCardWidget();
         this.generateShipWidgets();
@@ -951,18 +1137,34 @@ public class CardRoundScreen extends Screen {
 
         this.playerNameWidget.printWidget();
 
+        // Show the current actions only to the
+        // player that is currently playing
+        if (this.currPlayerNickname.equals(this.model.getNickname())) {
+            this.generatePlayerActionsRecapWidget();
+
+            currCardAndPlayerActions = WidgetTUI.composeTwoWidgetsHorizontally(
+                    this.currEventCardWidget,
+                    this.playerActionsRecapWidget
+            );
+        }
+        else {
+            // Otherwise, a player that is not playing will only
+            // see the current event card (since he's not playing)
+            currCardAndPlayerActions = this.currEventCardWidget;
+        }
+
         WidgetTUI.composeTwoWidgetsHorizontally(
                 WidgetTUI.fillScreenWithSpaces(
                         WidgetTUI.composeTwoWidgetsVertically(
-                                        this.boardWidget.addPadding(0, 0, 1, 0),
-                                        this.shipStatsWidget
-                                )
-                                .centerWidgetScreen()
-                                .addPadding(0, 1, 0, 0)
+                                    this.boardWidget.addPadding(0, 0, 1, 0),
+                                    this.shipStatsWidget
+                            )
+                            .centerWidgetScreen()
+                            .addPadding(0, 1, 0, 0)
                 ),
                 WidgetTUI.composeTwoWidgetsHorizontally(
                         this.shipGridWidget.addPadding(0, 1, 0, 0),
-                        this.currEventCardWidget
+                        currCardAndPlayerActions
                 )
         ).printWidget();
 
@@ -1236,14 +1438,15 @@ public class CardRoundScreen extends Screen {
             "playCard",
             () -> {
                 System.out.println("onSuccess");
+                this.ctx = null;
 
                 // TODO: Implement onSuccess (if it needs to do something)
-                // TODO: view a screen saying that your turn is over
             },
             () -> {
                 System.out.println("onError");
 
                 System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
+                this.ctx = null;
                 this.getCardRoundCommand();
             }
         );
@@ -1264,14 +1467,17 @@ public class CardRoundScreen extends Screen {
         this.forceStopScreen();
 
         try {
-            // Storing the current event card's card state
+            // Storing the current event card's card state and the currently playing player
             this.currEventCardState = cardRound.getCardInfo();
+            this.currPlayerNickname = cardRound.getCardInfo().getPlayerNickname();
+
+            System.out.println("CURR_PLAYER=" + this.currPlayerNickname);
 
             // Updating this player's ship widget and
             // getting the current event card
             this.getCurrEventCard();
             this.generateShipWidgets();
-            this.generatePlayerTurnWidget(cardRound.getCardInfo().getPlayerNickname());
+            this.generatePlayerTurnWidget();
 
             // Updating the current event card
             this.currEventCard.updateCard(cardRound.getCardInfo());

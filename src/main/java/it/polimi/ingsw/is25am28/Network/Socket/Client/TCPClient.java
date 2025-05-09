@@ -140,11 +140,18 @@ public class TCPClient implements VirtualViewSocket {
         StateDTO nextState = answer.getNextState();
         String nickname = answer.getPlayerNickname();
 
-        CompletableFuture<Void> future;
+        CompletableFuture<Void> future = new CompletableFuture<>();
+
+//        if (state != null) {
+//            System.out.println("STATE: " + state.getStateName() + " (" + state + ")");
+//        }
+//        if (nextState != null) {
+//            System.out.println("NEXT_STATE: " + nextState.getStateName() + " (" + nextState + ")");
+//        }
 
         switch (state) {
             // Update the current state of the game
-            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PlayerEndedShipDTO _,
+            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PopulateShipComponentDTO _,
                  ConstructionDeckDTO _ -> { // TODO: Timer should be removed from here
                 future = CompletableFuture.runAsync(() -> {
                     try {
@@ -165,6 +172,28 @@ public class TCPClient implements VirtualViewSocket {
                     }, inputThread);
                 }
             }
+            case PlayerEndedShipDTO _ -> {
+                if (nextState == null) {
+                    future = CompletableFuture.runAsync(() -> {
+                        try {
+                            state.accept(viewUpdater);
+                        } catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }, updateThread);
+
+                    // Then commit the command
+                    if (nickname != null && viewUpdater.isCTXAvailable()) { // Try to commit the message only if it's present --> otherwise is not smart to potentially lock the program
+                        future = future.thenRunAsync(() -> {
+                            try {
+                                viewUpdater.commitCommand(nickname);
+                            } catch (Exception e) {
+                                throw new RuntimeException("Error while commiting the command: ", e);
+                            }
+                        }, inputThread);
+                    }
+                }
+            }
             case DisconnectedPlayerDTO _ -> {
                 future = CompletableFuture.runAsync(() -> {
                     try {
@@ -174,15 +203,36 @@ public class TCPClient implements VirtualViewSocket {
                     }
                 }, updateThread);
             }
-            case CardRoundDTO _ -> {
-                future = CompletableFuture.runAsync(() -> {
-                    try {
-                        viewUpdater.interruptCurrScreen();
-                    }
-                    catch (Exception e) {
-                        throw e;
-                    }
-                });
+            case CardRoundDTO data -> {
+                if (nextState != null) {
+                    future = CompletableFuture.runAsync(() -> {
+                        try {
+                            viewUpdater.updateCardResult(data);
+                        }
+                        catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }, updateThread);
+
+                    future = future.thenRunAsync(() -> {
+                        try {
+                            viewUpdater.interruptCurrScreen();
+                        }
+                        catch (Exception e) {
+                            throw e;
+                        }
+                    }, forceThread);
+                }
+                else {
+                    future = CompletableFuture.runAsync(() -> {
+                        try {
+                            viewUpdater.interruptCurrScreen();
+                        }
+                        catch (Exception e) {
+                            throw e;
+                        }
+                    }, forceThread);
+                }
 
                 // If the nickname is present, commit the command first
                 if (nickname != null && viewUpdater.isCTXAvailable()) {
@@ -193,17 +243,17 @@ public class TCPClient implements VirtualViewSocket {
                             throw new RuntimeException("Error while commiting the command: ", e);
                         }
                     }, inputThread);
-                } else {
-                    future = CompletableFuture.completedFuture(null);
                 }
 
-                future = future.thenRunAsync(() -> {
-                    try {
-                        state.accept(viewUpdater);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error while executing the state: ", e);
-                    }
-                }, inputThread);
+                if (nextState == null) {
+                    future = future.thenRunAsync(() -> {
+                        try {
+                            state.accept(viewUpdater);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Error while executing the state: ", e);
+                        }
+                    }, inputThread);
+                }
             }
             case null -> {
                 // If the nickname is present, commit the command first
@@ -244,7 +294,7 @@ public class TCPClient implements VirtualViewSocket {
         }
 
         switch (nextState) {
-            case InsufficientPlayerDTO _ -> {
+            case InsufficientPlayerDTO _-> {
                 forceThread.submit(() -> {
                     try {
                         nextState.accept(viewUpdater);
@@ -253,7 +303,7 @@ public class TCPClient implements VirtualViewSocket {
                     }
                 });
             }
-            case FixShipDTO _, PopulateShipDTO _, CardRoundDTO _ -> {
+            case FixShipDTO _, PopulateShipDTO _, EndGameDTO _, CardRoundDTO _ -> {
                 CompletableFuture<Void> completableFuture;
 
                 completableFuture = CompletableFuture.runAsync(
@@ -262,14 +312,14 @@ public class TCPClient implements VirtualViewSocket {
                 );
 
                 completableFuture = completableFuture.thenRunAsync(
-                    () -> {
-                        try {
-                            nextState.accept(viewUpdater);
-                        } catch (Exception e) {
-                            throw new RuntimeException("Error while executing the next state: ", e);
-                        }
-                    },
-                    inputThread
+                        () -> {
+                            try {
+                                nextState.accept(viewUpdater);
+                            } catch (Exception e) {
+                                throw new RuntimeException("Error while executing the next state: ", e);
+                            }
+                        },
+                        inputThread
                 );
             }
             case null -> {}

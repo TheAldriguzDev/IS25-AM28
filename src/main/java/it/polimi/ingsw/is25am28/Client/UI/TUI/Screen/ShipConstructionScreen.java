@@ -740,7 +740,7 @@ public class ShipConstructionScreen extends Screen {
                 // When the server gives the OK to lock the subdeck, then
                 // proceed to generate and show the corresponding widget
                 this.generateCardSubdeckWidget(
-                        this.model.getClientEventCards().subList(start, end)
+                    this.model.getClientEventCards().subList(start, end)
                 );
 
                 clearTerminal();

@@ -342,7 +342,7 @@ public class Server {
                         pingHelper.incrementPing();
 
                         // Check if the client is disconnected
-                        if (pingHelper.getFailedPings() > 2) {
+                        if (pingHelper.getFailedPings() > 10) {
                             // Get the game id
                             int gameID;
                             synchronized (this.clientToGame) {

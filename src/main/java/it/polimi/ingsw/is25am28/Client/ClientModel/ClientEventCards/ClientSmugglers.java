@@ -134,7 +134,7 @@ public class ClientSmugglers extends ClientEventCard {
     }
 
     @Override
-    public boolean getTakeReward() {
+    public Boolean getTakeReward() {
         return this.smugglersJSON.getTakeLoot();
     }
 

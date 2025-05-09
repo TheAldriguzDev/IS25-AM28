@@ -12,6 +12,7 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -118,7 +119,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'setTakeReward()' is not supported in " + this + " state");
     }
 
-    public boolean getTakeReward() throws UnsupportedOperationException {
+    public Boolean getTakeReward() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getTakeReward()' is not supported in " + this + " state");
     }
 
@@ -126,7 +127,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'setChosenPlanetIndex()' is not supported in " + this + " state");
     }
 
-    public int getChosenPlanetIndex() throws UnsupportedOperationException {
+    public Integer getChosenPlanetIndex() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getChosenPlanetIndex()' is not supported in " + this + " state");
     }
 
@@ -134,7 +135,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'setWantsToVisit()' is not supported in " + this + " state");
     }
 
-    public boolean getWantsToVisit() throws UnsupportedOperationException {
+    public Boolean getWantsToVisit() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getWantsToVisit()' is not supported in " + this + " state");
     }
 
@@ -161,7 +162,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'setDoubleEnginesToActivate()' is not supported in " + this + " state");
     }
 
-    public int getDoubleEnginesToActivate() throws UnsupportedOperationException {
+    public Integer getDoubleEnginesToActivate() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getDoubleEnginesToActivate()' is not supported in " + this + " state");
     }
 }

@@ -15,6 +15,7 @@ import it.polimi.ingsw.is25am28.Network.Messages.Ping;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 
+import javax.smartcardio.Card;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -161,6 +162,13 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
         CompletableFuture<Void> future = new CompletableFuture<>();
 
+//        if (state != null) {
+//            System.out.println("STATE: " + state.getStateName() + " (" + state + ")");
+//        }
+//        if (nextState != null) {
+//            System.out.println("NEXT_STATE: " + nextState.getStateName() + " (" + nextState + ")");
+//        }
+
         switch (state) {
             // Update the current state of the game
             case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PopulateShipComponentDTO _,
@@ -224,7 +232,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                         catch (Exception e) {
                             throw new RuntimeException(e);
                         }
-                    });
+                    }, updateThread);
 
                     future = future.thenRunAsync(() -> {
                         try {
@@ -233,7 +241,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                         catch (Exception e) {
                             throw e;
                         }
-                    });
+                    }, forceThread);
                 }
                 else {
                     future = CompletableFuture.runAsync(() -> {
@@ -243,7 +251,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                         catch (Exception e) {
                             throw e;
                         }
-                    });
+                    }, forceThread);
                 }
 
                 // If the nickname is present, commit the command first
@@ -255,17 +263,17 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                             throw new RuntimeException("Error while commiting the command: ", e);
                         }
                     }, inputThread);
-                } else {
-                    future = CompletableFuture.completedFuture(null);
                 }
 
-                future = future.thenRunAsync(() -> {
-                    try {
-                        Objects.requireNonNullElse(nextState, state).accept(viewUpdater);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error while executing the state: ", e);
-                    }
-                }, inputThread);
+                if (nextState == null) {
+                    future = future.thenRunAsync(() -> {
+                        try {
+                            state.accept(viewUpdater);
+                        } catch (Exception e) {
+                            throw new RuntimeException("Error while executing the state: ", e);
+                        }
+                    }, inputThread);
+                }
             }
             case null -> {
                 // If the nickname is present, commit the command first
@@ -315,7 +323,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                     }
                 });
             }
-            case FixShipDTO _, PopulateShipDTO _, CardRoundDTO _ -> {
+            case FixShipDTO _, PopulateShipDTO _, EndGameDTO _, CardRoundDTO _ -> {
                 CompletableFuture<Void> completableFuture;
 
                 completableFuture = CompletableFuture.runAsync(

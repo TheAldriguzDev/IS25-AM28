@@ -984,12 +984,6 @@ public class ClientShip implements WidgetTUIGenerator {
         WidgetTUI shipStatsWidget = new WidgetTUI();
         List<String> shipStatsScreen = new ArrayList<String>();
 
-        WidgetTUI shipStatsTitle = new WidgetTUI();
-        shipStatsTitle.appendString("SHIP STATS");
-        shipStatsTitle.addPadding(0, 1, 0, 1);
-        shipStatsTitle.wrapWidgetWithBorder();
-        shipStatsWidget.setScreen(shipStatsTitle.getScreen());
-
         List<Item> storedItems = this.getAllItems();
         long totalRedItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
         long totalYellowItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
@@ -1001,16 +995,41 @@ public class ClientShip implements WidgetTUIGenerator {
         String greenItemsString = totalGreenItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.GREEN) + SPACE;
         String blueItemsString = totalBlueItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BLUE) + SPACE;
 
+        List<ClientCannon> doubleCannons = this.getDoubleCannons();
+        List<ClientEngine> doubleEngines = this.getDoubleEngines();
+
+        float doubleCannonFirepower = 0;
+        int doubleEnginePower = 0;
+
+        if (!doubleCannons.isEmpty()) {
+            doubleCannonFirepower = this.getDoubleCannons().getFirst().getFirePower();
+        }
+
+        if (!doubleEngines.isEmpty()) {
+            doubleEnginePower = this.getDoubleEngines().getFirst().getSpeed();
+        }
+
+        float maxFirepower = this.getBaselineFirepower() + (doubleCannonFirepower * this.getDoubleCannons().size()) + (this.purpleAlienPosition != null ? 2 : 0);
+        int maxEnginePower = this.getBaselineEnginePower() + (doubleEnginePower * this.getDoubleEngines().size()) + (this.brownAlienPosition != null ? 2 : 0);
+
         // Getting all the ship's stats
         shipStatsScreen.add("Total Crew: " + this.getAllLifeforms().size());
-        shipStatsScreen.add("Firepower: " + this.getBaselineFirepower());
-        shipStatsScreen.add("Engine Power: " + this.getBaselineEnginePower());
+        shipStatsScreen.add("Firepower: (base=" + this.getBaselineFirepower() + ", max=" + maxFirepower + ")");
+        shipStatsScreen.add("Engine Power: (base=" + this.getBaselineEnginePower() + ", max=" + maxEnginePower + ")");
         shipStatsScreen.add("Total Batteries: " + this.getAvailableEnergy());
         shipStatsScreen.add("Total Items: " + redItemsString + yellowItemsString + greenItemsString + blueItemsString);
 
-        shipStatsWidget.appendScreen(shipStatsScreen);
-        shipStatsWidget.centerWidgetScreen();
-        shipStatsWidget.wrapWidgetWithBorder();
+        WidgetTUI tmp = shipStatsWidget.setScreen(shipStatsScreen);
+        shipStatsWidget = new WidgetTUI();
+
+        shipStatsWidget
+                .setWidth(tmp.getWidth())
+                .appendString("[SHIP STATS]")
+                .addPadding(0, 0, 1, 0)
+                .centerWidgetScreen()
+                .appendScreen(tmp.getScreen())
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder();
 
         return shipStatsWidget;
     }

@@ -79,10 +79,10 @@ public class ClientVisitPlanets extends ClientEventCard {
 
         for (Map.Entry<Integer, Map<ItemColor, Integer>> entry : availablePlanets.entrySet()) {
 //            cardInfoWidget.appendString(entry.getKey() + ": " + entry.getValue().toString());
-            redItems = (entry.getValue().get(ItemColor.RED));
-            yellowItems = (entry.getValue().get(ItemColor.YELLOW));
-            blueItems = (entry.getValue().get(ItemColor.BLUE));
-            greenItems = (entry.getValue().get(ItemColor.GREEN));
+            redItems = (entry.getValue().getOrDefault(ItemColor.RED, 0));
+            yellowItems = (entry.getValue().getOrDefault(ItemColor.YELLOW, 0));
+            blueItems = (entry.getValue().getOrDefault(ItemColor.BLUE, 0));
+            greenItems = (entry.getValue().getOrDefault(ItemColor.GREEN, 0));
             cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Planet ╿ Available ╿ " + ANSIColors.RED + "R: " + ANSIColors.RESET + redItems + "," + ANSIColors.YELLOW + " Y: " + ANSIColors.RESET + yellowItems);
             cardInfoWidget.appendString("Num: " + entry.getKey() + " ╽ Resources ╽ " + ANSIColors.BLUE + "B: " + ANSIColors.RESET + blueItems + "," + ANSIColors.GREEN + " G: " + ANSIColors.RESET + greenItems);
@@ -124,11 +124,9 @@ public class ClientVisitPlanets extends ClientEventCard {
     }
 
     @Override
-    public int getChosenPlanetIndex() throws UnsupportedOperationException {
+    public Integer getChosenPlanetIndex() throws UnsupportedOperationException {
         return this.visitPlanetsJSON.getChosenPlanetIndex();
     }
-
-
 
     //
 
