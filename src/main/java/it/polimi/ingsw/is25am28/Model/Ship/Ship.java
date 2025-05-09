@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Model.Ship;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStructural;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Components.*;
+import it.polimi.ingsw.is25am28.Model.Connector;
 import it.polimi.ingsw.is25am28.Model.Exceptions.*;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
@@ -989,6 +990,7 @@ public class Ship implements WidgetTUIGenerator {
      */
     public Component[] getNearestComponents(Component component) throws NullComponentException, NullPointerException {
         Component[] neighbours = new Component[4];
+        Component potentialNeighbour;
         int[] positionInGrid;
 
         if (component == null) {
@@ -1004,7 +1006,14 @@ public class Ship implements WidgetTUIGenerator {
             if (positionInGrid != null) {
                 // NORTH neighbour
                 try {
-                    neighbours[0] = this.components[positionInGrid[0] - 1][positionInGrid[1]];
+                    potentialNeighbour = this.components[positionInGrid[0] - 1][positionInGrid[1]];
+
+                    if (this.areSidesConnected(potentialNeighbour.getTopSide(), component.getTopSide())) {
+                        neighbours[0] = potentialNeighbour;
+                    }
+                    else {
+                        neighbours[0] = null;
+                    }
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[0] = null;
@@ -1012,7 +1021,14 @@ public class Ship implements WidgetTUIGenerator {
 
                 // EAST neighbour
                 try {
-                    neighbours[1] = this.components[positionInGrid[0]][positionInGrid[1] + 1];
+                    potentialNeighbour = this.components[positionInGrid[0]][positionInGrid[1] + 1];
+
+                    if (this.areSidesConnected(potentialNeighbour.getRightSide(), component.getRightSide())) {
+                        neighbours[1] = potentialNeighbour;
+                    }
+                    else {
+                        neighbours[1] = null;
+                    }
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[1] = null;
@@ -1020,7 +1036,14 @@ public class Ship implements WidgetTUIGenerator {
 
                 // SOUTH neighbour
                 try {
-                    neighbours[2] = this.components[positionInGrid[0] + 1][positionInGrid[1]];
+                    potentialNeighbour = this.components[positionInGrid[0] + 1][positionInGrid[1]];
+
+                    if (this.areSidesConnected(potentialNeighbour.getBottomSide(), component.getBottomSide())) {
+                        neighbours[2] = potentialNeighbour;
+                    }
+                    else {
+                        neighbours[2] = null;
+                    }
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[2] = null;
@@ -1028,7 +1051,14 @@ public class Ship implements WidgetTUIGenerator {
 
                 // WEST neighbour
                 try {
-                    neighbours[3] = this.components[positionInGrid[0]][positionInGrid[1] - 1];
+                    potentialNeighbour = this.components[positionInGrid[0]][positionInGrid[1] - 1];
+
+                    if (this.areSidesConnected(potentialNeighbour.getLeftSide(), component.getLeftSide())) {
+                        neighbours[3] = potentialNeighbour;
+                    }
+                    else {
+                        neighbours[3] = null;
+                    }
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[3] = null;
@@ -1040,6 +1070,16 @@ public class Ship implements WidgetTUIGenerator {
         }
 
         return neighbours;
+    }
+
+    /**
+     * @return TRUE if the given connectors are compatible, FALSE otherwise.
+     */
+    private boolean areSidesConnected(Connector a, Connector b) {
+        return (a == THREE_PIPES && b != ZERO_PIPES)
+                || (a != ZERO_PIPES && b == THREE_PIPES)
+                || (a == ONE_PIPE && b == ONE_PIPE)
+                || (a == TWO_PIPES && b == TWO_PIPES);
     }
 
     /**
