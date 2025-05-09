@@ -52,6 +52,7 @@ public class ClientSlavers extends ClientEventCard {
 //        this.firstRound = slaversCardState.getFirstRound();
         this.isPlayerDefeated = slaversCardState.getIsPlayerDefeated();
         enabledCommands.clear();
+        enabledCommands.add("playCard");
         if (this.isPlayerDefeated) {
             enabledCommands.add("setCrewToRemove");
         } else {

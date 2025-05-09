@@ -51,6 +51,7 @@ public class ClientPirates extends ClientEventCard {
         this.firstRound = piratesState.getFirstRound();
 
         enabledCommands.clear();
+        enabledCommands.add("playCard");
         if (!this.firstRound) {
             this.diceThrowResult = piratesState.getDiceThrowResult();
             this.currentPlasmaShot = piratesState.getCurrPlasmaShotDescriptor();

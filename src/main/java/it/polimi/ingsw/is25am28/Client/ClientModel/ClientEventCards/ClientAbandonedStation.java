@@ -22,13 +22,11 @@ public class ClientAbandonedStation extends ClientEventCard {
         super(cardState);
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementStep = cardState.getMovementSteps();
-        this.hasBeenUsed = cardState.getIsCardUsable();
+        this.isCardUsable = cardState.getIsCardUsable();
         this.stationResources = cardState.getStationResources();
         this.abandonedStationJSON = new AbandonedStationJSON();
 
-        enabledCommands.add("setItemsToBeRemoved");
-        enabledCommands.add("setItemsToBeTaken");
-        enabledCommands.add("setWantsToVisit");
+
     }
 
     @Override
@@ -43,6 +41,13 @@ public class ClientAbandonedStation extends ClientEventCard {
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
         this.isCardUsable = cardState.getIsCardUsable();
+        enabledCommands.clear();
+        enabledCommands.add("playCard");
+        if (this.isCardUsable) {
+            enabledCommands.add("setItemsToBeRemoved");
+            enabledCommands.add("setItemsToBeTaken");
+            enabledCommands.add("setWantsToVisit");
+        }
     }
 
     @Override

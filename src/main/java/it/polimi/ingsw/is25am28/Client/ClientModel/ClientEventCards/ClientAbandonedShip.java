@@ -24,9 +24,9 @@ public class ClientAbandonedShip extends ClientEventCard {
         this.movementStep = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();
         this.abandonedShipJSON = new AbandonedShipJSON();
+        this.isCardUsable = cardState.getIsCardUsable();
 
-        enabledCommands.add("setCrewToRemove");
-        enabledCommands.add("setWantsToVisit");
+
     }
 
     @Override
@@ -42,6 +42,12 @@ public class ClientAbandonedShip extends ClientEventCard {
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
         this.isCardUsable = cardState.getIsCardUsable();
+        enabledCommands.clear();
+        enabledCommands.add("playCard");
+        if (this.isCardUsable) {
+            enabledCommands.add("setCrewToRemove");
+            enabledCommands.add("setWantsToVisit");
+        }
     }
 
     // TODO: Remake the widget into something that makes sense

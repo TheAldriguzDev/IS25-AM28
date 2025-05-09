@@ -61,7 +61,8 @@ public class ClientWarZone extends ClientEventCard {
         this.diceThrowResult = cardState.getDiceThrowResult();
 
         enabledCommands.clear();
-        if (this.affectedPlayer == null) { // Sets the commands relative to the Actions
+        enabledCommands.add("playCard");
+        if (this.affectedPlayer == null || this.affectedPlayer.isEmpty()) { // Sets the commands relative to the Actions
             switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
                 case "Enginepower" -> {
                     enabledCommands.add("setDoubleEnginesToActivate");

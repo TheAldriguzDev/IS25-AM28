@@ -60,6 +60,7 @@ public class ClientSmugglers extends ClientEventCard {
         this.playerNickname = smugglersState.getPlayerNickname();
         this.isPlayerDefeated = smugglersState.getIsPlayerDefeated();
         enabledCommands.clear();
+        enabledCommands.add("playCard");
         if (this.isPlayerDefeated) {
             enabledCommands.add("setItemsToBeRemoved");
         } else {
