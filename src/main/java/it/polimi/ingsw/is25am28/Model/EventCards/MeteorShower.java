@@ -188,7 +188,7 @@ public class MeteorShower extends EventCard {
                     }
 
                     if (toHit == null) break;
-                    sideToHit = toHit.getTopSide().ordinal();
+                    sideToHit = toHit.getRightSide().ordinal();
                 }
 
                 // Case 2 - Meteor arrives from the RIGHT
@@ -239,7 +239,7 @@ public class MeteorShower extends EventCard {
                     }
 
                     if (toHit == null) break;
-                    sideToHit = toHit.getRightSide().ordinal();
+                    sideToHit = toHit.getLeftSide().ordinal();
                 }
 
                 default -> throw new IllegalStateException("ERROR: Only 4 directions allowed");
@@ -288,6 +288,10 @@ public class MeteorShower extends EventCard {
                         }
                     }
                 }
+                else {
+                    // Small meteor is destroyed since it bouces on a smooth side
+                    threatDestroyed = true;
+                }
 
                 // Case 2 - Big Meteor
                 // => Check if there are cannons that can destroy it
@@ -321,8 +325,8 @@ public class MeteorShower extends EventCard {
                                                         if (this.getBoard().getLevel() > 2) {
                                                             threatDestroyed =
                                                                     (cannon.getPosition()[1] == this.diceThrowResult - 2)
-                                                                             || (cannon.getPosition()[1] == this.diceThrowResult - 1)
-                                                                             || (cannon.getPosition()[1] == this.diceThrowResult);
+                                                                            || (cannon.getPosition()[1] == this.diceThrowResult - 1)
+                                                                            || (cannon.getPosition()[1] == this.diceThrowResult);
                                                         }
                                                         else {
                                                             threatDestroyed = (cannon.getPosition()[1] == this.diceThrowResult - 1);
@@ -337,8 +341,8 @@ public class MeteorShower extends EventCard {
                                                         if (this.getBoard().getLevel() > 1) {
                                                             threatDestroyed =
                                                                     (cannon.getPosition()[0] == this.diceThrowResult - 2)
-                                                                             || (cannon.getPosition()[0] == this.diceThrowResult - 1)
-                                                                             || (cannon.getPosition()[0] == this.diceThrowResult);
+                                                                            || (cannon.getPosition()[0] == this.diceThrowResult - 1)
+                                                                            || (cannon.getPosition()[0] == this.diceThrowResult);
                                                         }
                                                         else {
                                                             threatDestroyed = (cannon.getPosition()[0] == this.diceThrowResult - 1);
