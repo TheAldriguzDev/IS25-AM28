@@ -44,51 +44,58 @@ public class ClientMeteorShower extends ClientEventCard {
 
     @Override
     public WidgetTUI generateWidget() {
-        WidgetTUI meteor1Title = new WidgetTUI();
-        WidgetTUI meteor1 = new WidgetTUI();
-        WidgetTUI meteor1Info = new WidgetTUI();
-        WidgetTUI meteor1Final;
+        WidgetTUI meteorShowerTitle = new WidgetTUI();
+        WidgetTUI meteorShower = new WidgetTUI();
+        WidgetTUI meteorShowerInfo = new WidgetTUI();
+        WidgetTUI meteorShowerFinal;
 
-        meteor1Title.appendString(" ==== METEOR SHOWER ====");
+        meteorShowerTitle.appendString("[METEOR SHOWER]");
 
-        meteor1.appendString(ANSIColors.RED + " ██████                        " + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.RED + "  █████████                   " + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.RED + "   ████████████               " + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.RED + "    █████████████            " + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.RED + "     █████" + ANSIColors.BRIGHT_YELLOW + "████" + ANSIColors.RED + "███████          " + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.RED + "      █████" + ANSIColors.BRIGHT_YELLOW + "███████" + ANSIColors.RED + "█████       " + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.RED + "       █████" + ANSIColors.BRIGHT_YELLOW + "██████████" + ANSIColors.RED + "████    " + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.RED + "        ███" + ANSIColors.BRIGHT_YELLOW + "████████████████   " + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.RED + "          ██" + ANSIColors.BRIGHT_YELLOW + "██████" + ANSIColors.RESET + "███████" + ANSIColors.BRIGHT_YELLOW + "█████ " + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.BRIGHT_YELLOW + "           █████" + ANSIColors.RESET + "███████████" + ANSIColors.BRIGHT_YELLOW + "███" + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.BRIGHT_YELLOW + "             █████" + ANSIColors.RESET + "███████" + ANSIColors.BRIGHT_YELLOW + "████ " + ANSIColors.RESET);
-        meteor1.appendString(ANSIColors.BRIGHT_YELLOW + "                ███████████  " + ANSIColors.RESET);
-        meteor1.wrapWidgetWithBorder();
+        meteorShower.appendString(ANSIColors.RED + " ██████                        " + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.RED + "  █████████                   " + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.RED + "   ████████████               " + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.RED + "    █████████████            " + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.RED + "     █████" + ANSIColors.BRIGHT_YELLOW + "████" + ANSIColors.RED + "███████          " + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.RED + "      █████" + ANSIColors.BRIGHT_YELLOW + "███████" + ANSIColors.RED + "█████       " + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.RED + "       █████" + ANSIColors.BRIGHT_YELLOW + "██████████" + ANSIColors.RED + "████    " + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.RED + "        ███" + ANSIColors.BRIGHT_YELLOW + "████████████████   " + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.RED + "          ██" + ANSIColors.BRIGHT_YELLOW + "██████" + ANSIColors.RESET + "███████" + ANSIColors.BRIGHT_YELLOW + "█████ " + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.BRIGHT_YELLOW + "           █████" + ANSIColors.RESET + "███████████" + ANSIColors.BRIGHT_YELLOW + "███" + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.BRIGHT_YELLOW + "             █████" + ANSIColors.RESET + "███████" + ANSIColors.BRIGHT_YELLOW + "████ " + ANSIColors.RESET);
+        meteorShower.appendString(ANSIColors.BRIGHT_YELLOW + "                ███████████  " + ANSIColors.RESET);
+        meteorShower.wrapWidgetWithBorder();
 
         if (this.playerNickname != null) {
-            meteor1Info.appendString("==== CURRENT METEOR INFO ====");
+            meteorShowerInfo
+                    .appendString("[CURRENT METEOR INFO]")
+                    .appendString("Meteor #" + (this.currMeteorIndex + 1));
+
             switch (this.currMeteorDescriptor.get("meteorDirection")) {
-                case 0 -> meteor1Info.appendString("Inbound Direction: ABOVE");
-                case 1 -> meteor1Info.appendString("Outbound Direction: RIGHT");
-                case 2 -> meteor1Info.appendString("Outbound Direction: BELOW");
-                case 3 -> meteor1Info.appendString("Inbound Direction: LEFT");
+                case 0 -> meteorShowerInfo.appendString("Inbound Direction: ABOVE");
+                case 1 -> meteorShowerInfo.appendString("Outbound Direction: RIGHT");
+                case 2 -> meteorShowerInfo.appendString("Outbound Direction: BELOW");
+                case 3 -> meteorShowerInfo.appendString("Inbound Direction: LEFT");
             }
-            meteor1Info.appendString("Dice Throw Result: " + this.diceThrowResult);
+
+            meteorShowerInfo.appendString("Dice Throw Result: " + this.diceThrowResult);
+
             if (this.currMeteorDescriptor.get("meteorSize") == 1) {
-                meteor1Info.appendString("Size: SMALL METEOR");
-            } else {
-                meteor1Info.appendString("Size: BIG METEOR");
+                meteorShowerInfo.appendString("Size: SMALL METEOR");
             }
-            meteor1Info.appendString("Target: " + this.playerNickname);
+            else {
+                meteorShowerInfo.appendString("Size: BIG METEOR");
+            }
+
+            meteorShowerInfo.appendString("Target: " + this.playerNickname);
         }
         // TODO : does the shootingSequence need to be shown to the clients as a whole?
-        meteor1Final = WidgetTUI.composeTwoWidgetsVertically(
-                WidgetTUI.composeTwoWidgetsVertically(meteor1Title, meteor1),
-                meteor1Info
+        meteorShowerFinal = WidgetTUI.composeTwoWidgetsVertically(
+                WidgetTUI.composeTwoWidgetsVertically(meteorShowerTitle, meteorShower),
+                meteorShowerInfo
         );
 
-        meteor1Final.centerWidgetScreen();
-        return meteor1Final.wrapWidgetWithBorder();
+        meteorShowerFinal.centerWidgetScreen();
+        return meteorShowerFinal.wrapWidgetWithBorder();
     }
 
     // Shields

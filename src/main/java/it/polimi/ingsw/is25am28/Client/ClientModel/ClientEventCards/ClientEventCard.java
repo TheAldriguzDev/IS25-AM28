@@ -12,7 +12,6 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;

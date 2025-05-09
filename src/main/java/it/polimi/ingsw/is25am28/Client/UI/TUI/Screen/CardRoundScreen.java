@@ -499,7 +499,7 @@ public class CardRoundScreen extends Screen {
                         }
                     }
                     case null, default -> {
-                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentCoordinates.getKey() + ", " + componentCoordinates.getValue() + ") is not a cabin.", ANSIColors.RED));
+                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentCoordinates.getKey() + 1) + ", " + (componentCoordinates.getValue() + 1) + ") is not a cabin.", ANSIColors.RED));
                     }
                 }
             }
@@ -593,7 +593,7 @@ public class CardRoundScreen extends Screen {
                 switch (component) {
                     case ClientStorage storage -> { correctInput = true; }
                     case null, default -> {
-                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentCoordinates.getKey() + ", " + componentCoordinates.getValue() + ") is not a storage.", ANSIColors.RED));
+                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentCoordinates.getKey() + 1) + ", " + (componentCoordinates.getValue() + 1) + ") is not a storage.", ANSIColors.RED));
                     }
                 }
             }
@@ -686,7 +686,7 @@ public class CardRoundScreen extends Screen {
                 switch (component) {
                     case ClientStorage storage -> { correctInput = true; }
                     case null, default -> {
-                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentCoordinates.getKey() + ", " + componentCoordinates.getValue() + ") is not a storage.", ANSIColors.RED));
+                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentCoordinates.getKey() + 1) + ", " + (componentCoordinates.getValue() + 1) + ") is not a storage.", ANSIColors.RED));
                     }
                 }
             }
@@ -806,7 +806,7 @@ public class CardRoundScreen extends Screen {
                     correctInput = true;
                 }
                 case null, default -> {
-                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentHelper.getI() + ", " + componentHelper.getJ() + ") is not a shield.", ANSIColors.RED));
+                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentHelper.getI() + 1) + ", " + (componentHelper.getJ() + 1) + ") is not a shield.", ANSIColors.RED));
                 }
             }
         }
@@ -860,7 +860,7 @@ public class CardRoundScreen extends Screen {
             }
 
             if (!correctInput) {
-                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + componentHelper.getI() + ", " + componentHelper.getJ() + ") is not a double cannon.", ANSIColors.RED));
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentHelper.getI() + 1) + ", " + (componentHelper.getJ() + 1) + ") is not a double cannon.", ANSIColors.RED));
             }
         }
         while (!correctInput);
@@ -1437,13 +1437,13 @@ public class CardRoundScreen extends Screen {
         this.ctx = new CommandCTX(
             "playCard",
             () -> {
-                System.out.println("onSuccess");
+                // System.out.println("onSuccess");
                 this.ctx = null;
 
                 // TODO: Implement onSuccess (if it needs to do something)
             },
             () -> {
-                System.out.println("onError");
+                // System.out.println("onError");
 
                 System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
                 this.ctx = null;
@@ -1470,8 +1470,6 @@ public class CardRoundScreen extends Screen {
             // Storing the current event card's card state and the currently playing player
             this.currEventCardState = cardRound.getCardInfo();
             this.currPlayerNickname = cardRound.getCardInfo().getPlayerNickname();
-
-            System.out.println("CURR_PLAYER=" + this.currPlayerNickname);
 
             // Updating this player's ship widget and
             // getting the current event card

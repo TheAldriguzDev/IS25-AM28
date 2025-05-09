@@ -257,7 +257,6 @@ public class ViewUpdater implements StateVisitor {
     }
 
     public void updateCardResult(CardRoundDTO state) throws Exception {
-        System.out.println("updateCardResult with PREV_STATE");
         this.update(state);
     }
 

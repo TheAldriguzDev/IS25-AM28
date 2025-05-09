@@ -846,7 +846,8 @@ public class ClientShip implements WidgetTUIGenerator {
         return (float) this.cannonList.stream()
                 .filter((ClientCannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
                 .mapToDouble(ClientCannon::getFirePower)
-                .sum();
+                .sum()
+                + (this.purpleAlienPosition != null ? LifeformType.PURPLE_ALIEN.getAttackBoost() : 0);
     }
 
     /**
@@ -856,7 +857,8 @@ public class ClientShip implements WidgetTUIGenerator {
         // Adding the engine power of only the single engines
         return (int) this.engineList.stream()
                 .filter(e -> (e.getSpeed() == 1))
-                .count();
+                .count()
+                + (this.brownAlienPosition != null ? LifeformType.BROWN_ALIEN.getPowerBoost() : 0);
     }
 
     public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
@@ -986,9 +988,9 @@ public class ClientShip implements WidgetTUIGenerator {
 
         List<Item> storedItems = this.getAllItems();
         long totalRedItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
-        long totalYellowItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
-        long totalGreenItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
-        long totalBlueItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
+        long totalYellowItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.YELLOW)).count();
+        long totalGreenItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.GREEN)).count();
+        long totalBlueItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor\.BLUE)).count();
 
         String redItemsString = totalRedItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.RED) + SPACE;
         String yellowItemsString = totalYellowItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.YELLOW) + SPACE;
@@ -1009,8 +1011,8 @@ public class ClientShip implements WidgetTUIGenerator {
             doubleEnginePower = this.getDoubleEngines().getFirst().getSpeed();
         }
 
-        float maxFirepower = this.getBaselineFirepower() + (doubleCannonFirepower * this.getDoubleCannons().size()) + (this.purpleAlienPosition != null ? 2 : 0);
-        int maxEnginePower = this.getBaselineEnginePower() + (doubleEnginePower * this.getDoubleEngines().size()) + (this.brownAlienPosition != null ? 2 : 0);
+        float maxFirepower = this.getBaselineFirepower() + (doubleCannonFirepower * this.getDoubleCannons().size());
+        int maxEnginePower = this.getBaselineEnginePower() + (doubleEnginePower * this.getDoubleEngines().size());
 
         // Getting all the ship's stats
         shipStatsScreen.add("Total Crew: " + this.getAllLifeforms().size());

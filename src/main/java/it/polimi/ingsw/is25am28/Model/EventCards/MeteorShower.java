@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -94,7 +93,8 @@ public class MeteorShower extends EventCard {
                 return Optional.empty();
             }
             else {
-                Player nextPlayer = this.getBoard().getPlayers().get(currentIndex + 1);
+                // TODO: Take the players not from the board (which updates continuously), but from a fixed list
+                Player nextPlayer = this.players.get(currentIndex + 1);
                 this.currentPlayer = Optional.of(nextPlayer);
 
                 if ( !this.currentPlayer.get().isConnected()) {
@@ -105,7 +105,7 @@ public class MeteorShower extends EventCard {
             }
         }
         else {
-            this.currentPlayer = Optional.of(this.getBoard().getPlayers().getFirst());
+            this.currentPlayer = Optional.of(this.players.getFirst());
 
             // If the first player is disconnected, then get the next one in line
             if ( !this.currentPlayer.get().isConnected()) {
@@ -466,7 +466,9 @@ public class MeteorShower extends EventCard {
 
             cardState.setCurrMeteorIndex(this.currMeteorIndex);
             cardState.setDiceThrowResult(this.diceThrowResult);
-            cardState.setCurrMeteorDescriptor(Map.of("meteorSize", this.meteorSequence.get(this.currMeteorIndex).getSize(), "meteorDirection", this.meteorSequence.get(this.currMeteorIndex).getOrientation()));
+            if (this.currMeteorIndex < this.meteorSequence.size()) {
+                cardState.setCurrMeteorDescriptor(Map.of("meteorSize", this.meteorSequence.get(this.currMeteorIndex).getSize(), "meteorDirection", this.meteorSequence.get(this.currMeteorIndex).getOrientation()));
+            }
             // The differential update happens always except when the card is
             // first picked (since no one has been hit with a meteor yet)
 

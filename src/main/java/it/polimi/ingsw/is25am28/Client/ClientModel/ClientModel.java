@@ -75,7 +75,6 @@ public class ClientModel {
     public void addNewPlayer(String nickname, PlayerColor color) {
         synchronized (this.players) {
             if (!this.players.containsKey(nickname)) {
-                System.out.println("MODEL DIFF: " + this.difficultyLevel);
                 this.players.put(nickname, new ClientPlayer(nickname, color, this.difficultyLevel));
             }
         }

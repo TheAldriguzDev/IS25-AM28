@@ -19,16 +19,6 @@ import java.util.*;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
-// TODO: screen stuck bug after populating (HOW TO REPRODUCE)
-//      - P1's SHIP --> (7,6)#56, (7,8)#55, (7,5)#58 cabins ; (6,6)#120 brown vital ; (6,8)#125 purple vital
-//        P1's POPULATE --> BROWN_ALIEN@(7,6), PURPLE_ALIEN@(7,8), ASTRONAUT@(7,5)
-//      .
-//      - P2's SHIP --> (7,6), (8,7) cabins ; (7,5) brown vital
-//        P2's POPULATE --> ASTRONAUT@(8,7), ASTRONAUT@(7,6)
-//      .
-//      - NOTE: All populate actions were performed by first trying all wrong possibilities, then
-//        at the end the correct populate command was sent
-
 public class ShipConstructionScreen extends Screen {
     // Default component selection matrix (row, col) dimensions
     public static final int DEFAULT_COMPONENT_ROWS = 8;

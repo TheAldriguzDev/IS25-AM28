@@ -142,13 +142,6 @@ public class TCPClient implements VirtualViewSocket {
 
         CompletableFuture<Void> future = new CompletableFuture<>();
 
-//        if (state != null) {
-//            System.out.println("STATE: " + state.getStateName() + " (" + state + ")");
-//        }
-//        if (nextState != null) {
-//            System.out.println("NEXT_STATE: " + nextState.getStateName() + " (" + nextState + ")");
-//        }
-
         switch (state) {
             // Update the current state of the game
             case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PopulateShipComponentDTO _,
