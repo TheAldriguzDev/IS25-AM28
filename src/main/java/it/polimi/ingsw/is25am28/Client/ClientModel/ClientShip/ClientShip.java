@@ -358,16 +358,16 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
         else {
             // NORTH neighbour
             try {
-//                potentialNeighbour = this.components[clientComponent.getI() - 1][clientComponent.getJ()];
-//
-//                if (potentialNeighbour != null) {
-//                    if (this.areSidesConnected(potentialNeighbour.getTopSide(), clientComponent.getTopSide())) {
-//                        neighbours[0] = potentialNeighbour;
-//                    }
-//                }
-//                else {
-//                    neighbours[0] = null;
-//                }
+                potentialNeighbour = this.components[clientComponent.getI() - 1][clientComponent.getJ()];
+
+                if (potentialNeighbour != null) {
+                    if (this.areSidesConnected(potentialNeighbour.getBottomSide(), clientComponent.getTopSide())) {
+                        neighbours[0] = potentialNeighbour;
+                    }
+                }
+                else {
+                    neighbours[0] = null;
+                }
 
                 neighbours[0] = this.components[clientComponent.getI() - 1][clientComponent.getJ()];
             }
@@ -377,16 +377,16 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
             // EAST neighbour
             try {
-//                potentialNeighbour = this.components[clientComponent.getI()][clientComponent.getJ() + 1];
-//
-//                if (potentialNeighbour != null) {
-//                    if (this.areSidesConnected(potentialNeighbour.getRightSide(), clientComponent.getRightSide())) {
-//                        neighbours[1] = potentialNeighbour;
-//                    }
-//                }
-//                else {
-//                    neighbours[1] = null;
-//                }
+                potentialNeighbour = this.components[clientComponent.getI()][clientComponent.getJ() + 1];
+
+                if (potentialNeighbour != null) {
+                    if (this.areSidesConnected(potentialNeighbour.getLeftSide(), clientComponent.getRightSide())) {
+                        neighbours[1] = potentialNeighbour;
+                    }
+                }
+                else {
+                    neighbours[1] = null;
+                }
 
                 neighbours[1] = this.components[clientComponent.getI()][clientComponent.getJ() + 1];
             }
@@ -396,16 +396,16 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
             // SOUTH neighbour
             try {
-//                potentialNeighbour = this.components[clientComponent.getI() + 1][clientComponent.getJ()];
-//
-//                if (potentialNeighbour != null) {
-//                    if (this.areSidesConnected(potentialNeighbour.getBottomSide(), clientComponent.getBottomSide())) {
-//                        neighbours[2] = potentialNeighbour;
-//                    }
-//                }
-//                else {
-//                    neighbours[2] = null;
-//                }
+                potentialNeighbour = this.components[clientComponent.getI() + 1][clientComponent.getJ()];
+
+                if (potentialNeighbour != null) {
+                    if (this.areSidesConnected(potentialNeighbour.getTopSide(), clientComponent.getBottomSide())) {
+                        neighbours[2] = potentialNeighbour;
+                    }
+                }
+                else {
+                    neighbours[2] = null;
+                }
 
                 neighbours[2] = this.components[clientComponent.getI() + 1][clientComponent.getJ()];
             }
@@ -415,16 +415,16 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
             // WEST neighbour
             try {
-//                potentialNeighbour = this.components[clientComponent.getI()][clientComponent.getJ() - 1];
-//
-//                if (potentialNeighbour != null) {
-//                    if (this.areSidesConnected(potentialNeighbour.getLeftSide(), clientComponent.getLeftSide())) {
-//                        neighbours[3] = potentialNeighbour;
-//                    }
-//                }
-//                else {
-//                    neighbours[3] = null;
-//                }
+                potentialNeighbour = this.components[clientComponent.getI()][clientComponent.getJ() - 1];
+
+                if (potentialNeighbour != null) {
+                    if (this.areSidesConnected(potentialNeighbour.getRightSide(), clientComponent.getLeftSide())) {
+                        neighbours[3] = potentialNeighbour;
+                    }
+                }
+                else {
+                    neighbours[3] = null;
+                }
 
                 neighbours[3] = this.components[clientComponent.getI()][clientComponent.getJ() - 1];
             }
