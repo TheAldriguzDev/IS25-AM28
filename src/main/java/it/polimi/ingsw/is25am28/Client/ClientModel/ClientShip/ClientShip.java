@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
+import it.polimi.ingsw.is25am28.Model.Connector;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
@@ -23,7 +24,9 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.is25am28.Model.Connector.THREE_PIPES;
+import static it.polimi.ingsw.is25am28.Model.Connector.*;
+import static it.polimi.ingsw.is25am28.Model.Connector.ONE_PIPE;
+import static it.polimi.ingsw.is25am28.Model.Connector.TWO_PIPES;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientShip implements WidgetTUIGenerator {
@@ -498,6 +501,7 @@ public class ClientShip implements WidgetTUIGenerator {
      */
     public ClientComponent[] getNearestComponents(ClientComponent clientComponent) throws NullComponentException {
         ClientComponent[] neighbours = new ClientComponent[4];
+        ClientComponent potentialNeighbour;
 
         if (clientComponent == null) {
             // If passed component is null, there's no need to find its neighbours
@@ -506,6 +510,17 @@ public class ClientShip implements WidgetTUIGenerator {
         else {
             // NORTH neighbour
             try {
+//                potentialNeighbour = this.components[clientComponent.getI() - 1][clientComponent.getJ()];
+//
+//                if (potentialNeighbour != null) {
+//                    if (this.areSidesConnected(potentialNeighbour.getTopSide(), clientComponent.getTopSide())) {
+//                        neighbours[0] = potentialNeighbour;
+//                    }
+//                }
+//                else {
+//                    neighbours[0] = null;
+//                }
+
                 neighbours[0] = this.components[clientComponent.getI() - 1][clientComponent.getJ()];
             }
             catch (ArrayIndexOutOfBoundsException e) {
@@ -514,6 +529,17 @@ public class ClientShip implements WidgetTUIGenerator {
 
             // EAST neighbour
             try {
+//                potentialNeighbour = this.components[clientComponent.getI()][clientComponent.getJ() + 1];
+//
+//                if (potentialNeighbour != null) {
+//                    if (this.areSidesConnected(potentialNeighbour.getRightSide(), clientComponent.getRightSide())) {
+//                        neighbours[1] = potentialNeighbour;
+//                    }
+//                }
+//                else {
+//                    neighbours[1] = null;
+//                }
+
                 neighbours[1] = this.components[clientComponent.getI()][clientComponent.getJ() + 1];
             }
             catch (ArrayIndexOutOfBoundsException e) {
@@ -522,6 +548,17 @@ public class ClientShip implements WidgetTUIGenerator {
 
             // SOUTH neighbour
             try {
+//                potentialNeighbour = this.components[clientComponent.getI() + 1][clientComponent.getJ()];
+//
+//                if (potentialNeighbour != null) {
+//                    if (this.areSidesConnected(potentialNeighbour.getBottomSide(), clientComponent.getBottomSide())) {
+//                        neighbours[2] = potentialNeighbour;
+//                    }
+//                }
+//                else {
+//                    neighbours[2] = null;
+//                }
+
                 neighbours[2] = this.components[clientComponent.getI() + 1][clientComponent.getJ()];
             }
             catch (ArrayIndexOutOfBoundsException e) {
@@ -530,6 +567,17 @@ public class ClientShip implements WidgetTUIGenerator {
 
             // WEST neighbour
             try {
+//                potentialNeighbour = this.components[clientComponent.getI()][clientComponent.getJ() - 1];
+//
+//                if (potentialNeighbour != null) {
+//                    if (this.areSidesConnected(potentialNeighbour.getLeftSide(), clientComponent.getLeftSide())) {
+//                        neighbours[3] = potentialNeighbour;
+//                    }
+//                }
+//                else {
+//                    neighbours[3] = null;
+//                }
+
                 neighbours[3] = this.components[clientComponent.getI()][clientComponent.getJ() - 1];
             }
             catch (ArrayIndexOutOfBoundsException e) {
@@ -538,6 +586,16 @@ public class ClientShip implements WidgetTUIGenerator {
         }
 
         return neighbours;
+    }
+
+    /**
+     * @return TRUE if the given connectors are compatible, FALSE otherwise.
+     */
+    private boolean areSidesConnected(Connector a, Connector b) {
+        return (a == THREE_PIPES && b != ZERO_PIPES)
+                || (a != ZERO_PIPES && b == THREE_PIPES)
+                || (a == ONE_PIPE && b == ONE_PIPE)
+                || (a == TWO_PIPES && b == TWO_PIPES);
     }
 
     /**
@@ -631,6 +689,7 @@ public class ClientShip implements WidgetTUIGenerator {
      */
     public void removeComponent(int i, int j) {
         this.components[i][j] = null;
+        this.generateComponentSubLists();
     }
 
     /**

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
+import it.polimi.ingsw.is25am28.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
@@ -11,6 +12,7 @@ import it.polimi.ingsw.is25am28.Model.EventCards.Stardust;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.FileLoader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Timer.HourGlass;
@@ -76,15 +78,25 @@ public final class ShipContructionState extends State implements TimerObserver {
         this.players_done = new ArrayList<>();
         this.shipConfigEnded = false;
 
-        //this.cards = this.model.getGameDeck();
+        this.cards = this.model.getGameDeck();
 
         // TODO: Remove the fake deck after testing
-        List<EventCard> fakeDeck = new ArrayList<>();
-//        fakeDeck.add(new Epidemy("Epidemy", 2, this.model.getBoard(), 0));
-//        fakeDeck.add(new Epidemy("Epidemy", 2, this.model.getBoard(), 1));
-        fakeDeck.add(new Stardust("Stardust", 2, this.model.getBoard(), 0));
-        fakeDeck.add(new OpenSpace("OpenSpace", 2, this.model.getBoard(), 1));
-        this.cards = fakeDeck;
+        //List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(), model.getGameLevel());
+        //List<EventCard> fakeDeck = new ArrayList<>();
+//        fakeDeck.add(AllCards.get(0)); // AbandonedShip
+//        fakeDeck.add(AllCards.get(5)); // AbandonedStation
+        //fakeDeck.add(AllCards.get(8)); // MeteorSHower
+//        fakeDeck.add(AllCards.get(14));
+//        fakeDeck.add(AllCards.get(16));
+//        fakeDeck.add(AllCards.get(24));
+//        fakeDeck.add(AllCards.get(31));
+//        fakeDeck.add(AllCards.get(32));
+//        fakeDeck.add(AllCards.get(34));
+//        fakeDeck.add(AllCards.get(36));
+//        fakeDeck.add(AllCards.get(38));
+//        fakeDeck.add(AllCards.get(30));
+
+        //this.cards = fakeDeck;
 
         this.selectedSubDecks = new HashMap<>();
     }

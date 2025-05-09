@@ -59,12 +59,7 @@ public class ClientBoard {
         // If a player's position has been changed we need to set it again
         if (cardState.getNeedsUpdatedPositions()) {
             for (String playerNickname : cardState.getUpdatedPositions().keySet()) {
-                int newCursor = cardState.getUpdatedPositions().get(playerNickname);
-                newCursor %= this.getSize();
-                if (newCursor < 0) {
-                    newCursor += this.getSize();
-                }
-                this.players.get(playerNickname).setCursor(newCursor);
+                this.players.get(playerNickname).setCursor(cardState.getUpdatedPositions().get(playerNickname));
             }
         }
         // If a player has been eliminated we need to remove him from the player's list, and add him to the eliminatedPlayers list
@@ -192,7 +187,12 @@ public class ClientBoard {
 //            Map<String, ClientPlayer> players = new HashMap<>(this.players);
             Map<Integer, String> coloredCells = new HashMap<>();
             for (ClientPlayer player : this.players.values()) {
-                coloredCells.put(player.getCursor(), player.getColor().getColorString());
+                int relCursor = player.getCursor();
+                relCursor %= this.getSize();
+                if (relCursor < 0) {
+                    relCursor += this.getSize();
+                }
+                coloredCells.put(relCursor, player.getColor().getColorString());
                 //System.out.println("put color: " + player.getColorToString().getColorString() + "COLOR " + ANSIColors.RESET + "of player:" + player.getNickname() + " cursor: " + player.getCursor());
             }
 

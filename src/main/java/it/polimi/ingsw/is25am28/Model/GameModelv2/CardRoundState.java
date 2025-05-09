@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
+import it.polimi.ingsw.is25am28.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.EventCards.OpenSpace;
 import it.polimi.ingsw.is25am28.Model.EventCards.Stardust;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,11 +30,22 @@ public final class CardRoundState extends State {
         super(model);
 
         this.round = 0;
-//        this.deck = this.model.getGameDeck();
-        List<EventCard> fakeDeck = new ArrayList<>();
-        fakeDeck.add(new Stardust("Stardust", 2, this.model.getBoard(), 0));
-        fakeDeck.add(new OpenSpace("OpenSpace", 2, this.model.getBoard(), 1));
-        this.deck = fakeDeck;
+        this.deck = this.model.getGameDeck();
+        //List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(), model.getGameLevel());
+        //List<EventCard> fakeDeck = new ArrayList<>();
+//        fakeDeck.add(AllCards.get(0)); // AbandonedShip
+//        fakeDeck.add(AllCards.get(5)); // AbandonedStation
+        //fakeDeck.add(AllCards.get(8)); // MeteorSHower
+//        fakeDeck.add(AllCards.get(14));
+//        fakeDeck.add(AllCards.get(16));
+//        fakeDeck.add(AllCards.get(24));
+//        fakeDeck.add(AllCards.get(31));
+//        fakeDeck.add(AllCards.get(32));
+//        fakeDeck.add(AllCards.get(34));
+//        fakeDeck.add(AllCards.get(36));
+//        fakeDeck.add(AllCards.get(38));
+//        fakeDeck.add(AllCards.get(30));
+        //this.deck = fakeDeck;
         this.board = this.model.getBoard();
         this.isFirstState = true;
 
