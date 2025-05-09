@@ -1438,6 +1438,7 @@ public class CardRoundScreen extends Screen {
             "playCard",
             () -> {
                 System.out.println("onSuccess");
+                this.ctx = null;
 
                 // TODO: Implement onSuccess (if it needs to do something)
             },
@@ -1445,6 +1446,7 @@ public class CardRoundScreen extends Screen {
                 System.out.println("onError");
 
                 System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
+                this.ctx = null;
                 this.getCardRoundCommand();
             }
         );

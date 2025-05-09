@@ -30,12 +30,6 @@ public final class CardRoundState extends State {
         this.board = this.model.getBoard();
         this.isFirstState = true;
 
-        // TODO: Remove the fake deck after testing
-//        List<EventCard> fakeDeck = new ArrayList<>();
-//        fakeDeck.add(new Epidemy("Epidemy", 2, this.board, 0));
-//        fakeDeck.add(new Epidemy("Epidemy", 2, this.board, 1));
-//        this.setFakeDeck(fakeDeck);
-
         // Initialize the first card players
         this.deck.getFirst().initCardPlayers();
         this.refreshPlayersShip();
@@ -53,16 +47,16 @@ public final class CardRoundState extends State {
 
         if (round >= deck.size()) return null;
 
-        EventCard card = deck.get(round);
-
         // If all the players got eliminated except one we set the round equal to the deck size and return null.
         // In this way the game will transit to the EndGameState. This is due to the impossibility of playing the game
         // with just one player.
         // Otherwise, we can init the card players.
-        if (this.model.getBoard().getPlayers().size() == 1) {
+        if (this.model.getBoard().getPlayers().size() <= 1) {
             this.round = this.deck.size();
             return null;
         }
+
+        EventCard card = deck.get(round);
 
         card.initCardPlayers();
 

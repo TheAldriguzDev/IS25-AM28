@@ -263,6 +263,10 @@ public class ViewUpdater implements StateVisitor {
 
     private void update(CardRoundDTO state) {
         synchronized (this.model) {
+            if (!(this.model.getState() instanceof ClientCardRoundState)) {
+                this.model.setClientBoard(new ClientBoard(state.getBoard(), model));
+            }
+
             // Updates the ClientBoard if necessary (Positions, EliminatedPlayers)
             if(state.getCardInfo().getNeedsBoardUpdate()) {
                 this.model.getClientBoard().updateBoard(state.getCardInfo());
@@ -276,10 +280,6 @@ public class ViewUpdater implements StateVisitor {
             // Updates the ClientPlayers' info if necessary (Credits)
             if(state.getCardInfo().getNeedsPlayerUpdate()) {
                 this.model.updatePlayers(state.getCardInfo());
-            }
-
-            if (!(this.model.getState() instanceof ClientCardRoundState)) {
-                this.model.setClientBoard(new ClientBoard(state.getBoard(), model));
             }
         }
     }
