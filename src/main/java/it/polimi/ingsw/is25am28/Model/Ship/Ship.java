@@ -1006,14 +1006,18 @@ public class Ship implements WidgetTUIGenerator {
             if (positionInGrid != null) {
                 // NORTH neighbour
                 try {
-                    potentialNeighbour = this.components[positionInGrid[0] - 1][positionInGrid[1]];
+//                    potentialNeighbour = this.components[positionInGrid[0] - 1][positionInGrid[1]];
+//
+//                    if (potentialNeighbour != null) {
+//                        if (this.areSidesConnected(potentialNeighbour.getTopSide(), component.getTopSide())) {
+//                            neighbours[0] = potentialNeighbour;
+//                        }
+//                    }
+//                    else {
+//                        neighbours[0] = null;
+//                    }
 
-                    if (this.areSidesConnected(potentialNeighbour.getTopSide(), component.getTopSide())) {
-                        neighbours[0] = potentialNeighbour;
-                    }
-                    else {
-                        neighbours[0] = null;
-                    }
+                    neighbours[0] = this.components[positionInGrid[0] - 1][positionInGrid[1]];
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[0] = null;
@@ -1021,14 +1025,18 @@ public class Ship implements WidgetTUIGenerator {
 
                 // EAST neighbour
                 try {
-                    potentialNeighbour = this.components[positionInGrid[0]][positionInGrid[1] + 1];
+//                    potentialNeighbour = this.components[positionInGrid[0]][positionInGrid[1] + 1];
+//
+//                    if (potentialNeighbour != null) {
+//                        if (this.areSidesConnected(potentialNeighbour.getRightSide(), component.getRightSide())) {
+//                            neighbours[1] = potentialNeighbour;
+//                        }
+//                    }
+//                    else {
+//                        neighbours[1] = null;
+//                    }
 
-                    if (this.areSidesConnected(potentialNeighbour.getRightSide(), component.getRightSide())) {
-                        neighbours[1] = potentialNeighbour;
-                    }
-                    else {
-                        neighbours[1] = null;
-                    }
+                    neighbours[1] = this.components[positionInGrid[0]][positionInGrid[1] + 1];
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[1] = null;
@@ -1036,14 +1044,18 @@ public class Ship implements WidgetTUIGenerator {
 
                 // SOUTH neighbour
                 try {
-                    potentialNeighbour = this.components[positionInGrid[0] + 1][positionInGrid[1]];
+//                    potentialNeighbour = this.components[positionInGrid[0] + 1][positionInGrid[1]];
+//
+//                    if (potentialNeighbour != null) {
+//                        if (this.areSidesConnected(potentialNeighbour.getBottomSide(), component.getBottomSide())) {
+//                            neighbours[2] = potentialNeighbour;
+//                        }
+//                    }
+//                    else {
+//                        neighbours[2] = null;
+//                    }
 
-                    if (this.areSidesConnected(potentialNeighbour.getBottomSide(), component.getBottomSide())) {
-                        neighbours[2] = potentialNeighbour;
-                    }
-                    else {
-                        neighbours[2] = null;
-                    }
+                    neighbours[2] = this.components[positionInGrid[0] + 1][positionInGrid[1]];
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[2] = null;
@@ -1051,14 +1063,18 @@ public class Ship implements WidgetTUIGenerator {
 
                 // WEST neighbour
                 try {
-                    potentialNeighbour = this.components[positionInGrid[0]][positionInGrid[1] - 1];
+//                    potentialNeighbour = this.components[positionInGrid[0]][positionInGrid[1] - 1];
+//
+//                    if (potentialNeighbour != null) {
+//                        if (this.areSidesConnected(potentialNeighbour.getLeftSide(), component.getLeftSide())) {
+//                            neighbours[3] = potentialNeighbour;
+//                        }
+//                    }
+//                    else {
+//                        neighbours[3] = null;
+//                    }
 
-                    if (this.areSidesConnected(potentialNeighbour.getLeftSide(), component.getLeftSide())) {
-                        neighbours[3] = potentialNeighbour;
-                    }
-                    else {
-                        neighbours[3] = null;
-                    }
+                    neighbours[3] = this.components[positionInGrid[0]][positionInGrid[1] - 1];
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[3] = null;
