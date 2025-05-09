@@ -631,6 +631,7 @@ public class ClientShip implements WidgetTUIGenerator {
      */
     public void removeComponent(int i, int j) {
         this.components[i][j] = null;
+        this.generateComponentSubLists();
     }
 
     /**
