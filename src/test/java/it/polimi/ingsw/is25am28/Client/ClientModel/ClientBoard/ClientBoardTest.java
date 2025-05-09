@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
@@ -10,6 +11,9 @@ import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 class ClientBoardTest {
@@ -47,7 +51,8 @@ class ClientBoardTest {
         clientModel.addNewPlayer("Player 3", PlayerColor.GREEN);
         clientModel.addNewPlayer("Player 4", PlayerColor.YELLOW);
 
-        clientBoard = new ClientBoard(serverBoard.generateState(), clientModel);
+        clientModel.setClientBoard(clientBoard = new ClientBoard(serverBoard.generateState(), clientModel));
+
 
     }
 
@@ -56,6 +61,18 @@ class ClientBoardTest {
         WidgetTUI clientBoardWidget;
         clientBoardWidget = clientBoard.generateWidget();
         System.out.println("Client Version");
+        clientBoardWidget.printWidget();
+
+        CardStateJSON state = new CardStateJSON();
+        state.setNeedsBoardUpdate(true);
+        state.setNeedsUpdatedPositions(true);
+        state.setUpdatedPositions(Map.of("Player 1", 15));
+        state.setNeedsUpdatedEliminatedPlayers(true);
+        state.setEliminatedPlayers(Arrays.asList("Player 2"));
+        clientModel.getClientBoard().updateBoard(state);
+
+        System.out.println("DOPO LA MODIFICA");
+        clientBoardWidget = clientBoard.generateWidget();
         clientBoardWidget.printWidget();
     }
 

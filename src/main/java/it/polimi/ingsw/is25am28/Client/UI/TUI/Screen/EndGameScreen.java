@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
@@ -34,6 +35,9 @@ public class EndGameScreen extends Screen {
         placements.add("2nd");
         placements.add("3rd");
         placements.add("4th");
+
+        System.out.println();
+        TUIHandler.clearTerminal();
 
         leaderboard = endGame.getPlayersPositionResult().entrySet().stream()
                 .sorted(Comparator.comparingInt(Map.Entry::getValue))

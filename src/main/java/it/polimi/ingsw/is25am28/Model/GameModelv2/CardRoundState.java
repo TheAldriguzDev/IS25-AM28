@@ -7,6 +7,8 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.EventCards.Epidemy;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Model.EventCards.OpenSpace;
+import it.polimi.ingsw.is25am28.Model.EventCards.Stardust;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
 import java.util.ArrayList;
@@ -26,7 +28,11 @@ public final class CardRoundState extends State {
         super(model);
 
         this.round = 0;
-        this.deck = this.model.getGameDeck();
+//        this.deck = this.model.getGameDeck();
+        List<EventCard> fakeDeck = new ArrayList<>();
+        fakeDeck.add(new Stardust("Stardust", 2, this.model.getBoard(), 0));
+        fakeDeck.add(new OpenSpace("OpenSpace", 2, this.model.getBoard(), 1));
+        this.deck = fakeDeck;
         this.board = this.model.getBoard();
         this.isFirstState = true;
 

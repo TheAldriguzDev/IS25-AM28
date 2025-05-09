@@ -6,6 +6,8 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.EventCards.Epidemy;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Model.EventCards.OpenSpace;
+import it.polimi.ingsw.is25am28.Model.EventCards.Stardust;
 import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.FileLoader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
@@ -74,13 +76,15 @@ public final class ShipContructionState extends State implements TimerObserver {
         this.players_done = new ArrayList<>();
         this.shipConfigEnded = false;
 
-        this.cards = this.model.getGameDeck();
+        //this.cards = this.model.getGameDeck();
 
         // TODO: Remove the fake deck after testing
-//        List<EventCard> fakeDeck = new ArrayList<>();
+        List<EventCard> fakeDeck = new ArrayList<>();
 //        fakeDeck.add(new Epidemy("Epidemy", 2, this.model.getBoard(), 0));
 //        fakeDeck.add(new Epidemy("Epidemy", 2, this.model.getBoard(), 1));
-//        this.cards = fakeDeck;
+        fakeDeck.add(new Stardust("Stardust", 2, this.model.getBoard(), 0));
+        fakeDeck.add(new OpenSpace("OpenSpace", 2, this.model.getBoard(), 1));
+        this.cards = fakeDeck;
 
         this.selectedSubDecks = new HashMap<>();
     }

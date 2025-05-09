@@ -20,6 +20,7 @@ public class AbandonedShip extends EventCard {
     private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
     private Map <String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private List<String> eliminatedPlayers;
+    private Map<String, Integer> updatedPositions;
 
     private boolean hasBeenUsedByPlayer;
 
@@ -35,6 +36,7 @@ public class AbandonedShip extends EventCard {
         this.playersThatCanUseTheCard = new ArrayList<>();
         this.removedLifeforms = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
+        this.updatedPositions = new HashMap<>();
     }
 
     /**
@@ -133,6 +135,7 @@ public class AbandonedShip extends EventCard {
 
             // Move the player and re-validate the positions
             this.getBoard().movePlayerBackwards(this.getCurrentPlayer().get(), this.movementStep);
+            this.updatedPositions.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getCursor());
             int tmp = getBoard().getEliminatedPlayers().size();
             this.getBoard().validatePlayersPosition();
             for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
@@ -186,6 +189,7 @@ public class AbandonedShip extends EventCard {
             if (this.hasBeenUsedByPlayer) {
                 setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
                 setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
+                setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
             }
         } else {
             // Set the card information that are needed to play the game
