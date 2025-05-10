@@ -174,9 +174,11 @@ public class WarZone extends EventCard {
 
         // Check if the card can be used by matching the player
         String playerNickname = warZoneJSON.getPlayerNickname();
-        if ( playerNickname == null ||
-                playerNickname.isEmpty() ||
-                !playerNickname.equals(this.getCurrentPlayer().get().getNickname()) ) {
+        if (
+            (playerNickname == null)
+                || (playerNickname.isEmpty())
+                || (!playerNickname.equals(this.getCurrentPlayer().get().getNickname()))
+        ) {
             throw new IllegalArgumentException("The given player does not match with the current one!");
         }
 
@@ -508,8 +510,7 @@ public class WarZone extends EventCard {
     }
 
     private WarZone handlePlasmaShot(Player player, WarZoneJSON warZoneJSON) {
-
-        int inboundDirection, sideToHit;
+        int inboundDirection;
         boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
@@ -521,7 +522,6 @@ public class WarZone extends EventCard {
         // Initializing variables
         toHit = null;
         threatDestroyed = false;
-        sideToHit = -1;
 
         // Grab for the affected player the input about the cannon and shield to activate
         shieldList = warZoneJSON.getShieldList();
@@ -547,7 +547,7 @@ public class WarZone extends EventCard {
                     row++;
                 }
 
-                if (toHit == null) break;
+                if (toHit == null) return this;
             }
 
             // Case 2 - Meteor arrives from the RIGHT
@@ -563,7 +563,7 @@ public class WarZone extends EventCard {
                     column--;
                 }
 
-                if (toHit == null) break;
+                if (toHit == null) return this;
             }
 
             // Case 3 - Meteor arrives from the BOTTOM
@@ -579,7 +579,7 @@ public class WarZone extends EventCard {
                     row--;
                 }
 
-                if (toHit == null) break;
+                if (toHit == null) return this;
             }
 
             // Case 4 - Meteor arrives from the LEFT
@@ -595,46 +595,45 @@ public class WarZone extends EventCard {
                     column++;
                 }
 
-                if (toHit == null) break;
+                if (toHit == null) return this;
             }
 
             default -> throw new IllegalStateException("ERROR: Only 4 directions allowed");
         }
 
         // If a component has been found
-        if (toHit != null) {
-            if (shieldList != null) {
-                for (ComponentHelper<Void> shieldCoords : shieldList) {
-                    if (shieldCoords != null) {
-                        Component component = shipPtr.getComponent(
-                                shieldCoords.getI(),
-                                shieldCoords.getJ()
-                        );
+        if (shieldList != null) {
+            for (ComponentHelper<Void> shieldCoords : shieldList) {
+                if (shieldCoords != null) {
+                    Component component = shipPtr.getComponent(
+                            shieldCoords.getI(),
+                            shieldCoords.getJ()
+                    );
 
-                        // Safe cast of Component to Shield
-                        switch (component) {
-                            case Shield shield -> {
-                                int[] shieldCoverage = shield.getCoveredSide();
-                                try {
-                                    // Consume energy only if there's enough energy available
-                                    shipPtr.consumeEnergy(1);
-                                    for (int j : shieldCoverage) {
-                                        if (currPlasmaShot.getSize() == 1 && j == inboundDirection) {
-                                            // Checking if the shield selected for activation
-                                            // can actually defend the ship from the small meteor
-                                            // by checking if it's correctly oriented towards the threat
-                                            threatDestroyed = true;
-                                            break;
-                                        }
+                    // Safe cast of Component to Shield
+                    switch (component) {
+                        case Shield shield -> {
+                            int[] shieldCoverage = shield.getCoveredSide();
+                            try {
+                                // Consume energy only if there's enough energy available
+                                shipPtr.consumeEnergy(1);
+
+                                for (int j : shieldCoverage) {
+                                    if (currPlasmaShot.getSize() == 1 && j == inboundDirection) {
+                                        // Checking if the shield selected for activation
+                                        // can actually defend the ship from the small meteor
+                                        // by checking if it's correctly oriented towards the threat
+                                        threatDestroyed = true;
+                                        break;
                                     }
                                 }
-                                catch (InsufficientEnergyException e) {
-                                    // Otherwise the ship depleted its energy reserve and the selected shields
-                                    // cannot be activated, therefore the meteor will not be deflected
-                                }
                             }
-                            case null, default -> {}
+                            catch (InsufficientEnergyException e) {
+                                // Otherwise the ship depleted its energy reserve and the selected shields
+                                // cannot be activated, therefore the meteor will not be deflected
+                            }
                         }
+                        case null, default -> {}
                     }
                 }
             }
@@ -642,15 +641,17 @@ public class WarZone extends EventCard {
 
         // If the meteor wasn't destroyed, then remove the component
         // that was hit from the current player's ship
-        if (toHit != null && !threatDestroyed) {
+        if (!threatDestroyed) {
             try {
                 shipPtr.removeComponent(
                         toHit.getPosition()[0],
                         toHit.getPosition()[1]
                 );
+
                 this.prevPlayer = player.getNickname();
                 this.previousPlayerRemovedComponents = new ArrayList<>();
-            } catch (CoreDeletionAttemptException e) {
+            }
+            catch (CoreDeletionAttemptException e) {
                 this.eliminatedPlayers.add(player.getNickname());
                 this.getBoard().eliminatePlayer(player);
             }

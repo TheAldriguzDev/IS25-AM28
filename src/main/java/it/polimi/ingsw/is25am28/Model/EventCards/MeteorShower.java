@@ -174,8 +174,8 @@ public class MeteorShower extends EventCard {
                         row++;
                     }
 
-                    if (toHit == null) break;
-                    sideToHit = toHit.getRightSide().ordinal();
+                    if (toHit == null) return this;
+                    sideToHit = toHit.getTopSide().ordinal();
                 }
 
                 // Case 2 - Meteor arrives from the RIGHT
@@ -191,7 +191,7 @@ public class MeteorShower extends EventCard {
                         column--;
                     }
 
-                    if (toHit == null) break;
+                    if (toHit == null) return this;
                     sideToHit = toHit.getRightSide().ordinal();
                 }
 
@@ -208,7 +208,7 @@ public class MeteorShower extends EventCard {
                         row--;
                     }
 
-                    if (toHit == null) break;
+                    if (toHit == null) return this;
                     sideToHit = toHit.getBottomSide().ordinal();
                 }
 
@@ -225,7 +225,7 @@ public class MeteorShower extends EventCard {
                         column++;
                     }
 
-                    if (toHit == null) break;
+                    if (toHit == null) return this;
                     sideToHit = toHit.getLeftSide().ordinal();
                 }
 
@@ -372,7 +372,7 @@ public class MeteorShower extends EventCard {
 
             // If the meteor wasn't destroyed, then remove the component
             // that was hit from the current player's ship
-            if (toHit != null && !threatDestroyed) {
+            if (!threatDestroyed) {
                 try {
                     // The current player will become the previous player after the
                     // current meteor effects have been applied to him, therefore in

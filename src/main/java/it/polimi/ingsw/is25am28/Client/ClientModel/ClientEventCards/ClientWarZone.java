@@ -37,15 +37,14 @@ public class ClientWarZone extends ClientEventCard {
         this.requiredResources = cardState.getRequiredResources();
         this.warZoneJSON = new WarZoneJSON();
 
-        enabledCommands.add("setItemsToBeRemoved");
-        enabledCommands.add("setDoubleCannonsToActivate");
-        enabledCommands.add("setDoubleEnginesToActivate");
-
-
+//        enabledCommands.add("setItemsToBeRemoved");
+//        enabledCommands.add("setDoubleCannonsToActivate");
+//        enabledCommands.add("setDoubleEnginesToActivate");
     }
 
     @Override
     public ActionJSON useCard() {
+        this.warZoneJSON.setPlayerNickname(this.playerNickname);
         WarZoneJSON tmp = this.warZoneJSON;
         this.warZoneJSON = new WarZoneJSON();
 
