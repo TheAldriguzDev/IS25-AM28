@@ -368,8 +368,6 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 else {
                     neighbours[0] = null;
                 }
-
-                neighbours[0] = this.components[clientComponent.getI() - 1][clientComponent.getJ()];
             }
             catch (ArrayIndexOutOfBoundsException e) {
                 neighbours[0] = null;
@@ -387,8 +385,6 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 else {
                     neighbours[1] = null;
                 }
-
-                neighbours[1] = this.components[clientComponent.getI()][clientComponent.getJ() + 1];
             }
             catch (ArrayIndexOutOfBoundsException e) {
                 neighbours[1] = null;
@@ -406,8 +402,6 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 else {
                     neighbours[2] = null;
                 }
-
-                neighbours[2] = this.components[clientComponent.getI() + 1][clientComponent.getJ()];
             }
             catch (ArrayIndexOutOfBoundsException e) {
                 neighbours[2] = null;
@@ -425,8 +419,6 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 else {
                     neighbours[3] = null;
                 }
-
-                neighbours[3] = this.components[clientComponent.getI()][clientComponent.getJ() - 1];
             }
             catch (ArrayIndexOutOfBoundsException e) {
                 neighbours[3] = null;

@@ -71,7 +71,7 @@ public class ClientAbandonedStation extends ClientEventCard {
         }
 
 
-        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
+        cardWidget.appendString("[" + this.cardName.toUpperCase() + " - LVL: " + this.cardLevel + "]");
 
         cardInfoWidget.appendString(                   "            ██ █     █         "                   );
         cardInfoWidget.appendString(                   "              █     █          "                   );

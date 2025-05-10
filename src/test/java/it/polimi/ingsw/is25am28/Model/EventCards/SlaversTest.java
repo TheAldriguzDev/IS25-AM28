@@ -391,7 +391,7 @@ class SlaversTest {
         Cannon cannon_3 = new Cannon(connectors1, 1);
         Cannon cannon_4 = new Cannon(connectors5, 1);
         Vital vital_1 = new Vital(connectors4, 0);
-        Battery battery_1 = new Battery(connectors5, 3);
+        Battery battery_1 = new Battery(connectors1, 3);
         //cannon_1.rotateLeft();
 
 
@@ -494,7 +494,7 @@ class SlaversTest {
         Cannon cannon_4 = new Cannon(connectors5, 1);
         Vital vital_1 = new Vital(connectors4, 0);
         Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors5, 3, false);
+        Storage storage_1 = new Storage(connectors1, 3, false);
         //cannon_1.rotateLeft();
 
 
@@ -596,7 +596,7 @@ class SlaversTest {
         Cannon cannon_4 = new Cannon(connectors5, 2);
         Vital vital_1 = new Vital(connectors4, 0);
         Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors5, 3, false);
+        Storage storage_1 = new Storage(connectors1, 3, false);
         Storage storage_2 = new Storage(connectors5, 2, true);
         //cannon_1.rotateLeft();
 
@@ -703,7 +703,7 @@ class SlaversTest {
         Cannon cannon_4 = new Cannon(connectors5, 2);
         Vital vital_1 = new Vital(connectors4, 0);
         Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors5, 3, false);
+        Storage storage_1 = new Storage(connectors1, 3, false);
         Storage storage_2 = new Storage(connectors5, 2, true);
         //cannon_1.rotateLeft();
 

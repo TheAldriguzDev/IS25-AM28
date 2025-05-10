@@ -616,23 +616,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
     }
 
     /**
-     * @return All components that fail the <code>check()</code> method
-     */
-    public List<Component> getWrongComponents(){
-        List<Component> wrongs = new ArrayList<>();
-
-        traverse(
-            (Component c) -> {
-                if(!c.check(getNearestComponents(c))){
-                    wrongs.add(c);
-                }
-            }
-        );
-
-        return wrongs;
-    }
-
-    /**
      * @param index The index of the row to extract
      *
      * @return The grid's row with the given index
@@ -841,8 +824,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                     else {
                         neighbours[0] = null;
                     }
-
-                    neighbours[0] = this.components[positionInGrid[0] - 1][positionInGrid[1]];
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[0] = null;
@@ -860,8 +841,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                     else {
                         neighbours[1] = null;
                     }
-
-                    neighbours[1] = this.components[positionInGrid[0]][positionInGrid[1] + 1];
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[1] = null;
@@ -879,8 +858,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                     else {
                         neighbours[2] = null;
                     }
-
-                    neighbours[2] = this.components[positionInGrid[0] + 1][positionInGrid[1]];
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[2] = null;
@@ -898,8 +875,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                     else {
                         neighbours[3] = null;
                     }
-
-                    neighbours[3] = this.components[positionInGrid[0]][positionInGrid[1] - 1];
                 }
                 catch (ArrayIndexOutOfBoundsException e) {
                     neighbours[3] = null;

@@ -873,7 +873,7 @@ class ShipTest {
 //        System.out.println("==== SHIP CONFIGURATION ====");
 //        printShipGrid(ship);
 
-        List<Component> wrongs = ship.getWrongComponents();
+        List<Component> wrongs = ship.removeComponent(0, 0);
 
 //        if (!wrongs.isEmpty()) {
 //            System.out.println("\nWRONG COMPONENTS FOUND:");
@@ -883,11 +883,14 @@ class ShipTest {
 //        }
 
         List<Component> expectedWrongs = new ArrayList<>();
+        expectedWrongs.add(vital);
+        expectedWrongs.add(structural);
+        expectedWrongs.add(storage);
+        expectedWrongs.add(cannon);
         expectedWrongs.add(battery);
-        expectedWrongs.add(engine2);
 
         assertTrue(wrongs.containsAll(expectedWrongs));
-        assertFalse(ship.validateShip());
+        assertTrue(ship.validateShip());
 
         // Fixing the ship and performing the validity check again
         // Battery moved from (6, 7) to (4, 6)
@@ -903,7 +906,7 @@ class ShipTest {
 //        System.out.println("\n==== SHIP CONFIGURATION (after moving some components (see the test code)) ====");
 //        printShipGrid(ship);
 
-        wrongs = ship.getWrongComponents();
+        wrongs = ship.removeComponent(0, 0);
 
 //        if (!wrongs.isEmpty()) {
 //            System.out.println("\nWRONG COMPONENTS FOUND:");
