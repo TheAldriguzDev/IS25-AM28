@@ -59,7 +59,7 @@ public class ClientPirates extends ClientEventCard {
 
             enabledCommands.add("setShieldsToActivate");
         } else {
-            enabledCommands.add("setShieldsToActivate");
+            enabledCommands.add("setDoubleCannonsToActivate");
             enabledCommands.add("setTakeReward");
         }
     }

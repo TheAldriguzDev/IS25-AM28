@@ -184,17 +184,8 @@ public class ClientBoard {
             int width = boardDimensions.get(this.level).getValue();
 
             // Sets which blocks need to be colored
-//            Map<String, ClientPlayer> players = new HashMap<>(this.players);
-            Map<Integer, String> coloredCells = new HashMap<>();
-            for (ClientPlayer player : this.players.values()) {
-                int relCursor = player.getCursor();
-                relCursor %= this.getSize();
-                if (relCursor < 0) {
-                    relCursor += this.getSize();
-                }
-                coloredCells.put(relCursor, player.getColor().getColorString());
-                //System.out.println("put color: " + player.getColorToString().getColorString() + "COLOR " + ANSIColors.RESET + "of player:" + player.getNickname() + " cursor: " + player.getCursor());
-            }
+            // Map<String, ClientPlayer> players = new HashMap<>(this.players);
+            Map<Integer, String> coloredCells = this.getIntegerStringMap();
 
             for (int i = 0; i < this.getSize(); i++) {
                 if (coloredCells.containsKey(i)) {
@@ -267,5 +258,27 @@ public class ClientBoard {
         }
 
         return null;
+    }
+
+    /**
+     * @return A map of all the colored cells indicating
+     *         where each player is positioned.
+     */
+    private Map<Integer, String> getIntegerStringMap() {
+        Map<Integer, String> coloredCells = new HashMap<>();
+
+        for (ClientPlayer player : this.players.values()) {
+            int relCursor = player.getCursor();
+
+            relCursor %= this.getSize();
+
+            if (relCursor < 0) {
+                relCursor += this.getSize();
+            }
+
+            coloredCells.put(relCursor, player.getColor().getColorString());
+        }
+
+        return coloredCells;
     }
 }
