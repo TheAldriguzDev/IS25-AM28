@@ -12,7 +12,9 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -82,5 +84,26 @@ class ClientBoardTest {
         serverBoardWidget = serverBoard.generateWidget();
         System.out.println("Server Version");
         serverBoardWidget.printWidget();
+    }
+
+    @Test
+    void boardFullRotation() {
+        WidgetTUI boardWidget;
+
+        for (int i = 0; i < clientBoard.getSize(); i++) {
+            boardWidget = clientBoard.generateWidget();
+            boardWidget.printWidget();
+
+            CardStateJSON state = new CardStateJSON();
+            state.setNeedsBoardUpdate(true);
+            state.setNeedsUpdatedPositions(true);
+            state.setUpdatedPositions(Map.of("Player 1", i, "Player 2", i+1, "Player 3", i+2, "Player 4", i+3));
+
+            serverBoard.validatePlayersPosition();
+            serverBoard.movePlayerForward(serverBoard.getPlayers().getFirst(), 1);
+            serverBoard.validatePlayersPosition();
+
+            clientModel.getClientBoard().updateBoard(state);
+        }
     }
 }
