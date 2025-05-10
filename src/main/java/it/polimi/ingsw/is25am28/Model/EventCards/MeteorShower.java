@@ -409,9 +409,14 @@ public class MeteorShower extends EventCard {
         //  2) Re-initialize card players, since we need to loop over all players again for the next meteor
         //  3) Calculate the next dice throw for the next meteor
         if (this.currentPlayer.isEmpty()) {
-            this.currMeteorIndex++;
-            this.initCardPlayers();
-            this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
+            if (this.getBoard().getPlayers().size() > 1) {
+                this.currMeteorIndex++;
+                this.initCardPlayers();
+                this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
+            }
+            else {
+                this.cardUsed();
+            }
         }
 
         // The card gets marked as completed only when all players
