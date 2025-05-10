@@ -81,7 +81,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
 
     /**
      * @return The client event card's widget containing
-     *         all the relevant information
+     * all the relevant information
      */
     public abstract WidgetTUI generateWidget();
 
@@ -163,5 +163,14 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
 
     public Integer getDoubleEnginesToActivate() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getDoubleEnginesToActivate()' is not supported in " + this + " state");
+    }
+
+    // Card specific methods
+    public List<ItemColor> getAvailableItemColors() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getAvailableColors()' is not supported in " + this + " card");
+    }
+
+    public void removeItem(ItemColor itemColor) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'removeColor()' is not supported in " + this + " card");
     }
 }

@@ -101,4 +101,9 @@ public class ClientAbandonedShip extends ClientEventCard {
     public void setWantsToVisit(boolean wantsToVisit) throws UnsupportedOperationException {
         this.abandonedShipJSON.setWantToVisitShip(wantsToVisit);
     }
+
+    @Override
+    public Boolean getWantsToVisit() {
+        return this.abandonedShipJSON.getWantToVisitShip();
+    }
 }

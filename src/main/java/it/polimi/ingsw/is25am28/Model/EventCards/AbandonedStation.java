@@ -127,7 +127,7 @@ public class AbandonedStation extends EventCard {
                                 resourceDrop.getJ()));
             }
 
-            if (!this.takenResources.isEmpty()) {
+            if (!this.resourceToTake.isEmpty()) {
                 this.takenResources.put(this.getCurrentPlayer().get().getNickname(), this.resourceToTake);
             }
 
@@ -171,7 +171,10 @@ public class AbandonedStation extends EventCard {
 
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             setUpdatedDroppedResourcesIfNecessary(cardState, droppedResources);
+            System.out.println("TAKEN RESOURECE(FORM ACTIONJSON): " + this.resourceToTake);
+            System.out.println("TAKEN RESOURECE(MAP): " + this.takenResources);
             setUpdatedTakenResourcesIfNecessary(cardState, takenResources);
+            System.out.println("TAKEN RESOURECE(CARDSTATE): " + cardState.getTakenResources());
             setUpdatedPositionsIfNecessary(cardState, updatedPositions);
         } else {
             // Card information that are needed to play
@@ -194,7 +197,7 @@ public class AbandonedStation extends EventCard {
                     .flatMap(entry -> Collections.nCopies(entry.getValue(), entry.getKey()).stream())
                     .toList();
 
-            cardState.setStationResources(itemList);
+            cardState.setStationResources(new ArrayList<>(itemList));
         }
 
         cardState.setCardEnded(this.hasFinished());

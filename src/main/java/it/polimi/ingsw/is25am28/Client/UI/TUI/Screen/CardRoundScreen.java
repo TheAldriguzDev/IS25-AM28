@@ -65,7 +65,7 @@ public class CardRoundScreen extends Screen {
 
         // Widgets initializations
         this.generateAvailableLifeformsWidget();
-        this.generateAvailableItemColorsWidget();
+        //this.generateAvailableItemColorsWidget();
         this.generatePlayerNameWidget();
         this.generateOtherPlayerShipCommandsWidget();
 
@@ -637,6 +637,7 @@ public class CardRoundScreen extends Screen {
         // Getting the items to remove or take
         do {
             System.out.println("Available item colors:");
+            this.generateAvailableItemColorsWidget();
             availableItemColors.printWidget();
             System.out.print(DEFAULT_COMMAND_PREFIX);
 
@@ -653,12 +654,24 @@ public class CardRoundScreen extends Screen {
                 correctInput = true;
 
                 try {
-                    itemColor = ItemColor.values()[itemIndex];
+                    //itemColor = ItemColor.values()[itemIndex];
+                    itemColor = this.currEventCard.getAvailableItemColors().get(itemIndex);
                 }
                 catch (IndexOutOfBoundsException e) {
                     System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please select a valid item color.", ANSIColors.RED));
                     correctInput = false;
                 }
+
+                // Removes the selected item from the card
+                this.currEventCard.removeItem(itemColor);
+                // If the card has no more resources, disable the command
+                if (this.currEventCard.getAvailableItemColors().isEmpty()) {
+                    CommandWidgetTUI command = this.indexedCardInputMethods.get("setItemsToBeTaken").getValue();
+                    this.indexedCardInputMethods.replace("setItemsToBeTaken", new Pair<>(false, command));
+                    this.generateCardRoundCommandsWidget();
+                }
+                // TODO : See if its possible to alter the ship stats widget and the clientShip only locally, in a way that it all gets replaced by the next updated ship upon receiving a new cardState
+
             }
             catch (InterruptedException e) {
                 // A forced interrupt arrived
@@ -956,11 +969,20 @@ public class CardRoundScreen extends Screen {
      */
     private void generateAvailableItemColorsWidget() {
         this.availableItemColors = new WidgetTUI();
-        int len = ItemColor.values().length;
+        List<ItemColor> availableCardItemColors = this.currEventCard.getAvailableItemColors();
+        //int len = ItemColor.values().length;
+        int len = availableCardItemColors.size();
+
+        // TODO: new available color widget system | also implement it in droppedItems
+
+//        for (int i = 0; i < len; i++) {
+//            this.availableItemColors.appendString("(" + i + ")" + SPACE + ItemColor.values()[i].toString());
+//        }
 
         for (int i = 0; i < len; i++) {
-            this.availableItemColors.appendString("(" + i + ")" + SPACE + ItemColor.values()[i].toString());
+            this.availableItemColors.appendString("(" + i + ")" + SPACE + availableCardItemColors.get(i).toString());
         }
+
 
         this.availableItemColors
                 .addPadding(0, 1, 0, 1)

@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientAbandonedStation extends ClientEventCard {
@@ -121,7 +122,32 @@ public class ClientAbandonedStation extends ClientEventCard {
 
     // WantsToVisit
     @Override
-    public void setWantsToVisit(boolean wantsToVisit) throws UnsupportedOperationException {
+    public void setWantsToVisit(boolean wantsToVisit) {
         this.abandonedStationJSON.setWantToVisitStation(wantsToVisit);
     }
+
+    @Override
+    public Boolean getWantsToVisit() {
+        return this.abandonedStationJSON.getWantToVisitStation();
+    }
+
+    // Method necessary to the availableColors widget
+    // Returns a list of the available colors
+    @Override
+    public List<ItemColor> getAvailableItemColors() {
+        List<ItemColor> availableColors = new ArrayList<>();
+        for(ItemColor color : ItemColor.values()) {
+            if (this.stationResources.contains(color)) {
+                availableColors.add(color);
+            }
+        }
+        return availableColors;
+    }
+
+    @Override
+    public void removeItem(ItemColor itemColor) {
+        this.stationResources.remove(itemColor);
+    }
+
+
 }
