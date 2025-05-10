@@ -380,27 +380,27 @@ class WarZoneTest {
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
-            // now the player 4 need to send the data regarding what items he wants to drop
-            // player 4
-            List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>();
-            itemsToBeRemoved.add(new ComponentHelper<ItemColor>(5, 5).addItem(ItemColor.RED));
-            itemsToBeRemoved.add(new ComponentHelper<ItemColor>(7, 4).addItem(ItemColor.YELLOW));
-            itemsToBeRemoved.add(new ComponentHelper<ItemColor>(7, 4).addItem(ItemColor.BLUE));
+        // now the player 4 need to send the data regarding what items he wants to drop
+        // player 4
+        List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>();
+        itemsToBeRemoved.add(new ComponentHelper<ItemColor>(5, 5).addItem(ItemColor.RED));
+        itemsToBeRemoved.add(new ComponentHelper<ItemColor>(7, 4).addItem(ItemColor.YELLOW));
+        itemsToBeRemoved.add(new ComponentHelper<ItemColor>(7, 4).addItem(ItemColor.BLUE));
 
-            actionJSON = new WarZoneJSON("Player 4", 0, lifeformsToRemove_empty, itemsToBeRemoved, new ArrayList<>(), doubleCannons_empty);
-            warzone.useCard(actionJSON);
-            assertFalse(warzone.hasFinished());
+        actionJSON = new WarZoneJSON("Player 4", 0, lifeformsToRemove_empty, itemsToBeRemoved, new ArrayList<>(), doubleCannons_empty);
+        warzone.useCard(actionJSON);
+        assertFalse(warzone.hasFinished());
 
-            // Verifying storage changes
-            assertEquals(0, p4.getShip().getStorageList().get(0).getStoredItems().size()); // Special storage is now empty
-            assertEquals(1, p4.getShip().getStorageList().get(1).getStoredItems().size()); // Normal storage should have only 1 item left
-            assertEquals(ItemColor.GREEN, p4.getShip().getStorageList().get(1).getStoredItems().getFirst().getColor()); // That item should be a blue item
+        // Verifying storage changes
+        assertEquals(0, p4.getShip().getStorageList().get(0).getStoredItems().size()); // Special storage is now empty
+        assertEquals(1, p4.getShip().getStorageList().get(1).getStoredItems().size()); // Normal storage should have only 1 item left
+        assertEquals(ItemColor.GREEN, p4.getShip().getStorageList().get(1).getStoredItems().getFirst().getColor()); // That item should be a blue item
 
-            // Verifying changes to the battery counts
-            assertEquals(2, p1.getShip().getAvailableEnergy()); // did use 1 battery for the doubleBooster | BASELINE: 3
-            assertEquals(4, p2.getShip().getAvailableEnergy()); // did use 1 battery for the doubleBooster | BASELINE: 5
-            assertEquals(0, p3.getShip().getAvailableEnergy()); // did not use any batteries | BASELINE: 0
-            assertEquals(2, p4.getShip().getAvailableEnergy()); // did not use any batteries | BASELINE: 2
+        // Verifying changes to the battery counts
+        assertEquals(2, p1.getShip().getAvailableEnergy()); // did use 1 battery for the doubleBooster | BASELINE: 3
+        assertEquals(4, p2.getShip().getAvailableEnergy()); // did use 1 battery for the doubleBooster | BASELINE: 5
+        assertEquals(0, p3.getShip().getAvailableEnergy()); // did not use any batteries | BASELINE: 0
+        assertEquals(2, p4.getShip().getAvailableEnergy()); // did not use any batteries | BASELINE: 2
 
         // Lowest crewCount
         // player 2 // Teh lowest crewCount is determined instantly, no need to send information
@@ -408,47 +408,47 @@ class WarZoneTest {
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
-            // The lowest crewCount player (player 2) must send data about which shields to activate (4 times since there are 4 shots) // will not get destroyed
-            // First shot
-            warzone.forceDiceThrow(6); // aimed at the battery pack in 5, 6
-            shieldsToActivate2 = new ArrayList<>();
-            shieldsToActivate2.add(new ComponentHelper<>(7, 7)); // protection for top and right sides
-            actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
-            warzone.useCard(actionJSON);
-            assertFalse(warzone.hasFinished());
-            assertEquals(3, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
+        // The lowest crewCount player (player 2) must send data about which shields to activate (4 times since there are 4 shots) // will not get destroyed
+        // First shot
+        warzone.forceDiceThrow(6); // aimed at the battery pack in 5, 6
+        shieldsToActivate2 = new ArrayList<>();
+        shieldsToActivate2.add(new ComponentHelper<>(7, 7)); // protection for top and right sides
+        actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
+        warzone.useCard(actionJSON);
+        assertFalse(warzone.hasFinished());
+        assertEquals(3, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
 
-            // Second shot
-            warzone.forceDiceThrow(6); // aimed at the purple vital in 6, 8
-            shieldsToActivate2 = new ArrayList<>();
-            shieldsToActivate2.add(new ComponentHelper<>(7, 7)); // protection for top and right sides
-            actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
-            warzone.useCard(actionJSON);
-            assertFalse(warzone.hasFinished());
-            assertEquals(2, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
+        // Second shot
+        warzone.forceDiceThrow(6); // aimed at the purple vital in 6, 8
+        shieldsToActivate2 = new ArrayList<>();
+        shieldsToActivate2.add(new ComponentHelper<>(7, 7)); // protection for top and right sides
+        actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
+        warzone.useCard(actionJSON);
+        assertFalse(warzone.hasFinished());
+        assertEquals(2, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
 
-            // Third shot
-            warzone.forceDiceThrow(4); // aimed at the doubleCannon in 6, 4
-            shieldsToActivate2 = new ArrayList<>();
-            shieldsToActivate2.add(new ComponentHelper<>(7, 5)); // protection for bottom and left sides (in this case it will not work as the shot is big)
-            actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
-            warzone.useCard(actionJSON);
-            assertFalse(warzone.hasFinished());
-            assertEquals(1, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
+        // Third shot
+        warzone.forceDiceThrow(4); // aimed at the doubleCannon in 6, 4
+        shieldsToActivate2 = new ArrayList<>();
+        shieldsToActivate2.add(new ComponentHelper<>(7, 5)); // protection for bottom and left sides (in this case it will not work as the shot is big)
+        actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
+        warzone.useCard(actionJSON);
+        assertFalse(warzone.hasFinished());
+        assertEquals(1, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
 
-            // Fourth shot
-            warzone.forceDiceThrow(7); // aimed at the shield in 7, 5
-            shieldsToActivate2 = new ArrayList<>();
-            shieldsToActivate2.add(new ComponentHelper<>(7, 5)); // protection for top and right sides
-            actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
-            warzone.useCard(actionJSON);
-            assertTrue(warzone.hasFinished());
-            assertEquals(0, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
+        // Fourth shot
+        warzone.forceDiceThrow(7); // aimed at the shield in 7, 5
+        shieldsToActivate2 = new ArrayList<>();
+        shieldsToActivate2.add(new ComponentHelper<>(7, 5)); // protection for top and right sides
+        actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
+        warzone.useCard(actionJSON);
+        assertTrue(warzone.hasFinished());
+        assertEquals(0, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
 
-            assertNotNull(p2.getShip().getComponent(5, 6));
-            assertNotNull(p2.getShip().getComponent(6, 8));
-            assertNull(p2.getShip().getComponent(6, 4));
-            assertNotNull(p2.getShip().getComponent(7, 5));
+        assertNotNull(p2.getShip().getComponent(5, 6));
+        assertNotNull(p2.getShip().getComponent(6, 8));
+        assertNull(p2.getShip().getComponent(6, 4));
+        assertNotNull(p2.getShip().getComponent(7, 5));
     }
 
 
@@ -606,21 +606,21 @@ class WarZoneTest {
         Cabin cabin_1 = new Cabin(connectors1, false);
         //cabin_1.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
 
-        Vital purple_vital = new Vital(connectors4, VitalType.PURPLE_VITAL.ordinal());
+        Vital purple_vital = new Vital(connectors5, VitalType.PURPLE_VITAL.ordinal());
 
         Battery battery_1 = new Battery(connectors3, 3);
 
-        Engine double_booster = new Engine(connectors8, 2);
+        Engine double_booster = new Engine(connectors6, 2);
 
         Shield shield_top_right = new Shield(connectors1);
 
-        Shield shield_bottom_left = new Shield(connectors4);
+        Shield shield_bottom_left = new Shield(connectors5);
         shield_bottom_left.rotateLeft();
         shield_bottom_left.rotateLeft();
 
         Engine single_booster = new Engine(connectors5, 1);
 
-        Battery battery_2 = new Battery(connectors7, 3);
+        Battery battery_2 = new Battery(connectors1, 3);
 
         Cannon double_cannon = new Cannon(connectors4, 2);
 

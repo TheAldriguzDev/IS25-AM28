@@ -606,7 +606,7 @@ class SmugglersTest {
         //Cabin core = new Cabin(connectors, true);
         Cabin cabin_1 = new Cabin(connectors2, false);
         Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors1, false);
+        Cabin cabin_3 = new Cabin(connectors6, false);
         Cannon cannon_1 = new Cannon(connectors3, 1);
         Cannon cannon_2 = new Cannon(connectors1, 1);
         Cannon cannon_3 = new Cannon(connectors1, 1);

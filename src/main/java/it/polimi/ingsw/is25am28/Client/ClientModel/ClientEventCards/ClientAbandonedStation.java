@@ -124,4 +124,9 @@ public class ClientAbandonedStation extends ClientEventCard {
     public void setWantsToVisit(boolean wantsToVisit) throws UnsupportedOperationException {
         this.abandonedStationJSON.setWantToVisitStation(wantsToVisit);
     }
+
+    @Override
+    public Boolean getWantsToVisit() throws UnsupportedOperationException {
+        return this.abandonedStationJSON.getWantToVisitStation();
+    }
 }

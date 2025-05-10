@@ -10,7 +10,7 @@ public enum Connector {
      * @param ordinal The value of the Connector instance that you want to get
      * @return The corresponding Connector instance to the given ordinal value
      */
-    public static Connector fromOrdinal( int ordinal ){
+    public static Connector fromOrdinal(int ordinal) {
         if (ordinal == ZERO_PIPES.ordinal()) {
             return ZERO_PIPES;
         }

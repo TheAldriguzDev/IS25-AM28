@@ -721,7 +721,7 @@ class PiratesTest {
         Battery battery_1 = new Battery(connectors1, 3);
         Storage storage_1 = new Storage(connectors5, 3, false);
         Storage storage_2 = new Storage(connectors5, 2, true);
-        Shield shield_1 = new Shield(connectors8);
+        Shield shield_1 = new Shield(connectors4);
         shield_1.rotateLeft();
 
 
@@ -826,7 +826,7 @@ class PiratesTest {
         Battery battery_1 = new Battery(connectors1, 3);
         Storage storage_1 = new Storage(connectors5, 3, false);
         Storage storage_2 = new Storage(connectors5, 2, true);
-        Shield shield_1 = new Shield(connectors8);
+        Shield shield_1 = new Shield(connectors3);
         Shield shield_2 = new Shield(connectors3);
         shield_1.rotateLeft();
         shield_1.rotateLeft();
