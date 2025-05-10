@@ -14,6 +14,7 @@ import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.Messages.Ping;
 import it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket;
+import it.polimi.ingsw.is25am28.Network.UpdateHandler.UpdateHandler;
 
 import java.io.*;
 import java.net.Socket;
@@ -34,9 +35,8 @@ public class TCPClient implements VirtualViewSocket {
 
     private final ObjectMapper mapper = new ObjectMapper();
 
-    private final ExecutorService inputThread;
-    private final ExecutorService updateThread;
-    private final ExecutorService forceThread;
+    private final UpdateHandler updateHandler;
+
     private final ScheduledExecutorService pingScheduler;
 
     /**
@@ -63,9 +63,8 @@ public class TCPClient implements VirtualViewSocket {
 
         this.viewUpdater = new ViewUpdater(ui, model);
 
-        this.inputThread = Executors.newSingleThreadExecutor();
-        this.updateThread = Executors.newSingleThreadExecutor();
-        this.forceThread = Executors.newSingleThreadExecutor();
+        this.updateHandler = new UpdateHandler(viewUpdater);
+
         this.pingScheduler = Executors.newSingleThreadScheduledExecutor();
 
         // Run the client TCPClient
@@ -136,202 +135,11 @@ public class TCPClient implements VirtualViewSocket {
 
     @Override
     public void updateState(Answer answer) {
-        StateDTO state = answer.getState();
-        StateDTO nextState = answer.getNextState();
-        String nickname = answer.getPlayerNickname();
-
-        CompletableFuture<Void> future = new CompletableFuture<>();
-
-        switch (state) {
-            // Update the current state of the game
-            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PopulateShipComponentDTO _,
-                 ConstructionDeckDTO _ -> { // TODO: Timer should be removed from here
-                future = CompletableFuture.runAsync(() -> {
-                    try {
-                        state.accept(viewUpdater);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }, updateThread);
-
-                // Then commit the command
-                if (nickname != null && viewUpdater.isCTXAvailable()) { // Try to commit the message only if it's present --> otherwise is not smart to potentially lock the program
-                    future = future.thenRunAsync(() -> {
-                        try {
-                            viewUpdater.commitCommand(nickname);
-                        } catch (Exception e) {
-                            throw new RuntimeException("Error while commiting the command: ", e);
-                        }
-                    }, inputThread);
-                }
-            }
-            case PlayerEndedShipDTO _ -> {
-                if (nextState == null) {
-                    future = CompletableFuture.runAsync(() -> {
-                        try {
-                            state.accept(viewUpdater);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    }, updateThread);
-
-                    // Then commit the command
-                    if (nickname != null && viewUpdater.isCTXAvailable()) { // Try to commit the message only if it's present --> otherwise is not smart to potentially lock the program
-                        future = future.thenRunAsync(() -> {
-                            try {
-                                viewUpdater.commitCommand(nickname);
-                            } catch (Exception e) {
-                                throw new RuntimeException("Error while commiting the command: ", e);
-                            }
-                        }, inputThread);
-                    }
-                }
-            }
-            case DisconnectedPlayerDTO _ -> {
-                future = CompletableFuture.runAsync(() -> {
-                    try {
-                        state.accept(viewUpdater);
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
-                    }
-                }, updateThread);
-            }
-            case CardRoundDTO data -> {
-                if (nextState != null) {
-                    future = CompletableFuture.runAsync(() -> {
-                        try {
-                            viewUpdater.updateCardResult(data);
-                        }
-                        catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    }, updateThread);
-
-                    future = future.thenRunAsync(() -> {
-                        try {
-                            viewUpdater.interruptCurrScreen();
-                        }
-                        catch (Exception e) {
-                            throw e;
-                        }
-                    }, forceThread);
-                }
-                else {
-                    future = CompletableFuture.runAsync(() -> {
-                        try {
-                            viewUpdater.interruptCurrScreen();
-                        }
-                        catch (Exception e) {
-                            throw e;
-                        }
-                    }, forceThread);
-                }
-
-                // If the nickname is present, commit the command first
-                if (nickname != null && viewUpdater.isCTXAvailable()) {
-                    future = future.thenRunAsync(() -> {
-                        try {
-                            viewUpdater.commitCommand(nickname);
-                        } catch (Exception e) {
-                            throw new RuntimeException("Error while commiting the command: ", e);
-                        }
-                    }, inputThread);
-                }
-
-                if (nextState == null) {
-                    future = future.thenRunAsync(() -> {
-                        try {
-                            state.accept(viewUpdater);
-                        } catch (Exception e) {
-                            throw new RuntimeException("Error while executing the state: ", e);
-                        }
-                    }, inputThread);
-                }
-            }
-            case null -> {
-                // If the nickname is present, commit the command first
-                if (nickname != null && viewUpdater.isCTXAvailable()) {
-                    future = CompletableFuture.runAsync(() -> {
-                        try {
-                            viewUpdater.commitCommand(nickname);
-                        } catch (Exception e) {
-                            throw new RuntimeException("Error while commiting the command: ", e);
-                        }
-                    }, inputThread);
-                } else {
-                    future = CompletableFuture.completedFuture(null);
-                }
-            }
-            default -> {
-                // If the nickname is present, commit the command first
-                if (nickname != null && viewUpdater.isCTXAvailable()) {
-                    future = CompletableFuture.runAsync(() -> {
-                        try {
-                            viewUpdater.commitCommand(nickname);
-                        } catch (Exception e) {
-                            throw new RuntimeException("Error while commiting the command: ", e);
-                        }
-                    }, inputThread);
-                } else {
-                    future = CompletableFuture.completedFuture(null);
-                }
-
-                future = future.thenRunAsync(() -> {
-                    try {
-                        state.accept(viewUpdater);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error while executing the state: ", e);
-                    }
-                }, inputThread);
-            }
-        }
-
-        switch (nextState) {
-            case InsufficientPlayerDTO _-> {
-                forceThread.submit(() -> {
-                    try {
-                        nextState.accept(viewUpdater);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error while executing the next state: ", e);
-                    }
-                });
-            }
-            case FixShipDTO _, PopulateShipDTO _, EndGameDTO _, CardRoundDTO _ -> {
-                CompletableFuture<Void> completableFuture;
-
-                completableFuture = CompletableFuture.runAsync(
-                        this.viewUpdater::interruptCurrScreen,
-                        forceThread
-                );
-
-                completableFuture = completableFuture.thenRunAsync(
-                        () -> {
-                            try {
-                                nextState.accept(viewUpdater);
-                            } catch (Exception e) {
-                                throw new RuntimeException("Error while executing the next state: ", e);
-                            }
-                        },
-                        inputThread
-                );
-            }
-            case null -> {}
-            default -> {
-                future = future.thenRunAsync(() -> {
-                    try {
-                        nextState.accept(viewUpdater);
-                    } catch (Exception e) {
-                        throw new RuntimeException("Error while executing the next state: ", e);
-                    }
-                }, inputThread);
-            }
-        }
+        this.updateHandler.processUpdate(answer);
     }
 
     @Override
     public void reportError(ErrorAnswer error) {
-        inputThread.submit(() -> {
-            viewUpdater.reportError(error.getError());
-        });
+        this.updateHandler.reportErrorUpdate(error);
     }
 }
