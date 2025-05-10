@@ -107,7 +107,7 @@ public class ClientWarZone extends ClientEventCard {
             case "LossItems" -> tmpConsequence = "Taken Items";
         }
 
-        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
+        cardWidget.appendString("[" + this.cardName.toUpperCase() + " - LVL: " + this.cardLevel + "]");
 
         if (this.playerNickname != null) {
 

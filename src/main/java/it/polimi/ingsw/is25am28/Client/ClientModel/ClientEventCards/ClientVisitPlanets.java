@@ -57,7 +57,7 @@ public class ClientVisitPlanets extends ClientEventCard {
         int blueItems = 0;
         int greenItems = 0;
 
-        cardWidget.appendString("~~~[" + this.cardName.toUpperCase() + " - LVL:" + this.cardLevel + "]~~~");
+        cardWidget.appendString("[" + this.cardName.toUpperCase() + " - LVL: " + this.cardLevel + "]");
 
         cardInfoWidget.appendString(ANSIColors.BLUE + "                               " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.GREEN + " ██████████" + ANSIColors.BLUE + "███████████████████ " + ANSIColors.RESET);
