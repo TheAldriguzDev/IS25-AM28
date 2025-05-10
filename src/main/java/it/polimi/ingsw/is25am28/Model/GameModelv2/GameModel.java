@@ -31,7 +31,7 @@ public class GameModel {
     private int level; // The level range can be 0 - 1 - 2 - 3
     private Board board;
     private final List<EventCard> deck;
-    private final ResourceBank resourceBank;
+    private ResourceBank resourceBank;
     private int numPlayers;
     private final Map<String, Player> players;
     private final Map<String, VirtualView> playerVirtualViews;
@@ -42,7 +42,6 @@ public class GameModel {
 
     public GameModel() {
         this.deck = new ArrayList<>();
-        this.resourceBank = new ResourceBank();
         this.players = new HashMap<>();
         this.numPlayers = 2; // min value
         this.currentState = new CreateGameState(this);
@@ -219,6 +218,7 @@ public class GameModel {
         // Set the game configuration sent by the leader
         this.currentState.gameConfig(nickname, playerColor, level, numPlayers);
 
+        this.resourceBank = new ResourceBank(level);
         this.createBoard();
         this.generateDeck();
 

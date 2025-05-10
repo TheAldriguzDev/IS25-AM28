@@ -100,7 +100,7 @@ class WarZoneTest {
         ship_4 = p4.getShip();
         ship_init4(ship_4);
 
-        resourceBank = new ResourceBank();
+        resourceBank = new ResourceBank(2);
 
         board.addPlayerToBoard(p1);
         board.addPlayerToBoard(p2);

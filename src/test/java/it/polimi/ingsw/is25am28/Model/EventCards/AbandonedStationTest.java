@@ -196,7 +196,7 @@ class AbandonedStationTest {
         // To be sure we validate the players positions
         board.validatePlayersPosition();
 
-        this.resourceBank = new ResourceBank();
+        this.resourceBank = new ResourceBank(2);
     }
 
     @Test

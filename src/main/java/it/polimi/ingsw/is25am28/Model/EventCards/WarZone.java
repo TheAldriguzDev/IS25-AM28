@@ -202,7 +202,7 @@ public class WarZone extends EventCard {
             }
         }
 
-        return null;
+        return this;
     }
 
     /**

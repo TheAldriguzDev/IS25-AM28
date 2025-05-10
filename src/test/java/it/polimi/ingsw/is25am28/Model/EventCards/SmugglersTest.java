@@ -113,7 +113,7 @@ class SmugglersTest {
         board.addPlayerToBoard(p3);
         board.addPlayerToBoard(p4);
 
-        resourceBank = new ResourceBank();
+        resourceBank = new ResourceBank(2);
     }
 
     @Test

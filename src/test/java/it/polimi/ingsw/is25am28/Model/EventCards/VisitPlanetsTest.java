@@ -180,7 +180,7 @@ class VisitPlanetsTest {
 
     @BeforeEach
     void init() {
-        this.resourceBank = new ResourceBank();
+        this.resourceBank = new ResourceBank(2);
         this.board = new BoardLevel2();
         Random random = new Random(100);    // Fixed seed for predictable results
         List<Map<String, Integer>> itemsPerPlanet = new ArrayList<>();

@@ -23,7 +23,7 @@ class ResourceBankTest {
 
     @BeforeEach
     void init() {
-        this.resourceBank = new ResourceBank();
+        this.resourceBank = new ResourceBank(2);
         this.board = new BoardLevel2();
 
         this.board.buildBoard();

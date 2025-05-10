@@ -12,6 +12,7 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 
 import java.util.*;
 
@@ -30,6 +31,7 @@ public class ClientModel {
     private final Map<String, ClientPlayer> players;
     private final List<ClientEventCard> eventCards;
     private ClientBoard board;
+    private final ResourceBank resourceBank;
 
     // TODO: ClientBoard - ClientShip - ClientComponent --> For ships and playerColor i would store them inside Maps to identify each user data
 
@@ -37,6 +39,9 @@ public class ClientModel {
         this.players = new HashMap<>();
         this.eventCards = new ArrayList<>();
         this.board = null;
+
+
+        this.resourceBank = new ResourceBank(2);
     }
 
     public String getNickname() {

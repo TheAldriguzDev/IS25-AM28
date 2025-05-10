@@ -13,14 +13,31 @@ public class ResourceBank {
     /**
      * Create the resource bank and initialize it with the correct amount of resources
      * */
-    public ResourceBank() {
+    public ResourceBank(int gameLevel) {
         this.resources = new HashMap<>();
 
-        // Add the correct number of resources to the bank
-        this.resources.put(ItemColor.RED, 12);
-        this.resources.put(ItemColor.YELLOW, 17);
-        this.resources.put(ItemColor.GREEN, 13);
-        this.resources.put(ItemColor.BLUE, 14);
+        if (gameLevel == 2) {
+            // Add the correct number of resources to the bank
+            this.resources.put(ItemColor.RED, 12);
+            this.resources.put(ItemColor.YELLOW, 17);
+            this.resources.put(ItemColor.GREEN, 13);
+            this.resources.put(ItemColor.BLUE, 14);
+        } else {
+            this.resources.put(ItemColor.RED, Integer.MAX_VALUE);
+            this.resources.put(ItemColor.YELLOW, Integer.MAX_VALUE);
+            this.resources.put(ItemColor.GREEN, Integer.MAX_VALUE);
+            this.resources.put(ItemColor.BLUE, Integer.MAX_VALUE);
+        }
+    }
+
+    /**
+     * This method is used to reset the current quantity of the resources when a player reconnects to the game and needs to rebuild the model information
+     * */
+    public void resetResourcesQuantity(int red, int yellow, int green, int blue) {
+        this.resources.put(ItemColor.RED, red);
+        this.resources.put(ItemColor.YELLOW, yellow);
+        this.resources.put(ItemColor.GREEN, green);
+        this.resources.put(ItemColor.BLUE, blue);
     }
 
     /**

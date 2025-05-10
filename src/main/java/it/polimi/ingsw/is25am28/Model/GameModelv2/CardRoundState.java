@@ -30,7 +30,7 @@ public final class CardRoundState extends State {
         this.deck = this.model.getGameDeck();
 
         // TODO: Remove the fake deck after testing
-//        List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(), model.getGameLevel());
+//        List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(this.model.getGameLevel()), model.getGameLevel());
 //        List<EventCard> fakeDeck = new ArrayList<>();
 //        fakeDeck.add(AllCards.get(38)); // WarZone
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
