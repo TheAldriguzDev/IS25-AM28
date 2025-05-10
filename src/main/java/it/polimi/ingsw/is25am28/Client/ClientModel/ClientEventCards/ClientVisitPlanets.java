@@ -8,6 +8,8 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -24,8 +26,8 @@ public class ClientVisitPlanets extends ClientEventCard {
         this.visitPlanetsJSON = new VisitPlanetsJSON();
         this.movementSteps = cardState.getMovementSteps();
 
-        enabledCommands.add("setItemsToBeRemoved");
-        enabledCommands.add("setItemsToBeTaken");
+//        enabledCommands.add("setItemsToBeRemoved");
+//        enabledCommands.add("setItemsToBeTaken");
         enabledCommands.add("setChosenPlanetIndex");
     }
 
@@ -120,7 +122,8 @@ public class ClientVisitPlanets extends ClientEventCard {
     // Planet Index
     @Override
     public void setChosenPlanetIndex(int chosenPlanetIndex) throws UnsupportedOperationException {
-        this.visitPlanetsJSON.setChosenPlanetIndex(chosenPlanetIndex);
+        this.chosenPlanetIndex = chosenPlanetIndex;
+        this.visitPlanetsJSON.setChosenPlanetIndex(this.chosenPlanetIndex);
     }
 
     @Override
@@ -132,5 +135,38 @@ public class ClientVisitPlanets extends ClientEventCard {
 
     public Map<Integer, Map<ItemColor, Integer>> getAvailablePlanets() {
         return this.availablePlanets;
+    }
+
+    // Method necessary to the availableColors widget
+    // Returns a list of the available colors
+    /**
+     * For this method to work correctly, it must be invoked only when a valid chosenPlanetIndex has been set
+     * */
+    @Override
+    public List<ItemColor> getAvailableItemColors() {
+        List<ItemColor> availableColors = new ArrayList<>();
+        Map<ItemColor, Integer> availableResources = availablePlanets.get(chosenPlanetIndex);
+        if (availableResources.get(ItemColor.RED) > 0) {
+            availableColors.add(ItemColor.RED);
+        }
+        if (availableResources.get(ItemColor.YELLOW) > 0) {
+            availableColors.add(ItemColor.YELLOW);
+        }
+        if (availableResources.get(ItemColor.BLUE) > 0) {
+            availableColors.add(ItemColor.BLUE);
+        }
+        if (availableResources.get(ItemColor.GREEN) > 0) {
+            availableColors.add(ItemColor.GREEN);
+        }
+        return availableColors;
+    }
+
+    /**
+     * For this method to work correctly, it must be invoked only when a valid chosenPlanetIndex has been set
+     * */
+    @Override
+    public void removeItem(ItemColor itemColor) {
+        Map<ItemColor, Integer> availableResources = availablePlanets.get(chosenPlanetIndex);
+        availableResources.replace(itemColor, availableResources.get(itemColor) - 1);
     }
 }

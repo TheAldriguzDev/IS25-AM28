@@ -22,10 +22,8 @@ import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
@@ -656,22 +654,20 @@ public class CardRoundScreen extends Screen {
                 try {
                     //itemColor = ItemColor.values()[itemIndex];
                     itemColor = this.currEventCard.getAvailableItemColors().get(itemIndex);
+                    // Removes the selected item from the card
+                    this.currEventCard.removeItem(itemColor);
+                    // If the card has no more resources, disable the command
+                    if (this.currEventCard.getAvailableItemColors().isEmpty()) {
+                        CommandWidgetTUI command = this.indexedCardInputMethods.get("setItemsToBeTaken").getValue();
+                        this.indexedCardInputMethods.replace("setItemsToBeTaken", new Pair<>(false, command));
+                        this.generateCardRoundCommandsWidget();
+                    }
+                    // TODO : See if its possible to alter the ship stats widget and the clientShip only locally, in a way that it all gets replaced by the next updated ship upon receiving a new cardState
                 }
                 catch (IndexOutOfBoundsException e) {
                     System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please select a valid item color.", ANSIColors.RED));
                     correctInput = false;
                 }
-
-                // Removes the selected item from the card
-                this.currEventCard.removeItem(itemColor);
-                // If the card has no more resources, disable the command
-                if (this.currEventCard.getAvailableItemColors().isEmpty()) {
-                    CommandWidgetTUI command = this.indexedCardInputMethods.get("setItemsToBeTaken").getValue();
-                    this.indexedCardInputMethods.replace("setItemsToBeTaken", new Pair<>(false, command));
-                    this.generateCardRoundCommandsWidget();
-                }
-                // TODO : See if its possible to alter the ship stats widget and the clientShip only locally, in a way that it all gets replaced by the next updated ship upon receiving a new cardState
-
             }
             catch (InterruptedException e) {
                 // A forced interrupt arrived
@@ -685,38 +681,89 @@ public class CardRoundScreen extends Screen {
 
         correctInput = false;
 
-        // Getting the component coordinates
-        do {
-            try {
-                componentCoordinates = this.getComponentCoordinates();
-                Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
+        // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
+        // TODO: add pervPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
 
-                component = ship.getComponent(
-                        finalComponentCoordinates.getKey(),
-                        finalComponentCoordinates.getValue()
-                );
+        AtomicReference<ClientStorage> selectedStorage = new AtomicReference<>(null);
+        int index = 0;
+        CommandWidgetTUI command;
+        InputWidgetTUI availableStorages = new InputWidgetTUI(this.inputThread);
+        availableStorages.setColumnGroupingAmount(4);
 
-                switch (component) {
-                    case ClientStorage storage -> { correctInput = true; }
-                    case null, default -> {
-                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentCoordinates.getKey() + 1) + ", " + (componentCoordinates.getValue() + 1) + ") is not a storage.", ANSIColors.RED));
+        for(ClientStorage storage : ship.getStorageList()) {
+            if (storage.getCapacity() > 0) {
+                if (itemColor.equals(ItemColor.RED)) {
+                    if (storage.isSpecialStorage()) {
+                        command = new CommandWidgetTUI("" + index,
+                                () -> {
+                                    selectedStorage.set(storage);
+                                }
+                        );
+                        command.appendString("storage @ (row=" + (storage.getI() + 1) + ", col=" + (storage.getJ() + 1) + ")");
+                        availableStorages.addCommand(command);
+                        index++;
                     }
+                } else {
+                    command = new CommandWidgetTUI("" + index,
+                            () -> {
+                                selectedStorage.set(storage);
+                            }
+                    );
+                    command.appendString("storage @ (row=" + (storage.getI() + 1) + ", col=" + (storage.getJ() + 1) + ")");
+                    availableStorages.addCommand(command);
+                    index++;
                 }
             }
-            catch (InterruptedException e) {
-                return;
-            }
         }
-        while (!correctInput);
+
+        do {
+            try{
+                correctInput = availableStorages.selectCommand(DEFAULT_COMMAND_PREFIX);
+            } catch (InterruptedException e) {
+
+            }
+            if (!correctInput) {
+                System.out.println(UNKNOWN_COMMAND_ERROR);
+            }
+        } while (!correctInput);
+
+
+
+
+//        // Getting the component coordinates
+//        do {
+//            try {
+//                componentCoordinates = this.getComponentCoordinates();
+//                Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
+//
+//                component = ship.getComponent(
+//                        finalComponentCoordinates.getKey(),
+//                        finalComponentCoordinates.getValue()
+//                );
+//
+//                switch (component) {
+//                    case ClientStorage storage -> { correctInput = true; }
+//                    case null, default -> {
+//                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentCoordinates.getKey() + 1) + ", " + (componentCoordinates.getValue() + 1) + ") is not a storage.", ANSIColors.RED));
+//                    }
+//                }
+//            }
+//            catch (InterruptedException e) {
+//                return;
+//            }
+//        }
+//        while (!correctInput);
 
         // Assembling all together
         itemPosition = new ComponentHelper<ItemColor>(
-                componentCoordinates.getKey(),
-                componentCoordinates.getValue()
+                selectedStorage.get().getI(),
+                selectedStorage.get().getJ()
         ).addItem(itemColor);
 
         itemsToBeTaken.add(itemPosition);
         this.currEventCard.setItemsToBeTaken(itemsToBeTaken);
+
+
     }
 
     /**
@@ -763,6 +810,18 @@ public class CardRoundScreen extends Screen {
 
                 if (availablePlanetIndexes.contains(chosenIndex)) {
                     correctInput = true;
+                    CommandWidgetTUI command;
+                    // Disables the "setChosenPlanetIndex" command
+                    command = this.indexedCardInputMethods.get("setChosenPlanetIndex").getValue();
+                    this.indexedCardInputMethods.replace("setChosenPlanetIndex", new Pair<>(false, command));
+                    // Enables the "setItemsToBeTaken" command
+                    command = this.indexedCardInputMethods.get("setItemsToBeTaken").getValue();
+                    this.indexedCardInputMethods.replace("setItemsToBeTaken", new Pair<>(true, command));
+                    // Enables the "setItemsToBeRemoved" command
+                    command = this.indexedCardInputMethods.get("setItemsToBeRemoved").getValue();
+                    this.indexedCardInputMethods.replace("setItemsToBeRemoved", new Pair<>(true, command));
+                    // Generates the updated command widget
+                    this.generateCardRoundCommandsWidget();
                 }
                 else {
                     System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Planet with index " + chosenIndex + " does not exist.", ANSIColors.RED));
@@ -1520,4 +1579,6 @@ public class CardRoundScreen extends Screen {
             e.printStackTrace();
         }
     }
+
+//    public void
 }

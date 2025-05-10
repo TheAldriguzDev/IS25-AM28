@@ -14,10 +14,10 @@ import java.util.List;
 public class ClientSmugglers extends ClientEventCard {
     private final int requiredFirepower;
     private final int movementSteps;
-    private final int redItems;
-    private final int yellowItems;
-    private final int blueItems;
-    private final int greenItems;
+    private int redItems;
+    private int yellowItems;
+    private int blueItems;
+    private int greenItems;
     private final int takenItems;
     //private boolean firstRound;
     //private List<String> defeatedPlayers;
@@ -158,5 +158,35 @@ public class ClientSmugglers extends ClientEventCard {
     @Override
     public List<ComponentHelper<ItemColor>> getItemsToBeTaken() throws UnsupportedOperationException {
         return this.smugglersJSON.getItemsToBeTaken();
+    }
+
+    // Method necessary to the availableColors widget
+    // Returns a list of the available colors
+    @Override
+    public List<ItemColor> getAvailableItemColors() {
+        List<ItemColor> availableColors = new ArrayList<>();
+        if (redItems > 0) {
+            availableColors.add(ItemColor.RED);
+        }
+        if (yellowItems > 0) {
+            availableColors.add(ItemColor.YELLOW);
+        }
+        if (blueItems > 0) {
+            availableColors.add(ItemColor.BLUE);
+        }
+        if (greenItems > 0) {
+            availableColors.add(ItemColor.GREEN);
+        }
+        return availableColors;
+    }
+
+    @Override
+    public void removeItem(ItemColor itemColor) {
+        switch (itemColor) {
+            case RED -> this.redItems--;
+            case YELLOW -> this.yellowItems--;
+            case BLUE -> this.blueItems--;
+            case GREEN -> this.greenItems--;
+        }
     }
 }

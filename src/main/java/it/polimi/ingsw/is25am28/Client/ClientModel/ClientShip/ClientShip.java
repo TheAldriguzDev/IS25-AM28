@@ -771,6 +771,11 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
         }
     }
 
+    // Return the available colors to remove from the ship
+    public void getAvailableItemColors() {
+        // TODO: implement
+    }
+
     /**
      * @return A screen containing a randomly selected star pattern
      *         which come in a few colors, that will make the ship look

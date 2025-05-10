@@ -84,14 +84,14 @@ public final class ShipContructionState extends State implements TimerObserver {
         List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(), model.getGameLevel());
         List<EventCard> fakeDeck = new ArrayList<>();
 //        fakeDeck.add(AllCards.get(0)); // AbandonedShip
-        fakeDeck.add(AllCards.get(5)); // AbandonedStation
-        fakeDeck.add(AllCards.get(8)); // MeteorSHower
+//        fakeDeck.add(AllCards.get(5)); // AbandonedStation
+//        fakeDeck.add(AllCards.get(8)); // MeteorSHower
 //        fakeDeck.add(AllCards.get(14)); // Pirates
-//        fakeDeck.add(AllCards.get(16)); // VisitPlanets
+        fakeDeck.add(AllCards.get(16)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(24)); // OpenSpace
 //        fakeDeck.add(AllCards.get(31)); // Epidemy
 //        fakeDeck.add(AllCards.get(32)); // Smugglers
-//        fakeDeck.add(AllCards.get(34));
+//        fakeDeck.add(AllCards.get(34)); // Slavers
 //        fakeDeck.add(AllCards.get(36));
 //        fakeDeck.add(AllCards.get(38));
 //        fakeDeck.add(AllCards.get(30));
