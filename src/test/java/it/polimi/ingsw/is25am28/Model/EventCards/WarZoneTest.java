@@ -128,7 +128,7 @@ class WarZoneTest {
         consequencePairs.add(new WarZoneActionConsequencePair(WarZoneAction.fromInteger(1), WarZoneConsequence.fromInteger(0))); // LowestEnginePower -> removeCrew
         consequencePairs.add(new WarZoneActionConsequencePair(WarZoneAction.fromInteger(0), WarZoneConsequence.fromInteger(2))); // LowestFirepower -> PlasmaShots
 
-        warzone = new WarZone("WarZone", 2, board, resourceBank, 3, 2, 0, shootingSequence, consequencePairs, 0);        // end of WarZone Card 1 Initialization
+        warzone = new WarZone("WarZone", 2, board, resourceBank, 3, 2, 0, shootingSequence, consequencePairs, 0, "");        // end of WarZone Card 1 Initialization
 
         // Used energy is the energy use by the double engines
 
@@ -317,7 +317,7 @@ class WarZoneTest {
         consequencePairs.add(new WarZoneActionConsequencePair(WarZoneAction.fromInteger(1), WarZoneConsequence.fromInteger(3))); // enginePower -> items
         consequencePairs.add(new WarZoneActionConsequencePair(WarZoneAction.fromInteger(2), WarZoneConsequence.fromInteger(2))); // crewCount -> shootingSequence
 
-        warzone = new WarZone("WarZone", 2, board, resourceBank, 4, 0, 3, shootingSequence, consequencePairs, 0);
+        warzone = new WarZone("WarZone", 2, board, resourceBank, 4, 0, 3, shootingSequence, consequencePairs, 0, "");
         // end of WarZone card 2 initialization
 
         warzone.initCardPlayers();
@@ -508,22 +508,22 @@ class WarZoneTest {
         connectors8.add(0);
         connectors8.add(0);
 
-        Cabin cabin_1 = new Cabin(connectors7, false);
+        Cabin cabin_1 = new Cabin(connectors7, false, "");
 //        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 //        cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        Cabin cabin_2 = new Cabin(connectors5, false);
+        Cabin cabin_2 = new Cabin(connectors5, false, "");
 //        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 //        cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-        Engine double_booster = new Engine(connectors8, 2);
+        Engine double_booster = new Engine(connectors8, 2, "");
 
-        Battery battery = new Battery(connectors7, 3);
+        Battery battery = new Battery(connectors7, 3, "");
 
-        Shield shield = new Shield(connectors5);
+        Shield shield = new Shield(connectors5, "");
         shield.rotateRight(); // Covers right and lower side
 
-        Cannon single_cannon = new Cannon(connectors4, 1);
+        Cannon single_cannon = new Cannon(connectors4, 1, "");
 
         ship.addComponent(cabin_1, 6, 7);
         ship.addComponent(cabin_2, 6, 8);
@@ -603,26 +603,26 @@ class WarZoneTest {
         connectors8.add(0);
         connectors8.add(0);
 
-        Cabin cabin_1 = new Cabin(connectors1, false);
+        Cabin cabin_1 = new Cabin(connectors1, false, "");
         //cabin_1.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
 
-        Vital purple_vital = new Vital(connectors5, VitalType.PURPLE_VITAL.ordinal());
+        Vital purple_vital = new Vital(connectors5, VitalType.PURPLE_VITAL.ordinal(), "");
 
-        Battery battery_1 = new Battery(connectors3, 3);
+        Battery battery_1 = new Battery(connectors3, 3, "");
 
-        Engine double_booster = new Engine(connectors6, 2);
+        Engine double_booster = new Engine(connectors6, 2, "");
 
-        Shield shield_top_right = new Shield(connectors1);
+        Shield shield_top_right = new Shield(connectors1, "");
 
-        Shield shield_bottom_left = new Shield(connectors5);
+        Shield shield_bottom_left = new Shield(connectors5, "");
         shield_bottom_left.rotateLeft();
         shield_bottom_left.rotateLeft();
 
-        Engine single_booster = new Engine(connectors5, 1);
+        Engine single_booster = new Engine(connectors5, 1, "");
 
-        Battery battery_2 = new Battery(connectors1, 3);
+        Battery battery_2 = new Battery(connectors1, 3, "");
 
-        Cannon double_cannon = new Cannon(connectors4, 2);
+        Cannon double_cannon = new Cannon(connectors4, 2, "");
 
         ship.addComponent(cabin_1, 6, 7);
         ship.addComponent(purple_vital, 6, 8);
@@ -718,14 +718,14 @@ class WarZoneTest {
         connectors10.add(1);
         connectors10.add(0);
 
-        Cannon single_cannon = new Cannon(connectors3, 1);
+        Cannon single_cannon = new Cannon(connectors3, 1, "");
 
-        Engine single_booster = new Engine(connectors9, 1);
+        Engine single_booster = new Engine(connectors9, 1, "");
 
-        Cabin cabin_1 = new Cabin(connectors10, false);
+        Cabin cabin_1 = new Cabin(connectors10, false, "");
         //cabin_1.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
 
-        Vital brown_vital = new Vital(connectors2, VitalType.BROWN_VITAL.ordinal());
+        Vital brown_vital = new Vital(connectors2, VitalType.BROWN_VITAL.ordinal(), "");
 
         ship.addComponent(single_cannon, 5, 6);
         ship.addComponent(single_booster, 7, 6);
@@ -809,21 +809,21 @@ class WarZoneTest {
         connectors10.add(1);
         connectors10.add(0);
 
-        Battery battery = new Battery(connectors1, 3);
+        Battery battery = new Battery(connectors1, 3, "");
 
-        Cannon double_cannon = new Cannon(connectors5, 2);
+        Cannon double_cannon = new Cannon(connectors5, 2, "");
 
-        Engine single_booster = new Engine(connectors8, 1);
+        Engine single_booster = new Engine(connectors8, 1, "");
 
-        Cabin cabin_1 = new Cabin(connectors2, false);
+        Cabin cabin_1 = new Cabin(connectors2, false, "");
         //cabin_1.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
 
-        Vital purple_vital = new Vital(connectors10, VitalType.PURPLE_VITAL.ordinal());
+        Vital purple_vital = new Vital(connectors10, VitalType.PURPLE_VITAL.ordinal(), "");
 
-        Storage special_storage = new Storage(connectors3, 2, true);
+        Storage special_storage = new Storage(connectors3, 2, true, "");
         special_storage.storeItem(new Item(ItemColor.RED));
 
-        Storage normal_storage = new Storage(connectors8, 3, false);
+        Storage normal_storage = new Storage(connectors8, 3, false, "");
         normal_storage.storeItem(new Item(ItemColor.YELLOW));
         normal_storage.storeItem(new Item(ItemColor.BLUE));
         normal_storage.storeItem(new Item(ItemColor.GREEN));

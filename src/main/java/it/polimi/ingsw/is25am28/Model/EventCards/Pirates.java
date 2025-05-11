@@ -36,8 +36,8 @@ public class Pirates extends EventCard {
     private Map<String, List<Map<String, Object>>> removedComponents;
     private Map<String, Integer> removedBatteries; // TODO: Implement in the state (both firepower and shields)
 
-    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board, int cardID) {
-        super(name, cardLevel, board, cardID);
+    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board, int cardID, String path) {
+        super(name, cardLevel, board, cardID, path);
         this.requiredFirepower = requiredFirepower;
         this.givenCredits = givenCredits;
         this.movementSteps = movementSteps;
@@ -391,6 +391,7 @@ public class Pirates extends EventCard {
             // This static info will be sent to the clients only when the card has not been activated yet
             piratesStateJSON.setId(this.id);
             piratesStateJSON.setCardName(getCardName());
+            piratesStateJSON.setImagePath(this.path);
             piratesStateJSON.setCardLevel(getCardLevel());
             piratesStateJSON.setRequiredFirepower(this.requiredFirepower);
             piratesStateJSON.setGivenCredits(this.givenCredits);

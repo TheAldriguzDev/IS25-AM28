@@ -18,13 +18,15 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
     private int row;
     private int col;
 
+    protected String path;
+
     // isFlipped is used to decide if the tile needs to be shown in the shipConstructionState phase
     private boolean isFlipped;
     // isVisible is used to decide if the tile is "present" on the table where the user can decide which tile to select
     // when is set to true we will render an invisible component
     private boolean isVisible;
 
-    public ClientComponent(int id, List<Integer> connectors) {
+    public ClientComponent(int id, List<Integer> connectors, String path) {
         this.id = id;
 
         sides = new Connector[4];
@@ -33,6 +35,8 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
         }
         this.isFlipped = false;
         this.isVisible = true;
+
+        this.path = path;
     }
 
     /**

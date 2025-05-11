@@ -17,8 +17,8 @@ public final class Cabin extends Component {
     private final boolean isCore;
     private final ArrayList<Lifeform> inhabitants;
 
-    public Cabin(List<Integer> connectors, boolean isCore) {
-        super(connectors);
+    public Cabin(List<Integer> connectors, boolean isCore, String path) {
+        super(connectors, path);
         this.isCore = isCore;
         this.inhabitants = new ArrayList<>();
 

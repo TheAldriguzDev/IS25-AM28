@@ -13,8 +13,8 @@ import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 public final class ClientCannon extends ClientComponent {
     private final int force;
 
-    public ClientCannon(int id, List<Integer> sides, int force) {
-        super(id, sides);
+    public ClientCannon(int id, List<Integer> sides, int force, String path) {
+        super(id, sides, path);
         this.force = force;
     }
 

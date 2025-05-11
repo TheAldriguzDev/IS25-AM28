@@ -29,8 +29,8 @@ public class AbandonedStation extends EventCard {
     private Map<String, Integer> updatedPositions;
     private List<String> eliminatedPlayers;
 
-    public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> givenItems, Board board, ResourceBank resourceBank, int cardID) {
-        super(name, cardLevel, board, cardID);
+    public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> givenItems, Board board, ResourceBank resourceBank, int cardID, String path) {
+        super(name, cardLevel, board, cardID, path);
         this.requiredCrew = requiredCrew;
         this.movementStep = movementStep;
         this.givenItems = givenItems;
@@ -180,6 +180,7 @@ public class AbandonedStation extends EventCard {
             // Card information that are needed to play
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
+            cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
             cardState.setRequiredCrewMembers(this.requiredCrew);
             cardState.setMovementSteps(this.movementStep);

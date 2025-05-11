@@ -13,8 +13,8 @@ public final class Engine extends Component {
     public static final String alias = "ENGINE";
     private final int speed;
 
-    public Engine(List<Integer> connectors, int speed) {
-        super(connectors);
+    public Engine(List<Integer> connectors, int speed, String path) {
+        super(connectors, path);
         this.speed = speed;
     }
 

@@ -16,8 +16,8 @@ public final class ClientBattery extends ClientComponent {
     private final int maxAvailability;
     private int available;
 
-    public ClientBattery(int id, List<Integer> sides, int maxAvailability) {
-        super(id, sides);
+    public ClientBattery(int id, List<Integer> sides, int maxAvailability, String path) {
+        super(id, sides, path);
         this.maxAvailability = maxAvailability;
         this.available = maxAvailability;
     }

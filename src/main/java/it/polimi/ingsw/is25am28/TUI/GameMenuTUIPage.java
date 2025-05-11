@@ -46,13 +46,13 @@ public final class GameMenuTUIPage extends TUIPage {
         this.waitingForPlayersWidget = new WidgetTUI();
 
         // Initializing menuCommandsWidget
-        this.menuCommandsWidget = new InputWidgetTUI();
+        this.menuCommandsWidget = new InputWidgetTUI(null);
         // this.menuCommandsWidget.setNewReader(System.in);
         this.menuCommandsWidget.setColumnGroupingAmount(LOBBY_COMMANDS_PER_COLUMN);
         this.initMenuCommands();
 
         // Initializing gameListWidget
-        this.gameListInputWidget = new InputWidgetTUI();
+        this.gameListInputWidget = new InputWidgetTUI(null);
         // this.gameListInputWidget.setNewReader(System.in);
         this.gameListInputWidget.setColumnGroupingAmount(AVAILABLE_GAMES_PER_COLUMN);
     }

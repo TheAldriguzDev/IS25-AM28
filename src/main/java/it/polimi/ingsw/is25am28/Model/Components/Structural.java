@@ -11,8 +11,8 @@ import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.*;
 public final class Structural extends Component {
       public static final String alias = "STRUCT";
 
-      public Structural(List<Integer> connectors) {
-            super(connectors);
+      public Structural(List<Integer> connectors, String path) {
+            super(connectors, path);
       }
 
       @Override

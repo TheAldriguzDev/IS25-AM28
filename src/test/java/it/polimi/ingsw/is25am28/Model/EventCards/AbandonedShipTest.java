@@ -58,38 +58,38 @@ class AbandonedShipTest {
             }
 
             if (player.getNickname().equals("Player 1")) {
-                Cannon singleCannon1 = new Cannon(connectors, 1);
-                Cannon singleCannon2 = new Cannon(connectors, 1);
+                Cannon singleCannon1 = new Cannon(connectors, 1, "");
+                Cannon singleCannon2 = new Cannon(connectors, 1, "");
 
-                Shield shield1 = new Shield(connectors);
+                Shield shield1 = new Shield(connectors, "");
 
-                Storage specialStorage1 = new Storage(connectors, 1, true);
-                Storage specialStorage2 = new Storage(connectors, 2, true);
+                Storage specialStorage1 = new Storage(connectors, 1, true, "");
+                Storage specialStorage2 = new Storage(connectors, 2, true, "");
 
-                Storage storage1 = new Storage(connectors, 3, false);
-                Storage storage2 = new Storage(connectors, 2, false);
+                Storage storage1 = new Storage(connectors, 3, false, "");
+                Storage storage2 = new Storage(connectors, 2, false, "");
 
-                Battery battery1 = new Battery(connectors, 2);
-                Battery battery2 = new Battery(connectors, 2);
-                Battery battery3 = new Battery(connectors, 2);
+                Battery battery1 = new Battery(connectors, 2, "");
+                Battery battery2 = new Battery(connectors, 2, "");
+                Battery battery3 = new Battery(connectors, 2, "");
 
-                Structural structural1 = new Structural(connectors);
-                Structural structural2 = new Structural(connectors);
-                Structural structural3 = new Structural(connectors);
+                Structural structural1 = new Structural(connectors, "");
+                Structural structural2 = new Structural(connectors, "");
+                Structural structural3 = new Structural(connectors, "");
 
-                Cabin cabin1 = new Cabin(connectors, false);
+                Cabin cabin1 = new Cabin(connectors, false, "");
                 cabin1.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
-                Cabin cabin2 = new Cabin(connectors, false);
+                Cabin cabin2 = new Cabin(connectors, false, "");
                 cabin2.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
 
-                Vital vital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-                Vital vital2 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+                Vital vital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+                Vital vital2 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
 
-                Engine normalEngine1 = new Engine(connectors, 1);
-                Engine normalEngine2 = new Engine(connectors, 1);
-                Engine normalEngine3 = new Engine(connectors, 1);
+                Engine normalEngine1 = new Engine(connectors, 1, "");
+                Engine normalEngine2 = new Engine(connectors, 1, "");
+                Engine normalEngine3 = new Engine(connectors, 1, "");
 
-                Engine doubleEngine = new Engine(connectors, 2);
+                Engine doubleEngine = new Engine(connectors, 2, "");
 
                 player.getShip().addComponent(singleCannon1, 5, 6);
                 player.getShip().addComponent(singleCannon2, 5, 4);
@@ -119,40 +119,40 @@ class AbandonedShipTest {
                 player.getShip().addComponent(storage2, 8, 8);
                 player.getShip().addComponent(doubleEngine, 8, 9);
             } else {
-                Cannon singleCannon1 = new Cannon(connectors, 1);
-                Cannon singleCannon2 = new Cannon(connectors, 1);
+                Cannon singleCannon1 = new Cannon(connectors, 1, "");
+                Cannon singleCannon2 = new Cannon(connectors, 1, "");
 
-                Shield shield1 = new Shield(connectors);
+                Shield shield1 = new Shield(connectors, "");
 
-                Storage specialStorage1 = new Storage(connectors, 1, true);
-                Storage specialStorage2 = new Storage(connectors, 2, true);
+                Storage specialStorage1 = new Storage(connectors, 1, true, "");
+                Storage specialStorage2 = new Storage(connectors, 2, true, "");
 
-                Storage storage1 = new Storage(connectors, 3, false);
-                Storage storage2 = new Storage(connectors, 2, false);
+                Storage storage1 = new Storage(connectors, 3, false, "");
+                Storage storage2 = new Storage(connectors, 2, false, "");
 
-                Battery battery1 = new Battery(connectors, 2);
-                Battery battery2 = new Battery(connectors, 2);
-                Battery battery3 = new Battery(connectors, 2);
+                Battery battery1 = new Battery(connectors, 2, "");
+                Battery battery2 = new Battery(connectors, 2, "");
+                Battery battery3 = new Battery(connectors, 2, "");
 
-                Structural structural1 = new Structural(connectors);
-                Structural structural2 = new Structural(connectors);
-                Structural structural3 = new Structural(connectors);
+                Structural structural1 = new Structural(connectors, "");
+                Structural structural2 = new Structural(connectors, "");
+                Structural structural3 = new Structural(connectors, "");
 
-                Cabin cabin1 = new Cabin(connectors, false);
+                Cabin cabin1 = new Cabin(connectors, false, "");
                 cabin1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
                 cabin1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
-                Cabin cabin2 = new Cabin(connectors, false);
+                Cabin cabin2 = new Cabin(connectors, false, "");
                 cabin2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
                 cabin2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
 
-                Vital vital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-                Vital vital2 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+                Vital vital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+                Vital vital2 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
 
-                Engine normalEngine1 = new Engine(connectors, 1);
-                Engine normalEngine2 = new Engine(connectors, 1);
-                Engine normalEngine3 = new Engine(connectors, 1);
+                Engine normalEngine1 = new Engine(connectors, 1, "");
+                Engine normalEngine2 = new Engine(connectors, 1, "");
+                Engine normalEngine3 = new Engine(connectors, 1, "");
 
-                Engine doubleEngine = new Engine(connectors, 2);
+                Engine doubleEngine = new Engine(connectors, 2, "");
 
                 player.getShip().addComponent(singleCannon1, 5, 6);
                 player.getShip().addComponent(singleCannon2, 5, 4);
@@ -201,7 +201,7 @@ class AbandonedShipTest {
     @Test
     void test_abandoned_ship_with_only_three_players_that_can_use_the_card_and_the_third_player_will_use_it() {
         // Create the card that will be used in the simulation
-        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 5, 1, 3, board, 0);
+        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 5, 1, 3, board, 0, "");
 
         ClientAbandonedShip clientAbandonedShip;
 
@@ -311,7 +311,7 @@ class AbandonedShipTest {
     @Test
     void test_player_elimination_when_astronauts_are_finished() {
         // Create the card that will be used in the simulation
-        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 6, 1, 3, board, 0);
+        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 6, 1, 3, board, 0,"");
 
         // Init the card players
         abandonedShipCard.initCardPlayers();
@@ -410,7 +410,7 @@ class AbandonedShipTest {
     @Test
     void test_no_players_want_use_the_card() {
         // Create the card that will be used in the simulation
-        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 6, 1, 3, board, 0);
+        AbandonedShip abandonedShipCard = new AbandonedShip("abandonedShip", 2, 6, 1, 3, board, 0, "");
 
         // Init the card players
         abandonedShipCard.initCardPlayers();

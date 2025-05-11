@@ -20,8 +20,8 @@ public final class ClientStorage extends ClientComponent {
     private final boolean isSpecialStorage;
     private final List<Item> storedItems;
 
-    public ClientStorage(int id, List<Integer> sides, int capacity, boolean isSpecialStorage) {
-        super(id, sides);
+    public ClientStorage(int id, List<Integer> sides, int capacity, boolean isSpecialStorage, String path) {
+        super(id, sides, path);
         this.capacity = capacity;
         this.isSpecialStorage = isSpecialStorage;
         this.storedItems = new ArrayList<>();
@@ -31,6 +31,9 @@ public final class ClientStorage extends ClientComponent {
         return capacity;
     }
 
+    /**
+     * @return The units of space that are currently free
+     */
     public int availableSpace() {
         return capacity - storedItems.size();
     }

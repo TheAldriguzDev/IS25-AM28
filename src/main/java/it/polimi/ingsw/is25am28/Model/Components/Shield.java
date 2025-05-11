@@ -12,8 +12,8 @@ import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.*;
 public final class Shield extends Component {
     public static final String alias = "SHIELD";
 
-    public Shield(List<Integer> connectors) {
-        super(connectors);
+    public Shield(List<Integer> connectors, String path) {
+        super(connectors, path);
     }
     /**
      * return the two sides that are covered by the

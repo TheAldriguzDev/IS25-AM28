@@ -12,8 +12,8 @@ import java.util.List;
 public final class ClientEngine extends ClientComponent {
     private final int power;
 
-    public ClientEngine(int id, List<Integer> sides, int power) {
-        super(id, sides);
+    public ClientEngine(int id, List<Integer> sides, int power, String path) {
+        super(id, sides, path);
         this.power = power;
     }
 

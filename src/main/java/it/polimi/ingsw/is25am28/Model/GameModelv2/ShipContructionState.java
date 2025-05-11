@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
+import it.polimi.ingsw.is25am28.Loader.CardLoader;
 import it.polimi.ingsw.is25am28.Loader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
@@ -7,11 +8,13 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Timer.HourGlass;
 import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
+import java.io.IOException;
 import java.util.*;
 
 // TODO: Implement the HourGlass here (the state contains the HourGlass instance and implements the onTimerEnd method)
@@ -79,24 +82,32 @@ public final class ShipContructionState extends State implements TimerObserver {
         this.players_done = new ArrayList<>();
         this.shipConfigEnded = false;
 
-        this.cards = this.model.getGameDeck();
+//        this.cards = this.model.getGameDeck();
 
         // TODO: Remove the fake deck after testing
-//        List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(this.model.getGameLevel()), model.getGameLevel());
-//        List<EventCard> fakeDeck = new ArrayList<>();
+        CardLoader cardLoader;
+        try {
+            cardLoader = new CardLoader();
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<EventCard> AllCards = cardLoader.getCards(model.getBoard(), new ResourceBank(this.model.getGameLevel()), model.getGameLevel());
+        List<EventCard> fakeDeck = new ArrayList<>();
 //        fakeDeck.add(AllCards.get(8)); // MeteorShower
 //        fakeDeck.add(AllCards.get(38)); // WarZone
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
 //        fakeDeck.add(AllCards.get(24)); // OpenSpace
 //        fakeDeck.add(AllCards.get(0)); // AbandonedShip
-//        fakeDeck.add(AllCards.get(5)); // AbandonedStation
+        fakeDeck.add(AllCards.get(5)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(14)); // Pirates
-//        fakeDeck.add(AllCards.get(16)); // VisitPlanets
+        fakeDeck.add(AllCards.get(16)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(31)); // Epidemy
 //        fakeDeck.add(AllCards.get(32)); // Smugglers
 //        fakeDeck.add(AllCards.get(34)); // Slavers
 //        fakeDeck.add(AllCards.get(36)); // Stardust
-//        this.cards = fakeDeck;
+        this.cards = fakeDeck;
 
         this.selectedSubDecks = new HashMap<>();
     }

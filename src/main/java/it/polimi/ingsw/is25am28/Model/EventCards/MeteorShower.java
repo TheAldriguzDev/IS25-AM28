@@ -40,9 +40,10 @@ public class MeteorShower extends EventCard {
             int cardLevel,
             List<List<Integer>> meteorSequence,
             Board board,
-            int cardID
+            int cardID,
+            String path
     ) {
-        super(cardName, cardLevel, board, cardID);
+        super(cardName, cardLevel, board, cardID, path);
 
         this.meteorSequence = new ArrayList<Meteor>();
         this.random = new Random();
@@ -460,6 +461,7 @@ public class MeteorShower extends EventCard {
         } else {
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
+            cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
         }
 

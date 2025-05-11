@@ -19,8 +19,8 @@ public class Epidemy extends EventCard {
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
     // Constructor
-    public Epidemy(String name, int cardLevel, Board board, int cardID) {
-        super(name, cardLevel, board, cardID);
+    public Epidemy(String name, int cardLevel, Board board, int cardID, String path) {
+        super(name, cardLevel, board, cardID, path);
         this.removedLifeforms = new HashMap<>();
     }
 
@@ -119,6 +119,7 @@ public class Epidemy extends EventCard {
         } else {
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
+            cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
         }
 

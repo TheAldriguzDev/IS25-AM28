@@ -52,7 +52,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
         }
 
         // Creating the ship's core cabin
-        this.core = new Cabin(coreConnectors,true);
+        this.core = new Cabin(coreConnectors,true, "");
 
         // No aliens are present at the beginning
         this.purpleAlienPosition = null;
@@ -1323,7 +1323,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
             List<String> unwrappedScreen = shipGridWidget.unwrapWidgetFromBorder().getScreen();;
 
             // Generating a mockup component to get its dimensions
-            ClientStructural clientStructural = new ClientStructural(-1, Arrays.asList(0, 0, 0, 0));
+            ClientStructural clientStructural = new ClientStructural(-1, Arrays.asList(0, 0, 0, 0), "");
             WidgetTUI widget = clientStructural.generateWidget();
             int componentHeight = widget.getHeight();
             int componentWidth = widget.getWidth();
