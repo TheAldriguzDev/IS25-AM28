@@ -1541,16 +1541,18 @@ public class CardRoundScreen extends Screen {
                     WidgetTUI.composeTwoWidgetsVertically(
                             this.playerActionsRecapWidget,
                             this.resourceBankWidget
-                    ).centerWidgetScreen()
+                    )
+                    .addPadding(0, 0, 0, 1)
+                    .centerWidgetScreen()
             );
         }
         else {
             // Otherwise, a player that is not playing will only
             // see the current event card (since he's not playing)
             currCardAndPlayerActions = WidgetTUI.composeTwoWidgetsHorizontally(
-                    this.currEventCardWidget,
+                    this.currEventCardWidget.addPadding(0, 1, 0, 0),
                     this.resourceBankWidget
-            ).centerWidgetScreen();
+            );
         }
 
         WidgetTUI.composeTwoWidgetsHorizontally(
