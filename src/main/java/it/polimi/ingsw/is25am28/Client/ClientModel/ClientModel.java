@@ -218,13 +218,14 @@ public class ClientModel {
                 for(ComponentHelper<ItemColor> itemToDrop : cardStateJSON.getDroppedResources().get(playerNickname)) {
                     this.getShipOfPlayer(playerNickname).ifPresent(
                         (ship) -> {
-                            ClientStorage s = (ClientStorage) ship.getComponent(itemToDrop.getI(), itemToDrop.getJ());
+                            ClientStorage storage = (ClientStorage) ship.getComponent(itemToDrop.getI(), itemToDrop.getJ());
                             ItemColor color = itemToDrop.getItem().orElse(null);
-                            Optional<Item> foundItem = s.getStoredItems().stream()
+                            Optional<Item> foundItem = storage.getStoredItems().stream()
                                     .filter( item -> item.getColor().equals(color))
                                     .findFirst();
                             // Remove the resource from the player
-                            foundItem.ifPresent(s::removeItem);
+                            foundItem.ifPresent(storage::removeItem);
+                            this.resourceBank.addResourceToBank(color);
                         }
                     );
                 }
@@ -237,10 +238,11 @@ public class ClientModel {
                 for(ComponentHelper<ItemColor> itemToTake : cardStateJSON.getTakenResources().get(playerNickname)) {
                     this.getShipOfPlayer(playerNickname).ifPresent(
                         (ship) -> {
-                            ClientStorage s = (ClientStorage) ship.getComponent(itemToTake.getI(), itemToTake.getJ());
+                            ClientStorage storage = (ClientStorage) ship.getComponent(itemToTake.getI(), itemToTake.getJ());
                             ItemColor color = itemToTake.getItem().orElse(null);
                             // Add resource to the player
-                            s.storeItem(new Item(color));
+                            storage.storeItem(new Item(color));
+                            this.resourceBank.removeResourceFromBank(color);
                         }
                     );
                 }

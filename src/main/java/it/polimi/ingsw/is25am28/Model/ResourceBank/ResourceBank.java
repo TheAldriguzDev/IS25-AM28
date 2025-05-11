@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.ResourceBank;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Components.Storage;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
@@ -64,14 +65,14 @@ public class ResourceBank {
     /**
      * Increase the amount of availability for the given resource color
      * */
-    private synchronized void addResourceToBank(ItemColor color) {
+    public synchronized void addResourceToBank(ItemColor color) {
         resources.put(color, resources.get(color) + 1);
     }
 
     /**
      * Decrease the amount of availability for the given resource color
      * */
-    private synchronized void removeResourceFromBank(ItemColor color) {
+    public synchronized void removeResourceFromBank(ItemColor color) {
         resources.put(color, resources.get(color) - 1);
     }
 
