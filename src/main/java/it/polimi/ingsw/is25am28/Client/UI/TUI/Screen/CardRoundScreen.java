@@ -894,6 +894,9 @@ public class CardRoundScreen extends Screen {
 
         itemsToBeTaken.add(itemPosition);
         this.currEventCard.setItemsToBeTaken(itemsToBeTaken);
+
+        // Updating the card
+        this.currEventCard.removeItem(selectedItem.get());
     }
 
     /**
