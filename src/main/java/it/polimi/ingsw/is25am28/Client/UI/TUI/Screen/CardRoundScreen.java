@@ -18,6 +18,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Network.Messages.PlayCard;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.ConsoleWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
@@ -41,6 +42,7 @@ public class CardRoundScreen extends Screen {
     private WidgetTUI shipStatsWidget;
     private WidgetTUI playerNameWidget;
     private WidgetTUI playerTurnWidget;
+    private WidgetTUI resourceBankWidget;
 
     private InputWidgetTUI availableLifeforms;
     private InputWidgetTUI availableItemColors;
@@ -878,7 +880,7 @@ public class CardRoundScreen extends Screen {
             }
             else {
                 new WidgetTUI()
-                        .appendString(COMPUTER_MSG_TAG + "Your ship's storage is " + PrintUtils.addColor("FULL", ANSIColors.RED) + "! You must free up some space before retrieving other items!")
+                        .appendString(COMPUTER_MSG_TAG + "Your ship's has no available space! You must free up some space before retrieving other items!")
                         .addPadding(0, 1, 0, 1)
                         .wrapWidgetWithBorder()
                         .printWidget();
@@ -1316,6 +1318,26 @@ public class CardRoundScreen extends Screen {
     }
 
     /**
+     * Generates the widget that displays the resource bank's
+     * currently available resources
+     */
+    private void generateResourceBankWidget() {
+        this.resourceBankWidget = new WidgetTUI();
+
+        this.resourceBankWidget.appendString("[RESOURCE BANK]");
+
+        for (Map.Entry<ItemColor, Integer> entry : this.model.getResourceBank().getResources().entrySet()) {
+            this.resourceBankWidget.appendString(
+                entry.getValue().toString() + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, entry.getKey().getANSIColor())
+            );
+        }
+
+        this.resourceBankWidget
+                .centerWidgetScreen()
+                .wrapWidgetWithBorder();
+    }
+
+    /**
      * Generates a widget containing all available commands
      * that each player can choose from
      */
@@ -1503,6 +1525,7 @@ public class CardRoundScreen extends Screen {
         // Updating all widgets before using them
         this.generateCurrEventCardWidget();
         this.generateShipWidgets();
+        this.generateResourceBankWidget();
         this.boardWidget = this.model.getClientBoard().generateWidget();
 
         this.playerNameWidget.printWidget();
@@ -1514,13 +1537,19 @@ public class CardRoundScreen extends Screen {
 
             currCardAndPlayerActions = WidgetTUI.composeTwoWidgetsHorizontally(
                     this.currEventCardWidget,
-                    this.playerActionsRecapWidget
+                    WidgetTUI.composeTwoWidgetsVertically(
+                            this.playerActionsRecapWidget,
+                            this.resourceBankWidget
+                    )
             );
         }
         else {
             // Otherwise, a player that is not playing will only
             // see the current event card (since he's not playing)
-            currCardAndPlayerActions = this.currEventCardWidget;
+            currCardAndPlayerActions = WidgetTUI.composeTwoWidgetsHorizontally(
+                    this.currEventCardWidget,
+                    this.resourceBankWidget
+            );
         }
 
         WidgetTUI.composeTwoWidgetsHorizontally(
