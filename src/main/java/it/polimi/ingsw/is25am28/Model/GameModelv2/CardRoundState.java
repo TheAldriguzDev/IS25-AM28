@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
+import it.polimi.ingsw.is25am28.Loader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
@@ -7,7 +8,9 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +31,15 @@ public final class CardRoundState extends State {
         this.deck = this.model.getGameDeck();
 
         // TODO: Remove the fake deck after testing
-//        List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(this.model.getGameLevel()), model.getGameLevel());
+//        CardLoader cardLoader;
+//        try {
+//            cardLoader = new CardLoader();
+//        }
+//        catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        List<EventCard> AllCards = cardLoader.getCards(model.getBoard(), new ResourceBank(this.model.getGameLevel()), model.getGameLevel());
 //        List<EventCard> fakeDeck = new ArrayList<>();
 //        fakeDeck.add(AllCards.get(8)); // MeteorShower
 //        fakeDeck.add(AllCards.get(38)); // WarZone
