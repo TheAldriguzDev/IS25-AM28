@@ -36,7 +36,7 @@ public class PrintTest {
      * InputWidgetTUI + InputThread - Implementation Test
      */
     public static void main(String[] args) {
-        InputWidgetTUI inputWidget = new InputWidgetTUI();
+        InputWidgetTUI inputWidget = new InputWidgetTUI(null);
 
         CommandWidgetTUI command1 = new CommandWidgetTUI("1", null);
         CommandWidgetTUI command2 = new CommandWidgetTUI("2", null);
@@ -1615,7 +1615,7 @@ public class PrintTest {
     }
 
     InputWidgetTUI generateMockupInputWidget() {
-        InputWidgetTUI inputWidget = new InputWidgetTUI();
+        InputWidgetTUI inputWidget = new InputWidgetTUI(null);
 
         CommandWidgetTUI command1 = new CommandWidgetTUI("1", null);
         CommandWidgetTUI command2 = new CommandWidgetTUI("2", null);

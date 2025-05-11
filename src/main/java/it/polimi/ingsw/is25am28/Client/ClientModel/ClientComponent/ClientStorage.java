@@ -31,6 +31,9 @@ public final class ClientStorage extends ClientComponent {
         return capacity;
     }
 
+    /**
+     * @return The units of space that are currently free
+     */
     public int availableSpace() {
         return capacity - storedItems.size();
     }

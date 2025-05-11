@@ -12,14 +12,6 @@ public class InputWidgetTUI extends WidgetTUI {
     private InputThread inputThread;
 
     // Constructor
-    public InputWidgetTUI() {
-        super();
-        this.commands = null;
-        this.commandsPerCol = DEFAULT_GROUPING_FACTOR;
-        this.inputThread = null;
-    }
-
-    // Constructor
     public InputWidgetTUI(InputThread inputThread) {
         super();
         this.commands = null;

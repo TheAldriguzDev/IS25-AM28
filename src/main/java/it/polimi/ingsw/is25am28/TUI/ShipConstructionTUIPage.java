@@ -84,19 +84,19 @@ public final class ShipConstructionTUIPage extends TUIPage {
         this.generateEmptyComponentWidget();
 
         // Initializing the component selection command widget
-        this.componentSelectionCommandsWidget = new InputWidgetTUI();
+        this.componentSelectionCommandsWidget = new InputWidgetTUI(null);
         // this.componentSelectionCommandsWidget.setNewReader(System.in);
         this.componentSelectionCommandsWidget.setColumnGroupingAmount(COMMANDS_PER_COLUMN);
         this.initComponentSelectionCommands();
 
         // Initializing the ship construction command widget
-        this.shipConstructionCommandsWidget = new InputWidgetTUI();
+        this.shipConstructionCommandsWidget = new InputWidgetTUI(null);
         // this.shipConstructionCommandsWidget.setNewReader(System.in);
         this.shipConstructionCommandsWidget.setColumnGroupingAmount(COMMANDS_PER_COLUMN);
         this.initShipConstructionCommands();
 
         // Initializing the card deck selection command widget
-        this.cardDeckSelectionWidget = new InputWidgetTUI();
+        this.cardDeckSelectionWidget = new InputWidgetTUI(null);
         // this.cardDeckSelectionWidget.setNewReader(System.in);
         this.cardDeckSelectionWidget.setColumnGroupingAmount(COMMANDS_PER_COLUMN);
         this.initCardDeckSelectionCommands();
@@ -110,7 +110,7 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
         if (this.componentSelectionCommandsWidget == null) {
             // Initializing a new component selection command input widget
-            this.componentSelectionCommandsWidget = new InputWidgetTUI();
+            this.componentSelectionCommandsWidget = new InputWidgetTUI(null);
         }
         else {
             // Resetting the command widget and keeping only the command grouping factor
@@ -255,7 +255,7 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
         if (this.shipConstructionCommandsWidget == null) {
             // Initializing a new ship construction command input widget
-            this.shipConstructionCommandsWidget = new InputWidgetTUI();
+            this.shipConstructionCommandsWidget = new InputWidgetTUI(null);
         }
         else {
             // Resetting the command widget and keeping only the command grouping factor
@@ -385,7 +385,7 @@ public final class ShipConstructionTUIPage extends TUIPage {
 
         if (this.cardDeckSelectionWidget == null) {
             // Initializing a new card deck selection command input widget
-            this.cardDeckSelectionWidget = new InputWidgetTUI();
+            this.cardDeckSelectionWidget = new InputWidgetTUI(null);
         }
         else {
             // Resetting the command widget and keeping only the command grouping factor
