@@ -793,6 +793,14 @@ public class CardRoundScreen extends Screen {
 
         availableItemsToTake = this.currEventCard.getAvailableItemColors();
 
+        if (availableItemsToTake.isEmpty()) {
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + "The current card has no more resources left to take!")
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
+        }
+
         this.generateAvailableItemColorsWidget(
                 availableItemsToTake,
                 selectedItem
