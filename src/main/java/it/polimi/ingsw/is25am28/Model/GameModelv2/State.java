@@ -5,9 +5,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
-import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
@@ -32,11 +29,11 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
         throw new IllegalStateException("The 'selectDeselectSubdeck' command is not allowed in the " + this + " state");
     }
 
-    public synchronized ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalStateException, SelectedConcurrencyException {
+    public synchronized ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The 'selectTile' command is not allowed in the " + this + " state");
     }
 
-    public synchronized ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalStateException, SelectedConcurrencyException {
+    public synchronized ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The 'deselectTile' command is not allowed in the " + this + " state");
     }
 
@@ -52,11 +49,11 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
         throw new IllegalStateException("The 'flipTimer' command is not allowed in the " + this + " state");
     }
 
-    public FixedComponentDTO fixShip(String player, Integer i, Integer j) throws IllegalArgumentException, FixNotRequiredError {
+    public FixedComponentDTO fixShip(String player, Integer i, Integer j) throws IllegalArgumentException {
         throw new IllegalStateException("The 'fixShip' command is not allowed in the " + this + " state");
     }
 
-    public PopulateShipComponentDTO populateShip(String player, ComponentHelper<LifeformType> lifeformToAdd) throws IllegalArgumentException, ShipPopulationFailException {
+    public PopulateShipComponentDTO populateShip(String player, ComponentHelper<LifeformType> lifeformToAdd) throws IllegalArgumentException {
         throw new IllegalStateException("The 'populateShip' command is not allowed in the " + this + " state");
     }
 

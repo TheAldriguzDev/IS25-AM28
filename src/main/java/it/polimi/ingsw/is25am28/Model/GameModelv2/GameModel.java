@@ -12,10 +12,7 @@ import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Model.Board.BoardTestFlight;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
-import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
 import it.polimi.ingsw.is25am28.FileLoader.CardLoader;
-import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -271,7 +268,7 @@ public class GameModel {
      * @return the ConstructionComponentDTO that represent the selectedTile. The behavior of the communication sendTo / sendToAll
      * is left to the controller
      * */
-    public ConstructionComponentDTO selectTile(String player, Integer id) throws SelectedConcurrencyException {
+    public ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalArgumentException {
         return currentState.selectTile(player, id);
     }
 
@@ -280,7 +277,7 @@ public class GameModel {
      * @return the ConstructionComponentDTO that represent the selectedTile. The behavior of the communication sendTo / sendToAll
      * is left to the controller
      * */
-    public ConstructionComponentDTO deselectTile(String player, Integer id) throws SelectedConcurrencyException {
+    public ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalArgumentException {
         return currentState.deselectTile(player, id);
     }
 
@@ -333,7 +330,7 @@ public class GameModel {
      * 1. Contains the response of the executed command
      * 2. If all the players have fixed their ship, it contains the PopulateShipState information
      * */
-    public List<StateDTO> fixShip(String player, Integer i, Integer j) throws IllegalArgumentException, FixNotRequiredError {
+    public List<StateDTO> fixShip(String player, Integer i, Integer j) throws IllegalArgumentException {
         List<StateDTO> states = new ArrayList<>();
 
         StateDTO tmpState = this.currentState.fixShip(player, i, j);
@@ -356,7 +353,7 @@ public class GameModel {
      * 1. Contains the response of the executed command
      * 2. If all the players has populated their ship, it contains the CardRoundState information
      * */
-    public List<StateDTO> populateShip(String player, ComponentHelper<LifeformType> lifeformToAdd) throws IllegalArgumentException, ShipPopulationFailException {
+    public List<StateDTO> populateShip(String player, ComponentHelper<LifeformType> lifeformToAdd) throws IllegalArgumentException {
         List<StateDTO> states = new ArrayList<>();
 
         StateDTO tmpState = this.currentState.populateShip(player, lifeformToAdd);

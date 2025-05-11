@@ -2,16 +2,11 @@ package it.polimi.ingsw.is25am28.Controller;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
-import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
 import it.polimi.ingsw.is25am28.Model.GameModelv2.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -86,13 +81,13 @@ public class GameController {
         }
     }
 
-    public ConstructionComponentDTO selectTile(String player, Integer id) throws SelectedConcurrencyException {
+    public ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalArgumentException {
         synchronized (this.model) {
             return this.model.selectTile(player, id);
         }
     }
 
-    public ConstructionComponentDTO deselectTile(String player, Integer id) throws SelectedConcurrencyException {
+    public ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalArgumentException {
         synchronized (this.model) {
             return this.model.deselectTile(player, id);
         }
@@ -116,13 +111,13 @@ public class GameController {
         }
     }
 
-    public List<StateDTO> fixShip(String player, Integer i, Integer j) throws IllegalArgumentException, FixNotRequiredError {
+    public List<StateDTO> fixShip(String player, Integer i, Integer j) throws IllegalArgumentException {
         synchronized (this.model) {
             return this.model.fixShip(player, i, j);
         }
     }
 
-    public List<StateDTO> populateShip(String player, ComponentHelper<LifeformType> lifeFormToAdd) throws IllegalArgumentException, ShipPopulationFailException {
+    public List<StateDTO> populateShip(String player, ComponentHelper<LifeformType> lifeFormToAdd) throws IllegalArgumentException {
         synchronized (this.model) {
             return this.model.populateShip(player, lifeFormToAdd);
         }
