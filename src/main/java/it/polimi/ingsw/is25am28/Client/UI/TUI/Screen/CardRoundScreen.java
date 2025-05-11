@@ -841,24 +841,48 @@ public class CardRoundScreen extends Screen {
 
         for (ClientStorage storage : ship.getStorageList()) {
             if (storage.availableSpace() > 0) {
-                command = new CommandWidgetTUI(
-                    "" + index,
-                    () -> {
-                        selectedStorage.set(storage);
+                if (selectedItem.get().equals(ItemColor.RED)) {
+                    if (storage.isSpecialStorage()) {
+                        command = new CommandWidgetTUI(
+                            "" + index,
+                            () -> {
+                                selectedStorage.set(storage);
+                            }
+                        );
+                        command.appendString("Special Storage @ (row=" + (storage.getI() + 1) + ", col=" + (storage.getJ() + 1) + ")");
+                        availableStorages.addCommand(command);
+                        index++;
                     }
-                );
-                command.appendString("Storage @ (row=" + (storage.getI() + 1) + ", col=" + (storage.getJ() + 1) + ")");
-                availableStorages.addCommand(command);
-                index++;
+                }
+                else {
+                    command = new CommandWidgetTUI(
+                            "" + index,
+                            () -> {
+                                selectedStorage.set(storage);
+                            }
+                    );
+                    command.appendString("Storage @ (row=" + (storage.getI() + 1) + ", col=" + (storage.getJ() + 1) + ")");
+                    availableStorages.addCommand(command);
+                    index++;
+                }
             }
         }
 
         if (availableStorages.getCommandMap().isEmpty()) {
-            new WidgetTUI()
-                    .appendString(COMPUTER_MSG_TAG + "Your ship's storage is " + PrintUtils.addColor("FULL", ANSIColors.RED) + "! You must free up some space before retrieving other items!")
-                    .addPadding(0, 1, 0, 1)
-                    .wrapWidgetWithBorder()
-                    .printWidget();
+            if (ship.getStorageList().isEmpty()) {
+                new WidgetTUI()
+                        .appendString(COMPUTER_MSG_TAG + "Your ship doesn't have any storage capacity!")
+                        .addPadding(0, 1, 0, 1)
+                        .wrapWidgetWithBorder()
+                        .printWidget();
+            }
+            else {
+                new WidgetTUI()
+                        .appendString(COMPUTER_MSG_TAG + "Your ship's storage is " + PrintUtils.addColor("FULL", ANSIColors.RED) + "! You must free up some space before retrieving other items!")
+                        .addPadding(0, 1, 0, 1)
+                        .wrapWidgetWithBorder()
+                        .printWidget();
+            }
         }
 
         // (-1) Go back to menu
