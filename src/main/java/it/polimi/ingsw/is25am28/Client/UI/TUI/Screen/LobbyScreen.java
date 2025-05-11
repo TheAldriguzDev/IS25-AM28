@@ -13,19 +13,22 @@ import it.polimi.ingsw.is25am28.Network.Messages.Reconnect;
 import it.polimi.ingsw.is25am28.Network.Messages.RefreshGames;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.CommandWidgetTUI;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.List;
 import java.util.Map;
 
 public class LobbyScreen extends Screen {
-    private WidgetTUI availableGamesWidget;
-    private WidgetTUI lobbyCommandsWidget;
+    private static final int AVAILABLE_GAMES_GROUPING_FACTOR = 8;
+
+    private InputWidgetTUI availableGamesWidget;
+    private InputWidgetTUI lobbyCommandsWidget;
 
     // Constructor
     public LobbyScreen(ClientModel model, InputThread inputThread) {
         super(model, inputThread);
-        this.initLobbyCommandsWidget();
     }
 
     /**
@@ -45,40 +48,176 @@ public class LobbyScreen extends Screen {
     /**
      * Initializes the widget containing all available lobby commands
      */
-    private void initLobbyCommandsWidget() {
-        this.lobbyCommandsWidget = new WidgetTUI();
+    private void initLobbyCommandsWidget(AvailableGamesDTO state) {
+        CommandWidgetTUI command;
 
-        this.lobbyCommandsWidget.appendString("(0) Quit game");
-        this.lobbyCommandsWidget.appendString("(1) Create new game");
-        this.lobbyCommandsWidget.appendString("(2) Join an existing game");
-        this.lobbyCommandsWidget.appendString("(3) Reconnect to an existing game");
-        this.lobbyCommandsWidget.appendString("(4) Refresh available games");
+        this.lobbyCommandsWidget = new InputWidgetTUI(this.inputThread);
 
-        this.lobbyCommandsWidget.addPadding(0, 1, 0, 1);
-        this.lobbyCommandsWidget.wrapWidgetWithBorder();
+        // (0) - Quit game
+        command = new CommandWidgetTUI(
+                "0",
+                () -> {
+                    // (0) - Quit game
+                    // Return nothing and the program stops
+                    System.out.println();
+
+                    new WidgetTUI()
+                            .appendString(COMPUTER_MSG_TAG + "Bye bye!")
+                            .addPadding(1, 1, 1, 1)
+                            .wrapWidgetWithBorder()
+                            .printWidget();
+
+                    System.exit(0);
+                }
+        );
+        command.appendString("Quit game");
+        this.lobbyCommandsWidget.addCommand(command);
+
+        // (1) - Create new game
+        command = new CommandWidgetTUI(
+                "1",
+            () -> {
+                try {
+                    this.createGameInput();
+                }
+                catch (Exception e) {
+                    System.out.println(
+                        PrintUtils.addColor("[ERROR] An error occurred. Please try again.", ANSIColors.RED)
+                    );
+                }
+            }
+        );
+        command.appendString("Create new game");
+        this.lobbyCommandsWidget.addCommand(command);
+
+        // (2) - Join an existing game
+        command = new CommandWidgetTUI(
+            "2",
+            () -> {
+                boolean commandExecuted;
+
+                if (!state.getAvailableGames().isEmpty()) {
+                    this.initAvailableGamesWidget(state);
+
+                    do {
+                        try {
+                            System.out.println();
+                            System.out.println("Available games to join:");
+                            commandExecuted = this.availableGamesWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+                        }
+                        catch (InterruptedException e) {
+                            // A forced interrupt arrived
+                            return;
+                        }
+
+                        if (!commandExecuted) {
+                            System.out.println(UNKNOWN_COMMAND_ERROR);
+                        }
+                    }
+                    while (!commandExecuted);
+                }
+                else {
+                    System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
+                }
+            }
+        );
+        command.appendString("Join an existing game");
+        this.lobbyCommandsWidget.addCommand(command);
+
+        // (3) - Reconnect to an existing game
+        command = new CommandWidgetTUI(
+            "3",
+            () -> {
+                if (!state.getUsedNicknames().isEmpty()) {
+                    try {
+                        this.reconnectToGameInput(state, state.getUsedNicknames());
+                    }
+                    catch (Exception e) {
+                        System.out.println(
+                            PrintUtils.addColor("[ERROR] An error occurred. Please try again.", ANSIColors.RED)
+                        );
+                    }
+                }
+                else {
+                    System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
+                }
+            }
+        );
+        command.appendString("Reconnect to an existing game");
+        this.lobbyCommandsWidget.addCommand(command);
+
+        // (4) - Refresh available games
+        command = new CommandWidgetTUI(
+            "4",
+            () -> {
+                try {
+                    this.refreshGames();
+                }
+                catch (Exception e) {
+                    System.out.println(
+                        PrintUtils.addColor("[ERROR] An error occurred. Please try again.", ANSIColors.RED)
+                    );
+                }
+            }
+        );
+        command.appendString("Refresh available games");
+        this.lobbyCommandsWidget.addCommand(command);
+
+        this.lobbyCommandsWidget.setColumnGroupingAmount(
+            this.lobbyCommandsWidget.getCommandMap().size()
+        );
     }
 
     /**
      * Initializes the widget containing all available games
      */
-    private void initAvailableGamesWidget(List<GameInfoDTO> availableGames) {
-        this.availableGamesWidget = new WidgetTUI();
+    private void initAvailableGamesWidget(AvailableGamesDTO state) {
+        List<GameInfoDTO> availableGames = state.getAvailableGames();
+        CommandWidgetTUI command;
 
+        this.availableGamesWidget = new InputWidgetTUI(this.inputThread);
+        this.availableGamesWidget.setColumnGroupingAmount(AVAILABLE_GAMES_GROUPING_FACTOR);
+
+        // (n) - All n available games
         if (availableGames != null && !availableGames.isEmpty()) {
             for (GameInfoDTO game : availableGames) {
-                this.availableGamesWidget.appendString("(" + game.getId() + ") (level=" + game.getLevel() + ", players=" + game.getActualPlayers() + "/" + game.getTotalPlayers() + ")");
+                command = new CommandWidgetTUI(
+            "" + game.getId(),
+                    () -> {
+                        try {
+                            this.joinGameInput(game, state.getUsedNicknames());
+                        }
+                        catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                );
+                command.appendString("(level=" + game.getLevel() + ", players=" + game.getActualPlayers() + "/" + game.getTotalPlayers() + ")");
+                this.availableGamesWidget.addCommand(command);
             }
         }
 
-        this.availableGamesWidget.appendString("(-1) Go back to the menu");
-        this.availableGamesWidget.addPadding(0, 1, 0, 1);
-        this.availableGamesWidget.wrapWidgetWithBorder();
+        // (-1) - Go back to the menu
+        command = new CommandWidgetTUI(
+            "-1",
+            () -> {
+                try {
+                    this.showLobbies(state, false);
+                }
+                catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        );
+        command.appendString("Go back to the menu");
+        this.availableGamesWidget.addCommand(command);
     }
 
     /**
      * Method used to ask for nickname and color to join the game
      */
     private void joinGameInput(GameInfoDTO game, List<String> usedNicknames) throws Exception {
+        System.out.println();
         System.out.println("Joining the game with id " + game.getId() + "...");
 
         // Ask for nickname
@@ -125,7 +264,9 @@ public class LobbyScreen extends Screen {
                     this.joinGameInput(game, usedNicknames);
                 }
                 catch (Exception e) {
-                    throw new RuntimeException(e);
+                    System.out.println(
+                        PrintUtils.addColor("[ERROR] An error occurred. Please try again.", ANSIColors.RED)
+                    );
                 }
             }
         );
@@ -137,6 +278,7 @@ public class LobbyScreen extends Screen {
      * Method used to ask for nickname, color, gameLevel and totalGamePlayer, and then it will create a new Game
      */
     private void createGameInput() throws Exception {
+        System.out.println();
         System.out.println("Creating a new game ...");
 
         // Ask for nickname
@@ -235,6 +377,7 @@ public class LobbyScreen extends Screen {
             return;
         }
 
+        System.out.println();
         System.out.println("Trying to reconnect you to the game...");
 
         // Ask for nickname
@@ -248,6 +391,16 @@ public class LobbyScreen extends Screen {
             }
         }
         while (playerName.isEmpty() && !usedNicknames.contains(playerName));
+
+        this.ctx = new CommandCTX(
+            "reconnect",
+            () -> {
+                // TODO
+            },
+            () -> {
+                // TODO
+            }
+        );
 
         this.client.sendMessage(new Reconnect(playerName));
     }
@@ -273,115 +426,19 @@ public class LobbyScreen extends Screen {
     @Override
     public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
         boolean commandExecuted;
-        String line;
-        int choice;
 
-        if (isFirstAccess) { printTitle(); }
-
-        this.initAvailableGamesWidget(state.getAvailableGames());
+        if (isFirstAccess) {
+            printTitle();
+            this.initLobbyCommandsWidget(state);
+        }
 
         do {
-            commandExecuted = false;
-
+            System.out.println();
             System.out.println("Available commands:");
-            this.lobbyCommandsWidget.printWidget();
+            commandExecuted = this.lobbyCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
 
-            System.out.print(DEFAULT_COMMAND_PREFIX);
-            line = this.inputThread.waitForInput();
-
-            try {
-                choice = Integer.parseInt(line);
-            }
-            catch (NumberFormatException e) {
-                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please enter a number.", ANSIColors.RED));
-                continue;
-            }
-
-            // TODO: Rewrite this and the part above with the new implementation of InputWidgetTUI
-            switch (choice) {
-                case 0 -> {
-                    // (0) - Quit game
-                    // Return nothing and the program stops
-                    System.out.println();
-
-                    new WidgetTUI()
-                            .appendString(COMPUTER_MSG_TAG + "Bye bye!")
-                            .addPadding(1, 1, 1, 1)
-                            .wrapWidgetWithBorder()
-                            .printWidget();
-
-                    System.exit(0);
-                }
-                case 1 -> {
-                    // (1) - Create new game
-                    this.createGameInput();
-                    commandExecuted = true;
-                }
-                case 2 -> {
-                    // (2) - Join an existing game
-                    if (!state.getAvailableGames().isEmpty()) {
-                        List<Integer> availableGameIDs = state.getAvailableGames().stream().map(GameInfoDTO::getId).toList();
-
-                        GameInfoDTO game = null;
-
-                        do {
-                            System.out.println("Currently available games:");
-                            this.availableGamesWidget.printWidget();
-
-                            System.out.print(DEFAULT_COMMAND_PREFIX);
-                            line = this.inputThread.waitForInput();
-
-                            try {
-                                choice = Integer.parseInt(line);
-                            }
-                            catch (NumberFormatException e) {
-                                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please enter a number.", ANSIColors.RED));
-                            }
-
-                            if (choice == -1) {
-                                // Go back to the lobby commands
-                                break;
-                            }
-                            int finalChoice = choice;
-
-                            game = state.getAvailableGames().stream()
-                                    .filter(g -> g.getId() == finalChoice)
-                                    .findFirst()
-                                    .orElse(null);
-
-                            if (game == null) {
-                                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Game with ID=" + choice + " does not exist. Please choose an existing game.", ANSIColors.RED));
-                            }
-                        }
-                        while (!availableGameIDs.contains(choice) || game == null);
-
-                        if (choice != -1) {
-                            this.joinGameInput(game, state.getUsedNicknames());
-                            commandExecuted = true;
-                        }
-                    }
-                    else {
-                        System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
-                    }
-                }
-                case 3 -> {
-                    // (3) - Reconnect to an existing game
-                    if (!state.getUsedNicknames().isEmpty()) {
-                        this.reconnectToGameInput(state, state.getUsedNicknames());
-                        commandExecuted = true;
-                    }
-                    else {
-                        System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
-                    }
-                }
-                case 4 -> {
-                    // (4) - Refresh available games
-                    this.refreshGames();
-                    commandExecuted = true;
-                }
-                default -> {
-                    System.out.println(UNKNOWN_COMMAND_ERROR);
-                }
+            if (!commandExecuted) {
+                System.out.println(UNKNOWN_COMMAND_ERROR);
             }
         }
         while (!commandExecuted);
