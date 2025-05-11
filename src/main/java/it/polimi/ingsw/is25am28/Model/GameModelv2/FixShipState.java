@@ -4,7 +4,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.FixedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
@@ -20,9 +19,9 @@ public final class FixShipState extends State {
     }
 
     @Override
-    public FixedComponentDTO fixShip(String player, Integer i, Integer j) throws IllegalArgumentException, FixNotRequiredError {
+    public FixedComponentDTO fixShip(String player, Integer i, Integer j) throws IllegalArgumentException {
         if (!this.playersWithInvalidShip.contains(player)) {
-            throw new FixNotRequiredError(player);
+            throw new IllegalArgumentException("The player: " + player + " does not need to fix his ship");
         }
 
         Player p = this.model.getPlayers().get(player);

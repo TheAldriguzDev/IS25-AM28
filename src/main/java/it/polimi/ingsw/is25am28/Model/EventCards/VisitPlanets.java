@@ -63,25 +63,25 @@ public class VisitPlanets extends EventCard {
             // Blue Items Initializer
             formattedPlanetDescriptor.put(
                 ItemColor.BLUE,
-                planetDescriptor.get("blue")
+                planetDescriptor.get(ItemColor.BLUE.toString())
             );
 
             // Green Items Initializer
             formattedPlanetDescriptor.put(
                     ItemColor.GREEN,
-                    planetDescriptor.get("green")
+                    planetDescriptor.get(ItemColor.GREEN.toString())
             );
 
             // Yellow Items Initializer
             formattedPlanetDescriptor.put(
                     ItemColor.YELLOW,
-                    planetDescriptor.get("yellow")
+                    planetDescriptor.get(ItemColor.YELLOW.toString())
             );
 
             // Red Items Initializer
             formattedPlanetDescriptor.put(
                     ItemColor.RED,
-                    planetDescriptor.get("red")
+                    planetDescriptor.get(ItemColor.RED.toString())
             );
 
             // Putting the transformed entry into the itemsPerPlanet map

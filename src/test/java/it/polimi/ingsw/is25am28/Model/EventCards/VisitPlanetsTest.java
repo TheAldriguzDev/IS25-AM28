@@ -218,10 +218,10 @@ class VisitPlanetsTest {
             Map<String, Integer> planetConfig = new HashMap<>();
 
             // Each of the 4 planets has a random amount of items
-            planetConfig.put("blue", random.nextInt(0, 4));
-            planetConfig.put("green", random.nextInt(0, 3));
-            planetConfig.put("yellow", random.nextInt(0, 2));
-            planetConfig.put("red", random.nextInt(0, 3));
+            planetConfig.put("BLUE", random.nextInt(0, 4));
+            planetConfig.put("GREEN", random.nextInt(0, 3));
+            planetConfig.put("YELLOW", random.nextInt(0, 2));
+            planetConfig.put("RED", random.nextInt(0, 3));
 
             itemsPerPlanet.add(planetID, planetConfig);
         }
@@ -705,10 +705,10 @@ class VisitPlanetsTest {
             Map<String, Integer> planetConfig = new HashMap<>();
 
             // Each of the 4 planets has a random amount of items
-            planetConfig.put("blue", random.nextInt(0, 4));
-            planetConfig.put("green", random.nextInt(0, 3));
-            planetConfig.put("yellow", random.nextInt(0, 2));
-            planetConfig.put("red", random.nextInt(0, 3));
+            planetConfig.put("BLUE", random.nextInt(0, 4));
+            planetConfig.put("GREEN", random.nextInt(0, 3));
+            planetConfig.put("YELLOW", random.nextInt(0, 2));
+            planetConfig.put("RED", random.nextInt(0, 3));
 
             itemsPerPlanet.add(planetID, planetConfig);
         }
@@ -1047,10 +1047,10 @@ class VisitPlanetsTest {
             Map<String, Integer> planetConfig = new HashMap<>();
 
             // Each of the 4 planets has a random amount of items
-            planetConfig.put("blue", random.nextInt(0, 4));
-            planetConfig.put("green", random.nextInt(0, 3));
-            planetConfig.put("yellow", random.nextInt(0, 2));
-            planetConfig.put("red", random.nextInt(0, 3));
+            planetConfig.put("BLUE", random.nextInt(0, 4));
+            planetConfig.put("GREEN", random.nextInt(0, 3));
+            planetConfig.put("YELLOW", random.nextInt(0, 2));
+            planetConfig.put("RED", random.nextInt(0, 3));
 
             itemsPerPlanet.add(planetID, planetConfig);
         }

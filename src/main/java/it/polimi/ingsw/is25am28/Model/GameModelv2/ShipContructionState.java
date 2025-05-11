@@ -1,18 +1,12 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
-import it.polimi.ingsw.is25am28.FileLoader.CardLoader;
+import it.polimi.ingsw.is25am28.Loader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
-import it.polimi.ingsw.is25am28.Model.EventCards.Epidemy;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.Model.EventCards.OpenSpace;
-import it.polimi.ingsw.is25am28.Model.EventCards.Stardust;
-import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.FileLoader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Timer.HourGlass;
@@ -51,10 +45,17 @@ public final class ShipContructionState extends State implements TimerObserver {
     public ShipContructionState(GameModel model) {
         super(model);
 
+        TileLoader loader;
+        try {
+            loader = new TileLoader();
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while reading the json file: " + e);
+        }
+
         this.gameLevel = model.getGameLevel();
 
         // Load the tiles
-        this.all_components = TileLoader.get().read();
+        this.all_components = loader.getTiles();
 //        Collections.shuffle(this.all_components);
         this.selected = new HashSet<>();
         this.flipped = new HashSet<>();
@@ -78,24 +79,24 @@ public final class ShipContructionState extends State implements TimerObserver {
         this.players_done = new ArrayList<>();
         this.shipConfigEnded = false;
 
-        //this.cards = this.model.getGameDeck();
+        this.cards = this.model.getGameDeck();
 
         // TODO: Remove the fake deck after testing
-          List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(this.model.getGameLevel()), model.getGameLevel());
-          List<EventCard> fakeDeck = new ArrayList<>();
+//        List<EventCard> AllCards = CardLoader.get().read(model.getBoard(), new ResourceBank(this.model.getGameLevel()), model.getGameLevel());
+//        List<EventCard> fakeDeck = new ArrayList<>();
+//        fakeDeck.add(AllCards.get(8)); // MeteorShower
 //        fakeDeck.add(AllCards.get(38)); // WarZone
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
 //        fakeDeck.add(AllCards.get(24)); // OpenSpace
 //        fakeDeck.add(AllCards.get(0)); // AbandonedShip
-          fakeDeck.add(AllCards.get(5)); // AbandonedStation
-//        fakeDeck.add(AllCards.get(8)); // MeteorShower
+//        fakeDeck.add(AllCards.get(5)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(14)); // Pirates
 //        fakeDeck.add(AllCards.get(16)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(31)); // Epidemy
-          fakeDeck.add(AllCards.get(32)); // Smugglers
-          fakeDeck.add(AllCards.get(34)); // Slavers
-          fakeDeck.add(AllCards.get(36)); // Stardust
-          this.cards = fakeDeck;
+//        fakeDeck.add(AllCards.get(32)); // Smugglers
+//        fakeDeck.add(AllCards.get(34)); // Slavers
+//        fakeDeck.add(AllCards.get(36)); // Stardust
+//        this.cards = fakeDeck;
 
         this.selectedSubDecks = new HashMap<>();
     }
@@ -153,7 +154,7 @@ public final class ShipContructionState extends State implements TimerObserver {
      * Select the given tile
      * @return the Component Data Object Transfer needed to update the client with the selectComponent event
      * */
-    public ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalStateException, SelectedConcurrencyException {
+    public ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalStateException, IllegalArgumentException {
         if (shipConfigEnded) {
             throw new IllegalStateException("The time to select the tiles has ended");
         }
@@ -182,13 +183,13 @@ public final class ShipContructionState extends State implements TimerObserver {
      * Deselect the given tile
      * @return the Component Data Object Transfer needed to update the client with the deselectComponent event
      * */
-    public ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalStateException, SelectedConcurrencyException {
+    public ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalStateException, IllegalArgumentException {
         if (shipConfigEnded) {
             throw new IllegalStateException("The time to deselected the tiles has ended");
         }
 
         if (!selected.contains(id)) {
-            throw new SelectedConcurrencyException(player);
+            throw new IllegalArgumentException("The player: " + player + " cannot select the tile since it has already been selected by someone else");
         }
 
         selected.remove(id);

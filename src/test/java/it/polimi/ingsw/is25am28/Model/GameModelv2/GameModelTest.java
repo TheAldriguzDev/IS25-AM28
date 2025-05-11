@@ -11,18 +11,13 @@ import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.EventCards.AbandonedShip;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.EventCards.OpenSpace;
-import it.polimi.ingsw.is25am28.Model.Exceptions.FixNotRequiredError;
-import it.polimi.ingsw.is25am28.Model.Exceptions.SelectedConcurrencyException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.ShipPopulationFailException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.management.timer.Timer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,7 +33,7 @@ class GameModelTest {
     }
 
     @Test
-    public void test_game_model_valid_complete_flow() throws JsonProcessingException, SelectedConcurrencyException, ShipPopulationFailException, FixNotRequiredError {
+    public void test_game_model_valid_complete_flow() throws JsonProcessingException, IllegalArgumentException {
         // ========================================
         // NEW GAME HAS BEEN CREATED
         // ========================================
@@ -260,7 +255,7 @@ class GameModelTest {
 
         // Player 1 tries to fix his ship, but since it's valid it should throw an error
         assertThrows(
-                FixNotRequiredError.class,
+                IllegalArgumentException.class,
                 () -> model.fixShip("Player 1", 6, 4),
                 "Player 1 should already have a valid ship"
         );
@@ -455,7 +450,7 @@ class GameModelTest {
 
 
     @Test
-    public void test_game_model_when_players_got_eliminated_except_for_one() throws JsonProcessingException, SelectedConcurrencyException, ShipPopulationFailException, FixNotRequiredError {
+    public void test_game_model_when_players_got_eliminated_except_for_one() throws JsonProcessingException, IllegalArgumentException {
         // ========================================
         // NEW GAME HAS BEEN CREATED
         // ========================================

@@ -449,6 +449,7 @@ public class ShipConstructionScreen extends Screen {
             return;
         }
 
+        // TODO: Rewrite this and the part above with the new implementation of InputWidgetTUI
         switch (choice) {
             case 1 -> {
                 // (1) - Select Tile

@@ -458,7 +458,7 @@
                   ],
                   "actions": [
                         {
-                              "action": 0,
+                              "action": 2,
                               "consequence": 0
                         },
                         {
@@ -466,7 +466,7 @@
                               "consequence": 0
                         },
                         {
-                              "action": 2,
+                              "action": 0,
                               "consequence": 0
                         }
                   ],

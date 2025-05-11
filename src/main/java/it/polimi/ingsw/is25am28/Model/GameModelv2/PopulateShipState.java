@@ -29,7 +29,7 @@ public final class PopulateShipState extends State {
         }
     }
 
-    public PopulateShipComponentDTO populateShip(String player, ComponentHelper<LifeformType> lifeformToAdd) throws IllegalArgumentException, ShipPopulationFailException {
+    public PopulateShipComponentDTO populateShip(String player, ComponentHelper<LifeformType> lifeformToAdd) throws IllegalArgumentException {
         if (this.playersReady.contains(player)) {
             throw new IllegalArgumentException("The given player has already populated the ship");
         }
@@ -48,7 +48,7 @@ public final class PopulateShipState extends State {
             }
             catch (TooManyAliensException | OutOfGridException | IllegalArgumentException | OutOfShipException |
                    NoSupportVitalFoundException e){
-                throw new ShipPopulationFailException(player);
+                throw new IllegalArgumentException("The player " + player + " failed to populate his ship: " + e.getMessage());
             }
         }
 
