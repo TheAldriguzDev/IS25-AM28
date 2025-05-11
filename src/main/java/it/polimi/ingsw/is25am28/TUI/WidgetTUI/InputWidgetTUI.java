@@ -12,6 +12,7 @@ public class InputWidgetTUI extends WidgetTUI {
     private InputThread inputThread;
 
     // Constructor
+    @Deprecated
     public InputWidgetTUI() {
         super();
         this.commands = null;
@@ -22,7 +23,7 @@ public class InputWidgetTUI extends WidgetTUI {
     // Constructor
     public InputWidgetTUI(InputThread inputThread) {
         super();
-        this.commands = null;
+        this.commands = new HashMap<>();
         this.commandsPerCol = DEFAULT_GROUPING_FACTOR;
         this.inputThread = inputThread;
     }
