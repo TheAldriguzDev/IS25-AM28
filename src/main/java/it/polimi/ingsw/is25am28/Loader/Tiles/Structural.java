@@ -1,4 +1,5 @@
 package it.polimi.ingsw.is25am28.Loader.Tiles;
 
-public class Structural {
+public final class Structural extends Tile {
+
 }

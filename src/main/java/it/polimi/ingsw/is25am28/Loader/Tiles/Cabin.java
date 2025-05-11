@@ -1,4 +1,5 @@
 package it.polimi.ingsw.is25am28.Loader.Tiles;
 
-public class Cabin {
+public final class Cabin extends Tile {
+
 }

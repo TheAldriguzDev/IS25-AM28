@@ -34,8 +34,6 @@ module it.polimi.ingsw.is25am {
     opens it.polimi.ingsw.is25am28.Model.Exceptions to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Model.Ship to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Model.Player to javafx.fxml;
-    exports it.polimi.ingsw.is25am28.FileLoader;
-    opens it.polimi.ingsw.is25am28.FileLoader to javafx.fxml;
     exports it.polimi.ingsw.is25am28.Model.ActionJSON.State;
     opens it.polimi.ingsw.is25am28.Model.ActionJSON.State to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction;
@@ -63,4 +61,5 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer;
 
     exports it.polimi.ingsw.is25am28.Loader.Cards to com.fasterxml.jackson.databind;
+    exports it.polimi.ingsw.is25am28.Loader.Tiles to com.fasterxml.jackson.databind;
 }

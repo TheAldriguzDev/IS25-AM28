@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
+import it.polimi.ingsw.is25am28.Loader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
@@ -12,7 +13,6 @@ import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Model.Board.BoardTestFlight;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -21,6 +21,7 @@ import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -166,7 +167,14 @@ public class GameModel {
     private void generateDeck() throws IllegalStateException {
         // If the level is equal to 0, then we have loaded all the cards for the test flight
         // Otherwise we need to get the right amount of card for the selected flight level
-        List<EventCard> tempDeck = CardLoader.get().read(this.board, this.resourceBank, this.level);
+        CardLoader cardLoader;
+        try {
+            cardLoader = new CardLoader();
+        } catch (IOException e) {
+            throw new RuntimeException("An error occurred while reading the json file: " + e);
+        }
+
+        List<EventCard> tempDeck = cardLoader.getCards(this.board, this.resourceBank, this.level);
 
         List<EventCard> levelOneDeck = new ArrayList<>(tempDeck.stream().filter(c -> c.getCardLevel() == 1).toList());
         List<EventCard> levelTwoDeck = new ArrayList<>(tempDeck.stream().filter( c -> c.getCardLevel() == 2).toList());
@@ -217,6 +225,8 @@ public class GameModel {
 
         this.resourceBank = new ResourceBank(level);
         this.createBoard();
+
+        // Generate the deck after the bank and the board since these values are needed in the loader
         this.generateDeck();
 
         this.playerVirtualViews.put(nickname, clientView);

@@ -1,11 +1,11 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
+import it.polimi.ingsw.is25am28.Loader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
-import it.polimi.ingsw.is25am28.FileLoader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
@@ -45,10 +45,17 @@ public final class ShipContructionState extends State implements TimerObserver {
     public ShipContructionState(GameModel model) {
         super(model);
 
+        TileLoader loader;
+        try {
+            loader = new TileLoader();
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while reading the json file: " + e);
+        }
+
         this.gameLevel = model.getGameLevel();
 
         // Load the tiles
-        this.all_components = TileLoader.get().read();
+        this.all_components = loader.getTiles();
 //        Collections.shuffle(this.all_components);
         this.selected = new HashSet<>();
         this.flipped = new HashSet<>();

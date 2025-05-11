@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
-import it.polimi.ingsw.is25am28.FileLoader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
@@ -8,7 +7,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 
 import java.util.ArrayList;
 import java.util.HashMap;
