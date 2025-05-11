@@ -30,7 +30,7 @@ public enum ItemColor {
      */
     public String getANSIColor() {
         return switch (this) {
-            case RED -> ANSIColors.RESET;
+            case RED -> ANSIColors.RED;
             case YELLOW -> ANSIColors.YELLOW;
             case GREEN -> ANSIColors.GREEN;
             case BLUE -> ANSIColors.BLUE;

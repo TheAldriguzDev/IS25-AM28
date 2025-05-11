@@ -1334,6 +1334,7 @@ public class CardRoundScreen extends Screen {
 
         this.resourceBankWidget
                 .centerWidgetScreen()
+                .addPadding(0, 1, 0, 1)
                 .wrapWidgetWithBorder();
     }
 
@@ -1540,7 +1541,7 @@ public class CardRoundScreen extends Screen {
                     WidgetTUI.composeTwoWidgetsVertically(
                             this.playerActionsRecapWidget,
                             this.resourceBankWidget
-                    )
+                    ).centerWidgetScreen()
             );
         }
         else {
@@ -1549,7 +1550,7 @@ public class CardRoundScreen extends Screen {
             currCardAndPlayerActions = WidgetTUI.composeTwoWidgetsHorizontally(
                     this.currEventCardWidget,
                     this.resourceBankWidget
-            );
+            ).centerWidgetScreen();
         }
 
         WidgetTUI.composeTwoWidgetsHorizontally(
