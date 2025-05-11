@@ -29,6 +29,8 @@ public class AbandonedStation extends EventCard {
     private Map<String, Integer> updatedPositions;
     private List<String> eliminatedPlayers;
 
+    private String prevPlayerNickname;
+
     public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> givenItems, Board board, ResourceBank resourceBank, int cardID, String path) {
         super(name, cardLevel, board, cardID, path);
         this.requiredCrew = requiredCrew;
@@ -78,6 +80,7 @@ public class AbandonedStation extends EventCard {
 
         // Retrieve the data from the JSON
         String playerNickname = abandonedStation.getPlayerNickname();
+        this.prevPlayerNickname = playerNickname;
         boolean wantsToVisitTheShip = abandonedStation.getWantToVisitStation();
 
         // Check if:
@@ -168,6 +171,7 @@ public class AbandonedStation extends EventCard {
 
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+            cardState.setPrevPlayerNickname(this.prevPlayerNickname);
 
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             setUpdatedDroppedResourcesIfNecessary(cardState, droppedResources);

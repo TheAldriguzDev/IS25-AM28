@@ -47,6 +47,8 @@ public class WarZone extends EventCard {
     private final Random random;
     private int diceResult;
 
+    // TODO: prev Player Nickname
+
     /**
      * WarZone constructor that sets:
      * - General information about the card (name, level, board)

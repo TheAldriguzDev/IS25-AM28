@@ -764,6 +764,13 @@ public class CardRoundScreen extends Screen {
                 selectedStorage.get().getJ()
         ).addItem(selectedItem.get());
 
+        Optional<Item> foundItem = selectedStorage.get().getStoredItems().stream()
+                .filter(item -> item.getColor().equals(selectedItem.get()))
+                .findFirst();
+        // Remove the resource from the player
+        foundItem.ifPresent(selectedStorage.get()::removeItem);
+        this.model.getResourceBank().addResourceToBank(selectedItem.get());
+
         itemsToBeRemoved.add(itemPosition);
         this.currEventCard.setItemsToBeRemoved(itemsToBeRemoved);
     }
@@ -923,6 +930,9 @@ public class CardRoundScreen extends Screen {
                 selectedStorage.get().getI(),
                 selectedStorage.get().getJ()
         ).addItem(selectedItem.get());
+
+        selectedStorage.get().storeItem(new Item(selectedItem.get()));
+        this.model.getResourceBank().removeResourceFromBank(selectedItem.get());
 
         itemsToBeTaken.add(itemPosition);
         this.currEventCard.setItemsToBeTaken(itemsToBeTaken);

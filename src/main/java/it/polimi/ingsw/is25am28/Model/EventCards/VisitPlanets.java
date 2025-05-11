@@ -30,6 +30,8 @@ public class VisitPlanets extends EventCard {
     private int chosenPlanetIndex;
     private List<String> eliminatedPlayers;
 
+    private String prevPlayerNickname;
+
 
     public VisitPlanets(
             @JsonProperty("cardName") String cardName,
@@ -219,6 +221,7 @@ public class VisitPlanets extends EventCard {
             if ( !this.currentPlayer.get().getNickname().equals(visitPlanetsJSON.getPlayerNickname())) {
                 throw new IllegalArgumentException("ERROR: Current player and player in visitPlanetJSON do not match (wrong arguments)");
             }
+            this.prevPlayerNickname = visitPlanetsJSON.getPlayerNickname();
 
             // Extracting the player's chosen planet and his landing decision
             chosenPlanetIndex = visitPlanetsJSON.getChosenPlanetIndex();
@@ -351,6 +354,7 @@ public class VisitPlanets extends EventCard {
 
             // Setting the playerNickname (if present)
             this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+            cardState.setPrevPlayerNickname(this.prevPlayerNickname);
 
             if (itemsPerPlanet.containsKey(chosenPlanetIndex)) {
                 cardState.setChosenPlanetIndex(chosenPlanetIndex);

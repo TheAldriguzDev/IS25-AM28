@@ -31,6 +31,8 @@ public class Smugglers extends EventCard {
     private Map<String, Integer> removedBatteries; // TODO: missing implementation on firepower
     private List<String> eliminatedPlayers;
 
+    private String prevPlayerNickname;
+
     public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank, int cardID, String path) {
         super(name, cardLevel, board, cardID, path);
         this.requiredFirepower = requiredFirepower;
@@ -88,6 +90,7 @@ public class Smugglers extends EventCard {
                 (Player player) -> {
 
                     String playerNickname = smugglersData.getPlayerNickname();
+                    this.prevPlayerNickname = playerNickname;
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
@@ -212,6 +215,7 @@ public class Smugglers extends EventCard {
 
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> smugglersStateJSON.setPlayerNickname(player.getNickname()));
+            smugglersStateJSON.setPrevPlayerNickname(this.prevPlayerNickname);
 
             // The clients need to know when to update the right parameters
 //            smugglersStateJSON.setFirstRound(this.firstRound);

@@ -202,12 +202,14 @@ public class ClientModel {
         if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
             Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms = cardStateJSON.getRemovedLifeforms();
             for (String playerNickname : removedLifeforms.keySet()) {
-                for (ComponentHelper<LifeformType> lifeFormToRemove : removedLifeforms.get(playerNickname)) {
-                    this.getShipOfPlayer(playerNickname).ifPresent(
-                        (ship) -> {
-                            ship.removeLifeformFromCabin(lifeFormToRemove.getI(), lifeFormToRemove.getJ(), lifeFormToRemove.getItem().orElse(null));
-                        }
-                    );
+                if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
+                    for (ComponentHelper<LifeformType> lifeFormToRemove : removedLifeforms.get(playerNickname)) {
+                        this.getShipOfPlayer(playerNickname).ifPresent(
+                                (ship) -> {
+                                    ship.removeLifeformFromCabin(lifeFormToRemove.getI(), lifeFormToRemove.getJ(), lifeFormToRemove.getItem().orElse(null));
+                                }
+                        );
+                    }
                 }
             }
         }
@@ -215,19 +217,21 @@ public class ClientModel {
         // Removes the specified resources from the specified ships
         if (cardStateJSON.getNeedsUpdatedDroppedResources()) {
             for (String playerNickname : cardStateJSON.getDroppedResources().keySet()) {
-                for(ComponentHelper<ItemColor> itemToDrop : cardStateJSON.getDroppedResources().get(playerNickname)) {
-                    this.getShipOfPlayer(playerNickname).ifPresent(
-                        (ship) -> {
-                            ClientStorage storage = (ClientStorage) ship.getComponent(itemToDrop.getI(), itemToDrop.getJ());
-                            ItemColor color = itemToDrop.getItem().orElse(null);
-                            Optional<Item> foundItem = storage.getStoredItems().stream()
-                                    .filter( item -> item.getColor().equals(color))
-                                    .findFirst();
-                            // Remove the resource from the player
-                            foundItem.ifPresent(storage::removeItem);
-                            this.resourceBank.addResourceToBank(color);
-                        }
-                    );
+                if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
+                    for (ComponentHelper<ItemColor> itemToDrop : cardStateJSON.getDroppedResources().get(playerNickname)) {
+                        this.getShipOfPlayer(playerNickname).ifPresent(
+                                (ship) -> {
+                                    ClientStorage storage = (ClientStorage) ship.getComponent(itemToDrop.getI(), itemToDrop.getJ());
+                                    ItemColor color = itemToDrop.getItem().orElse(null);
+                                    Optional<Item> foundItem = storage.getStoredItems().stream()
+                                            .filter(item -> item.getColor().equals(color))
+                                            .findFirst();
+                                    // Remove the resource from the player
+                                    foundItem.ifPresent(storage::removeItem);
+                                    this.resourceBank.addResourceToBank(color);
+                                }
+                        );
+                    }
                 }
             }
         }
@@ -235,16 +239,18 @@ public class ClientModel {
         // Adds the specified resources to the specified ships
         if (cardStateJSON.getNeedsUpdatedTakenResources()) {
             for (String playerNickname : cardStateJSON.getTakenResources().keySet()) {
-                for(ComponentHelper<ItemColor> itemToTake : cardStateJSON.getTakenResources().get(playerNickname)) {
-                    this.getShipOfPlayer(playerNickname).ifPresent(
-                        (ship) -> {
-                            ClientStorage storage = (ClientStorage) ship.getComponent(itemToTake.getI(), itemToTake.getJ());
-                            ItemColor color = itemToTake.getItem().orElse(null);
-                            // Add resource to the player
-                            storage.storeItem(new Item(color));
-                            this.resourceBank.removeResourceFromBank(color);
-                        }
-                    );
+                if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
+                    for(ComponentHelper<ItemColor> itemToTake : cardStateJSON.getTakenResources().get(playerNickname)) {
+                        this.getShipOfPlayer(playerNickname).ifPresent(
+                                (ship) -> {
+                                    ClientStorage storage = (ClientStorage) ship.getComponent(itemToTake.getI(), itemToTake.getJ());
+                                    ItemColor color = itemToTake.getItem().orElse(null);
+                                    // Add resource to the player
+                                    storage.storeItem(new Item(color));
+                                    this.resourceBank.removeResourceFromBank(color);
+                                }
+                        );
+                    }
                 }
             }
         }
