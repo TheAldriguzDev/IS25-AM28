@@ -30,14 +30,21 @@ public class ResourceBank {
         }
     }
 
+//    /**
+//     * This method is used to reset the current quantity of the resources when a player reconnects to the game and needs to rebuild the model information
+//     * */
+//    public void resetResourcesQuantity(int red, int yellow, int green, int blue) {
+//        this.resources.put(ItemColor.RED, red);
+//        this.resources.put(ItemColor.YELLOW, yellow);
+//        this.resources.put(ItemColor.GREEN, green);
+//        this.resources.put(ItemColor.BLUE, blue);
+//    }
+
     /**
      * This method is used to reset the current quantity of the resources when a player reconnects to the game and needs to rebuild the model information
      * */
-    public void resetResourcesQuantity(int red, int yellow, int green, int blue) {
-        this.resources.put(ItemColor.RED, red);
-        this.resources.put(ItemColor.YELLOW, yellow);
-        this.resources.put(ItemColor.GREEN, green);
-        this.resources.put(ItemColor.BLUE, blue);
+    public void resetResourcesQuantity(Map<ItemColor, Integer> availableResources) {
+        this.resources.putAll(availableResources);
     }
 
     /**

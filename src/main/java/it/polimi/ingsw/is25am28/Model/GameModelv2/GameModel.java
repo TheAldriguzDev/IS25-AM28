@@ -131,6 +131,7 @@ public class GameModel {
         ReconnectDTO state = new ReconnectDTO()
                 .setTargetNickname(nickname);
         state.setBoard(this.board.generateState()); // Board information
+        state.setResourceBank(this.resourceBank.getResources()); // resourceBank information
 
         // Players information
         List<PlayerJSON> playerInfo = new ArrayList<>();

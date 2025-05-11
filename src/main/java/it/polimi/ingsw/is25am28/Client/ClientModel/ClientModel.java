@@ -31,7 +31,7 @@ public class ClientModel {
     private final Map<String, ClientPlayer> players;
     private final List<ClientEventCard> eventCards;
     private ClientBoard board;
-    private final ResourceBank resourceBank;
+    private ResourceBank resourceBank;
 
     // TODO: ClientBoard - ClientShip - ClientComponent --> For ships and playerColor i would store them inside Maps to identify each user data
 
@@ -41,7 +41,7 @@ public class ClientModel {
         this.board = null;
 
 
-        this.resourceBank = new ResourceBank(2);
+//        this.resourceBank = new ResourceBank(2);
     }
 
     public String getNickname() {
@@ -58,6 +58,7 @@ public class ClientModel {
 
     public void setDifficultyLevel(int difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
+        this.resourceBank = new ResourceBank(difficultyLevel);
     }
 
     /**
@@ -155,6 +156,20 @@ public class ClientModel {
     public void setClientBoard(ClientBoard board) {
         this.board = board;
     }
+
+    /**
+     * @return The client resourceBank
+     */
+    public ResourceBank getResourceBank() {
+        return this.resourceBank;
+    }
+
+//    /**
+//     * Sets the current resourceBank to the given one
+//     */
+//    public void setClientResourceBank(ResourceBank resourceBank) {
+//        this.resourceBank = resourceBank;
+//    }
 
     /**
      * Updates the current clientPlayer stats (only the credits, the other stats are updated by the clientShip

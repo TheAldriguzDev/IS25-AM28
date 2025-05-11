@@ -89,6 +89,9 @@ public class ViewUpdater implements StateVisitor {
         BoardJSON board = state.getBoard();
         this.model.setClientBoard(new ClientBoard(board, this.model));
 
+        // 3. Reset the resourceBank to the correct amount of resources
+        this.model.getResourceBank().resetResourcesQuantity(state.getResourceBank());
+
         state.getCurrentState().accept(this);
     }
 

@@ -5,8 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * This data container will contain:
@@ -20,6 +22,7 @@ public final class ReconnectDTO extends StateDTO {
     private List<PlayerJSON> players;
     private BoardJSON board;
     private StateDTO currentState;
+    private Map<ItemColor, Integer> resourceBank;
 
     public ReconnectDTO() {}
 
@@ -75,6 +78,18 @@ public final class ReconnectDTO extends StateDTO {
     public void setCurrentState(StateDTO currentState) {
         this.currentState = currentState;
     }
+
+    @JsonSetter("setResourceBank")
+    public Map<ItemColor, Integer> getResourceBank() {
+        return resourceBank;
+    }
+
+    @JsonGetter("getResourceBank")
+    public void setResourceBank(Map<ItemColor, Integer> resourceBank) {
+        this.resourceBank = resourceBank;
+    }
+
+
 
     /**
      * Accept the visitor to visit the state
