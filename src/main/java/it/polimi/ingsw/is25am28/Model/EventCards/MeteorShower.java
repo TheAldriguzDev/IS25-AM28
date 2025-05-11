@@ -174,7 +174,7 @@ public class MeteorShower extends EventCard {
                         row++;
                     }
 
-                    if (toHit == null) return this;
+                    if (toHit == null) break;
                     sideToHit = toHit.getTopSide().ordinal();
                 }
 
@@ -191,7 +191,7 @@ public class MeteorShower extends EventCard {
                         column--;
                     }
 
-                    if (toHit == null) return this;
+                    if (toHit == null) break;
                     sideToHit = toHit.getRightSide().ordinal();
                 }
 
@@ -208,7 +208,7 @@ public class MeteorShower extends EventCard {
                         row--;
                     }
 
-                    if (toHit == null) return this;
+                    if (toHit == null) break;
                     sideToHit = toHit.getBottomSide().ordinal();
                 }
 
@@ -225,7 +225,7 @@ public class MeteorShower extends EventCard {
                         column++;
                     }
 
-                    if (toHit == null) return this;
+                    if (toHit == null) break;
                     sideToHit = toHit.getLeftSide().ordinal();
                 }
 

@@ -297,6 +297,7 @@ public class LobbyScreen extends Screen {
                 continue;
             }
 
+            // TODO: Rewrite this and the part above with the new implementation of InputWidgetTUI
             switch (choice) {
                 case 0 -> {
                     // (0) - Quit game
