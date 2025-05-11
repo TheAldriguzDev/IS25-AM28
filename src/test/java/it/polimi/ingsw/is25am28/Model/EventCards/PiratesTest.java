@@ -130,7 +130,7 @@ class PiratesTest {
 
 
 
-        pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board, 0);
+        pirates = new Pirates("Pirates", 2, 4, 4, 4, shootingSequence, board, 0, "");
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Non initialized card");
@@ -425,7 +425,7 @@ class PiratesTest {
         actionJSON3 = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
         actionJSON4 = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>()); // Total FirePower: 3
 
-        pirates = new Pirates("Pirates", 2, 3, 4, 4, shootingSequence, board, 0);
+        pirates = new Pirates("Pirates", 2, 3, 4, 4, shootingSequence, board, 0, "");
 
         pirates.initCardPlayers();
 
@@ -525,14 +525,14 @@ class PiratesTest {
         connectors5.add(1);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors1, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors2, false);
-        Cannon cannon_1 = new Cannon(connectors3, 2);
-        Cannon cannon_2 = new Cannon(connectors4, 1);
-        Cannon cannon_3 = new Cannon(connectors5, 1);
-        Vital vital_1 = new Vital(connectors4, 0);
-        Battery battery_1 = new Battery(connectors5, 3);
+        Cabin cabin_1 = new Cabin(connectors1, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors2, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 2, "");
+        Cannon cannon_2 = new Cannon(connectors4, 1, "");
+        Cannon cannon_3 = new Cannon(connectors5, 1, "");
+        Vital vital_1 = new Vital(connectors4, 0, "");
+        Battery battery_1 = new Battery(connectors5, 3, "");
         //cannon_1.rotateLeft();
 
 
@@ -611,16 +611,16 @@ class PiratesTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors2, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors6, false);
-        Cannon cannon_1 = new Cannon(connectors3, 2);
-        Cannon cannon_2 = new Cannon(connectors1, 1);
-        Cannon cannon_3 = new Cannon(connectors5, 1);
-        Vital vital_1 = new Vital(connectors7, 0);
-        Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors5, 3, false);
-        Shield shield_1 = new Shield(connectors8);
+        Cabin cabin_1 = new Cabin(connectors2, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors6, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 2, "");
+        Cannon cannon_2 = new Cannon(connectors1, 1, "");
+        Cannon cannon_3 = new Cannon(connectors5, 1, "");
+        Vital vital_1 = new Vital(connectors7, 0, "");
+        Battery battery_1 = new Battery(connectors1, 3, "");
+        Storage storage_1 = new Storage(connectors5, 3, false, "");
+        Shield shield_1 = new Shield(connectors8, "");
         //cannon_1.rotateLeft();
 
 
@@ -711,17 +711,17 @@ class PiratesTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors2, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors2, false);
-        Cannon cannon_1 = new Cannon(connectors3, 1);
-        Cannon cannon_2 = new Cannon(connectors1, 1);
-        Cannon cannon_3 = new Cannon(connectors1, 1);
-        Vital vital_1 = new Vital(connectors7, 0);
-        Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors5, 3, false);
-        Storage storage_2 = new Storage(connectors5, 2, true);
-        Shield shield_1 = new Shield(connectors4);
+        Cabin cabin_1 = new Cabin(connectors2, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors2, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 1, "");
+        Cannon cannon_2 = new Cannon(connectors1, 1, "");
+        Cannon cannon_3 = new Cannon(connectors1, 1, "");
+        Vital vital_1 = new Vital(connectors7, 0, "");
+        Battery battery_1 = new Battery(connectors1, 3, "");
+        Storage storage_1 = new Storage(connectors5, 3, false, "");
+        Storage storage_2 = new Storage(connectors5, 2, true, "");
+        Shield shield_1 = new Shield(connectors4, "");
         shield_1.rotateLeft();
 
 
@@ -816,18 +816,18 @@ class PiratesTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors2, false);
-        Cabin cabin_2 = new Cabin(connectors2, false);
-        Cabin cabin_3 = new Cabin(connectors6, false);
-        Cannon cannon_1 = new Cannon(connectors3, 1);
-        Cannon cannon_2 = new Cannon(connectors2, 1);
-        Cannon cannon_3 = new Cannon(connectors1, 1);
-        Vital vital_1 = new Vital(connectors7, 0);
-        Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors5, 3, false);
-        Storage storage_2 = new Storage(connectors5, 2, true);
-        Shield shield_1 = new Shield(connectors3);
-        Shield shield_2 = new Shield(connectors3);
+        Cabin cabin_1 = new Cabin(connectors2, false, "");
+        Cabin cabin_2 = new Cabin(connectors2, false, "");
+        Cabin cabin_3 = new Cabin(connectors6, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 1, "");
+        Cannon cannon_2 = new Cannon(connectors2, 1, "");
+        Cannon cannon_3 = new Cannon(connectors1, 1, "");
+        Vital vital_1 = new Vital(connectors7, 0, "");
+        Battery battery_1 = new Battery(connectors1, 3, "");
+        Storage storage_1 = new Storage(connectors5, 3, false, "");
+        Storage storage_2 = new Storage(connectors5, 2, true, "");
+        Shield shield_1 = new Shield(connectors3, "");
+        Shield shield_2 = new Shield(connectors3, "");
         shield_1.rotateLeft();
         shield_1.rotateLeft();
         //cannon_1.rotateLeft();

@@ -112,7 +112,7 @@ class SlaversTest {
         System.out.println("======================== SLAVERS PRINT AND FUNCTION (1) TEST ==========================");
 
 
-        slavers = new Slavers("Slavers", 2, 4, 2, 4, 6, board, 0);
+        slavers = new Slavers("Slavers", 2, 4, 2, 4, 6, board, 0, "");
         // ======== STATE TESTING ======== //
         cardState = slavers.generateState();
         assertEquals("Slavers", cardState.getCardName());
@@ -259,7 +259,7 @@ class SlaversTest {
 
     @Test
     public void test_first_three_players_tie_fourth_one_wins() {
-        slavers = new Slavers("Slavers", 2, 3, 2, 4, 6, board, 0);
+        slavers = new Slavers("Slavers", 2, 3, 2, 4, 6, board, 0, "");
 
         List<ComponentHelper<Void>> doubleCannonActivated = new ArrayList<>();
 //        List<Integer> x = new ArrayList<>();
@@ -383,15 +383,15 @@ class SlaversTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors1, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors2, false);
-        Cannon cannon_1 = new Cannon(connectors3, 2);
-        Cannon cannon_2 = new Cannon(connectors4, 1);
-        Cannon cannon_3 = new Cannon(connectors1, 1);
-        Cannon cannon_4 = new Cannon(connectors5, 1);
-        Vital vital_1 = new Vital(connectors4, 0);
-        Battery battery_1 = new Battery(connectors1, 3);
+        Cabin cabin_1 = new Cabin(connectors1, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors2, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 2, "");
+        Cannon cannon_2 = new Cannon(connectors4, 1, "");
+        Cannon cannon_3 = new Cannon(connectors1, 1, "");
+        Cannon cannon_4 = new Cannon(connectors5, 1, "");
+        Vital vital_1 = new Vital(connectors4, 0, "");
+        Battery battery_1 = new Battery(connectors1, 3, "");
         //cannon_1.rotateLeft();
 
 
@@ -485,16 +485,16 @@ class SlaversTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors2, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors6, false);
-        Cannon cannon_1 = new Cannon(connectors3, 2);
-        Cannon cannon_2 = new Cannon(connectors4, 1);
-        Cannon cannon_3 = new Cannon(connectors1, 1);
-        Cannon cannon_4 = new Cannon(connectors5, 1);
-        Vital vital_1 = new Vital(connectors4, 0);
-        Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors1, 3, false);
+        Cabin cabin_1 = new Cabin(connectors2, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors6, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 2, "");
+        Cannon cannon_2 = new Cannon(connectors4, 1, "");
+        Cannon cannon_3 = new Cannon(connectors1, 1, "");
+        Cannon cannon_4 = new Cannon(connectors5, 1, "");
+        Vital vital_1 = new Vital(connectors4, 0, "");
+        Battery battery_1 = new Battery(connectors1, 3, "");
+        Storage storage_1 = new Storage(connectors1, 3, false, "");
         //cannon_1.rotateLeft();
 
 
@@ -587,17 +587,17 @@ class SlaversTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors2, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors2, false);
-        Cannon cannon_1 = new Cannon(connectors3, 1);
-        Cannon cannon_2 = new Cannon(connectors1, 1);
-        Cannon cannon_3 = new Cannon(connectors1, 1);
-        Cannon cannon_4 = new Cannon(connectors5, 2);
-        Vital vital_1 = new Vital(connectors4, 0);
-        Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors1, 3, false);
-        Storage storage_2 = new Storage(connectors5, 2, true);
+        Cabin cabin_1 = new Cabin(connectors2, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors2, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 1, "");
+        Cannon cannon_2 = new Cannon(connectors1, 1, "");
+        Cannon cannon_3 = new Cannon(connectors1, 1, "");
+        Cannon cannon_4 = new Cannon(connectors5, 2, "");
+        Vital vital_1 = new Vital(connectors4, 0, "");
+        Battery battery_1 = new Battery(connectors1, 3, "");
+        Storage storage_1 = new Storage(connectors1, 3, false, "");
+        Storage storage_2 = new Storage(connectors5, 2, true, "");
         //cannon_1.rotateLeft();
 
 
@@ -694,17 +694,17 @@ class SlaversTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors2, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors6, false);
-        Cannon cannon_1 = new Cannon(connectors3, 1);
-        Cannon cannon_2 = new Cannon(connectors2, 1);
-        Cannon cannon_3 = new Cannon(connectors1, 1);
-        Cannon cannon_4 = new Cannon(connectors5, 2);
-        Vital vital_1 = new Vital(connectors4, 0);
-        Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors1, 3, false);
-        Storage storage_2 = new Storage(connectors5, 2, true);
+        Cabin cabin_1 = new Cabin(connectors2, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors6, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 1, "");
+        Cannon cannon_2 = new Cannon(connectors2, 1, "");
+        Cannon cannon_3 = new Cannon(connectors1, 1, "");
+        Cannon cannon_4 = new Cannon(connectors5, 2, "");
+        Vital vital_1 = new Vital(connectors4, 0, "");
+        Battery battery_1 = new Battery(connectors1, 3, "");
+        Storage storage_1 = new Storage(connectors1, 3, false, "");
+        Storage storage_2 = new Storage(connectors5, 2, true, "");
         //cannon_1.rotateLeft();
 
 

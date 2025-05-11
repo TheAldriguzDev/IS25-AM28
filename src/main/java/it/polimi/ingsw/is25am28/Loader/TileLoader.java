@@ -22,7 +22,8 @@ public class TileLoader extends Loader<Tiles> {
             tiles.add(
                     new Cannon(
                             c.getConnectors(),
-                            c.getForce()
+                            c.getForce(),
+                            c.getPath()
                     )
             );
         });
@@ -30,7 +31,8 @@ public class TileLoader extends Loader<Tiles> {
         tilesData.getShield().forEach((c) -> {
             tiles.add(
                     new Shield(
-                            c.getConnectors()
+                            c.getConnectors(),
+                            c.getPath()
                     )
             );
         });
@@ -38,7 +40,8 @@ public class TileLoader extends Loader<Tiles> {
         tilesData.getStructural().forEach((c) -> {
             tiles.add(
                     new Structural(
-                            c.getConnectors()
+                            c.getConnectors(),
+                            c.getPath()
                     )
             );
         });
@@ -47,7 +50,8 @@ public class TileLoader extends Loader<Tiles> {
             tiles.add(
                     new Cabin(
                             c.getConnectors(),
-                            false
+                            false,
+                            c.getPath()
                     )
             );
         });
@@ -56,7 +60,8 @@ public class TileLoader extends Loader<Tiles> {
            tiles.add(
                    new Engine(
                            c.getConnectors(),
-                           c.getSpeed()
+                           c.getSpeed(),
+                           c.getPath()
                    )
            );
         });
@@ -65,7 +70,8 @@ public class TileLoader extends Loader<Tiles> {
             tiles.add(
                 new Battery(
                         c.getConnectors(),
-                        c.getCapacity()
+                        c.getCapacity(),
+                        c.getPath()
                 )
             );
         });
@@ -74,7 +80,8 @@ public class TileLoader extends Loader<Tiles> {
            tiles.add(
                    new Vital(
                            c.getConnectors(),
-                           c.getType()
+                           c.getType(),
+                           c.getPath()
                    )
            );
         });
@@ -84,7 +91,8 @@ public class TileLoader extends Loader<Tiles> {
                     new Storage(
                             c.getConnectors(),
                             c.getCapacity(),
-                            c.getSpecial()
+                            c.getSpecial(),
+                            c.getPath()
                     )
             );
         });

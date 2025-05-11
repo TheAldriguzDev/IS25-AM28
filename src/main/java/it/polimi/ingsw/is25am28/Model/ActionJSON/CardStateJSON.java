@@ -23,6 +23,7 @@ public class CardStateJSON extends ActionJSON {
     private int id;
     private String cardName;
     private int cardLevel;
+    private String imagePath;
     private boolean isCardUsable;
     private boolean hasBeenActivated;
     private boolean isPlayerDefeated;
@@ -362,6 +363,22 @@ public class CardStateJSON extends ActionJSON {
     @JsonSetter("cardName")
     public void setCardName(String cardName) throws IllegalStateException {
         this.cardName = cardName;
+    }
+
+    /**
+     * Returns the card image path
+     * */
+    @JsonGetter("imagePath")
+    public String getImagePath() throws IllegalStateException {
+        return this.imagePath;
+    }
+
+    /**
+     * Set the card image path to the given data
+     * */
+    @JsonSetter("imagePath")
+    public void setImagePath(String imagePath) throws IllegalStateException {
+        this.imagePath = imagePath;
     }
 
     /**

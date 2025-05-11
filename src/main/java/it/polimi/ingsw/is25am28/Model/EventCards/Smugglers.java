@@ -31,8 +31,8 @@ public class Smugglers extends EventCard {
     private Map<String, Integer> removedBatteries; // TODO: missing implementation on firepower
     private List<String> eliminatedPlayers;
 
-    public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank, int cardID) {
-        super(name, cardLevel, board, cardID);
+    public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank, int cardID, String path) {
+        super(name, cardLevel, board, cardID, path);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.redItems = redItems;
@@ -247,6 +247,7 @@ public class Smugglers extends EventCard {
             // Setting the card's static data
             smugglersStateJSON.setId(this.id);
             smugglersStateJSON.setCardName(this.getCardName());
+            smugglersStateJSON.setImagePath(this.path);
             smugglersStateJSON.setCardLevel(this.getCardLevel());
             smugglersStateJSON.setRequiredFirepower(requiredFirepower);
             smugglersStateJSON.setMovementSteps(movementSteps);

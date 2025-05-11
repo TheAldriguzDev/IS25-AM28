@@ -15,8 +15,8 @@ import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.addColor;
 public final class ClientVital extends ClientComponent {
     private final VitalType vitalType;
 
-    public ClientVital(int id, List<Integer> sides, int type) {
-        super(id, sides);
+    public ClientVital(int id, List<Integer> sides, int type, String path) {
+        super(id, sides, path);
 
         if (type == VitalType.BROWN_VITAL.ordinal()) {
             this.vitalType = VitalType.BROWN_VITAL;

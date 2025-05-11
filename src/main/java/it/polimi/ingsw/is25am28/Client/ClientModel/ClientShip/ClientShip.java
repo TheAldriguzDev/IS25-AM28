@@ -56,7 +56,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
         }
 
         // Creating the ship's core cabin
-        this.core = new ClientCabin(1, coreConnectors,true);
+        this.core = new ClientCabin(1, coreConnectors,true, "");
 
         // No aliens are present at the beginning
         this.purpleAlienPosition = null;
@@ -89,7 +89,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
             coreConnectors.add(THREE_PIPES.ordinal());
         }
 
-        this.core = new ClientCabin(-1, coreConnectors,true);
+        this.core = new ClientCabin(-1, coreConnectors,true, "");
 
         // No aliens are present at the beginning
         this.purpleAlienPosition = null;
@@ -131,14 +131,14 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 case 0 -> {
                     int force = (int) map.get("force");
 
-                    ClientCannon component = new ClientCannon(id, connectorOrdinals, force);
+                    ClientCannon component = new ClientCannon(id, connectorOrdinals, force, "");
 
                     this.addComponent(component, i, j);
                 }
                 // Cabin
                 case 1 -> {
                     List<LifeformType> lifeform = (List<LifeformType>) map.get("inhabitants");
-                    ClientCabin component = new ClientCabin(id, connectorOrdinals, false);
+                    ClientCabin component = new ClientCabin(id, connectorOrdinals, false, "");
 
                     for (LifeformType lifeformType : lifeform) {
                         component.addInhabitant(new Lifeform(lifeformType));
@@ -152,7 +152,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                     boolean isSpecial = (boolean) map.get("special");
 
                     List<Integer> storedItems = (List<Integer>) map.get("storedItems");
-                    ClientStorage component = new ClientStorage(id, connectorOrdinals, capacity, isSpecial);
+                    ClientStorage component = new ClientStorage(id, connectorOrdinals, capacity, isSpecial, "");
 
                     for (Integer storedItem : storedItems) {
                         switch (storedItem) {
@@ -176,30 +176,30 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 // Vital
                 case 3 -> {
                     int type = (int) map.get("type");
-                    this.addComponent(new ClientVital(id, connectorOrdinals, type), i, j);
+                    this.addComponent(new ClientVital(id, connectorOrdinals, type, ""), i, j);
                 }
                 // Engine
                 case 4 -> {
                     int speed = (int) map.get("speed");
-                    this.addComponent(new ClientEngine(id, connectorOrdinals, speed), i, j);
+                    this.addComponent(new ClientEngine(id, connectorOrdinals, speed, ""), i, j);
                 }
                 // Battery
                 case 5 -> {
                     int capacity = (int) map.get("capacity");
                     int available = (int) map.get("available");
 
-                    ClientBattery component = new ClientBattery(id, connectorOrdinals, capacity);
+                    ClientBattery component = new ClientBattery(id, connectorOrdinals, capacity, "");
                     component.setAvailability(available);
 
                     this.addComponent(component, i, j);
                 }
                 // Shield
                 case 6 -> {
-                    this.addComponent(new ClientShield(id, connectorOrdinals), i, j);
+                    this.addComponent(new ClientShield(id, connectorOrdinals, ""), i, j);
                 }
                 // Structural
                 case 7 -> {
-                    this.addComponent(new ClientStructural(id, connectorOrdinals), i, j);
+                    this.addComponent(new ClientStructural(id, connectorOrdinals, ""), i, j);
                 }
                 default -> {
                     throw new RuntimeException("The given component is not recognised.");
@@ -1040,7 +1040,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
             List<String> unwrappedScreen = shipGridWidget.unwrapWidgetFromBorder().getScreen();;
 
             // Generating a mockup component to get its dimensions
-            ClientStructural clientStructural = new ClientStructural(-1, Arrays.asList(0, 0, 0, 0));
+            ClientStructural clientStructural = new ClientStructural(-1, Arrays.asList(0, 0, 0, 0), "");
             WidgetTUI widget = clientStructural.generateWidget();
             int componentHeight = widget.getHeight();
             int componentWidth = widget.getWidth();

@@ -13,8 +13,8 @@ public class Stardust extends EventCard {
     private Map<String, Integer> updatedPositions;
     private List<String> eliminatedPlayers;
 
-    public Stardust(String name, int cardLevel, Board board, int cardID) {
-        super(name, cardLevel, board, cardID);
+    public Stardust(String name, int cardLevel, Board board, int cardID, String path) {
+        super(name, cardLevel, board, cardID, path);
         this.updatedPositions = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
     }
@@ -103,6 +103,7 @@ public class Stardust extends EventCard {
         } else {
             stardustStateJSON.setId(this.id);
             stardustStateJSON.setCardName(getCardName());
+            stardustStateJSON.setImagePath(this.path);
             stardustStateJSON.setCardLevel(getCardLevel());
         }
 

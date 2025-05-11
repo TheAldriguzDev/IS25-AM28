@@ -23,6 +23,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected final int id;
     protected String playerNickname;
     protected String cardName;
+    protected String path;
     protected int cardLevel;
     protected boolean hasBeenUsed;
     protected boolean hasBeenActivated; // this flag allows the card to send its full static information (like when only visualized at the start of the game) only when ita has not been used a single time wit useCard()
@@ -35,6 +36,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         this.id = cardState.getId();
         this.cardName = cardState.getCardName();
         this.cardLevel = cardState.getCardLevel();
+        this.path = cardState.getImagePath();
 
         enabledCommands.add("playCard");
     }

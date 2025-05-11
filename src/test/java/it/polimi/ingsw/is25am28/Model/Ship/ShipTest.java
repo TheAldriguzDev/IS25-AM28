@@ -112,31 +112,31 @@ class ShipTest {
             r = singleEngine3 at (9, 8)
         */
 
-        Battery tripleBattery1 = new Battery(connectors, 3);
+        Battery tripleBattery1 = new Battery(connectors, 3, "");
 
-        Cannon singleCannon1 = new Cannon(connectors, 1);
-        Cannon singleCannon2 = new Cannon(connectors, 1);
-        Cannon doubleCannon1 = new Cannon(connectors, 2);
-        Cannon doubleCannon2 = new Cannon(connectors, 2);
+        Cannon singleCannon1 = new Cannon(connectors, 1, "");
+        Cannon singleCannon2 = new Cannon(connectors, 1, "");
+        Cannon doubleCannon1 = new Cannon(connectors, 2, "");
+        Cannon doubleCannon2 = new Cannon(connectors, 2, "");
 
-        Engine singleEngine1 = new Engine(connectors, 1);
-        Engine singleEngine2 = new Engine(connectors, 1);
-        Engine singleEngine3 = new Engine(connectors, 1);
-        Engine doubleEngine1 = new Engine(connectors, 2);
+        Engine singleEngine1 = new Engine(connectors, 1, "");
+        Engine singleEngine2 = new Engine(connectors, 1, "");
+        Engine singleEngine3 = new Engine(connectors, 1, "");
+        Engine doubleEngine1 = new Engine(connectors, 2, "");
 
-        Cabin cabin1 = new Cabin(connectors, false);
+        Cabin cabin1 = new Cabin(connectors, false, "");
 
-        Shield shield1 = new Shield(connectors);
+        Shield shield1 = new Shield(connectors, "");
 
-        Storage normalDoubleStorage1 = new Storage(connectors, 2, false);
-        Storage normalTripleStorage1 = new Storage(connectors, 3, false);
-        Storage specialSingleStorage1 = new Storage(connectors, 1, true);
-        Storage specialDoubleStorage1 = new Storage(connectors, 2, true);
+        Storage normalDoubleStorage1 = new Storage(connectors, 2, false, "");
+        Storage normalTripleStorage1 = new Storage(connectors, 3, false, "");
+        Storage specialSingleStorage1 = new Storage(connectors, 1, true, "");
+        Storage specialDoubleStorage1 = new Storage(connectors, 2, true, "");
 
-        Structural structural1 = new Structural(connectors);
+        Structural structural1 = new Structural(connectors, "");
 
-        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
 
         // Adding the components created above
         ship.addComponent(doubleCannon1, 4, 6);
@@ -177,16 +177,16 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
 
 //        System.out.println("==== BEFORE ====");
 //        printShipGrid(ship);
@@ -276,31 +276,31 @@ class ShipTest {
             r = singleEngine3 at (9, 8)
         */
 
-        Battery tripleBattery1 = new Battery(connectors, 3);
+        Battery tripleBattery1 = new Battery(connectors, 3, "");
 
-        Cannon singleCannon1 = new Cannon(connectors, 1);
-        Cannon singleCannon2 = new Cannon(connectors, 1);
-        Cannon doubleCannon1 = new Cannon(connectors, 2);
-        Cannon doubleCannon2 = new Cannon(connectors, 2);
+        Cannon singleCannon1 = new Cannon(connectors, 1, "");
+        Cannon singleCannon2 = new Cannon(connectors, 1, "");
+        Cannon doubleCannon1 = new Cannon(connectors, 2, "");
+        Cannon doubleCannon2 = new Cannon(connectors, 2, "");
 
-        Engine singleEngine1 = new Engine(connectors, 1);
-        Engine singleEngine2 = new Engine(connectors, 1);
-        Engine singleEngine3 = new Engine(connectors, 1);
-        Engine doubleEngine1 = new Engine(connectors, 2);
+        Engine singleEngine1 = new Engine(connectors, 1, "");
+        Engine singleEngine2 = new Engine(connectors, 1, "");
+        Engine singleEngine3 = new Engine(connectors, 1, "");
+        Engine doubleEngine1 = new Engine(connectors, 2, "");
 
-        Cabin cabin1 = new Cabin(connectors, false);
+        Cabin cabin1 = new Cabin(connectors, false, "");
 
-        Shield shield1 = new Shield(connectors);
+        Shield shield1 = new Shield(connectors, "");
 
-        Storage normalDoubleStorage1 = new Storage(connectors, 2, false);
-        Storage normalTripleStorage1 = new Storage(connectors, 3, false);
-        Storage specialSingleStorage1 = new Storage(connectors, 1, true);
-        Storage specialDoubleStorage1 = new Storage(connectors, 2, true);
+        Storage normalDoubleStorage1 = new Storage(connectors, 2, false, "");
+        Storage normalTripleStorage1 = new Storage(connectors, 3, false, "");
+        Storage specialSingleStorage1 = new Storage(connectors, 1, true, "");
+        Storage specialDoubleStorage1 = new Storage(connectors, 2, true, "");
 
-        Structural structural1 = new Structural(connectors);
+        Structural structural1 = new Structural(connectors, "");
 
-        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
 
         // Adding the components created above
         ship.addComponent(doubleCannon1, 4, 6);
@@ -390,18 +390,18 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Cannon doubleCannon = new Cannon(connectors, 2);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 1);
-        Engine doubleEngine = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Cannon doubleCannon = new Cannon(connectors, 2, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 1, "");
+        Engine doubleEngine = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -452,16 +452,16 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -550,8 +550,8 @@ class ShipTest {
         assertEquals(expectedFirePower, ship.getFirePower(null));
 
         // Case 1 - No cannons, + purple alien on board
-        ship.addComponent(new Cabin(connectors, false), 6, 7);
-        ship.addComponent(new Vital(connectors, PURPLE_VITAL.ordinal()), 6, 8);
+        ship.addComponent(new Cabin(connectors, false, ""), 6, 7);
+        ship.addComponent(new Vital(connectors, PURPLE_VITAL.ordinal(), ""), 6, 8);
 
 //        alienCoords = new HashMap<>();
 //        alienCoords.put(PURPLE_ALIEN.ordinal(), new Pair<>(6, 7));
@@ -628,8 +628,8 @@ class ShipTest {
         assertEquals(expectedEnginePower, ship.getEnginePower(batteries));
 
         // Case 1 - No engines, + brown alien on board
-        ship.addComponent(new Cabin(connectors, false), 6, 7);
-        ship.addComponent(new Vital(connectors, BROWN_VITAL.ordinal()), 6, 8);
+        ship.addComponent(new Cabin(connectors, false, ""), 6, 7);
+        ship.addComponent(new Vital(connectors, BROWN_VITAL.ordinal(), ""), 6, 8);
 
 //        alienCoords = new HashMap<>();
 //        alienCoords.put(BROWN_ALIEN.ordinal(), new Pair<>(6, 7));
@@ -697,17 +697,17 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
-        Vital vital2 = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
+        Vital vital2 = new Vital(connectors, 0, "");
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -748,10 +748,10 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Storage leftStorage = new Storage(connectors, 3, false);
-        Storage rightStorage = new Storage(connectors, 3, false);
-        Storage topStorage = new Storage(connectors, 2, true);
-        Storage disconnectedStorage = new Storage(connectors, 3, false);
+        Storage leftStorage = new Storage(connectors, 3, false, "");
+        Storage rightStorage = new Storage(connectors, 3, false, "");
+        Storage topStorage = new Storage(connectors, 2, true, "");
+        Storage disconnectedStorage = new Storage(connectors, 3, false, "");
 
         Item red = new Item(ItemColor.RED);
         Item yellow = new Item(ItemColor.YELLOW);
@@ -847,15 +847,15 @@ class ShipTest {
         connector5.add( THREE_PIPES.ordinal() );
 
 
-        Battery battery = new Battery(connector3, 3);
-        Cabin cabin = new Cabin(connector4, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connector4, 1);
-        Engine engine2 = new Engine(connector5, 2);
-        Shield shield = new Shield(connector2);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connector2);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connector3, 3, "");
+        Cabin cabin = new Cabin(connector4, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connector4, 1, "");
+        Engine engine2 = new Engine(connector5, 2, "");
+        Shield shield = new Shield(connector2, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connector2, "");
+        Vital vital = new Vital(connectors, 0, "");
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -930,16 +930,16 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -996,16 +996,16 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -1075,16 +1075,16 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -1144,17 +1144,17 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 2);
-        Battery battery3 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 2, "");
+        Battery battery3 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -1215,16 +1215,16 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
 
         Cabin core = (Cabin) ship.getComponent(6, 6);
 
@@ -1275,16 +1275,16 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
 
 //        System.out.println("==== BEFORE ====");
 //        printShipGrid(ship);
@@ -1394,17 +1394,17 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Battery battery = new Battery(connectors, 3);
-        Battery battery2 = new Battery(connectors, 2);
-        Battery battery3 = new Battery(connectors, 3);
-        Cabin cabin = new Cabin(connectors, false);
-        Cannon cannon = new Cannon(connectors, 1);
-        Engine engine = new Engine(connectors, 1);
-        Engine engine2 = new Engine( connectors, 2);
-        Shield shield = new Shield( connectors);
-        Storage storage = new Storage(connectors, 3, false);
-        Structural structural = new Structural(connectors);
-        Vital vital = new Vital(connectors, 0);
+        Battery battery = new Battery(connectors, 3, "");
+        Battery battery2 = new Battery(connectors, 2, "");
+        Battery battery3 = new Battery(connectors, 3, "");
+        Cabin cabin = new Cabin(connectors, false, "");
+        Cannon cannon = new Cannon(connectors, 1, "");
+        Engine engine = new Engine(connectors, 1, "");
+        Engine engine2 = new Engine( connectors, 2, "");
+        Shield shield = new Shield( connectors, "");
+        Storage storage = new Storage(connectors, 3, false, "");
+        Structural structural = new Structural(connectors, "");
+        Vital vital = new Vital(connectors, 0, "");
 
         // Adding the components created above
         ship.addComponent(battery, 6, 7);
@@ -1519,7 +1519,7 @@ class ShipTest {
         // (1) - Adding both aliens
         ship = initCustomShip();
         ship.removeComponent(6, 8);
-        ship.addComponent(new Cabin(connectors, false), 6, 8);  // Adding another cabin to the brown vital unit
+        ship.addComponent(new Cabin(connectors, false, ""), 6, 8);  // Adding another cabin to the brown vital unit
         ship.generateComponentSubLists();
 
         ship.addLifeformToCabin(7, 7, PURPLE_ALIEN);
@@ -1544,7 +1544,7 @@ class ShipTest {
         // Adding purpleAlien to a brownAlien-eligible cabin (the one @ coords (6, 8))
         ship = initCustomShip();
         ship.removeComponent(6, 8);
-        ship.addComponent(new Cabin(connectors, false), 6, 8);  // Adding another cabin to the brown vital unit
+        ship.addComponent(new Cabin(connectors, false, ""), 6, 8);  // Adding another cabin to the brown vital unit
         ship.generateComponentSubLists();
 
         NoSupportVitalFoundException nsvfe = assertThrows(NoSupportVitalFoundException.class, () -> { ship.addLifeformToCabin(6, 8, PURPLE_ALIEN); });
@@ -1567,11 +1567,11 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Cabin cabin = new Cabin(connectors, false);
-        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital purpleVital2 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital brownVital1 = new Vital(connectors, BROWN_VITAL.ordinal());
-        Vital brownVital2 = new Vital(connectors, BROWN_VITAL.ordinal());
+        Cabin cabin = new Cabin(connectors, false, "");
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital purpleVital2 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital brownVital1 = new Vital(connectors, BROWN_VITAL.ordinal(), "");
+        Vital brownVital2 = new Vital(connectors, BROWN_VITAL.ordinal(), "");
 
         ship.addComponent(cabin, 6, 7);
         ship.addComponent(purpleVital1, 6, 8);
@@ -1637,10 +1637,10 @@ class ShipTest {
             connectors.add( THREE_PIPES.ordinal() );
         }
 
-        Cabin cabin = new Cabin(connectors, false);
-        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital purpleVital2 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital brownVital1 = new Vital(connectors, BROWN_VITAL.ordinal());
+        Cabin cabin = new Cabin(connectors, false, "");
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital purpleVital2 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital brownVital1 = new Vital(connectors, BROWN_VITAL.ordinal(), "");
 
         Lifeform astronaut = new Lifeform(LifeformType.ASTRONAUT);
 

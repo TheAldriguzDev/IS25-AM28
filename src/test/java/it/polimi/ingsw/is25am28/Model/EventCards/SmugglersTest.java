@@ -135,7 +135,7 @@ class SmugglersTest {
         itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
         itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
 
-        smugglers = new Smugglers("Smugglers", 2, 3, 5, 4, 1, 2, 1, 0, board, resourceBank, 0);
+        smugglers = new Smugglers("Smugglers", 2, 3, 5, 4, 1, 2, 1, 0, board, resourceBank, 0, "");
 
         actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>()); // Total FirePower: 2
         actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>()); // Total FirePower: 2
@@ -305,7 +305,7 @@ class SmugglersTest {
         actionJSON3 = new SmugglersJSON("Player 3", true, itemsToBeTaken3, itemsToBeRemoved3, doubleCannonActivated); // Total FirePower: 5
         actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, new ArrayList<>()); // Total FirePower: 3
 
-        smugglers = new Smugglers("Smugglers", 2, 3, 3, 2, 1, 2, 1, 0, board, resourceBank, 0);
+        smugglers = new Smugglers("Smugglers", 2, 3, 3, 2, 1, 2, 1, 0, board, resourceBank, 0, "");
 
         ArrayList<Integer> playerPositionsBefore = new ArrayList<>();
         for (Player p : board.getPlayers()) {
@@ -414,14 +414,14 @@ class SmugglersTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors1, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors2, false);
-        Cannon cannon_1 = new Cannon(connectors2, 2);
-        Cannon cannon_2 = new Cannon(connectors4, 1);
-        Cannon cannon_3 = new Cannon(connectors1, 1);
-        Vital vital_1 = new Vital(connectors4, 0);
-        Battery battery_1 = new Battery(connectors5, 3);
+        Cabin cabin_1 = new Cabin(connectors1, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors2, false, "");
+        Cannon cannon_1 = new Cannon(connectors2, 2, "");
+        Cannon cannon_2 = new Cannon(connectors4, 1, "");
+        Cannon cannon_3 = new Cannon(connectors1, 1, "");
+        Vital vital_1 = new Vital(connectors4, 0, "");
+        Battery battery_1 = new Battery(connectors5, 3, "");
         //cannon_1.rotateLeft();
 
 
@@ -507,15 +507,15 @@ class SmugglersTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors2, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors6, false);
-        Cannon cannon_1 = new Cannon(connectors3, 1);
-        Cannon cannon_2 = new Cannon(connectors4, 1);
-        Cannon cannon_3 = new Cannon(connectors1, 1);
-        Vital vital_1 = new Vital(connectors4, 0);
-        Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors5, 3, false);
+        Cabin cabin_1 = new Cabin(connectors2, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors6, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 1, "");
+        Cannon cannon_2 = new Cannon(connectors4, 1, "");
+        Cannon cannon_3 = new Cannon(connectors1, 1, "");
+        Vital vital_1 = new Vital(connectors4, 0, "");
+        Battery battery_1 = new Battery(connectors1, 3, "");
+        Storage storage_1 = new Storage(connectors5, 3, false, "");
         //cannon_1.rotateLeft();
 
         cabin_1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
@@ -604,17 +604,17 @@ class SmugglersTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors2, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors6, false);
-        Cannon cannon_1 = new Cannon(connectors3, 1);
-        Cannon cannon_2 = new Cannon(connectors1, 1);
-        Cannon cannon_3 = new Cannon(connectors1, 1);
-        Cannon cannon_4 = new Cannon(connectors5, 2);
-        Vital vital_1 = new Vital(connectors4, 0);
-        Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors5, 3, false);
-        Storage storage_2 = new Storage(connectors5, 2, true);
+        Cabin cabin_1 = new Cabin(connectors2, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors6, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 1, "");
+        Cannon cannon_2 = new Cannon(connectors1, 1, "");
+        Cannon cannon_3 = new Cannon(connectors1, 1, "");
+        Cannon cannon_4 = new Cannon(connectors5, 2, "");
+        Vital vital_1 = new Vital(connectors4, 0, "");
+        Battery battery_1 = new Battery(connectors1, 3, "");
+        Storage storage_1 = new Storage(connectors5, 3, false, "");
+        Storage storage_2 = new Storage(connectors5, 2, true, "");
         //cannon_1.rotateLeft();
 
 
@@ -710,16 +710,16 @@ class SmugglersTest {
         connectors8.add(0);
 
         //Cabin core = new Cabin(connectors, true);
-        Cabin cabin_1 = new Cabin(connectors2, false);
-        Cabin cabin_2 = new Cabin(connectors1, false);
-        Cabin cabin_3 = new Cabin(connectors6, false);
-        Cannon cannon_1 = new Cannon(connectors3, 1);
-        Cannon cannon_2 = new Cannon(connectors2, 1);
-        Cannon cannon_3 = new Cannon(connectors1, 1);
-        Vital vital_1 = new Vital(connectors4, 0);
-        Battery battery_1 = new Battery(connectors1, 3);
-        Storage storage_1 = new Storage(connectors5, 3, false);
-        Storage storage_2 = new Storage(connectors5, 2, true);
+        Cabin cabin_1 = new Cabin(connectors2, false, "");
+        Cabin cabin_2 = new Cabin(connectors1, false, "");
+        Cabin cabin_3 = new Cabin(connectors6, false, "");
+        Cannon cannon_1 = new Cannon(connectors3, 1, "");
+        Cannon cannon_2 = new Cannon(connectors2, 1, "");
+        Cannon cannon_3 = new Cannon(connectors1, 1, "");
+        Vital vital_1 = new Vital(connectors4, 0, "");
+        Battery battery_1 = new Battery(connectors1, 3, "");
+        Storage storage_1 = new Storage(connectors5, 3, false, "");
+        Storage storage_2 = new Storage(connectors5, 2, true, "");
         //cannon_1.rotateLeft();
 
 

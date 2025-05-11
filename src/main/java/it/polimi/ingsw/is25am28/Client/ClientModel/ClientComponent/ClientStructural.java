@@ -12,8 +12,8 @@ import java.util.List;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public final class ClientStructural extends ClientComponent {
-    public ClientStructural(int id, List<Integer> sides) {
-        super(id, sides);
+    public ClientStructural(int id, List<Integer> sides, String path) {
+        super(id, sides, path);
     }
 
     @Override

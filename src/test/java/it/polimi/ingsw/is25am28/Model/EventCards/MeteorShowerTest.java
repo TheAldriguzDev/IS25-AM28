@@ -83,32 +83,32 @@ class MeteorShowerTest {
             connectors.add(THREE_PIPES.ordinal());
         }
 
-        Battery tripleBattery1 = new Battery(connectors, 6);
+        Battery tripleBattery1 = new Battery(connectors, 6, "");
 
-        Cannon singleCannon1 = new Cannon(connectors, 1);
-        Cannon singleCannon2 = new Cannon(connectors, 1);
-        Cannon singleCannon3 = new Cannon(connectors, 1);
-        Cannon doubleCannon1 = new Cannon(connectors, 2);
-        Cannon doubleCannon2 = new Cannon(connectors, 2);
+        Cannon singleCannon1 = new Cannon(connectors, 1, "");
+        Cannon singleCannon2 = new Cannon(connectors, 1, "");
+        Cannon singleCannon3 = new Cannon(connectors, 1, "");
+        Cannon doubleCannon1 = new Cannon(connectors, 2, "");
+        Cannon doubleCannon2 = new Cannon(connectors, 2, "");
 
-        Engine singleEngine1 = new Engine(connectors, 1);
-        Engine singleEngine2 = new Engine(connectors, 1);
-        Engine singleEngine3 = new Engine(connectors, 1);
-        Engine doubleEngine1 = new Engine(connectors, 2);
+        Engine singleEngine1 = new Engine(connectors, 1, "");
+        Engine singleEngine2 = new Engine(connectors, 1, "");
+        Engine singleEngine3 = new Engine(connectors, 1, "");
+        Engine doubleEngine1 = new Engine(connectors, 2, "");
 
-        Cabin cabin1 = new Cabin(connectors, false);
+        Cabin cabin1 = new Cabin(connectors, false, "");
 
-        Shield shield1 = new Shield(connectors);
+        Shield shield1 = new Shield(connectors, "");
 
-        Storage normalDoubleStorage1 = new Storage(connectors, 2, false);
-        Storage normalTripleStorage1 = new Storage(connectors, 3, false);
-        Storage specialSingleStorage1 = new Storage(connectors, 1, true);
-        Storage specialDoubleStorage1 = new Storage(connectors, 2, true);
+        Storage normalDoubleStorage1 = new Storage(connectors, 2, false, "");
+        Storage normalTripleStorage1 = new Storage(connectors, 3, false, "");
+        Storage specialSingleStorage1 = new Storage(connectors, 1, true, "");
+        Storage specialDoubleStorage1 = new Storage(connectors, 2, true, "");
 
-        Structural structural1 = new Structural(connectors);
+        Structural structural1 = new Structural(connectors, "");
 
-        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
 
         // Adding the components created above
         ship.addComponent(doubleCannon1, 7, 3);
@@ -224,7 +224,8 @@ class MeteorShowerTest {
                 2,
                 meteorSequence,
                 board,
-                0
+                0,
+                ""
         );
     }
 

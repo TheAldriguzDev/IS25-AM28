@@ -148,31 +148,31 @@ class EpidemyTest {
             r = singleEngine3 at (9, 8)
         */
 
-        Battery tripleBattery1 = new Battery(connectors, 3);
+        Battery tripleBattery1 = new Battery(connectors, 3, "");
 
-        Cannon singleCannon1 = new Cannon(connectors, 1);
-        Cannon singleCannon2 = new Cannon(connectors, 1);
-        Cannon doubleCannon1 = new Cannon(connectors, 2);
-        Cannon doubleCannon2 = new Cannon(connectors, 2);
+        Cannon singleCannon1 = new Cannon(connectors, 1, "");
+        Cannon singleCannon2 = new Cannon(connectors, 1, "");
+        Cannon doubleCannon1 = new Cannon(connectors, 2, "");
+        Cannon doubleCannon2 = new Cannon(connectors, 2, "");
 
-        Engine singleEngine1 = new Engine(connectors, 1);
-        Engine singleEngine2 = new Engine(connectors, 1);
-        Engine singleEngine3 = new Engine(connectors, 1);
-        Engine doubleEngine1 = new Engine(connectors, 2);
+        Engine singleEngine1 = new Engine(connectors, 1, "");
+        Engine singleEngine2 = new Engine(connectors, 1, "");
+        Engine singleEngine3 = new Engine(connectors, 1, "");
+        Engine doubleEngine1 = new Engine(connectors, 2, "");
 
-        Cabin cabin1 = new Cabin(connectors, false);
+        Cabin cabin1 = new Cabin(connectors, false, "");
 
-        Shield shield1 = new Shield(connectors);
+        Shield shield1 = new Shield(connectors, "");
 
-        Storage normalDoubleStorage1 = new Storage(connectors, 2, false);
-        Storage normalTripleStorage1 = new Storage(connectors, 3, false);
-        Storage specialSingleStorage1 = new Storage(connectors, 1, true);
-        Storage specialDoubleStorage1 = new Storage(connectors, 2, true);
+        Storage normalDoubleStorage1 = new Storage(connectors, 2, false, "");
+        Storage normalTripleStorage1 = new Storage(connectors, 3, false, "");
+        Storage specialSingleStorage1 = new Storage(connectors, 1, true, "");
+        Storage specialDoubleStorage1 = new Storage(connectors, 2, true, "");
 
-        Structural structural1 = new Structural(connectors);
+        Structural structural1 = new Structural(connectors, "");
 
-        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
 
         // Adding the components created above
         ship.addComponent(doubleCannon1, 4, 5);
@@ -223,8 +223,8 @@ class EpidemyTest {
 
         List<Integer> connectors = getConnectors();
 
-        Cabin cabin2 = new Cabin(connectors, false);
-        Cabin cabin3 = new Cabin(connectors, false);
+        Cabin cabin2 = new Cabin(connectors, false, "");
+        Cabin cabin3 = new Cabin(connectors, false, "");
 
         shipPlayer1.removeComponent(6, 7);
         shipPlayer1.addComponent(cabin2, 6, 7);
@@ -395,7 +395,8 @@ class EpidemyTest {
                 "Epidemy",
                 board.getLevel(),
                 board
-                ,0
+                ,0,
+                ""
         );
 
         ClientEpidemy clientEpidemy;
@@ -548,8 +549,8 @@ class EpidemyTest {
 
         List<Integer> connectors = getConnectors();
 
-        Cabin cabin2 = new Cabin(connectors, false);
-        Cabin cabin3 = new Cabin(connectors, false);
+        Cabin cabin2 = new Cabin(connectors, false, "");
+        Cabin cabin3 = new Cabin(connectors, false, "");
 
         shipPlayer1.removeComponent(6, 7);
         shipPlayer1.addComponent(cabin2, 6, 7);
@@ -584,7 +585,8 @@ class EpidemyTest {
                 "Epidemy",
                 board.getLevel(),
                 board,
-                0
+                0,
+                ""
         );
 
         List<LifeformType> expectedPlayer1Lifeforms;
@@ -661,8 +663,8 @@ class EpidemyTest {
 
         List<Integer> connectors = getConnectors();
 
-        Cabin cabin2 = new Cabin(connectors, false);
-        Cabin cabin3 = new Cabin(connectors, false);
+        Cabin cabin2 = new Cabin(connectors, false, "");
+        Cabin cabin3 = new Cabin(connectors, false, "");
 
         shipPlayer1.removeComponent(6, 7);
         shipPlayer1.addComponent(cabin2, 6, 7);
@@ -682,7 +684,8 @@ class EpidemyTest {
                 "Epidemy",
                 board.getLevel(),
                 board,
-                0
+                0,
+                ""
         );
 
         List<LifeformType> expectedPlayer1Lifeforms;
@@ -763,10 +766,10 @@ class EpidemyTest {
 
         List<Integer> connectors = getConnectors();
 
-        Cabin cabin2 = new Cabin(connectors, false);
-        Cabin cabin3 = new Cabin(connectors, false);
-        Cabin cabin4 = new Cabin(connectors, false);
-        Cabin cabin5 = new Cabin(connectors, false);
+        Cabin cabin2 = new Cabin(connectors, false, "");
+        Cabin cabin3 = new Cabin(connectors, false, "");
+        Cabin cabin4 = new Cabin(connectors, false, "");
+        Cabin cabin5 = new Cabin(connectors, false, "");
 
         shipPlayer1.removeComponent(6, 7);
         shipPlayer1.addComponent(cabin2, 6, 7);
@@ -800,7 +803,8 @@ class EpidemyTest {
                 "Epidemy",
                 board.getLevel(),
                 board,
-                0
+                0,
+                ""
         );
 
         List<LifeformType> expectedLifeformsP1;

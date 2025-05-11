@@ -63,9 +63,10 @@ public class WarZone extends EventCard {
             int requiredItems,
             List<PlasmaShot> shootingSequence,
             List<WarZoneActionConsequencePair> cardActions,
-            int cardID
+            int cardID,
+            String path
     ) {
-        super(name, level, board, cardID);
+        super(name, level, board, cardID, path);
         this.resourceBank = resourceBank;
         this.movementSteps = movementSteps;
         this.requiredCrew = requiredCrew;
@@ -741,7 +742,7 @@ public class WarZone extends EventCard {
             cardState.setCardName(this.getCardName());
             // Set the card level
             cardState.setCardLevel(this.cardLevel);
-
+            cardState.setImagePath(this.path);
 
             List<List<String>> actionsAndConsequences = new ArrayList<>();
             for (WarZoneActionConsequencePair pair : this.cardActions) {

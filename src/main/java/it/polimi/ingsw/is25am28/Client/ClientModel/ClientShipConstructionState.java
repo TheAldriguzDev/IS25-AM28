@@ -96,6 +96,7 @@ public class ClientShipConstructionState extends ClientState {
         for (Map<String, Object> map : componentList) {
             int id = (int) map.get("id");
             int typeId = (int) map.get("tid");
+            String path = (String) map.get("path");
 
             Object connectorsObj = map.get("connectors");
             List<Integer> connectorOrdinals = null;
@@ -113,40 +114,40 @@ public class ClientShipConstructionState extends ClientState {
                 // Cannon
                 case 0 -> {
                     int force = (int) map.get("force");
-                    this.components.add(new ClientCannon(id, connectorOrdinals, force));
+                    this.components.add(new ClientCannon(id, connectorOrdinals, force, path));
                 }
                 // Cabin
                 case 1 -> {
-                    this.components.add(new ClientCabin(id, connectorOrdinals, false));
+                    this.components.add(new ClientCabin(id, connectorOrdinals, false, path));
                 }
                 // Storage
                 case 2 -> {
                     int capacity = (int) map.get("capacity");
                     boolean isSpecial = (boolean) map.get("special");
-                    this.components.add(new ClientStorage(id, connectorOrdinals, capacity, isSpecial));
+                    this.components.add(new ClientStorage(id, connectorOrdinals, capacity, isSpecial, path));
                 }
                 // Vital
                 case 3 -> {
                     int type = (int) map.get("type");
-                    this.components.add(new ClientVital(id, connectorOrdinals, type));
+                    this.components.add(new ClientVital(id, connectorOrdinals, type, path));
                 }
                 // Engine
                 case 4 -> {
                     int speed = (int) map.get("speed");
-                    this.components.add(new ClientEngine(id, connectorOrdinals, speed));
+                    this.components.add(new ClientEngine(id, connectorOrdinals, speed, path));
                 }
                 // Battery
                 case 5 -> {
                     int capacity = (int) map.get("capacity");
-                    this.components.add(new ClientBattery(id, connectorOrdinals, capacity));
+                    this.components.add(new ClientBattery(id, connectorOrdinals, capacity, path));
                 }
                 // Shield
                 case 6 -> {
-                    this.components.add(new ClientShield(id, connectorOrdinals));
+                    this.components.add(new ClientShield(id, connectorOrdinals, path));
                 }
                 // Structural
                 case 7 -> {
-                    this.components.add(new ClientStructural(id, connectorOrdinals));
+                    this.components.add(new ClientStructural(id, connectorOrdinals, path));
                 }
                 default -> {
                     throw new RuntimeException("The given component is not recognised.");

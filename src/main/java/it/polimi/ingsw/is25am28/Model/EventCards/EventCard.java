@@ -26,13 +26,15 @@ public abstract class EventCard {
     protected Optional<Player> currentPlayer;
     private Board board;
 
+    protected String path;
+
     private boolean hasBeenUsed;
     private boolean hasBeenActivated;
 
     /**
      * General constructor shared between the classes
      * */
-    protected EventCard(String name, int cardLevel, Board board, int cardID) {
+    protected EventCard(String name, int cardLevel, Board board, int cardID, String path) {
         this.id = this.getId();
         this.name = name;
         this.cardLevel = cardLevel;
@@ -41,6 +43,7 @@ public abstract class EventCard {
         this.currentPlayer = Optional.empty();
         this.hasBeenActivated = false;
         this.cardID = cardID;
+        this.path = path;
     }
 
     public int getCardID() {

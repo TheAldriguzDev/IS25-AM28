@@ -238,31 +238,31 @@ public class PrintTest {
             r = singleEngine3 at (9, 8)
         */
 
-        Battery tripleBattery1 = new Battery(connectors, 3);
+        Battery tripleBattery1 = new Battery(connectors, 3, "");
 
-        Cannon singleCannon1 = new Cannon(connectors, 1);
-        Cannon singleCannon2 = new Cannon(connectors, 1);
-        Cannon doubleCannon1 = new Cannon(connectors, 2);
-        Cannon doubleCannon2 = new Cannon(connectors, 2);
+        Cannon singleCannon1 = new Cannon(connectors, 1, "");
+        Cannon singleCannon2 = new Cannon(connectors, 1, "");
+        Cannon doubleCannon1 = new Cannon(connectors, 2, "");
+        Cannon doubleCannon2 = new Cannon(connectors, 2, "");
 
-        Engine singleEngine1 = new Engine(connectors, 1);
-        Engine singleEngine2 = new Engine(connectors, 1);
-        Engine singleEngine3 = new Engine(connectors, 1);
-        Engine doubleEngine1 = new Engine(connectors, 2);
+        Engine singleEngine1 = new Engine(connectors, 1, "");
+        Engine singleEngine2 = new Engine(connectors, 1, "");
+        Engine singleEngine3 = new Engine(connectors, 1, "");
+        Engine doubleEngine1 = new Engine(connectors, 2, "");
 
-        Cabin cabin1 = new Cabin(connectors, false);
+        Cabin cabin1 = new Cabin(connectors, false, "");
 
-        Shield shield1 = new Shield(connectors);
+        Shield shield1 = new Shield(connectors, "");
 
-        Storage normalDoubleStorage1 = new Storage(connectors, 2, false);
-        Storage normalTripleStorage1 = new Storage(connectors, 3, false);
-        Storage specialSingleStorage1 = new Storage(connectors, 1, true);
-        Storage specialDoubleStorage1 = new Storage(connectors, 2, true);
+        Storage normalDoubleStorage1 = new Storage(connectors, 2, false, "");
+        Storage normalTripleStorage1 = new Storage(connectors, 3, false, "");
+        Storage specialSingleStorage1 = new Storage(connectors, 1, true, "");
+        Storage specialDoubleStorage1 = new Storage(connectors, 2, true, "");
 
-        Structural structural1 = new Structural(connectors);
+        Structural structural1 = new Structural(connectors, "");
 
-        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
 
         // Adding the components created above
         ship.addComponent(doubleCannon1, 4, 5);
@@ -297,32 +297,32 @@ public class PrintTest {
             connectors.add(THREE_PIPES.ordinal());
         }
 
-        Battery tripleBattery1 = new Battery(connectors, 3);
+        Battery tripleBattery1 = new Battery(connectors, 3, "");
 
-        Cannon singleCannon1 = new Cannon(connectors, 1);
-        Cannon singleCannon2 = new Cannon(connectors, 1);
-        Cannon singleCannon3 = new Cannon(connectors, 1);
-        Cannon doubleCannon1 = new Cannon(connectors, 2);
-        Cannon doubleCannon2 = new Cannon(connectors, 2);
+        Cannon singleCannon1 = new Cannon(connectors, 1, "");
+        Cannon singleCannon2 = new Cannon(connectors, 1, "");
+        Cannon singleCannon3 = new Cannon(connectors, 1, "");
+        Cannon doubleCannon1 = new Cannon(connectors, 2, "");
+        Cannon doubleCannon2 = new Cannon(connectors, 2, "");
 
-        Engine singleEngine1 = new Engine(connectors, 1);
-        Engine singleEngine2 = new Engine(connectors, 1);
-        Engine singleEngine3 = new Engine(connectors, 1);
-        Engine doubleEngine1 = new Engine(connectors, 2);
+        Engine singleEngine1 = new Engine(connectors, 1, "");
+        Engine singleEngine2 = new Engine(connectors, 1, "");
+        Engine singleEngine3 = new Engine(connectors, 1, "");
+        Engine doubleEngine1 = new Engine(connectors, 2, "");
 
-        Cabin cabin1 = new Cabin(connectors, false);
+        Cabin cabin1 = new Cabin(connectors, false, "");
 
-        Shield shield1 = new Shield(connectors);
+        Shield shield1 = new Shield(connectors, "");
 
-        Storage normalDoubleStorage1 = new Storage(connectors, 2, false);
-        Storage normalTripleStorage1 = new Storage(connectors, 3, false);
-        Storage specialSingleStorage1 = new Storage(connectors, 1, true);
-        Storage specialDoubleStorage1 = new Storage(connectors, 2, true);
+        Storage normalDoubleStorage1 = new Storage(connectors, 2, false, "");
+        Storage normalTripleStorage1 = new Storage(connectors, 3, false, "");
+        Storage specialSingleStorage1 = new Storage(connectors, 1, true, "");
+        Storage specialDoubleStorage1 = new Storage(connectors, 2, true, "");
 
-        Structural structural1 = new Structural(connectors);
+        Structural structural1 = new Structural(connectors, "");
 
-        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+        Vital purpleVital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
 
         // Adding the components created above
         ship.addComponent(doubleCannon1, 7, 3);
@@ -358,14 +358,14 @@ public class PrintTest {
     void printTest_battery() {
         System.out.println("======================== BATTERY PRINT TEST ==========================");
 
-        Battery battery1 = new Battery(connectors, 2);
-        Battery battery2 = new Battery(connectors, 2);
-        Battery battery3 = new Battery(connectors, 3);
-        Battery battery4 = new Battery(connectors, 3);
-        Battery battery5 = new Battery(connectors, 3);
+        Battery battery1 = new Battery(connectors, 2, "");
+        Battery battery2 = new Battery(connectors, 2, "");
+        Battery battery3 = new Battery(connectors, 3, "");
+        Battery battery4 = new Battery(connectors, 3, "");
+        Battery battery5 = new Battery(connectors, 3, "");
 
-        Battery emptyBattery2 = new Battery(connectors, 2);
-        Battery emptyBattery3 = new Battery(connectors, 3);
+        Battery emptyBattery2 = new Battery(connectors, 2, "");
+        Battery emptyBattery3 = new Battery(connectors, 3, "");
 
         battery2.setAvailability(1);
         battery4.setAvailability(2);
@@ -395,12 +395,12 @@ public class PrintTest {
     void printTest_cabin() {
         System.out.println("======================== CABIN PRINT TEST ==========================");
 
-        Cabin coreCabin = new Cabin(connectors, true);
-        Cabin emptyCabin = new Cabin(connectors, false);
-        Cabin oneAstronautCabin = new Cabin(connectors, false);
-        Cabin twoAstronautCabin = new Cabin(connectors, false);
-        Cabin purpleAlienCabin = new Cabin(connectors, false);
-        Cabin brownAlienCabin = new Cabin(connectors, false);
+        Cabin coreCabin = new Cabin(connectors, true, "");
+        Cabin emptyCabin = new Cabin(connectors, false, "");
+        Cabin oneAstronautCabin = new Cabin(connectors, false, "");
+        Cabin twoAstronautCabin = new Cabin(connectors, false, "");
+        Cabin purpleAlienCabin = new Cabin(connectors, false, "");
+        Cabin brownAlienCabin = new Cabin(connectors, false, "");
 
         Lifeform astronaut = new Lifeform(LifeformType.ASTRONAUT);
         Lifeform purpleAlien = new Lifeform(LifeformType.PURPLE_ALIEN);
@@ -432,8 +432,8 @@ public class PrintTest {
     void printTest_cannon() {
         System.out.println("======================== CANNON PRINT TEST ==========================");
 
-        Cannon singleCannon = new Cannon(connectors, 1);
-        Cannon doubleCannon = new Cannon(connectors, 2);
+        Cannon singleCannon = new Cannon(connectors, 1, "");
+        Cannon doubleCannon = new Cannon(connectors, 2, "");
 
         WidgetTUI widgetSingleCannon;
         WidgetTUI widgetDoubleCannon;
@@ -454,8 +454,8 @@ public class PrintTest {
     void printTest_engine() {
         System.out.println("======================== ENGINE PRINT TEST ==========================");
 
-        Engine singleEngine = new Engine(connectors, 1);
-        Engine doubleEngine = new Engine(connectors, 2);
+        Engine singleEngine = new Engine(connectors, 1, "");
+        Engine doubleEngine = new Engine(connectors, 2, "");
 
         WidgetTUI widgetSingleEngine;
         WidgetTUI widgetDoubleEngine;
@@ -476,16 +476,16 @@ public class PrintTest {
     void printTest_shield() {
         System.out.println("======================== SHIELD PRINT TEST ==========================");
 
-        Shield shield_top_right = new Shield(connectors);
+        Shield shield_top_right = new Shield(connectors, "");
 
-        Shield shield_bottom_right = new Shield(connectors);
+        Shield shield_bottom_right = new Shield(connectors, "");
         shield_bottom_right.rotateRight();
 
-        Shield shield_bottom_left = new Shield(connectors);
+        Shield shield_bottom_left = new Shield(connectors, "");
         shield_bottom_left.rotateRight();
         shield_bottom_left.rotateRight();
 
-        Shield shield_top_left = new Shield(connectors);
+        Shield shield_top_left = new Shield(connectors, "");
         shield_top_left.rotateLeft();
 
         WidgetTUI widgetShield_top_right = shield_top_right.generateWidget();
@@ -503,12 +503,12 @@ public class PrintTest {
     void printTest_storage() {
         System.out.println("======================== STORAGE PRINT TEST ==========================");
 
-        Storage specialSingleStorage = new Storage(connectors, 1, true);
-        Storage specialDoubleStorage = new Storage(connectors, 2, true);
-        Storage normalDoubleStorage = new Storage(connectors, 2, false);
-        Storage normalTripleStorage = new Storage(connectors, 3, false);
-        Storage emptySpecialSingleStorage = new Storage(connectors, 1, true);
-        Storage emptyNormalTripleStorage = new Storage(connectors, 3, false);
+        Storage specialSingleStorage = new Storage(connectors, 1, true, "");
+        Storage specialDoubleStorage = new Storage(connectors, 2, true, "");
+        Storage normalDoubleStorage = new Storage(connectors, 2, false, "");
+        Storage normalTripleStorage = new Storage(connectors, 3, false, "");
+        Storage emptySpecialSingleStorage = new Storage(connectors, 1, true, "");
+        Storage emptyNormalTripleStorage = new Storage(connectors, 3, false, "");
 
         Item red = new Item(ItemColor.RED);
         Item yellow = new Item(ItemColor.YELLOW);
@@ -542,7 +542,7 @@ public class PrintTest {
     @Test
     void printTest_structural() {
         System.out.println("======================== STRUCTURAL PRINT TEST ==========================");
-        Structural structure = new Structural(connectors);
+        Structural structure = new Structural(connectors, "");
 
         WidgetTUI widget = structure.generateWidget();
         widget.printWidget();
@@ -551,8 +551,8 @@ public class PrintTest {
     @Test
     void printTest_vital() {
         System.out.println("======================== VITAL PRINT TEST ==========================");
-        Vital vital_purple = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal());
-        Vital vital_brown = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+        Vital vital_purple = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
+        Vital vital_brown = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
 
         WidgetTUI purpleVitalWidget = vital_purple.generateWidget();
         WidgetTUI brownVitalWidget = vital_brown.generateWidget();
@@ -604,16 +604,16 @@ public class PrintTest {
         List<String> finalScreen;
 
         // In this test we'll be composing shields along a line
-        Shield shield_top_right = new Shield(connectors);
+        Shield shield_top_right = new Shield(connectors, "");
 
-        Shield shield_bottom_right = new Shield(connectors);
+        Shield shield_bottom_right = new Shield(connectors, "");
         shield_bottom_right.rotateRight();
 
-        Shield shield_bottom_left = new Shield(connectors);
+        Shield shield_bottom_left = new Shield(connectors, "");
         shield_bottom_left.rotateRight();
         shield_bottom_left.rotateRight();
 
-        Shield shield_top_left = new Shield(connectors);
+        Shield shield_top_left = new Shield(connectors, "");
         shield_top_left.rotateLeft();
 
         List<String> screenShield_top_right = shield_top_right.generateWidget().getScreen();
@@ -654,45 +654,45 @@ public class PrintTest {
 
         Ship ship = new Ship(2);
 
-        Structural structural = new Structural(connectors);
+        Structural structural = new Structural(connectors, "");
         ship.addComponent(structural, 5, 6);
 
-        Battery battery_1 = new Battery(connectors, 3);
+        Battery battery_1 = new Battery(connectors, 3, "");
         ship.addComponent(battery_1, 6, 7);
 
-        Storage normal_storage_1 = new Storage(connectors, 3, false);
+        Storage normal_storage_1 = new Storage(connectors, 3, false, "");
         normal_storage_1.storeItem(new Item(ItemColor.YELLOW));
         normal_storage_1.storeItem(new Item(ItemColor.BLUE));
         normal_storage_1.storeItem(new Item(ItemColor.GREEN));
         ship.addComponent(normal_storage_1, 6, 5);
 
-        Shield shield_1 = new Shield(connectors);
+        Shield shield_1 = new Shield(connectors, "");
         ship.addComponent(shield_1, 7, 6);
 
-        Shield shield_2 = new Shield(connectors);
+        Shield shield_2 = new Shield(connectors, "");
         shield_2.rotateRight();
         ship.addComponent(shield_2, 6, 4);
 
-        Vital brown_vital = new Vital(connectors, VitalType.BROWN_VITAL.ordinal());
+        Vital brown_vital = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
         ship.addComponent(brown_vital, 7, 7);
 
-        Cabin cabin_1 = new Cabin(connectors, false);
+        Cabin cabin_1 = new Cabin(connectors, false, "");
         cabin_1.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
         ship.addComponent(cabin_1, 7, 8);
 
-        Cabin cabin_2 = new Cabin(connectors, false);
+        Cabin cabin_2 = new Cabin(connectors, false, "");
         cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         cabin_2.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         ship.addComponent(cabin_2, 7, 5);
 
-        Battery battery_2 = new Battery(connectors, 2);
+        Battery battery_2 = new Battery(connectors, 2, "");
         ship.addComponent(battery_2, 8, 5);
 
-        Storage special_storage_1 = new Storage(connectors, 2, true);
+        Storage special_storage_1 = new Storage(connectors, 2, true, "");
         special_storage_1.storeItem(new Item(ItemColor.RED));
         ship.addComponent(special_storage_1, 6, 8);
 
-        Cabin cabin_3 = new Cabin(connectors, false);
+        Cabin cabin_3 = new Cabin(connectors, false, "");
         cabin_3.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
         ship.addComponent(cabin_3, 5, 5);
 

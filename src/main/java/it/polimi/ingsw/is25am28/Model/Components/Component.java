@@ -23,6 +23,8 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
      */
     protected int direction;
 
+    protected String path;
+
     /**
      * Unique tile identifier
      */
@@ -44,12 +46,14 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
         }
     }
 
-    public Component(List<Integer> connectors) {
+    public Component(List<Integer> connectors, String path) {
         sides = new Connector[4];
 
         for (int i = 0; i < sides.length; i++) {
             sides[i] = Connector.fromOrdinal(connectors.get(i));
         }
+
+        this.path = path;
     }
 
     /**
@@ -195,6 +199,7 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
         map.put("id", getId());
         map.put("tid", getTypeId());
         map.put("connectors", connectors);
+        map.put("path", path);
         map.put("row", row);
         map.put("col", col);
 

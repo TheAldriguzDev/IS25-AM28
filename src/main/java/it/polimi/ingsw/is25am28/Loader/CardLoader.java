@@ -42,7 +42,8 @@ public class CardLoader extends Loader<Cards> {
                             c.getDays(),
                             c.getCredits(),
                             board,
-                            counter.getAndIncrement()
+                            counter.getAndIncrement(),
+                            c.getPath()
                     )
             );
         });
@@ -71,7 +72,8 @@ public class CardLoader extends Loader<Cards> {
                             items,
                             board,
                             resourceBank,
-                            counter.getAndIncrement()
+                            counter.getAndIncrement(),
+                            c.getPath()
                     )
             );
         });
@@ -84,7 +86,8 @@ public class CardLoader extends Loader<Cards> {
                            c.getLevel(),
                            c.getMeteors(),
                            board,
-                           counter.getAndIncrement()
+                           counter.getAndIncrement(),
+                           c.getPath()
                    )
            );
         });
@@ -99,7 +102,8 @@ public class CardLoader extends Loader<Cards> {
                             c.getDays(),
                             c.getShoots(),
                             board,
-                            counter.getAndIncrement()
+                            counter.getAndIncrement(),
+                            c.getPath()
                     )
             );
         });
@@ -126,7 +130,8 @@ public class CardLoader extends Loader<Cards> {
                            itemsPerPlanet,
                            resourceBank,
                            board,
-                           counter.getAndIncrement()
+                           counter.getAndIncrement(),
+                           c.getPath()
                    )
            );
         });
@@ -137,7 +142,8 @@ public class CardLoader extends Loader<Cards> {
                            "Open Space",
                            c.getLevel(),
                            board,
-                           counter.getAndIncrement()
+                           counter.getAndIncrement(),
+                           c.getPath()
                    )
            );
         });
@@ -148,7 +154,8 @@ public class CardLoader extends Loader<Cards> {
                            "Epidemic",
                            c.getLevel(),
                            board,
-                           counter.getAndIncrement()
+                           counter.getAndIncrement(),
+                           c.getPath()
                    )
            );
         });
@@ -167,7 +174,8 @@ public class CardLoader extends Loader<Cards> {
                             c.getStorage().getBlue(),
                             board,
                             resourceBank,
-                            counter.getAndIncrement()
+                            counter.getAndIncrement(),
+                            c.getPath()
                     )
             );
         });
@@ -182,7 +190,8 @@ public class CardLoader extends Loader<Cards> {
                            c.getCredits(),
                            c.getPenalty(),
                            board,
-                           counter.getAndIncrement()
+                           counter.getAndIncrement(),
+                           c.getPath()
                    )
            );
         });
@@ -193,7 +202,8 @@ public class CardLoader extends Loader<Cards> {
                             "Stardust",
                             c.getLevel(),
                             board,
-                            counter.getAndIncrement()
+                            counter.getAndIncrement(),
+                            c.getPath()
                     )
             );
         });
@@ -224,7 +234,8 @@ public class CardLoader extends Loader<Cards> {
                             c.getItems(),
                             plasmaShots,
                             actions,
-                            counter.getAndIncrement()
+                            counter.getAndIncrement(),
+                            c.getPath()
                     )
             );
         });

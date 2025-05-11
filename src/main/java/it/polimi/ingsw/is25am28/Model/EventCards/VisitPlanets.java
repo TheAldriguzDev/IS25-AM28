@@ -38,9 +38,10 @@ public class VisitPlanets extends EventCard {
             @JsonProperty("itemsPerPlanet") List<Map<String, Integer>> itemsPerPlanet,
             ResourceBank resourceBank,
             Board board,
-            int cardID
+            int cardID,
+            String path
     ) {
-        super(cardName, cardLevel, board, cardID);
+        super(cardName, cardLevel, board, cardID, path);
 
         updatedPositions = new HashMap<>();
 
@@ -363,6 +364,7 @@ public class VisitPlanets extends EventCard {
         } else {
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
+            cardState.setImagePath(this.path);
             cardState.setCardLevel(this.getCardLevel());
             cardState.setCardIsUsable( !this.hasFinished());
 

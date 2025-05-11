@@ -26,8 +26,8 @@ public class Slavers extends EventCard {
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private boolean isPlayerDefeated;
 
-    public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board, int cardID) {
-        super(name, cardLevel, board, cardID);
+    public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board, int cardID, String path) {
+        super(name, cardLevel, board, cardID, path);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.givenCredits = givenCredits;
@@ -225,6 +225,7 @@ public class Slavers extends EventCard {
             // Static info about the card
             slaversStateJSON.setId(this.id);
             slaversStateJSON.setCardName(this.getCardName());
+            slaversStateJSON.setImagePath(this.path);
             slaversStateJSON.setCardLevel(this.getCardLevel());
             slaversStateJSON.setRequiredFirepower(requiredFirepower);
             slaversStateJSON.setGivenCredits(this.givenCredits);

@@ -13,8 +13,8 @@ public final class Vital extends Component {
     public static final String alias = "VITAL";
     private final VitalType vitalType;
 
-    public Vital(List<Integer> connectors, int type) {
-        super(connectors);
+    public Vital(List<Integer> connectors, int type, String path) {
+        super(connectors, path);
 
         if (type == VitalType.BROWN_VITAL.ordinal()) {
             this.vitalType = VitalType.BROWN_VITAL;

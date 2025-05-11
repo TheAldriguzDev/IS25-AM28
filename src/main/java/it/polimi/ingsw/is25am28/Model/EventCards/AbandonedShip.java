@@ -26,8 +26,8 @@ public class AbandonedShip extends EventCard {
 
     private List<String> playersThatCanUseTheCard;
 
-    public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits, Board board, int cardID) {
-        super(name, cardLevel, board, cardID);
+    public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits, Board board, int cardID, String path) {
+        super(name, cardLevel, board, cardID, path);
         this.requiredCrew = requireCrew;
         this.movementStep = movementStep;
         this.givenCredits = givenCredits;
@@ -195,6 +195,7 @@ public class AbandonedShip extends EventCard {
             // Set the card information that are needed to play the game
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
+            cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
             cardState.setRequiredCrewMembers(this.requiredCrew);
             cardState.setGivenCredits(this.givenCredits);
