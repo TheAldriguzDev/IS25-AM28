@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.Items;
 
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+
 public enum ItemColor {
     RED(4), YELLOW(3), GREEN(2), BLUE(1);
 
@@ -20,6 +22,18 @@ public enum ItemColor {
             case YELLOW -> "YELLOW";
             case GREEN -> "GREEN";
             case BLUE -> "BLUE";
+        };
+    }
+
+    /**
+     * @return The corresponding ANSI color
+     */
+    public String getANSIColor() {
+        return switch (this) {
+            case RED -> ANSIColors.RED;
+            case YELLOW -> ANSIColors.YELLOW;
+            case GREEN -> ANSIColors.GREEN;
+            case BLUE -> ANSIColors.BLUE;
         };
     }
 }
