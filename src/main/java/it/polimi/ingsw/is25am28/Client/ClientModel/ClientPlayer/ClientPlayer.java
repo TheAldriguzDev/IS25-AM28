@@ -104,4 +104,5 @@ public class ClientPlayer {
     public ClientShip getShip() {
         return this.ship;
     }
+
 }

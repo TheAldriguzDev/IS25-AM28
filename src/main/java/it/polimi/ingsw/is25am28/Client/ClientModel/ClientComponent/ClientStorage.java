@@ -31,6 +31,10 @@ public final class ClientStorage extends ClientComponent {
         return capacity;
     }
 
+    public int availableSpace() {
+        return capacity - storedItems.size();
+    }
+
     public boolean isSpecialStorage() {
         return isSpecialStorage;
     }

@@ -11,6 +11,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
+import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Network.Messages.PlayCard;
@@ -430,6 +431,8 @@ public class CardRoundScreen extends Screen {
 
         if (ship == null) return;
 
+        // TODO : exclude lifeform commands if not present
+
         // Getting the lifeform type to remove
         do {
             System.out.println("Available lifeforms to remove:");
@@ -476,42 +479,102 @@ public class CardRoundScreen extends Screen {
 
         correctInput = false;
 
-        // Getting the component coordinates
-        do {
-            try {
-                componentCoordinates = this.getComponentCoordinates();
-                Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
+        // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
+        // TODO: add prevPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
 
-                component = ship.getComponent(
-                        finalComponentCoordinates.getKey(),
-                        finalComponentCoordinates.getValue()
-                );
+        AtomicReference<ClientCabin> selectedCabin = new AtomicReference<>(null);
+        int index = 0;
+        CommandWidgetTUI command;
+        InputWidgetTUI availableCabins = new InputWidgetTUI(this.inputThread);
+        availableCabins.setColumnGroupingAmount(4);
 
-                switch (component) {
-                    case ClientCabin cabin -> {
-                        if (cabin.getAvailableSpace() <= 1) {
-                            correctInput = true;
-                        }
-                        else {
-                            System.out.println(PrintUtils.addColor("[ERROR] Selected cabin is empty.", ANSIColors.RED));
-                        }
+        if (lfType.equals(LifeformType.PURPLE_ALIEN)) {
+            ClientCabin cabin = ship.getPurpleAlienPosition();
+            command = new CommandWidgetTUI("" + index,
+                    () -> {
+                        selectedCabin.set(cabin);
                     }
-                    case null, default -> {
-                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentCoordinates.getKey() + 1) + ", " + (componentCoordinates.getValue() + 1) + ") is not a cabin.", ANSIColors.RED));
+            );
+            command.appendString("Cabin @ (row=" + (cabin.getI() + 1) + ", col=" + (cabin.getJ() + 1) + ")");
+            availableCabins.addCommand(command);
+        } else if (lfType.equals(LifeformType.BROWN_ALIEN)) {
+            ClientCabin cabin = ship.getBrownAlienPosition();
+            command = new CommandWidgetTUI("" + index,
+                    () -> {
+                        selectedCabin.set(cabin);
+                    }
+            );
+            command.appendString("Cabin @ (row=" + (cabin.getI() + 1) + ", col=" + (cabin.getJ() + 1) + ")");
+            availableCabins.addCommand(command);
+        } else {
+            for(ClientCabin cabin : ship.getCabinList()) {
+                if (!cabin.getInhabitants().isEmpty()) {
+                    if (ship.getPurpleAlienPosition() != cabin && ship.getBrownAlienPosition() != cabin) {
+                        command = new CommandWidgetTUI("" + index,
+                                () -> {
+                                    selectedCabin.set(cabin);
+                                }
+                        );
+                        command.appendString("Cabin @ (row=" + (cabin.getI() + 1) + ", col=" + (cabin.getJ() + 1) + ")");
+                        availableCabins.addCommand(command);
+                        index++;
                     }
                 }
             }
-            catch (InterruptedException e) {
-                // A forced interrupt arrived
-                return;
-            }
         }
-        while (!correctInput);
+
+
+
+
+        do {
+            try{
+                correctInput = availableCabins.selectCommand(DEFAULT_COMMAND_PREFIX);
+            } catch (InterruptedException e) {
+
+            }
+            if (!correctInput) {
+                System.out.println(UNKNOWN_COMMAND_ERROR);
+            }
+        } while (!correctInput);
+
+//        correctInput = false;
+//
+//        // Getting the component coordinates
+//        do {
+//            try {
+//                componentCoordinates = this.getComponentCoordinates();
+//                Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
+//
+//                component = ship.getComponent(
+//                        finalComponentCoordinates.getKey(),
+//                        finalComponentCoordinates.getValue()
+//                );
+//
+//                switch (component) {
+//                    case ClientCabin cabin -> {
+//                        if (cabin.getAvailableSpace() <= 1) {
+//                            correctInput = true;
+//                        }
+//                        else {
+//                            System.out.println(PrintUtils.addColor("[ERROR] Selected cabin is empty.", ANSIColors.RED));
+//                        }
+//                    }
+//                    case null, default -> {
+//                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentCoordinates.getKey() + 1) + ", " + (componentCoordinates.getValue() + 1) + ") is not a cabin.", ANSIColors.RED));
+//                    }
+//                }
+//            }
+//            catch (InterruptedException e) {
+//                // A forced interrupt arrived
+//                return;
+//            }
+//        }
+//        while (!correctInput);
 
         // Assembling all together
         lifeformPosition = new ComponentHelper<LifeformType>(
-                componentCoordinates.getKey(),
-                componentCoordinates.getValue()
+                selectedCabin.get().getI(),
+                selectedCabin.get().getJ()
         ).addItem(lfType);
 
         crewToRemove.add(lifeformPosition);
@@ -539,9 +602,11 @@ public class CardRoundScreen extends Screen {
 
         if (ship == null) return;
 
+        ship.generateComponentSubLists();
         // Getting the items to remove or take
         do {
             System.out.println("Available item colors:");
+            this.generateAvailableItemColorsWidget(ship.getAvailableShipItemColors());
             availableItemColors.printWidget();
             System.out.print(DEFAULT_COMMAND_PREFIX);
 
@@ -558,7 +623,8 @@ public class CardRoundScreen extends Screen {
                 correctInput = true;
 
                 try {
-                    itemColor = ItemColor.values()[itemIndex];
+                    itemColor = ship.getAvailableShipItemColors().get(itemIndex);
+                    // Local update
                 }
                 catch (IndexOutOfBoundsException e) {
                     System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please select a valid item color.", ANSIColors.RED));
@@ -577,34 +643,71 @@ public class CardRoundScreen extends Screen {
 
         correctInput = false;
 
-        // Getting the component coordinates
-        do {
-            try {
-                componentCoordinates = this.getComponentCoordinates();
-                Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
+        // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
+        // TODO: add prevPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
 
-                component = ship.getComponent(
-                        finalComponentCoordinates.getKey(),
-                        finalComponentCoordinates.getValue()
-                );
+        AtomicReference<ClientStorage> selectedStorage = new AtomicReference<>(null);
+        int index = 0;
+        CommandWidgetTUI command;
+        InputWidgetTUI availableStorages = new InputWidgetTUI(this.inputThread);
+        availableStorages.setColumnGroupingAmount(4);
 
-                switch (component) {
-                    case ClientStorage storage -> { correctInput = true; }
-                    case null, default -> {
-                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentCoordinates.getKey() + 1) + ", " + (componentCoordinates.getValue() + 1) + ") is not a storage.", ANSIColors.RED));
-                    }
-                }
-            }
-            catch (InterruptedException e) {
-                return;
-            }
+        for(ClientStorage storage : ship.getStorageList()) {
+//            if (storage.availableSpace() == storage.getCapacity()) {
+                //if (storage.getStoredItems().stream().map(Item::getColor).toList().contains(itemColor)) {
+                    command = new CommandWidgetTUI("" + index,
+                            () -> {
+                                selectedStorage.set(storage);
+                            }
+                    );
+                    command.appendString("storage @ (row=" + (storage.getI() + 1) + ", col=" + (storage.getJ() + 1) + ")");
+                    availableStorages.addCommand(command);
+                    index++;
+                //}
+
         }
-        while (!correctInput);
+
+        do {
+            try{
+                correctInput = availableStorages.selectCommand(DEFAULT_COMMAND_PREFIX);
+            } catch (InterruptedException e) {
+
+            }
+            if (!correctInput) {
+                System.out.println(UNKNOWN_COMMAND_ERROR);
+            }
+        } while (!correctInput);
+
+//        correctInput = false;
+//
+//        // Getting the component coordinates
+//        do {
+//            try {
+//                componentCoordinates = this.getComponentCoordinates();
+//                Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
+//
+//                component = ship.getComponent(
+//                        finalComponentCoordinates.getKey(),
+//                        finalComponentCoordinates.getValue()
+//                );
+//
+//                switch (component) {
+//                    case ClientStorage storage -> { correctInput = true; }
+//                    case null, default -> {
+//                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentCoordinates.getKey() + 1) + ", " + (componentCoordinates.getValue() + 1) + ") is not a storage.", ANSIColors.RED));
+//                    }
+//                }
+//            }
+//            catch (InterruptedException e) {
+//                return;
+//            }
+//        }
+//        while (!correctInput);
 
         // Assembling all together
         itemPosition = new ComponentHelper<ItemColor>(
-                componentCoordinates.getKey(),
-                componentCoordinates.getValue()
+                selectedStorage.get().getI(),
+                selectedStorage.get().getJ()
         ).addItem(itemColor);
 
         itemsToBeRemoved.add(itemPosition);
@@ -635,7 +738,7 @@ public class CardRoundScreen extends Screen {
         // Getting the items to remove or take
         do {
             System.out.println("Available item colors:");
-            this.generateAvailableItemColorsWidget();
+            this.generateAvailableItemColorsWidget(this.currEventCard.getAvailableItemColors());
             availableItemColors.printWidget();
             System.out.print(DEFAULT_COMMAND_PREFIX);
 
@@ -682,7 +785,7 @@ public class CardRoundScreen extends Screen {
         correctInput = false;
 
         // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
-        // TODO: add pervPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
+        // TODO: add prevPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
 
         AtomicReference<ClientStorage> selectedStorage = new AtomicReference<>(null);
         int index = 0;
@@ -691,7 +794,7 @@ public class CardRoundScreen extends Screen {
         availableStorages.setColumnGroupingAmount(4);
 
         for(ClientStorage storage : ship.getStorageList()) {
-            if (storage.getCapacity() > 0) {
+            if (storage.availableSpace() > 0) {
                 if (itemColor.equals(ItemColor.RED)) {
                     if (storage.isSpecialStorage()) {
                         command = new CommandWidgetTUI("" + index,
@@ -726,33 +829,6 @@ public class CardRoundScreen extends Screen {
                 System.out.println(UNKNOWN_COMMAND_ERROR);
             }
         } while (!correctInput);
-
-
-
-
-//        // Getting the component coordinates
-//        do {
-//            try {
-//                componentCoordinates = this.getComponentCoordinates();
-//                Map.Entry<Integer, Integer> finalComponentCoordinates = componentCoordinates;
-//
-//                component = ship.getComponent(
-//                        finalComponentCoordinates.getKey(),
-//                        finalComponentCoordinates.getValue()
-//                );
-//
-//                switch (component) {
-//                    case ClientStorage storage -> { correctInput = true; }
-//                    case null, default -> {
-//                        System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentCoordinates.getKey() + 1) + ", " + (componentCoordinates.getValue() + 1) + ") is not a storage.", ANSIColors.RED));
-//                    }
-//                }
-//            }
-//            catch (InterruptedException e) {
-//                return;
-//            }
-//        }
-//        while (!correctInput);
 
         // Assembling all together
         itemPosition = new ComponentHelper<ItemColor>(
@@ -865,28 +941,42 @@ public class CardRoundScreen extends Screen {
 
         if (ship == null) return;
 
-        // Verify that the selected component is a shield
-        do {
-            componentHelper = this.getComponentHelperOfComponent();
-            component = ship.getComponent(
-                    componentHelper.getI(),
-                    componentHelper.getJ()
-            );
+        correctInput = false;
 
-            switch (component) {
-                case ClientShield shield -> {
-                    correctInput = true;
-                }
-                case null, default -> {
-                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentHelper.getI() + 1) + ", " + (componentHelper.getJ() + 1) + ") is not a shield.", ANSIColors.RED));
-                }
-            }
+        // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
+        // TODO: add prevPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
+
+        AtomicReference<ClientShield> selectedShield = new AtomicReference<>(null);
+        int index = 0;
+        CommandWidgetTUI command;
+        InputWidgetTUI availableShields = new InputWidgetTUI(this.inputThread);
+        availableShields.setColumnGroupingAmount(4);
+
+        for(ClientShield shield : ship.getShieldList()) {
+            command = new CommandWidgetTUI("" + index,
+                    () -> {
+                        selectedShield.set(shield);
+                    }
+            );
+            command.appendString("Shield @ (row=" + (shield.getI() + 1) + ", col=" + (shield.getJ() + 1) + ")");
+            availableShields.addCommand(command);
+            index++;
         }
-        while (!correctInput);
+
+        do {
+            try{
+                correctInput = availableShields.selectCommand(DEFAULT_COMMAND_PREFIX);
+            } catch (InterruptedException e) {
+
+            }
+            if (!correctInput) {
+                System.out.println(UNKNOWN_COMMAND_ERROR);
+            }
+        } while (!correctInput);
 
         componentHelper = new ComponentHelper<Void>(
-                componentHelper.getI(),
-                componentHelper.getJ()
+                selectedShield.get().getI(),
+                selectedShield.get().getJ()
         );
 
         componentHelperList.add(componentHelper);
@@ -910,36 +1000,70 @@ public class CardRoundScreen extends Screen {
 
         if (ship == null) return;
 
-        // Verify that the selected component is a cannon
-        do {
-            componentHelper = this.getComponentHelperOfComponent();
+        correctInput = false;
 
-            component = ship.getComponent(
-                    componentHelper.getI(),
-                    componentHelper.getJ()
-            );
+        // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
+        // TODO: add prevPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
+        // TODO: check also if there are enough batteries, reject the double cannon addition in that case; could also be done by blocking off the command
 
-            switch (component) {
-                case ClientCannon cannon -> {
-                    // Verify that it's also a double cannon and
-                    // not just a single cannon
-                    if (cannon.requireEnergy()) {
-                        correctInput = true;
+        AtomicReference<ClientCannon> selectedCannon = new AtomicReference<>(null);
+        int index = 0;
+        CommandWidgetTUI command;
+        InputWidgetTUI availableDoubleCannons = new InputWidgetTUI(this.inputThread);
+        availableDoubleCannons.setColumnGroupingAmount(4);
+
+        for(ClientCannon cannon : ship.getDoubleCannons()) {
+            command = new CommandWidgetTUI("" + index,
+                    () -> {
+                        selectedCannon.set(cannon);
                     }
-                }
-                case null, default -> {
-                }
-            }
-
-            if (!correctInput) {
-                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentHelper.getI() + 1) + ", " + (componentHelper.getJ() + 1) + ") is not a double cannon.", ANSIColors.RED));
-            }
+            );
+            command.appendString("DoubleCannon @ (row=" + (cannon.getI() + 1) + ", col=" + (cannon.getJ() + 1) + ")");
+            availableDoubleCannons.addCommand(command);
+            index++;
         }
-        while (!correctInput);
+
+        do {
+            try{
+                correctInput = availableDoubleCannons.selectCommand(DEFAULT_COMMAND_PREFIX);
+            } catch (InterruptedException e) {
+
+            }
+            if (!correctInput) {
+                System.out.println(UNKNOWN_COMMAND_ERROR);
+            }
+        } while (!correctInput);
+
+//        // Verify that the selected component is a cannon
+//        do {
+//            componentHelper = this.getComponentHelperOfComponent();
+//
+//            component = ship.getComponent(
+//                    componentHelper.getI(),
+//                    componentHelper.getJ()
+//            );
+//
+//            switch (component) {
+//                case ClientCannon cannon -> {
+//                    // Verify that it's also a double cannon and
+//                    // not just a single cannon
+//                    if (cannon.requireEnergy()) {
+//                        correctInput = true;
+//                    }
+//                }
+//                case null, default -> {
+//                }
+//            }
+//
+//            if (!correctInput) {
+//                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Component at (" + (componentHelper.getI() + 1) + ", " + (componentHelper.getJ() + 1) + ") is not a double cannon.", ANSIColors.RED));
+//            }
+//        }
+//        while (!correctInput);
 
         componentHelper = new ComponentHelper<Void>(
-                componentHelper.getI(),
-                componentHelper.getJ()
+                selectedCannon.get().getI(),
+                selectedCannon.get().getJ()
         );
 
         componentHelperList.add(componentHelper);
@@ -1026,9 +1150,9 @@ public class CardRoundScreen extends Screen {
      * Generates the available item colors widget with the relative
      * value the player needs to insert to select it
      */
-    private void generateAvailableItemColorsWidget() {
+    private void generateAvailableItemColorsWidget(List<ItemColor> colors) {
         this.availableItemColors = new WidgetTUI();
-        List<ItemColor> availableCardItemColors = this.currEventCard.getAvailableItemColors();
+        List<ItemColor> availableCardItemColors = colors;
         //int len = ItemColor.values().length;
         int len = availableCardItemColors.size();
 
@@ -1047,6 +1171,8 @@ public class CardRoundScreen extends Screen {
                 .addPadding(0, 1, 0, 1)
                 .wrapWidgetWithBorder();
     }
+
+
 
     /**
      * Generates a widget with the player's name and some
