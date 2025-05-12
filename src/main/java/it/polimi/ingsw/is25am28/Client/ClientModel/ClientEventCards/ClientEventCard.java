@@ -87,6 +87,16 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
      */
     public abstract WidgetTUI generateWidget();
 
+//    /**
+//     * Sets the clientModel in the card (needed for input validity checks)
+//     */
+//    public void setModel(ClientModel model) {
+//        this.model = model;
+//    }
+
+    public abstract void clearJSON();
+
+
     // ======== Players' ActionJSON Compilation Methods ======== //
 
     // LIFEFORMS
@@ -174,6 +184,10 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
 
     public void removeItem(ItemColor itemColor) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'removeColor()' is not supported in " + this + " card");
+    }
+
+    public void setShipIsEmpty(boolean shipIsEmpty) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setShipIsEmpty()' is not supported in " + this + " card");
     }
 
 

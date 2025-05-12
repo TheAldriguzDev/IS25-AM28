@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedStationJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -33,9 +30,7 @@ public class ClientAbandonedStation extends ClientEventCard {
     @Override
     public ActionJSON useCard() {
         this.abandonedStationJSON.setPlayerNickname(this.playerNickname);
-        AbandonedStationJSON tmp = abandonedStationJSON;
-        abandonedStationJSON = new AbandonedStationJSON();
-        return tmp;
+        return this.abandonedStationJSON;
     }
 
     @Override
@@ -95,6 +90,11 @@ public class ClientAbandonedStation extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void clearJSON() {
+        this.abandonedStationJSON = new AbandonedStationJSON();
     }
 
     // Items

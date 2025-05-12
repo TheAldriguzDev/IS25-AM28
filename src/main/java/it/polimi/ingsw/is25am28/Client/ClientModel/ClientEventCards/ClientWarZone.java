@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
@@ -45,10 +42,7 @@ public class ClientWarZone extends ClientEventCard {
     @Override
     public ActionJSON useCard() {
         this.warZoneJSON.setPlayerNickname(this.playerNickname);
-        WarZoneJSON tmp = this.warZoneJSON;
-        this.warZoneJSON = new WarZoneJSON();
-
-        return tmp;
+        return this.warZoneJSON;
     }
 
     @Override
@@ -274,6 +268,11 @@ public class ClientWarZone extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget)
                 .centerWidgetScreen()
                 .wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void clearJSON() {
+        this.warZoneJSON = new WarZoneJSON();
     }
 
     // Cannons

@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.VisitPlanetsJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -34,10 +31,7 @@ public class ClientVisitPlanets extends ClientEventCard {
     @Override
     public ActionJSON useCard() {
         this.visitPlanetsJSON.setPlayerNickname(this.playerNickname);
-        VisitPlanetsJSON tmp = this.visitPlanetsJSON;
-        this.visitPlanetsJSON = new VisitPlanetsJSON();
-
-        return tmp;
+        return this.visitPlanetsJSON;
     }
 
     @Override
@@ -96,6 +90,11 @@ public class ClientVisitPlanets extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void clearJSON() {
+        this.visitPlanetsJSON = new VisitPlanetsJSON();
     }
 
     // Items

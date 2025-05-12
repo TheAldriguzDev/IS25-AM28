@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedShipJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
@@ -27,10 +28,7 @@ public class ClientOpenSpace extends ClientEventCard {
     @Override
     public ActionJSON useCard() {
         this.openSpaceJSON.setPlayerNickname(this.playerNickname);
-        OpenSpaceJSON tmp = openSpaceJSON;
-        this.openSpaceJSON = new OpenSpaceJSON();
-
-        return tmp;
+        return this.openSpaceJSON;
     }
 
     @Override
@@ -85,6 +83,11 @@ public class ClientOpenSpace extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, twinkling_space).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void clearJSON() {
+        this.openSpaceJSON = new OpenSpaceJSON();
     }
 
     // Engines

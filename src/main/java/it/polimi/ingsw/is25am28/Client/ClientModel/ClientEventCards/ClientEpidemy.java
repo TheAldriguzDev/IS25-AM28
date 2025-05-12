@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedShipJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.EpidemyJSON;
@@ -18,10 +19,7 @@ public class ClientEpidemy extends ClientEventCard {
     @Override
     public ActionJSON useCard() {
         this.epidemyJSON.setPlayerNickname(this.playerNickname);
-        EpidemyJSON tmp = this.epidemyJSON;
-        this.epidemyJSON = new EpidemyJSON();
-
-        return tmp;
+        return this.epidemyJSON;
     }
 
     @Override
@@ -55,5 +53,10 @@ public class ClientEpidemy extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void clearJSON() {
+        this.epidemyJSON = new EpidemyJSON();
     }
 }

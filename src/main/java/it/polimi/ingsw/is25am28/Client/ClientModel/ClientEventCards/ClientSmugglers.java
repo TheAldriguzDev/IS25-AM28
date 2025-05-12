@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.SmugglersJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -49,10 +46,7 @@ public class ClientSmugglers extends ClientEventCard {
     @Override
     public ActionJSON useCard() {
         this.smugglersJSON.setPlayerNickname(this.playerNickname);
-        SmugglersJSON tmp = this.smugglersJSON;
-        this.smugglersJSON = new SmugglersJSON();
-
-        return tmp;
+        return this.smugglersJSON;
     }
 
     @Override
@@ -115,6 +109,11 @@ public class ClientSmugglers extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void clearJSON() {
+        this.smugglersJSON = new SmugglersJSON();
     }
 
     // Cannons

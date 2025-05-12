@@ -147,8 +147,12 @@ public class Slavers extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         SlaversJSON slaversData = (SlaversJSON) data;
         this.eliminatedPlayers = new ArrayList<>();
+
         playerOptional.ifPresent(
                 (Player player) -> {
+                    if (slaversData.getCrewToRemove().size() != this.takenCrew && slaversData.getCrewToRemove().size() != player.getShip().getAllLifeforms().size()) {
+                        throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
+                    }
                     // Remove the crew members from the given cabins
                     for (ComponentHelper<LifeformType> lifeform : slaversData.getCrewToRemove()) {
                         Cabin tmpCabin;

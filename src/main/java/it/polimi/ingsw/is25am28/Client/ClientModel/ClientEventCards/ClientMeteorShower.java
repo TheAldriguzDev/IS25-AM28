@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
@@ -28,10 +25,7 @@ public class ClientMeteorShower extends ClientEventCard {
     @Override
     public ActionJSON useCard() {
         this.meteorShowerJSON.setPlayerNickname(this.playerNickname);
-        MeteorShowerJSON tmp = this.meteorShowerJSON;
-        this.meteorShowerJSON = new MeteorShowerJSON();
-
-        return tmp;
+        return this.meteorShowerJSON;
     }
 
     @Override
@@ -96,6 +90,11 @@ public class ClientMeteorShower extends ClientEventCard {
 
         meteorShowerFinal.centerWidgetScreen();
         return meteorShowerFinal.wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void clearJSON() {
+        this.meteorShowerJSON = new MeteorShowerJSON();
     }
 
     // Shields

@@ -1,9 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.SlaversJSON;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
@@ -19,6 +17,7 @@ public class ClientSlavers extends ClientEventCard {
 //    private boolean firstRound;
     private boolean isPlayerDefeated;
     //private List<String> defeatedPlayers;
+    private boolean isShipEmpty;
 
     private SlaversJSON slaversJSON;
 
@@ -33,17 +32,12 @@ public class ClientSlavers extends ClientEventCard {
         this.isPlayerDefeated = false;
         this.slaversJSON = new SlaversJSON();
 
-
-
     }
 
     @Override
     public ActionJSON useCard() {
         this.slaversJSON.setPlayerNickname(this.playerNickname);
-        SlaversJSON tmp = this.slaversJSON;
-        this.slaversJSON = new SlaversJSON();
-
-        return tmp;
+        return this.slaversJSON;
     }
 
     @Override
@@ -106,6 +100,11 @@ public class ClientSlavers extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
     }
 
+    @Override
+    public void clearJSON() {
+        this.slaversJSON = new SlaversJSON();
+    }
+
     // Cannons
     @Override
     public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
@@ -137,5 +136,10 @@ public class ClientSlavers extends ClientEventCard {
     @Override
     public List<ComponentHelper<LifeformType>> getCrewToRemove() throws UnsupportedOperationException {
         return this.slaversJSON.getCrewToRemove();
+    }
+
+    // Card specific methods
+    public void setIsShipEmpty(boolean isShipEmpty) {
+        this.isShipEmpty = isShipEmpty;
     }
 }

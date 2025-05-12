@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
@@ -39,10 +36,7 @@ public class ClientPirates extends ClientEventCard {
     @Override
     public ActionJSON useCard() {
         this.piratesJSON.setPlayerNickname(this.playerNickname);
-        PiratesJSON tmp = this.piratesJSON;
-        this.piratesJSON = new PiratesJSON();
-
-        return tmp;
+        return this.piratesJSON;
     }
 
     @Override
@@ -129,6 +123,11 @@ public class ClientPirates extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void clearJSON() {
+        this.piratesJSON = new PiratesJSON();
     }
 
     // Shields

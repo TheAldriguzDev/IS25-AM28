@@ -32,10 +32,7 @@ public class ClientAbandonedShip extends ClientEventCard {
     @Override
     public ActionJSON useCard() {
         this.abandonedShipJSON.setPlayerNickname(this.playerNickname);
-        AbandonedShipJSON tmp = this.abandonedShipJSON;
-        this.abandonedShipJSON = new AbandonedShipJSON();
-
-        return tmp;
+        return this.abandonedShipJSON;
     }
 
     @Override
@@ -82,6 +79,11 @@ public class ClientAbandonedShip extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void clearJSON() {
+        this.abandonedShipJSON = new AbandonedShipJSON();
     }
 
     // CrewToRemove

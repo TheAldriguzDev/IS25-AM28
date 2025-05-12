@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedShipJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON;
@@ -26,9 +27,7 @@ public class ClientStardust extends ClientEventCard {
     @Override
     public ActionJSON useCard() {
         this.stardustJSON.setPlayerNickname(this.playerNickname);
-        StardustJSON tmp = this.stardustJSON;
-        this.stardustJSON = new StardustJSON();
-        return tmp;
+        return this.stardustJSON;
     }
 
     @Override
@@ -86,5 +85,10 @@ public class ClientStardust extends ClientEventCard {
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, twinkling_space)
                 .centerWidgetScreen()
                 .wrapWidgetWithBorder();
+    }
+
+    @Override
+    public void clearJSON() {
+        this.stardustJSON = new StardustJSON();
     }
 }
