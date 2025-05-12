@@ -279,7 +279,6 @@ public class Smugglers extends EventCard {
             smugglersStateJSON.setCardLevel(this.getCardLevel());
             smugglersStateJSON.setRequiredFirepower(requiredFirepower);
             smugglersStateJSON.setMovementSteps(movementSteps);
-            // TODO : Resourcebank question about number of items (referring to how it's done in abandonedStation)
             smugglersStateJSON.setTakenItems(takenItems);
             smugglersStateJSON.setRedItems(redItems);
             smugglersStateJSON.setYellowItems(yellowItems);
@@ -290,6 +289,25 @@ public class Smugglers extends EventCard {
         smugglersStateJSON.setCardEnded(this.hasFinished());
 
         return smugglersStateJSON;
+    }
+
+    @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        cardState.setCardName(this.getCardName());
+        cardState.setImagePath(this.path);
+        cardState.setCardLevel(this.getCardLevel());
+        cardState.setRequiredFirepower(requiredFirepower);
+        cardState.setMovementSteps(movementSteps);
+        cardState.setTakenItems(takenItems);
+        cardState.setRedItems(redItems);
+        cardState.setYellowItems(yellowItems);
+        cardState.setBlueItems(blueItems);
+        cardState.setGreenItems(greenItems);
+
+        return cardState;
     }
 
     public WidgetTUI generateWidget(CardStateJSON smugglersStateJSON) {

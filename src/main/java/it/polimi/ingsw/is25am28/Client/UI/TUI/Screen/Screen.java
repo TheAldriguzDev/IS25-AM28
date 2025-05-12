@@ -12,6 +12,7 @@ import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
@@ -95,7 +96,12 @@ public class Screen implements ClientUI {
             this.ctx.handleError(error.getError());
             // this.ctx = null;
         } else {
-            System.out.println(error.getError());
+            System.out.println();
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(error.getError(), ANSIColors.RED))
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
         }
     }
 

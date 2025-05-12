@@ -176,6 +176,18 @@ public class OpenSpace extends EventCard {
     }
 
     @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        cardState.setCardName(this.getCardName());
+        cardState.setImagePath(this.path);
+        cardState.setCardLevel(this.cardLevel);
+
+        return cardState;
+    }
+
+    @Override
     public WidgetTUI generateWidget(CardStateJSON openSpaceJSON) {
         return null;
     }

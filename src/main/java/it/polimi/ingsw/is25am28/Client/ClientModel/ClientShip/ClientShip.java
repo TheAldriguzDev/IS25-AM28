@@ -90,14 +90,16 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
             coreConnectors.add(THREE_PIPES.ordinal());
         }
 
-        this.core = new ClientCabin(-1, coreConnectors,true, "");
+//        this.core = new ClientCabin(-1, coreConnectors,true, "");
 
         // No aliens are present at the beginning
         this.purpleAlienPosition = null;
         this.brownAlienPosition = null;
 
+        System.out.println("Before the add core");
         // Adding the core component as the first component in the ship's grid
-        this.addComponent(this.core, grid_rows/2, grid_cols/2);
+//        this.addComponent(this.core, grid_rows/2, grid_cols/2);
+        System.out.println("After the add core");
 
         // Instantiating each component list as an empty list
         this.batteryList = new ArrayList<ClientBattery>();
@@ -208,6 +210,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
             }
         }
 
+        this.core = (ClientCabin) this.getComponent(grid_rows/2, grid_cols/2);
         this.generateComponentSubLists();
     }
 

@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
+import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
@@ -124,6 +125,18 @@ public class Epidemy extends EventCard {
         }
 
         cardState.setCardEnded(this.hasFinished());
+
+        return cardState;
+    }
+
+    @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        cardState.setCardName(this.getCardName());
+        cardState.setImagePath(this.path);
+        cardState.setCardLevel(this.cardLevel);
 
         return cardState;
     }

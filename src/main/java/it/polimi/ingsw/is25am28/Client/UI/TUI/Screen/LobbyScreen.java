@@ -395,11 +395,13 @@ public class LobbyScreen extends Screen {
         this.ctx = new CommandCTX(
             "reconnect",
             () -> {
-                // TODO
+                new WidgetTUI()
+                        .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor("Successfully reconnected to the game!", ANSIColors.BRIGHT_GREEN))
+                        .addPadding(1, 1, 1, 1)
+                        .wrapWidgetWithBorder()
+                        .printWidget();
             },
-            () -> {
-                // TODO
-            }
+                this::getLobbyCommand
         );
 
         this.client.sendMessage(new Reconnect(playerName));
@@ -421,27 +423,42 @@ public class LobbyScreen extends Screen {
     }
 
     /**
-     * TUI screen entry point for the game menu
+     * Asks the player for a correct lobby command
      */
-    @Override
-    public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
+    private void getLobbyCommand() {
         boolean commandExecuted;
-
-        if (isFirstAccess) {
-            printTitle();
-            this.initLobbyCommandsWidget(state);
-        }
 
         do {
             System.out.println();
             System.out.println("Available commands:");
-            commandExecuted = this.lobbyCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+
+            try {
+                commandExecuted = this.lobbyCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+            } catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return;
+            }
 
             if (!commandExecuted) {
                 System.out.println(UNKNOWN_COMMAND_ERROR);
             }
         }
         while (!commandExecuted);
+    }
+
+    /**
+     * TUI screen entry point for the game menu
+     */
+    @Override
+    public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
+
+
+        if (isFirstAccess) {
+            printTitle();
+            this.initLobbyCommandsWidget(state);
+        }
+
+        this.getLobbyCommand();
     }
 
     /**

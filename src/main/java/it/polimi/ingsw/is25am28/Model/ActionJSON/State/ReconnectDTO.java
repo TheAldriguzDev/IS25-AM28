@@ -4,7 +4,9 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 
 import java.util.List;
@@ -23,6 +25,10 @@ public final class ReconnectDTO extends StateDTO {
     private BoardJSON board;
     private StateDTO currentState;
     private Map<ItemColor, Integer> resourceBank;
+    private int gameLevel;
+
+    // Card list that contains the information about the deck in the game
+    private List<CardStateJSON> cards;
 
     public ReconnectDTO() {}
 
@@ -79,15 +85,36 @@ public final class ReconnectDTO extends StateDTO {
         this.currentState = currentState;
     }
 
-    @JsonSetter("setResourceBank")
+    @JsonSetter("resourceBank")
     public Map<ItemColor, Integer> getResourceBank() {
         return resourceBank;
     }
 
-    @JsonGetter("getResourceBank")
+    @JsonGetter("resourceBank")
     public void setResourceBank(Map<ItemColor, Integer> resourceBank) {
         this.resourceBank = resourceBank;
     }
+
+    @JsonGetter("gameLevel")
+    public void setGameLevel(int gameLevel) {
+        this.gameLevel = gameLevel;
+    }
+
+    @JsonGetter("gameLevel")
+    public int getGameLevel() {
+        return gameLevel;
+    }
+
+    @JsonSetter("cards")
+    public void setCards(List<CardStateJSON> cards) {
+        this.cards = cards;
+    }
+
+    @JsonGetter("cards")
+    public List<CardStateJSON> getCards() {
+        return cards;
+    }
+
 
 
 

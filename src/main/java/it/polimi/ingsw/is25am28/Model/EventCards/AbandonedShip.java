@@ -210,6 +210,21 @@ public class AbandonedShip extends EventCard {
         return cardState;
     }
 
+    @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        cardState.setCardName(this.getCardName());
+        cardState.setImagePath(this.path);
+        cardState.setCardLevel(this.cardLevel);
+        cardState.setRequiredCrewMembers(this.requiredCrew);
+        cardState.setGivenCredits(this.givenCredits);
+        cardState.setMovementSteps(this.movementStep);
+
+        return cardState;
+    }
+
     public WidgetTUI generateWidget(CardStateJSON abandonedShipJSON) {
         return null;
     }

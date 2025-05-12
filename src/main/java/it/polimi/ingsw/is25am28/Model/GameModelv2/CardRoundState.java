@@ -28,33 +28,33 @@ public final class CardRoundState extends State {
         super(model);
 
         this.round = 0;
-        //this.deck = this.model.getGameDeck();
+        this.deck = this.model.getGameDeck();
 
         // TODO: Remove the fake deck after testing
-        CardLoader cardLoader;
-        try {
-            cardLoader = new CardLoader();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        List<EventCard> AllCards = cardLoader.getCards(model.getBoard(), new ResourceBank(this.model.getGameLevel()), model.getGameLevel());
-        List<EventCard> fakeDeck = new ArrayList<>();
+//        CardLoader cardLoader;
+//        try {
+//            cardLoader = new CardLoader();
+//        }
+//        catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//
+//        List<EventCard> AllCards = cardLoader.getCards(model.getBoard(), new ResourceBank(this.model.getGameLevel()), model.getGameLevel());
+//        List<EventCard> fakeDeck = new ArrayList<>();
 //        fakeDeck.add(AllCards.get(8)); // MeteorShower
 //        fakeDeck.add(AllCards.get(38)); // WarZone
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
 //        fakeDeck.add(AllCards.get(24)); // OpenSpace
 //        fakeDeck.add(AllCards.get(0)); // AbandonedShip
-        fakeDeck.add(AllCards.get(5)); // AbandonedStation
+//        fakeDeck.add(AllCards.get(5)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(14)); // Pirates
 //        fakeDeck.add(AllCards.get(16)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(31)); // Epidemy
 //        fakeDeck.add(AllCards.get(32)); // Smugglers
-        fakeDeck.add(AllCards.get(33)); // Smugglers
+//        fakeDeck.add(AllCards.get(33)); // Smugglers
 //        fakeDeck.add(AllCards.get(34)); // Slavers
 //        fakeDeck.add(AllCards.get(36)); // Stardust
-        this.deck = fakeDeck;
+//        this.deck = fakeDeck;
 
         this.board = this.model.getBoard();
         this.isFirstState = true;

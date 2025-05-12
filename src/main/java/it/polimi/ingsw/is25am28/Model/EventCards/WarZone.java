@@ -815,6 +815,29 @@ public class WarZone extends EventCard {
         return cardState;
     }
 
+    @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        // Set the card name
+        cardState.setCardName(this.getCardName());
+        // Set the card level
+        cardState.setCardLevel(this.cardLevel);
+        cardState.setImagePath(this.path);
+
+        List<List<String>> actionsAndConsequences = new ArrayList<>();
+        for (WarZoneActionConsequencePair pair : this.cardActions) {
+            actionsAndConsequences.add(Arrays.asList(pair.getAction().toString(), pair.getConsequence().toString()));
+        }
+        cardState.setActionsAndConsequences(actionsAndConsequences);
+        cardState.setRequiredCrewMembers(this.requiredCrew);
+        cardState.setMovementSteps(this.movementSteps);
+        cardState.setRequiredResources(this.requiredItems);
+
+        return cardState;
+    }
+
     public WidgetTUI generateWidget(CardStateJSON warZoneJSON) {
         return null;
     }

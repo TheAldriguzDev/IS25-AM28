@@ -112,6 +112,18 @@ public class Stardust extends EventCard {
         return stardustStateJSON;
     }
 
+    @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        cardState.setCardName(getCardName());
+        cardState.setImagePath(this.path);
+        cardState.setCardLevel(getCardLevel());
+
+        return cardState;
+    }
+
     public WidgetTUI generateWidget(CardStateJSON stardustJSON) {
         return null;
     }

@@ -177,6 +177,7 @@ public abstract class EventCard {
      * */
     public abstract EventCard useCard( ActionJSON data ) throws IllegalArgumentException;
 
+    // TODO: change this javaDoc since there are now 2 distinct generateStates
     /**
      * generateState return a JSONObject that return the current state of the card. It MUST contain all the specific information like:
      * - currentPlayer
@@ -184,6 +185,12 @@ public abstract class EventCard {
      * - cardData (e.g. planets list with all the related resources)
      * */
     public abstract CardStateJSON generateState();
+
+    /**
+     * @return the generic info of the card
+     */
+    public abstract CardStateJSON generateStaticState();
+
 
     /**
      * @return This card's widget

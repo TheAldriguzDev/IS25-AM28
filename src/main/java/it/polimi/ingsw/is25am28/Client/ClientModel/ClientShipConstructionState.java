@@ -55,7 +55,7 @@ public class ClientShipConstructionState extends ClientState {
         this.generateClientComponents(shipConstructionDTO.getAllComponents(), shipConstructionDTO.getFlippedComponents(), shipConstructionDTO.getSelectedComponents());
 
         // Initialize all client cards
-        this.generateClientEventCards(shipConstructionDTO.getCards());
+        this.model.generateClientEventCards(shipConstructionDTO.getCards());
     }
 
     /**
@@ -163,34 +163,6 @@ public class ClientShipConstructionState extends ClientState {
 
             if (selectedComponents.contains(component.getID())) {
                 component.setIsVisible(false);
-            }
-        }
-    }
-
-    /**
-     * Generates all client event cards from the given list of card
-     * states sent by the server and stores them in the client model
-     */
-    private void generateClientEventCards(List<CardStateJSON> cards) {
-        if (cards == null || cards.isEmpty()) {
-            throw new IllegalArgumentException("ERROR: Cannot construct all client event cards without the data");
-        }
-
-        for (CardStateJSON cardState : cards) {
-            switch (cardState.getId()) {
-                case 0 -> this.model.getClientEventCards().add(new ClientAbandonedShip(cardState));
-                case 1 -> this.model.getClientEventCards().add(new ClientAbandonedStation(cardState));
-                case 2 -> this.model.getClientEventCards().add(new ClientEpidemy(cardState));
-                case 3 -> this.model.getClientEventCards().add(new ClientMeteorShower(cardState));
-                case 4 -> this.model.getClientEventCards().add(new ClientOpenSpace(cardState));
-                case 5 -> this.model.getClientEventCards().add(new ClientPirates(cardState));
-                case 6 -> this.model.getClientEventCards().add(new ClientSlavers(cardState));
-                case 7 -> this.model.getClientEventCards().add(new ClientSmugglers(cardState));
-                case 8 -> this.model.getClientEventCards().add(new ClientStardust(cardState));
-                case 9 -> this.model.getClientEventCards().add(new ClientVisitPlanets(cardState));
-                case 10 -> this.model.getClientEventCards().add(new ClientWarZone(cardState));
-
-                default -> throw new IllegalArgumentException("ERROR: Illegal event card ID");
             }
         }
     }

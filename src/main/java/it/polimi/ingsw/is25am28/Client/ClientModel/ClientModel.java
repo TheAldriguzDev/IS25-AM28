@@ -2,7 +2,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard.ClientBoard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStorage;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
@@ -172,6 +172,35 @@ public class ClientModel {
 //    public void setClientResourceBank(ResourceBank resourceBank) {
 //        this.resourceBank = resourceBank;
 //    }
+
+    /**
+     * Generates all client event cards from the given list of card
+     * states sent by the server and stores them in the client model
+     */
+    public void generateClientEventCards(List<CardStateJSON> cards) {
+        if (cards == null || cards.isEmpty()) {
+            throw new IllegalArgumentException("ERROR: Cannot construct all client event cards without the data");
+        }
+
+        List<ClientEventCard> eventCards = this.getClientEventCards();
+        for (CardStateJSON cardState : cards) {
+            switch (cardState.getId()) {
+                case 0 -> eventCards.add(new ClientAbandonedShip(cardState));
+                case 1 -> eventCards.add(new ClientAbandonedStation(cardState));
+                case 2 -> eventCards.add(new ClientEpidemy(cardState));
+                case 3 -> eventCards.add(new ClientMeteorShower(cardState));
+                case 4 -> eventCards.add(new ClientOpenSpace(cardState));
+                case 5 -> eventCards.add(new ClientPirates(cardState));
+                case 6 -> eventCards.add(new ClientSlavers(cardState));
+                case 7 -> eventCards.add(new ClientSmugglers(cardState));
+                case 8 -> eventCards.add(new ClientStardust(cardState));
+                case 9 -> eventCards.add(new ClientVisitPlanets(cardState));
+                case 10 -> eventCards.add(new ClientWarZone(cardState));
+
+                default -> throw new IllegalArgumentException("ERROR: Illegal event card ID");
+            }
+        }
+    }
 
     /**
      * Updates the current clientPlayer stats (only the credits, the other stats are updated by the clientShip

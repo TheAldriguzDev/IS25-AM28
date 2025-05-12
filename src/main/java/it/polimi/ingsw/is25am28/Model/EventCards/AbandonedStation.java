@@ -187,22 +187,38 @@ public class AbandonedStation extends EventCard {
             cardState.setMovementSteps(this.movementStep);
             // Filter the resources to the only available in the bank.
             // The numbers of the resources will be set as the min between the given by the card and the available in the bank // TODO: this is no longer necessary
-            Map<ItemColor, Integer> givenItemByTypeCount = givenItems.stream()
-                    .collect(Collectors.groupingBy(
-                            Item::getColor,
-                            Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
-                    ));
-
-            givenItemByTypeCount.replaceAll((c, _) -> Math.min(givenItemByTypeCount.get(c), this.resourceBank.getResourceAvailabilityFromColor(c)));
-
-            List<ItemColor> itemList = givenItemByTypeCount.entrySet().stream()
-                    .flatMap(entry -> Collections.nCopies(entry.getValue(), entry.getKey()).stream())
-                    .toList();
-
-            cardState.setStationResources(new ArrayList<>(itemList));
+//            Map<ItemColor, Integer> givenItemByTypeCount = givenItems.stream()
+//                    .collect(Collectors.groupingBy(
+//                            Item::getColor,
+//                            Collectors.collectingAndThen(Collectors.counting(), Long::intValue)
+//                    ));
+//
+//            givenItemByTypeCount.replaceAll((c, _) -> Math.min(givenItemByTypeCount.get(c), this.resourceBank.getResourceAvailabilityFromColor(c)));
+//
+//            List<ItemColor> itemList = givenItemByTypeCount.entrySet().stream()
+//                    .flatMap(entry -> Collections.nCopies(entry.getValue(), entry.getKey()).stream())
+//                    .toList();
+//
+//            cardState.setStationResources(new ArrayList<>(itemList));
+            cardState.setStationResources(new ArrayList<>(this.givenItems.stream().map(Item::getColor).toList()));
         }
 
         cardState.setCardEnded(this.hasFinished());
+
+        return cardState;
+    }
+
+    @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        cardState.setCardName(this.getCardName());
+        cardState.setImagePath(this.path);
+        cardState.setCardLevel(this.cardLevel);
+        cardState.setRequiredCrewMembers(this.requiredCrew);
+        cardState.setMovementSteps(this.movementStep);
+        cardState.setStationResources(new ArrayList<>(this.givenItems.stream().map(Item::getColor).toList()));
 
         return cardState;
     }

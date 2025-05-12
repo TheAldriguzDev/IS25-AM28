@@ -1,6 +1,12 @@
 package it.polimi.ingsw.is25am28.Client.UI;
 
+import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+
 import java.util.function.Consumer;
+
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen.COMPUTER_MSG_TAG;
 
 public class CommandCTX {
     private String commandName;
@@ -27,7 +33,13 @@ public class CommandCTX {
      * Method used to run the onError Runnable and print the given Error
      * */
     public void handleError(String error) {
-        System.out.println(error);
+        System.out.println();
+        new WidgetTUI()
+                .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(error, ANSIColors.RED))
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder()
+                .printWidget();
+
         this.onError.run();
         this.hasBeenUsed = true;
     }

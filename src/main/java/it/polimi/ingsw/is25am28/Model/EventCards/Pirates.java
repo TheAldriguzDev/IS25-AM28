@@ -403,6 +403,21 @@ public class Pirates extends EventCard {
         return piratesStateJSON;
     }
 
+    @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        cardState.setCardName(getCardName());
+        cardState.setImagePath(this.path);
+        cardState.setCardLevel(getCardLevel());
+        cardState.setRequiredFirepower(this.requiredFirepower);
+        cardState.setGivenCredits(this.givenCredits);
+        cardState.setMovementSteps(this.movementSteps);
+
+        return cardState;
+    }
+
     // Only for testing
     void setDiceThrowResult(int diceThrowResult) {
         this.diceThrowResult = diceThrowResult;

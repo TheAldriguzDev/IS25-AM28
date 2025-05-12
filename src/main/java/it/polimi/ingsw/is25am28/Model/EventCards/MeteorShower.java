@@ -470,6 +470,19 @@ public class MeteorShower extends EventCard {
         return cardState;
     }
 
+    @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        cardState.setCardName(this.getCardName());
+        cardState.setImagePath(this.path);
+        cardState.setCardLevel(this.cardLevel);
+
+
+        return cardState;
+    }
+
     // Only for testing
     void setDiceThrowResult(int diceThrowResult) {
         this.diceThrowResult = diceThrowResult;

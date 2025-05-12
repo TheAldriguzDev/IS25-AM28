@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientPlayer {
-    private final String nickname;
-    private final PlayerColor color;
+    private  String nickname; // final
+    private  PlayerColor color; // final
     private int credits;
     private int lostComponents;
     private int cursor;
-    private final ClientShip ship;
+    private  ClientShip ship; // final
 
     public ClientPlayer(String nickname, PlayerColor color, int level) {
         this.nickname = nickname;
@@ -26,13 +26,20 @@ public class ClientPlayer {
     }
 
     public ClientPlayer(String nickname, PlayerColor color, int level, int credits, int lostPieces, List<Map<String, Object>> ship) {
-        this.nickname = nickname;
-        this.color = color;
-        this.credits = credits;
-        this.lostComponents = lostPieces;
-        this.cursor = 0;
+        System.out.println("Entrato nel new ClientPlayer");
+        try {
+            this.nickname = nickname;
+            this.color = color;
+            this.credits = credits;
+            this.lostComponents = lostPieces;
+            this.cursor = 0;
 
-        this.ship = new ClientShip(level, ship);
+            this.ship = new ClientShip(level, ship);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println("Finito il new ClientPlayer");
+
     }
 
     /**

@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client;
 import it.polimi.ingsw.is25am28.Client.ClientModel.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard.ClientBoard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
@@ -78,7 +79,9 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(ReconnectDTO state) throws Exception {
-        System.out.println("Reconnect player to the game lessgooooo");
+
+        this.model.setNickname(state.getTargetNickname());
+        this.model.setDifficultyLevel(state.getGameLevel());
 
         // 1. Create the players --> and set their ship
         List<PlayerJSON> players = state.getPlayers();
@@ -92,6 +95,9 @@ public class ViewUpdater implements StateVisitor {
 
         // 3. Reset the resourceBank to the correct amount of resources
         this.model.getResourceBank().resetResourcesQuantity(state.getResourceBank());
+
+        // 4. cards
+        this.model.generateClientEventCards(state.getCards());
 
         state.getCurrentState().accept(this);
     }
@@ -267,7 +273,9 @@ public class ViewUpdater implements StateVisitor {
     private void update(CardRoundDTO state) {
         synchronized (this.model) {
             if (!(this.model.getState() instanceof ClientCardRoundState)) {
-                this.model.setClientBoard(new ClientBoard(state.getBoard(), model));
+                if (state.getBoard() != null) { // Skip in case of reconnection
+                    this.model.setClientBoard(new ClientBoard(state.getBoard(), model));
+                }
             }
 
             // Updates the ClientBoard if necessary (Positions, EliminatedPlayers)

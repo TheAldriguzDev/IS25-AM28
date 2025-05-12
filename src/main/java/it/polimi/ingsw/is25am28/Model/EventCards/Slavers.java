@@ -244,6 +244,22 @@ public class Slavers extends EventCard {
         return slaversStateJSON;
     }
 
+    @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        cardState.setCardName(this.getCardName());
+        cardState.setImagePath(this.path);
+        cardState.setCardLevel(this.getCardLevel());
+        cardState.setRequiredFirepower(requiredFirepower);
+        cardState.setGivenCredits(this.givenCredits);
+        cardState.setMovementSteps(this.movementSteps);
+        cardState.setTakenCrew(this.takenCrew);
+
+        return cardState;
+    }
+
 
     public WidgetTUI generateWidget(CardStateJSON slaversState) {
         return null;

@@ -45,6 +45,7 @@ public class Server {
 
     // This map stores the players nickname and their network connection (nickname --> virtualView)
     private final Map<String, VirtualView> connectedClients;
+
     // This map will store the virtualView of each client with the pingHelper utility data
     private final Map<VirtualView, PingHelper> viewToPingHelper;
 
@@ -342,7 +343,7 @@ public class Server {
                         pingHelper.incrementPing();
 
                         // Check if the client is disconnected
-                        if (pingHelper.getFailedPings() > 10) {
+                        if (pingHelper.getFailedPings() > 4) { // TODO: adjust right pings number
                             // Get the game id
                             int gameID;
                             synchronized (this.clientToGame) {

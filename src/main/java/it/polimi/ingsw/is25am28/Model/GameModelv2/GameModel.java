@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
 import it.polimi.ingsw.is25am28.Loader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
@@ -130,6 +131,14 @@ public class GameModel {
                 .setTargetNickname(nickname);
         state.setBoard(this.board.generateState()); // Board information
         state.setResourceBank(this.resourceBank.getResources()); // resourceBank information
+        state.setGameLevel(this.level); // Game level
+
+        List<CardStateJSON> cardsInfo = new ArrayList<>();
+        for (EventCard card : this.deck) {
+            cardsInfo.add(card.generateStaticState());
+        }
+
+        state.setCards(cardsInfo);
 
         // Players information
         List<PlayerJSON> playerInfo = new ArrayList<>();

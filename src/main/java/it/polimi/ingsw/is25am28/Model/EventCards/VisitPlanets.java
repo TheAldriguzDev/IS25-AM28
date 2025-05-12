@@ -382,6 +382,24 @@ public class VisitPlanets extends EventCard {
         return cardState;
     }
 
+    @Override
+    public CardStateJSON generateStaticState() {
+        CardStateJSON cardState = new CardStateJSON();
+        cardState.setCardID(this.getCardID());
+        cardState.setId(this.id);
+        cardState.setCardName(this.getCardName());
+        cardState.setImagePath(this.path);
+        cardState.setCardLevel(this.getCardLevel());
+        cardState.setCardIsUsable( !this.hasFinished());
+
+        Map<Integer, Map<ItemColor, Integer>> availablePlanets;
+        cardState.setMovementSteps(this.movementSteps);
+        availablePlanets = new HashMap<>(this.itemsPerPlanet);
+        cardState.setAvailablePlanets(availablePlanets);
+
+        return cardState;
+    }
+
     public WidgetTUI generateWidget(CardStateJSON visitPlanetsJSON) {
         return null;
     }
