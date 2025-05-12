@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 
-import it.polimi.ingsw.is25am28.Client.Client;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
@@ -260,8 +259,9 @@ public class CardRoundScreen extends Screen {
                 () -> {
                     try {
                         this.playCard();
-                    } catch (Exception e) {
-                        System.out.println(PrintUtils.addColor("[ERROR] " + e.getClass().getSimpleName() + " thrown by method 'playCard'.", ANSIColors.RED));
+                    }
+                    catch (Exception e) {
+                        System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" thrown by method 'playCard'.", ANSIColors.RED));
                     }
                 }
         );
@@ -598,11 +598,11 @@ public class CardRoundScreen extends Screen {
                 availableCabins.getCommandMap().size()
         );
 
-        // Selecting the cabins from where the chosen lifeForm will be taken
+        // Selecting the cabins from where the chosen lifeform will be taken
         do {
             try {
                 System.out.println();
-                System.out.println("Select a cabin from where to remove " + selectedLifeform.get().toString() + ":");
+                System.out.println("Select a cabin from where to remove \"" + selectedLifeform.get().toString() + "\":");
                 commandSelected = availableCabins.selectCommand(DEFAULT_COMMAND_PREFIX);
 
                 if (commandSelected) {
@@ -768,6 +768,7 @@ public class CardRoundScreen extends Screen {
         Optional<Item> foundItem = selectedStorage.get().getStoredItems().stream()
                 .filter(item -> item.getColor().equals(selectedItem.get()))
                 .findFirst();
+
         foundItem.ifPresent(selectedStorage.get()::removeItem);
         this.model.getResourceBank().addResourceToBank(selectedItem.get());
 
@@ -1068,29 +1069,35 @@ public class CardRoundScreen extends Screen {
         }
 
         List<ClientShield> shieldsList = ship.getShieldList();
-        len = shieldsList.size();
-
-        if (len == 0) {
-            new WidgetTUI()
-                    .appendString(COMPUTER_MSG_TAG + "You don't have any shields to activate!")
-                    .addPadding(0, 1, 0, 1)
-                    .wrapWidgetWithBorder()
-                    .printWidget();
-        }
-
         componentHelperList = this.currEventCard.getShieldsToActivate();
         selectedShield = new AtomicReference<>(null);
         availableShields = new InputWidgetTUI(this.inputThread);
         availableShields.setColumnGroupingAmount(4);
 
+        // Removing already selected shields from the shields list
+        for (ComponentHelper<Void> ch : componentHelperList) {
+            ClientShield sh = (ClientShield) ship.getComponent(ch.getI(), ch.getJ());
+            shieldsList.remove(sh);
+        }
+
+        len = shieldsList.size();
+
+        if (len == 0) {
+            new WidgetTUI()
+                .appendString(COMPUTER_MSG_TAG + "You don't have any shields to activate!")
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder()
+                .printWidget();
+        }
+
         for (i = 0; i < len; i++) {
             ClientShield shield = shieldsList.get(i);
 
             command = new CommandWidgetTUI(
-                    "" + i,
-                    () -> {
-                        selectedShield.set(shield);
-                    }
+                "" + i,
+                () -> {
+                    selectedShield.set(shield);
+                }
             );
             command.appendString("Shield @ (row=" + (shield.getI() + 1) + ", col=" + (shield.getJ() + 1) + ")");
             availableShields.addCommand(command);
@@ -1133,6 +1140,22 @@ public class CardRoundScreen extends Screen {
                 selectedShield.get().getJ()
         );
 
+        // Refusing to add the selected shield if it's
+        // already present inside the componentHelperList
+//        int shieldI, shieldJ;
+//
+//        for (ComponentHelper<Void> ch : componentHelperList) {
+//            shieldI = selectedShield.get().getI();
+//            shieldJ = selectedShield.get().getJ();
+//
+//            if (ch.getI() == shieldI && ch.getJ() == shieldJ) {
+//                System.out.println(
+//                    PrintUtils.addColor("[ERROR] You've already selected the Shield @ (row=" + shieldI + ", col=" + shieldJ + ")", ANSIColors.RED)
+//                );
+//                return;
+//            }
+//        }
+
         componentHelperList.add(componentHelper);
         this.currEventCard.setShieldsToActivate(componentHelperList);
     }
@@ -1159,20 +1182,26 @@ public class CardRoundScreen extends Screen {
         }
 
         List<ClientCannon> doubleCannonsList = ship.getDoubleCannons();
-        len = doubleCannonsList.size();
-
-        if (len == 0) {
-            new WidgetTUI()
-                    .appendString(COMPUTER_MSG_TAG + "You don't have any double cannons to activate!")
-                    .addPadding(0, 1, 0, 1)
-                    .wrapWidgetWithBorder()
-                    .printWidget();
-        }
-
         componentHelperList = this.currEventCard.getDoubleCannonsToActivate();
         selectedDoubleCannon = new AtomicReference<>(null);
         availableDoubleCannons = new InputWidgetTUI(this.inputThread);
         availableDoubleCannons.setColumnGroupingAmount(4);
+
+        // Removing already selected shields from the shields list
+        for (ComponentHelper<Void> ch : componentHelperList) {
+            ClientCannon dc = (ClientCannon) ship.getComponent(ch.getI(), ch.getJ());
+            doubleCannonsList.remove(dc);
+        }
+
+        len = doubleCannonsList.size();
+
+        if (len == 0) {
+            new WidgetTUI()
+                .appendString(COMPUTER_MSG_TAG + "You don't have any double cannons to activate!")
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder()
+                .printWidget();
+        }
 
         for (i = 0; i < len; i++) {
             ClientCannon doubleCannon = doubleCannonsList.get(i);
@@ -1223,6 +1252,22 @@ public class CardRoundScreen extends Screen {
                 selectedDoubleCannon.get().getI(),
                 selectedDoubleCannon.get().getJ()
         );
+
+        // Refusing to add the selected shield if it's
+        // already present inside the componentHelperList
+//        int doubleCannonI, doubleCannonJ;
+//
+//        for (ComponentHelper<Void> ch : componentHelperList) {
+//            doubleCannonI = selectedDoubleCannon.get().getI();
+//            doubleCannonJ = selectedDoubleCannon.get().getJ();
+//
+//            if (ch.getI() == doubleCannonI && ch.getJ() == doubleCannonJ) {
+//                System.out.println(
+//                        PrintUtils.addColor("[ERROR] You've already selected the Double Cannon @ (row=" + doubleCannonI + ", col=" + doubleCannonJ + ")", ANSIColors.RED)
+//                );
+//                return;
+//            }
+//        }
 
         componentHelperList.add(componentHelper);
         this.currEventCard.setDoubleCannonsToActivate(componentHelperList);
@@ -1382,13 +1427,8 @@ public class CardRoundScreen extends Screen {
 
         // (0) - Visualize ship
         command = new CommandWidgetTUI(
-                "0",
-                () -> {
-                    this.getOtherShipCommand();
-
-                    // Go back to the card round available commands
-                    this.getCardRoundCommand();
-                }
+            "0",
+            this::getOtherShipCommand
         );
         command.appendString("Visualize ship");
         this.cardRoundCommandsWidget.addCommand(command);
@@ -1464,6 +1504,9 @@ public class CardRoundScreen extends Screen {
 
                             this.otherPlayerShipWidget = null;
                         }
+
+                        // Go back to the card round available commands
+                        this.getCardRoundCommand();
                     }
             );
 
@@ -1713,48 +1756,105 @@ public class CardRoundScreen extends Screen {
     private void playCard() throws Exception {
         ActionJSON response = this.currEventCard.useCard();
 
-        this.ctx = new CommandCTX(
-                "playCard",
-                () -> {
-                    // System.out.println("onSuccess");
-                    this.ctx = null;
+        // If the current card supports the action, it removes
+        // any take/remove operations that target the same storage
+        // and the same item color
+        try {
+            List<ComponentHelper<ItemColor>>[][] matrix = new List[ClientShip.grid_rows][ClientShip.grid_cols];
 
-                    this.currEventCard.clearJSON();
-                },
-                () -> {
-                    ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+            List<ComponentHelper<ItemColor>> itemsToTake = this.currEventCard.getItemsToBeTaken();
+            List<ComponentHelper<ItemColor>> itemsToRemove = this.currEventCard.getItemsToBeRemoved();
 
-                    if (ship == null) {
-                        System.out.println(PrintUtils.addColor("[ERROR] ClientShip is null", ANSIColors.RED));
-                        return;
+            List<ComponentHelper<ItemColor>> itemsToTakeFinal = new ArrayList<>();
+            List<ComponentHelper<ItemColor>> itemsToRemoveFinal = new ArrayList<>();
+
+            for (int i = 0; i < ClientShip.grid_rows; i++) {
+                for (int j = 0; j < ClientShip.grid_cols; j++) {
+                    matrix[i][j] = new ArrayList<>();
+                }
+            }
+
+            for (ComponentHelper<ItemColor> toTake : itemsToTake) {
+                if (toTake.getItem().isPresent()) {
+                    matrix[toTake.getI()][toTake.getJ()].add(toTake);
+                }
+            }
+
+            for (ComponentHelper<ItemColor> toRemove : itemsToRemove) {
+                if (toRemove.getItem().isPresent()) {
+                    if (matrix[toRemove.getI()][toRemove.getJ()].isEmpty()) {
+                        itemsToRemoveFinal.add(toRemove);
                     }
+                    else {
+                        ItemColor colorToRemove = toRemove.getItem().get();
 
-                    if (this.indexedCardInputMethods.get("setCrewToRemove").getKey() && this.currEventCard.getCrewToRemove() != null && !this.currEventCard.getCrewToRemove().isEmpty()) {
-                        // Reverts the changes to the dropped lifeForms
-                        for(ComponentHelper<LifeformType> lfch : this.currEventCard.getCrewToRemove()) {
-                            LifeformType lfType = lfch.getItem().orElse(null);
-                            if (lfType != null) {
-                                ship.addLifeformToCabin(lfch.getI(), lfch.getJ(), lfType);
+                        for (ComponentHelper<ItemColor> ch : matrix[toRemove.getI()][toRemove.getJ()]) {
+                            if (ch.getItem().isPresent()) {
+                                if (ch.getItem().get().equals(colorToRemove)) {
+                                    matrix[toRemove.getI()][toRemove.getJ()].remove(ch);
+                                    break;
+                                }
                             }
                         }
                     }
+                }
+            }
 
+            for (int i = 0; i < ClientShip.grid_rows; i++) {
+                for (int j = 0; j < ClientShip.grid_cols; j++) {
+                    if (matrix[i][j] != null) {
+                        itemsToTakeFinal.addAll(matrix[i][j]);
+                        matrix[i][j] = null;
+                    }
+                }
+            }
+
+            this.currEventCard.setItemsToBeTaken(itemsToTakeFinal);
+            this.currEventCard.setItemsToBeRemoved(itemsToRemoveFinal);
+        }
+        catch (UnsupportedOperationException e) {
+            // Don't check for duplicate items if the current
+            // card doesn't enable the relative commands
+        }
+
+        this.ctx = new CommandCTX(
+            "playCard",
+            () -> {
+                // System.out.println("onSuccess");
+                this.ctx = null;
+
+                this.currEventCard.clearJSON();
+            },
+            () -> {
+                ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+
+                if (ship == null) {
+                    System.out.println(PrintUtils.addColor("[ERROR] ClientShip is null", ANSIColors.RED));
+                    return;
+                }
+                // System.out.println("onError");
+                if (this.indexedCardInputMethods.get("setCrewToRemove").getKey() && this.currEventCard.getCrewToRemove() != null && !this.currEventCard.getCrewToRemove().isEmpty()) {
+                    // Revert the changes to the dropped lifeForms
+                    for(ComponentHelper<LifeformType> lfch : this.currEventCard.getCrewToRemove()) {
+                        LifeformType lfType = lfch.getItem().orElse(null);
+                        if (lfType != null) {
+                            ship.addLifeformToCabin(lfch.getI(), lfch.getJ(), lfType);
+                        }
+                    }
+                    this.currEventCard.setCrewToRemove(null);
+                }
+                try {
                     if (this.indexedCardInputMethods.get("setItemsToBeRemoved").getKey() && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
                         // Revert the changes to the dropped resources
-                        for(ComponentHelper<ItemColor> icch : this.currEventCard.getItemsToBeRemoved()) {
-                            ItemColor ic = icch.getItem().orElse(null);
-                            if (ic != null) {
-                                ClientStorage storage = (ClientStorage) ship.getComponent(icch.getI(), icch.getJ());
-                                storage.storeItem(new Item(ic));
-                            }
-                        }
                     }
-
-                    System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
-                    this.ctx = null;
-                    this.currEventCard.clearJSON();
-                    this.getCardRoundCommand();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+
+                System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
+                this.ctx = null;
+                this.getCardRoundCommand();
+            }
         );
 
         this.client.sendMessage(
