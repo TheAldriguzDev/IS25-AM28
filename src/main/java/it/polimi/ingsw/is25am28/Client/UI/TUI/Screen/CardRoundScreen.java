@@ -1719,21 +1719,18 @@ public class CardRoundScreen extends Screen {
         this.ctx = new CommandCTX(
                 "playCard",
                 () -> {
-                    System.out.println("ON SUCCESS");
                     // System.out.println("onSuccess");
                     this.ctx = null;
 
                     this.currEventCard.clearJSON();
                 },
                 () -> {
-                    System.out.println("ON ERROR");
                     ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
 
                     if (ship == null) {
                         System.out.println(PrintUtils.addColor("[ERROR] ClientShip is null", ANSIColors.RED));
                         return;
                     }
-                    System.out.println("ON ERROR(1)");
                     // System.out.println("onError");
                     if (this.indexedCardInputMethods.get("setCrewToRemove").getKey() && this.currEventCard.getCrewToRemove() != null && !this.currEventCard.getCrewToRemove().isEmpty()) {
                         // Revert the changes to the dropped lifeForms
@@ -1745,7 +1742,6 @@ public class CardRoundScreen extends Screen {
                         }
                         this.currEventCard.setCrewToRemove(null);
                     }
-                    System.out.println("ON ERROR(2)");
                     try {
                         if (this.indexedCardInputMethods.get("setItemsToBeRemoved").getKey() && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
                             // Revert the changes to the dropped resources
@@ -1754,12 +1750,9 @@ public class CardRoundScreen extends Screen {
                         e.printStackTrace();
                     }
 
-                    System.out.println("ON ERROR(3)");
-
                     System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
                     this.ctx = null;
                     this.getCardRoundCommand();
-                    System.out.println("ON ERROR(%%%)");
                 }
         );
 
