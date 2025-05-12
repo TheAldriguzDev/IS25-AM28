@@ -963,10 +963,10 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
         long totalGreenItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.GREEN)).count();
         long totalBlueItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.BLUE)).count();
 
-        String redItemsString = totalRedItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.RED) + SPACE;
-        String yellowItemsString = totalYellowItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.YELLOW) + SPACE;
-        String greenItemsString = totalGreenItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.GREEN) + SPACE;
-        String blueItemsString = totalBlueItems + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BLUE) + SPACE;
+        String redItemsString = totalRedItems + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.RED) + SPACE;
+        String yellowItemsString = totalYellowItems + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.YELLOW) + SPACE;
+        String greenItemsString = totalGreenItems + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.GREEN) + SPACE;
+        String blueItemsString = totalBlueItems + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BLUE) + SPACE;
 
         List<ClientCannon> doubleCannons = this.getDoubleCannons();
         List<ClientEngine> doubleEngines = this.getDoubleEngines();

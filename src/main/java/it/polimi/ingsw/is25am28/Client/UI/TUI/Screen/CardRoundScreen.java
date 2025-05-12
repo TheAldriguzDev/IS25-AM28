@@ -529,9 +529,6 @@ public class CardRoundScreen extends Screen {
         }
         while (!commandSelected);
 
-        // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
-        // TODO: add prevPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
-
         AtomicReference<ClientCabin> selectedCabin;
         InputWidgetTUI availableCabins;
         CommandWidgetTUI command;
@@ -698,9 +695,6 @@ public class CardRoundScreen extends Screen {
         }
         while (!commandSelected);
 
-        // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
-        // TODO: add prevPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
-
         AtomicReference<ClientStorage> selectedStorage;
         InputWidgetTUI availableStorages;
         CommandWidgetTUI command;
@@ -838,9 +832,6 @@ public class CardRoundScreen extends Screen {
             }
         }
         while (!commandSelected);
-
-        // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
-        // TODO: add prevPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
 
         AtomicReference<ClientStorage> selectedStorage;
         InputWidgetTUI availableStorages;
@@ -1089,9 +1080,6 @@ public class CardRoundScreen extends Screen {
                     .printWidget();
         }
 
-        // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
-        // TODO: add prevPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
-
         componentHelperList = this.currEventCard.getShieldsToActivate();
         selectedShield = new AtomicReference<>(null);
         availableShields = new InputWidgetTUI(this.inputThread);
@@ -1171,9 +1159,6 @@ public class CardRoundScreen extends Screen {
             System.out.println(PrintUtils.addColor("[ERROR] [getDoubleCannonToActivate()] ClientShip is null", ANSIColors.RED));
             return;
         }
-
-        // TODO: need parallel capacity list or local changes to the ship -> requires removing the ship from the updates and having a local resourceBank
-        // TODO: add prevPlayerNickname field to carsState so that the locally modified ship does not accept the update (only on some specific things)
 
         List<ClientCannon> doubleCannonsList = ship.getDoubleCannons();
         len = doubleCannonsList.size();
@@ -1360,17 +1345,28 @@ public class CardRoundScreen extends Screen {
      * currently available resources
      */
     private void generateResourceBankWidget() {
+        Map<ItemColor, Integer> availableResources = this.model.getResourceBank().getResources();
+        StringBuilder s;
+
+        s = new StringBuilder();
         this.resourceBankWidget = new WidgetTUI();
 
-        this.resourceBankWidget.appendString("[RESOURCE BANK]");
+        this.resourceBankWidget
+                .appendString("[RESOURCE BANK]")
+                .addPadding(0, 0, 1, 0);
 
-        for (Map.Entry<ItemColor, Integer> entry : this.model.getResourceBank().getResources().entrySet()) {
-            this.resourceBankWidget.appendString(
-                entry.getValue().toString() + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, entry.getKey().getANSIColor())
-            );
-        }
+        String redItems = availableResources.getOrDefault(ItemColor.RED, 0) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.RED.getANSIColor()) + SPACE;
+        String yellowItems = availableResources.getOrDefault(ItemColor.YELLOW, 0) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.YELLOW.getANSIColor()) + SPACE;
+        String greenItems = availableResources.getOrDefault(ItemColor.GREEN, 0) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.GREEN.getANSIColor()) + SPACE;
+        String blueItems = availableResources.getOrDefault(ItemColor.BLUE, 0) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.BLUE.getANSIColor());
+
+        s.append(redItems);
+        s.append(yellowItems);
+        s.append(greenItems);
+        s.append(blueItems);
 
         this.resourceBankWidget
+                .appendString(s.toString())
                 .centerWidgetScreen()
                 .addPadding(0, 1, 0, 1)
                 .wrapWidgetWithBorder();
@@ -1577,8 +1573,8 @@ public class CardRoundScreen extends Screen {
             currCardAndPlayerActions = WidgetTUI.composeTwoWidgetsHorizontally(
                     this.currEventCardWidget,
                     WidgetTUI.composeTwoWidgetsVertically(
-                            this.playerActionsRecapWidget,
-                            this.resourceBankWidget
+                            this.resourceBankWidget,
+                            this.playerActionsRecapWidget
                     )
                     .addPadding(0, 0, 0, 1)
                     .centerWidgetScreen()
