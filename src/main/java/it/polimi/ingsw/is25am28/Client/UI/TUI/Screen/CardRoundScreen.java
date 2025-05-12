@@ -261,7 +261,7 @@ public class CardRoundScreen extends Screen {
                     try {
                         this.playCard();
                     } catch (Exception e) {
-                        System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" thrown by method 'playCard'.", ANSIColors.RED));
+                        System.out.println(PrintUtils.addColor("[ERROR] " + e.getClass().getSimpleName() + " thrown by method 'playCard'.", ANSIColors.RED));
                     }
                 }
         );
@@ -598,11 +598,11 @@ public class CardRoundScreen extends Screen {
                 availableCabins.getCommandMap().size()
         );
 
-        // Selecting the cabins from where the chosen lifeform will be taken
+        // Selecting the cabins from where the chosen lifeForm will be taken
         do {
             try {
                 System.out.println();
-                System.out.println("Select a cabin from where to remove \"" + selectedLifeform.get().toString() + "\":");
+                System.out.println("Select a cabin from where to remove " + selectedLifeform.get().toString() + ":");
                 commandSelected = availableCabins.selectCommand(DEFAULT_COMMAND_PREFIX);
 
                 if (commandSelected) {
@@ -1032,17 +1032,14 @@ public class CardRoundScreen extends Screen {
             // Disables the "setWantsToVisit" command
             command = this.indexedCardInputMethods.get("setWantsToVisit").getValue();
             this.indexedCardInputMethods.replace("setWantsToVisit", new Pair<>(false, command));
-            System.out.println("Comando disabilitato");
 
             // Enables the "setItemsToBeTaken" command
             command = this.indexedCardInputMethods.get("setItemsToBeTaken").getValue();
             this.indexedCardInputMethods.replace("setItemsToBeTaken", new Pair<>(true, command));
-            System.out.println("Comando abilitato");
 
             // Enables the "setItemsToBeRemoved" command
             command = this.indexedCardInputMethods.get("setItemsToBeRemoved").getValue();
             this.indexedCardInputMethods.replace("setItemsToBeRemoved", new Pair<>(true, command));
-            System.out.println("Comando abilitato");
 
             // Generates the updated command widget
             this.generateCardRoundCommandsWidget();
@@ -1731,27 +1728,31 @@ public class CardRoundScreen extends Screen {
                         System.out.println(PrintUtils.addColor("[ERROR] ClientShip is null", ANSIColors.RED));
                         return;
                     }
-                    // System.out.println("onError");
+
                     if (this.indexedCardInputMethods.get("setCrewToRemove").getKey() && this.currEventCard.getCrewToRemove() != null && !this.currEventCard.getCrewToRemove().isEmpty()) {
-                        // Revert the changes to the dropped lifeForms
+                        // Reverts the changes to the dropped lifeForms
                         for(ComponentHelper<LifeformType> lfch : this.currEventCard.getCrewToRemove()) {
                             LifeformType lfType = lfch.getItem().orElse(null);
                             if (lfType != null) {
                                 ship.addLifeformToCabin(lfch.getI(), lfch.getJ(), lfType);
                             }
                         }
-                        this.currEventCard.setCrewToRemove(null);
                     }
-                    try {
-                        if (this.indexedCardInputMethods.get("setItemsToBeRemoved").getKey() && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
-                            // Revert the changes to the dropped resources
+
+                    if (this.indexedCardInputMethods.get("setItemsToBeRemoved").getKey() && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
+                        // Revert the changes to the dropped resources
+                        for(ComponentHelper<ItemColor> icch : this.currEventCard.getItemsToBeRemoved()) {
+                            ItemColor ic = icch.getItem().orElse(null);
+                            if (ic != null) {
+                                ClientStorage storage = (ClientStorage) ship.getComponent(icch.getI(), icch.getJ());
+                                storage.storeItem(new Item(ic));
+                            }
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
                     }
 
                     System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
                     this.ctx = null;
+                    this.currEventCard.clearJSON();
                     this.getCardRoundCommand();
                 }
         );

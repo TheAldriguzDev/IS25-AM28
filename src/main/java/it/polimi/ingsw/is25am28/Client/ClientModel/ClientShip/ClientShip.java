@@ -19,6 +19,7 @@ import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
+import java.sql.SQLOutput;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -757,6 +758,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
         int availableEnergy;
 
         // Consuming the given amount of energy
+        this.generateComponentSubLists();
         for (ClientBattery battery : this.batteryList) {
             availableEnergy = battery.getAvailability();
 

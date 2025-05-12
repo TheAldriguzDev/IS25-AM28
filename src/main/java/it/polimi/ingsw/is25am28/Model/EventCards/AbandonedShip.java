@@ -90,6 +90,9 @@ public class AbandonedShip extends EventCard {
             // otherwise get the next player
             if (wantsToVisitTheShip) {
                 this.lifeformsToBeRemoved = abandonedShip.getLifeformsToBeRemoved();
+                if (lifeformsToBeRemoved.size() != this.requiredCrew) {
+                    throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
+                }
                 this.removedLifeforms.put(playerNickname, this.lifeformsToBeRemoved);
 
                 // Check if the given input is valid

@@ -175,10 +175,7 @@ public class AbandonedStation extends EventCard {
 
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             setUpdatedDroppedResourcesIfNecessary(cardState, droppedResources);
-            System.out.println("TAKEN RESOURECE(FORM ACTIONJSON): " + this.resourceToTake);
-            System.out.println("TAKEN RESOURECE(MAP): " + this.takenResources);
             setUpdatedTakenResourcesIfNecessary(cardState, takenResources);
-            System.out.println("TAKEN RESOURECE(CARDSTATE): " + cardState.getTakenResources());
             setUpdatedPositionsIfNecessary(cardState, updatedPositions);
         } else {
             // Card information that are needed to play
@@ -189,7 +186,7 @@ public class AbandonedStation extends EventCard {
             cardState.setRequiredCrewMembers(this.requiredCrew);
             cardState.setMovementSteps(this.movementStep);
             // Filter the resources to the only available in the bank.
-            // The numbers of the resources will be set as the min between the given by the card and the available in the bank
+            // The numbers of the resources will be set as the min between the given by the card and the available in the bank // TODO: this is no longer necessary
             Map<ItemColor, Integer> givenItemByTypeCount = givenItems.stream()
                     .collect(Collectors.groupingBy(
                             Item::getColor,

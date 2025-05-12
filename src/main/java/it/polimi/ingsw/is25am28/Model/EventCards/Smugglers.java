@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.Battery;
+import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
@@ -171,8 +172,29 @@ public class Smugglers extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
                 (Player player) -> {
+                    // Creates a tmp List of the n=takenItems most valuable item colors in the ship
+                    List<ItemColor> mostValuableItems = player.getShip().getAllItems().stream()
+                            .sorted(Comparator.comparingInt(Item::getValue).reversed())
+                            .limit(this.takenItems)
+                            .map(Item::getColor)
+                            .toList();
 
                     List<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
+                    // Extracts the colors form the resourcesToDrop
+                    List<ItemColor> colorsToDrop = resourcesToDrop.stream()
+                            .map(item -> item.getItem().orElse(null))
+                            .toList();
+
+                    // This covers also the case in which there are not enough resources on board
+                    if (resourcesToDrop.size() != mostValuableItems.size()) {
+                        throw new IllegalArgumentException("The dropped items are not enough");
+                    } else if (this.countOccurrencies(mostValuableItems).equals(colorsToDrop)) {
+                        throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
+                    }
+
+                    if (!resourcesToDrop.isEmpty()) {
+                        this.droppedResources.put(player.getNickname(), resourcesToDrop);
+                    }
 
                     // Item da lasciare
                     for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
@@ -203,6 +225,14 @@ public class Smugglers extends EventCard {
     @Override
     protected void malusEffect() {}
 
+    private Map<ItemColor, Integer> countOccurrencies(List<ItemColor> colors) {
+        Map<ItemColor, Integer> occurrencies = new HashMap<>();
+        for(ItemColor itemColor : colors) {
+            occurrencies.put(itemColor, occurrencies.getOrDefault(itemColor, 0) + 1);
+        }
+        return occurrencies;
+    }
+
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
@@ -227,24 +257,18 @@ public class Smugglers extends EventCard {
 //                    defeatedPlayers.add(player.getNickname());
 //                }
 
-            smugglersStateJSON.setIsPlayerDefeated(this.isPlayerDefeated);
+            smugglersStateJSON.setIsPlayerDefeated(this.isPlayerDefeated); // TODO: think about separating the setters in case of defeat
 
                 // This field is necessary to the clients to know if they need to send additional info
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO: Need more thinking on this
 
                 // Sets the dropped resources (if there are any) // this works both in case of defeat or victory
-                setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, droppedResources);
+            setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, this.droppedResources);
 
-                // Sets the removed batteries (if there are any), due to the smugglers
-                setUpdatedRemovedBatteriesIfNecessary(smugglersStateJSON, removedBatteries);
-//            } else {
-                // Batteries consumed due to the double cannons
-                setUpdatedRemovedBatteriesIfNecessary(smugglersStateJSON, removedBatteries);
-//            }
-            // if the smugglers have been defeated we need to set the rewards (if taken)
-            setUpdatedPositionsIfNecessary(smugglersStateJSON, updatedPositions);
-            setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, droppedResources);
-            setUpdatedTakenResourcesIfNecessary(smugglersStateJSON, takenResources);
+            // Sets the removed batteries (if there are any), due to the smugglers
+            setUpdatedRemovedBatteriesIfNecessary(smugglersStateJSON, this.removedBatteries);
+            setUpdatedPositionsIfNecessary(smugglersStateJSON, this.updatedPositions);
+            setUpdatedTakenResourcesIfNecessary(smugglersStateJSON, this.takenResources);
             setUpdatedEliminatedPlayersIfNecessary(smugglersStateJSON, this.eliminatedPlayers);
 
         } else {

@@ -11,6 +11,7 @@ import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities.PlasmaShot;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.InsufficientEnergyException;
+import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
@@ -48,6 +49,7 @@ public class WarZone extends EventCard {
     private int diceResult;
 
     // TODO: prev Player Nickname
+    private String prevPlayerNickname;
 
     /**
      * WarZone constructor that sets:
@@ -184,6 +186,7 @@ public class WarZone extends EventCard {
         ) {
             throw new IllegalArgumentException("The given player does not match with the current one!");
         }
+        this.prevPlayerNickname = playerNickname;
 
         // Switch the handling to the specific action
         WarZoneActionConsequencePair currentAction = this.cardActions.get(this.current_action);
@@ -445,14 +448,36 @@ public class WarZone extends EventCard {
     private WarZone handleLossItems(Player player, WarZoneJSON warZoneJSON) throws IllegalArgumentException {
         // Get the list of components and resources to be dropped
         List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>(warZoneJSON.getItemsToBeRemoved());
-        if (!itemsToBeRemoved.isEmpty()) {
-            this.droppedResources.put(player.getNickname(), itemsToBeRemoved);
+
+        // Creates a tmp List of the n=takenItems most valuable item colors in the ship
+        List<ItemColor> mostValuableItems = player.getShip().getAllItems().stream()
+                .sorted(Comparator.comparingInt(Item::getValue).reversed())
+                .limit(this.requiredItems)
+                .map(Item::getColor)
+                .toList();
+
+        List<ComponentHelper<ItemColor>> resourcesToDrop = warZoneJSON.getItemsToBeRemoved();
+        // Extracts the colors form the resourcesToDrop
+        List<ItemColor> colorsToDrop = resourcesToDrop.stream()
+                .map(item -> item.getItem().orElse(null))
+                .toList();
+
+        // This covers also the case in which there are not enough resources on board
+        if (resourcesToDrop.size() != mostValuableItems.size()) {
+            throw new IllegalArgumentException("The dropped items are not enough");
+        } else if (this.countOccurrencies(mostValuableItems).equals(colorsToDrop)) {
+            throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
         }
 
         // This check cannot be made, if the list sent by the player is smaller than requiredItems, the player's batteries must be taken instead
 //        if (itemsToBeRemoved.size() != this.requiredItems) {
 //            throw new IllegalArgumentException("The itemsToBeRemoved size does not match with the card requirements!");
 //        }
+
+
+        if (!itemsToBeRemoved.isEmpty()) {
+            this.droppedResources.put(player.getNickname(), itemsToBeRemoved);
+        }
 
         // Remove the resources from the player to the bank
         for ( ComponentHelper<ItemColor> resourceDrop : itemsToBeRemoved ) {
@@ -480,6 +505,14 @@ public class WarZone extends EventCard {
         return this;
     }
 
+    private Map<ItemColor, Integer> countOccurrencies(List<ItemColor> colors) {
+        Map<ItemColor, Integer> occurrencies = new HashMap<>();
+        for(ItemColor itemColor : colors) {
+            occurrencies.put(itemColor, occurrencies.getOrDefault(itemColor, 0) + 1);
+        }
+        return occurrencies;
+    }
+
     /**
      * Removes the lifeform of the given player from the given Cabin component.
      * It also checks if the player hash finished all his Astronauts --> if yes it will be eliminated
@@ -487,11 +520,12 @@ public class WarZone extends EventCard {
     private WarZone handleRequiredCrew(Player player, WarZoneJSON warZoneJSON) {
         // Get the list of components where we need to remove the lifeform of the given player
         List<ComponentHelper<LifeformType>> lifeFormToBeRemoved = new ArrayList<>(warZoneJSON.getLifeformsToBeRemoved());
-        this.removedLifeforms.put(player.getNickname(), lifeFormToBeRemoved);
 
-        if (lifeFormToBeRemoved.size() != this.requiredCrew) {
-            throw new IllegalArgumentException("The lifeformsToBeRemoved size does not match with the card requirements!");
+        if (lifeFormToBeRemoved.size() != this.requiredCrew && lifeFormToBeRemoved.size() != player.getShip().getAllLifeforms().size()) {
+            throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
         }
+
+        this.removedLifeforms.put(player.getNickname(), lifeFormToBeRemoved);
 
         Ship playerShip = player.getShip();
 
@@ -702,6 +736,7 @@ public class WarZone extends EventCard {
 
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+            cardState.setPrevPlayerNickname(this.prevPlayerNickname);
 
             cardState.setCurrActionIndex(this.current_action); // Need a way to set this only when necessary, but it might not be worth it // should now be obsolete since there are flags
             // If present set the current player (the one that needs to play the game)

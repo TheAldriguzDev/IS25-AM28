@@ -157,8 +157,6 @@ public class Slavers extends EventCard {
                     for (ComponentHelper<LifeformType> lifeform : slaversData.getCrewToRemove()) {
                         Cabin tmpCabin;
 
-                        // TODO: Throw exception if crewToRemove.size is wrong (check also if the player cannot send more than the current amount)
-
                         try {
                             tmpCabin = (Cabin) player.getShip().getComponent(lifeform.getI(), lifeform.getJ());
                         } catch (Exception e) {
