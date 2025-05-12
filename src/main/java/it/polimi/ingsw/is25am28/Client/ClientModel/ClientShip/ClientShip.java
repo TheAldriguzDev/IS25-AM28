@@ -544,7 +544,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
     /**
      * @return A grid of <code>ClientComponent</code> of the given dimensions with all values initialized to <code>null</code>
      */
-    private ClientComponent[][] initGrid() {
+    public ClientComponent[][] initGrid() {
         ClientComponent[][] grid = new ClientComponent[grid_rows][grid_cols];
 
         for (int i = 0; i < grid_rows; i++) {

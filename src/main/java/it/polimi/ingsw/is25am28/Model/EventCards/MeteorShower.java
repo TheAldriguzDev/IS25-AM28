@@ -373,7 +373,7 @@ public class MeteorShower extends EventCard {
 
             // If the meteor wasn't destroyed, then remove the component
             // that was hit from the current player's ship
-            if (!threatDestroyed) {
+            if (toHit != null && !threatDestroyed) {
                 try {
                     // The current player will become the previous player after the
                     // current meteor effects have been applied to him, therefore in
@@ -383,8 +383,8 @@ public class MeteorShower extends EventCard {
                     this.prevPlayer = this.currentPlayer.get().getNickname();
 
                     this.prevPlayerRemovedComponents = shipPtr.removeComponent(
-                            toHit.getPosition()[0],
-                            toHit.getPosition()[1]
+                        toHit.getPosition()[0],
+                        toHit.getPosition()[1]
                     );
 
                     this.removedComponents.put(this.prevPlayer, this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList());
