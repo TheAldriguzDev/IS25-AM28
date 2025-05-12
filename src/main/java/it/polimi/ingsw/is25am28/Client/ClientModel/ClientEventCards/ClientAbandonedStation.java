@@ -45,8 +45,6 @@ public class ClientAbandonedStation extends ClientEventCard {
         enabledCommands.clear();
         enabledCommands.add("playCard");
         if (this.isCardUsable) {
-            enabledCommands.add("setItemsToBeRemoved");
-            enabledCommands.add("setItemsToBeTaken");
             enabledCommands.add("setWantsToVisit");
         }
     }

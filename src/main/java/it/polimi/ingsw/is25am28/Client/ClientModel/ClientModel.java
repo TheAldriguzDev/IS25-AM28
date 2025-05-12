@@ -185,6 +185,7 @@ public class ClientModel {
     }
 
     public void updateShips(CardStateJSON cardStateJSON) {
+
         // Removes the destroyed components from the specified ship
         if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
             for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {

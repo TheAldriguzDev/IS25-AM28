@@ -431,8 +431,8 @@ public class CardRoundScreen extends Screen {
         command.appendString("Go back to menu");
         this.availableLifeforms.addCommand(command);
 
-        this.availableItemColors.setColumnGroupingAmount(
-                this.availableItemColors.getCommandMap().size()
+        this.availableLifeforms.setColumnGroupingAmount(
+                this.availableLifeforms.getCommandMap().size()
         );
     }
 
@@ -628,6 +628,9 @@ public class CardRoundScreen extends Screen {
                 selectedCabin.get().getJ()
         ).addItem(selectedLifeform.get());
 
+        // Locally removes the lifeForm from the ship
+        ship.removeLifeformFromCabin(selectedCabin.get().getI(), selectedCabin.get().getJ(), selectedLifeform.get());
+
         crewToRemove.add(lifeformPosition);
         this.currEventCard.setCrewToRemove(crewToRemove);
     }
@@ -673,7 +676,7 @@ public class CardRoundScreen extends Screen {
                 selectedItem
         );
 
-        // Getting the lifeform type to remove
+        // Getting the lifeForm type to remove
         do {
             try {
                 System.out.println();
@@ -766,10 +769,10 @@ public class CardRoundScreen extends Screen {
                 selectedStorage.get().getJ()
         ).addItem(selectedItem.get());
 
+        // Locally removes the resource from the player, adding it to the resource bank
         Optional<Item> foundItem = selectedStorage.get().getStoredItems().stream()
                 .filter(item -> item.getColor().equals(selectedItem.get()))
                 .findFirst();
-        // Remove the resource from the player
         foundItem.ifPresent(selectedStorage.get()::removeItem);
         this.model.getResourceBank().addResourceToBank(selectedItem.get());
 
@@ -933,6 +936,7 @@ public class CardRoundScreen extends Screen {
                 selectedStorage.get().getJ()
         ).addItem(selectedItem.get());
 
+        // Locally adds the item to the player, removing it from the resource bank
         selectedStorage.get().storeItem(new Item(selectedItem.get()));
         this.model.getResourceBank().removeResourceFromBank(selectedItem.get());
 
@@ -1026,7 +1030,31 @@ public class CardRoundScreen extends Screen {
      * visit the POI (Point of Interest) offered by the card, FALSE otherwise.
      */
     public void getWantsToVisit() {
-        this.currEventCard.setWantsToVisit(this.getBooleanAnswerToQuestion("Do you want to visit it?"));
+        boolean answer = this.getBooleanAnswerToQuestion("Do you want to visit it?");
+
+        this.currEventCard.setWantsToVisit(answer);
+
+        if (answer) {
+            CommandWidgetTUI command;
+
+            // Disables the "setWantsToVisit" command
+            command = this.indexedCardInputMethods.get("setWantsToVisit").getValue();
+            this.indexedCardInputMethods.replace("setWantsToVisit", new Pair<>(false, command));
+            System.out.println("Comando disabilitato");
+
+            // Enables the "setItemsToBeTaken" command
+            command = this.indexedCardInputMethods.get("setItemsToBeTaken").getValue();
+            this.indexedCardInputMethods.replace("setItemsToBeTaken", new Pair<>(true, command));
+            System.out.println("Comando abilitato");
+
+            // Enables the "setItemsToBeRemoved" command
+            command = this.indexedCardInputMethods.get("setItemsToBeRemoved").getValue();
+            this.indexedCardInputMethods.replace("setItemsToBeRemoved", new Pair<>(true, command));
+            System.out.println("Comando abilitato");
+
+            // Generates the updated command widget
+            this.generateCardRoundCommandsWidget();
+        }
     }
 
     /**

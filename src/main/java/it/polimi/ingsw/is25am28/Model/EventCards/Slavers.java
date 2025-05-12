@@ -26,6 +26,8 @@ public class Slavers extends EventCard {
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private boolean isPlayerDefeated;
 
+    private String prevPlayerNickname;
+
     public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board, int cardID, String path) {
         super(name, cardLevel, board, cardID, path);
         this.requiredFirepower = requiredFirepower;
@@ -74,6 +76,7 @@ public class Slavers extends EventCard {
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
                     String playerNickname = slaversData.getPlayerNickname();
+                    this.prevPlayerNickname = playerNickname;
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
@@ -199,6 +202,7 @@ public class Slavers extends EventCard {
 
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> slaversStateJSON.setPlayerNickname(player.getNickname()));
+            slaversStateJSON.setPrevPlayerNickname(this.prevPlayerNickname);
 
             // If the first round is finished, send the dynamic info to the players
 
