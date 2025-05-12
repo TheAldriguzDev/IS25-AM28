@@ -243,7 +243,7 @@ public class Pirates extends EventCard {
                     if ((shotSize == 1 && !shieldedSides[shotDirection]) || shotSize == 2) {
                         switch (shotDirection) {
                             case 0: {
-                                int column = diceThrowResult;
+                                int column = diceThrowResult - 1;
                                 for (int row = 4; row < 9; row++) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
@@ -263,7 +263,7 @@ public class Pirates extends EventCard {
                                 break;
                             }
                             case 1: {
-                                int row = diceThrowResult;
+                                int row = diceThrowResult - 1;
                                 for (int column = 3; column < 10; column++) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
@@ -283,7 +283,7 @@ public class Pirates extends EventCard {
                                 break;
                             }
                             case 2: {
-                                int column = diceThrowResult;
+                                int column = diceThrowResult - 1;
                                 for (int row = 8; row > 3; row--) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {
@@ -303,7 +303,7 @@ public class Pirates extends EventCard {
                                 break;
                             }
                             case 3: {
-                                int row = diceThrowResult;
+                                int row = diceThrowResult - 1;
                                 for (int column = 9; column > 2; column--) {
                                     if (player.getShip().getComponent(row, column) != null) {
                                         try {

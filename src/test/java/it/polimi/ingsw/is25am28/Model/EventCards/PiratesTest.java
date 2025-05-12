@@ -186,7 +186,8 @@ class PiratesTest {
 
         // Start of destruction and defense rounds
         // First shot : big from above on column 7
-        pirates.setDiceThrowResult(7);
+//        pirates.setDiceThrowResult(7);
+          pirates.setDiceThrowResult(8);
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Player 1 consequences - 1st plasmaShot");
@@ -235,7 +236,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // Second shot : small from the left on row 5
-        pirates.setDiceThrowResult(5);
+//        pirates.setDiceThrowResult(5);
+        pirates.setDiceThrowResult(6);
 
         // First player should be no more
 
@@ -290,7 +292,8 @@ class PiratesTest {
         assertFalse(pirates.hasFinished());
 
         // Third shot : small from above on column 6
-        pirates.setDiceThrowResult(6);
+//        pirates.setDiceThrowResult(6);
+        pirates.setDiceThrowResult(7);
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Player 1 consequences - 3rd plasmaShot");
@@ -393,6 +396,7 @@ class PiratesTest {
 //
 //        assertTrue(pirates.hasFinished());
 
+        // TODO: FIX TEST
         assertNull(ship_2.getComponent(6, 7));
         assertNull(ship_2.getComponent(5, 6));
 

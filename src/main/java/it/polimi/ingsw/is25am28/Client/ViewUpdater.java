@@ -79,27 +79,35 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(ReconnectDTO state) throws Exception {
+        if (this.model.getNickname() == null) {
 
-        this.model.setNickname(state.getTargetNickname());
-        this.model.setDifficultyLevel(state.getGameLevel());
+            this.model.setNickname(state.getTargetNickname());
+            this.model.setDifficultyLevel(state.getGameLevel());
 
-        // 1. Create the players --> and set their ship
-        List<PlayerJSON> players = state.getPlayers();
-        for (PlayerJSON player : players) {
-            this.model.addNewPlayer(player.getNickname(), PlayerColor.valueOf(player.getColor()), player.getCredits(), player.getLostPieces(), player.getShip());
+            // 1. Create the players --> and set their ship
+            List<PlayerJSON> players = state.getPlayers();
+            for (PlayerJSON player : players) {
+                this.model.addNewPlayer(player.getNickname(), PlayerColor.valueOf(player.getColor()), player.getCredits(), player.getLostPieces(), player.getShip());
+            }
+
+            // 2. Create the board
+            BoardJSON board = state.getBoard();
+            this.model.setClientBoard(new ClientBoard(board, this.model));
+
+            // 3. Reset the resourceBank to the correct amount of resources
+            this.model.getResourceBank().resetResourcesQuantity(state.getResourceBank());
+
+            // 4. cards
+            this.model.generateClientEventCards(state.getCards());
+
+            state.getCurrentState().accept(this);
+        } else {
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getTargetNickname() + " reconnected to the game.", ANSIColors.BRIGHT_MAGENTA))
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
         }
-
-        // 2. Create the board
-        BoardJSON board = state.getBoard();
-        this.model.setClientBoard(new ClientBoard(board, this.model));
-
-        // 3. Reset the resourceBank to the correct amount of resources
-        this.model.getResourceBank().resetResourcesQuantity(state.getResourceBank());
-
-        // 4. cards
-        this.model.generateClientEventCards(state.getCards());
-
-        state.getCurrentState().accept(this);
     }
 
     @Override

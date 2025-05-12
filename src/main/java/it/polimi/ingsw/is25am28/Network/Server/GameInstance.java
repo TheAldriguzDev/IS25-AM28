@@ -309,6 +309,13 @@ public class GameInstance {
             answer.setNextState(reconnectState.get(1));
         }
 
+//        this.queueHandler.enqueue(() -> {
+//            try {
+//                virtualClient.updateState(answer);
+//            } catch (Exception e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
         this.broadCastUpdate(answer);
     }
 }

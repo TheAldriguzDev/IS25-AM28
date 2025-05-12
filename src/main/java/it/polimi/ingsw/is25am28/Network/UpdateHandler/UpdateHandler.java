@@ -49,7 +49,7 @@ public class UpdateHandler {
                     future = this.commitCmd(future, nickname, this.inputThread);
                 }
             }
-            case DisconnectedPlayerDTO _ -> {
+            case DisconnectedPlayerDTO _, ReconnectDTO _ -> {
                 future = acceptState(future, state, this.updateThread, "Error while executing the " + state.getStateName() + " update");
             }
             case CardRoundDTO cardData -> {
