@@ -7,6 +7,7 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Network to java.rmi;
 
     requires javafx.controls;
+    requires javafx.graphics;
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
@@ -62,4 +63,6 @@ module it.polimi.ingsw.is25am {
 
     exports it.polimi.ingsw.is25am28.Loader.Cards to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.is25am28.Loader.Tiles to com.fasterxml.jackson.databind;
+
+    exports it.polimi.ingsw.is25am28.Client.UI.GUI;
 }
