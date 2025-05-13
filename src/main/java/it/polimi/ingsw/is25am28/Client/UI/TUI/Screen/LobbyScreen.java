@@ -392,6 +392,8 @@ public class LobbyScreen extends Screen {
         }
         while (playerName.isEmpty() && !usedNicknames.contains(playerName));
 
+        this.model.setNickname(playerName);
+
         this.ctx = new CommandCTX(
             "reconnect",
             () -> {
@@ -401,7 +403,7 @@ public class LobbyScreen extends Screen {
                         .wrapWidgetWithBorder()
                         .printWidget();
             },
-                this::getLobbyCommand
+            this::getLobbyCommand
         );
 
         this.client.sendMessage(new Reconnect(playerName));

@@ -79,7 +79,7 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(ReconnectDTO state) throws Exception {
-        if (this.model.getNickname() == null) {
+        if (this.model.getNickname().equals(state.getTargetNickname())) {
 
             this.model.setNickname(state.getTargetNickname());
             this.model.setDifficultyLevel(state.getGameLevel());
