@@ -44,6 +44,7 @@ public class WarZone extends EventCard {
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private List<String> eliminatedPlayers;
+    private Map<String, Integer> lostPieces;
 
     private final Random random;
     private int diceResult;
@@ -92,6 +93,7 @@ public class WarZone extends EventCard {
         this.removedBatteries = new HashMap<>();
         this.removedLifeforms = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
+        this.lostPieces = new HashMap<>();
 
         this.previousPlayerRemovedComponents = new ArrayList<>();
 
@@ -676,7 +678,6 @@ public class WarZone extends EventCard {
             }
         }
 
-        // If the meteor wasn't destroyed, then remove the component
         // that was hit from the current player's ship
         if (!threatDestroyed) {
             try {
@@ -687,6 +688,8 @@ public class WarZone extends EventCard {
 
                 this.prevPlayer = player.getNickname();
                 this.previousPlayerRemovedComponents = new ArrayList<>();
+                this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
+                this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
             }
             catch (CoreDeletionAttemptException e) {
                 this.eliminatedPlayers.add(player.getNickname());
@@ -755,6 +758,7 @@ public class WarZone extends EventCard {
                             cardState.setNeedsShipUpdate(true);
                             cardState.setNeedsUpdatedRemovedComponents(true);
                             cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
+                            setUpdatedLostPiecesIfNecessary(cardState, this.lostPieces);
                         }
                         if (current_plasmaShot < this.shootingSequence.size()) {
                             PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);

@@ -320,6 +320,15 @@ public abstract class EventCard {
         }
     }
 
+    protected void setUpdatedLostPiecesIfNecessary(CardStateJSON cardState, Map<String, Integer> lostPieces) {
+        if (!lostPieces.isEmpty()) {
+            cardState.setNeedsPlayerUpdate(true);
+            cardState.setNeedsUpdatedLostPieces(true);
+            cardState.setUpdatedLostPieces(new HashMap<>(lostPieces));
+            lostPieces.clear();
+        }
+    }
+
     // TODO: eventCards should also set the lapped eliminated players
 
 

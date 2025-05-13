@@ -34,7 +34,9 @@ public class CardStateJSON extends ActionJSON {
     // ==== CLIENT PLAYER FLAGS/INFORMATION ==== //
     private boolean needsPlayerUpdate;
     private boolean needsUpdatedCredits;
+    private boolean needsUpdatedLostPieces;
     private Map<String, Integer> updatedCredits;
+    private Map<String, Integer> updatedLostPieces;
     // ========================================= //
 
     // ======== CLIENT BOARD FLAGS/INFORMATION ======== //
@@ -523,6 +525,24 @@ public class CardStateJSON extends ActionJSON {
         @JsonGetter("updatedCredits")
         public Map<String, Integer> getUpdatedCredits() {
             return this.updatedCredits;
+        }
+
+        // ==== LOST PIECES ==== //
+        @JsonSetter("needsUpdatedLostPieces")
+        public void setNeedsUpdatedLostPieces(boolean needsUpdatedLostPieces) {
+            this.needsUpdatedLostPieces = needsUpdatedLostPieces;
+        }
+        @JsonGetter("needsUpdatedLostPieces")
+        public boolean getNeedsUpdatedLostPieces() {
+            return this.needsUpdatedLostPieces;
+        }
+        @JsonSetter("setUpdatedLostPieces")
+        public void setUpdatedLostPieces(Map<String, Integer> updatedLostPieces) {
+            this.updatedLostPieces = updatedLostPieces;
+        }
+        @JsonGetter("setUpdatedLostPieces")
+        public Map<String, Integer> getUpdatedLostPieces() {
+            return this.updatedLostPieces;
         }
     // ==================================================== //
 

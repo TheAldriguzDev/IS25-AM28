@@ -213,6 +213,12 @@ public class ClientModel {
                 this.players.get(playerNickname).setCredits(cardStateJSON.getUpdatedCredits().get(playerNickname));
             }
         }
+
+        if (cardStateJSON.getNeedsUpdatedLostPieces()) {
+            for (String playerNickname : cardStateJSON.getUpdatedLostPieces().keySet()) {
+                this.players.get(playerNickname).setLostComponents(cardStateJSON.getUpdatedLostPieces().get(playerNickname));
+            }
+        }
     }
 
     public void updateShips(CardStateJSON cardStateJSON) {

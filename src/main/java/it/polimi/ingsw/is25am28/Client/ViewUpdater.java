@@ -104,6 +104,7 @@ public class ViewUpdater implements StateVisitor {
             // 4. cards
             this.model.generateClientEventCards(state.getCards());
         } else {
+            System.out.println();
             new WidgetTUI()
                     .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getTargetNickname() + " reconnected to the game.", ANSIColors.BRIGHT_MAGENTA))
                     .addPadding(0, 1, 0, 1)

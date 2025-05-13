@@ -92,7 +92,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 //        catch (IOException e) {
 //            throw new RuntimeException(e);
 //        }
-
+//
 //        List<EventCard> AllCards = cardLoader.getCards(model.getBoard(), new ResourceBank(this.model.getGameLevel()), model.getGameLevel());
 //        List<EventCard> fakeDeck = new ArrayList<>();
 //        fakeDeck.add(AllCards.get(8)); // MeteorShower

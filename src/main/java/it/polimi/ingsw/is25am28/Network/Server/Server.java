@@ -343,7 +343,7 @@ public class Server {
                         pingHelper.incrementPing();
 
                         // Check if the client is disconnected
-                        if (pingHelper.getFailedPings() > 4) { // TODO: adjust right pings number
+                        if (pingHelper.getFailedPings() > 2) { // TODO: adjust right pings number
                             // Get the game id
                             int gameID;
                             synchronized (this.clientToGame) {

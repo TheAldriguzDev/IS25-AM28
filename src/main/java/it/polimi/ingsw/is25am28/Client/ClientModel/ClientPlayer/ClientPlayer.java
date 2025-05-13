@@ -26,8 +26,6 @@ public class ClientPlayer {
     }
 
     public ClientPlayer(String nickname, PlayerColor color, int level, int credits, int lostPieces, List<Map<String, Object>> ship) {
-        System.out.println("Entrato nel new ClientPlayer");
-        try {
             this.nickname = nickname;
             this.color = color;
             this.credits = credits;
@@ -35,10 +33,6 @@ public class ClientPlayer {
             this.cursor = 0;
 
             this.ship = new ClientShip(level, ship);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        System.out.println("Finito il new ClientPlayer");
     }
 
     /**
@@ -102,6 +96,13 @@ public class ClientPlayer {
      * */
     public void setCursor(int cursor) {
         this.cursor = cursor;
+    }
+
+    /**
+     * @param lostPieces is the current amount the player's lost components
+     */
+    public void setLostComponents(int lostPieces) {
+        this.lostComponents = lostPieces;
     }
 
     /**
