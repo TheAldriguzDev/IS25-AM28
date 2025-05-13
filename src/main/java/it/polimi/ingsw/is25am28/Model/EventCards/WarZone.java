@@ -93,6 +93,7 @@ public class WarZone extends EventCard {
         this.removedBatteries = new HashMap<>();
         this.removedLifeforms = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
+        this.lostPieces = new HashMap<>();
 
         this.previousPlayerRemovedComponents = new ArrayList<>();
 
