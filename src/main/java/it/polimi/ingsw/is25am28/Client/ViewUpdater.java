@@ -102,6 +102,7 @@ public class ViewUpdater implements StateVisitor {
 
             state.getCurrentState().accept(this);
         } else {
+            System.out.println();
             new WidgetTUI()
                     .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getTargetNickname() + " reconnected to the game.", ANSIColors.BRIGHT_MAGENTA))
                     .addPadding(0, 1, 0, 1)

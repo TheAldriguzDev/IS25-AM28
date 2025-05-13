@@ -10,6 +10,11 @@ import it.polimi.ingsw.is25am28.Model.GameModelv2.InsufficientPlayerState;
 import java.io.Serial;
 import java.io.Serializable;
 
+
+
+
+
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = StateDTO.class, name = "StateDTO"),
@@ -25,11 +30,14 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = PlacedComponentDTO.class, name = "PlacedComponentDTO"),
         @JsonSubTypes.Type(value = PlayerEndedShipDTO.class, name = "PlayerEndedShipDTO"),
         @JsonSubTypes.Type(value = FixedComponentDTO.class, name = "FixedComponentDTO"),
+        @JsonSubTypes.Type(value = FixShipDTO.class, name = "FixShipDTO"),
         @JsonSubTypes.Type(value = PopulateShipComponentDTO.class, name = "PopulateShipComponentDTO"),
+        @JsonSubTypes.Type(value = PopulateShipDTO.class, name = "PopulateShipDTO"),
         @JsonSubTypes.Type(value = ConstructionDeckDTO.class, name = "ConstructionDeckDTO"),
         @JsonSubTypes.Type(value = DisconnectedPlayerDTO.class, name = "DisconnectedPlayerDTO"),
         @JsonSubTypes.Type(value = InsufficientPlayerDTO.class, name = "InsufficientPlayerDTO"),
-        @JsonSubTypes.Type(value = CardRoundDTO.class, name = "CardRoundDTO")
+        @JsonSubTypes.Type(value = CardRoundDTO.class, name = "CardRoundDTO"),
+        @JsonSubTypes.Type(value = EndGameDTO.class, name = "EndGameDTO")
 })
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
