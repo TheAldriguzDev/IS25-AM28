@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
-import it.polimi.ingsw.is25am28.Model.Connector;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
@@ -19,14 +18,11 @@ import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
 
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.is25am28.Model.Connector.*;
-import static it.polimi.ingsw.is25am28.Model.Connector.ONE_PIPE;
-import static it.polimi.ingsw.is25am28.Model.Connector.TWO_PIPES;
 import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
@@ -345,13 +341,21 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
      * </ul>
      * <br>
      * NOTE: The direct neighbours are NOT diagonal, thus only the top, right, bottom and left adjacent
-     * client components are considered as neighbours of the given client component.
+     *       components are considered as neighbours of the given component.
+     * <br>
+     * NOTE: All returned neighbours (if any exist) are also <b>REACHABLE</b> from the given component,
+     *       meaning that the connectors that bridge the gap between the latter and each neighbour
+     *       are checked for validity.
+     *       An invalid pair of connectors between two components implies that from the given
+     *       component that particular neighbour cannot be reached, therefore the latter is not
+     *       reachable from the former.
      *
-     * @param clientComponent The client component of which we want to get its direct neighbours
-     * @return A <code>ClientComponent[]</code> array of size 4 with the given client component's neighbours
-     * @throws NullComponentException If the given client component is <code>null</code>
+     * @param clientComponent The component of which we want to get its direct neighbours
+     * @return A <code>Component[]</code> array of size 4 with the given component's neighbours
+     * @throws NullComponentException If the given component is <code>null</code>
+     * @throws NullPointerException If the position of the given component fails to yield legal coordinates
      */
-    public ClientComponent[] getNearestComponents(ClientComponent clientComponent) throws NullComponentException {
+    public ClientComponent[] getNearestReachableComponents(ClientComponent clientComponent) throws NullComponentException {
         ClientComponent[] neighbours = new ClientComponent[4];
         ClientComponent potentialNeighbour;
 
@@ -457,7 +461,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 // Applying the lambda to currComp
                 lambda.accept(currComp);
 
-                neighbours = this.getNearestComponents(currComp);
+                neighbours = this.getNearestReachableComponents(currComp);
                 alreadyChecked.add(currComp);
 
                 // Creating the nextLayer list of components for next iteration
@@ -640,7 +644,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                     case PURPLE_ALIEN -> {
                         if (this.purpleAlienPosition == null) {
                             if (cabin.getAvailableSpace() == LifeformType.PURPLE_ALIEN.getRequiredSpace()) {
-                                neighbours = this.getNearestComponents(cabin);
+                                neighbours = this.getNearestReachableComponents(cabin);
 
                                 for (ClientComponent neighbour : neighbours) {
                                     switch (neighbour) {
@@ -659,7 +663,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                     case BROWN_ALIEN -> {
                         if (this.brownAlienPosition == null) {
                             if (cabin.getAvailableSpace() == LifeformType.BROWN_ALIEN.getRequiredSpace()) {
-                                neighbours = this.getNearestComponents(cabin);
+                                neighbours = this.getNearestReachableComponents(cabin);
 
                                 for (ClientComponent neighbour : neighbours) {
                                     switch (neighbour) {

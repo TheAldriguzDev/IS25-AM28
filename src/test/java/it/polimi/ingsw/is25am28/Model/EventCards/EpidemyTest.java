@@ -248,7 +248,7 @@ class EpidemyTest {
         shipPlayer2.getCabinList().forEach(
                 (Cabin c) -> {
                     if (c != shipPlayer2.getCore()) {
-                        Component[] neighbours = shipPlayer2.getNearestComponents(c);
+                        Component[] neighbours = shipPlayer2.getNearestReachableComponents(c);
                         boolean alienPlaced = false;
 
                         for (Component neighbour : neighbours) {
@@ -320,7 +320,7 @@ class EpidemyTest {
                 (Cabin c) -> {
                     if (c != shipPlayer3.getCore()) {
 
-                        Component[] neighbours = shipPlayer3.getNearestComponents(c);
+                        Component[] neighbours = shipPlayer3.getNearestReachableComponents(c);
                         boolean alienPlaced = false;
 
                         for (Component neighbour : neighbours) {

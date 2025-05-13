@@ -3,12 +3,9 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
-import it.polimi.ingsw.is25am28.Model.Items.Item;
-import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
@@ -58,7 +55,7 @@ public class Epidemy extends EventCard {
 
             for (Cabin cabin : cabinList) {
                 if (!alreadyQuarantined.contains(cabin)) {
-                    neighbours = shipPtr.getNearestComponents(cabin);
+                    neighbours = shipPtr.getNearestReachableComponents(cabin);
                     for (Component neighbour : neighbours) {
                         switch (neighbour) {
                             case Cabin neighbourCabin -> {

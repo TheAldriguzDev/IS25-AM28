@@ -32,7 +32,6 @@ public class VisitPlanets extends EventCard {
 
     private String prevPlayerNickname;
 
-
     public VisitPlanets(
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
@@ -58,7 +57,6 @@ public class VisitPlanets extends EventCard {
 
         int planetIndex = 0;
         this.chosenPlanetIndex = -1;
-
 
         for (Map<String, Integer> planetDescriptor : itemsPerPlanet) {
             Map<ItemColor, Integer> formattedPlanetDescriptor = new HashMap<>();
@@ -91,37 +89,6 @@ public class VisitPlanets extends EventCard {
             this.itemsPerPlanet.put(planetIndex, formattedPlanetDescriptor);
             planetIndex++;
         }
-
-        // Parsing the incoming data and transforming the integer value
-        // found in the map into the corresponding color
-//        for (Integer planetIndex : itemsPerPlanet.keySet()) {
-//            Map<ItemColor, Integer> planetResourceDescriptor = new HashMap<>();
-//
-//            for (Integer itemColor : itemsPerPlanet.get(planetIndex).keySet()) {
-//                switch (itemColor) {
-//                    // Blue Item
-//                    case 1 -> {
-//                        planetResourceDescriptor.put(ItemColor.BLUE, itemsPerPlanet.get(planetIndex).get(1));
-//                    }
-//                    // Green Item
-//                    case 2 -> {
-//                        planetResourceDescriptor.put(ItemColor.GREEN, itemsPerPlanet.get(planetIndex).get(2));
-//                    }
-//                    // Yellow Item
-//                    case 3 -> {
-//                        planetResourceDescriptor.put(ItemColor.YELLOW, itemsPerPlanet.get(planetIndex).get(3));
-//                    }
-//                    // Red Item
-//                    case 4 -> {
-//                        planetResourceDescriptor.put(ItemColor.RED, itemsPerPlanet.get(planetIndex).get(4));
-//                    }
-//                    default -> throw new IllegalStateException("[VisitPlanets] ERROR: There cannon be more than 4 item colors");
-//                }
-//            }
-//
-//            // Putting the transformed entry into the itemsPerPlanet map
-//            this.itemsPerPlanet.put(planetIndex, planetResourceDescriptor);
-//        }
 
         // Map containing each player and its chosen planet to land on. If a player
         // is not present in this map, then it means that he didn't choose a planet to land on
@@ -171,6 +138,7 @@ public class VisitPlanets extends EventCard {
         // by the amount specified by the attribute movementSteps
         // NOTE: The players that landed are moved backwards starting from the
         //       player in last place to the player in first place (it's a rule)
+
         for (i = activePlayers.size() - 1; i >= 0; i--) {
             for (Player player : this.playersChosenPlanet.values()) {
                 if (player.equals(activePlayers.get(i))) {
@@ -182,10 +150,11 @@ public class VisitPlanets extends EventCard {
                 }
             }
         }
-        // TODO: Tests not passed with this
-        int tmp = getBoard().getEliminatedPlayers().size();
+
+        int tmp = this.getBoard().getEliminatedPlayers().size();
         this.getBoard().validatePlayersPosition();
-        for (int j = 0; j < getBoard().getEliminatedPlayers().size() - tmp; j++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
+
+        for (int j = 0; j < this.getBoard().getEliminatedPlayers().size() - tmp; j++) {
             this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - j - 1).getNickname());
         }
     }
@@ -196,8 +165,6 @@ public class VisitPlanets extends EventCard {
         List<ComponentHelper<ItemColor>> itemsToVerify;
         Map<ItemColor, Integer> planetConfig;
         ItemColor itemToVerify;
-
-
 
         // ActionJSON unpacking
         try {
@@ -223,8 +190,8 @@ public class VisitPlanets extends EventCard {
             }
             this.prevPlayerNickname = visitPlanetsJSON.getPlayerNickname();
 
-            // Extracting the player's chosen planet and his landing decision
-            chosenPlanetIndex = visitPlanetsJSON.getChosenPlanetIndex();
+            // Extracting the player's chosen planet
+            this.chosenPlanetIndex = visitPlanetsJSON.getChosenPlanetIndex();
 
             // If the given chosenPlanetIndex is not a valid planetID, then
             // the request will be interpreted as if the player did not want
@@ -274,9 +241,11 @@ public class VisitPlanets extends EventCard {
                             }
                         }
                     }
+
                     if (!this.itemsToDrop.isEmpty()) {
                         this.droppedResources.put(this.getCurrentPlayer().get().getNickname(), this.itemsToDrop);
                     }
+
                     // (2) - Before withdrawing the requested resources from the planet,
                     //       verify that they are actually present, otherwise consider
                     //       the requested item as unavailable
@@ -304,9 +273,11 @@ public class VisitPlanets extends EventCard {
                             }
                         }
                     }
+
                     if (!this.itemsToTake.isEmpty()) {
                         this.takenResources.put(this.getCurrentPlayer().get().getNickname(), this.itemsToTake);
                     }
+
                     // Finally, apply all the deposits and withdrawals
                     // that are now considered valid resource transfers
                     this.bonusEffect();
@@ -314,9 +285,12 @@ public class VisitPlanets extends EventCard {
                     // Storing the chosen planet to avoid showing
                     // another player the same planetIDs
                     this.playersChosenPlanet.put(
-                            chosenPlanetIndex,
-                            this.currentPlayer.get()
+                        chosenPlanetIndex,
+                        this.currentPlayer.get()
                     );
+
+                    // Removing the planet that the current player selected (if present)
+                    this.itemsPerPlanet.remove(this.chosenPlanetIndex);
 
                     // Incrementing the use counter for each player that
                     // actually used the card
@@ -333,7 +307,7 @@ public class VisitPlanets extends EventCard {
 
         // Set the "hasBeenUsed" flag to true iff all the available planets
         // have been chosen or if all players have answered to the card (i.e.: currPlayer == players.getLast())
-        if (this.playerUseCount == this.itemsPerPlanet.size() || this.currentPlayer.isEmpty()) {
+        if (this.currentPlayer.isEmpty()) {
             this.malusEffect();
             this.cardUsed();
         }
@@ -391,9 +365,9 @@ public class VisitPlanets extends EventCard {
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.getCardLevel());
         cardState.setCardIsUsable( !this.hasFinished());
+        cardState.setMovementSteps(this.movementSteps);
 
         Map<Integer, Map<ItemColor, Integer>> availablePlanets;
-        cardState.setMovementSteps(this.movementSteps);
         availablePlanets = new HashMap<>(this.itemsPerPlanet);
         cardState.setAvailablePlanets(availablePlanets);
 

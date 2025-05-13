@@ -3,7 +3,6 @@ package it.polimi.ingsw.is25am28.Model.Ship;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStructural;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Components.*;
-import it.polimi.ingsw.is25am28.Model.Connector;
 import it.polimi.ingsw.is25am28.Model.Exceptions.*;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
@@ -311,7 +310,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                     case PURPLE_ALIEN -> {
                         if (this.purpleAlienPosition == null) {
                             if (cabin.getAvailableSpace() == LifeformType.PURPLE_ALIEN.getRequiredSpace()) {
-                                neighbours = this.getNearestComponents(cabin);
+                                neighbours = this.getNearestReachableComponents(cabin);
                                 vitalFound = false;
 
                                 for (Component neighbour : neighbours) {
@@ -345,7 +344,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                     case BROWN_ALIEN -> {
                         if (this.brownAlienPosition == null) {
                             if (cabin.getAvailableSpace() == LifeformType.BROWN_ALIEN.getRequiredSpace()) {
-                                neighbours = this.getNearestComponents(cabin);
+                                neighbours = this.getNearestReachableComponents(cabin);
                                 vitalFound = false;
 
                                 for (Component neighbour : neighbours) {
@@ -564,7 +563,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
 
         traverse(
             (Component component) -> {
-                Component[] neighbours = this.getNearestComponents(component);
+                Component[] neighbours = this.getNearestReachableComponents(component);
                 boolean sideIsZeroPipes = false;
 
                 for (int i = 0; i < neighbours.length; i++) {
@@ -669,7 +668,8 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
         traverse(
             (Component c) -> {
                 foundComponents.incrementAndGet();
-                if (isShipValid.get() && !c.check(getNearestComponents(c))) {
+
+                if (isShipValid.get() && !c.check(this.getNearestComponents(c))) {
                     isShipValid.set(false);
                 }
             }
@@ -755,7 +755,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                 // Applying the lambda to currComp
                 lambda.accept(currComp);
 
-                neighbours = this.getNearestComponents(currComp);
+                neighbours = this.getNearestReachableComponents(currComp);
                 alreadyChecked.add(currComp);
 
                 // Creating the nextLayer list of components for next iteration
@@ -789,7 +789,11 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
      * </ul>
      * <br>
      * NOTE: The direct neighbours are NOT diagonal, thus only the top, right, bottom and left adjacent
-     * components are considered as neighbours of the given component.
+     *       components are considered as neighbours of the given component.
+     * <br>
+     * NOTE: This method differs from <code>getNearestReachableComponents</code> only for the reachability
+     *       aspect, meaning that these neighbours CAN OR CANNOT be reachable from the given component, therefore
+     *       you should mind which method to use in your specific case.
      *
      * @param component The component of which we want to get its direct neighbours
      * @return A <code>Component[]</code> array of size 4 with the given component's neighbours
@@ -797,6 +801,85 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
      * @throws NullPointerException If the position of the given component fails to yield legal coordinates
      */
     public Component[] getNearestComponents(Component component) throws NullComponentException, NullPointerException {
+        Component[] neighbours = new Component[4];
+        int[] positionInGrid;
+
+        if (component == null) {
+            // If passed component is null, there's no need to find its neighbours
+            throw new NullComponentException("Passed component is null");
+        }
+        else {
+            // Getting the passed component's position in the grid
+            positionInGrid = component.getPosition();
+
+            // After checking if the given component is in a legal position, each neighbouring position
+            // is tested to check if it has a component or is illegal (in the latter case, that neighbour is null)
+            if (positionInGrid != null) {
+                // NORTH neighbour
+                try {
+                    neighbours[0] = this.components[positionInGrid[0] - 1][positionInGrid[1]];
+                }
+                catch (ArrayIndexOutOfBoundsException e) {
+                    neighbours[0] = null;
+                }
+
+                // EAST neighbour
+                try {
+                    neighbours[1] = this.components[positionInGrid[0]][positionInGrid[1] + 1];
+                }
+                catch (ArrayIndexOutOfBoundsException e) {
+                    neighbours[1] = null;
+                }
+
+                // SOUTH neighbour
+                try {
+                    neighbours[2] = this.components[positionInGrid[0] + 1][positionInGrid[1]];
+                }
+                catch (ArrayIndexOutOfBoundsException e) {
+                    neighbours[2] = null;
+                }
+
+                // WEST neighbour
+                try {
+                    neighbours[3] = this.components[positionInGrid[0]][positionInGrid[1] - 1];
+                }
+                catch (ArrayIndexOutOfBoundsException e) {
+                    neighbours[3] = null;
+                }
+            }
+            else {
+                throw new NullPointerException("Array \"positionInGrid\" is null, implying that the component is in an illegal position");
+            }
+        }
+
+        return neighbours;
+    }
+
+    /**
+     * Returns the direct neighbours of the given component in the following order:
+     * <ul>
+     *     <li>Index 0 - Top</li>
+     *     <li>Index 1 - Right</li>
+     *     <li>Index 2 - Bottom</li>
+     *     <li>Index 3 - Left</li>
+     * </ul>
+     * <br>
+     * NOTE: The direct neighbours are NOT diagonal, thus only the top, right, bottom and left adjacent
+     *       components are considered as neighbours of the given component.
+     * <br>
+     * NOTE: All returned neighbours (if any exist) are also <b>REACHABLE</b> from the given component,
+     *       meaning that the connectors that bridge the gap between the latter and each neighbour
+     *       are checked for validity.
+     *       An invalid pair of connectors between two components implies that from the given
+     *       component that particular neighbour cannot be reached, therefore the latter is not
+     *       reachable from the former.
+     *
+     * @param component The component of which we want to get its direct neighbours
+     * @return A <code>Component[]</code> array of size 4 with the given component's neighbours
+     * @throws NullComponentException If the given component is <code>null</code>
+     * @throws NullPointerException If the position of the given component fails to yield legal coordinates
+     */
+    public Component[] getNearestReachableComponents(Component component) throws NullComponentException, NullPointerException {
         Component[] neighbours = new Component[4];
         Component potentialNeighbour;
         int[] positionInGrid;
@@ -1021,7 +1104,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
             switch (removedComponent) {
                 case Vital vital -> {
                     // Getting the vital unit neighbours before deleting it
-                    Component[] vitalNeighbours = this.getNearestComponents(removedComponent);
+                    Component[] vitalNeighbours = this.getNearestReachableComponents(removedComponent);
 
                     // If this vital unit has any cabins as neighbours, then check
                     // whether there were any aliens in them
@@ -1032,7 +1115,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                                 // it means that the cabin has an alien inside
                                 if (cabin.getInhabitants().size() == 1 && cabin.getAvailableSpace() == 0) {
                                     Lifeform alien = cabin.getInhabitants().getFirst();
-                                    Component[] cabinNeighbours = this.getNearestComponents(cabin);
+                                    Component[] cabinNeighbours = this.getNearestReachableComponents(cabin);
                                     boolean otherVitalUnitFound = false;
 
                                     // Check whether that alien, after removing the vital unit, can

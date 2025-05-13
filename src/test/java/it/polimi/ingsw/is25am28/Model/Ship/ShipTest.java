@@ -1205,7 +1205,7 @@ class ShipTest {
     }
 
     @Test
-    void getNearestComponents() {
+    void getNearestReachableComponents() {
         Ship ship = new Ship(-1);
 
         List<Integer> connectors = new ArrayList<>();
@@ -1246,22 +1246,22 @@ class ShipTest {
 //        printShipGrid(ship);
 
         // Asserting the shield's neighbours
-        assertEquals(null, ship.getNearestComponents(shield)[0]);
-        assertEquals(core, ship.getNearestComponents(shield)[1]);
-        assertEquals(null, ship.getNearestComponents(shield)[2]);
-        assertEquals(null, ship.getNearestComponents(shield)[3]);
+        assertEquals(null, ship.getNearestReachableComponents(shield)[0]);
+        assertEquals(core, ship.getNearestReachableComponents(shield)[1]);
+        assertEquals(null, ship.getNearestReachableComponents(shield)[2]);
+        assertEquals(null, ship.getNearestReachableComponents(shield)[3]);
 
         // Asserting the core's neighbours
-        assertEquals(cabin, ship.getNearestComponents(core)[0]);
-        assertEquals(battery, ship.getNearestComponents(core)[1]);
-        assertEquals(engine, ship.getNearestComponents(core)[2]);
-        assertEquals(shield, ship.getNearestComponents(core)[3]);
+        assertEquals(cabin, ship.getNearestReachableComponents(core)[0]);
+        assertEquals(battery, ship.getNearestReachableComponents(core)[1]);
+        assertEquals(engine, ship.getNearestReachableComponents(core)[2]);
+        assertEquals(shield, ship.getNearestReachableComponents(core)[3]);
 
         // Asserting the engine2's neighbours
-        assertEquals(battery, ship.getNearestComponents(engine2)[0]);
-        assertEquals(null, ship.getNearestComponents(engine2)[1]);
-        assertEquals(null, ship.getNearestComponents(engine2)[2]);
-        assertEquals(engine, ship.getNearestComponents(engine2)[3]);
+        assertEquals(battery, ship.getNearestReachableComponents(engine2)[0]);
+        assertEquals(null, ship.getNearestReachableComponents(engine2)[1]);
+        assertEquals(null, ship.getNearestReachableComponents(engine2)[2]);
+        assertEquals(engine, ship.getNearestReachableComponents(engine2)[3]);
     }
 
     @Test
