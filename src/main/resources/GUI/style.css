@@ -1,0 +1,31 @@
+.root {
+    -fx-background-color: #1e1e2f;
+    -fx-text-fill: white;
+}
+
+.label {
+    -fx-text-fill: white;
+}
+
+.button {
+    -fx-background-color: #4A90E2;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0.2, 0, 2);
+    -fx-border-color: transparent;
+    -fx-border-radius: 8px;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+    -fx-background-color: #357ABD;
+}
+
+.button:pressed {
+    -fx-background-color: #2E5D9F;
+    -fx-translate-y: 1px;
+}

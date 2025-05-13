@@ -125,45 +125,83 @@ public class GameModel {
 
         List<StateDTO> states = new ArrayList<>();
 
-        // ===== RECONNECT DTO INFO ===== //
-        // Get the current information that the client needs to resume the game
-        ReconnectDTO state = new ReconnectDTO()
-                .setTargetNickname(nickname);
-        state.setBoard(this.board.generateState()); // Board information
-        state.setResourceBank(this.resourceBank.getResources()); // resourceBank information
-        state.setGameLevel(this.level); // Game level
+        ReconnectDTO state = new ReconnectDTO();
 
-        List<CardStateJSON> cardsInfo = new ArrayList<>();
-        for (EventCard card : this.deck) {
-            cardsInfo.add(card.generateStaticState());
+        State prev = this.currentState;
+        if (this.currentState instanceof InsufficientPlayerState) {
+            this.currentState.onComplete();
+            state.setWasInsufficientState(true);
+        } else {
+            state.setWasInsufficientState(false);
         }
 
-        state.setCards(cardsInfo);
-
-        // Players information
-        List<PlayerJSON> playerInfo = new ArrayList<>();
-        for (Player player : this.players.values()) {
-            playerInfo.add(PlayerJSON.fromPlayer(player, true));
-        }
-        state.setPlayers(playerInfo);
-        state.setCurrentState(this.currentState.generateState());
+        state.setTargetNickname(nickname)
+            .setBoard(this.board.generateState())
+            .setResourceBank(this.resourceBank.getResources())
+            .setGameLevel(this.level)
+            .setCards(this.deck.stream().map(EventCard::generateStaticState).toList())
+            .setPlayers(this.players.values().stream().map(p2 -> PlayerJSON.fromPlayer(p2, true)).toList());
 
         states.add(state);
 
-        // Check if the current state is InsufficientPlayerState
-        State prev = this.currentState;
-        if (this.currentState instanceof InsufficientPlayerState) {
-            this.currentState.onComplete(); // Try to make the state transition --> if two players are
-                                            // connected the game will resume
-        }
-
-        // If we had a state updated, then we need to generate the state to resume the game
-        if (!prev.equals(this.currentState)) {
-            states.add(this.currentState.generateState());
-        }
+        states.add(this.currentState.generateState());
 
         return states;
     }
+
+//    public List<StateDTO> reconnectClient(String nickname, VirtualView clientView) throws Exception {
+//        if (!this.getDisconnectedPlayers().contains(nickname)) {
+//            throw new IllegalArgumentException("The given nickname does not exist in the disconnected players");
+//        }
+//
+//        Player p = this.players.get(nickname);
+//        if (p == null) {
+//            throw new IllegalArgumentException("The given nickname does not exist");
+//        }
+//        p.setConnected(true);
+//        this.playerVirtualViews.put(nickname, clientView);
+//
+//        List<StateDTO> states = new ArrayList<>();
+//
+//        // ===== RECONNECT DTO INFO ===== //
+//        // Get the current information that the client needs to resume the game
+//        ReconnectDTO state = new ReconnectDTO()
+//                .setTargetNickname(nickname);
+//        state.setBoard(this.board.generateState()); // Board information
+//        state.setResourceBank(this.resourceBank.getResources()); // resourceBank information
+//        state.setGameLevel(this.level); // Game level
+//
+//        List<CardStateJSON> cardsInfo = new ArrayList<>();
+//        for (EventCard card : this.deck) {
+//            cardsInfo.add(card.generateStaticState());
+//        }
+//
+//        state.setCards(cardsInfo);
+//
+//        // Players information
+//        List<PlayerJSON> playerInfo = new ArrayList<>();
+//        for (Player player : this.players.values()) {
+//            playerInfo.add(PlayerJSON.fromPlayer(player, true));
+//        }
+//        state.setPlayers(playerInfo);
+//        state.setCurrentState(this.currentState.generateState());
+//
+//        states.add(state);
+//
+//        // Check if the current state is InsufficientPlayerState
+//        State prev = this.currentState;
+//        if (this.currentState instanceof InsufficientPlayerState) {
+//            this.currentState.onComplete(); // Try to make the state transition --> if two players are
+//                                            // connected the game will resume
+//        }
+//
+//        // If we had a state updated, then we need to generate the state to resume the game
+//        if (!prev.equals(this.currentState)) {
+//            states.add(this.currentState.generateState());
+//        }
+//
+//        return states;
+//    }
 
     /**
      * generateDeck() set the game deck by extracting the correct amount of cards. For each level the deck will be of:
@@ -224,8 +262,7 @@ public class GameModel {
 
         Collections.shuffle(this.deck);
 
-
-        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(this.getGameLevel()), getGameLevel());
+        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
         List<EventCard> fakeDeck = new ArrayList<>();
 //        fakeDeck.add(AllCards.get(8)); // MeteorShower
 //        fakeDeck.add(AllCards.get(38)); // WarZone
@@ -240,6 +277,7 @@ public class GameModel {
         fakeDeck.add(AllCards.get(33)); // Smugglers
         fakeDeck.add(AllCards.get(34)); // Slavers
         fakeDeck.add(AllCards.get(36)); // Stardust
+
         this.deck.clear();
         this.deck.addAll(fakeDeck);
     }

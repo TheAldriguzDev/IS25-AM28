@@ -71,7 +71,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         this.queueHandler = new Queue();
         new Thread(queueHandler).start();
 
-        this.updateHandler = new UpdateHandler(this.viewUpdater);
+        this.updateHandler = new UpdateHandler(model, this.viewUpdater);
 
         this.pingScheduler = Executors.newSingleThreadScheduledExecutor();
 

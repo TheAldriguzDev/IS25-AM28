@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Network.UpdateHandler;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
@@ -14,14 +15,15 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class UpdateHandler {
+    private final ClientModel model;
     private final ViewUpdater viewUpdater;
     private final ExecutorService updateThread;
     private final ExecutorService inputThread;
     private final ExecutorService forceThread;
 
-    public UpdateHandler(ViewUpdater viewUpdater) {
+    public UpdateHandler(ClientModel model, ViewUpdater viewUpdater) {
+        this.model = model;
         this.viewUpdater = viewUpdater;
-
         this.inputThread = Executors.newSingleThreadExecutor();
         this.updateThread = Executors.newSingleThreadExecutor();
         this.forceThread = Executors.newSingleThreadExecutor();
@@ -49,8 +51,19 @@ public class UpdateHandler {
                     future = this.commitCmd(future, nickname, this.inputThread);
                 }
             }
-            case DisconnectedPlayerDTO _, ReconnectDTO _ -> {
+            case DisconnectedPlayerDTO _ -> {
                 future = acceptState(future, state, this.updateThread, "Error while executing the " + state.getStateName() + " update");
+            }
+            case ReconnectDTO data -> {
+                future = acceptState(future, state, this.updateThread, "Error while executing the " + state.getStateName() + " update");
+
+                // If the player is the one that reconnects to the game, or we were in the insufficient player state, we need to update the screen
+                if (data.getWasInsufficientState() || data.getTargetNickname().equals(this.model.getNickname())) {
+
+                    future = acceptState(future, nextState, this.inputThread, "Error while executing the " + state.getStateName() + " update");
+                }
+
+                nextState = null;
             }
             case CardRoundDTO cardData -> {
                 if (nextState != null) {
