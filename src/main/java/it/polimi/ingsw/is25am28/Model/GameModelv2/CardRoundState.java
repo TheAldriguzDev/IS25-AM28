@@ -30,7 +30,7 @@ public final class CardRoundState extends State {
         this.round = 0;
         this.deck = this.model.getGameDeck();
 
-//        // TODO: Remove the fake deck after testing
+          // TODO: Remove the fake deck after testing
 //        CardLoader cardLoader;
 //        try {
 //            cardLoader = new CardLoader();

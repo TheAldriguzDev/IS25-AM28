@@ -289,8 +289,7 @@ public class VisitPlanets extends EventCard {
                         this.currentPlayer.get()
                     );
 
-                    // Removing the planet that the current player selected (if present)
-                    this.itemsPerPlanet.remove(this.chosenPlanetIndex);
+
 
                     // Incrementing the use counter for each player that
                     // actually used the card
@@ -307,7 +306,7 @@ public class VisitPlanets extends EventCard {
 
         // Set the "hasBeenUsed" flag to true iff all the available planets
         // have been chosen or if all players have answered to the card (i.e.: currPlayer == players.getLast())
-        if (this.currentPlayer.isEmpty()) {
+        if (this.itemsPerPlanet.isEmpty() || this.currentPlayer.isEmpty()) {
             this.malusEffect();
             this.cardUsed();
         }
@@ -333,12 +332,16 @@ public class VisitPlanets extends EventCard {
             if (itemsPerPlanet.containsKey(chosenPlanetIndex)) {
                 cardState.setChosenPlanetIndex(chosenPlanetIndex);
 
-                setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
+                // Removing the planet that the current player selected (if present)
+                this.itemsPerPlanet.remove(this.chosenPlanetIndex);
+
                 setUpdatedDroppedResourcesIfNecessary(cardState, this.droppedResources);
                 setUpdatedTakenResourcesIfNecessary(cardState, this.takenResources);
             } else {
                 cardState.setChosenPlanetIndex(-1);
             }
+
+            setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
         } else {
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());

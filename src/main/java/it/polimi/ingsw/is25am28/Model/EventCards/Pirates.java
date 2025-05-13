@@ -89,10 +89,22 @@ public class Pirates extends EventCard {
             } else {
                 Player nextPlayer = players.get(currentIndex + 1);
                 currentPlayer = Optional.of(nextPlayer);
+
+                // If the first player is disconnected, then get the next one in line
+                if ( !currentPlayer.get().isConnected()) {
+                    currentPlayer = this.getNextPlayer();
+                }
+
                 return currentPlayer;
             }
         } else {
             currentPlayer = Optional.of(players.getFirst());
+
+            // If the first player is disconnected, then get the next one in line
+            if ( !currentPlayer.get().isConnected()) {
+                currentPlayer = this.getNextPlayer();
+            }
+
             return currentPlayer;
         }
     }
