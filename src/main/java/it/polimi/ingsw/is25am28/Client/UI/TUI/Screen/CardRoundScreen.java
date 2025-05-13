@@ -1581,6 +1581,7 @@ public class CardRoundScreen extends Screen {
     private void getCurrEventCard() {
         int cardId;
 
+
         cardId = this.currEventCardState.getCardID();
 
         for (ClientEventCard card : this.model.getClientEventCards()) {
@@ -1832,7 +1833,7 @@ public class CardRoundScreen extends Screen {
                     System.out.println(PrintUtils.addColor("[ERROR] ClientShip is null", ANSIColors.RED));
                     return;
                 }
-                // System.out.println("onError");
+
                 if (this.indexedCardInputMethods.get("setCrewToRemove").getKey() && this.currEventCard.getCrewToRemove() != null && !this.currEventCard.getCrewToRemove().isEmpty()) {
                     // Revert the changes to the dropped lifeForms
                     for(ComponentHelper<LifeformType> lfch : this.currEventCard.getCrewToRemove()) {
@@ -1841,18 +1842,22 @@ public class CardRoundScreen extends Screen {
                             ship.addLifeformToCabin(lfch.getI(), lfch.getJ(), lfType);
                         }
                     }
-                    this.currEventCard.setCrewToRemove(null);
                 }
-                try {
-                    if (this.indexedCardInputMethods.get("setItemsToBeRemoved").getKey() && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
-                        // Revert the changes to the dropped resources
+
+                if (this.indexedCardInputMethods.get("setItemsToBeRemoved").getKey() && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
+                    // Revert the changes to the dropped resources
+                    for(ComponentHelper<ItemColor> icch : this.currEventCard.getItemsToBeRemoved()) {
+                        ItemColor ic = icch.getItem().orElse(null);
+                        if (ic != null) {
+                            ClientStorage storage = (ClientStorage) ship.getComponent(icch.getI(), icch.getJ());
+                            storage.storeItem(new Item(ic));
+                        }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
 
                 System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
                 this.ctx = null;
+                this.currEventCard.clearJSON();
                 this.getCardRoundCommand();
             }
         );
