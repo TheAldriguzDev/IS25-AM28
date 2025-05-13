@@ -63,7 +63,7 @@ public class TCPClient implements VirtualViewSocket {
 
         this.viewUpdater = new ViewUpdater(ui, model);
 
-        this.updateHandler = new UpdateHandler(viewUpdater);
+        this.updateHandler = new UpdateHandler(model, viewUpdater);
 
         this.pingScheduler = Executors.newSingleThreadScheduledExecutor();
 

@@ -103,18 +103,12 @@ public class ViewUpdater implements StateVisitor {
 
             // 4. cards
             this.model.generateClientEventCards(state.getCards());
-
-            state.getCurrentState().accept(this);
         } else {
             new WidgetTUI()
                     .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getTargetNickname() + " reconnected to the game.", ANSIColors.BRIGHT_MAGENTA))
                     .addPadding(0, 1, 0, 1)
                     .wrapWidgetWithBorder()
                     .printWidget();
-
-            if (state.getWasInsufficientState()) {
-                state.getCurrentState().accept(this);
-            }
         }
     }
 

@@ -58,7 +58,7 @@ public class GameController {
         }
     }
 
-    public ReconnectDTO reconnectClient(String nickname, VirtualView clientView) throws Exception {
+    public List<StateDTO> reconnectClient(String nickname, VirtualView clientView) throws Exception {
         synchronized (this.model) {
             return this.model.reconnectClient(nickname, clientView);
         }

@@ -112,7 +112,7 @@ public class GameModel {
      * 2. If we had a state transition from InsufficientPlayerState to any other state, the new state will be added to the response
      * */
 
-    public ReconnectDTO reconnectClient(String nickname, VirtualView clientView) throws Exception {
+    public List<StateDTO> reconnectClient(String nickname, VirtualView clientView) throws Exception {
         if (!this.getDisconnectedPlayers().contains(nickname)) {
             throw new IllegalArgumentException("The given nickname does not exist in the disconnected players");
         }
@@ -124,8 +124,11 @@ public class GameModel {
         p.setConnected(true);
         this.playerVirtualViews.put(nickname, clientView);
 
+        List<StateDTO> states = new ArrayList<>();
+
         ReconnectDTO state = new ReconnectDTO();
 
+        State prev = this.currentState;
         if (this.currentState instanceof InsufficientPlayerState) {
             this.currentState.onComplete();
             state.setWasInsufficientState(true);
@@ -138,10 +141,13 @@ public class GameModel {
             .setResourceBank(this.resourceBank.getResources())
             .setGameLevel(this.level)
             .setCards(this.deck.stream().map(EventCard::generateStaticState).toList())
-            .setPlayers(this.players.values().stream().map(p2 -> PlayerJSON.fromPlayer(p2, true)).toList())
-            .setCurrentState(this.currentState.generateState());
+            .setPlayers(this.players.values().stream().map(p2 -> PlayerJSON.fromPlayer(p2, true)).toList());
 
-        return state;
+        states.add(state);
+
+        states.add(this.currentState.generateState());
+
+        return states;
     }
 
 //    public List<StateDTO> reconnectClient(String nickname, VirtualView clientView) throws Exception {
