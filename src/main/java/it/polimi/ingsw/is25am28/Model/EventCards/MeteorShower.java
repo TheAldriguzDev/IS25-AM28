@@ -33,6 +33,8 @@ public class MeteorShower extends EventCard {
     private Map<String, List<Map<String, Object>>> removedComponents;
     private final Map<String, Integer> removedBatteries; // TODO: Implement in the state
     private final List<String> eliminatedPlayers;
+    private final Map<String, Integer> lostPieces;
+
 
 
     public MeteorShower(
@@ -54,6 +56,7 @@ public class MeteorShower extends EventCard {
         this.removedComponents = new HashMap<>();
         this.removedBatteries = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
+        this.lostPieces = new HashMap<>();
 
         try {
             for (List<Integer> meteorDescriptor : meteorSequence) {
@@ -95,7 +98,6 @@ public class MeteorShower extends EventCard {
                 return Optional.empty();
             }
             else {
-                // TODO: Take the players not from the board (which updates continuously), but from a fixed list
                 Player nextPlayer = this.players.get(currentIndex + 1);
                 this.currentPlayer = Optional.of(nextPlayer);
 
@@ -388,6 +390,8 @@ public class MeteorShower extends EventCard {
                     );
 
                     this.removedComponents.put(this.prevPlayer, this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList());
+                    this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
+                    this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
                 }
                 catch (CoreDeletionAttemptException e) {
                     this.eliminatedPlayers.add(this.currentPlayer.get().getNickname());
@@ -452,6 +456,7 @@ public class MeteorShower extends EventCard {
             // performing a differential update on what changed before the card
             // transitioned to the next state
             setUpdatedRemovedComponentsIfNecessary(cardState, this.removedComponents);
+            setUpdatedLostPiecesIfNecessary(cardState, this.lostPieces);
 
             // Setting the eliminated players (if there are any)
             setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
@@ -478,7 +483,6 @@ public class MeteorShower extends EventCard {
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.cardLevel);
-
 
         return cardState;
     }

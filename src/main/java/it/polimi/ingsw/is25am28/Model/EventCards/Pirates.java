@@ -35,6 +35,7 @@ public class Pirates extends EventCard {
     private Map<String, Integer> updatedCredits;
     private Map<String, List<Map<String, Object>>> removedComponents;
     private Map<String, Integer> removedBatteries; // TODO: Implement in the state (both firepower and shields)
+    private final Map<String, Integer> lostPieces;
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board, int cardID, String path) {
         super(name, cardLevel, board, cardID, path);
@@ -55,6 +56,7 @@ public class Pirates extends EventCard {
         this.removedComponents = new HashMap<>();
         this.removedBatteries = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
+        this.lostPieces = new HashMap<>();
     }
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
@@ -249,6 +251,8 @@ public class Pirates extends EventCard {
                                         try {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
+                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
+                                            this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -269,6 +273,8 @@ public class Pirates extends EventCard {
                                         try {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
+                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
+                                            this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -289,6 +295,8 @@ public class Pirates extends EventCard {
                                         try {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
+                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
+                                            this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -309,6 +317,8 @@ public class Pirates extends EventCard {
                                         try {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
+                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
+                                            this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -373,6 +383,7 @@ public class Pirates extends EventCard {
                 piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
 
                 setUpdatedRemovedComponentsIfNecessary(piratesStateJSON, this.removedComponents);
+                setUpdatedLostPiecesIfNecessary(piratesStateJSON, this.lostPieces);
                 setUpdatedEliminatedPlayersIfNecessary(piratesStateJSON, this.eliminatedPlayers);
 
                 // Batteries consumed due to the shield
