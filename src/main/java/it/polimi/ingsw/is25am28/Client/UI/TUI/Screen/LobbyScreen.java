@@ -118,6 +118,7 @@ public class LobbyScreen extends Screen {
                 }
                 else {
                     System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
+                    this.getLobbyCommand();
                 }
             }
         );
@@ -139,7 +140,8 @@ public class LobbyScreen extends Screen {
                     }
                 }
                 else {
-                    System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to join. Refresh or create one first.", ANSIColors.RED));
+                    System.out.println(PrintUtils.addColor("[ERROR] There aren't any available games to reconnect to. Create one first.", ANSIColors.RED));
+                    this.getLobbyCommand();
                 }
             }
         );
@@ -453,8 +455,6 @@ public class LobbyScreen extends Screen {
      */
     @Override
     public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
-
-
         if (isFirstAccess) {
             printTitle();
             this.initLobbyCommandsWidget(state);
