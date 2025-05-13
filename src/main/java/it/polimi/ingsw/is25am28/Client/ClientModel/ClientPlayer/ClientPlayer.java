@@ -39,7 +39,6 @@ public class ClientPlayer {
             e.printStackTrace();
         }
         System.out.println("Finito il new ClientPlayer");
-
     }
 
     /**

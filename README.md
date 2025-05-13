@@ -1,6 +1,6 @@
 
 <h1 align="center">
-    <img src="/src/main/resources/imgs/galaxy_trucker.png" alt="logo" width="350"/>
+    <img src="/src/main/resources/imgs/galaxy_logo.png" alt="logo" width="350"/>
     <br>
     Galaxy Trucker
     <br>
@@ -26,14 +26,14 @@ In the project we implemented all the requirements plus we decide to develop thr
 | Feature                      | Implemented |
 |:-----------------------------|:-----------:|
 | Complete rules               |      🟢       |
-| TUI                          |      🟡      |
+| TUI                          |      🟢      |
 | GUI                          |      🟡      |
 | Socket                       |      🟢      |
 | RMI                          |      🟢      |
 | Multiple games               |      🟢      |
 | Persitency                   |      🔴      |
 | Resilience to disconnections |      🟡      |
-| Test flight                  |      🟡      |
+| Test flight                  |      🟢      |
 
 Legend: 
 - 🔴 Not implemented

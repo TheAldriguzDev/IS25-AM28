@@ -69,6 +69,10 @@ public class TUIHandler implements ClientUI {
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
         synchronized (this.ioLock) {
+            if (!(this.screen instanceof LobbyScreen)) {
+                this.setScreen(new LobbyScreen(this.model, this.inputThread));
+            }
+
             this.screen.showWaitingForPlayers(waitingForPlayers);
         }
     }

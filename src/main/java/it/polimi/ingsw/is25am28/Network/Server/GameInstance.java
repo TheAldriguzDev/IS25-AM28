@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Network.Server;
 import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
@@ -299,15 +300,15 @@ public class GameInstance {
         }
 
         // Update the client with the state to resume the game
-        List<StateDTO> reconnectState = this.controller.reconnectClient(playerNickname, virtualClient);
+        ReconnectDTO reconnectState = this.controller.reconnectClient(playerNickname, virtualClient);
 
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)
-                .setState(reconnectState.getFirst());
+                .setState(reconnectState);
 
-        if (reconnectState.size() > 1) {
-            answer.setNextState(reconnectState.get(1));
-        }
+//        if (reconnectState.size() > 1) {
+//            answer.setNextState(reconnectState.get(1));
+//        }
 
 //        this.queueHandler.enqueue(() -> {
 //            try {
@@ -316,6 +317,7 @@ public class GameInstance {
 //                throw new RuntimeException(e);
 //            }
 //        });
+
         this.broadCastUpdate(answer);
     }
 }

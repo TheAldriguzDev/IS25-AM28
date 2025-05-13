@@ -27,6 +27,8 @@ public final class ReconnectDTO extends StateDTO {
     private Map<ItemColor, Integer> resourceBank;
     private int gameLevel;
 
+    private boolean wasInsufficientState;
+
     // Card list that contains the information about the deck in the game
     private List<CardStateJSON> cards;
 
@@ -36,12 +38,14 @@ public final class ReconnectDTO extends StateDTO {
             @JsonProperty("targetNickname") String targetNickname,
             @JsonProperty("players") List<PlayerJSON> players,
             @JsonProperty("board") BoardJSON board,
-            @JsonProperty("currentState") StateDTO currentState
+            @JsonProperty("currentState") StateDTO currentState,
+            @JsonProperty("wasInsufficientState") boolean wasInsufficientState
     ) {
         this.targetNickname = targetNickname;
         this.players = players;
         this.board = board;
         this.currentState = currentState;
+        this.wasInsufficientState = wasInsufficientState;
     }
 
     @JsonGetter("targetNickname")
@@ -61,8 +65,9 @@ public final class ReconnectDTO extends StateDTO {
     }
 
     @JsonSetter("players")
-    public void setPlayers(List<PlayerJSON> players) {
+    public ReconnectDTO setPlayers(List<PlayerJSON> players) {
         this.players = players;
+        return this;
     }
 
     @JsonGetter("board")
@@ -71,8 +76,9 @@ public final class ReconnectDTO extends StateDTO {
     }
 
     @JsonSetter("board")
-    public void setBoard(BoardJSON board) {
+    public ReconnectDTO setBoard(BoardJSON board) {
         this.board = board;
+        return this;
     }
 
     @JsonGetter("currentState")
@@ -81,8 +87,9 @@ public final class ReconnectDTO extends StateDTO {
     }
 
     @JsonSetter("currentState")
-    public void setCurrentState(StateDTO currentState) {
+    public ReconnectDTO setCurrentState(StateDTO currentState) {
         this.currentState = currentState;
+        return this;
     }
 
     @JsonSetter("resourceBank")
@@ -91,13 +98,15 @@ public final class ReconnectDTO extends StateDTO {
     }
 
     @JsonGetter("resourceBank")
-    public void setResourceBank(Map<ItemColor, Integer> resourceBank) {
+    public ReconnectDTO setResourceBank(Map<ItemColor, Integer> resourceBank) {
         this.resourceBank = resourceBank;
+        return this;
     }
 
     @JsonGetter("gameLevel")
-    public void setGameLevel(int gameLevel) {
+    public ReconnectDTO setGameLevel(int gameLevel) {
         this.gameLevel = gameLevel;
+        return this;
     }
 
     @JsonGetter("gameLevel")
@@ -106,8 +115,9 @@ public final class ReconnectDTO extends StateDTO {
     }
 
     @JsonSetter("cards")
-    public void setCards(List<CardStateJSON> cards) {
+    public ReconnectDTO setCards(List<CardStateJSON> cards) {
         this.cards = cards;
+        return this;
     }
 
     @JsonGetter("cards")
@@ -115,8 +125,16 @@ public final class ReconnectDTO extends StateDTO {
         return cards;
     }
 
+    @JsonGetter("wasInsufficientState")
+    public boolean getWasInsufficientState() {
+        return wasInsufficientState;
+    }
 
-
+    @JsonSetter("wasInsufficientState")
+    public ReconnectDTO setWasInsufficientState(boolean wasInsufficientState) {
+        this.wasInsufficientState = wasInsufficientState;
+        return this;
+    }
 
     /**
      * Accept the visitor to visit the state

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #1e1e2f;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+    <padding>
+        <Insets bottom="50" left="50" right="50" top="50" />
+    </padding>
+    <VBox alignment="CENTER" spacing="20.0">
+        <ImageView fx:id="gameLogoView" fitHeight="272.0" fitWidth="500.0" pickOnBounds="true" preserveRatio="true">
+            <Image url="@../../imgs/galaxy_logo.png" />
+        </ImageView>
+
+        <Label style="-fx-font-size: 20px; -fx-text-fill: white; -fx-font-weight: bold;" text="Loading the game...">
+            <padding>
+                <Insets top="20" />
+            </padding>
+        </Label>
+    </VBox>
+</StackPane>

@@ -12,20 +12,29 @@ import it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Group;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import javax.swing.*;
+import java.io.IOException;
+import java.util.Objects;
 import java.util.UUID;
 
 public class GUIHandler extends Application implements ClientUI {
     private static GUIHandler instance;
+
+    // connectionType is used to create the RMI or the Socket client
     private static int connectionType;
+    // model is the reference to the clientModel
     private static ClientModel model;
+    // virtualClient is the reference to the client network protocol
     private VirtualView virtualClient;
+
+    // ========== ATTRIBUTES NEEDED TO HANDLE THE GUI ========== //
+    private Stage stage;
+    private Scene scene;
+    private GuiScenes currentScene;
 
     public static GUIHandler getInstance() {
         return instance;
@@ -49,25 +58,38 @@ public class GUIHandler extends Application implements ClientUI {
             this.virtualClient = new TCPClient("127.0.0.1", 8888, this, model);
         }
 
-        Label loadingLabel = new Label("Loading...");
-        StackPane root = new StackPane(loadingLabel);
-        Scene scene = new Scene(root, 720, 720);
+        // ========== BUILD THE INITIAL SCREEN OF THE GAME ========== //
 
+        // TODO: Convert in FXML file
+        this.stage = stage;
+
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/GUI/FXML/login.fxml")));
         stage.setTitle("Galaxy Trucker");
-        stage.setResizable(false);
+        //stage.setResizable(false);
+
+        Scene scene = new Scene(root);
+        this.scene = scene;
         stage.setScene(scene);
 
         Platform.runLater(stage::show);
     }
 
     @Override
-    public void setVirtualClient(VirtualView client) {
-
-    }
-
-    @Override
     public void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws Exception {
+        Platform.runLater(() -> {
 
+            try {
+                System.out.println("Cambio scena a Lobby.fxml");
+                Parent root = FXMLLoader.load(
+                        Objects.requireNonNull(getClass().getResource("/GUI/FXML/lobby.fxml"))
+                );
+                Scene newScene = new Scene(root);
+                stage.setScene(newScene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     @Override
@@ -123,5 +145,10 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public boolean isCTXAvailable() {
         return false;
+    }
+
+    @Override
+    public void setVirtualClient(VirtualView client) {
+        // Not used in the GUI
     }
 }

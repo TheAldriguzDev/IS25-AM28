@@ -70,11 +70,15 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(WaitPlayersStateDTO state) throws Exception {
         // Creating the ship of the newly connected player in all clients
-        for (Map.Entry<String, PlayerColor> playerEntry : state.getUsedNicknames().entrySet()) {
-            this.model.addNewPlayer(playerEntry.getKey(), playerEntry.getValue());
-        }
+        try {
+            for (Map.Entry<String, PlayerColor> playerEntry : state.getUsedNicknames().entrySet()) {
+                this.model.addNewPlayer(playerEntry.getKey(), playerEntry.getValue());
+            }
 
-        this.ui.showWaitingForPlayers(state);
+            this.ui.showWaitingForPlayers(state);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -107,6 +111,10 @@ public class ViewUpdater implements StateVisitor {
                     .addPadding(0, 1, 0, 1)
                     .wrapWidgetWithBorder()
                     .printWidget();
+
+            if (state.getWasInsufficientState()) {
+                state.getCurrentState().accept(this);
+            }
         }
     }
 

@@ -34,6 +34,9 @@ public class UpdateHandler {
         StateDTO nextState = answer.getNextState();
         String nickname = answer.getPlayerNickname();
 
+        System.out.println(state);
+        System.out.println(nextState);
+
         // Init the future that will be used in the methods to create a sequential update flow
         CompletableFuture<Void> future = CompletableFuture.completedFuture(null);
 
@@ -49,7 +52,11 @@ public class UpdateHandler {
                     future = this.commitCmd(future, nickname, this.inputThread);
                 }
             }
-            case DisconnectedPlayerDTO _, ReconnectDTO _ -> {
+            case DisconnectedPlayerDTO _ -> {
+                future = acceptState(future, state, this.updateThread, "Error while executing the " + state.getStateName() + " update");
+            }
+            case ReconnectDTO data -> {
+                // TODO: Cambiare questa gestione da update thread in input thread
                 future = acceptState(future, state, this.updateThread, "Error while executing the " + state.getStateName() + " update");
             }
             case CardRoundDTO cardData -> {
