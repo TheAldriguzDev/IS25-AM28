@@ -19,7 +19,7 @@ public class Pirates extends EventCard {
     private final int movementSteps;
     private final List<List<Integer>> shootingSequence;
     private final Random random;
-    private int playerUseCount;
+//    private int playerUseCount;
     private int diceThrowResult;
     private int plasmashotIndex;
     Map<String, Integer> currentPlasmaShot;
@@ -28,7 +28,7 @@ public class Pirates extends EventCard {
 
     private boolean firstRound;
     List<Player> playersToHit;
-    private boolean hasBeenDefeated;
+//    private boolean hasBeenDefeated;
     private List<Component> previousPlayerRemovedComponents;
     private List<String> eliminatedPlayers;
     private Map<String, Integer> updatedPositions;
@@ -45,12 +45,12 @@ public class Pirates extends EventCard {
         this.shootingSequence = shootingSequence;
 
         this.random = new Random();
-        this.playerUseCount = 0;
+//        this.playerUseCount = 0;
         this.diceThrowResult = -1;
         this.plasmashotIndex = 0;
         this.firstRound = true;
         this.playersToHit = new ArrayList<>();
-        this.hasBeenDefeated = false;
+//        this.hasBeenDefeated = false;
         this.updatedPositions = new HashMap<>();
         this.updatedCredits = new HashMap<>();
         this.removedComponents = new HashMap<>();
@@ -109,6 +109,7 @@ public class Pirates extends EventCard {
         }
     }
 
+    // TODO: need rework on when the card ends
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         PiratesJSON piratesData;
         try {
@@ -126,15 +127,15 @@ public class Pirates extends EventCard {
                     }
                     // if the first round of meteors has passed, this block won't be executed, assuring that no players will get the same reward twice (or activate the cannons twice)
                     if (firstRound) {
+
                         // Power consumed by the DoubleCannons
                         if (!piratesData.getDoubleCannonsToActivateCoordinates().isEmpty()) {
                             this.removedBatteries.put(playerNickname, piratesData.getDoubleCannonsToActivateCoordinates().size());
                         }
                         float playerFirepower = player.getShip().getFirePower(piratesData.getDoubleCannonsToActivateCoordinates());
-                        if (playerFirepower > requiredFirepower && !hasBeenDefeated) {
+
+                        if (playerFirepower > requiredFirepower) {
                             // Pirates defeated, even if the player who defeated them does not take the credits, the card won't be used by other players
-                            //cardUsed();
-                            this.hasBeenDefeated = true;
                             if (piratesData.getTakeCredits()) {
                                 bonusEffect();
                                 getBoard().movePlayerBackwards(player, movementSteps);
@@ -145,27 +146,31 @@ public class Pirates extends EventCard {
                                     this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
                                 }
                             }
-                        } else if (playerFirepower < requiredFirepower && !hasBeenDefeated) {
-                            //malusEffect(piratesData);
+
+                            player = this.players.getLast(); // We set the current player as the last one to end the first round, since the pirates have been defeated
+
+                        } else if (playerFirepower < requiredFirepower) {
                             playersToHit.add(player);
                         }
                     }
-                    playerUseCount++;
-                    // if the first round is finished, if the player is among tye defeated players, he will be exposed to the plasmashots
+
+                    // if the first round is finished, if the player is among the defeated players, he will be exposed to the plasmaShots
                     if (!firstRound) {
                         if (playersToHit.contains(player)) {
                             malusEffect(piratesData);
                         }
                     }
-                    if (this.playerUseCount % this.players.size() == 0) {
-                        // flag to make sure  players do not get rewards or have to use cannons twice
+
+                    if (player.equals(this.players.getLast())) {
+
                         if (firstRound) {
                             firstRound = false;
-                            // Necessary for the first round of shots (without this the descriptor would not be included in the state generated)
+
+                            // Necessary for the first round of shots (without this the descriptor would not be included in the first state generated in the plasmaShotRound)
                             shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
                             shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
-                            //currentPlasmaShot = new ArrayList<>(Arrays.asList(shotSize, shotDirection));
                             currentPlasmaShot = Map.of("shotSize", shotSize, "shotDirection", shotDirection);
+
                             // If there are no defeated players at the end of the first round the card is set as used
                             if (playersToHit.isEmpty()) {
                                 cardUsed();
@@ -180,12 +185,13 @@ public class Pirates extends EventCard {
                             }
                             this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
                         }
+
                         this.initCardPlayers();
+
                     } else {
                         this.getNextPlayer();
                     }
-                    // The card gets marked as completed only when all players
-                    // have encountered all the plasmashots
+                    // When there are players to hit, the card is marked as used only when all plasmaShot have been dealt with (or when all the players to hit are eliminated)
                     if (this.plasmashotIndex == shootingSequence.size()) {
                         this.cardUsed();
                     }
@@ -217,14 +223,7 @@ public class Pirates extends EventCard {
 
                     Boolean[] shieldedSides = new Boolean[] {false, false, false, false};
 
-                    //player.getShip().consumeEnergy(piratesData.getShieldsActivatedCoordinates().size()); // Il controllo sulle batterie disponibili è fatto dal client
-
-                    // Moved to the bottom
-//                    int shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
-//                    int shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
-//                    Pair<Integer, Integer> currentPlasmaShot = new Pair<>(shotSize, shotDirection);
-
-                    // Impostazione dei lati protetti della ship
+                    // Setting the ship's shielded sides
                     for (ComponentHelper<Void> coordinates : piratesData.getShieldsActivatedCoordinates()) {
                         Shield shield = (Shield) player.getShip().getComponent(coordinates.getI(), coordinates.getJ());
                         if (player.getShip().getAvailableEnergy() > 0) {
@@ -247,11 +246,11 @@ public class Pirates extends EventCard {
                                     shieldedSides[0] = true;
                             }
                         } else {
-                            // Non possono essere attivati ulteriori scudi
+                            // No more shields can't be activated
                             break;
                         }
                     }
-                    // Batteries comsumed by the shields, might need a check on avaiability
+                    // Batteries consumed by the shields, might need a check on availability
                     this.removedBatteries.put(player.getNickname(), piratesData.getShieldsActivatedCoordinates().size());
 
                     if ((shotSize == 1 && !shieldedSides[shotDirection]) || shotSize == 2) {
@@ -349,11 +348,6 @@ public class Pirates extends EventCard {
                     shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
                     shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
                     currentPlasmaShot = Map.of("shotSize", shotSize, "shotDirection", shotDirection);
-                    //currentPlasmaShot = new ArrayList<>(Arrays.asList(shotSize, shotDirection));
-//                    System.out.println("Parametri shot cambiati! -> pS index : " + plasmashotIndex);
-//                    System.out.println("SIZE: " + shotSize);
-//                    System.out.println("Direction: " + shotDirection);
-
                 }
         );
     }
@@ -405,11 +399,10 @@ public class Pirates extends EventCard {
                 // Batteries consumed due to the double cannons
                 setUpdatedRemovedBatteriesIfNecessary(piratesStateJSON, removedBatteries);
             }
-            // If the pirates have been defeated, set the rewards
-            if (this.hasBeenDefeated) {
-                setUpdatedPositionsIfNecessary(piratesStateJSON, this.updatedPositions);
-                setUpdatedCreditsIfNecessary(piratesStateJSON, this.updatedCredits);
-            }
+
+            setUpdatedPositionsIfNecessary(piratesStateJSON, this.updatedPositions);
+            setUpdatedCreditsIfNecessary(piratesStateJSON, this.updatedCredits);
+
         } else {
             // This static info will be sent to the clients only when the card has not been activated yet
             piratesStateJSON.setId(this.id);

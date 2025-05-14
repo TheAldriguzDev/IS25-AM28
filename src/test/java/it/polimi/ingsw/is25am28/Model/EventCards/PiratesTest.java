@@ -439,17 +439,6 @@ class PiratesTest {
         }
 
         pirates.useCard(actionJSON1);
-        assertFalse(pirates.hasFinished());
-
-        assertFalse(pirates.hasFinished());
-        pirates.useCard(actionJSON2);
-
-        assertFalse(pirates.hasFinished());
-        pirates.useCard(actionJSON3);
-
-        assertFalse(pirates.hasFinished());
-        pirates.useCard(actionJSON4);
-
         assertTrue(pirates.hasFinished());
 
         assertEquals(playerPositionsBefore.get(0) - 7, p1.getCursor()); // 4 steps + 3 jumps over players (2, 3, 4)
