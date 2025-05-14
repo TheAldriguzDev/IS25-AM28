@@ -459,7 +459,7 @@
                   "actions": [
                         {
                               "action": 2,
-                              "consequence": 0
+                              "consequence": 1
                         },
                         {
                               "action": 1,
@@ -467,7 +467,7 @@
                         },
                         {
                               "action": 0,
-                              "consequence": 0
+                              "consequence": 2
                         }
                   ],
                   "level": 0,
@@ -486,15 +486,15 @@
                   "actions": [
                         {
                               "action": 0,
-                              "consequence": 0
+                              "consequence": 1
                         },
                         {
                               "action": 1,
-                              "consequence": 0
+                              "consequence": 3
                         },
                         {
                               "action": 2,
-                              "consequence": 0
+                              "consequence": 2
                         }
                   ],
                   "level": 2,

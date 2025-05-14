@@ -121,7 +121,8 @@ public class ClientWarZone extends ClientEventCard {
                     cardInfoWidget.wrapWidgetWithBorder();
 
                     if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
-                        cardInfoWidget.appendString("Required Crew: " + requiredCrew);
+                        cardInfoWidget.appendString("Affected player: " + affectedPlayer);
+                        cardInfoWidget.appendString("Taken crew: " + requiredCrew);
                     } else {
                         cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
                     }
@@ -228,6 +229,13 @@ public class ClientWarZone extends ClientEventCard {
                         cardInfoWidget.appendString(spaceString.toString());
                     }
                     cardInfoWidget.wrapWidgetWithBorder();
+
+                    if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+                        cardInfoWidget.appendString("Taken items: " + requiredCrew);
+                    } else {
+                        cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
+                    }
+                    cardInfoWidget.appendString("───────────────────────────────");
                 }
             }
 

@@ -419,6 +419,7 @@ public class WarZone extends EventCard {
             case MOVEMENTSTEPS -> {
                 this.getBoard().movePlayerBackwards(player, this.movementSteps);
                 this.updatedPositions.put(player.getNickname(), player.getCursor());
+                // TODO: fix warzone states
 
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or to mark the card as used
                 this.affectedPlayer = Optional.empty();
@@ -728,14 +729,8 @@ public class WarZone extends EventCard {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
 
-
         if (this.hasBeenActivated()) {
             initStateFlags(cardState);
-
-//            cardState.setApplyMovementStepsConsequence(false);
-//            cardState.setApplyRequiredCrewConsequences(false);
-//            cardState.setApplyLossItemsConsequence(false);
-//            cardState.setApplyShootingSequenceConsequence(false);
 
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
@@ -743,8 +738,7 @@ public class WarZone extends EventCard {
 
             cardState.setCurrActionIndex(this.current_action); // Need a way to set this only when necessary, but it might not be worth it // should now be obsolete since there are flags
             // If present set the current player (the one that needs to play the game)
-            if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
-                cardState.setAffectedPlayer(this.affectedPlayer.get().getNickname());
+
                 switch (this.cardActions.get(current_action).getConsequence()) {
                     case REQUIREDCREW -> {
                         setUpdatedRemovedLifeformsIfNecessary(cardState, removedLifeforms);
@@ -754,7 +748,7 @@ public class WarZone extends EventCard {
                         setUpdatedPositionsIfNecessary(cardState, updatedPositions);
                     }
                     case SHOOTINGSEQUENCE -> {
-                        if(!this.previousPlayerRemovedComponents.isEmpty()) {
+                        if (!this.previousPlayerRemovedComponents.isEmpty()) {
                             cardState.setNeedsShipUpdate(true);
                             cardState.setNeedsUpdatedRemovedComponents(true);
                             cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
@@ -767,14 +761,11 @@ public class WarZone extends EventCard {
                         setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
                     }
                     case LOSSITEMS -> {
-                        // TODO: neede revision on the use of isEmpty on maps/mapsOf, it should might (probably) be wrong // can fix it with get(nickname).isEmpty
                         setUpdatedDroppedResourcesIfNecessary(cardState, this.droppedResources);
                         setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
                     }
                 }
-            } else {
-                cardState.setAffectedPlayer("");
-            }
+                // TODO: a variable for the actual affected player that dictates if checking the actionIndex or the actionIndex-1 may be the answer
 
 
         } else {
