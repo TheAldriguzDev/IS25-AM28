@@ -30,6 +30,19 @@ public enum PlayerColor {
         return YELLOW;
     }
 
+    public static PlayerColor fromString(String colorName) {
+        if (colorName != null && !colorName.isEmpty()) {
+            colorName = colorName.toUpperCase();
+
+            if (colorName.equals(RED.name()))       return RED;
+            if (colorName.equals(YELLOW.name()))    return YELLOW;
+            if (colorName.equals(GREEN.name()))     return GREEN;
+            if (colorName.equals(BLUE.name()))      return BLUE;
+        }
+
+        return null;
+    }
+
     @Override
     public String toString() {
         return this.name();
