@@ -33,10 +33,6 @@ public class ClientWarZone extends ClientEventCard {
         this.movementSteps = cardState.getMovementSteps();
         this.requiredResources = cardState.getRequiredResources();
         this.warZoneJSON = new WarZoneJSON();
-
-//        enabledCommands.add("setItemsToBeRemoved");
-//        enabledCommands.add("setDoubleCannonsToActivate");
-//        enabledCommands.add("setDoubleEnginesToActivate");
     }
 
     @Override
@@ -50,12 +46,13 @@ public class ClientWarZone extends ClientEventCard {
         this.playerNickname = cardState.getPlayerNickname(); // If present, the current action (not the general card thumbnail) will be shown
         this.affectedPlayer = cardState.getAffectedPlayer();
         this.currActionIndex = cardState.getCurrActionIndex(); // Will be used in the generateWidget to determine what to display
-        this.currentPlasmaShot = cardState.getCurrPlasmaShotDescriptor();
         this.diceThrowResult = cardState.getDiceThrowResult();
 
         enabledCommands.clear();
         enabledCommands.add("playCard");
+
         if (this.affectedPlayer == null || this.affectedPlayer.isEmpty()) { // Sets the commands relative to the Actions
+
             switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
                 case "Enginepower" -> {
                     enabledCommands.add("setDoubleEnginesToActivate");
@@ -66,11 +63,16 @@ public class ClientWarZone extends ClientEventCard {
                 default -> {} // "Humans" does not need user input
             }
         } else { // Sets the commands relative to the Consequences
+
             switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
                 case "RequiredCrew" -> {
                     enabledCommands.add("setCrewToRemove");
                 }
                 case "ShootingSequence" -> {
+                    System.out.println("Imposto plasmashot");
+                    this.currentPlasmaShot = cardState.getCurrPlasmaShotDescriptor();
+                    this.diceThrowResult = cardState.getDiceThrowResult();
+                    System.out.println("ENABLED SHOOTING SEQUENCE");
                     enabledCommands.add("setShieldsToActivate");
                 }
                 case "LossItems" -> {

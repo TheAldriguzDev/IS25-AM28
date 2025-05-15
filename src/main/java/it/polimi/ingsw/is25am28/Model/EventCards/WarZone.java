@@ -24,6 +24,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class WarZone extends EventCard {
+    // Variables necessary for the card
     private final ResourceBank resourceBank;
     private final int movementSteps;
     private final int requiredCrew;
@@ -36,18 +37,22 @@ public class WarZone extends EventCard {
     private Map<Player, Integer> playersEnginePower;
     private Map<Player, Float> playersFirePower;
     private int current_plasmaShot;
+    private final Random random;
+    private int diceResult;
 
+    // Variables necessary for the generation of the card's state
     private List<Component> previousPlayerRemovedComponents;
     private String prevPlayer;
+    private Map<String, List<Map<String, Object>>> removedComponents;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
     private Map<String, Integer> removedBatteries;
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private List<String> eliminatedPlayers;
     private Map<String, Integer> lostPieces;
+    private String targetPlayer;
 
-    private final Random random;
-    private int diceResult;
+
 
     // TODO: prev Player Nickname
     private String prevPlayerNickname;
@@ -94,10 +99,9 @@ public class WarZone extends EventCard {
         this.removedLifeforms = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
         this.lostPieces = new HashMap<>();
-
         this.previousPlayerRemovedComponents = new ArrayList<>();
-
         this.droppedResources = new HashMap<>();
+        this.removedComponents = new HashMap<>();
     }
 
     /**
@@ -241,6 +245,7 @@ public class WarZone extends EventCard {
                     totalPower += tmpCannon.getFirePower();
                     p.getShip().consumeEnergy(1);
                 }
+                this.removedBatteries.put(this.getCurrentPlayer().get().getNickname(), warZoneJSON.getCannonList().size());
 
                 //  float totalPower = p.getShip().getFirePower(usedEnergy);
                 this.playersFirePower.put(p, totalPower);
@@ -261,6 +266,7 @@ public class WarZone extends EventCard {
                     }
                     if (tmpPlayer != null) {
                         this.affectedPlayer = Optional.of(tmpPlayer);
+//                        this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
                         this.currentPlayer = Optional.of(tmpPlayer);
                         // If the consequence is MOVEMENTSTEPS --> We can apply them immediately,
                         // for the others we need to wait for user inputs
@@ -306,6 +312,8 @@ public class WarZone extends EventCard {
                 int totalEnginePower = p.getShip().getEnginePower(usedEnergy);
                 this.playersEnginePower.put(p, totalEnginePower);
 
+                this.removedBatteries.put(this.getCurrentPlayer().get().getNickname(), warZoneJSON.getUsedEnergy());
+
                 // Check if we are already arrived to the last player --> In case we need to grab the affected player
                 if (this.players.getLast().equals(p)) {
                     Player tmpPlayer = null;
@@ -323,6 +331,7 @@ public class WarZone extends EventCard {
 
                     if (tmpPlayer != null) {
                         this.affectedPlayer = Optional.of(tmpPlayer);
+//                        this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
                         this.currentPlayer = Optional.of(tmpPlayer);
                         // If the consequence is MOVEMENTSTEPS --> We can apply them immediately,
                         // for the others we need to wait for user inputs
@@ -368,6 +377,7 @@ public class WarZone extends EventCard {
 
             if (tmpPlayer.isPresent()) {
                 this.affectedPlayer = tmpPlayer;
+//                this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
                 this.currentPlayer = tmpPlayer;
 
                 // If the consequence is MOVEMENTSTEPS --> We can apply them immediately,
@@ -399,6 +409,8 @@ public class WarZone extends EventCard {
     private WarZone applyConsequence(Player player, WarZoneJSON warZoneJSON) throws IllegalStateException, NoSuchElementException {
         WarZoneActionConsequencePair currentAction = this.cardActions.get(this.current_action);
 
+        this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
+
         switch (currentAction.getConsequence()) {
             case LOSSITEMS -> {
                 this.handleLossItems(player, warZoneJSON);
@@ -418,6 +430,7 @@ public class WarZone extends EventCard {
             }
             case MOVEMENTSTEPS -> {
                 this.getBoard().movePlayerBackwards(player, this.movementSteps);
+
                 this.updatedPositions.put(player.getNickname(), player.getCursor());
                 // TODO: fix warzone states
 
@@ -468,7 +481,9 @@ public class WarZone extends EventCard {
         // This covers also the case in which there are not enough resources on board
         if (resourcesToDrop.size() != mostValuableItems.size()) {
             throw new IllegalArgumentException("The dropped items are not enough");
+//            this.targetPlayer = this.affectedPlayer.orElse(null).getNickname(); // TODO: ???
         } else if (this.countOccurrencies(mostValuableItems).equals(colorsToDrop)) {
+            this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
             throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
         }
 
@@ -521,7 +536,7 @@ public class WarZone extends EventCard {
      * It also checks if the player hash finished all his Astronauts --> if yes it will be eliminated
      * */
     private WarZone handleRequiredCrew(Player player, WarZoneJSON warZoneJSON) {
-        // Get the list of components where we need to remove the lifeform of the given player
+        // Get the list of components where we need to remove the lifeForm of the given player
         List<ComponentHelper<LifeformType>> lifeFormToBeRemoved = new ArrayList<>(warZoneJSON.getLifeformsToBeRemoved());
 
         if (lifeFormToBeRemoved.size() != this.requiredCrew && lifeFormToBeRemoved.size() != player.getShip().getAllLifeforms().size()) {
@@ -567,6 +582,8 @@ public class WarZone extends EventCard {
         shieldList = warZoneJSON.getShieldList();
         shipPtr = player.getShip();
         currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
+
+        this.removedBatteries.put(player.getNickname(), shieldList.size());
 
         // Adding +2 to the currMeteor's pointing direction gets the
         // side from where the ship will see it arrive from
@@ -682,13 +699,11 @@ public class WarZone extends EventCard {
         // that was hit from the current player's ship
         if (!threatDestroyed) {
             try {
-                shipPtr.removeComponent(
-                        toHit.getPosition()[0],
-                        toHit.getPosition()[1]
+                this.previousPlayerRemovedComponents = shipPtr.removeComponent(toHit.getPosition()[0], toHit.getPosition()[1]
                 );
 
                 this.prevPlayer = player.getNickname();
-                this.previousPlayerRemovedComponents = new ArrayList<>();
+                this.removedComponents.put(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                 this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
                 this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
             }
@@ -739,34 +754,67 @@ public class WarZone extends EventCard {
             cardState.setCurrActionIndex(this.current_action); // Need a way to set this only when necessary, but it might not be worth it // should now be obsolete since there are flags
             // If present set the current player (the one that needs to play the game)
 
-                switch (this.cardActions.get(current_action).getConsequence()) {
-                    case REQUIREDCREW -> {
-                        setUpdatedRemovedLifeformsIfNecessary(cardState, removedLifeforms);
-                        setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
-                    }
-                    case MOVEMENTSTEPS -> {
-                        setUpdatedPositionsIfNecessary(cardState, updatedPositions);
-                    }
-                    case SHOOTINGSEQUENCE -> {
-                        if (!this.previousPlayerRemovedComponents.isEmpty()) {
-                            cardState.setNeedsShipUpdate(true);
-                            cardState.setNeedsUpdatedRemovedComponents(true);
-                            cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
-                            setUpdatedLostPiecesIfNecessary(cardState, this.lostPieces);
-                        }
-                        if (current_plasmaShot < this.shootingSequence.size()) {
-                            PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
-                            cardState.setCurrPlasmaShotDescriptor(Map.of("shotSize", currPlasmaShot.getSize(), "shotDirection", currPlasmaShot.getOrientation()));//<>(currPlasmaShot.getSize(), currPlasmaShot.getOrientation()));
-                        }
-                        setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
-                    }
-                    case LOSSITEMS -> {
-                        setUpdatedDroppedResourcesIfNecessary(cardState, this.droppedResources);
-                        setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
-                    }
-                }
-                // TODO: a variable for the actual affected player that dictates if checking the actionIndex or the actionIndex-1 may be the answer
+            if(this.affectedPlayer.orElse(null) != null) {
+                cardState.setAffectedPlayer(this.affectedPlayer.get().getNickname());
 
+                if (this.cardActions.get(this.current_action).getConsequence().equals(WarZoneConsequence.SHOOTINGSEQUENCE)) {
+                    PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
+                    cardState.setCurrPlasmaShotDescriptor(Map.of("shotSize", currPlasmaShot.getSize(), "shotDirection", currPlasmaShot.getOrientation()));
+                    cardState.setDiceThrowResult(this.diceResult);
+                }
+            }
+
+            if (this.targetPlayer != null && !this.targetPlayer.isEmpty()) {
+
+                this.targetPlayer = null;
+
+                setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
+                setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
+                setUpdatedRemovedLifeformsIfNecessary(cardState, removedLifeforms);
+                setUpdatedDroppedResourcesIfNecessary(cardState, this.droppedResources);
+                setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
+                setUpdatedRemovedComponentsIfNecessary(cardState, this.removedComponents);
+                setUpdatedLostPiecesIfNecessary(cardState, this.lostPieces);
+
+
+//                cardState.setAffectedPlayer(this.targetPlayer);
+
+//                cardState.setAffectedPlayer(this.affectedPlayer.orElse(null).getNickname());
+//                this.targetPlayer = null;
+
+//                switch (this.cardActions.get(current_action - 1).getConsequence()) {
+//                    case REQUIREDCREW -> {
+//                        setUpdatedRemovedLifeformsIfNecessary(cardState, removedLifeforms);
+//                        setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
+//                    }
+//                    case MOVEMENTSTEPS -> {
+//                        setUpdatedPositionsIfNecessary(cardState, updatedPositions);
+//                    }
+//                    case SHOOTINGSEQUENCE -> {
+//                        cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
+//                        setUpdatedRemovedComponentsIfNecessary(cardState, this.removedComponents);
+//                        setUpdatedLostPiecesIfNecessary(cardState, this.lostPieces);
+//
+//                        setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
+//
+//
+//                        if (current_plasmaShot < this.shootingSequence.size()) {
+//                            PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
+//                            cardState.setCurrPlasmaShotDescriptor(Map.of("shotSize", currPlasmaShot.getSize(), "shotDirection", currPlasmaShot.getOrientation()));
+//                        }
+//                        cardState.setDiceThrowResult(this.diceResult);
+//                        setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
+//
+//                    }
+//                    case LOSSITEMS -> {
+//                        setUpdatedDroppedResourcesIfNecessary(cardState, this.droppedResources);
+//                        setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
+//                    }
+                //}
+                // TODO: a variable for the actual affected player that dictates if checking the actionIndex or the actionIndex-1 may be the answer
+            } else {
+                setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
+            }
 
         } else {
             cardState.setId(this.id);
@@ -785,10 +833,14 @@ public class WarZone extends EventCard {
             cardState.setMovementSteps(this.movementSteps);
             cardState.setRequiredResources(this.requiredItems);
 
-
+            if (current_plasmaShot < this.shootingSequence.size()) {
+                PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
+                cardState.setCurrPlasmaShotDescriptor(Map.of("shotSize", currPlasmaShot.getSize(), "shotDirection", currPlasmaShot.getOrientation()));
+            }
+            cardState.setDiceThrowResult(this.diceResult);
         }
 
-        cardState.setDiceThrowResult(this.diceResult);
+
 
         Map<String, Float> playersFirePowerMap = this.playersFirePower.entrySet().stream()
                 .collect(Collectors.toMap(

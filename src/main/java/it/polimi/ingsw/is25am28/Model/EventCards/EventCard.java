@@ -331,6 +331,8 @@ public abstract class EventCard {
 
     // TODO: eventCards should also set the lapped eliminated players
 
+    // TODO: method: unlock additional commands
+
 
 }
 

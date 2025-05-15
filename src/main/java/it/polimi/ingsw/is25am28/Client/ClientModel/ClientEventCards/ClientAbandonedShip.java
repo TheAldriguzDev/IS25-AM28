@@ -42,7 +42,7 @@ public class ClientAbandonedShip extends ClientEventCard {
         enabledCommands.clear();
         enabledCommands.add("playCard");
         if (this.isCardUsable) {
-            enabledCommands.add("setCrewToRemove");
+//            enabledCommands.add("setCrewToRemove");
             enabledCommands.add("setWantsToVisit");
         }
     }

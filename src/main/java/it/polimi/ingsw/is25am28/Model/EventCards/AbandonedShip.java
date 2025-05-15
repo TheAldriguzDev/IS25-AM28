@@ -21,6 +21,7 @@ public class AbandonedShip extends EventCard {
     private Map <String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private List<String> eliminatedPlayers;
     private Map<String, Integer> updatedPositions;
+    private String prevPlayerNickname;
 
     private boolean hasBeenUsedByPlayer;
 
@@ -78,6 +79,7 @@ public class AbandonedShip extends EventCard {
 
         // Retrieve the data from the JSON
         String playerNickname = abandonedShip.getPlayerNickname();
+        this.prevPlayerNickname = playerNickname;
         boolean wantsToVisitTheShip = abandonedShip.getWantToVisitShip();
 
         // Check if:
@@ -90,16 +92,13 @@ public class AbandonedShip extends EventCard {
             // otherwise get the next player
             if (wantsToVisitTheShip) {
                 this.lifeformsToBeRemoved = abandonedShip.getLifeformsToBeRemoved();
+
                 if (lifeformsToBeRemoved.size() != this.requiredCrew) {
+
                     throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
-                }
-                this.removedLifeforms.put(playerNickname, this.lifeformsToBeRemoved);
 
-                // Check if the given input is valid
-                if (lifeformsToBeRemoved.size() != this.requiredCrew) {
-                    throw new IllegalArgumentException("The lifeformsToBeRemoved size does not match with the card requirements!");
                 } else {
-
+                    this.removedLifeforms.put(playerNickname, this.lifeformsToBeRemoved);
                     // Apply the bonus effects --> give the credits
                     this.bonusEffect();
                     this.hasBeenUsedByPlayer = true;
@@ -187,6 +186,7 @@ public class AbandonedShip extends EventCard {
 
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+            cardState.setPrevPlayerNickname(this.prevPlayerNickname);
 
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             if (this.hasBeenUsedByPlayer) {

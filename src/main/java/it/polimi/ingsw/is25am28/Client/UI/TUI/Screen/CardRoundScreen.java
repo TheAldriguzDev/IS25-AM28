@@ -1034,13 +1034,25 @@ public class CardRoundScreen extends Screen {
             command = this.indexedCardInputMethods.get("setWantsToVisit").getValue();
             this.indexedCardInputMethods.replace("setWantsToVisit", new Pair<>(false, command));
 
-            // Enables the "setItemsToBeTaken" command
-            command = this.indexedCardInputMethods.get("setItemsToBeTaken").getValue();
-            this.indexedCardInputMethods.replace("setItemsToBeTaken", new Pair<>(true, command));
+            if (this.currEventCard.getClass().equals(ClientAbandonedStation.class)) {
 
-            // Enables the "setItemsToBeRemoved" command
-            command = this.indexedCardInputMethods.get("setItemsToBeRemoved").getValue();
-            this.indexedCardInputMethods.replace("setItemsToBeRemoved", new Pair<>(true, command));
+                // Enables the "setItemsToBeTaken" command
+                command = this.indexedCardInputMethods.get("setItemsToBeTaken").getValue();
+                this.indexedCardInputMethods.replace("setItemsToBeTaken", new Pair<>(true, command));
+
+                // Enables the "setItemsToBeRemoved" command
+                command = this.indexedCardInputMethods.get("setItemsToBeRemoved").getValue();
+                this.indexedCardInputMethods.replace("setItemsToBeRemoved", new Pair<>(true, command));
+
+            } else if (this.currEventCard.getClass().equals(ClientAbandonedShip.class)) {
+                // Enables the "setCrewToRemove" command
+                command = this.indexedCardInputMethods.get("setCrewToRemove").getValue();
+                this.indexedCardInputMethods.replace("setCrewToRemove", new Pair<>(true, command));
+            }
+
+            // TODO: think about implementing a method specific to the unlocking of additional commands
+
+
 
             // Generates the updated command widget
             this.generateCardRoundCommandsWidget();
