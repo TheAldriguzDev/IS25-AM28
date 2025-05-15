@@ -1,6 +1,6 @@
-package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+package it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI;
 
-import it.polimi.ingsw.is25am28.TUI.Utils.*;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

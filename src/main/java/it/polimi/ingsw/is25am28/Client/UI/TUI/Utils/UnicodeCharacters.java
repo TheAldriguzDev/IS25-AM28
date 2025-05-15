@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.TUI.Utils;
+package it.polimi.ingsw.is25am28.Client.UI.TUI.Utils;
 
 public class UnicodeCharacters {
     // Single Lines

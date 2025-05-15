@@ -1,8 +1,8 @@
-package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+package it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI;
 
 import java.util.List;
 
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public class CommandWidgetTUI extends WidgetTUI {
     private final String commandId;

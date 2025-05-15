@@ -1,12 +1,12 @@
-package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+package it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI;
 
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.*;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.*;
 
 public class WidgetTUI {
     public static final List<String> defaultBorderCharacters = new ArrayList<String>();
