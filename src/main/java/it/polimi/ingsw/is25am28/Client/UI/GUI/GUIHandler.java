@@ -2,6 +2,9 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
+import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.LobbyController;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.WaitingForPlayersController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
@@ -15,7 +18,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -29,7 +36,9 @@ public class GUIHandler extends Application implements ClientUI {
     // model is the reference to the clientModel
     private static ClientModel model;
     // virtualClient is the reference to the client network protocol
-    private VirtualView virtualClient;
+    private static VirtualView virtualClient;
+
+    private static CommandCTX ctx;
 
     // ========== ATTRIBUTES NEEDED TO HANDLE THE GUI ========== //
     private Stage stage;
@@ -48,6 +57,34 @@ public class GUIHandler extends Application implements ClientUI {
         GUIHandler.model = model;
     }
 
+    public static VirtualView getVirtualClient() {
+        return GUIHandler.virtualClient;
+    }
+
+    public static CommandCTX getCommandCTX() {
+        return GUIHandler.ctx;
+    }
+
+    public static void setCommandCTX(CommandCTX ctx) {
+        GUIHandler.ctx = ctx;
+    }
+
+    public Stage getStage() {
+        return this.stage;
+    }
+
+    public static void onQuitHandler(WindowEvent windowEvent) {
+        Alert quitConfirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+
+        quitConfirmationAlert.setTitle("Quit Galaxy Trucker");
+        quitConfirmationAlert.setHeaderText("You're about to quit Galaxy Trucker");
+        quitConfirmationAlert.setContentText("Do you want to proceed?");
+
+        if (quitConfirmationAlert.showAndWait().get() == ButtonType.OK) {
+            GUIHandler.getInstance().getStage().close();
+        }
+    }
+
     @Override
     public void start(Stage stage) throws Exception {
         instance = this;
@@ -60,8 +97,8 @@ public class GUIHandler extends Application implements ClientUI {
 
         // ========== BUILD THE INITIAL SCREEN OF THE GAME ========== //
 
-        // TODO: Convert in FXML file
         this.stage = stage;
+        this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
 
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/GUI/FXML/login.fxml")));
         stage.setTitle("Galaxy Trucker");
@@ -77,29 +114,56 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws Exception {
         Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(
+                    getClass().getResource("/GUI/FXML/lobby.fxml")
+                )
+            );
 
             try {
-                System.out.println("Cambio scena a Lobby.fxml");
-                Parent root = FXMLLoader.load(
-                        Objects.requireNonNull(getClass().getResource("/GUI/FXML/lobby.fxml"))
-                );
-                Scene newScene = new Scene(root);
-                stage.setScene(newScene);
-                stage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
+                Parent root = loader.load();
+                LobbyController controller = loader.getController();
+                controller.init(availableGames);
+
+                Scene scene = new Scene(root);
+                this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
+                this.stage.setScene(scene);
+                this.stage.show();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
             }
         });
     }
 
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(
+                    getClass().getResource("/GUI/FXML/waitingForPlayers.fxml")
+                )
+            );
 
+            try {
+                Parent root = loader.load();
+                WaitingForPlayersController controller = loader.getController();
+                controller.showConnectedPlayers(waitingForPlayers);
+
+                Scene newScene = new Scene(root);
+                this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
+                this.stage.setScene(newScene);
+                this.stage.show();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
-
+        System.out.println("SHIP CONSTRUCTION DTO ARRIVED");
     }
 
     @Override
@@ -134,21 +198,40 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void commitCommand(String playerNickname) {
-
+        if (ctx != null && playerNickname.equals(model.getNickname())) {
+            ctx.handleSuccess();
+        }
     }
 
     @Override
     public void showError(ErrorAnswer error) {
+        if (ctx != null) {
+            ctx.handleError(error.getError());
+        }
+        else {
+            // Terminal output
+            System.err.println(error.getError());
 
+            Parent root = this.stage.getScene().getRoot();
+            Label errorLabel = new Label();
+
+            errorLabel.setText(error.getError());
+            errorLabel.setWrapText(true);
+            errorLabel.getStyleClass().add("error-label");
+            root.getChildrenUnmodifiable().add(errorLabel);
+
+            this.stage.show();
+        }
     }
 
     @Override
     public boolean isCTXAvailable() {
-        return false;
+        return (ctx != null);
     }
 
     @Override
     public void setVirtualClient(VirtualView client) {
-        // Not used in the GUI
+        // Not used in the GUI since the instance is handled by JavaFX
+        // (no instance of GUIHandler is available to invoke the method before launching the GUI)
     }
 }

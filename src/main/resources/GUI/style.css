@@ -3,8 +3,31 @@
     -fx-text-fill: white;
 }
 
+.auto-resize {
+    -fx-pref-width: 100%;
+    -fx-pref-height: 100%;
+}
+
 .label {
     -fx-text-fill: white;
+}
+
+.error-label {
+    -fx-text-fill: red;
+    -fx-font-weight: 600;
+    -fx-font-size: 16;
+}
+
+.lobbyList {
+    -fx-background: #1e1e2f;
+}
+
+.lobbyList:vertical {
+    -fx-background: red;
+}
+
+.lobbyList:horizontal {
+    -fx-background: red;
 }
 
 .button {
@@ -29,3 +52,4 @@
     -fx-background-color: #2E5D9F;
     -fx-translate-y: 1px;
 }
+

@@ -2,7 +2,11 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI;
 
 public enum GuiScenes {
     LOGIN_SCENE("login.fxml"),
-    LOBBY_SCENE("lobby.fxml"),;
+    LOBBY_SCENE("lobby.fxml"),
+    CREATE_GAME_SCENE("createGame.fxml"),
+    JOIN_GAME_SCENE("joinGame.fxml"),
+    RECONNECT_GAME_SCENE("reconnectGame.fxml"),
+    WAITING_FOR_PLAYERS_SCENE("waitingForPlayers.fxml");
 
     private final String fxmlFile;
 
@@ -16,9 +20,6 @@ public enum GuiScenes {
 
     @Override
     public String toString() {
-        return switch (this) {
-            case LOGIN_SCENE -> "LOGIN_SCENE";
-            case LOBBY_SCENE -> "LOBBY_SCENE";
-        };
+        return this.name();
     }
 }
