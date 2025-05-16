@@ -5,13 +5,11 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
-import it.polimi.ingsw.is25am28.Model.Components.Battery;
-import it.polimi.ingsw.is25am28.Model.Components.Cannon;
-import it.polimi.ingsw.is25am28.Model.Components.Component;
-import it.polimi.ingsw.is25am28.Model.Components.Shield;
+import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.InsufficientEnergyException;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
@@ -34,6 +32,7 @@ public class MeteorShower extends EventCard {
     private final Map<String, Integer> removedBatteries; // TODO: Implement in the state
     private final List<String> eliminatedPlayers;
     private final Map<String, Integer> lostPieces;
+    private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
 
 
@@ -57,6 +56,7 @@ public class MeteorShower extends EventCard {
         this.removedBatteries = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
         this.lostPieces = new HashMap<>();
+        this.removedLifeforms = new HashMap<>();
 
         try {
             for (List<Integer> meteorDescriptor : meteorSequence) {
@@ -152,6 +152,9 @@ public class MeteorShower extends EventCard {
         catch (Exception e) {
             throw new IllegalArgumentException("[MeteorShower::useCard] " + e.getMessage());
         }
+
+        this.removedBatteries.put(this.currentPlayer.get().getNickname(), shieldCoordsList.size());
+        this.removedBatteries.put(this.currentPlayer.get().getNickname(), cannonCoordsList.size());
 
         // Skips any player marked as disconnected during their turn
         if (this.currentPlayer.get().isConnected()) {
@@ -384,10 +387,29 @@ public class MeteorShower extends EventCard {
                     // on the current player before the card moves to the next player.
                     this.prevPlayer = this.currentPlayer.get().getNickname();
 
+                    Cabin tmpPurpleAlienPos = shipPtr.getPurpleAlienPosition();
+                    Cabin tmpBrownAlienPos = shipPtr.getBrownAlienPosition();
+
                     this.prevPlayerRemovedComponents = shipPtr.removeComponent(
                         toHit.getPosition()[0],
                         toHit.getPosition()[1]
                     );
+
+                    // If there were any aliens that have been removed, add them to the removed lifeForms
+                    List<ComponentHelper<LifeformType>> removedAliensList = new ArrayList<>();
+                    if (tmpPurpleAlienPos != null && shipPtr.getPurpleAlienPosition() == null) {
+                        ComponentHelper<LifeformType> purpleAlienCH = new ComponentHelper<>(tmpPurpleAlienPos.getPosition()[0], tmpPurpleAlienPos.getPosition()[1]);
+                        purpleAlienCH.addItem(LifeformType.PURPLE_ALIEN);
+                        removedAliensList.add(purpleAlienCH);
+                    }
+                    if (tmpBrownAlienPos != null && shipPtr.getBrownAlienPosition() == null) {
+                        ComponentHelper<LifeformType> brownAlienCH = new ComponentHelper<>(tmpBrownAlienPos.getPosition()[0], tmpBrownAlienPos.getPosition()[1]);
+                        brownAlienCH.addItem(LifeformType.BROWN_ALIEN);
+                        removedAliensList.add(brownAlienCH);
+                    }
+                    if (!removedAliensList.isEmpty()) {
+                        this.removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), removedAliensList);
+                    }
 
                     this.removedComponents.put(this.prevPlayer, this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList());
                     this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
@@ -463,6 +485,8 @@ public class MeteorShower extends EventCard {
 
             // Setting the batteries consumed by the shields and the doubleCannons
             setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
+
+            setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
         } else {
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());

@@ -4,10 +4,12 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON;
+import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
 
@@ -36,6 +38,7 @@ public class Pirates extends EventCard {
     private Map<String, List<Map<String, Object>>> removedComponents;
     private Map<String, Integer> removedBatteries; // TODO: Implement in the state (both firepower and shields)
     private final Map<String, Integer> lostPieces;
+    private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board, int cardID, String path) {
         super(name, cardLevel, board, cardID, path);
@@ -57,6 +60,7 @@ public class Pirates extends EventCard {
         this.removedBatteries = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
         this.lostPieces = new HashMap<>();
+        this.removedLifeforms = new HashMap<>();
     }
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
@@ -254,6 +258,10 @@ public class Pirates extends EventCard {
                     this.removedBatteries.put(player.getNickname(), piratesData.getShieldsActivatedCoordinates().size());
 
                     if ((shotSize == 1 && !shieldedSides[shotDirection]) || shotSize == 2) {
+
+                        Cabin tmpPurpleAlienPos = player.getShip().getPurpleAlienPosition();
+                        Cabin tmpBrownAlienPos = player.getShip().getBrownAlienPosition();
+
                         switch (shotDirection) {
                             case 0: {
                                 int column = diceThrowResult - 1;
@@ -344,6 +352,23 @@ public class Pirates extends EventCard {
                                 break;
                             }
                         }
+
+                        // If there were any aliens that have been removed, add them to the removed lifeForms
+                        List<ComponentHelper<LifeformType>> removedAliensList = new ArrayList<>();
+                        if (tmpPurpleAlienPos != null && player.getShip().getPurpleAlienPosition() == null) {
+                            ComponentHelper<LifeformType> purpleAlienCH = new ComponentHelper<>(tmpPurpleAlienPos.getPosition()[0], tmpPurpleAlienPos.getPosition()[1]);
+                            purpleAlienCH.addItem(LifeformType.PURPLE_ALIEN);
+                            removedAliensList.add(purpleAlienCH);
+                        }
+                        if (tmpBrownAlienPos != null && player.getShip().getBrownAlienPosition() == null) {
+                            ComponentHelper<LifeformType> brownAlienCH = new ComponentHelper<>(tmpBrownAlienPos.getPosition()[0], tmpBrownAlienPos.getPosition()[1]);
+                            brownAlienCH.addItem(LifeformType.BROWN_ALIEN);
+                            removedAliensList.add(brownAlienCH);
+                        }
+                        if (!removedAliensList.isEmpty()) {
+                            this.removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), removedAliensList);
+                        }
+
                     }
                     shotSize = shootingSequence.get(plasmashotIndex).getFirst();  // 1 -> small, 2 -> big
                     shotDirection = shootingSequence.get(plasmashotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
@@ -395,8 +420,10 @@ public class Pirates extends EventCard {
                 // Batteries consumed due to the shield
                 setUpdatedRemovedBatteriesIfNecessary(piratesStateJSON, removedBatteries);
 
+                setUpdatedRemovedLifeformsIfNecessary(piratesStateJSON, removedLifeforms);
+
             } else {
-                // Batteries consumed due to the double cannons
+                // Batteries consumed due to activation of the double cannons
                 setUpdatedRemovedBatteriesIfNecessary(piratesStateJSON, removedBatteries);
             }
 

@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 import it.polimi.ingsw.is25am28.Model.Components.Cannon;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Components.Shield;
@@ -699,8 +700,27 @@ public class WarZone extends EventCard {
         // that was hit from the current player's ship
         if (!threatDestroyed) {
             try {
-                this.previousPlayerRemovedComponents = shipPtr.removeComponent(toHit.getPosition()[0], toHit.getPosition()[1]
-                );
+
+                Cabin tmpPurpleAlienPos = shipPtr.getPurpleAlienPosition();
+                Cabin tmpBrownAlienPos = shipPtr.getBrownAlienPosition();
+
+                this.previousPlayerRemovedComponents = shipPtr.removeComponent(toHit.getPosition()[0], toHit.getPosition()[1]);
+
+                // If there were any aliens that have been removed, add them to the removed lifeForms
+                List<ComponentHelper<LifeformType>> removedAliensList = new ArrayList<>();
+                if (tmpPurpleAlienPos != null && shipPtr.getPurpleAlienPosition() == null) {
+                    ComponentHelper<LifeformType> purpleAlienCH = new ComponentHelper<>(tmpPurpleAlienPos.getPosition()[0], tmpPurpleAlienPos.getPosition()[1]);
+                    purpleAlienCH.addItem(LifeformType.PURPLE_ALIEN);
+                    removedAliensList.add(purpleAlienCH);
+                }
+                if (tmpBrownAlienPos != null && shipPtr.getBrownAlienPosition() == null) {
+                    ComponentHelper<LifeformType> brownAlienCH = new ComponentHelper<>(tmpBrownAlienPos.getPosition()[0], tmpBrownAlienPos.getPosition()[1]);
+                    brownAlienCH.addItem(LifeformType.BROWN_ALIEN);
+                    removedAliensList.add(brownAlienCH);
+                }
+                if (!removedAliensList.isEmpty()) {
+                    this.removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), removedAliensList);
+                }
 
                 this.prevPlayer = player.getNickname();
                 this.removedComponents.put(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList());

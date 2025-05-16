@@ -919,7 +919,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                     }
                     else {
                         // Otherwise, this tile is a placeholder, thus generate the placeholder screen
-                        screenRowList.add(this.generateComponentPlaceholderWidget().getScreen());
+                        screenRowList.add(this.generateComponentPlaceholderWidget().getScreen()); // TODO: with a variable that activates when in the cardRound (or when exiting the construction) this block can be replaced by an empty space block withoul borders
                     }
                 }
                 else {
