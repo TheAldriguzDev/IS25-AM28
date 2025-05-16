@@ -1,4 +1,4 @@
-package it.polimi.ingsw.is25am28.TUI.WidgetTUI;
+package it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI;
 
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 

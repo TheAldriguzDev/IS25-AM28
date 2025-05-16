@@ -10,14 +10,14 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
-import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public class ShipConstructionScreen extends Screen {
     // Default component selection matrix (row, col) dimensions

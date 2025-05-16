@@ -10,15 +10,15 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfShipException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Network.Messages.PopulateShip;
-import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.clearTerminal;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType.*;
 
 public class PopulateShipScreen extends Screen {

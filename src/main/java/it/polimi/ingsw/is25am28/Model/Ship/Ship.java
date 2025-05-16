@@ -8,11 +8,11 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
-import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 import static it.polimi.ingsw.is25am28.Model.Connector.*;
 
 public class Ship extends AbstractShip implements WidgetTUIGenerator {

@@ -3,16 +3,16 @@ package it.polimi.ingsw.is25am28.Model.Board;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
-import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public abstract class Board implements WidgetTUIGenerator {
     private static final Map<Integer, Pair<Integer, Integer>> boardDimensions;

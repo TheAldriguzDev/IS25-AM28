@@ -12,18 +12,18 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
-import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator;
 
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static it.polimi.ingsw.is25am28.Model.Connector.*;
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
     private ClientComponent[][] components;

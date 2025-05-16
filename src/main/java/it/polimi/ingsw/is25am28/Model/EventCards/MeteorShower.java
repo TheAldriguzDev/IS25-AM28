@@ -6,6 +6,9 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.*;
+import it.polimi.ingsw.is25am28.Model.Components.Cannon;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
+import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.InsufficientEnergyException;
@@ -13,7 +16,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 

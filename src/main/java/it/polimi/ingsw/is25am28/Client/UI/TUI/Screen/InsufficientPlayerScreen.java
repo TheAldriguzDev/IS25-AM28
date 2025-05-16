@@ -3,9 +3,9 @@ package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
-import static it.polimi.ingsw.is25am28.Client.UI.ClientTUI_v2.clearTerminal;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 
 public class InsufficientPlayerScreen extends Screen {
 

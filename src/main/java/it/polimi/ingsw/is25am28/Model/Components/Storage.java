@@ -2,16 +2,17 @@ package it.polimi.ingsw.is25am28.Model.Components;
 
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
-import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils;
-import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.*;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.addColor;
 
 public final class Storage extends Component {
     public static final String alias = "STORAGE";
@@ -134,10 +135,10 @@ public final class Storage extends Component {
                         if (k % 2 == 0) {
                             if (occupiedSlots > 0) {
                                 switch (this.getStoredItems().get(currItemIndex).getColor()) {
-                                    case RED -> paddedString.append(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_RED));
-                                    case YELLOW -> paddedString.append(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_YELLOW));
-                                    case GREEN -> paddedString.append(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_GREEN));
-                                    case BLUE -> paddedString.append(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_BLUE));
+                                    case RED -> paddedString.append(addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_RED));
+                                    case YELLOW -> paddedString.append(addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_YELLOW));
+                                    case GREEN -> paddedString.append(addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_GREEN));
+                                    case BLUE -> paddedString.append(addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BRIGHT_BLUE));
                                 }
                                 occupiedSlots--;
                                 currItemIndex++;

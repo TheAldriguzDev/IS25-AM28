@@ -1,13 +1,13 @@
 package it.polimi.ingsw.is25am28.Model.Components;
 
-import it.polimi.ingsw.is25am28.TUI.Utils.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.*;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public final class Cannon extends Component {
     public static final String alias = "CANNON";

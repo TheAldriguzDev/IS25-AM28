@@ -1,17 +1,16 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent;
 
 import it.polimi.ingsw.is25am28.Model.Components.Cabin;
-import it.polimi.ingsw.is25am28.Model.Connector;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.SPACE;
-import static it.polimi.ingsw.is25am28.TUI.Utils.PrintUtils.addColor;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.addColor;
 
 public final class ClientCabin extends ClientComponent {
     private final boolean isCore;

@@ -15,8 +15,6 @@ public class TUIHandler implements ClientUI {
     private final ClientModel model;
     private Screen screen;
 
-    // If the screen needs to be force quit, we can save it to resume it --> TODO: Probably not useful
-    private Screen prevScreen;
     private final InputThread inputThread;
     private final Object ioLock;
     private VirtualView virtualClient;
@@ -140,9 +138,6 @@ public class TUIHandler implements ClientUI {
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
         // Interrupt the inputThread to prevent actions from the player
         this.inputThread.interruptInputReader();
-
-        // Save the previous screen
-        this.prevScreen = this.screen;
 
         // Force and show the new screen
         this.setScreen(new InsufficientPlayerScreen(this.model, this.inputThread));
