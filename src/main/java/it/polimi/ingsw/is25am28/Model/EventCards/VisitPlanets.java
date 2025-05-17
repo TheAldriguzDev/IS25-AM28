@@ -241,7 +241,6 @@ public class VisitPlanets extends EventCard {
                             }
                         }
                     }
-
                     if (!this.itemsToDrop.isEmpty()) {
                         this.droppedResources.put(this.getCurrentPlayer().get().getNickname(), this.itemsToDrop);
                     }
