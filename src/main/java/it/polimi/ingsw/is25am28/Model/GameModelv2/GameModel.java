@@ -261,7 +261,7 @@ public class GameModel {
         }
 
         Collections.shuffle(this.deck);
-//
+
 //        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
 //        List<EventCard> fakeDeck = new ArrayList<>();
 
