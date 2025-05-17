@@ -3,10 +3,7 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
-import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController;
-import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.InsufficientPlayersController;
-import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.LobbyController;
-import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.WaitingForPlayersController;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
@@ -235,7 +232,31 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showEndGame(EndGameDTO endGame) {
+        System.out.println("END GAME DTO ARRIVED");
 
+        Platform.runLater(() -> {
+
+            FXMLLoader loader = new FXMLLoader(
+                    Objects.requireNonNull(
+                            getClass().getResource(GuiScenes.END_GAME_SCENE.getFxmlFile())
+                    )
+            );
+
+            try {
+                Parent root = loader.load();
+                EndGameController controller = loader.getController();
+
+                controller.setLeaderBoard(endGame);
+
+                Scene newScene = new Scene(root);
+                this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
+                this.stage.setScene(newScene);
+                this.stage.show();
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override

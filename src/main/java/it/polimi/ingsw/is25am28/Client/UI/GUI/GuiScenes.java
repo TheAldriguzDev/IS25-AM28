@@ -7,7 +7,8 @@ public enum GuiScenes {
     JOIN_GAME_SCENE("joinGame.fxml"),
     RECONNECT_GAME_SCENE("reconnectGame.fxml"),
     WAITING_FOR_PLAYERS_SCENE("waitingForPlayers.fxml"),
-    INSUFFICIENT_PLAYER_SCENE("insufficientPlayer.fxml");
+    INSUFFICIENT_PLAYER_SCENE("insufficientPlayer.fxml"),
+    END_GAME_SCENE("endGame.fxml");
 
     private final String fxmlFile;
 

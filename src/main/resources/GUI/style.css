@@ -153,3 +153,24 @@
 .scroll-pane .viewport {
     -fx-background-color: transparent;
 }
+
+/* EndGame */
+
+.leaderBoard {
+    -fx-border-color: #FFD700;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px;
+}
+
+.winnerBox {
+    -fx-border-color: #FFD700;
+    -fx-border-width: 2px;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+    -fx-padding: 10px;
+    -fx-pref-height: 50px;
+    -fx-pref-width: 250px;
+}
+
