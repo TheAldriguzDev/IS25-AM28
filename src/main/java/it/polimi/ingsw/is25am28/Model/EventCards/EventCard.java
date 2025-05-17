@@ -8,88 +8,129 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static it.polimi.ingsw.is25am28.Model.EventCards.CardTypes.*;
+
 public abstract class EventCard {
-    protected final int id;
-    private final int cardID;
-    protected String name;
-    protected int cardLevel;
+    protected final int cardTypeId;
+    protected final String cardName;
+    protected final int cardLevel;
+    protected final Board board;
+    protected final int cardID;
+    protected final String path;
     protected List<Player> players;
     protected Optional<Player> currentPlayer;
-    private Board board;
 
-    protected String path;
-
-    private boolean hasBeenUsed;
-    private boolean hasBeenActivated;
+    protected boolean hasBeenUsed;
+    protected boolean hasBeenActivated;
 
     /**
      * General constructor shared between the classes
-     * */
-    protected EventCard(String name, int cardLevel, Board board, int cardID, String path) {
-        this.id = this.getId();
-        this.name = name;
+     */
+    protected EventCard(String cardName, int cardLevel, Board board, int cardID, String path) {
+        this.cardName = cardName;
         this.cardLevel = cardLevel;
         this.board = board;
-        this.hasBeenUsed = false;
-        this.currentPlayer = Optional.empty();
-        this.hasBeenActivated = false;
         this.cardID = cardID;
         this.path = path;
-    }
 
-    public int getCardID() {
-        return cardID;
+        this.cardTypeId = this.getCardTypeId();
+        this.currentPlayer = Optional.empty();
+        this.hasBeenUsed = false;
+        this.hasBeenActivated = false;
     }
 
     /**
      * @return This event card's unique identifier
      */
-    public int getId(){
-        switch (this){
-            case AbandonedShip _:       return 0;
-            case AbandonedStation _:    return 1;
-            case Epidemy _:             return 2;
-            case MeteorShower _:        return 3;
-            case OpenSpace _:           return 4;
-            case Pirates _:             return 5;
-            case Slavers _:             return 6;
-            case Smugglers _:           return 7;
-            case Stardust _:            return 8;
-            case VisitPlanets _:        return 9;
-            case WarZone _:             return 10;
-            default:
-                throw new IllegalStateException("ERROR: Unexpected EventCard instance \"" + this +  "\"");
-        }
+    public int getCardTypeId(){
+        return switch (this) {
+            case AbandonedShip _    -> ABANDONED_SHIP.ordinal();
+            case AbandonedStation _ -> ABANDONED_STATION.ordinal();
+            case Epidemy _          -> EPIDEMY.ordinal();
+            case MeteorShower _     -> METEOR_SHOWER.ordinal();
+            case OpenSpace _        -> OPEN_SPACE.ordinal();
+            case Pirates _          -> PIRATES.ordinal();
+            case Slavers _          -> SLAVERS.ordinal();
+            case Smugglers _        -> SMUGGLERS.ordinal();
+            case Stardust _         -> STARDUST.ordinal();
+            case VisitPlanets _     -> VISIT_PLANETS.ordinal();
+            case WarZone _          -> WARZONE.ordinal();
+
+            default -> throw new IllegalStateException("ERROR: Unexpected EventCard instance \"" + this + "\"");
+        };
+    }
+
+    /**
+     * @return This card's cardName
+     */
+    public String getCardName() {
+        return this.cardName;
+    }
+
+    /**
+     * @return This card's level
+     */
+    public int getCardLevel() {
+        return this.cardLevel;
+    }
+
+    /**
+     * @return The pointer to the board
+     */
+    protected Board getBoard() {
+        return board;
+    }
+
+    /**
+     * @return The card's ID (given by the CardLoader)
+     */
+    public int getCardID() {
+        return cardID;
+    }
+
+    /**
+     * Marks the card as used. In this way the game model
+     * can understand when to get the next card.
+     */
+    protected void cardUsed() {
+        this.hasBeenUsed = true;
     }
 
     /**
      * This method is immediately invoked when the card a new card is extracted.
      * Can be overridden to specify different initialization modes (like reverse player order)
-     *
      * We do not use the board players list since in some cards the players order could be different
      */
     public void initCardPlayers() throws IllegalArgumentException {
-        if ( this.board.getPlayers() == null || this.board.getPlayers().isEmpty() || this.board.getPlayers().size() < 2 ) {
-            throw new IllegalArgumentException("The player list is null or contains less than two player");
-        } else {
-            this.players = new ArrayList<>(this.board.getPlayers());
-            currentPlayer = Optional.of(players.getFirst());
+        if (
+               (this.board.getPlayers() == null)
+            || (this.board.getPlayers().isEmpty())
+            || (this.board.getPlayers().size() < 2)
+        ) {
+            throw new IllegalArgumentException("The player list is null or contains less than two players.");
         }
-        cardActivated();
+        else {
+            this.players = new ArrayList<>(this.board.getPlayers());
+            this.currentPlayer = Optional.of(this.players.getFirst());
+        }
+
+        this.activateCard();
     }
 
-    protected abstract void bonusEffect();
-
-    protected abstract void malusEffect();
+    /**
+     * Bonus and malus effects are left empty and will be implemented only
+     * by those event cards that actually benefit from this distinction.
+     */
+    protected void bonusEffect() {}
+    protected void malusEffect() {}
 
     /**
-     * Set the currentPlayer to the next player in the game's turn order. If there are no more players left, set the attribute to an empty optional.
-     * */
+     * Sets the currentPlayer to the next player in the game's turn order.
+     * If there are no more players left, set the attribute to an empty optional.
+     */
     protected Optional<Player> getNextPlayer() {
         if (players == null || players.isEmpty()) {
             throw new Error("Players are not set, you must call initCardPlayers method before");
@@ -126,116 +167,123 @@ public abstract class EventCard {
         }
     }
 
+    /**
+     * @return An optional wrapper of the current player.
+     */
     protected Optional<Player> getCurrentPlayer() {
         return currentPlayer;
     }
 
-    protected Board getBoard() {
-        return board;
+    /**
+     * Activate the card so that the generate state can send only a restricted amount of data to the client,
+     * instead that sending every time all the static information (has to be done only when first created)
+     */
+    protected void activateCard() {
+        this.hasBeenActivated = true;
     }
 
     /**
-     * Mark the card as used. In this way the game model can understand when to get the next card
-     * */
-    protected void cardUsed() {
-        this.hasBeenUsed = true;
+     * @return TRUE if the current card was activated,
+     *         FALSE otherwise.
+     */
+    protected boolean hasBeenActivated() {
+        return this.hasBeenActivated;
     }
 
-
-    /*
-    * Activate the card so that the generate state can send only a restricted amount of data to the client, instead that sending every time all the static information (has to be done only when first created)*/
-    protected void cardActivated() { this.hasBeenActivated = true; }
-
-    protected boolean hasBeenActivated() {return this.hasBeenActivated;}
     /**
-     * This method will be used in the specific class, but also from outside (game model).
-     *
-     * It returns true if the current player is the last one of the card players or if there are no active players in the card
-     * */
+     * @return TRUE if the current card has finished being used,
+     *         FALSE otherwise.
+     */
     public boolean hasFinished() {
         return this.hasBeenUsed;
     }
 
-    public String getCardName() {
-        return name;
-    }
-
-    public int getCardLevel() {
-        return cardLevel;
-    }
-
     /**
-     * useCard will be used when a player send some data to the server to complete an action.
-     * The method will elaborate the given data and if the actions are valid we return a EventCard that contains the new state that can be return to the client
-     * Instead, if the data is not valid we return an exception that will be returned to the client
+     * @param data An ActionJSON containing the data about all actions that the player
+     *             decided to take when faced with the current event card.
      *
-     * The communication of the new, valid or invalid, state will be sent (broadcast) to all the clients.
-     * */
-    public abstract EventCard useCard( ActionJSON data ) throws IllegalArgumentException;
+     * @throws IllegalArgumentException If some data inside the given ActionJSON is incorrect
+     *                                  or invalid for the actions the player specified.
+     */
+    public abstract EventCard useCard(ActionJSON data) throws IllegalArgumentException;
 
-    // TODO: change this javaDoc since there are now 2 distinct generateStates
     /**
-     * generateState return a JSONObject that return the current state of the card. It MUST contain all the specific information like:
-     * - currentPlayer
-     * - cardName
-     * - cardData (e.g. planets list with all the related resources)
-     * */
+     * @return Any information that is dynamically updated
+     *         throughout the event card's lifecycle.
+     *         (this is what enables support for client-side differential updates)
+     */
     public abstract CardStateJSON generateState();
 
     /**
-     * @return the generic info of the card
+     * @return The generic information that remains static
+     *         throughout the event card's lifecycle.
      */
     public abstract CardStateJSON generateStaticState();
 
-
     /**
-     * @return This card's widget
+     * Initializes the flags needed to know which fields need to be updated
+     * in order to perform a differential update of the card's state.
      */
-    public abstract WidgetTUI generateWidget(CardStateJSON cardStateJSON);
-
     protected void initStateFlags(CardStateJSON cardState) {
-        // Initializing the three main Flags
+        // Initializing the three main flags
         cardState.setNeedsShipUpdate(false);
         cardState.setNeedsPlayerUpdate(false);
         cardState.setNeedsBoardUpdate(false);
-        // Initializing the lesser flags, it necessary since otherwise null flag fields will be checked when a main flag is set to true
 
-        // Lesser flags relative to updateShip (clientSide)
+        // Also initializing lesser flags (to avoid NullPointerExceptions when these are checked)
+        // (1) - Lesser flags relative to updateShip (clientSide)
         cardState.setNeedsUpdatedDroppedResources(false);
         cardState.setNeedsUpdatedTakenResources(false);
         cardState.setNeedsUpdatedRemovedLifeforms(false);
         cardState.setNeedsUpdatedBatteries(false);
         cardState.setNeedsUpdatedRemovedComponents(false);
-        //Lesser flags relative to updateBoard (clientSide)
+
+        // (2) - Lesser flags relative to updateBoard (clientSide)
         cardState.setNeedsUpdatedPositions(false);
         cardState.setNeedsUpdatedEliminatedPlayers(false);
-        // Lesser flags relative to updateClient (clientSide)
+
+        // (3) - Lesser flags relative to updateClient (clientSide)
         cardState.setNeedsUpdatedCredits(false);
     }
 
-    // TODO: IMPORTANT: instead of new HashMap there should be clear(), but this empties the data set in the state, a copy of the data is needed, the states are currently not usable
-
+    // TODO: IMPORTANT: Instead of new HashMap there should be clear(), but this empties the data set
+    //                  in the state, a copy of the data is needed, the states are currently not usable
     /**
-     * If the map of updatedPositions is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
-     * */
-    protected void setUpdatedPositionsIfNecessary(CardStateJSON cardState, Map<String, Integer> updatedPositions) {
-        if(!updatedPositions.isEmpty()) {
+     * If the map of updatedPositions is not empty, it means that there is something
+     * to send to the clients, so we set the field in the cardState.
+     * <br>
+     * This method clears the list after being used (if it wasn't empty to begin with), so that the
+     * old data is not sent back to the clients another time
+     */
+    protected void setUpdatedPositionsIfNecessary(
+            CardStateJSON cardState,
+            Map<String, Integer> updatedPositions
+    ) {
+        if (!updatedPositions.isEmpty()) {
             cardState.setNeedsBoardUpdate(true);
             cardState.setNeedsUpdatedPositions(true);
-            cardState.setUpdatedPositions(new HashMap<>(
-                    updatedPositions
-                            .entrySet()
-                            .stream()
-                            .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() % getBoard().getSize()))));
+            cardState.setUpdatedPositions(
+                new HashMap<>(
+                    updatedPositions.entrySet().stream()
+                        .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() % getBoard().getSize()))
+                )
+            );
             updatedPositions.clear();
         }
     }
 
     /**
-     * If the list of eliminatedPlayers is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
-     * */
-    protected void setUpdatedEliminatedPlayersIfNecessary(CardStateJSON cardState, List<String> eliminatedPlayers) {
-        if(!eliminatedPlayers.isEmpty()) {
+     * If the list of eliminatedPlayers is not empty, it means that there is something
+     * to send to the clients, so we set the field in the cardState.
+     * <br>
+     * This method clears the list after being used (if it wasn't empty to begin with), so
+     * that the old data is not sent back to the clients another time.
+     */
+    protected void setUpdatedEliminatedPlayersIfNecessary(
+            CardStateJSON cardState,
+            List<String> eliminatedPlayers
+    ) {
+        if (!eliminatedPlayers.isEmpty()) {
             cardState.setNeedsBoardUpdate(true);
             cardState.setNeedsUpdatedEliminatedPlayers(true);
             cardState.setEliminatedPlayers(new ArrayList<>(eliminatedPlayers));
@@ -244,10 +292,17 @@ public abstract class EventCard {
     }
 
     /**
-     * If the map of updatedCredits, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
-     * */
-    protected void setUpdatedCreditsIfNecessary(CardStateJSON cardState, Map<String, Integer> updatedCredits) {
-        if(!updatedCredits.isEmpty()) {
+     * If the map of updatedCredits, it means that there is something to send to the clients, so
+     * we set the field in the cardState.
+     * <br>
+     * This method clears the list after being used (if it wasn't empty to begin with), so
+     * that the old data is not sent back to the clients another time.
+     */
+    protected void setUpdatedCreditsIfNecessary(
+            CardStateJSON cardState,
+            Map<String, Integer> updatedCredits
+    ) {
+        if (!updatedCredits.isEmpty()) {
             cardState.setNeedsPlayerUpdate(true);
             cardState.setNeedsUpdatedCredits(true);
             cardState.setUpdatedCredits(new HashMap<>(updatedCredits));
@@ -256,10 +311,17 @@ public abstract class EventCard {
     }
 
     /**
-     * If the map of droppedResources is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
-     * */
-    protected void setUpdatedDroppedResourcesIfNecessary(CardStateJSON cardState, Map<String, List<ComponentHelper<ItemColor>>> droppedResources) {
-        if(!droppedResources.isEmpty()) {
+     * If the map of droppedResources is not empty, it means that there is something to send
+     * to the clients, so we set the field in the cardState.
+     * <br>
+     * This method clears the list after being used (if it wasn't empty to begin with), so
+     * that the old data is not sent back to the clients another time.
+     */
+    protected void setUpdatedDroppedResourcesIfNecessary(
+            CardStateJSON cardState,
+            Map<String, List<ComponentHelper<ItemColor>>> droppedResources
+    ) {
+        if (!droppedResources.isEmpty()) {
             cardState.setNeedsShipUpdate(true);
             cardState.setNeedsUpdatedDroppedResources(true);
             cardState.setDroppedResources(new HashMap<>(droppedResources));
@@ -268,10 +330,17 @@ public abstract class EventCard {
     }
 
     /**
-     * If the map of takenResources is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
-     * */
-    protected void setUpdatedTakenResourcesIfNecessary(CardStateJSON cardState, Map<String, List<ComponentHelper<ItemColor>>> takenResources) {
-        if(!takenResources.isEmpty()) {
+     * If the map of takenResources is not empty, it means that there is something to send
+     * to the clients, so we set the field in the cardState.
+     * <br>
+     * This method clears the list after being used (if it wasn't empty to begin with), so
+     * that the old data is not sent back to the clients another time.
+     */
+    protected void setUpdatedTakenResourcesIfNecessary(
+            CardStateJSON cardState,
+            Map<String, List<ComponentHelper<ItemColor>>> takenResources
+    ) {
+        if (!takenResources.isEmpty()) {
             cardState.setNeedsShipUpdate(true);
             cardState.setNeedsUpdatedTakenResources(true);
             cardState.setTakenResources(new HashMap<>(takenResources));
@@ -280,10 +349,17 @@ public abstract class EventCard {
     }
 
     /**
-     * If the map of removedComponents is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
-     * */
-    protected void setUpdatedRemovedComponentsIfNecessary(CardStateJSON cardState, Map<String, List<Map<String, Object>>> removedComponents) {
-        if(!removedComponents.isEmpty()) {
+     * If the map of removedComponents is not empty, it means that there is something to send
+     * to the clients, so we set the field in the cardState.
+     * <br>
+     * This method clears the list after being used (if it wasn't empty to begin with), so
+     * that the old data is not sent back to the clients another time.
+     */
+    protected void setUpdatedRemovedComponentsIfNecessary(
+            CardStateJSON cardState,
+            Map<String, List<Map<String, Object>>> removedComponents
+    ) {
+        if (!removedComponents.isEmpty()) {
             cardState.setNeedsShipUpdate(true);
             cardState.setNeedsUpdatedRemovedComponents(true);
             cardState.setRemovedComponents(new HashMap<>(removedComponents));
@@ -292,9 +368,16 @@ public abstract class EventCard {
     }
 
     /**
-     * If the map of removedLifeforms is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
-     * */
-    protected void setUpdatedRemovedLifeformsIfNecessary(CardStateJSON cardState, Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms) {
+     * If the map of removedLifeforms is not empty, it means that there is something to send
+     * to the clients, so we set the field in the cardState.
+     * <br>
+     * This method clears the list after being used (if it wasn't empty to begin with), so
+     * that the old data is not sent back to the clients another time.
+     */
+    protected void setUpdatedRemovedLifeformsIfNecessary(
+            CardStateJSON cardState,
+            Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms
+    ) {
         if (!removedLifeforms.isEmpty()) {
             cardState.setNeedsShipUpdate(true);
             cardState.setNeedsUpdatedRemovedLifeforms(true);
@@ -303,11 +386,21 @@ public abstract class EventCard {
         }
     }
 
+    // TODO: The cardName should be UpdatedBatteries since it contains the new batteries
+    //       count, but i will be changed in the future to contain the coordinates of the
+    //       actual components from which to remove the batteries, so in theory a cardName
+    //       change is not necessary.
     /**
-     * If the map of removedBatteries is not empty, it means that there is something to send to the clients, so we set the field in the cardState. This method clears the list after being used (if it wasn't empty to begin with), so that the old data is not sent back to the clients another time
-     * */
-    // TODO: The name should be UpdatedBatteries since it contains the new batteries count, but i will be changed in the future to contain the coordinates of the actual components from which to remove the batteries, so in theory a name change is not necessary
-    protected void setUpdatedRemovedBatteriesIfNecessary(CardStateJSON cardState, Map<String, Integer> removedBatteries) {
+     * If the map of removedBatteries is not empty, it means that there is something to send
+     * to the clients, so we set the field in the cardState.
+     * <br>
+     * This method clears the list after being used (if it wasn't empty to begin with), so
+     * that the old data is not sent back to the clients another time.
+     */
+    protected void setUpdatedRemovedBatteriesIfNecessary(
+            CardStateJSON cardState,
+            Map<String, List<ComponentHelper<Void>>> removedBatteries
+    ) {
         if (!removedBatteries.isEmpty()) {
             cardState.setNeedsShipUpdate(true);
             cardState.setNeedsUpdatedBatteries(true);
@@ -316,7 +409,11 @@ public abstract class EventCard {
         }
     }
 
-    protected void setUpdatedLostPiecesIfNecessary(CardStateJSON cardState, Map<String, Integer> lostPieces) {
+    // TODO: Add JavaDoc just like the other methods above
+    protected void setUpdatedLostPiecesIfNecessary(
+            CardStateJSON cardState,
+            Map<String, Integer> lostPieces
+    ) {
         if (!lostPieces.isEmpty()) {
             cardState.setNeedsPlayerUpdate(true);
             cardState.setNeedsUpdatedLostPieces(true);
@@ -328,8 +425,4 @@ public abstract class EventCard {
     // TODO: eventCards should also set the lapped eliminated players
 
     // TODO: method: unlock additional commands
-
-
 }
-
-

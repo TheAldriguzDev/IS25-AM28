@@ -93,7 +93,7 @@ public final class Battery extends Component {
         // used by the wrapper to create the border
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding the name
+        // Adding the cardName
         screen.add(nameAlias + SPACE.repeat(width - nameAlias.length()));
 
         // Adding the battery indicator and all the padding spaces

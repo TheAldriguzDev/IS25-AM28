@@ -220,7 +220,6 @@ public class ClientModel {
     }
 
     public void updateShips(CardStateJSON cardStateJSON) {
-
         // Removes the destroyed components from the specified ship
         if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
             for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
@@ -244,9 +243,9 @@ public class ClientModel {
                 if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
                     for (ComponentHelper<LifeformType> lifeFormToRemove : removedLifeforms.get(playerNickname)) {
                         this.getShipOfPlayer(playerNickname).ifPresent(
-                                (ship) -> {
-                                    ship.removeLifeformFromCabin(lifeFormToRemove.getI(), lifeFormToRemove.getJ(), lifeFormToRemove.getItem().orElse(null));
-                                }
+                            (ship) -> {
+                                ship.removeLifeformFromCabin(lifeFormToRemove.getI(), lifeFormToRemove.getJ(), lifeFormToRemove.getItem().orElse(null));
+                            }
                         );
                     }
                 }
@@ -259,16 +258,16 @@ public class ClientModel {
                 if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
                     for (ComponentHelper<ItemColor> itemToDrop : cardStateJSON.getDroppedResources().get(playerNickname)) {
                         this.getShipOfPlayer(playerNickname).ifPresent(
-                                (ship) -> {
-                                    ClientStorage storage = (ClientStorage) ship.getComponent(itemToDrop.getI(), itemToDrop.getJ());
-                                    ItemColor color = itemToDrop.getItem().orElse(null);
-                                    Optional<Item> foundItem = storage.getStoredItems().stream()
-                                            .filter(item -> item.getColor().equals(color))
-                                            .findFirst();
-                                    // Remove the resource from the player
-                                    foundItem.ifPresent(storage::removeItem);
-                                    this.resourceBank.addResourceToBank(color);
-                                }
+                            (ship) -> {
+                                ClientStorage storage = (ClientStorage) ship.getComponent(itemToDrop.getI(), itemToDrop.getJ());
+                                ItemColor color = itemToDrop.getItem().orElse(null);
+                                Optional<Item> foundItem = storage.getStoredItems().stream()
+                                        .filter(item -> item.getColor().equals(color))
+                                        .findFirst();
+                                // Remove the resource from the player
+                                foundItem.ifPresent(storage::removeItem);
+                                this.resourceBank.addResourceToBank(color);
+                            }
                         );
                     }
                 }
@@ -281,27 +280,42 @@ public class ClientModel {
                 if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
                     for(ComponentHelper<ItemColor> itemToTake : cardStateJSON.getTakenResources().get(playerNickname)) {
                         this.getShipOfPlayer(playerNickname).ifPresent(
-                                (ship) -> {
-                                    ClientStorage storage = (ClientStorage) ship.getComponent(itemToTake.getI(), itemToTake.getJ());
-                                    ItemColor color = itemToTake.getItem().orElse(null);
-                                    // Add resource to the player
-                                    storage.storeItem(new Item(color));
-                                    this.resourceBank.removeResourceFromBank(color);
-                                }
+                            (ship) -> {
+                                ClientStorage storage = (ClientStorage) ship.getComponent(itemToTake.getI(), itemToTake.getJ());
+                                ItemColor color = itemToTake.getItem().orElse(null);
+                                // Add resource to the player
+                                storage.storeItem(new Item(color));
+                                this.resourceBank.removeResourceFromBank(color);
+                            }
                         );
                     }
                 }
             }
         }
 
-        // Removes the specified amount of batteries form the specified ships
+        // Removes the specified amount of batteries from the specified ships
         if (cardStateJSON.getNeedsUpdatedBatteries()) {
+            System.out.println("NEEDS BATTERIES UPDATE");
+
             for (String playerNickname : cardStateJSON.getRemovedBatteries().keySet()) {
-                this.getShipOfPlayer(playerNickname).ifPresent(
-                    (ship) -> {
-                        ship.consumeEnergy(cardStateJSON.getRemovedBatteries().get(playerNickname));
-                    }
-                );
+                if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
+                    System.out.println("\tUPDATING SHIP OF " + cardStateJSON.getPrevPlayerNickname() + " INTO MODEL OF " + this.nickname);
+
+                    this.getShipOfPlayer(playerNickname).ifPresent(
+                        (ship) -> {
+
+                            if (cardStateJSON.getRemovedBatteries().get(cardStateJSON.getPrevPlayerNickname()) != null) {
+                                for (ComponentHelper<Void> ch : cardStateJSON.getRemovedBatteries().get(cardStateJSON.getPrevPlayerNickname())) {
+                                    System.out.println("\t\t => Battery @ (row=" + ch.getI() + ", col=" + ch.getJ() + ")");
+                                }
+                            }
+
+                            ship.consumeEnergy(
+                                cardStateJSON.getRemovedBatteries().get(cardStateJSON.getPrevPlayerNickname())
+                            );
+                        }
+                    );
+                }
             }
         }
     }

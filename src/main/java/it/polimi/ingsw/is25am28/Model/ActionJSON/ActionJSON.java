@@ -11,20 +11,23 @@ public class ActionJSON implements Serializable {
 
     /**
      * Default constructor used client side
-     * */
+     */
+    @JsonCreator
     public ActionJSON() {}
 
     /**
      * Constructor that initialize the JSON with a nickname, used mainly serverside
-     * */
+     */
     @JsonCreator
-    public ActionJSON(@JsonProperty("playerNickname")  String playerNickname) {
+    public ActionJSON(
+            @JsonProperty("playerNickname") String playerNickname
+    ) {
         this.playerNickname = playerNickname;
     }
 
     /**
      * Returns the player Nickname
-     * */
+     */
     @JsonGetter("playerNickname")
     public String getPlayerNickname() throws IllegalStateException {
         if (this.playerNickname == null || this.playerNickname.isEmpty()) {
@@ -36,7 +39,7 @@ public class ActionJSON implements Serializable {
 
     /**
      * Set the playerNickname to the given data
-     * */
+     */
     public void setPlayerNickname(String playerNickname) throws IllegalStateException {
         if (playerNickname == null || playerNickname.isEmpty()) {
             throw new IllegalStateException("playerNickname cannot be null or empty");

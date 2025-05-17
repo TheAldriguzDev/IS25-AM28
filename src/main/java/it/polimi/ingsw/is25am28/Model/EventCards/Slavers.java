@@ -3,10 +3,11 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.Cabin;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 
@@ -22,7 +23,7 @@ public class Slavers extends EventCard {
     private List<String> eliminatedPlayers;
     private Map<String, Integer> updatedPositions;
     private Map<String, Integer> updatedCredits;
-    private Map<String, Integer> removedBatteries;
+    private Map<String, List<ComponentHelper<Void>>> removedBatteries;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private boolean isPlayerDefeated;
 
@@ -34,9 +35,9 @@ public class Slavers extends EventCard {
         this.movementSteps = movementSteps;
         this.givenCredits = givenCredits;
         this.takenCrew = takenCrew;
-        //this.hasBeenDefeated = false;
-        //this.defeatedPlayers = new ArrayList<>();
-        //this.firstRound = true;
+        // this.hasBeenDefeated = false;
+        // this.defeatedPlayers = new ArrayList<>();
+        // this.firstRound = true;
         this.playersToTakeCrewFrom = new ArrayList<>();
         this.updatedPositions = new HashMap<>();
         this.updatedCredits = new HashMap<>();
@@ -60,9 +61,8 @@ public class Slavers extends EventCard {
 //            }
 //            currentPlayer = Optional.of(players.getFirst());
 //        }
-//        cardActivated();
+//        activateCard();
 //    }
-
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         SlaversJSON slaversData;
@@ -81,11 +81,25 @@ public class Slavers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
                     if (!this.isPlayerDefeated) { // If the player has not been set as defeated it means its the first time he uses the card
+                        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleCannons
+                                = player.getShip().activateComponents(slaversData.getDoubleCannonsToActivateCoordinates());
+
                         // Power consumed by the DoubleCannons
-                        if (!slaversData.getDoubleCannonsToActivateCoordinates().isEmpty()) {
-                            this.removedBatteries.put(playerNickname, slaversData.getDoubleCannonsToActivateCoordinates().size());
+                        if (!activatedDoubleCannons.isEmpty()) {
+                            this.removedBatteries.put(
+                                    playerNickname,
+                                    activatedDoubleCannons.stream()
+                                            .map(Pair::getValue)
+                                            .toList()
+                            );
                         }
-                        float playerFirepower = player.getShip().getFirePower(slaversData.getDoubleCannonsToActivateCoordinates());
+
+                        float playerFirepower = player.getShip().getFirePower(
+                                activatedDoubleCannons.stream()
+                                        .map(Pair::getValue)
+                                        .toList()
+                        );
+
                         if (playerFirepower > requiredFirepower) {
                             cardUsed();
                             if (slaversData.getTakeCredits()) {
@@ -185,12 +199,6 @@ public class Slavers extends EventCard {
         );
     }
 
-
-    @Override
-    protected void malusEffect() {}
-
-
-    //
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
@@ -229,7 +237,7 @@ public class Slavers extends EventCard {
 
         } else {
             // Static info about the card
-            slaversStateJSON.setId(this.id);
+            slaversStateJSON.setId(this.cardTypeId);
             slaversStateJSON.setCardName(this.getCardName());
             slaversStateJSON.setImagePath(this.path);
             slaversStateJSON.setCardLevel(this.getCardLevel());
@@ -248,7 +256,7 @@ public class Slavers extends EventCard {
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
-        cardState.setId(this.id);
+        cardState.setId(this.cardTypeId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.getCardLevel());
@@ -258,10 +266,5 @@ public class Slavers extends EventCard {
         cardState.setTakenCrew(this.takenCrew);
 
         return cardState;
-    }
-
-
-    public WidgetTUI generateWidget(CardStateJSON slaversState) {
-        return null;
     }
 }

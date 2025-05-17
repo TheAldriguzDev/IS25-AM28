@@ -20,7 +20,6 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.CommandWidgetTUI;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.ConsoleWidgetTUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -33,8 +32,6 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.TAB;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public class CardRoundScreen extends Screen {
-    private static final int CONSOLE_WIDGET_MAX_HEIGHT = 6;
-    private static final int CONSOLE_WIDGET_MAX_WIDTH = 40;
     private static final int COMMAND_GROUPING_FACTOR = 2;
 
     private WidgetTUI boardWidget;
@@ -54,7 +51,6 @@ public class CardRoundScreen extends Screen {
     private WidgetTUI playerActionsRecapWidget;
 
     private InputWidgetTUI cardRoundCommandsWidget;
-    private ConsoleWidgetTUI consoleWidget;
 
     private ClientEventCard currEventCard;
     private CardStateJSON currEventCardState;
@@ -70,11 +66,6 @@ public class CardRoundScreen extends Screen {
         this.generateOtherPlayerShipCommandsWidget();
 
         this.boardWidget = this.model.getClientBoard().generateWidget();
-
-        this.consoleWidget = new ConsoleWidgetTUI(
-                CONSOLE_WIDGET_MAX_HEIGHT,
-                CONSOLE_WIDGET_MAX_WIDTH
-        );
     }
 
     /**
@@ -183,14 +174,15 @@ public class CardRoundScreen extends Screen {
 
         // (7) - Shields to activate
         try {
-            List<ComponentHelper<Void>> shieldsToActivate = this.currEventCard.getShieldsToActivate();
+            List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate = this.currEventCard.getShieldsToActivate();
 
             if (shieldsToActivate != null && !shieldsToActivate.isEmpty()) {
                 this.playerActionsRecapWidget.appendString("Shields to activate:");
 
-                for (ComponentHelper<Void> shieldToActivate : shieldsToActivate) {
+                for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> shieldToActivate : shieldsToActivate) {
                     this.playerActionsRecapWidget
-                            .appendString(TAB + "Shield @ (row=" + (shieldToActivate.getI() + 1) + ", col=" + (shieldToActivate.getJ() + 1) + ")");
+                            .appendString(TAB + "Shield @ (row=" + (shieldToActivate.getKey().getI() + 1) + ", col=" + (shieldToActivate.getKey().getJ() + 1) + ")")
+                            .appendString(TAB + TAB + "Battery @ (row=" + (shieldToActivate.getValue().getI() + 1) + ", col=" + (shieldToActivate.getValue().getJ() + 1) + ")");
                 }
             }
         } catch (UnsupportedOperationException e) {
@@ -199,14 +191,15 @@ public class CardRoundScreen extends Screen {
 
         // (8) - Double cannons to activate
         try {
-            List<ComponentHelper<Void>> doubleCannonsToActivate = this.currEventCard.getDoubleCannonsToActivate();
+            List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivate = this.currEventCard.getDoubleCannonsToActivate();
 
             if (doubleCannonsToActivate != null && !doubleCannonsToActivate.isEmpty()) {
                 this.playerActionsRecapWidget.appendString("Double cannons to activate:");
 
-                for (ComponentHelper<Void> doubleCannonToActivate : doubleCannonsToActivate) {
+                for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> doubleCannonToActivate : doubleCannonsToActivate) {
                     this.playerActionsRecapWidget
-                            .appendString(TAB + "DoubleCannon @ (row=" + (doubleCannonToActivate.getI() + 1) + ", col=" + (doubleCannonToActivate.getJ() + 1) + ")");
+                            .appendString(TAB + "Double Cannon @ (row=" + (doubleCannonToActivate.getKey().getI() + 1) + ", col=" + (doubleCannonToActivate.getKey().getJ() + 1) + ")")
+                            .appendString(TAB + TAB + "Battery @ (row=" + (doubleCannonToActivate.getValue().getI() + 1) + ", col=" + (doubleCannonToActivate.getValue().getJ() + 1) + ")");
                 }
             }
         } catch (UnsupportedOperationException e) {
@@ -215,12 +208,16 @@ public class CardRoundScreen extends Screen {
 
         // (9) - Double engines to activate
         try {
-            Integer doubleEnginesToActivate = this.currEventCard.getDoubleEnginesToActivate();
+            List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate = this.currEventCard.getDoubleEnginesToActivate();
 
-            if (doubleEnginesToActivate != null) {
-                this.playerActionsRecapWidget
-                        .appendString("Double engines to activate: " + doubleEnginesToActivate);
+            if (doubleEnginesToActivate != null && !doubleEnginesToActivate.isEmpty()) {
+               this.playerActionsRecapWidget.appendString("Double engines to activate:");
 
+               for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> doubleEngineToActivate : doubleEnginesToActivate) {
+                   this.playerActionsRecapWidget
+                           .appendString(TAB + "Double Engine @ (row=" + (doubleEngineToActivate.getKey().getI() + 1) + ", col=" + (doubleEngineToActivate.getKey().getJ() + 1) + ")")
+                           .appendString(TAB + TAB + "Battery @ (row=" + (doubleEngineToActivate.getValue().getI() + 1) + ", col=" + (doubleEngineToActivate.getValue().getJ() + 1) + ")");
+               }
             }
         } catch (UnsupportedOperationException e) {
             // Nothing is added
@@ -377,7 +374,7 @@ public class CardRoundScreen extends Screen {
         command = new CommandWidgetTUI(
                 "10",
                 () -> {
-                    this.getDoubleEnginesToActivate();
+                    this.getDoubleEngineToActivate();
 
                     // Go back to the card round available commands
                     this.getCardRoundCommand();
@@ -385,19 +382,6 @@ public class CardRoundScreen extends Screen {
         );
         command.appendString("Set double engines to activate");
         this.indexedCardInputMethods.put("setDoubleEnginesToActivate", new Pair<>(false, command));
-
-        // (11) - Acknowledge and continue
-        command = new CommandWidgetTUI(
-                "11",
-                () -> {
-                    this.getPlayerAck();
-
-                    // Go back to the card round available commands
-                    this.getCardRoundCommand();
-                }
-        );
-        command.appendString("Acknowledge and continue");
-        this.indexedCardInputMethods.put("getPlayerAck", new Pair<>(false, command));
     }
 
     /**
@@ -1077,7 +1061,7 @@ public class CardRoundScreen extends Screen {
      * a shield that the player wants to activate.
      */
     public void getShieldToActivate() {
-        List<ComponentHelper<Void>> componentHelperList;
+        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> componentHelperList;
         ComponentHelper<Void> componentHelper;
         AtomicReference<ClientShield> selectedShield;
         InputWidgetTUI availableShields;
@@ -1093,39 +1077,48 @@ public class CardRoundScreen extends Screen {
             return;
         }
 
-        List<ClientShield> shieldsList = ship.getShieldList();
+        List<ClientShield> shieldList = ship.getShieldList();
         componentHelperList = this.currEventCard.getShieldsToActivate();
         selectedShield = new AtomicReference<>(null);
         availableShields = new InputWidgetTUI(this.inputThread);
         availableShields.setColumnGroupingAmount(4);
 
-        // Removing already selected shields from the shields list
-        for (ComponentHelper<Void> ch : componentHelperList) {
-            ClientShield sh = (ClientShield) ship.getComponent(ch.getI(), ch.getJ());
-            shieldsList.remove(sh);
+        // Removing already selected double cannons from the double cannons list
+        for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> ch : componentHelperList) {
+            ClientShield s = (ClientShield) ship.getComponent(ch.getKey().getI(), ch.getKey().getJ());
+            shieldList.remove(s);
         }
 
-        len = shieldsList.size();
+        len = shieldList.size();
 
         if (len == 0) {
             new WidgetTUI()
-                .appendString(COMPUTER_MSG_TAG + "You don't have any shields to activate!")
-                .addPadding(0, 1, 0, 1)
-                .wrapWidgetWithBorder()
-                .printWidget();
+                    .appendString(COMPUTER_MSG_TAG + "You don't have any shields to activate!")
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
         }
 
-        for (i = 0; i < len; i++) {
-            ClientShield shield = shieldsList.get(i);
+        if (ship.getAvailableEnergy() == 0) {
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + "You don't have any batteries to consume!")
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
+        }
+        else {
+            for (i = 0; i < len; i++) {
+                ClientShield shield = shieldList.get(i);
 
-            command = new CommandWidgetTUI(
-                "" + i,
-                () -> {
-                    selectedShield.set(shield);
-                }
-            );
-            command.appendString("Shield @ (row=" + (shield.getI() + 1) + ", col=" + (shield.getJ() + 1) + ")");
-            availableShields.addCommand(command);
+                command = new CommandWidgetTUI(
+                        "" + i,
+                        () -> {
+                            selectedShield.set(shield);
+                        }
+                );
+                command.appendString("Shield @ (row=" + (shield.getI() + 1) + ", col=" + (shield.getJ() + 1) + ")");
+                availableShields.addCommand(command);
+            }
         }
 
         // (-1) Go back to menu
@@ -1160,29 +1153,18 @@ public class CardRoundScreen extends Screen {
         }
         while (!commandSelected);
 
+        ComponentHelper<Void> batteryToConsume = this.getBatteryToConsume();
+        if (batteryToConsume == null) return;
+
         componentHelper = new ComponentHelper<>(
                 selectedShield.get().getI(),
                 selectedShield.get().getJ()
         );
 
-        // Refusing to add the selected shield if it's
-        // already present inside the componentHelperList
-//        int shieldI, shieldJ;
-//
-//        for (ComponentHelper<Void> ch : componentHelperList) {
-//            shieldI = selectedShield.get().getI();
-//            shieldJ = selectedShield.get().getJ();
-//
-//            if (ch.getI() == shieldI && ch.getJ() == shieldJ) {
-//                System.out.println(
-//                    PrintUtils.addColor("[ERROR] You've already selected the Shield @ (row=" + shieldI + ", col=" + shieldJ + ")", ANSIColors.RED)
-//                );
-//                return;
-//            }
-//        }
-
-        componentHelperList.add(componentHelper);
+        componentHelperList.add(new Pair<>(componentHelper, batteryToConsume));
         this.currEventCard.setShieldsToActivate(componentHelperList);
+
+        ship.consumeEnergy(List.of(batteryToConsume));
     }
 
     /**
@@ -1190,10 +1172,10 @@ public class CardRoundScreen extends Screen {
      * a double cannon that the player wants to activate.
      */
     public void getDoubleCannonToActivate() {
-        List<ComponentHelper<Void>> componentHelperList;
+        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> componentHelperList;
         ComponentHelper<Void> componentHelper;
         AtomicReference<ClientCannon> selectedDoubleCannon;
-        InputWidgetTUI availableDoubleCannons;
+        InputWidgetTUI availableCannons;
         CommandWidgetTUI command;
         ClientShip ship;
         boolean commandSelected;
@@ -1206,39 +1188,48 @@ public class CardRoundScreen extends Screen {
             return;
         }
 
-        List<ClientCannon> doubleCannonsList = ship.getDoubleCannons();
+        List<ClientCannon> doubleCannonList = ship.getDoubleCannons();
         componentHelperList = this.currEventCard.getDoubleCannonsToActivate();
         selectedDoubleCannon = new AtomicReference<>(null);
-        availableDoubleCannons = new InputWidgetTUI(this.inputThread);
-        availableDoubleCannons.setColumnGroupingAmount(4);
+        availableCannons = new InputWidgetTUI(this.inputThread);
+        availableCannons.setColumnGroupingAmount(4);
 
-        // Removing already selected shields from the shields list
-        for (ComponentHelper<Void> ch : componentHelperList) {
-            ClientCannon dc = (ClientCannon) ship.getComponent(ch.getI(), ch.getJ());
-            doubleCannonsList.remove(dc);
+        // Removing already selected double cannons from the double cannons list
+        for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> ch : componentHelperList) {
+            ClientCannon dc = (ClientCannon) ship.getComponent(ch.getKey().getI(), ch.getKey().getJ());
+            doubleCannonList.remove(dc);
         }
 
-        len = doubleCannonsList.size();
+        len = doubleCannonList.size();
 
         if (len == 0) {
             new WidgetTUI()
-                .appendString(COMPUTER_MSG_TAG + "You don't have any double cannons to activate!")
-                .addPadding(0, 1, 0, 1)
-                .wrapWidgetWithBorder()
-                .printWidget();
+                    .appendString(COMPUTER_MSG_TAG + "You don't have any double cannons to activate!")
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
         }
 
-        for (i = 0; i < len; i++) {
-            ClientCannon doubleCannon = doubleCannonsList.get(i);
+        if (ship.getAvailableEnergy() == 0) {
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + "You don't have any batteries to consume!")
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
+        }
+        else {
+            for (i = 0; i < len; i++) {
+                ClientCannon doubleCannon = doubleCannonList.get(i);
 
-            command = new CommandWidgetTUI(
-                    "" + i,
-                    () -> {
-                        selectedDoubleCannon.set(doubleCannon);
-                    }
-            );
-            command.appendString("Double Cannon @ (row=" + (doubleCannon.getI() + 1) + ", col=" + (doubleCannon.getJ() + 1) + ")");
-            availableDoubleCannons.addCommand(command);
+                command = new CommandWidgetTUI(
+                        "" + i,
+                        () -> {
+                            selectedDoubleCannon.set(doubleCannon);
+                        }
+                );
+                command.appendString("Double Cannon @ (row=" + (doubleCannon.getI() + 1) + ", col=" + (doubleCannon.getJ() + 1) + ")");
+                availableCannons.addCommand(command);
+            }
         }
 
         // (-1) Go back to menu
@@ -1247,16 +1238,16 @@ public class CardRoundScreen extends Screen {
                 () -> {}
         );
         command.appendString("Go back to menu");
-        availableDoubleCannons.addCommand(command);
+        availableCannons.addCommand(command);
 
-        availableDoubleCannons.setColumnGroupingAmount(
-                availableDoubleCannons.getCommandMap().size()
+        availableCannons.setColumnGroupingAmount(
+                availableCannons.getCommandMap().size()
         );
 
         do {
             try {
                 System.out.println("Available double cannons to activate:");
-                commandSelected = availableDoubleCannons.selectCommand(DEFAULT_COMMAND_PREFIX);
+                commandSelected = availableCannons.selectCommand(DEFAULT_COMMAND_PREFIX);
 
                 if (commandSelected) {
                     // If the user selected "(-1) Go back to menu", then return
@@ -1273,29 +1264,18 @@ public class CardRoundScreen extends Screen {
         }
         while (!commandSelected);
 
+        ComponentHelper<Void> batteryToConsume = this.getBatteryToConsume();
+        if (batteryToConsume == null) return;
+
         componentHelper = new ComponentHelper<>(
                 selectedDoubleCannon.get().getI(),
                 selectedDoubleCannon.get().getJ()
         );
 
-        // Refusing to add the selected shield if it's
-        // already present inside the componentHelperList
-//        int doubleCannonI, doubleCannonJ;
-//
-//        for (ComponentHelper<Void> ch : componentHelperList) {
-//            doubleCannonI = selectedDoubleCannon.get().getI();
-//            doubleCannonJ = selectedDoubleCannon.get().getJ();
-//
-//            if (ch.getI() == doubleCannonI && ch.getJ() == doubleCannonJ) {
-//                System.out.println(
-//                        PrintUtils.addColor("[ERROR] You've already selected the Double Cannon @ (row=" + doubleCannonI + ", col=" + doubleCannonJ + ")", ANSIColors.RED)
-//                );
-//                return;
-//            }
-//        }
-
-        componentHelperList.add(componentHelper);
+        componentHelperList.add(new Pair<>(componentHelper, batteryToConsume));
         this.currEventCard.setDoubleCannonsToActivate(componentHelperList);
+
+        ship.consumeEnergy(List.of(batteryToConsume));
     }
 
     /**
@@ -1304,20 +1284,38 @@ public class CardRoundScreen extends Screen {
      * NOTE: If the player's chosen amount exceeds the actual amount of double engines, then
      * server-side this is equivalent to activating all double engines (input saturation)
      */
-    public void getDoubleEnginesToActivate() {
-        int doubleEnginesToActivate;
-        boolean correctInput;
+    public void getDoubleEngineToActivate() {
+        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> componentHelperList;
+        ComponentHelper<Void> componentHelper;
+        AtomicReference<ClientEngine> selectedDoubleEngine;
+        InputWidgetTUI availableEngines;
+        CommandWidgetTUI command;
         ClientShip ship;
-        String line;
+        boolean commandSelected;
+        int i, len;
 
         ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
 
         if (ship == null) {
-            System.out.println(PrintUtils.addColor("[ERROR] [getDoubleEnginesToActivate()] ClientShip is null", ANSIColors.RED));
+            System.out.println(PrintUtils.addColor("[ERROR] [getDoubleEngineToActivate()] ClientShip is null", ANSIColors.RED));
             return;
         }
 
-        if (ship.getDoubleEngines().isEmpty()) {
+        List<ClientEngine> doubleEngineList = ship.getDoubleEngines();
+        componentHelperList = this.currEventCard.getDoubleEnginesToActivate();
+        selectedDoubleEngine = new AtomicReference<>(null);
+        availableEngines = new InputWidgetTUI(this.inputThread);
+        availableEngines.setColumnGroupingAmount(4);
+
+        // Removing already selected double cannons from the double cannons list
+        for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> ch : componentHelperList) {
+            ClientEngine e = (ClientEngine) ship.getComponent(ch.getKey().getI(), ch.getKey().getJ());
+            doubleEngineList.remove(e);
+        }
+
+        len = doubleEngineList.size();
+
+        if (len == 0) {
             new WidgetTUI()
                     .appendString(COMPUTER_MSG_TAG + "You don't have any double engines to activate!")
                     .addPadding(0, 1, 0, 1)
@@ -1325,60 +1323,198 @@ public class CardRoundScreen extends Screen {
                     .printWidget();
         }
 
-        doubleEnginesToActivate = 0;
-        correctInput = false;
+        if (ship.getAvailableEnergy() == 0) {
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + "You don't have any batteries to consume!")
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
+        }
+        else {
+            for (i = 0; i < len; i++) {
+                ClientEngine doubleEngine = doubleEngineList.get(i);
 
-        // Verify that the selected component is an engine
+                command = new CommandWidgetTUI(
+                        "" + i,
+                        () -> {
+                            selectedDoubleEngine.set(doubleEngine);
+                        }
+                );
+                command.appendString("Double Engine @ (row=" + (doubleEngine.getI() + 1) + ", col=" + (doubleEngine.getJ() + 1) + ")");
+                availableEngines.addCommand(command);
+            }
+        }
+
+        // (-1) Go back to menu
+        command = new CommandWidgetTUI(
+                "-1",
+                () -> {}
+        );
+        command.appendString("Go back to menu");
+        availableEngines.addCommand(command);
+
+        availableEngines.setColumnGroupingAmount(
+                availableEngines.getCommandMap().size()
+        );
+
         do {
             try {
-                System.out.print("Insert amount of double engines to activate (-1 to go back): ");
-                line = this.inputThread.waitForInput();
+                System.out.println("Available double engines to activate:");
+                commandSelected = availableEngines.selectCommand(DEFAULT_COMMAND_PREFIX);
 
-                if (line == null) return;
-
-                doubleEnginesToActivate = Integer.parseInt(line);
-
-                if (doubleEnginesToActivate >= 0) {
-                    correctInput = true;
-                }
-                else if (doubleEnginesToActivate == -1) {
-                    // User wanted to quit
-                    return;
+                if (commandSelected) {
+                    // If the user selected "(-1) Go back to menu", then return
+                    if (selectedDoubleEngine.get() == null) return;
                 }
                 else {
-                    System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Amount must be greater than or equal to 0.", ANSIColors.RED));
+                    System.out.println(UNKNOWN_COMMAND_ERROR);
                 }
             }
             catch (InterruptedException e) {
                 // A forced interrupt arrived
                 return;
             }
-            catch (NumberFormatException e) {
-                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
-            }
         }
-        while (!correctInput);
+        while (!commandSelected);
 
-        this.currEventCard.setDoubleEnginesToActivate(doubleEnginesToActivate);
+        ComponentHelper<Void> batteryToConsume = this.getBatteryToConsume();
+        if (batteryToConsume == null) return;
+
+        componentHelper = new ComponentHelper<>(
+                selectedDoubleEngine.get().getI(),
+                selectedDoubleEngine.get().getJ()
+        );
+
+        componentHelperList.add(new Pair<>(componentHelper, batteryToConsume));
+        this.currEventCard.setDoubleEnginesToActivate(componentHelperList);
+
+        ship.consumeEnergy(List.of(batteryToConsume));
     }
 
     /**
-     * Method used to make the player aware that the current operation
-     * is automatic, and he just has to acknowledge it.
+     * Adds a component helper with coordinates pointing to
+     * a battery that the player wants to consume by 1 unit of charge.
      */
-    public void getPlayerAck() {
-        System.out.print("Press any key and then press [ENTER] to continue...");
+    public ComponentHelper<Void> getBatteryToConsume() {
+        List<ComponentHelper<Void>> componentHelperList;
+        ComponentHelper<Void> componentHelper;
+        AtomicReference<ClientBattery> selectedBattery;
+        InputWidgetTUI availableBatteries;
+        CommandWidgetTUI command;
+        ClientShip ship;
+        boolean commandSelected;
+        int i, len;
+
+        ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+
+        if (ship == null) {
+            System.out.println(PrintUtils.addColor("[ERROR] [getBatteryToConsume()] ClientShip is null", ANSIColors.RED));
+            return null;
+        }
+
+        componentHelperList = new ArrayList<>();
 
         try {
-            this.inputThread.waitForInput();
+            // Add all batteries bound to double cannons (if the method is supported=
+            componentHelperList.addAll(
+                    this.currEventCard.getDoubleCannonsToActivate().stream()
+                            .map(Pair::getValue)
+                            .toList()
+            );
         }
-        catch (InterruptedException e) {
-            // A forced interrupt arrived
+        catch (UnsupportedOperationException e) {
+           // Nothing
         }
+
+        try {
+            // Add all batteries bound to double engines (if the method is supported)
+            componentHelperList.addAll(
+                    this.currEventCard.getDoubleEnginesToActivate().stream()
+                            .map(Pair::getValue)
+                            .toList()
+            );
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing
+        }
+
+        List<ClientBattery> batteryList = new ArrayList<>();
+        selectedBattery = new AtomicReference<>(null);
+        availableBatteries = new InputWidgetTUI(this.inputThread);
+        availableBatteries.setColumnGroupingAmount(4);
+
+        // Filtering out depleted batteries from being selectable
+        for (ClientBattery battery : ship.getBatteryList()) {
+            if (battery.getAvailability() > 0) {
+                batteryList.add(battery);
+            }
+        }
+
+        len = batteryList.size();
+
+        if (len == 0) {
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + "You don't have any batteries to consume!")
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
+        }
+
+        for (i = 0; i < len; i++) {
+            ClientBattery battery = batteryList.get(i);
+
+            command = new CommandWidgetTUI(
+                    "" + i,
+                    () -> {
+                        selectedBattery.set(battery);
+                    }
+            );
+            command.appendString("Battery @ (row=" + (battery.getI() + 1) + ", col=" + (battery.getJ() + 1) + ")");
+            availableBatteries.addCommand(command);
+        }
+
+        // (-1) Go back to menu
+        command = new CommandWidgetTUI(
+                "-1",
+                () -> {}
+        );
+        command.appendString("Go back to menu");
+        availableBatteries.addCommand(command);
+
+        availableBatteries.setColumnGroupingAmount(
+                availableBatteries.getCommandMap().size()
+        );
+
+        do {
+            try {
+                System.out.println("Available batteries to activate:");
+                commandSelected = availableBatteries.selectCommand(DEFAULT_COMMAND_PREFIX);
+
+                if (commandSelected) {
+                    // If the user selected "(-1) Go back to menu", then return
+                    if (selectedBattery.get() == null) return null;
+                }
+                else {
+                    System.out.println(UNKNOWN_COMMAND_ERROR);
+                }
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return null;
+            }
+        }
+        while (!commandSelected);
+
+        componentHelper = new ComponentHelper<>(
+                selectedBattery.get().getI(),
+                selectedBattery.get().getJ()
+        );
+
+        return componentHelper;
     }
 
     /**
-     * Generates a widget with the player's name and some
+     * Generates a widget with the player's cardName and some
      * information about the fact that he's viewing his ship
      */
     private void generatePlayerNameWidget() {

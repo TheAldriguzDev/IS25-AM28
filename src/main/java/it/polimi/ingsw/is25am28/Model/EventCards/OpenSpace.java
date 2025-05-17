@@ -2,26 +2,24 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
-import it.polimi.ingsw.is25am28.Model.Components.Engine;
-import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 
 public class OpenSpace extends EventCard {
-    private Map<String, Integer> playerPowerResult;
-    private Map<String, Integer> updatedPositions;
-    private List<String> eliminatedPlayers;
-    private Map<String, Integer> removedBatteries;
-    // TODO : modify the system to update from time to time, not at the end
+    private final Map<String, Integer> playerPowerResult;
+    private final Map<String, Integer> updatedPositions;
+    private final List<String> eliminatedPlayers;
+    private final Map<String, List<ComponentHelper<Void>>> removedBatteries;
 
-    // TODO: Implement the specific constructor to build the card with the necessary data
     public OpenSpace(String name, int level, Board board, int cardID, String path) {
         super(name, level, board, cardID, path);
+
         this.playerPowerResult = new HashMap<>();
         this.updatedPositions = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
@@ -29,117 +27,79 @@ public class OpenSpace extends EventCard {
     }
 
     @Override
-    protected void bonusEffect() {
-
-    }
-
-    @Override
-    protected void malusEffect() {
-
-    }
-
-
-    // Power dei motori normali la posso pre-calcolare per ogni player
-    // Mi devono inviare quanti segnalini batteria vogliono utilizzare per poter accendere i motori doppi
-    // Calcolo il valore finale di potenza che hanno
-    // Se è pari a 0 il player è eliminato, altrimenti lo sposto di X posizioni (alla fine, quando tutti i player hanno risposto cosa fare)
-
-    @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
+        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate;
+        OpenSpaceJSON openSpace;
+        String playerNickname;
+        Ship ship;
+        int totalEnginePower;
+
         // Check if there is a player playing the card
         if (this.currentPlayer.isEmpty()) {
             throw new IllegalArgumentException("There is no player playing in this moment");
         }
 
-        OpenSpaceJSON openSpace;
-
+        // Retrieve the data from the JSON
         try {
             openSpace = (OpenSpaceJSON) data;
-        } catch (Exception e) {
+            playerNickname = openSpace.getPlayerNickname();
+        }
+        catch (Exception e) {
             throw new IllegalArgumentException("The given JSON data is not a valid OpenSpace JSON");
         }
 
-        // Retrieve the data from the JSON
-        String playerNickname = openSpace.getPlayerNickname();
-        int usedEnergy = openSpace.getUsedEnergy();
+        doubleEnginesToActivate = openSpace.getDoubleEnginesToActivate();
 
-        // Count the double engines of the used
-        long availableDoubleEngines = this.getCurrentPlayer().get().getShip().getEngineList().stream().filter(Engine::requireEnergy).count();
+        if (playerNickname != null && !playerNickname.isEmpty()) {
+            if (this.getCurrentPlayer().isPresent()) {
+                if (playerNickname.equals(this.getCurrentPlayer().get().getNickname())) {
+                    ship = this.getCurrentPlayer().get().getShip();
 
-        // Check if:
-        // 1: The player match
-        // 2: The player has used an amount of available energy
-        if ( playerNickname != null &&
-                !playerNickname.isEmpty() &&
-                playerNickname.equals( this.getCurrentPlayer().get().getNickname() ) &&
-                usedEnergy <= this.getCurrentPlayer().get().getShip().getAvailableEnergy() ) {
+                    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleEngines = ship.activateComponents(doubleEnginesToActivate);
 
-            if (usedEnergy > 0) {
-                this.removedBatteries.put(playerNickname, usedEnergy);
-            }
-            // Calculate the ship engines power with:
-            // +1 for every normal motor
-            // +2 for every double motor activated
-            // +2 for every alien that boost the engine power
+                    totalEnginePower = ship.getEnginePower(activatedDoubleEngines.stream().map(Pair::getKey).toList());
+                    this.removedBatteries.put(
+                        playerNickname,
+                        activatedDoubleEngines.stream()
+                                .map(Pair::getValue).toList()
+                    );
 
-            Ship ship = this.getCurrentPlayer().get().getShip();
-            int totalPower = 0;
+                    // Store the power result to notify the player with the choices of the previous players
+                    this.playerPowerResult.put(playerNickname, totalEnginePower);
 
-            // Power given by the engine
-            totalPower += ship.getEngineList().stream()
-                            .filter( e -> !e.requireEnergy())
-                            .mapToInt(Engine::getSpeed)
-                            .sum();
+                    // Apply the effect to the player
+                    // if no power has been declared eliminate the player
+                    // otherwise move the player forward of the declared power
+                    if (totalEnginePower == 0) {
+                        this.getBoard().eliminatePlayer(this.getCurrentPlayer().get());
+                        this.eliminatedPlayers.add(playerNickname);
+                    }
+                    else {
+                        this.getBoard().movePlayerForward(this.getCurrentPlayer().get(), totalEnginePower);
+                        this.updatedPositions.put(playerNickname, this.getCurrentPlayer().get().getCursor());
+                    }
 
-            // Power given by the double engines
-            // While we have energy and doubleMotors then we can update the totalPower
-            while ( usedEnergy > 0 && availableDoubleEngines > 0 ) {
-                totalPower += 2;
+                    // When we have moved the last player we need to re-validate the positions
+                    if (this.getCurrentPlayer().get().equals(this.players.getLast())) {
+                        this.cardUsed();
+                        int tmp = getBoard().getEliminatedPlayers().size();
+                        this.getBoard().validatePlayersPosition();
 
-                usedEnergy--;
-                availableDoubleEngines--;
-                ship.consumeEnergy(1);
-            }
-
-            // Power given by the alien:
-            // If the power given by the engines is 0 than we cannot apply the boost given by the alien
-            totalPower += totalPower == 0 ? 0 : ship.getCabinList()
-                    .stream()
-                    .flatMap( c -> c.getInhabitants().stream() )
-                    .mapToInt( Lifeform::getPowerBoost )
-                    .sum();
-
-            // Store the power result to notify the player with the choices of the previous players
-            this.playerPowerResult.put(playerNickname, totalPower);
-
-            // Apply the effect to the player
-            // if no power has been declared eliminate the player
-            // otherwise move the player forward of the declared power
-            if (totalPower == 0) {
-                this.getBoard().eliminatePlayer(this.getCurrentPlayer().get());
-                this.eliminatedPlayers.add(playerNickname);
-            } else {
-                this.getBoard().movePlayerForward(this.getCurrentPlayer().get(), totalPower);
-                this.updatedPositions.put(playerNickname, this.getCurrentPlayer().get().getCursor());
-            }
-
-            // When we have moved the last player we need to re-validate the positions
-            if (this.getCurrentPlayer().get().equals(this.players.getLast())) {
-                this.cardUsed(); // Mark the card as used
-                int tmp = getBoard().getEliminatedPlayers().size();
-                this.getBoard().validatePlayersPosition();
-                for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
-                    this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
+                        for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
+                            this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
+                        }
+                    }
+                    else {
+                        this.getNextPlayer();
+                    }
                 }
-            } else {
-                this.getNextPlayer();
+                else {
+                    throw new IllegalArgumentException("ERROR: The given player doesn't match with the current one.");
+                }
             }
-        } else {
-            if ( usedEnergy > this.getCurrentPlayer().get().getShip().getAvailableEnergy() ) {
-                throw new IllegalArgumentException("There player does not have enough energy to perform the action!");
-            } else {
-                throw new IllegalArgumentException("The given player does not match with the current one!");
-            }
+        }
+        else {
+            throw new IllegalArgumentException("ERROR: The given player is either null or empty.");
         }
 
         return this;
@@ -157,12 +117,12 @@ public class OpenSpace extends EventCard {
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
 
-            //cardState.setPlayersEnginePower(this.playerPowerResult);
             setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
             setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
             setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
-        } else {
-            cardState.setId(this.id);
+        }
+        else {
+            cardState.setId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
@@ -177,16 +137,11 @@ public class OpenSpace extends EventCard {
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
-        cardState.setId(this.id);
+        cardState.setId(this.cardTypeId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.cardLevel);
 
         return cardState;
-    }
-
-    @Override
-    public WidgetTUI generateWidget(CardStateJSON openSpaceJSON) {
-        return null;
     }
 }

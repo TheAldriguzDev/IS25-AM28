@@ -35,6 +35,11 @@ public final class Shield extends Component {
     }
 
     @Override
+    public boolean requiresEnergy() {
+        return true;
+    }
+
+    @Override
     public List<String> getComponentScreen() {
         // TODO: Understand better these indexes
         int scale = 3;

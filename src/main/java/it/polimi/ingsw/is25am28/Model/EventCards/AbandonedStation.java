@@ -6,7 +6,6 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 
@@ -58,7 +57,7 @@ public class AbandonedStation extends EventCard {
             this.players = new ArrayList<>(this.getBoard().getPlayers());
             currentPlayer = Optional.of(players.getFirst());
         }
-        cardActivated();
+        activateCard();
     }
 
     @Override
@@ -177,7 +176,7 @@ public class AbandonedStation extends EventCard {
             setUpdatedPositionsIfNecessary(cardState, updatedPositions);
         } else {
             // Card information that are needed to play
-            cardState.setId(this.id);
+            cardState.setId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
@@ -210,7 +209,7 @@ public class AbandonedStation extends EventCard {
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
-        cardState.setId(this.id);
+        cardState.setId(this.cardTypeId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.cardLevel);
@@ -220,9 +219,4 @@ public class AbandonedStation extends EventCard {
 
         return cardState;
     }
-
-    public WidgetTUI generateWidget(CardStateJSON abandonedStationJSON) {
-        return null;
-    }
 }
-

@@ -13,6 +13,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -205,36 +206,69 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                 .sum();
     }
 
+//    /**
+//     * Consumes the given amount of energy from the ship's total energy
+//     *
+//     * @param energyToConsume The amount of energy to consume from the total available energy on the ship.<br>
+//     *                        The method doesn't do anything if <code>energyToConsume <= 0</code>.
+//     *
+//     * @throws InsufficientEnergyException If <code>energyToConsume</code> is greater than the energy currently available on the ship
+//     */
+//    public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
+//        int availableEnergy;
+//
+//        if (energyToConsume > 0) {
+//            if (energyToConsume <= this.getAvailableEnergy()) {
+//                // If there's enough energy, then consume the given amount
+//                for (Battery battery : this.batteryList) {
+//                    availableEnergy = battery.getAvailability();
+//
+//                    if (availableEnergy < energyToConsume) {
+//                        energyToConsume -= availableEnergy;
+//                        battery.setAvailability(0);
+//                    }
+//                    else {
+//                        battery.setAvailability(availableEnergy - energyToConsume);
+//                        break;
+//                    }
+//                }
+//            }
+//            else {
+//                // Otherwise, throw an InsufficientEnergyException
+//                throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
+//            }
+//        }
+//    }
+
     /**
-     * Consumes the given amount of energy from the ship's total energy
+     * Consumes 1 unit of charge from each battery found in the given battery list.
+     * If a battery is empty it'll be skipped.
      *
-     * @param energyToConsume The amount of energy to consume from the total available energy on the ship.<br>
-     *                        The method doesn't do anything if <code>energyToConsume <= 0</code>.
-     *
-     * @throws InsufficientEnergyException If <code>energyToConsume</code> is greater than the energy currently available on the ship
+     * @param batteriesToConsume The list of battery components to discharge by 1 unit of charge.
      */
-    public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
-        int availableEnergy;
+    public void consumeEnergy(List<ComponentHelper<Void>> batteriesToConsume) {
+        if (batteriesToConsume != null) {
+            // Removing any null pointers inside the list
+            batteriesToConsume = batteriesToConsume.stream().filter(Objects::nonNull).toList();
 
-        if (energyToConsume > 0) {
-            if (energyToConsume <= this.getAvailableEnergy()) {
-                // If there's enough energy, then consume the given amount
-                for (Battery battery : this.batteryList) {
-                    availableEnergy = battery.getAvailability();
+            // Discharging each battery by 1 unit of charge
+            for (ComponentHelper<Void> componentCoords : batteriesToConsume) {
+                Component component = this.getComponent(
+                    componentCoords.getI(),
+                    componentCoords.getJ()
+                );
 
-                    if (availableEnergy < energyToConsume) {
-                        energyToConsume -= availableEnergy;
-                        battery.setAvailability(0);
+                switch (component) {
+                    case Battery battery -> {
+                        try {
+                            battery.useBattery(1);
+                        }
+                        catch (IllegalArgumentException e) {
+                            // Battery is empty => continue iteration
+                        }
                     }
-                    else {
-                        battery.setAvailability(availableEnergy - energyToConsume);
-                        break;
-                    }
+                    case null, default -> {}
                 }
-            }
-            else {
-                // Otherwise, throw an InsufficientEnergyException
-                throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
             }
         }
     }
@@ -266,7 +300,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
     }
 
     /**
-     *
      * Adds the given lifeform to the given cabin. If an alien is added, it also
      * checks whether the given cabin has a matching vital unit attached
      *
@@ -279,10 +312,10 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
      * @throws OutOfGridException If the given coordinates fall out of the grid
      * @throws OutOfShipException If the given coordinates fall out of the ship
      * @throws NoSupportVitalFoundException If the given lifeform is an alien and the cabin has no matching vital units as its neighbours
-     * @throws IllegalArgumentException If other errors arise due to wrong input
+     * @throws TooLowDifficultyLevelException If the current difficulty level does not allow to add aliens to a ship
      */
     public void addLifeformToCabin(int i, int j, LifeformType lifeformType)
-            throws IllegalArgumentException, TooManyAliensException,
+            throws IllegalArgumentException, TooManyAliensException, TooLowDifficultyLevelException,
                    OutOfGridException, OutOfShipException, NoSupportVitalFoundException
     {
         boolean vitalFound;
@@ -308,70 +341,82 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                     }
                     // LifeformType.PURPLE_ALIEN.ordinal() == 1
                     case PURPLE_ALIEN -> {
-                        if (this.purpleAlienPosition == null) {
-                            if (cabin.getAvailableSpace() == LifeformType.PURPLE_ALIEN.getRequiredSpace()) {
-                                neighbours = this.getNearestReachableComponents(cabin);
-                                vitalFound = false;
+                        // Aliens can be added only for ships with difficulty levels greater than 1
+                        if (this.difficultyLevel > 1) {
+                            if (this.purpleAlienPosition == null) {
+                                if (cabin.getAvailableSpace() == LifeformType.PURPLE_ALIEN.getRequiredSpace()) {
+                                    neighbours = this.getNearestReachableComponents(cabin);
+                                    vitalFound = false;
 
-                                for (Component neighbour : neighbours) {
-                                    switch (neighbour) {
-                                        case Vital vital -> {
-                                            if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
-                                                vitalFound = true;
+                                    for (Component neighbour : neighbours) {
+                                        switch (neighbour) {
+                                            case Vital vital -> {
+                                                if (vital.getVitalType() == VitalType.PURPLE_VITAL) {
+                                                    vitalFound = true;
+                                                }
                                             }
+                                            case null, default -> {}
                                         }
-                                        case null, default -> {}
+                                    }
+
+                                    if (vitalFound) {
+                                        cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
+                                        this.purpleAlienPosition = cabin;
+                                    }
+                                    else {
+                                        throw new NoSupportVitalFoundException("ERROR: Cannot place purple alien since no purple vital is neighbouring this cabin");
                                     }
                                 }
-
-                                if (vitalFound) {
-                                    cabin.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
-                                    this.purpleAlienPosition = cabin;
-                                }
                                 else {
-                                    throw new NoSupportVitalFoundException("ERROR: Cannot place purple alien since no purple vital is neighbouring this cabin");
+                                    throw new IllegalArgumentException("ERROR: Cabin has " + cabin.getAvailableSpace() + " slot(s) occupied out of 2 (cannot insert purple alien (no space left))");
                                 }
                             }
                             else {
-                                throw new IllegalArgumentException("ERROR: Cabin has " + cabin.getAvailableSpace() + " slot(s) occupied out of 2 (cannot insert purple alien (no space left))");
+                                throw new TooManyAliensException("ERROR: Purple Alien is already present");
                             }
                         }
                         else {
-                            throw new TooManyAliensException("ERROR: Purple Alien is already present");
+                            throw new TooLowDifficultyLevelException("ERROR: Cannot add alien lifeforms for ships of difficulty level below 2");
                         }
                     }
                     // LifeformType.BROWN_ALIEN.ordinal() == 2
                     case BROWN_ALIEN -> {
-                        if (this.brownAlienPosition == null) {
-                            if (cabin.getAvailableSpace() == LifeformType.BROWN_ALIEN.getRequiredSpace()) {
-                                neighbours = this.getNearestReachableComponents(cabin);
-                                vitalFound = false;
+                        // Aliens can be added only for ships with difficulty levels greater than 1
+                        if (this.difficultyLevel > 1) {
+                            if (this.brownAlienPosition == null) {
+                                if (cabin.getAvailableSpace() == LifeformType.BROWN_ALIEN.getRequiredSpace()) {
+                                    neighbours = this.getNearestReachableComponents(cabin);
+                                    vitalFound = false;
 
-                                for (Component neighbour : neighbours) {
-                                    switch (neighbour) {
-                                        case Vital vital -> {
-                                            if (vital.getVitalType() == VitalType.BROWN_VITAL) {
-                                                vitalFound = true;
+                                    for (Component neighbour : neighbours) {
+                                        switch (neighbour) {
+                                            case Vital vital -> {
+                                                if (vital.getVitalType() == VitalType.BROWN_VITAL) {
+                                                    vitalFound = true;
+                                                }
                                             }
+                                            case null, default -> {}
                                         }
-                                        case null, default -> {}
+                                    }
+
+                                    if (vitalFound) {
+                                        cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+                                        this.brownAlienPosition = cabin;
+                                    }
+                                    else {
+                                        throw new NoSupportVitalFoundException("ERROR: Cannot place brown alien since no brown vital is neighbouring this cabin");
                                     }
                                 }
-
-                                if (vitalFound) {
-                                    cabin.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
-                                    this.brownAlienPosition = cabin;
-                                }
                                 else {
-                                    throw new NoSupportVitalFoundException("ERROR: Cannot place brown alien since no brown vital is neighbouring this cabin");
+                                    throw new IllegalArgumentException("ERROR: Cabin has " + cabin.getAvailableSpace() + " slot(s) occupied out of 2 (cannot insert brown alien (no space left))");
                                 }
                             }
                             else {
-                                throw new IllegalArgumentException("ERROR: Cabin has " + cabin.getAvailableSpace() + " slot(s) occupied out of 2 (cannot insert brown alien (no space left))");
+                                throw new TooManyAliensException("ERROR: Brown Alien is already present");
                             }
                         }
                         else {
-                            throw new TooManyAliensException("ERROR: Brown Alien is already present");
+                            throw new TooLowDifficultyLevelException("ERROR: Cannot add alien lifeforms for ships of difficulty level below 2");
                         }
                     }
                     case null, default -> throw new IllegalArgumentException("ERROR: Given lifeform type is null or invalid");
@@ -434,125 +479,276 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
         }
     }
 
+//    /**
+//     * Returns the real firepower by considering the baseline firepower (given by single cannons) and
+//     * the additional firepower (given by activating the given amount of double cannons) and also
+//     * takes into account the bonus given by the purple alien (if present)
+//     *
+//     * @param doubleCannonsToActivate The list of double cannons to activate. If it's set to <code>null</code>
+//     *                                or it's given empty, then it returns the baseline firepower
+//     *
+//     * @return The current ship's total firepower
+//     */
+//    public float getFirePower(List<ComponentHelper<Void>> doubleCannonsToActivate) {
+//        float totalFirePower;
+//        boolean allEnergyConsumed;
+//
+//        totalFirePower = 0;
+//        allEnergyConsumed = false;
+//
+//        // Adding the firepower of only the single cannons
+//        totalFirePower += (float) this.cannonList.stream()
+//                .filter((Cannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
+//                .mapToDouble(Cannon::getFirePower)
+//                .sum();
+//
+//        // Adding the firepower of only the double cannons (if there are any)
+//        if (doubleCannonsToActivate != null) {
+//            for (ComponentHelper<Void> doubleCannonCoords : doubleCannonsToActivate) {
+//                if (doubleCannonCoords != null) {
+//                    Component component = this.getComponent(
+//                        doubleCannonCoords.getI(),
+//                        doubleCannonCoords.getJ()
+//                    );
+//
+//                    switch (component) {
+//                        case Cannon c -> {
+//                            // If the given component at those coordinates is effectively a double cannon, then activate
+//                            // it as requested and consume 1 energy from the total. If no energy is available, then the
+//                            // remaining double cannons will not be activated
+//                            if ((c.getFirePower() == 2 && c.getDirection() == 0) || (c.getFirePower() == 1 && c.getDirection() != 0)) {
+//                                try {
+//                                    this.consumeEnergy(1);
+//                                    totalFirePower += c.getFirePower();
+//                                }
+//                                catch (InsufficientEnergyException e) {
+//                                    // If it fails, the double cannon will not be activated
+//                                    allEnergyConsumed = true;
+//                                }
+//                            }
+//                        }
+//                        case null, default -> {}
+//                    }
+//                }
+//
+//                if (allEnergyConsumed) {
+//                    break;
+//                }
+//            }
+//        }
+//
+//        // Finally, add the contribution of the single purple alien onboard the ship
+//        // to the overall firepower (only if it's present and if the baseline firepower is > 0)
+//        if (this.purpleAlienPosition != null && totalFirePower > 0) {
+//            totalFirePower += this.purpleAlienPosition.getInhabitants().getFirst().getAttackBoost();
+//        }
+//
+//        return totalFirePower;
+//    }
+
     /**
      * Returns the real firepower by considering the baseline firepower (given by single cannons) and
      * the additional firepower (given by activating the given amount of double cannons) and also
      * takes into account the bonus given by the purple alien (if present)
      *
-     * @param doubleCannonsToActivate The list of double cannons to activate. If it's set to <code>null</code>
-     *                                or it's given empty, then it returns the baseline firepower
-     *
-     * @return The current ship's total firepower
+     * @return The current ship's total firepower.
      */
-    public float getFirePower(List<ComponentHelper<Void>> doubleCannonsToActivate) {
-        float totalFirePower;
-        boolean allEnergyConsumed;
+    public float getFirePower(List<ComponentHelper<Void>> activatedDoubleCannonsCoordinates) {
+        List<Cannon> activatedDoubleCannons;
+        float totalFirepower;
 
-        totalFirePower = 0;
-        allEnergyConsumed = false;
-
-        // Adding the firepower of only the single cannons
-        totalFirePower += (float) this.cannonList.stream()
-                .filter((Cannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
+        // Starting from the firepower of only the single cannons
+        totalFirepower = (float) this.cannonList.stream()
+                .filter(c -> !c.requiresEnergy())
                 .mapToDouble(Cannon::getFirePower)
                 .sum();
 
-        // Adding the firepower of only the double cannons (if there are any)
-        if (doubleCannonsToActivate != null) {
-            for (ComponentHelper<Void> doubleCannonCoords : doubleCannonsToActivate) {
-                if (doubleCannonCoords != null) {
-                    Component component = this.getComponent(
-                        doubleCannonCoords.getI(),
-                        doubleCannonCoords.getJ()
-                    );
-
-                    switch (component) {
-                        case Cannon c -> {
-                            // If the given component at those coordinates is effectively a double cannon, then activate
-                            // it as requested and consume 1 energy from the total. If no energy is available, then the
-                            // remaining double cannons will not be activated
-                            if ((c.getFirePower() == 2 && c.getDirection() == 0) || (c.getFirePower() == 1 && c.getDirection() != 0)) {
-                                try {
-                                    this.consumeEnergy(1);
-                                    totalFirePower += c.getFirePower();
-                                }
-                                catch (InsufficientEnergyException e) {
-                                    // If it fails, the double cannon will not be activated
-                                    allEnergyConsumed = true;
-                                }
-                            }
+        if (activatedDoubleCannonsCoordinates != null && !activatedDoubleCannonsCoordinates.isEmpty()) {
+            // Filtering out all activated components that are not double cannons
+            activatedDoubleCannons = activatedDoubleCannonsCoordinates.stream()
+                    .map(
+                        ch -> {
+                            return this.getComponent(ch.getI(), ch.getJ());
                         }
-                        case null, default -> {}
-                    }
-                }
+                    )
+                    .map(
+                        (c) -> {
+                            switch (c) {
+                                case Cannon cannon -> {
+                                    if (cannon.requiresEnergy()) {
+                                        return cannon;
+                                    }
+                                }
+                                case null, default -> {}
+                            }
+                            return null;
+                        }
+                    )
+                    .filter(Objects::nonNull)
+                    .toList();
 
-                if (allEnergyConsumed) {
-                    break;
-                }
-            }
+            // Add the double cannon contribution to the total firepower
+            totalFirepower += (float) activatedDoubleCannons.stream()
+                    .mapToDouble(Cannon::getFirePower)
+                    .sum();
         }
 
-        // Finally, add the contribution of the single purple alien onboard the ship
-        // to the overall firepower (only if it's present and if the baseline firepower is > 0)
-        if (this.purpleAlienPosition != null && totalFirePower > 0) {
-            totalFirePower += this.purpleAlienPosition.getInhabitants().getFirst().getAttackBoost();
+        // Finally, add the contribution of the single purple alien onboard the ship to the
+        // overall firepower (only if it's present and if the total firepower is > 0)
+        if (this.purpleAlienPosition != null && totalFirepower > 0) {
+            totalFirepower += this.purpleAlienPosition.getInhabitants().getFirst().getPowerBoost();
         }
 
-        return totalFirePower;
+        return totalFirepower;
     }
 
+//    /**
+//     * Returns the real engine power by considering the baseline engine power (given by single engines)
+//     * and the additional engine power (given by activating the given amount of double engines) and also
+//     * takes into account the bonus given by the brown alien (if present)
+//     *
+//     * @param doubleEnginesToActivate The amount of double engines to activate.
+//     *                                If set to 0, the method returns the baseline engine power
+//     *                                (+ the contribution of the brown alien (if present))
+//     *
+//     * @return The current ship's total engine power
+//     */
+//    public int getEnginePower(int doubleEnginesToActivate) {
+//        List<Engine> doubleEngineList;
+//        int doubleEngineAmount;
+//        int totalEnginePower;
+//        int availableEnergy;
+//
+//        doubleEngineList = this.getDoubleEngines();
+//        doubleEngineAmount = doubleEngineList.size();
+//        totalEnginePower = 0;
+//
+//        // Adding the engine power of only the single engines
+//        totalEnginePower += (int) this.engineList.stream()
+//                .filter(e -> (e.getSpeed() == 1))
+//                .count();
+//
+//        // Adding the engine power of the double engines
+//        if (doubleEnginesToActivate > 0) {
+//            if (doubleEngineAmount < doubleEnginesToActivate) {
+//                // If I want to activate more engines than available, then
+//                // saturate the request to the max amount of double engines
+//                doubleEnginesToActivate = doubleEngineAmount;
+//            }
+//
+//            availableEnergy = this.getAvailableEnergy();
+//            if (availableEnergy < doubleEnginesToActivate) {
+//                // Saturating the amount of engines to activate to the
+//                // remaining amount of energy on the ship
+//                doubleEnginesToActivate = availableEnergy;
+//            }
+//
+//            this.consumeEnergy(doubleEnginesToActivate);
+//            totalEnginePower += doubleEngineList.getFirst().getSpeed() * doubleEnginesToActivate;
+//        }
+//
+//        // Finally, add the contribution of the single purple alien onboard the ship
+//        // to the overall firepower (only if it's present and if the baseline firepower is > 0)
+//        if (this.brownAlienPosition != null && totalEnginePower > 0) {
+//            totalEnginePower += this.brownAlienPosition.getInhabitants().getFirst().getPowerBoost();
+//        }
+//
+//        return totalEnginePower;
+//    }
+
     /**
-     * Returns the real engine power by considering the baseline engine power (given by single engines)
-     * and the additional engine power (given by activating the given amount of double engines) and also
-     * takes into account the bonus given by the brown alien (if present)
+     * Returns the real engine power by considering the baseline firepower (given by single cannons) and
+     * the additional firepower (given by activating the given amount of double cannons) and also
+     * takes into account the bonus given by the purple alien (if present)
      *
-     * @param doubleEnginesToActivate The amount of double engines to activate.
-     *                                If set to 0, the method returns the baseline engine power
-     *                                (+ the contribution of the brown alien (if present))
-     *
-     * @return The current ship's total engine power
+     * @return The current ship's total engine power.
      */
-    public int getEnginePower(int doubleEnginesToActivate) {
-        List<Engine> doubleEngineList;
-        int doubleEngineAmount;
+    public int getEnginePower(List<ComponentHelper<Void>> activatedDoubleEnginesCoordinates) {
+        List<Engine> activatedDoubleEngines;
         int totalEnginePower;
-        int availableEnergy;
 
-        doubleEngineList = this.getDoubleEngines();
-        doubleEngineAmount = doubleEngineList.size();
-        totalEnginePower = 0;
+        // Starting from the engine power of only the single engines
+        totalEnginePower = this.engineList.stream()
+                .filter(e -> !e.requiresEnergy())
+                .mapToInt(Engine::getSpeed)
+                .sum();
 
-        // Adding the engine power of only the single engines
-        totalEnginePower += (int) this.engineList.stream()
-                .filter(e -> (e.getSpeed() == 1))
-                .count();
+        if (activatedDoubleEnginesCoordinates != null && !activatedDoubleEnginesCoordinates.isEmpty()) {
+            // Filtering out all activated components that are not double engines
+            activatedDoubleEngines = activatedDoubleEnginesCoordinates.stream()
+                    .map(
+                        (ch) -> {
+                            return this.getComponent(ch.getI(), ch.getJ());
+                        }
+                    )
+                    .map(
+                        (c) -> {
+                            switch (c) {
+                                case Engine engine -> {
+                                    if (engine.requiresEnergy()) {
+                                        return engine;
+                                    }
+                                }
+                                case null, default -> {}
+                            }
+                            return null;
+                        }
+                    )
+                    .filter(Objects::nonNull)
+                    .toList();
 
-        // Adding the engine power of the double engines
-        if (doubleEnginesToActivate > 0) {
-            if (doubleEngineAmount < doubleEnginesToActivate) {
-                // If I want to activate more engines than available, then
-                // saturate the request to the max amount of double engines
-                doubleEnginesToActivate = doubleEngineAmount;
-            }
-
-            availableEnergy = this.getAvailableEnergy();
-            if (availableEnergy < doubleEnginesToActivate) {
-                // Saturating the amount of engines to activate to the
-                // remaining amount of energy on the ship
-                doubleEnginesToActivate = availableEnergy;
-            }
-
-            this.consumeEnergy(doubleEnginesToActivate);
-            totalEnginePower += doubleEngineList.getFirst().getSpeed() * doubleEnginesToActivate;
+            // Add the double engine contribution to the total engine power
+            totalEnginePower += activatedDoubleEngines.stream()
+                    .mapToInt(Engine::getSpeed)
+                    .sum();
         }
 
-        // Finally, add the contribution of the single purple alien onboard the ship
-        // to the overall firepower (only if it's present and if the baseline firepower is > 0)
+        // Finally, add the contribution of the single brown alien onboard the ship to the
+        // overall engine power (only if it's present and if the total engine power is > 0)
         if (this.brownAlienPosition != null && totalEnginePower > 0) {
             totalEnginePower += this.brownAlienPosition.getInhabitants().getFirst().getPowerBoost();
         }
 
         return totalEnginePower;
+    }
+
+    /**
+     * Given a list of pairs of components and the relative battery that powers it, it
+     * returns which of these have actually been checked and powered on, and also consumes
+     * 1 unit of charge from each relative batteries of each activated component.
+     */
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activateComponents(
+            List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> componentsAndRelativeBatteries
+    ) {
+        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedComponents = new ArrayList<>();
+
+        if (componentsAndRelativeBatteries != null && !componentsAndRelativeBatteries.isEmpty()) {
+            for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> componentAndBattery : componentsAndRelativeBatteries) {
+                Component component = this.getComponent(
+                        componentAndBattery.getKey().getI(),
+                        componentAndBattery.getKey().getJ()
+                );
+
+                if (component != null && component.requiresEnergy()) {
+                    component = this.getComponent(
+                        componentAndBattery.getValue().getI(),
+                        componentAndBattery.getValue().getJ()
+                    );
+
+                    switch (component) {
+                        case Battery battery -> {
+                            if (battery.getAvailability() > 0) {
+                                battery.useBattery(1);
+                                activatedComponents.add(componentAndBattery);
+                            }
+                        }
+                        case null, default -> {}
+                    }
+                }
+            }
+        }
+
+        return activatedComponents;
     }
 
     /**
@@ -1307,7 +1503,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
         // Getting all the ship's stats
         shipStatsScreen.add("Total Crew: " + this.getAllLifeforms().size());
         shipStatsScreen.add("Firepower: " + this.getFirePower(null));
-        shipStatsScreen.add("EnginePower: " + this.getEnginePower(0));
+        shipStatsScreen.add("EnginePower: " + this.getEnginePower(null));
 
         shipStatsWidget.appendScreen(shipStatsScreen);
         shipStatsWidget.centerWidgetScreen();

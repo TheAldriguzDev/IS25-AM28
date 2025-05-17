@@ -16,6 +16,7 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -290,7 +291,7 @@ class SmugglersTest {
         itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
         itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
 
-        List<ComponentHelper<Void>> doubleCannonActivated = new ArrayList<>();
+        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonActivated = new ArrayList<>();
 //        List<Integer> x = new ArrayList<>();
 //        List<Integer> y = new ArrayList<>();
 //        x.add(7);
@@ -298,7 +299,13 @@ class SmugglersTest {
 //        doubleCannonActivated.add(x);
 //        doubleCannonActivated.add(y);
 //        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(7, 9)));
-        doubleCannonActivated.add(new ComponentHelper<>(7, 9));
+
+        doubleCannonActivated.add(
+            new Pair<>(
+                    new ComponentHelper<>(7, 9),
+                    new ComponentHelper<>(7, 7)
+            )
+        );
 
         actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>()); // Total FirePower: 2
         actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>()); // Total FirePower: 3

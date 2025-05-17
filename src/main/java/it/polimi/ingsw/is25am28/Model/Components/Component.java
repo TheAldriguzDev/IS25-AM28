@@ -56,6 +56,10 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
         this.path = path;
     }
 
+    public boolean requiresEnergy() {
+        return false;
+    }
+
     /**
      * @param nearest This component's adjacent neighbours
      * @return TRUE if this component's connectors are all compatible with their neighbours', FALSE otherwise

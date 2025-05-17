@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.List;
 
@@ -70,14 +71,14 @@ public class ClientSlavers extends ClientEventCard {
         cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.WHITE + "        ██        ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██       ████       " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██       ████       " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████       ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████      ██    ██     " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.WHITE + "        ██        ██    ██     " + ANSIColors.RESET);
-        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "      ██████       ██████      " + ANSIColors.RESET);
         cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
+        cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██      ██████      " + ANSIColors.RESET);
         cardInfoWidget.wrapWidgetWithBorder();
 
         if (!this.isPlayerDefeated) {
@@ -105,12 +106,12 @@ public class ClientSlavers extends ClientEventCard {
 
     // Cannons
     @Override
-    public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.slaversJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
     }
 
     @Override
-    public List<ComponentHelper<Void>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         return this.slaversJSON.getDoubleCannonsToActivateCoordinates();
     }
 
@@ -134,10 +135,5 @@ public class ClientSlavers extends ClientEventCard {
     @Override
     public List<ComponentHelper<LifeformType>> getCrewToRemove() throws UnsupportedOperationException {
         return this.slaversJSON.getCrewToRemove();
-    }
-
-    // Card specific methods
-    public void setIsShipEmpty(boolean isShipEmpty) {
-        this.isShipEmpty = isShipEmpty;
     }
 }

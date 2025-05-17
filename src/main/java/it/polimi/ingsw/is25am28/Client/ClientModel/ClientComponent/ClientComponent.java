@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public sealed abstract class ClientComponent implements WidgetTUIGenerator permits ClientBattery, ClientCabin, ClientCannon, ClientEngine, ClientShield, ClientStorage, ClientStructural, ClientVital {
-    // The id represent the coordinate of the component in the shipConstructionPhase. It's calculated with (19 * i) + j
+    // The cardTypeId represent the coordinate of the component in the shipConstructionPhase. It's calculated with (19 * i) + j
     private int id;
 
     protected Connector[] sides;
@@ -123,6 +123,9 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
         return sides[normalizedPos % 4];
     }
 
+    public boolean requiresEnergy() {
+        return false;
+    }
 
     /**
      * @return true if a component is flipped on the board. The player will be able to see the component data

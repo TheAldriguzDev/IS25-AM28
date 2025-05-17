@@ -18,7 +18,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 
 import java.util.*;
@@ -46,7 +46,7 @@ public class WarZone extends EventCard {
     private String prevPlayer;
     private Map<String, List<Map<String, Object>>> removedComponents;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
-    private Map<String, Integer> removedBatteries;
+    private Map<String, List<ComponentHelper<Void>>> removedBatteries;
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private List<String> eliminatedPlayers;
@@ -60,7 +60,7 @@ public class WarZone extends EventCard {
 
     /**
      * WarZone constructor that sets:
-     * - General information about the card (name, level, board)
+     * - General information about the card (cardName, level, board)
      * - Specific information about the specs of the card (movementSteps, requiredCrew, shootingSequence)
      * - The order of the action of the card
      * */
@@ -233,23 +233,22 @@ public class WarZone extends EventCard {
             if (this.getCurrentPlayer().isPresent()) {
                 Player p = this.getCurrentPlayer().get();
 
-                float totalPower = 0;
+                List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleCannons
+                        = p.getShip().activateComponents(warZoneJSON.getCannonList());
 
-                // Compute the power of the normal cannons
-                totalPower += p.getShip().getFirePower(new ArrayList<>()); // replaced 0 with an empty arrayList to now work with the new version of getFirepower
+                float totalFirePower = p.getShip().getFirePower(
+                        activatedDoubleCannons.stream()
+                                .map(Pair::getKey)
+                                .toList()
+                );
 
-                // Get the cannonList (double cannons that gets activated) to compute the power
-                List<ComponentHelper<Void>> cannonList = warZoneJSON.getCannonList();
-                for (ComponentHelper<Void> c : cannonList) {
-                    Cannon tmpCannon = (Cannon) p.getShip().getComponent(c.getI(), c.getJ());
+                this.playersFirePower.put(p, totalFirePower);
 
-                    totalPower += tmpCannon.getFirePower();
-                    p.getShip().consumeEnergy(1);
-                }
-                this.removedBatteries.put(this.getCurrentPlayer().get().getNickname(), warZoneJSON.getCannonList().size());
-
-                //  float totalPower = p.getShip().getFirePower(usedEnergy);
-                this.playersFirePower.put(p, totalPower);
+                this.removedBatteries.put(
+                        this.getCurrentPlayer().get().getNickname(),
+                        activatedDoubleCannons.stream()
+                                .map(Pair::getValue).toList()
+                );
 
                 // Check if we are already arrived to the last player --> In case we need to grab the affected player
                 if (this.players.getLast().equals(p)) {
@@ -308,12 +307,24 @@ public class WarZone extends EventCard {
             if (this.getCurrentPlayer().isPresent()) {
                 Player p = this.getCurrentPlayer().get();
 
+                List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleEngines
+                        = p.getShip().activateComponents(warZoneJSON.getEngineList());
+
                 // Get the total power of the player and store it
-                int usedEnergy = warZoneJSON.getUsedEnergy();
-                int totalEnginePower = p.getShip().getEnginePower(usedEnergy);
+                int totalEnginePower = p.getShip().getEnginePower(
+                        activatedDoubleEngines.stream()
+                                .map(Pair::getKey)
+                                .toList()
+                );
+
                 this.playersEnginePower.put(p, totalEnginePower);
 
-                this.removedBatteries.put(this.getCurrentPlayer().get().getNickname(), warZoneJSON.getUsedEnergy());
+                this.removedBatteries.put(
+                        this.getCurrentPlayer().get().getNickname(),
+                        activatedDoubleEngines.stream()
+                                .map(Pair::getValue)
+                                .toList()
+                );
 
                 // Check if we are already arrived to the last player --> In case we need to grab the affected player
                 if (this.players.getLast().equals(p)) {
@@ -508,18 +519,18 @@ public class WarZone extends EventCard {
                             resourceDrop.getJ()));
         }
 
-        // Le batterie da rimuovere solo nel caso la lista di elementi da rimuovere non isa abbastanza grande, il client farà il controllo di fare la lista di elementi da togliore il piu grande possibile se non è possibile raggiungere una grandezza pari a takenItems
-        if (player.getShip().getAvailableEnergy() >= (requiredItems - itemsToBeRemoved.size())) {
-            if (requiredItems - itemsToBeRemoved.size() > 0) {
-                this.removedBatteries.put(player.getNickname(), requiredItems - itemsToBeRemoved.size());
-            }
-            player.getShip().consumeEnergy(requiredItems - itemsToBeRemoved.size());
-        } else {
-            if (player.getShip().getAvailableEnergy() > 0) {
-                this.removedBatteries.put(player.getNickname(), player.getShip().getAvailableEnergy());
-            }
-            player.getShip().consumeEnergy(player.getShip().getAvailableEnergy());
-        } // Se viene presa più energia di quanta ne è disponibile semplicemente va a 0
+        // TODO: Modify this part (@Filippo)
+//        if (player.getShip().getAvailableEnergy() >= (requiredItems - itemsToBeRemoved.size())) {
+//            if (requiredItems - itemsToBeRemoved.size() > 0) {
+//                this.removedBatteries.put(player.getNickname(), requiredItems - itemsToBeRemoved.size());
+//            }
+//            player.getShip().consumeEnergy(requiredItems - itemsToBeRemoved.size());
+//        } else {
+//            if (player.getShip().getAvailableEnergy() > 0) {
+//                this.removedBatteries.put(player.getNickname(), player.getShip().getAvailableEnergy());
+//            }
+//            player.getShip().consumeEnergy(player.getShip().getAvailableEnergy());
+//        }
 
         return this;
     }
@@ -570,7 +581,7 @@ public class WarZone extends EventCard {
         boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
-        List<ComponentHelper<Void>> shieldList;
+        List<Shield> shieldList;
         Component toHit;
         Ship shipPtr;
         PlasmaShot currPlasmaShot;
@@ -579,12 +590,36 @@ public class WarZone extends EventCard {
         toHit = null;
         threatDestroyed = false;
 
-        // Grab for the affected player the input about the cannon and shield to activate
-        shieldList = warZoneJSON.getShieldList();
         shipPtr = player.getShip();
         currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
 
-        this.removedBatteries.put(player.getNickname(), shieldList.size());
+        shieldList = shipPtr.activateComponents(warZoneJSON.getShieldList())
+                .stream()
+                .map(Pair::getKey)
+                .map(
+                    (ch) -> {
+                        return shipPtr.getComponent(ch.getI(), ch.getJ());
+                    }
+                )
+                .map(
+                    (c) -> {
+                        switch (c) {
+                            case Shield shield -> {
+                                return shield;
+                            }
+                            case null, default -> {}
+                        }
+                        return null;
+                    }
+                )
+                .filter(Objects::nonNull)
+                .toList();
+
+        this.removedBatteries.put(
+                player.getNickname(),
+                warZoneJSON.getShieldList().stream()
+                        .map(Pair::getValue).toList()
+        );
 
         // Adding +2 to the currMeteor's pointing direction gets the
         // side from where the ship will see it arrive from
@@ -659,39 +694,18 @@ public class WarZone extends EventCard {
             default -> throw new IllegalStateException("ERROR: Only 4 directions allowed");
         }
 
-        // If a component has been found
-        if (shieldList != null) {
-            for (ComponentHelper<Void> shieldCoords : shieldList) {
-                if (shieldCoords != null) {
-                    Component component = shipPtr.getComponent(
-                            shieldCoords.getI(),
-                            shieldCoords.getJ()
-                    );
+        // Activate all shields chosen by the player (even if unnecessary)
+        if (!shieldList.isEmpty()) {
+            for (Shield activeShield : shieldList) {
+                int[] shieldCoverage = activeShield.getCoveredSide();
 
-                    // Safe cast of Component to Shield
-                    switch (component) {
-                        case Shield shield -> {
-                            int[] shieldCoverage = shield.getCoveredSide();
-                            try {
-                                // Consume energy only if there's enough energy available
-                                shipPtr.consumeEnergy(1);
-
-                                for (int j : shieldCoverage) {
-                                    if (currPlasmaShot.getSize() == 1 && j == inboundDirection) {
-                                        // Checking if the shield selected for activation
-                                        // can actually defend the ship from the small meteor
-                                        // by checking if it's correctly oriented towards the threat
-                                        threatDestroyed = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            catch (InsufficientEnergyException e) {
-                                // Otherwise the ship depleted its energy reserve and the selected shields
-                                // cannot be activated, therefore the meteor will not be deflected
-                            }
-                        }
-                        case null, default -> {}
+                for (int j : shieldCoverage) {
+                    if (j == inboundDirection) {
+                        // Checking if the shield selected for activation
+                        // can actually defend the ship from the small meteor
+                        // by checking if it's correctly oriented towards the threat
+                        threatDestroyed = true;
+                        break;
                     }
                 }
             }
@@ -837,8 +851,8 @@ public class WarZone extends EventCard {
             }
 
         } else {
-            cardState.setId(this.id);
-            // Set the card name
+            cardState.setId(this.cardTypeId);
+            // Set the card cardName
             cardState.setCardName(this.getCardName());
             // Set the card level
             cardState.setCardLevel(this.cardLevel);
@@ -886,8 +900,8 @@ public class WarZone extends EventCard {
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
-        cardState.setId(this.id);
-        // Set the card name
+        cardState.setId(this.cardTypeId);
+        // Set the card cardName
         cardState.setCardName(this.getCardName());
         // Set the card level
         cardState.setCardLevel(this.cardLevel);
@@ -903,10 +917,6 @@ public class WarZone extends EventCard {
         cardState.setRequiredResources(this.requiredItems);
 
         return cardState;
-    }
-
-    public WidgetTUI generateWidget(CardStateJSON warZoneJSON) {
-        return null;
     }
 
     //Only for testing purposes

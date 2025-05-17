@@ -39,7 +39,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
     private final List<EventCard> cards;
 
-    // The map will store the pair of sub-deck id with the playerNickname that selected it
+    // The map will store the pair of sub-deck cardTypeId with the playerNickname that selected it
     private final Map<Integer, String> selectedSubDecks;
 
     private boolean shipConfigEnded;
@@ -115,7 +115,7 @@ public final class ShipContructionState extends State implements TimerObserver {
         }
         else {
             if (!this.selectedSubDecks.containsKey(selectedDeck)) {
-                throw new IllegalStateException("The given sub-deck id is not selected by anyone");
+                throw new IllegalStateException("The given sub-deck cardTypeId is not selected by anyone");
             }
 
             if (!this.selectedSubDecks.get(selectedDeck).equals(player)) {
@@ -145,7 +145,7 @@ public final class ShipContructionState extends State implements TimerObserver {
             throw new IllegalStateException("The time to select the tiles has ended");
         }
 
-        // TODO: Understand if we need to put the player name in the Exception
+        // TODO: Understand if we need to put the player cardName in the Exception
         if (selected.contains(id)) {
             throw new IllegalStateException("The required tile has already been selected from someone else");
         }

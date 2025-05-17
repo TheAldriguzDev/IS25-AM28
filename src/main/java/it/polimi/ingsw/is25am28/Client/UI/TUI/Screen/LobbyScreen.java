@@ -220,16 +220,16 @@ public class LobbyScreen extends Screen {
      */
     private void joinGameInput(GameInfoDTO game, List<String> usedNicknames) throws Exception {
         System.out.println();
-        System.out.println("Joining the game with id " + game.getId() + "...");
+        System.out.println("Joining the game with cardTypeId " + game.getId() + "...");
 
         // Ask for nickname
         String playerName;
         do {
-            System.out.print("Enter your name: ");
+            System.out.print("Enter your cardName: ");
             playerName = this.inputThread.waitForInput();
 
             if (playerName.isEmpty() || usedNicknames.contains(playerName)) {
-                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Given name is already used or empty.", ANSIColors.RED));
+                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Given cardName is already used or empty.", ANSIColors.RED));
             }
         }
         while (playerName.isEmpty() || usedNicknames.contains(playerName));
@@ -286,7 +286,7 @@ public class LobbyScreen extends Screen {
         // Ask for nickname
         String playerName;
         do {
-            System.out.print("Insert your name: ");
+            System.out.print("Insert your cardName: ");
             playerName = this.inputThread.waitForInput();
 
             if (playerName.isEmpty()) {
@@ -385,7 +385,7 @@ public class LobbyScreen extends Screen {
         // Ask for nickname
         String playerName;
         do {
-            System.out.print("Enter your name: ");
+            System.out.print("Enter your cardName: ");
             playerName = this.inputThread.waitForInput();
 
             if (playerName.isEmpty() && !usedNicknames.contains(playerName)) {

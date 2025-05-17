@@ -20,13 +20,12 @@ public class ClientAbandonedShip extends ClientEventCard {
 
     public ClientAbandonedShip(CardStateJSON cardState) {
         super(cardState);
+
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementStep = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();
-        this.abandonedShipJSON = new AbandonedShipJSON();
         this.isCardUsable = cardState.getIsCardUsable();
-
-
+        this.abandonedShipJSON = new AbandonedShipJSON();
     }
 
     @Override
