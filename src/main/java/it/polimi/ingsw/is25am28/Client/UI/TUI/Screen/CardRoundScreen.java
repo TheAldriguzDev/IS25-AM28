@@ -2040,22 +2040,7 @@ public class CardRoundScreen extends Screen {
     }
 
     /**
-     * TUI screen entry point for the card round game phase6
-     * 5
-     * 0
-     * 6
-     * 7
-     * 0
-     * 6
-     * 9
-     * 0
-     * 8
-     * 5
-     * 2
-     * 8
-     * 10
-     * 1
-     *
+     * TUI screen entry point for the card round game phase
      */
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
