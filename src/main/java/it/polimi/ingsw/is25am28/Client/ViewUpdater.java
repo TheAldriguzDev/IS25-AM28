@@ -268,7 +268,11 @@ public class ViewUpdater implements StateVisitor {
     }
 
     public void updateCardResult(CardRoundDTO state) throws Exception {
-        this.update(state);
+        try {
+            this.update(state);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void update(CardRoundDTO state) {

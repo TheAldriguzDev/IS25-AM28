@@ -18,7 +18,7 @@ import javafx.scene.control.TextField;
 import java.util.List;
 import java.util.Objects;
 
-public class JoinGameController {
+public class JoinGameController extends GUIController {
     @FXML private Label joinGameTitleLabel;
     @FXML private TextField nicknameTextField;
     @FXML private ComboBox<PlayerColor> colorComboBox;
@@ -46,32 +46,25 @@ public class JoinGameController {
     }
 
     public void onSubmitJoinGameButtonClick(ActionEvent actionEvent) {
-        Platform.runLater(() -> {
-            FXMLLoader loader = new FXMLLoader(
-                Objects.requireNonNull(
-                    getClass().getResource("/GUI/FXML/joinGame.fxml")
-                )
-            );
+        String nickname = this.nicknameTextField.getText() == null ? "" : this.nicknameTextField.getText().trim().strip();
+        PlayerColor color = this.colorComboBox.getValue();
 
-            GUIHandler.setCommandCTX(
-                new CommandCTX(
-                    "joinGame",
-                    () -> {
-                        // TODO: Determine if something needs to be added here
-                        System.out.println("joinGame -> onSuccess");
-                    },
-                    () -> {
-                        // TODO: Determine if something needs to be added here
-                        System.out.println("joinGame -> onError");
-                    }
-                )
-            );
+        Platform.runLater(() -> {
+            // Validate the input
+            if (nickname.isBlank()) {
+                showError("Nickname cannot be empty.");
+                return;
+            }
+            if (color == null) {
+                showError("Please select a color.");
+                return;
+            }
 
             try {
                 GUIHandler.getVirtualClient().sendMessage(
                     new NewPlayer(
-                        this.nicknameTextField.getText().trim().strip(),
-                        this.colorComboBox.getValue(),
+                        nickname,
+                        color,
                         this.gameID
                     )
                 );

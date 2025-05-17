@@ -6,7 +6,8 @@ public enum GuiScenes {
     CREATE_GAME_SCENE("createGame.fxml"),
     JOIN_GAME_SCENE("joinGame.fxml"),
     RECONNECT_GAME_SCENE("reconnectGame.fxml"),
-    WAITING_FOR_PLAYERS_SCENE("waitingForPlayers.fxml");
+    WAITING_FOR_PLAYERS_SCENE("waitingForPlayers.fxml"),
+    INSUFFICIENT_PLAYER_SCENE("insufficientPlayer.fxml");
 
     private final String fxmlFile;
 
@@ -15,7 +16,7 @@ public enum GuiScenes {
     }
 
     public String getFxmlFile() {
-        return fxmlFile;
+        return "/GUI/FXML/" + fxmlFile;
     }
 
     @Override

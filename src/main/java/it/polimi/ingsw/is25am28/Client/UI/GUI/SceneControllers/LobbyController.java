@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.GuiScenes;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
 import it.polimi.ingsw.is25am28.Network.Messages.RefreshGames;
@@ -9,17 +10,23 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.util.Objects;
+import java.util.stream.Stream;
 
-public class LobbyController {
+public class LobbyController extends GUIController {
     @FXML private Button createGameButton;
     @FXML private Button reconnectGameButton;
     @FXML private Button quitButton;
@@ -29,36 +36,52 @@ public class LobbyController {
 
     public void init(AvailableGamesDTO state) {
         VBox gameList = new VBox();
-
         gameList.setSpacing(10);
+        gameList.setPadding(new Insets(10));
+        gameList.setAlignment(Pos.TOP_CENTER);
 
-        this.lobbyListScrollPane.getChildrenUnmodifiable().clear();
         this.lobbyListScrollPane.setFitToWidth(true);
         this.lobbyListScrollPane.setFitToHeight(true);
         this.lobbyListScrollPane.setContent(gameList);
 
         for (GameInfoDTO game : state.getAvailableGames()) {
+            Label gameIdLabel = new Label("🎮 Game ID: " + game.getId());
+            Label playersLabel = new Label("👥 " + game.getActualPlayers() + "/" + game.getTotalPlayers() + " players");
+            Label levelLabel = new Label("⭐ Level: " + game.getLevel());
+
+            Stream.of(gameIdLabel, playersLabel, levelLabel).forEach(label -> {
+                label.setStyle("-fx-text-fill: white; -fx-font-size: 16px;");
+                label.setMaxWidth(Double.MAX_VALUE);
+                label.setAlignment(Pos.CENTER);
+                HBox.setHgrow(label, Priority.ALWAYS);
+            });
+
+            HBox content = new HBox(gameIdLabel, playersLabel, levelLabel);
+            content.setSpacing(20);
+            content.setAlignment(Pos.CENTER);
+            content.setPadding(new Insets(5, 10, 5, 10));
+            content.setPrefWidth(Double.MAX_VALUE);
+
             Button joinGameButton = new Button();
+            joinGameButton.setGraphic(content);
+            joinGameButton.setPrefHeight(60);
+            joinGameButton.setMaxWidth(Double.MAX_VALUE);
+            joinGameButton.getStyleClass().add("game-button");
 
-            joinGameButton.setText("GameID=" + game.getId() + " (" + game.getActualPlayers() + "/" + game.getTotalPlayers() + ")");
-            joinGameButton.setWrapText(true);
-            joinGameButton.getStyleClass().add("button");
+            joinGameButton.setOnAction(event -> this.onJoinGameButtonClick(event, game));
 
-            joinGameButton.setOnAction(
-                (event) -> {
-                     this.onJoinGameButtonClick(event, game);
-                }
-            );
-
+            VBox.setMargin(joinGameButton, new Insets(5, 20, 5, 20));
             gameList.getChildren().add(joinGameButton);
         }
     }
+
+
 
     public void onCreateGameButtonClick(ActionEvent actionEvent) {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
                 Objects.requireNonNull(
-                    getClass().getResource("/GUI/FXML/createGame.fxml")
+                    getClass().getResource(GuiScenes.CREATE_GAME_SCENE.getFxmlFile())
                 )
             );
 
@@ -72,6 +95,11 @@ public class LobbyController {
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
                 stage.show();
+
+                // Save the root and the controller
+                GUIHandler handler = GUIHandler.getInstance();
+                handler.saveRootAndController(GuiScenes.CREATE_GAME_SCENE, root, controller);
+                handler.switchScene(GuiScenes.CREATE_GAME_SCENE);
             }
             catch (Exception e) {
                 throw new RuntimeException(e);
@@ -83,7 +111,7 @@ public class LobbyController {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
                 Objects.requireNonNull(
-                    getClass().getResource("/GUI/FXML/joinGame.fxml")
+                    getClass().getResource(GuiScenes.JOIN_GAME_SCENE.getFxmlFile())
                 )
             );
 
@@ -97,6 +125,11 @@ public class LobbyController {
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
                 stage.show();
+
+                // Save the root and the controller
+                GUIHandler handler = GUIHandler.getInstance();
+                handler.saveRootAndController(GuiScenes.JOIN_GAME_SCENE, root, controller);
+                handler.switchScene(GuiScenes.JOIN_GAME_SCENE);
             }
             catch (Exception e) {
                 throw new RuntimeException(e);
@@ -108,50 +141,44 @@ public class LobbyController {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
                 Objects.requireNonNull(
-                    getClass().getResource("/GUI/FXML/reconnectGame.fxml")
+                    getClass().getResource(GuiScenes.RECONNECT_GAME_SCENE.getFxmlFile())
                 )
             );
 
             try {
                 Parent root = loader.load();
+                ReconnectGameController controller = loader.getController();
+
                 Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
 
                 Scene scene = new Scene(root);
                 stage.setScene(scene);
                 stage.show();
+
+                // Save the root and the controller
+                GUIHandler handler = GUIHandler.getInstance();
+                handler.saveRootAndController(GuiScenes.RECONNECT_GAME_SCENE, root, controller);
+                handler.switchScene(GuiScenes.RECONNECT_GAME_SCENE);
             }
             catch (Exception e) {
                 throw new RuntimeException(e);
+            } finally {
+                GUIHandler.getInstance().switchScene(GuiScenes.RECONNECT_GAME_SCENE);
             }
         });
     }
 
     public void onRefreshGamesButtonClick(ActionEvent actionEvent) {
-        GUIHandler.setCommandCTX(
-            new CommandCTX(
-                "refreshGames",
-                () -> {
-                    // TODO: Determine if something needs to be added here
-                    System.out.println("refreshGames -> onSuccess");
-                },
-                () -> {
-                    // TODO: Determine if something needs to be added here
-                    System.out.println("refreshGames -> onSuccess");
-                }
-            )
-        );
-
         try {
             GUIHandler.getVirtualClient().sendMessage(new RefreshGames());
         }
         catch (Exception e) {
-            // TODO: Determine if something needs to be added here
-            System.out.println("refreshGames -> sendMessage threw an exception");
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
-    public void onQuitButtonClick(javafx.event.ActionEvent actionEvent) {
-        GUIHandler.onQuitHandler(null);
+    public void onQuitButtonClick(ActionEvent actionEvent) {
+        GUIHandler.getInstance().getStage().close();
+        System.exit(0);
     }
 }

@@ -13,55 +13,52 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="lobbyScene" minHeight="-Infinity" minWidth="-Infinity" prefHeight="647.0" prefWidth="1004.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.LobbyController">
-   <children>
-      <VBox alignment="CENTER" layoutX="217.0" layoutY="-61.0" prefHeight="660.0" prefWidth="1084.0" spacing="10.0" stylesheets="@../style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <ImageView fitHeight="205.0" fitWidth="321.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../imgs/galaxy_logo.png" />
-               </image>
-            </ImageView>
-            <HBox alignment="CENTER" prefHeight="57.0" prefWidth="964.0" spacing="10.0" styleClass="auto-resize">
-               <children>
-                  <Button fx:id="createGameButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onCreateGameButtonClick" text="Create New Game" />
-                  <Button fx:id="reconnectGameButton" alignment="CENTER" mnemonicParsing="false" onAction="#onReconnectGameButtonClick" text="Reconnect to an Existing Game" />
-                  <Button fx:id="quitButton" mnemonicParsing="false" onAction="#onQuitButtonClick" text="Quit Game" />
-               </children>
-               <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </padding>
-            </HBox>
-            <HBox alignment="CENTER" prefHeight="70.0" prefWidth="964.0" spacing="20.0" styleClass="auto-resize">
-               <children>
-                  <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Available Games:">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <Region HBox.hgrow="ALWAYS" />
-                  <Button fx:id="refreshGamesButton" alignment="CENTER" onAction="#onRefreshGamesButtonClick">
-                     <graphic>
-                        <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../../imgs/utils/refresh.png" />
-                           </image>
-                        </ImageView>
-                     </graphic>
-                  </Button>
-               </children>
-            </HBox>
-            <ScrollPane fx:id="lobbyListScrollPane" prefHeight="255.0" prefWidth="964.0" styleClass="lobbyList">
-               <padding>
-                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-               </padding></ScrollPane>
-         </children>
+<?import javafx.scene.layout.StackPane?>
+<StackPane fx:id="rootPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="647.0" prefWidth="1004.0"
+           xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.LobbyController">
+   <VBox alignment="CENTER" layoutX="217.0" layoutY="-61.0" prefHeight="660.0" prefWidth="1084.0" spacing="10.0"
+         stylesheets="@../style.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+         AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <padding>
+         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+      </padding>
+      <styleClass>
+         <String fx:value="root"/>
+         <String fx:value="auto-resize"/>
+      </styleClass>
+      <ImageView fitHeight="205.0" fitWidth="321.0" pickOnBounds="true" preserveRatio="true">
+         <Image url="@../../imgs/galaxy_logo.png"/>
+      </ImageView>
+      <HBox alignment="CENTER" prefHeight="57.0" prefWidth="964.0" spacing="10.0" styleClass="auto-resize">
          <padding>
-            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
          </padding>
-         <styleClass>
-            <String fx:value="root" />
-            <String fx:value="auto-resize" />
-         </styleClass></VBox>
-   </children>
-</AnchorPane>
+         <Button fx:id="createGameButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false"
+                 onAction="#onCreateGameButtonClick" text="Create New Game"/>
+         <Button fx:id="reconnectGameButton" alignment="CENTER" mnemonicParsing="false"
+                 onAction="#onReconnectGameButtonClick" text="Reconnect to an Existing Game"/>
+         <Button fx:id="quitButton" mnemonicParsing="false" onAction="#onQuitButtonClick" text="Quit Game"/>
+      </HBox>
+      <HBox alignment="CENTER" prefHeight="70.0" prefWidth="964.0" spacing="20.0" styleClass="auto-resize">
+         <Label style="-fx-font-size: 14px; -fx-font-weight: bold;" text="Available Games:">
+            <font>
+               <Font size="16.0"/>
+            </font>
+         </Label>
+         <Region HBox.hgrow="ALWAYS"/>
+         <Button fx:id="refreshGamesButton" alignment="CENTER" onAction="#onRefreshGamesButtonClick">
+            <graphic>
+               <ImageView fitHeight="20.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../../imgs/utils/refresh.png"/>
+               </ImageView>
+            </graphic>
+         </Button>
+      </HBox>
+      <ScrollPane fx:id="lobbyListScrollPane" prefHeight="255.0" prefWidth="964.0" styleClass="lobbyList">
+         <padding>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+         </padding>
+      </ScrollPane>
+   </VBox>
+</StackPane>

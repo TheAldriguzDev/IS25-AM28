@@ -9,29 +9,23 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
-public class ReconnectGameController {
+public class ReconnectGameController extends GUIController {
     @FXML private TextField nicknameTextField;
     @FXML private Button submitReconnectGameButton;
 
     public void onSubmitReconnectGameButtonClick(ActionEvent actionEvent) {
+        String nickname = this.nicknameTextField.getText() == null ? "" : this.nicknameTextField.getText().trim().strip();
+
         Platform.runLater(() -> {
-            GUIHandler.setCommandCTX(
-                new CommandCTX(
-                    "reconnectGame",
-                    () -> {
-                        // TODO: Determine if something needs to be added here
-                        System.out.println("reconnectGame -> onSuccess");
-                    },
-                    () -> {
-                        // TODO: Determine if something needs to be added here
-                        System.out.println("reconnectGame -> onError");
-                    }
-                )
-            );
+            // Validate the input
+            if (nickname.isBlank()) {
+                showError("Nickname cannot be empty.");
+                return;
+            }
 
             try {
                 GUIHandler.getVirtualClient().sendMessage(
-                    new Reconnect(this.nicknameTextField.getText().trim().strip())
+                    new Reconnect(nickname)
                 );
             }
             catch (Exception e) {

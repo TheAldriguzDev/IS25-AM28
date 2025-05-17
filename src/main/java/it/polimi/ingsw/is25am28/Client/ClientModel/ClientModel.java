@@ -238,6 +238,9 @@ public class ClientModel {
         if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
             Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms = cardStateJSON.getRemovedLifeforms();
             for (String playerNickname : removedLifeforms.keySet()) {
+
+                System.out.println(cardStateJSON.getPrevPlayerNickname());
+
                 if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
                     for (ComponentHelper<LifeformType> lifeFormToRemove : removedLifeforms.get(playerNickname)) {
                         this.getShipOfPlayer(playerNickname).ifPresent(
