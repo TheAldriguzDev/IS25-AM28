@@ -14,7 +14,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
-import java.util.*;<
+import java.util.*;
 
 public class Pirates extends EventCard {
     private final int requiredFirepower;
@@ -482,7 +482,7 @@ public class Pirates extends EventCard {
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardTypeId);
+        cardState.setId(this.cardID);
         cardState.setCardName(getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(getCardLevel());
