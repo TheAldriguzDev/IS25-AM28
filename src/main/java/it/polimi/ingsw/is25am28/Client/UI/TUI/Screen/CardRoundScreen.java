@@ -449,7 +449,11 @@ public class CardRoundScreen extends Screen {
         this.availableItemColors = new InputWidgetTUI(this.inputThread);
         index = 0;
 
-        for (ItemColor color : availableItemColors) {
+        List<ItemColor> availableResourcesInGeneral = availableItemColors.stream()
+                .filter(itemColor -> this.model.getResourceBank().getResourceAvailabilityFromColor(itemColor) > 0)
+                .toList();
+
+        for (ItemColor color : availableResourcesInGeneral) {
             command = new CommandWidgetTUI(
                     "" + index,
                     () -> {
@@ -808,14 +812,22 @@ public class CardRoundScreen extends Screen {
                     .addPadding(0, 1, 0, 1)
                     .wrapWidgetWithBorder()
                     .printWidget();
+        } else if (this.model.getResourceBank().getResources().isEmpty()) {
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + "The Resource Bank is empty!")
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
         }
+
+        // TODO: ResourceBankCheck
 
         this.generateAvailableItemColorsWidget(
                 availableItemsToTake,
                 selectedItem
         );
 
-        // Getting the lifeform type to remove
+        // Getting the itemsToTake
         do {
             try {
                 System.out.println("Available items to take:");
@@ -1801,14 +1813,19 @@ public class CardRoundScreen extends Screen {
                     }
                     else {
                         ItemColor colorToRemove = toRemove.getItem().get();
+                        boolean colorFound = false;
 
                         for (ComponentHelper<ItemColor> ch : matrix[toRemove.getI()][toRemove.getJ()]) {
                             if (ch.getItem().isPresent()) {
                                 if (ch.getItem().get().equals(colorToRemove)) {
                                     matrix[toRemove.getI()][toRemove.getJ()].remove(ch);
+                                    colorFound = true;
                                     break;
                                 }
                             }
+                        }
+                        if (!colorFound) {
+                            itemsToRemoveFinal.add(toRemove);
                         }
                     }
                 }
