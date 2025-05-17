@@ -3,6 +3,8 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.InsufficientPlayersController;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.LobbyController;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.WaitingForPlayersController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
@@ -16,6 +18,7 @@ import it.polimi.ingsw.is25am28.Network.VirtualView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -25,8 +28,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
 import java.io.IOException;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class GUIHandler extends Application implements ClientUI {
     private static GUIHandler instance;
@@ -42,7 +44,12 @@ public class GUIHandler extends Application implements ClientUI {
 
     // ========== ATTRIBUTES NEEDED TO HANDLE THE GUI ========== //
     private Stage stage;
-    private Scene scene;
+
+    // Stores each page root to avoid page reloads when switching scenes
+    private final Map<GuiScenes, Parent> roots = new HashMap<>();
+    // Stores the controller instance for each page, when created
+    private final Map<GuiScenes, Object> controllers = new HashMap<>();
+    // Stores the current page scene
     private GuiScenes currentScene;
 
     public static GUIHandler getInstance() {
@@ -69,10 +76,21 @@ public class GUIHandler extends Application implements ClientUI {
         GUIHandler.ctx = ctx;
     }
 
+    public static void clearCommandCTX() {
+        GUIHandler.ctx = null;
+    }
+
     public Stage getStage() {
         return this.stage;
     }
 
+    /**
+     * Handles the quit action when the user attempts to close the application window.
+     * Displays a confirmation dialog to the user, prompting them to confirm or cancel the quit action.
+     *
+     * @param windowEvent the event triggered when the window close request is initiated.
+     *                    If the user cancels the quit action, the event is consumed to prevent the window from closing.
+     */
     public static void onQuitHandler(WindowEvent windowEvent) {
         Alert quitConfirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
 
@@ -80,8 +98,13 @@ public class GUIHandler extends Application implements ClientUI {
         quitConfirmationAlert.setHeaderText("You're about to quit Galaxy Trucker");
         quitConfirmationAlert.setContentText("Do you want to proceed?");
 
-        if (quitConfirmationAlert.showAndWait().get() == ButtonType.OK) {
+        Optional<ButtonType> result = quitConfirmationAlert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            System.out.println("here");
             GUIHandler.getInstance().getStage().close();
+            System.exit(0);
+        } else {
+            windowEvent.consume();
         }
     }
 
@@ -102,11 +125,10 @@ public class GUIHandler extends Application implements ClientUI {
 
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/GUI/FXML/login.fxml")));
         stage.setTitle("Galaxy Trucker");
-        //stage.setResizable(false);
 
         Scene scene = new Scene(root);
-        this.scene = scene;
         stage.setScene(scene);
+        this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
 
         Platform.runLater(stage::show);
     }
@@ -114,24 +136,39 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws Exception {
         Platform.runLater(() -> {
+
+            // Check if the LOBBY_SCENE is already loaded
+            if (this.currentScene != null && this.currentScene.equals(GuiScenes.LOBBY_SCENE)) {
+                LobbyController controller = (LobbyController) this.controllers.get(GuiScenes.LOBBY_SCENE);
+                controller.init(availableGames);
+
+                return;
+            }
+
+            // Otherwise load the new page, store the root, store the controller and init the page content
+
             FXMLLoader loader = new FXMLLoader(
-                Objects.requireNonNull(
-                    getClass().getResource("/GUI/FXML/lobby.fxml")
-                )
+                    Objects.requireNonNull(
+                            getClass().getResource(GuiScenes.LOBBY_SCENE.getFxmlFile())
+                    )
             );
 
             try {
                 Parent root = loader.load();
                 LobbyController controller = loader.getController();
+
+                // Store the root and the controller
+                controllers.put(GuiScenes.LOBBY_SCENE, controller);
+                roots.put(GuiScenes.LOBBY_SCENE, root);
                 controller.init(availableGames);
 
                 Scene scene = new Scene(root);
-                this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
                 this.stage.setScene(scene);
                 this.stage.show();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 throw new RuntimeException(e);
+            } finally {
+                this.currentScene = GuiScenes.LOBBY_SCENE;
             }
         });
     }
@@ -139,15 +176,28 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
         Platform.runLater(() -> {
+
+            if (this.currentScene != null && this.currentScene.equals(GuiScenes.WAITING_FOR_PLAYERS_SCENE)) {
+                WaitingForPlayersController controller = (WaitingForPlayersController) this.controllers.get(GuiScenes.WAITING_FOR_PLAYERS_SCENE);
+                controller.showConnectedPlayers(waitingForPlayers);
+
+                return;
+            }
+
             FXMLLoader loader = new FXMLLoader(
                 Objects.requireNonNull(
-                    getClass().getResource("/GUI/FXML/waitingForPlayers.fxml")
+                    getClass().getResource(GuiScenes.WAITING_FOR_PLAYERS_SCENE.getFxmlFile())
                 )
             );
 
             try {
                 Parent root = loader.load();
                 WaitingForPlayersController controller = loader.getController();
+
+                // Store the root and the controller
+                controllers.put(GuiScenes.WAITING_FOR_PLAYERS_SCENE, controller);
+                roots.put(GuiScenes.WAITING_FOR_PLAYERS_SCENE, root);
+
                 controller.showConnectedPlayers(waitingForPlayers);
 
                 Scene newScene = new Scene(root);
@@ -157,6 +207,8 @@ public class GUIHandler extends Application implements ClientUI {
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
+            } finally {
+                this.currentScene = GuiScenes.WAITING_FOR_PLAYERS_SCENE;
             }
         });
     }
@@ -188,7 +240,41 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
+        Platform.runLater(() -> {
 
+            if (this.currentScene != null && this.currentScene.equals(GuiScenes.INSUFFICIENT_PLAYER_SCENE)) {
+                InsufficientPlayersController controller = (InsufficientPlayersController) this.controllers.get(GuiScenes.INSUFFICIENT_PLAYER_SCENE);
+                controller.setCountDown(insufficientPlayer);
+
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(
+                    Objects.requireNonNull(
+                            getClass().getResource(GuiScenes.INSUFFICIENT_PLAYER_SCENE.getFxmlFile())
+                    )
+            );
+
+            try {
+                Parent root = loader.load();
+                InsufficientPlayersController controller = loader.getController();
+
+                // Store the root and the controller
+                this.saveRootAndController(GuiScenes.INSUFFICIENT_PLAYER_SCENE, root, controller);
+
+                controller.setCountDown(insufficientPlayer);
+
+                Scene newScene = new Scene(root);
+                this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
+                this.stage.setScene(newScene);
+                this.stage.show();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                this.currentScene = GuiScenes.INSUFFICIENT_PLAYER_SCENE;
+            }
+        });
     }
 
     @Override
@@ -207,22 +293,21 @@ public class GUIHandler extends Application implements ClientUI {
     public void showError(ErrorAnswer error) {
         if (ctx != null) {
             ctx.handleError(error.getError());
-        }
-        else {
+        } else {
             // Terminal output
             System.err.println(error.getError());
-
-            Parent root = this.stage.getScene().getRoot();
-            Label errorLabel = new Label();
-
-            errorLabel.setText(error.getError());
-            errorLabel.setWrapText(true);
-            errorLabel.getStyleClass().add("error-label");
-            root.getChildrenUnmodifiable().add(errorLabel);
-
-            this.stage.show();
         }
+
+        GUIController controller = (GUIController) this.controllers.get(this.currentScene);
+
+        if (controller == null) {
+            System.err.println("No controller has been found for the current scene");
+            return;
+        }
+
+        Platform.runLater(() -> controller.showError(error.getError()));
     }
+
 
     @Override
     public boolean isCTXAvailable() {
@@ -233,5 +318,14 @@ public class GUIHandler extends Application implements ClientUI {
     public void setVirtualClient(VirtualView client) {
         // Not used in the GUI since the instance is handled by JavaFX
         // (no instance of GUIHandler is available to invoke the method before launching the GUI)
+    }
+
+    public void saveRootAndController(GuiScenes scene, Parent root, Object controller) {
+        this.controllers.put(scene, controller);
+        this.roots.put(scene, root);
+    }
+
+    public void switchScene(GuiScenes scene) {
+        this.currentScene = scene;
     }
 }

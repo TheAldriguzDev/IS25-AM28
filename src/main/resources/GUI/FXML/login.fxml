@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.VBox?>
 
 <StackPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #1e1e2f;" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
-
     <padding>
         <Insets bottom="50" left="50" right="50" top="50" />
     </padding>

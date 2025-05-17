@@ -6,112 +6,56 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="448.0" prefWidth="600.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.CreateGameController">
-   <children>
-      <VBox alignment="CENTER" prefHeight="448.0" prefWidth="600.0">
-         <children>
-            <HBox alignment="CENTER" prefHeight="82.0" prefWidth="600.0" spacing="20.0">
-               <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="49.0" prefWidth="559.0" text="Configure Your Game" textAlignment="CENTER">
-                     <font>
-                        <Font size="26.0" />
-                     </font>
-                  </Label>
-               </children>
-            </HBox>
-            <GridPane alignment="CENTER">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="274.0" minWidth="10.0" prefWidth="205.0" />
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="409.0" minWidth="10.0" prefWidth="355.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label fx:id="nicknameLabel" alignment="CENTER_RIGHT" contentDisplay="CENTER" layoutX="10.0" layoutY="10.0" prefHeight="25.0" prefWidth="212.0" text="Your Nickname:" textAlignment="RIGHT">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox alignment="CENTER_LEFT" prefHeight="55.0" prefWidth="404.0" GridPane.columnIndex="1">
-                     <children>
-                        <HBox prefHeight="30.0" prefWidth="31.0" />
-                        <TextField fx:id="nicknameTextField" prefHeight="26.0" prefWidth="285.0" promptText="Your name goes here..." />
-                     </children>
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
-                     <children>
-                        <Label fx:id="colorLabel" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="25.0" prefWidth="212.0" text="Your Color:" textAlignment="RIGHT">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="30.0" prefWidth="31.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <children>
-                        <HBox prefHeight="30.0" prefWidth="31.0" />
-                        <ComboBox fx:id="colorComboBox" prefWidth="150.0" />
-                     </children>
-                  </HBox>
-                  <HBox layoutX="10.0" layoutY="40.0" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
-                     <children>
-                        <Label fx:id="levelLabel" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="25.0" prefWidth="212.0" text="Difficulty Level:" textAlignment="RIGHT">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-                  <HBox layoutX="215.0" layoutY="40.0" prefHeight="30.0" prefWidth="31.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
-                     <children>
-                        <HBox prefHeight="30.0" prefWidth="31.0" />
-                        <ComboBox fx:id="levelComboBox" prefWidth="150.0" />
-                     </children>
-                  </HBox>
-                  <HBox layoutX="215.0" layoutY="70.0" prefHeight="30.0" prefWidth="31.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
-                     <children>
-                        <HBox prefHeight="30.0" prefWidth="31.0" />
-                        <ComboBox fx:id="lobbySizeComboBox" prefWidth="150.0" />
-                     </children>
-                  </HBox>
-                  <HBox layoutX="10.0" layoutY="70.0" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="3">
-                     <children>
-                        <Label fx:id="levelLabel1" alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="25.0" prefWidth="212.0" text="Lobby Size:" textAlignment="RIGHT">
-                           <font>
-                              <Font size="16.0" />
-                           </font>
-                        </Label>
-                     </children>
-                  </HBox>
-               </children>
-               <VBox.margin>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </VBox.margin>
-            </GridPane>
-            <HBox alignment="CENTER" prefHeight="64.0" prefWidth="600.0">
-               <children>
-                  <Button fx:id="submitGameConfigButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onSubmitGameConfigButtonClick" prefHeight="22.0" prefWidth="251.0" text="Submit" />
-               </children>
-            </HBox>
-         </children>
+<?import javafx.scene.layout.StackPane?>
+<StackPane fx:id="rootPane" prefHeight="448.0" prefWidth="600.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1"
+           xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.CreateGameController">
+   <VBox alignment="CENTER" spacing="24" AnchorPane.bottomAnchor="0" AnchorPane.leftAnchor="0"
+         AnchorPane.rightAnchor="0" AnchorPane.topAnchor="0">
+
+      <!-- Title -->
+      <Label styleClass="title-label" text="Configure Your Game"/>
+
+      <!-- Form container -->
+      <VBox prefWidth="Infinity" spacing="16">
+         <padding>
+            <Insets left="32" right="32"/>
+         </padding>
+
+         <!-- Nickname -->
+         <HBox alignment="CENTER" prefWidth="Infinity" spacing="20">
+            <Label contentDisplay="RIGHT" prefHeight="13.0" styleClass="form-label" text="Your Nickname:"/>
+            <TextField fx:id="nicknameTextField" promptText="Your name goes here..." prefHeight="39.0"
+                       styleClass="form-control" HBox.hgrow="ALWAYS"/>
+         </HBox>
+
+         <!-- Color -->
+         <HBox alignment="CENTER" prefWidth="Infinity" spacing="20">
+            <Label prefHeight="13.0" styleClass="form-label" text="Choose color:"/>
+            <ComboBox fx:id="colorComboBox" prefHeight="39.0" prefWidth="396.0" styleClass="form-control"
+                      HBox.hgrow="ALWAYS"/>
+         </HBox>
+
+         <!-- Game level-->
+         <HBox alignment="CENTER" prefWidth="Infinity" spacing="20">
+            <Label prefHeight="13.0" prefWidth="99.0" styleClass="form-label" text="Choose level:"/>
+            <ComboBox fx:id="levelComboBox" prefHeight="39.0" prefWidth="396.0" styleClass="form-control"
+                      HBox.hgrow="ALWAYS"/>
+         </HBox>
+
+         <!-- Number of players -->
+         <HBox alignment="CENTER" prefWidth="Infinity" spacing="20">
+            <Label styleClass="form-label" text="Lobby Size:"/>
+            <ComboBox fx:id="lobbySizeComboBox" prefHeight="39.0" prefWidth="396.0" styleClass="form-control"
+                      HBox.hgrow="ALWAYS"/>
+         </HBox>
       </VBox>
-   </children>
-</AnchorPane>
+
+      <!-- Button -->
+      <Button fx:id="submitGameConfigButton" onAction="#onSubmitGameConfigButtonClick" styleClass="button" text="Submit"
+              HBox.hgrow="ALWAYS"/>
+   </VBox>
+</StackPane>
