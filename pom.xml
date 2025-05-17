@@ -7,7 +7,7 @@
     <groupId>it.polimi.ingsw</groupId>
     <artifactId>IS25-AM28</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <cardName>IS25-AM28</cardName>
+    <name>IS25-AM28</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
