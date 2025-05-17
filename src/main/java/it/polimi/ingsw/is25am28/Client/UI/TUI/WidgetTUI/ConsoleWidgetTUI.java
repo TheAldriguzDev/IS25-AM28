@@ -61,7 +61,7 @@ public class ConsoleWidgetTUI extends WidgetTUI {
     }
 
     /**
-     * @param sender The name of the entity to whom the given message belongs
+     * @param sender The cardName of the entity to whom the given message belongs
      * @param message The message to add to the console
      */
     public WidgetTUI appendStringWithSender(String sender, String message) {

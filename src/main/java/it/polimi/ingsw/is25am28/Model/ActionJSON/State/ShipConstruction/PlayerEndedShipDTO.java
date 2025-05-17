@@ -11,7 +11,7 @@ import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class PlayerEndedShipDTO extends ShipConstructionEventDTO {
-    // Contains the name of the player that ended the ship
+    // Contains the cardName of the player that ended the ship
     private String playerNickname;
     private Integer playerCredits;
     private Integer playerCursors;

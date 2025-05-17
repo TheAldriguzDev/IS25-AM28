@@ -36,7 +36,7 @@ public class CardLoader extends Loader<Cards> {
         cardsData.getAbandonedShip().stream().filter(c -> c.getLevel() <= level).forEach(c -> {
             cards.add(
                     new AbandonedShip(
-                            "AbandonedShip",
+                            "Abandoned Ship",
                             c.getLevel(),
                             c.getPeople(),
                             c.getDays(),

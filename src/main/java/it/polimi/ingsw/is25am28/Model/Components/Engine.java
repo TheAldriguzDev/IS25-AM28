@@ -22,8 +22,9 @@ public final class Engine extends Component {
         return speed;
     }
 
-    public boolean requireEnergy() {
-        return speed > 1;
+    @Override
+    public boolean requiresEnergy() {
+        return (speed > 1);
     }
 
     @Override
@@ -68,7 +69,7 @@ public final class Engine extends Component {
         // used by the wrapper to create the border
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding the component's name
+        // Adding the component's cardName
         paddedString = new StringBuilder(PrintUtils.SPACE + Engine.alias);
         screen.add(paddedString + PrintUtils.SPACE.repeat(width - paddedString.length()));
 

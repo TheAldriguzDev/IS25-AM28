@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -132,23 +133,23 @@ public class ClientPirates extends ClientEventCard {
 
     // Shields
     @Override
-    public void setShieldsToActivate(List<ComponentHelper<Void>> shieldsToActivate) throws UnsupportedOperationException {
+    public void setShieldsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate) throws UnsupportedOperationException {
         this.piratesJSON.setShieldsActivatedCoordinates(shieldsToActivate);
     }
 
     @Override
-    public List<ComponentHelper<Void>> getShieldsToActivate() throws UnsupportedOperationException {
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getShieldsToActivate() throws UnsupportedOperationException {
         return this.piratesJSON.getShieldsActivatedCoordinates();
     }
 
     // Cannons
     @Override
-    public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.piratesJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
     }
 
     @Override
-    public List<ComponentHelper<Void>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         return this.piratesJSON.getDoubleCannonsToActivateCoordinates();
     }
 

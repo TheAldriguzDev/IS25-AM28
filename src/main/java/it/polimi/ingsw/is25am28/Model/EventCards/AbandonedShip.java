@@ -7,7 +7,6 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 
@@ -55,7 +54,7 @@ public class AbandonedShip extends EventCard {
             this.players = new ArrayList<>(this.getBoard().getPlayers());
             currentPlayer = Optional.of(players.getFirst());
         }
-        cardActivated();
+        activateCard();
     }
 
     /**
@@ -195,7 +194,7 @@ public class AbandonedShip extends EventCard {
             }
         } else {
             // Set the card information that are needed to play the game
-            cardState.setId(this.id);
+            cardState.setId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
@@ -213,7 +212,7 @@ public class AbandonedShip extends EventCard {
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
-        cardState.setId(this.id);
+        cardState.setId(this.cardTypeId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.cardLevel);
@@ -222,9 +221,5 @@ public class AbandonedShip extends EventCard {
         cardState.setMovementSteps(this.movementStep);
 
         return cardState;
-    }
-
-    public WidgetTUI generateWidget(CardStateJSON abandonedShipJSON) {
-        return null;
     }
 }

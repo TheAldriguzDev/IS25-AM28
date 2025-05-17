@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientWarZone;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -17,6 +18,7 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,10 +44,10 @@ class WarZoneTest {
     // All THREE_PIPES connectors
     List<Integer> connectorsThree = new ArrayList<Integer>();
 
-    List<ComponentHelper<Void>> doubleCannons_1 = new ArrayList<>();
-    List<ComponentHelper<Void>> doubleCannons_2 = new ArrayList<>();
-    List<ComponentHelper<Void>> doubleCannons_3 = new ArrayList<>();
-    List<ComponentHelper<Void>> doubleCannons_4 = new ArrayList<>();
+    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannons_1 = new ArrayList<>();
+    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannons_2 = new ArrayList<>();
+    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannons_3 = new ArrayList<>();
+    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannons_4 = new ArrayList<>();
 
     List<ComponentHelper<LifeformType>> lifeformsToRemove_empty = new ArrayList<>();
     List<ComponentHelper<LifeformType>> lifeformsToRemove_4;
@@ -53,11 +55,11 @@ class WarZoneTest {
     List<ComponentHelper<LifeformType>> lifeformsToRemove_2;
     List<ComponentHelper<LifeformType>> lifeformsToRemove_1;
 
-    List<ComponentHelper<Void>> getShieldsToActivate_empty = new ArrayList<>();
-    List<ComponentHelper<Void>> shieldsToActivate1;
-    List<ComponentHelper<Void>> shieldsToActivate2;
+    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getShieldsToActivate_empty = new ArrayList<>();
+    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate1;
+    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate2;
 
-    List<ComponentHelper<Void>> doubleCannons_empty = new ArrayList<>();
+    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannons_empty = new ArrayList<>();
 
     ResourceBank resourceBank;
 
@@ -157,7 +159,14 @@ class WarZoneTest {
 
         //Lowest crew member action
         // actionJson del player 1
-            actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+            actionJSON = new WarZoneJSON(
+                    "Player 1",
+                    lifeformsToRemove_empty,
+                    new ArrayList<>(),
+                    new ArrayList<>(),
+                    new ArrayList<>(),
+                    doubleCannons_empty
+            );
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
             assertEquals(-2, p2.getCursor());
@@ -171,9 +180,17 @@ class WarZoneTest {
         // Player order: 1, 3, 4, 2
 
         //Lowest enginePower action : input
+            List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate = new ArrayList<>();
+
+            doubleEnginesToActivate.add(
+                new Pair<>(
+                        new ComponentHelper<>(7, 7),
+                        new ComponentHelper<>(6, 5)
+                )
+            );
 
             // actionJson del player 1
-            actionJSON = new WarZoneJSON("Player 1", 1, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+            actionJSON = new WarZoneJSON("Player 1", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, doubleEnginesToActivate);
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
@@ -184,7 +201,7 @@ class WarZoneTest {
             // ================================ //
 
             // actionJSON del player 3
-            actionJSON = new WarZoneJSON("Player 3", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+            actionJSON = new WarZoneJSON("Player 3", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, new ArrayList<>());
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
@@ -196,7 +213,7 @@ class WarZoneTest {
 
             // actionJSON del player 4
 
-            actionJSON = new WarZoneJSON("Player 4", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+            actionJSON = new WarZoneJSON("Player 4", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, new ArrayList<>());
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
@@ -207,7 +224,14 @@ class WarZoneTest {
             // ================================ //
 
             // actionJSON del player 2
-            actionJSON = new WarZoneJSON("Player 2", 1, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+            doubleEnginesToActivate.clear();
+            doubleEnginesToActivate.add(
+                    new Pair<>(
+                            new ComponentHelper<>(7, 6),
+                            new ComponentHelper<>(6, 5)
+                    )
+            );
+            actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, doubleEnginesToActivate);
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
@@ -218,7 +242,7 @@ class WarZoneTest {
             // ================================ //
 
             // Player 4 has to send lifeform to remove
-            actionJSON = new WarZoneJSON("Player 4", 0, lifeformsToRemove_4, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+            actionJSON = new WarZoneJSON("Player 4", lifeformsToRemove_4, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, new ArrayList<>());
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
@@ -234,7 +258,7 @@ class WarZoneTest {
         //Lowest Firepower action
 
             // actionJson del player 1
-            actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_1);
+            actionJSON = new WarZoneJSON("Player 1", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_1, new ArrayList<>());
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
@@ -245,7 +269,7 @@ class WarZoneTest {
             // ================================ //
 
             // actionJSON del player 3
-            actionJSON = new WarZoneJSON("Player 3", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_3);
+            actionJSON = new WarZoneJSON("Player 3", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_3, new ArrayList<>());
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
@@ -256,7 +280,7 @@ class WarZoneTest {
             // ================================ //
 
             // actionJSON del player 2
-            actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_2);
+            actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_2, new ArrayList<>());
             warzone.useCard(actionJSON);
             assertFalse(warzone.hasFinished());
 
@@ -270,7 +294,7 @@ class WarZoneTest {
                 clientWarZone.generateWidget().printWidget();
                 // ================================ //
 
-                actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate1, doubleCannons_empty);
+                actionJSON = new WarZoneJSON("Player 1", lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate1, doubleCannons_empty, new ArrayList<>());
                 warzone.useCard(actionJSON);
                 assertFalse(warzone.hasFinished());
 
@@ -285,7 +309,7 @@ class WarZoneTest {
                 // ================================ //
 
 
-                actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+                actionJSON = new WarZoneJSON("Player 1", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, new ArrayList<>());
                 warzone.useCard(actionJSON);
                 assertTrue(warzone.hasFinished());
 
@@ -328,22 +352,22 @@ class WarZoneTest {
 
         // Lowest firepower action // the consequence (movementSteps) will be applied instantly once all 4 players have sent their data
         // player 1
-        actionJSON = new WarZoneJSON("Player 1", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+        actionJSON = new WarZoneJSON("Player 1", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
         // player 2
-        actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_2);
+        actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_2, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
         // player 3
-        actionJSON = new WarZoneJSON("Player 3", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+        actionJSON = new WarZoneJSON("Player 3", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
         // player 4
-        actionJSON = new WarZoneJSON("Player 4", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_4);
+        actionJSON = new WarZoneJSON("Player 4", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_4, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
@@ -361,22 +385,37 @@ class WarZoneTest {
 
         // Lowest enginePower
         // player 2
-        actionJSON = new WarZoneJSON("Player 2", 1, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate = new ArrayList<>();
+
+        doubleEnginesToActivate.add(
+                new Pair<>(
+                        new ComponentHelper<>(7, 6),
+                        new ComponentHelper<>(6, 5)
+                )
+        );
+        actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, doubleEnginesToActivate);
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
         // player 3
-        actionJSON = new WarZoneJSON("Player 3", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+        actionJSON = new WarZoneJSON("Player 3", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
         // player 3
-        actionJSON = new WarZoneJSON("Player 4", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+        actionJSON = new WarZoneJSON("Player 4", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
         // player 4
-        actionJSON = new WarZoneJSON("Player 1", 1, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+        doubleEnginesToActivate.clear();
+        doubleEnginesToActivate.add(
+                new Pair<>(
+                        new ComponentHelper<>(7, 7),
+                        new ComponentHelper<>(6, 5)
+                )
+        );
+        actionJSON = new WarZoneJSON("Player 1", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, doubleEnginesToActivate); // TODO: 1 engine to activate
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
@@ -387,7 +426,7 @@ class WarZoneTest {
         itemsToBeRemoved.add(new ComponentHelper<ItemColor>(7, 4).addItem(ItemColor.YELLOW));
         itemsToBeRemoved.add(new ComponentHelper<ItemColor>(7, 4).addItem(ItemColor.BLUE));
 
-        actionJSON = new WarZoneJSON("Player 4", 0, lifeformsToRemove_empty, itemsToBeRemoved, new ArrayList<>(), doubleCannons_empty);
+        actionJSON = new WarZoneJSON("Player 4", lifeformsToRemove_empty, itemsToBeRemoved, new ArrayList<>(), doubleCannons_empty, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
@@ -404,7 +443,7 @@ class WarZoneTest {
 
         // Lowest crewCount
         // player 2 // Teh lowest crewCount is determined instantly, no need to send information
-        actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty);
+        actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 
@@ -412,8 +451,14 @@ class WarZoneTest {
         // First shot
         warzone.forceDiceThrow(6); // aimed at the battery pack in 5, 6
         shieldsToActivate2 = new ArrayList<>();
-        shieldsToActivate2.add(new ComponentHelper<>(7, 7)); // protection for top and right sides
-        actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
+        // protection for top and right sides
+        shieldsToActivate2.add(
+                new Pair<>(
+                        new ComponentHelper<>(7, 7),
+                        new ComponentHelper<>(6, 5)
+                )
+        );
+        actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
         assertEquals(3, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
@@ -421,8 +466,14 @@ class WarZoneTest {
         // Second shot
         warzone.forceDiceThrow(6); // aimed at the purple vital in 6, 8
         shieldsToActivate2 = new ArrayList<>();
-        shieldsToActivate2.add(new ComponentHelper<>(7, 7)); // protection for top and right sides
-        actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
+        // protection for top and right sides
+        shieldsToActivate2.add(
+                new Pair<>(
+                        new ComponentHelper<>(7, 7),
+                        new ComponentHelper<>(6, 5)
+                )
+        );
+        actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
         assertEquals(2, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
@@ -430,8 +481,14 @@ class WarZoneTest {
         // Third shot
         warzone.forceDiceThrow(4); // aimed at the doubleCannon in 6, 4
         shieldsToActivate2 = new ArrayList<>();
-        shieldsToActivate2.add(new ComponentHelper<>(7, 5)); // protection for bottom and left sides (in this case it will not work as the shot is big)
-        actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
+        // protection for bottom and left sides (in this case it will not work as the shot is big)
+        shieldsToActivate2.add(
+                new Pair<>(
+                        new ComponentHelper<>(7, 5),
+                        new ComponentHelper<>(6, 5)
+                )
+        );
+        actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
         assertEquals(1, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
@@ -439,8 +496,14 @@ class WarZoneTest {
         // Fourth shot
         warzone.forceDiceThrow(7); // aimed at the shield in 7, 5
         shieldsToActivate2 = new ArrayList<>();
-        shieldsToActivate2.add(new ComponentHelper<>(7, 5)); // protection for top and right sides
-        actionJSON = new WarZoneJSON("Player 2", 0, lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty);
+        // protection for top and right sides
+        shieldsToActivate2.add(
+                new Pair<>(
+                        new ComponentHelper<>(7, 5),
+                        new ComponentHelper<>(5, 6)
+                )
+        );
+        actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertTrue(warzone.hasFinished());
         assertEquals(0, p2.getShip().getAvailableEnergy()); // did use one battery for 1 shield
@@ -544,7 +607,12 @@ class WarZoneTest {
         lifeformsToRemove_1.add(new ComponentHelper<LifeformType>(6,7).addItem(ASTRONAUT));
 
         shieldsToActivate1 = new ArrayList<>();
-        shieldsToActivate1.add(new ComponentHelper<>(7, 5));
+        shieldsToActivate1.add(
+                new Pair<>(
+                        new ComponentHelper<>(7, 5),
+                        new ComponentHelper<>(6, 5)
+                )
+        );
     }
 
     /*Assuming batteries are being used:
@@ -638,7 +706,12 @@ class WarZoneTest {
 
         ship.addLifeformToCabin(6, 7, PURPLE_ALIEN);
 
-        doubleCannons_2.add(new ComponentHelper<>(6, 4));
+        doubleCannons_2.add(
+                new Pair<>(
+                        new ComponentHelper<>(6, 4),
+                        new ComponentHelper<>(5, 6)
+                )
+        );
 
         lifeformsToRemove_2 = new ArrayList<>();
         lifeformsToRemove_2.add(new ComponentHelper<LifeformType>(6,6).addItem(ASTRONAUT));
@@ -840,7 +913,12 @@ class WarZoneTest {
 
         ship.addLifeformToCabin(6, 5, PURPLE_ALIEN);
 
-        doubleCannons_4.add(new ComponentHelper<>(6, 8));
+        doubleCannons_4.add(
+                new Pair<>(
+                        new ComponentHelper<>(6, 8),
+                        new ComponentHelper<>(6, 7)
+                )
+        );
 
         lifeformsToRemove_4 = new ArrayList<>();
         lifeformsToRemove_4.add(new ComponentHelper<LifeformType>(6,6).addItem(ASTRONAUT));

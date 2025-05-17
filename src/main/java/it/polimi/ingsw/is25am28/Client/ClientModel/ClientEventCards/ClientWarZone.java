@@ -7,6 +7,8 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
+
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 import java.util.ArrayList;
@@ -287,12 +289,12 @@ public class ClientWarZone extends ClientEventCard {
 
     // Cannons
     @Override
-    public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.warZoneJSON.setCannonList(doubleCannonsToActivate);
     }
 
     @Override
-    public List<ComponentHelper<Void>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         return this.warZoneJSON.getCannonList();
     }
 
@@ -309,23 +311,23 @@ public class ClientWarZone extends ClientEventCard {
 
     // Engines
     @Override
-    public void setDoubleEnginesToActivate(int doubleEnginesToActivate) {
-        this.warZoneJSON.setUsedEnergy(doubleEnginesToActivate);
+    public void setDoubleEnginesToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate) {
+        this.warZoneJSON.setEngineList(doubleEnginesToActivate);
     }
 
     @Override
-    public Integer getDoubleEnginesToActivate() {
-        return this.warZoneJSON.getUsedEnergy();
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleEnginesToActivate() {
+        return this.warZoneJSON.getEngineList();
     }
 
     // Shields
     @Override
-    public void setShieldsToActivate(List<ComponentHelper<Void>> shieldsToActivate) throws UnsupportedOperationException {
+    public void setShieldsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate) throws UnsupportedOperationException {
         this.warZoneJSON.setShieldList(shieldsToActivate);
     }
 
     @Override
-    public List<ComponentHelper<Void>> getShieldsToActivate() throws UnsupportedOperationException {
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getShieldsToActivate() throws UnsupportedOperationException {
         return this.warZoneJSON.getShieldList();
     }
 
@@ -339,5 +341,4 @@ public class ClientWarZone extends ClientEventCard {
     public List<ComponentHelper<LifeformType>> getCrewToRemove() throws UnsupportedOperationException {
         return this.warZoneJSON.getLifeformsToBeRemoved();
     }
-
 }

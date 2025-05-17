@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.NullComponentException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
@@ -17,6 +18,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -756,31 +758,36 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
     }
 
     /**
-     * @param energyToConsume The energy to consume
-     * @throws InsufficientEnergyException If this ship has less energy than the one to consume
+     * Consumes 1 unit of charge from each battery found in the given battery list.
+     * If a battery is empty it'll be skipped.
+     *
+     * @param batteriesToConsume The list of battery components to discharge by 1 unit of charge.
      */
-    public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
-        int availableEnergy;
+    public void consumeEnergy(List<ComponentHelper<Void>> batteriesToConsume) {
+        if (batteriesToConsume != null) {
+            // Removing any null pointers inside the list
+            batteriesToConsume = batteriesToConsume.stream().filter(Objects::nonNull).toList();
 
-        // Consuming the given amount of energy
-        this.generateComponentSubLists();
-        for (ClientBattery battery : this.batteryList) {
-            availableEnergy = battery.getAvailability();
+            // Discharging each battery by 1 unit of charge
+            for (ComponentHelper<Void> componentCoords : batteriesToConsume) {
+                ClientComponent component = this.getComponent(
+                        componentCoords.getI(),
+                        componentCoords.getJ()
+                );
 
-            if (availableEnergy < energyToConsume) {
-                energyToConsume -= availableEnergy;
-                battery.setAvailability(0);
-            }
-            else {
-                battery.setAvailability(availableEnergy - energyToConsume);
-                break;
+                switch (component) {
+                    case ClientBattery battery -> {
+                        try {
+                            battery.useBattery(1);
+                        }
+                        catch (IllegalArgumentException e) {
+                            // Battery is empty => continue iteration
+                        }
+                    }
+                    case null, default -> {}
+                }
             }
         }
-    }
-
-    // Return the available colors to remove from the ship
-    public void getAvailableItemColors() {
-        // TODO: implement
     }
 
     /**

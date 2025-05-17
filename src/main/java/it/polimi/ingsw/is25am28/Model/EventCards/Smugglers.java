@@ -2,11 +2,12 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Components.Battery;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 
@@ -27,8 +28,7 @@ public class Smugglers extends EventCard {
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
     private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
-    //private Map<String, List<ComponentHelper<Battery>>> removedBatteries;
-    private Map<String, Integer> removedBatteries; // TODO: missing implementation on firepower
+    private Map<String, List<ComponentHelper<Void>>> removedBatteries;
     private List<String> eliminatedPlayers;
 
     private String prevPlayerNickname;
@@ -74,7 +74,7 @@ public class Smugglers extends EventCard {
 //            }
 //            currentPlayer = Optional.of(players.getFirst());
 //        }
-//        cardActivated();
+//        activateCard();
 //    }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
@@ -95,11 +95,25 @@ public class Smugglers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
                     if (!this.isPlayerDefeated) {
+                        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleCannons
+                                = player.getShip().activateComponents(smugglersData.getDoubleCannonsToActivateCoordinates());
+
                         // Power consumed by the DoubleCannons
-                        if (!smugglersData.getDoubleCannonsToActivateCoordinates().isEmpty()) {
-                            this.removedBatteries.put(playerNickname, smugglersData.getDoubleCannonsToActivateCoordinates().size());
+                        if (!activatedDoubleCannons.isEmpty()) {
+                            this.removedBatteries.put(
+                                    playerNickname,
+                                    activatedDoubleCannons.stream()
+                                            .map(Pair::getValue)
+                                            .toList()
+                            );
                         }
-                        float playerFirepower = player.getShip().getFirePower(smugglersData.getDoubleCannonsToActivateCoordinates());
+
+                        float playerFirepower = player.getShip().getFirePower(
+                                activatedDoubleCannons.stream()
+                                        .map(Pair::getKey)
+                                        .toList()
+                        );
+
                         if (playerFirepower > requiredFirepower) {
                             cardUsed();
                             if (smugglersData.getTakeLoot()) {
@@ -187,7 +201,7 @@ public class Smugglers extends EventCard {
                     // This covers also the case in which there are not enough resources on board
                     if (resourcesToDrop.size() != mostValuableItems.size()) {
                         throw new IllegalArgumentException("The dropped items are not enough");
-                    } else if (this.countOccurrencies(mostValuableItems).equals(colorsToDrop)) {
+                    } else if (this.countOccurrences(mostValuableItems).equals(colorsToDrop)) {
                         throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
                     }
 
@@ -195,7 +209,7 @@ public class Smugglers extends EventCard {
                         this.droppedResources.put(player.getNickname(), resourcesToDrop);
                     }
 
-                    // Item da lasciare
+                    // Items to drop
                     for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
                         resourceDrop.getItem().ifPresent( i ->
                                 this.resourceBank.addResourceToBankFromPlayer(
@@ -205,31 +219,39 @@ public class Smugglers extends EventCard {
                                         resourceDrop.getJ()));
                     }
 
-                    // Nel caso gli item da lasciare non siano abbastanza (check lato client), batterie da rimuovere
-                    //player.getShip().consumeEnergy(smugglersData.getTakenBatteries());
-                    // Le batterie da rimuovere solo nel caso la lista di elementi da rimuovere non isa abbastanza grande, il client farà il controllo di fare la lista di elementi da togliore il piu grande possibile se non è possibile raggiungere una grandezza pari a takenItems
-                    // TODO: usare il component helper per le batterie
-                    if (player.getShip().getAvailableEnergy() >= (takenItems - resourcesToDrop.size())) {
-                        this.removedBatteries.put(player.getNickname(), takenItems - resourcesToDrop.size());
-                        player.getShip().consumeEnergy(takenItems - resourcesToDrop.size());
-                    } else {
-                        this.removedBatteries.put(player.getNickname(), player.getShip().getAvailableEnergy());
-                        player.getShip().consumeEnergy(player.getShip().getAvailableEnergy());
-                    } // Se viene presa più energia di quanta ne è disponibile semplicemente va a 0
+                    List<ComponentHelper<Void>> consumableBatteries = new ArrayList<>();
 
+                    for (Battery battery : player.getShip().getBatteryList()) {
+                        int[] pos = battery.getPosition();
+                        int charge = battery.getAvailability();
+
+                        // Adding a component helper per battery charge
+                        // (i.e.: a battery has 3/3 energy => it gets added 3 times)
+                        if (charge > 0) {
+                            for (int i = 0; i < charge; i++) {
+                                consumableBatteries.add(
+                                        new ComponentHelper<>(pos[0], pos[1])
+                                );
+                            }
+                        }
+                    }
+
+                    if (player.getShip().getAvailableEnergy() >= (takenItems - resourcesToDrop.size())) {
+                        consumableBatteries = consumableBatteries.subList(0, takenItems - resourcesToDrop.size());
+                    }
+
+                    this.removedBatteries.put(player.getNickname(), consumableBatteries);
+                    player.getShip().consumeEnergy(consumableBatteries);
                 }
         );
     }
 
-    @Override
-    protected void malusEffect() {}
-
-    private Map<ItemColor, Integer> countOccurrencies(List<ItemColor> colors) {
-        Map<ItemColor, Integer> occurrencies = new HashMap<>();
+    private Map<ItemColor, Integer> countOccurrences(List<ItemColor> colors) {
+        Map<ItemColor, Integer> occurrences = new HashMap<>();
         for(ItemColor itemColor : colors) {
-            occurrencies.put(itemColor, occurrencies.getOrDefault(itemColor, 0) + 1);
+            occurrences.put(itemColor, occurrences.getOrDefault(itemColor, 0) + 1);
         }
-        return occurrencies;
+        return occurrences;
     }
 
     @Override
@@ -272,7 +294,7 @@ public class Smugglers extends EventCard {
 
         } else {
             // Setting the card's static data
-            smugglersStateJSON.setId(this.id);
+            smugglersStateJSON.setId(this.cardTypeId);
             smugglersStateJSON.setCardName(this.getCardName());
             smugglersStateJSON.setImagePath(this.path);
             smugglersStateJSON.setCardLevel(this.getCardLevel());
@@ -294,7 +316,7 @@ public class Smugglers extends EventCard {
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
-        cardState.setId(this.id);
+        cardState.setId(this.cardTypeId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.getCardLevel());
@@ -308,9 +330,4 @@ public class Smugglers extends EventCard {
 
         return cardState;
     }
-
-    public WidgetTUI generateWidget(CardStateJSON smugglersStateJSON) {
-        return null;
-    }
 }
-

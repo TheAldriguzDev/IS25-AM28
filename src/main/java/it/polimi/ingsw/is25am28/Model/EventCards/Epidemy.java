@@ -9,7 +9,6 @@ import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 
@@ -20,16 +19,6 @@ public class Epidemy extends EventCard {
     public Epidemy(String name, int cardLevel, Board board, int cardID, String path) {
         super(name, cardLevel, board, cardID, path);
         this.removedLifeforms = new HashMap<>();
-    }
-
-    @Override
-    protected void bonusEffect() {
-        // Nothing
-    }
-
-    @Override
-    protected void malusEffect() {
-        // Nothing
     }
 
     /**
@@ -71,6 +60,7 @@ public class Epidemy extends EventCard {
                     }
                 }
             }
+
             List<ComponentHelper<LifeformType>> previousPlayerRemovedLifeforms = new ArrayList<>();
 
             // Removing a lifeform for each cabin placed in quarantine
@@ -114,8 +104,9 @@ public class Epidemy extends EventCard {
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
 
             setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
-        } else {
-            cardState.setId(this.id);
+        }
+        else {
+            cardState.setId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
@@ -130,18 +121,11 @@ public class Epidemy extends EventCard {
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
-        cardState.setId(this.id);
+        cardState.setId(this.cardTypeId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.cardLevel);
 
         return cardState;
-    }
-
-    /**
-     * @return The card's widget
-     */
-    public WidgetTUI generateWidget(CardStateJSON epidemyStateJSON) {
-        return null;
     }
 }

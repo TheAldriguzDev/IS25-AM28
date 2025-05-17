@@ -5,7 +5,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 
@@ -79,7 +78,7 @@ public class Stardust extends EventCard {
             Collections.reverse(players);
             currentPlayer = Optional.of(players.getFirst());
         }
-        cardActivated();
+        activateCard();
     }
 
     @Override
@@ -101,7 +100,7 @@ public class Stardust extends EventCard {
             // Sets the eliminatedPlayer (if there are any)
             setUpdatedEliminatedPlayersIfNecessary(stardustStateJSON, this.eliminatedPlayers);
         } else {
-            stardustStateJSON.setId(this.id);
+            stardustStateJSON.setId(this.cardTypeId);
             stardustStateJSON.setCardName(getCardName());
             stardustStateJSON.setImagePath(this.path);
             stardustStateJSON.setCardLevel(getCardLevel());
@@ -116,15 +115,11 @@ public class Stardust extends EventCard {
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
-        cardState.setId(this.id);
+        cardState.setId(this.cardTypeId);
         cardState.setCardName(getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(getCardLevel());
 
         return cardState;
-    }
-
-    public WidgetTUI generateWidget(CardStateJSON stardustJSON) {
-        return null;
     }
 }

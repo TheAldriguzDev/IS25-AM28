@@ -42,6 +42,19 @@ public final class ClientBattery extends ClientComponent {
             available = energyLevel;
     }
 
+    /**
+     * @param energyToConsume The units of charge that will be consumed from this battery
+     * @throws IllegalArgumentException If anyone attempts to discharge the battery for more than its currently storing
+     */
+    public void useBattery(int energyToConsume) throws IllegalArgumentException {
+        if (available >= energyToConsume) {
+            available -= energyToConsume;
+        }
+        else {
+            throw new IllegalArgumentException("ERROR: Cannot consume more charge than available");
+        }
+    }
+
     @Override
     public List<String> getComponentScreen() {
         // TODO: Understand better these indexes
@@ -62,7 +75,7 @@ public final class ClientBattery extends ClientComponent {
         // used by the wrapper to create the border
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding the name
+        // Adding the cardName
         screen.add(nameAlias + SPACE.repeat(width - nameAlias.length()));
 
         // Adding the battery indicator and all the padding spaces

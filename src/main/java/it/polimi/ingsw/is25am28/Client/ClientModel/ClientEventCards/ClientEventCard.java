@@ -158,29 +158,29 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     }
 
     // SHIELDS
-    public void setShieldsToActivate(List<ComponentHelper<Void>> shieldsToActivate) throws UnsupportedOperationException {
+    public void setShieldsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setShieldsToActivate()' is not supported in " + this + " state");
     }
 
-    public List<ComponentHelper<Void>> getShieldsToActivate() throws UnsupportedOperationException {
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getShieldsToActivate() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getShieldsToActivate()' is not supported in " + this + " state");
     }
 
     // CANNONS
-    public void setDoubleCannonsToActivate(List<ComponentHelper<Void>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivate) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setDoubleCannonsToActivate()' is not supported in " + this + " state");
     }
 
-    public List<ComponentHelper<Void>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getDoubleCannonsToActivate()' is not supported in " + this + " state");
     }
 
     // ENGINES
-    public void setDoubleEnginesToActivate(int doubleEnginesToActivate) throws UnsupportedOperationException {
+    public void setDoubleEnginesToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setDoubleEnginesToActivate()' is not supported in " + this + " state");
     }
 
-    public Integer getDoubleEnginesToActivate() throws UnsupportedOperationException {
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleEnginesToActivate() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getDoubleEnginesToActivate()' is not supported in " + this + " state");
     }
 
@@ -192,10 +192,4 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     public void removeItem(ItemColor itemColor) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'removeColor()' is not supported in " + this + " card");
     }
-
-    public void setShipIsEmpty(boolean shipIsEmpty) throws UnsupportedOperationException {
-        throw new UnsupportedOperationException("The method 'setShipIsEmpty()' is not supported in " + this + " card");
-    }
-
-
 }

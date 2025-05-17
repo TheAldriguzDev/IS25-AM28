@@ -1,28 +1,39 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class OpenSpaceJSON extends ActionJSON {
-    private int usedEnergy;
+    private List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate;
 
-    /**
-     * Default constructor
-     * */
+    @JsonCreator
     public OpenSpaceJSON() {
-        this.usedEnergy = 0;
+        this.doubleEnginesToActivate = new ArrayList<>();
     }
 
-    public OpenSpaceJSON(@JsonProperty("playerNickname") String playerNickname,
-                         @JsonProperty("usedEnergy") int usedEnergy) {
+    @JsonCreator
+    public OpenSpaceJSON(
+            @JsonProperty("playerNickname") String playerNickname,
+            @JsonProperty("doubleEnginesToActivate") List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate
+    ) {
         super(playerNickname);
-        this.usedEnergy = usedEnergy;
+        this.doubleEnginesToActivate = doubleEnginesToActivate;
     }
 
-    public int getUsedEnergy() {
-        return this.usedEnergy;
+    @JsonGetter("doubleEnginesToActivate")
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleEnginesToActivate() {
+        return this.doubleEnginesToActivate;
     }
 
-    public void setUsedEnergy(int usedEnergy) {
-        this.usedEnergy = usedEnergy;
+    @JsonSetter("doubleEnginesToActivate")
+    public void setDoubleEnginesToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate) {
+        this.doubleEnginesToActivate = doubleEnginesToActivate;
     }
 }

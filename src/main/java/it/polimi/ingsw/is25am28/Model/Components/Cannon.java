@@ -30,8 +30,9 @@ public final class Cannon extends Component {
      * @return If the current cannon is a double cannon and thus
      * requires energy to be activated
      */
-    public boolean requireEnergy() {
-        return force > 1;
+    @Override
+    public boolean requiresEnergy() {
+        return (force > 1);
     }
 
     /**
@@ -75,7 +76,7 @@ public final class Cannon extends Component {
         // used by the wrapper to create the border
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding the component's name
+        // Adding the component's cardName
         paddedString = new StringBuilder(SPACE + Cannon.alias);
         screen.add(paddedString + SPACE.repeat(width - paddedString.length()));
 

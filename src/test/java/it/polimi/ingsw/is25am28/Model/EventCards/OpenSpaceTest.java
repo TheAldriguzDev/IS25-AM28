@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientOpenSpace;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -231,7 +233,14 @@ class OpenSpaceTest {
             OpenSpaceJSON openSpaceJSON = new OpenSpaceJSON();
             openSpaceJSON.setPlayerNickname(player.getNickname());
 
-            openSpaceJSON.setUsedEnergy(1);
+            openSpaceJSON.setDoubleEnginesToActivate(
+                    List.of(
+                            new Pair<>(
+                                    new ComponentHelper<>(8, 9),
+                                    new ComponentHelper<>(7, 8)
+                            )
+                    )
+            );
 
             // ======== STATE TESTING ======== //
             cardState = openSpaceCard.generateState();

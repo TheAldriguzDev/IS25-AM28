@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is25am28.Utils.Pair;
 
-public class Pair <K, V> {
+import java.io.Serializable;
+
+public class Pair <K, V> implements Serializable {
     private K key;
     private V value;
 

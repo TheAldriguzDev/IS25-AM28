@@ -2,11 +2,13 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -91,12 +93,12 @@ public class ClientOpenSpace extends ClientEventCard {
 
     // Engines
     @Override
-    public void setDoubleEnginesToActivate(int doubleEnginesToActivate) {
-        this.openSpaceJSON.setUsedEnergy(doubleEnginesToActivate);
+    public void setDoubleEnginesToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate) {
+        this.openSpaceJSON.setDoubleEnginesToActivate(doubleEnginesToActivate);
     }
 
     @Override
-    public Integer getDoubleEnginesToActivate() {
-        return this.openSpaceJSON.getUsedEnergy();
+    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleEnginesToActivate() {
+        return this.openSpaceJSON.getDoubleEnginesToActivate();
     }
 }

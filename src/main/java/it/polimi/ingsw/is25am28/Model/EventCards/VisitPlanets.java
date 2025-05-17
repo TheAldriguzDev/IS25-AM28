@@ -12,7 +12,6 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
 import java.util.*;
 
@@ -342,7 +341,7 @@ public class VisitPlanets extends EventCard {
 
             setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
         } else {
-            cardState.setId(this.id);
+            cardState.setId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
             cardState.setCardLevel(this.getCardLevel());
@@ -362,7 +361,7 @@ public class VisitPlanets extends EventCard {
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
-        cardState.setId(this.id);
+        cardState.setId(this.cardTypeId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.getCardLevel());
@@ -374,9 +373,5 @@ public class VisitPlanets extends EventCard {
         cardState.setAvailablePlanets(availablePlanets);
 
         return cardState;
-    }
-
-    public WidgetTUI generateWidget(CardStateJSON visitPlanetsJSON) {
-        return null;
     }
 }

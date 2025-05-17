@@ -8,8 +8,7 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
-import javafx.util.Pair;
-
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -488,29 +487,37 @@ class ShipTest {
         // Before consumption
         assertEquals(6, ship.getAvailableEnergy());
 
-        // After consumption
-        ship.consumeEnergy(2);
-        assertEquals(4, ship.getAvailableEnergy());
+        // Activating a doubleEngine and a doubleCannon and a shield (-3 energy)
+        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> toActivate = new ArrayList<>();
+        Component component = ship.getComponent(7, 6);  // Double Engine
+        Component _battery_ = ship.getComponent(6, 7);
+        toActivate.add(
+            new Pair<>(
+                    new ComponentHelper<>(component.getPosition()[0], component.getPosition()[1]),
+                    new ComponentHelper<>(_battery_.getPosition()[0], _battery_.getPosition()[1])
+            )
+        );
+        component = ship.getComponent(8, 4);  // Double Cannon
+        _battery_ = ship.getComponent(6, 7);
+        toActivate.add(
+                new Pair<>(
+                        new ComponentHelper<>(component.getPosition()[0], component.getPosition()[1]),
+                        new ComponentHelper<>(_battery_.getPosition()[0], _battery_.getPosition()[1])
+                )
+        );
+        component = ship.getComponent(6, 5);  // Shield
+        _battery_ = ship.getComponent(5, 5);
+        toActivate.add(
+                new Pair<>(
+                        new ComponentHelper<>(component.getPosition()[0], component.getPosition()[1]),
+                        new ComponentHelper<>(_battery_.getPosition()[0], _battery_.getPosition()[1])
+                )
+        );
 
-        // Overconsumption
-        InsufficientEnergyException iee = assertThrowsExactly(InsufficientEnergyException.class, () -> ship.consumeEnergy(20));
+        assertEquals(1, battery.getAvailability());
+        assertEquals(2, battery2.getAvailability());
 
-//        try {
-//            ship.consumeEnergy(20);
-//        }
-//        catch (InsufficientEnergyException e) {
-//            System.out.println("InsufficientEnergyException CAUGHT");
-//        }
-//        catch (Exception e) {
-//            fail("Wrong exception thrown");
-//        }
-//
-
-        int prevEnergy = ship.getAvailableEnergy();
-
-        // Illegal value, ship's total energy remains the same
-        ship.consumeEnergy(-20);
-        assertEquals(prevEnergy, ship.getAvailableEnergy());
+        ship.activateComponents(toActivate);
     }
 
     @Test
@@ -595,7 +602,19 @@ class ShipTest {
         assertEquals(expectedFirePower, ship.getFirePower(doubleCannonCoords));
 
         // Burning all energy
-        ship.consumeEnergy(ship.getAvailableEnergy());
+        List<ComponentHelper<Void>> batteries = new ArrayList<>();
+
+        for (Battery b : ship.getBatteryList()) {
+            for (int i = 0; i < b.getAvailability(); i++) {
+                batteries.add(
+                        new ComponentHelper<>(
+                                b.getPosition()[0],
+                                b.getPosition()[1]
+                        )
+                );
+            }
+        }
+        ship.consumeEnergy(batteries);
 
         // Case 5 - no energy available + purple alien on board
         doubleCannonCoords = new ArrayList<>();
@@ -611,7 +630,8 @@ class ShipTest {
 
     @Test
     void getEnginePower() {
-        int expectedEnginePower, batteries;
+        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate;
+        int expectedEnginePower, expectedTotalEnergy;
         Ship ship;
 
         List<Integer> connectors = new ArrayList<>();
@@ -623,9 +643,8 @@ class ShipTest {
 
         // Case 0 - No engines + no brown alien on board
         ship = new Ship(-1);
-        batteries = 0;
         expectedEnginePower = 0;
-        assertEquals(expectedEnginePower, ship.getEnginePower(batteries));
+        assertEquals(expectedEnginePower, ship.getEnginePower(null));
 
         // Case 1 - No engines, + brown alien on board
         ship.addComponent(new Cabin(connectors, false, ""), 6, 7);
@@ -638,17 +657,15 @@ class ShipTest {
 
         ship.addLifeformToCabin(6, 7, BROWN_ALIEN);
 
-        batteries = 0;
         expectedEnginePower = 0;
-        assertEquals(expectedEnginePower, ship.getEnginePower(batteries));
+        assertEquals(expectedEnginePower, ship.getEnginePower(null));
 
         // Initializing a custom ship (it has 3 single engines and 1 double engine)
         ship = initCustomShip();
 
         // Case 2 - baseline engine power + no brown alien on board
-        batteries = 0;
         expectedEnginePower = 3;
-        assertEquals(expectedEnginePower, ship.getEnginePower(batteries));
+        assertEquals(expectedEnginePower, ship.getEnginePower(null));
 
 //        alienCoords = new HashMap<>();
 //        alienCoords.put(BROWN_ALIEN.ordinal(), new Pair<>(7, 7));
@@ -658,22 +675,44 @@ class ShipTest {
         ship.addLifeformToCabin(7, 7, BROWN_ALIEN);
 
         // Case 3 - baseline engine power + brown alien on board
-        batteries = 0;
         expectedEnginePower = 5;
-        assertEquals(expectedEnginePower, ship.getEnginePower(batteries));
+        assertEquals(expectedEnginePower, ship.getEnginePower(null));
 
         // Case 4 - total engine power + brown alien on board
-        batteries = 1;
+        expectedTotalEnergy = ship.getAvailableEnergy();
+        doubleEnginesToActivate = new ArrayList<>();
+        Component doubleEngine = ship.getComponent(9, 7);
+        Component battery = ship.getComponent(7, 4);
+        doubleEnginesToActivate.add(
+            new Pair<>(
+                    new ComponentHelper<>(doubleEngine.getPosition()[0], doubleEngine.getPosition()[1]),
+                    new ComponentHelper<>(battery.getPosition()[0], battery.getPosition()[1])
+            )
+        );
         expectedEnginePower = 7;
-        assertEquals(expectedEnginePower, ship.getEnginePower(batteries));
+        doubleEnginesToActivate = ship.activateComponents(doubleEnginesToActivate);
+        assertEquals(expectedEnginePower, ship.getEnginePower(doubleEnginesToActivate.stream().map(Pair::getKey).toList()));
+        expectedTotalEnergy--;
+        assertEquals(expectedTotalEnergy, ship.getAvailableEnergy());
 
         // Burning all energy
-        ship.consumeEnergy(ship.getAvailableEnergy());
+        List<ComponentHelper<Void>> batteries = new ArrayList<>();
+
+        for (Battery b : ship.getBatteryList()) {
+            for (int i = 0; i < b.getAvailability(); i++) {
+                batteries.add(
+                        new ComponentHelper<>(
+                                b.getPosition()[0],
+                                b.getPosition()[1]
+                        )
+                );
+            }
+        }
+        ship.consumeEnergy(batteries);
 
         // Case 5 - no energy available + brown alien on board
-        batteries = 1;
         expectedEnginePower = 5;
-        assertEquals(expectedEnginePower, ship.getEnginePower(batteries));
+        assertEquals(expectedEnginePower, ship.getEnginePower(null));
     }
 
     @Test
