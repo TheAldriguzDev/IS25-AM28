@@ -158,9 +158,14 @@ public class OpenSpace extends EventCard {
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
 
             //cardState.setPlayersEnginePower(this.playerPowerResult);
-            setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
+
             setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
             setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
+
+            if (!hasFinished()) {
+                setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
+            }
+
         } else {
             cardState.setId(this.id);
             cardState.setCardName(this.getCardName());
