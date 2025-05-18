@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.ArrayList;
@@ -13,9 +14,9 @@ import java.util.List;
 public class WarZoneJSON extends ActionJSON {
     private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
     private List<ComponentHelper<ItemColor>> itemsToBeRemoved;
-    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldList;
-    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonList;
-    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> engineList;
+    private List<Pair<CoordinatePair, CoordinatePair>> shieldList;
+    private List<Pair<CoordinatePair, CoordinatePair>> cannonList;
+    private List<Pair<CoordinatePair, CoordinatePair>> engineList;
 
     /**
      * Default constructor
@@ -32,9 +33,9 @@ public class WarZoneJSON extends ActionJSON {
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("lifeformsToBeRemoved") List<ComponentHelper<LifeformType>> lifeformsToBeRemoved,
             @JsonProperty("itemsToBeRemoved") List<ComponentHelper<ItemColor>> itemsToBeRemoved,
-            @JsonProperty("shieldList") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldList,
-            @JsonProperty("cannonList") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonList,
-            @JsonProperty("cannonList") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> engineList
+            @JsonProperty("shieldList") List<Pair<CoordinatePair, CoordinatePair>> shieldList,
+            @JsonProperty("cannonList") List<Pair<CoordinatePair, CoordinatePair>> cannonList,
+            @JsonProperty("cannonList") List<Pair<CoordinatePair, CoordinatePair>> engineList
     ) {
         this.playerNickname = playerNickname;
         this.lifeformsToBeRemoved = lifeformsToBeRemoved;
@@ -69,32 +70,32 @@ public class WarZoneJSON extends ActionJSON {
     }
 
     @JsonGetter("shieldList")
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getShieldList() {
+    public List<Pair<CoordinatePair, CoordinatePair>> getShieldList() {
         return this.shieldList;
     }
 
     @JsonSetter("shieldList")
-    public void setShieldList(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldList) {
+    public void setShieldList(List<Pair<CoordinatePair, CoordinatePair>> shieldList) {
         this.shieldList = shieldList;
     }
 
     @JsonGetter("cannonList")
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getCannonList() {
+    public List<Pair<CoordinatePair, CoordinatePair>> getCannonList() {
         return this.cannonList;
     }
 
     @JsonSetter("cannonList")
-    public void setCannonList(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonList) {
+    public void setCannonList(List<Pair<CoordinatePair, CoordinatePair>> cannonList) {
         this.cannonList = cannonList;
     }
 
     @JsonGetter("engineList")
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getEngineList() {
+    public List<Pair<CoordinatePair, CoordinatePair>> getEngineList() {
         return this.engineList;
     }
 
     @JsonSetter("engineList")
-    public void setEngineList(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> engineList) {
+    public void setEngineList(List<Pair<CoordinatePair, CoordinatePair>> engineList) {
         this.engineList = engineList;
     }
 }

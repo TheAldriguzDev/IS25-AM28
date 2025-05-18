@@ -18,6 +18,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 
@@ -46,7 +47,7 @@ public class WarZone extends EventCard {
     private String prevPlayer;
     private Map<String, List<Map<String, Object>>> removedComponents;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
-    private Map<String, List<Pair<Integer, Integer>>> removedBatteries;
+    private Map<String, List<CoordinatePair>> removedBatteries;
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private List<String> eliminatedPlayers;
@@ -233,7 +234,7 @@ public class WarZone extends EventCard {
             if (this.getCurrentPlayer().isPresent()) {
                 Player p = this.getCurrentPlayer().get();
 
-                List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleCannons
+                List<Pair<CoordinatePair, CoordinatePair>> activatedDoubleCannons
                         = p.getShip().activateComponents(warZoneJSON.getCannonList());
 
                 float totalFirePower = p.getShip().getFirePower(
@@ -307,7 +308,7 @@ public class WarZone extends EventCard {
             if (this.getCurrentPlayer().isPresent()) {
                 Player p = this.getCurrentPlayer().get();
 
-                List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleEngines
+                List<Pair<CoordinatePair, CoordinatePair>> activatedDoubleEngines
                         = p.getShip().activateComponents(warZoneJSON.getEngineList());
 
                 // Get the total power of the player and store it
@@ -581,7 +582,7 @@ public class WarZone extends EventCard {
         boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate;
+        List<Pair<CoordinatePair, CoordinatePair>> shieldsToActivate;
         List<Shield> activatedShieldsList;
         Component toHit;
         Ship shipPtr;
@@ -600,8 +601,8 @@ public class WarZone extends EventCard {
                 .filter(Objects::nonNull)
                 .filter(
                     (pair) -> {
-                        Pair<Integer, Integer> shieldCoords = pair.getKey();
-                        Component component = shipPtr.getComponent(shieldCoords.getKey(), shieldCoords.getValue());
+                        CoordinatePair shieldCoords = pair.getKey();
+                        Component component = shipPtr.getComponent(shieldCoords.getI(), shieldCoords.getJ());
 
                         return switch (component) {
                             case Shield shield -> true;
@@ -616,7 +617,7 @@ public class WarZone extends EventCard {
         // NOTE: The cast is safe thanks to the previous check
         activatedShieldsList = shieldsToActivate.stream()
                 .map(Pair::getKey)
-                .map(p -> (Shield) shipPtr.getComponent(p.getKey(), p.getValue()))
+                .map(p -> (Shield) shipPtr.getComponent(p.getI(), p.getJ()))
                 .toList();
 
         this.removedBatteries.put(

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.ArrayList;
@@ -12,8 +13,8 @@ import java.util.List;
 public class MeteorShowerJSON extends ActionJSON {
     private int currMeteorIndex;
     private int diceThrowResult;
-    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsCoordinates;
-    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonsCoordinates;
+    private List<Pair<CoordinatePair, CoordinatePair>> shieldsCoordinates;
+    private List<Pair<CoordinatePair, CoordinatePair>> cannonsCoordinates;
 
     public MeteorShowerJSON() {
         this.currMeteorIndex = 0;
@@ -27,8 +28,8 @@ public class MeteorShowerJSON extends ActionJSON {
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("currMeteorIndex") int currMeteorIndex, // FIXME: Remove this field
             @JsonProperty("diceThrowResult") int diceThrowResult, // FIXME: REMOVE this field
-            @JsonProperty("shieldsCoordinates") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsCoordinates,
-            @JsonProperty("cannonsCoordinates") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonsCoordinates
+            @JsonProperty("shieldsCoordinates") List<Pair<CoordinatePair, CoordinatePair>> shieldsCoordinates,
+            @JsonProperty("cannonsCoordinates") List<Pair<CoordinatePair, CoordinatePair>> cannonsCoordinates
     ) {
         super(playerNickname);
         this.currMeteorIndex = currMeteorIndex;
@@ -58,22 +59,22 @@ public class MeteorShowerJSON extends ActionJSON {
     }
 
     @JsonGetter("shieldsCoordinates")
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getShieldsCoordinates() {
+    public List<Pair<CoordinatePair, CoordinatePair>> getShieldsCoordinates() {
         return this.shieldsCoordinates;
     }
 
     @JsonSetter("shieldsCoordinates")
-    public void setShieldsCoordinates(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsCoordinates) {
+    public void setShieldsCoordinates(List<Pair<CoordinatePair, CoordinatePair>> shieldsCoordinates) {
         this.shieldsCoordinates = shieldsCoordinates;
     }
 
     @JsonGetter("cannonsCoordinates")
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getCannonsCoordinates() {
+    public List<Pair<CoordinatePair, CoordinatePair>> getCannonsCoordinates() {
         return this.cannonsCoordinates;
     }
 
     @JsonSetter("cannonsCoordinates")
-    public void setCannonsCoordinates(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonsCoordinates) {
+    public void setCannonsCoordinates(List<Pair<CoordinatePair, CoordinatePair>> cannonsCoordinates) {
         this.cannonsCoordinates = cannonsCoordinates;
     }
 }

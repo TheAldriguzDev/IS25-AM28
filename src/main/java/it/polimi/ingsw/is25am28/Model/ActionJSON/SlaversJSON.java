@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class SlaversJSON extends ActionJSON {
     private boolean takeCredits;
     private boolean isPlayerDefeated;
     private List<ComponentHelper<LifeformType>> crewToRemove;
-    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivateCoordinates;
+    private List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates;
 
     public SlaversJSON() {
         this.takeCredits = false;
@@ -25,7 +26,7 @@ public class SlaversJSON extends ActionJSON {
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("takeCredits") boolean takeCredits,
             @JsonProperty("crewToRemove") List<ComponentHelper<LifeformType>> crewToRemove,
-            @JsonProperty("doubleCannonsToActivateCoordinates") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivateCoordinates
+            @JsonProperty("doubleCannonsToActivateCoordinates") List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates
     ) {
         super(playerNickname);
         this.takeCredits = takeCredits;
@@ -54,12 +55,12 @@ public class SlaversJSON extends ActionJSON {
     }
 
     @JsonGetter("doubleCannonsToActivateCoordinates")
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleCannonsToActivateCoordinates() {
-        return doubleCannonsToActivateCoordinates;
+    public List<Pair<CoordinatePair, CoordinatePair>> getDoubleCannonsToActivateCoordinates() {
+        return this.doubleCannonsToActivateCoordinates;
     }
 
     @JsonSetter("doubleCannonsToActivateCoordinates")
-    public void setDoubleCannonsToActivateCoordinates(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivateCoordinates) {
+    public void setDoubleCannonsToActivateCoordinates(List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates) {
         this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
 }

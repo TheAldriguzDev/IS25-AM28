@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import org.junit.jupiter.api.Test;
 
@@ -488,29 +489,29 @@ class ShipTest {
         assertEquals(6, ship.getAvailableEnergy());
 
         // Activating a doubleEngine and a doubleCannon and a shield (-3 energy)
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> toActivate = new ArrayList<>();
+        List<Pair<CoordinatePair, CoordinatePair>> toActivate = new ArrayList<>();
         Component component = ship.getComponent(7, 7);  // Double Engine
         Component _battery_ = ship.getComponent(6, 7);  // battery
         toActivate.add(
             new Pair<>(
-                    new Pair<>(component.getPosition()[0], component.getPosition()[1]),
-                    new Pair<>(_battery_.getPosition()[0], _battery_.getPosition()[1])
+                    new CoordinatePair(component.getPosition()[0], component.getPosition()[1]),
+                    new CoordinatePair(_battery_.getPosition()[0], _battery_.getPosition()[1])
             )
         );
         component = ship.getComponent(8, 4);  // Double Cannon
         _battery_ = ship.getComponent(6, 7);  // battery
         toActivate.add(
                 new Pair<>(
-                        new Pair<>(component.getPosition()[0], component.getPosition()[1]),
-                        new Pair<>(_battery_.getPosition()[0], _battery_.getPosition()[1])
+                        new CoordinatePair(component.getPosition()[0], component.getPosition()[1]),
+                        new CoordinatePair(_battery_.getPosition()[0], _battery_.getPosition()[1])
                 )
         );
         component = ship.getComponent(6, 5);  // Shield
         _battery_ = ship.getComponent(5, 5);  // battery2
         toActivate.add(
                 new Pair<>(
-                        new Pair<>(component.getPosition()[0], component.getPosition()[1]),
-                        new Pair<>(_battery_.getPosition()[0], _battery_.getPosition()[1])
+                        new CoordinatePair(component.getPosition()[0], component.getPosition()[1]),
+                        new CoordinatePair(_battery_.getPosition()[0], _battery_.getPosition()[1])
                 )
         );
 
@@ -540,7 +541,7 @@ class ShipTest {
 
     @Test
     void getFirePower() {
-        List<Pair<Integer, Integer>> doubleCannonCoords;
+        List<CoordinatePair> doubleCannonCoords;
         int expectedFirePower;
         Ship ship;
 
@@ -591,18 +592,18 @@ class ShipTest {
 
         // Case 4 - total firepower + purple alien on board
         doubleCannonCoords = new ArrayList<>();
-        doubleCannonCoords.add(new Pair<>(4, 5));
-        doubleCannonCoords.add(new Pair<>(6, 8));
+        doubleCannonCoords.add(new CoordinatePair(4, 5));
+        doubleCannonCoords.add(new CoordinatePair(6, 8));
         expectedFirePower = 8;
         assertEquals(expectedFirePower, ship.getFirePower(doubleCannonCoords));
 
         // Burning all energy
-        List<Pair<Integer, Integer>> batteries = new ArrayList<>();
+        List<CoordinatePair> batteries = new ArrayList<>();
 
         for (Battery b : ship.getBatteryList()) {
             for (int i = 0; i < b.getAvailability(); i++) {
                 batteries.add(
-                    new Pair<>(
+                    new CoordinatePair(
                             b.getPosition()[0],
                             b.getPosition()[1]
                     )
@@ -615,7 +616,7 @@ class ShipTest {
 
     @Test
     void getEnginePower() {
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate;
+        List<Pair<CoordinatePair, CoordinatePair>> doubleEnginesToActivate;
         int expectedEnginePower, expectedTotalEnergy;
         Ship ship;
 
@@ -670,8 +671,8 @@ class ShipTest {
         Component battery = ship.getComponent(7, 4);
         doubleEnginesToActivate.add(
             new Pair<>(
-                    new Pair<>(doubleEngine.getPosition()[0], doubleEngine.getPosition()[1]),
-                    new Pair<>(battery.getPosition()[0], battery.getPosition()[1])
+                    new CoordinatePair(doubleEngine.getPosition()[0], doubleEngine.getPosition()[1]),
+                    new CoordinatePair(battery.getPosition()[0], battery.getPosition()[1])
             )
         );
         expectedEnginePower = 7;
@@ -681,12 +682,12 @@ class ShipTest {
         assertEquals(expectedTotalEnergy, ship.getAvailableEnergy());
 
         // Burning all energy
-        List<Pair<Integer, Integer>> batteries = new ArrayList<>();
+        List<CoordinatePair> batteries = new ArrayList<>();
 
         for (Battery b : ship.getBatteryList()) {
             for (int i = 0; i < b.getAvailability(); i++) {
                 batteries.add(
-                        new Pair<>(
+                        new CoordinatePair(
                                 b.getPosition()[0],
                                 b.getPosition()[1]
                         )
@@ -1555,7 +1556,7 @@ class ShipTest {
 
     @Test
     void addingTheWrongAlienToAnAlienLifeEligibleCabin() {
-        Map<Integer, Pair<Integer, Integer>> chosenAliens;
+        Map<Integer, CoordinatePair> chosenAliens;
         Ship ship = new Ship(2);
 
         List<Integer> connectors = new ArrayList<>();

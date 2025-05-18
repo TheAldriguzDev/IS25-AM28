@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
@@ -23,7 +24,7 @@ public class Slavers extends EventCard {
     private List<String> eliminatedPlayers;
     private Map<String, Integer> updatedPositions;
     private Map<String, Integer> updatedCredits;
-    private Map<String, List<Pair<Integer, Integer>>> removedBatteries;
+    private Map<String, List<CoordinatePair>> removedBatteries;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private boolean isPlayerDefeated;
 
@@ -81,7 +82,7 @@ public class Slavers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
                     if (!this.isPlayerDefeated) { // If the player has not been set as defeated it means its the first time he uses the card
-                        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleCannons
+                        List<Pair<CoordinatePair, CoordinatePair>> activatedDoubleCannons
                                 = player.getShip().activateComponents(slaversData.getDoubleCannonsToActivateCoordinates());
 
                         // Power consumed by the DoubleCannons

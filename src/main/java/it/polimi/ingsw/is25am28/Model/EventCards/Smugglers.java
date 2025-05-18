@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
@@ -28,7 +29,7 @@ public class Smugglers extends EventCard {
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
     private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
-    private Map<String, List<Pair<Integer, Integer>>> removedBatteries;
+    private Map<String, List<CoordinatePair>> removedBatteries;
     private List<String> eliminatedPlayers;
 
     private String prevPlayerNickname;
@@ -95,7 +96,7 @@ public class Smugglers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
                     if (!this.isPlayerDefeated) {
-                        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleCannons
+                        List<Pair<CoordinatePair, CoordinatePair>> activatedDoubleCannons
                                 = player.getShip().activateComponents(smugglersData.getDoubleCannonsToActivateCoordinates());
 
                         // Power consumed by the DoubleCannons
@@ -218,7 +219,7 @@ public class Smugglers extends EventCard {
                                         resourceDrop.getJ()));
                     }
 
-                    List<Pair<Integer, Integer>> consumableBatteries = new ArrayList<>();
+                    List<CoordinatePair> consumableBatteries = new ArrayList<>();
 
                     for (Battery battery : player.getShip().getBatteryList()) {
                         int[] pos = battery.getPosition();
@@ -228,9 +229,7 @@ public class Smugglers extends EventCard {
                         // (i.e.: a battery has 3/3 energy => it gets added 3 times)
                         if (charge > 0) {
                             for (int i = 0; i < charge; i++) {
-                                consumableBatteries.add(
-                                        new Pair<>(pos[0], pos[1])
-                                );
+                                consumableBatteries.add(new CoordinatePair(pos[0], pos[1]));
                             }
                         }
                     }
