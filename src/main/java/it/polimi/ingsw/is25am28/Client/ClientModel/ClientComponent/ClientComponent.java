@@ -159,6 +159,10 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
         return this.id;
     }
 
+    public String getPath() {
+        return this.path;
+    }
+
     /**
      * @return This component's screen
      */

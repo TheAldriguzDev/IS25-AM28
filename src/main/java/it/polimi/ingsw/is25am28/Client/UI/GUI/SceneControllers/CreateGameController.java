@@ -74,6 +74,9 @@ public class CreateGameController extends GUIController {
                 return;
             }
 
+            GUIHandler.getInstance().getClientModel().setNickname(nickname);
+            GUIHandler.getInstance().getClientModel().setDifficultyLevel(level);
+
             try {
                 GUIHandler.getVirtualClient().sendMessage(
                     new ConfigGame(

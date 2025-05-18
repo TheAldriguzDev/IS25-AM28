@@ -23,6 +23,8 @@ public class ReconnectGameController extends GUIController {
                 return;
             }
 
+            GUIHandler.getInstance().getClientModel().setNickname(nickname);
+
             try {
                 GUIHandler.getVirtualClient().sendMessage(
                     new Reconnect(nickname)

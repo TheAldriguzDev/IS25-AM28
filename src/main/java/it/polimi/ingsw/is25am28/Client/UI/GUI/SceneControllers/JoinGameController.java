@@ -24,9 +24,11 @@ public class JoinGameController extends GUIController {
     @FXML private ComboBox<PlayerColor> colorComboBox;
 
     private int gameID;
+    private int gameLevel;
 
     public void init(GameInfoDTO state) {
         this.gameID = state.getId();
+        this.gameLevel = state.getLevel();
 
         this.joinGameTitleLabel.setText("Joining Game with ID=" + this.gameID);
         this.joinGameTitleLabel.setWrapText(true);
@@ -59,6 +61,9 @@ public class JoinGameController extends GUIController {
                 showError("Please select a color.");
                 return;
             }
+
+            GUIHandler.getInstance().getClientModel().setNickname(nickname);
+            GUIHandler.getInstance().getClientModel().setDifficultyLevel(this.gameLevel);
 
             try {
                 GUIHandler.getVirtualClient().sendMessage(

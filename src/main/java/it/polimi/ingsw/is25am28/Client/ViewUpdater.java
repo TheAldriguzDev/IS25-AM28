@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard.ClientBoard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
@@ -134,6 +135,11 @@ public class ViewUpdater implements StateVisitor {
                                 c.setIsVisible(!state.isSelected());
                             }
                         );
+
+                // Update the component in the GUI
+                if (this.ui instanceof GUIHandler) {
+                    ((GUIHandler) this.ui).updateShipConstructionComponent(state);
+                }
             }
         }
     }

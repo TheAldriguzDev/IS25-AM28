@@ -31,7 +31,7 @@
 }
 
 .button {
-    -fx-background-color: #4A90E2;
+    -fx-background-color: #ffc200;
     -fx-text-fill: white;
     -fx-font-size: 14px;
     -fx-font-weight: bold;
@@ -45,11 +45,11 @@
 }
 
 .button:hover {
-    -fx-background-color: #357ABD;
+    -fx-background-color: #ffc600;
 }
 
 .button:pressed {
-    -fx-background-color: #2E5D9F;
+    -fx-background-color: #ffc900;
     -fx-translate-y: 1px;
 }
 
@@ -109,17 +109,17 @@
     -fx-alignment: CENTER_LEFT;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0.3, 0, 2);
     -fx-cursor: hand;
-    -fx-border-color: #4a90e2;
+    -fx-border-color: #ffc200;
     -fx-border-width: 1px;
     -fx-border-radius: 10px;
 }
 
 .game-button:hover {
-    -fx-background-color: #3e5670;
+    -fx-background-color: #ffa600;
 }
 
 .game-button:pressed {
-    -fx-background-color: #2b3d54;
+    -fx-background-color: #ffa900;
     -fx-translate-y: 1px;
 }
 
@@ -153,3 +153,9 @@
 .scroll-pane .viewport {
     -fx-background-color: transparent;
 }
+
+#sidePanel VBox {
+    -fx-padding: 10 20 10 20;
+    -fx-spacing: 20;
+}
+
