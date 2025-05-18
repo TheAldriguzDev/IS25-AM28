@@ -47,11 +47,11 @@ class PiratesTest {
     Pirates pirates;
     ClientPirates clientPirates;
 
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> ShieldsToActivate;
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate1;
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate2;
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate3;
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate4;
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> ShieldsToActivate;
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate1;
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate2;
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate3;
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate4;
 
     ArrayList<Integer> dicesResults;
 
@@ -232,8 +232,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
             new Pair<>(
-                new ComponentHelper<>(5, 7),
-                new ComponentHelper<>(7, 7)
+                new Pair<>(5, 7),
+                new Pair<>(7, 7)
             )
         ); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
         //ShieldsToActivate.add(new int[] {5, 7}); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
@@ -267,8 +267,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
             new Pair<>(
-                new ComponentHelper<>(8, 5),
-                new ComponentHelper<>(7, 7)
+                new Pair<>(8, 5),
+                new Pair<>(7, 7)
             )
         ); // Non lo proteggerà
 //        ShieldsToActivate.add(new int[] {8, 5}); // Non lo proteggerà
@@ -285,8 +285,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
                 new Pair<>(
-                        new ComponentHelper<>(8, 5),
-                        new ComponentHelper<>(7, 7)
+                        new Pair<>(8, 5),
+                        new Pair<>(7, 7)
                 )
         ); // Lo proteggerà
         actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
@@ -302,8 +302,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
                 new Pair<>(
-                        new ComponentHelper<>(8, 5),
-                        new ComponentHelper<>(7, 7)
+                        new Pair<>(8, 5),
+                        new Pair<>(7, 7)
                 )
         ); // Non lo proteggerà
 //        ShieldsToActivate.add(new int[] {8, 5});
@@ -335,8 +335,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
                 new Pair<>(
-                        new ComponentHelper<>(8, 5),
-                        new ComponentHelper<>(7, 7)
+                        new Pair<>(8, 5),
+                        new Pair<>(7, 7)
                 )
         ); // Non lo proteggerà
 //        ShieldsToActivate.add(new int[] {8, 5});
@@ -353,8 +353,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
                 new Pair<>(
-                        new ComponentHelper<>(8, 5),
-                        new ComponentHelper<>(7, 7)
+                        new Pair<>(8, 5),
+                        new Pair<>(7, 7)
                 )
         ); // Non lo proteggerà
 //        ShieldsToActivate.add(new int[] {8, 5});
@@ -446,14 +446,14 @@ class PiratesTest {
 
         ShieldsToActivate = new ArrayList<>();
 
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonActivated = new ArrayList<>();
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonActivated = new ArrayList<>();
 //        x.add(5);
 //        y.add(6);
 //        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(5, 6)));
         doubleCannonActivated.add(
                 new Pair<>(
-                        new ComponentHelper<>(5, 6),
-                        new ComponentHelper<>(7, 7)
+                        new Pair<>(5, 6),
+                        new Pair<>(7, 7)
                 )
         );
 //        doubleCannonActivated.add(y);
@@ -788,8 +788,8 @@ class PiratesTest {
 //        shieldsToActivate3.add(new int[] {8, 5});
         shieldsToActivate3.add(
                 new Pair<>(
-                        new ComponentHelper<>(8, 5),
-                        new ComponentHelper<>(7, 7)
+                        new Pair<>(8, 5),
+                        new Pair<>(7, 7)
                 )
         );
 

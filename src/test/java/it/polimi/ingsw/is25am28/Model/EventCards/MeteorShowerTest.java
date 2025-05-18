@@ -250,8 +250,8 @@ class MeteorShowerTest {
         MeteorShowerJSON meteorShowerJSON;
         CardStateJSON meteorShowerStateJSON;
         List<Player> playerList = this.board.getPlayers();
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsCoordinates;
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> cannonsCoordinates;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsCoordinates;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonsCoordinates;
         int energyP1 = playerList.get(0).getShip().getAvailableEnergy();
         int energyP2 = playerList.get(1).getShip().getAvailableEnergy();
         int currMeteorIndex = 0;
@@ -310,15 +310,15 @@ class MeteorShowerTest {
         // Shield, 1 energy should be consumed
         shieldsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 4),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 4),
+                        new Pair<>(7, 4)
                 )
         );
         // Wrong component, no energy should be consumed
         shieldsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(0, 0),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(0, 0),
+                        new Pair<>(7, 4)
                 )
         );
         cannonsCoordinates.add(null);
@@ -586,8 +586,8 @@ class MeteorShowerTest {
         // P1 activates shield
         shieldsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 4),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 4),
+                        new Pair<>(7, 4)
                 )
         );
         cannonsCoordinates.add(null);   // P1 no cannons selected
@@ -652,20 +652,20 @@ class MeteorShowerTest {
         // P2 chooses 3 non-cannon components, equivalent to doing nothing
         cannonsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 4),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 4),
+                        new Pair<>(7, 4)
                 )
         );
         cannonsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(0, 0),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(0, 0),
+                        new Pair<>(7, 4)
                 )
         );
         cannonsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 6),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 6),
+                        new Pair<>(7, 4)
                 )
         );
         meteorShowerJSON = new MeteorShowerJSON(
@@ -741,8 +741,8 @@ class MeteorShowerTest {
         // P1 activates the shield
         shieldsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 4),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 4),
+                        new Pair<>(7, 4)
                 )
         );
         cannonsCoordinates.add(null);   // P1 no cannons selected
@@ -802,21 +802,21 @@ class MeteorShowerTest {
         // P2 activates the shield
         shieldsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 4),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 4),
+                        new Pair<>(7, 4)
                 )
         );
         // P2 activates a single and a double cannon for no reason, thus wasting 1 energy
         cannonsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(5, 7),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(5, 7),
+                        new Pair<>(7, 4)
                 )
         );
         cannonsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 8),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 8),
+                        new Pair<>(7, 4)
                 )
         );
         meteorShowerJSON = new MeteorShowerJSON(
@@ -1147,8 +1147,8 @@ class MeteorShowerTest {
         // P1 activates the shield
         shieldsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 4),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 4),
+                        new Pair<>(7, 4)
                 )
         );
         cannonsCoordinates.add(null);   // P1 no cannons selected
@@ -1210,8 +1210,8 @@ class MeteorShowerTest {
         // P2 activates the shield
         shieldsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 4),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 4),
+                        new Pair<>(7, 4)
                 )
         );
         cannonsCoordinates.add(null);   // P2 no cannons activated
@@ -1288,8 +1288,8 @@ class MeteorShowerTest {
         // P1 shoots at meteor with single cannon
         cannonsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(7, 9),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(7, 9),
+                        new Pair<>(7, 4)
                 )
         );
         meteorShowerJSON = new MeteorShowerJSON(
@@ -1355,8 +1355,8 @@ class MeteorShowerTest {
         // P2 shoots at meteor with double cannon, but it gets destroyed due to no energy left
         cannonsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 8),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 8),
+                        new Pair<>(7, 4)
                 )
         );
         meteorShowerJSON = new MeteorShowerJSON(
@@ -1541,8 +1541,8 @@ class MeteorShowerTest {
         MeteorShowerJSON meteorShowerJSON;
         CardStateJSON meteorShowerStateJSON;
         List<Player> playerList;
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsCoordinates;
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> cannonsCoordinates;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsCoordinates;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonsCoordinates;
 
         Player player3 = new Player("p3", PlayerColor.RED, 2);
         this.board.newPlayer(player3);
@@ -1608,14 +1608,14 @@ class MeteorShowerTest {
         // Shield, 1 energy should be consumed
         shieldsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 4),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(6, 4),
+                        new Pair<>(7, 4)
                 )
         );
         cannonsCoordinates.add(
                 new Pair<>(
-                        new ComponentHelper<>(0, 0),
-                        new ComponentHelper<>(7, 4)
+                        new Pair<>(0, 0),
+                        new Pair<>(7, 4)
                 )
         );
         cannonsCoordinates.add(null);

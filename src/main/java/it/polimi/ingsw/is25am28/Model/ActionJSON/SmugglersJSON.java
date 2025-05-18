@@ -13,7 +13,7 @@ public class SmugglersJSON extends ActionJSON {
     private boolean takeLoot;
     private List<ComponentHelper<ItemColor>> itemsToBeTaken;
     private List<ComponentHelper<ItemColor>> itemsToBeRemoved;
-    private List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivateCoordinates;
+    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivateCoordinates;
 
     public SmugglersJSON() {
         this.takeLoot = false;
@@ -27,7 +27,7 @@ public class SmugglersJSON extends ActionJSON {
             @JsonProperty("takeLoot") boolean takeLoot,
             @JsonProperty("itemsToBeTaken") List<ComponentHelper<ItemColor>> itemsToBeTaken,
             @JsonProperty("itemsToBeRemoved") List<ComponentHelper<ItemColor>> itemsToBeRemoved,
-            @JsonProperty("doubleCannonsToActivateCoordinates") List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivateCoordinates
+            @JsonProperty("doubleCannonsToActivateCoordinates") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivateCoordinates
     ) {
         super(playerNickname);
         this.takeLoot = takeLoot;
@@ -67,12 +67,12 @@ public class SmugglersJSON extends ActionJSON {
     }
 
     @JsonGetter("doubleCannonsToActivateCoordinates")
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleCannonsToActivateCoordinates() {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleCannonsToActivateCoordinates() {
         return doubleCannonsToActivateCoordinates;
     }
 
     @JsonSetter("doubleCannonsToActivateCoordinates")
-    public void setDoubleCannonsToActivateCoordinates(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivateCoordinates) {
+    public void setDoubleCannonsToActivateCoordinates(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivateCoordinates) {
         this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
 

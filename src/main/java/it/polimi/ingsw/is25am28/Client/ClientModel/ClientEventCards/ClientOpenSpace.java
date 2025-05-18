@@ -93,12 +93,12 @@ public class ClientOpenSpace extends ClientEventCard {
 
     // Engines
     @Override
-    public void setDoubleEnginesToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate) {
+    public void setDoubleEnginesToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate) {
         this.openSpaceJSON.setDoubleEnginesToActivate(doubleEnginesToActivate);
     }
 
     @Override
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleEnginesToActivate() {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleEnginesToActivate() {
         return this.openSpaceJSON.getDoubleEnginesToActivate();
     }
 }

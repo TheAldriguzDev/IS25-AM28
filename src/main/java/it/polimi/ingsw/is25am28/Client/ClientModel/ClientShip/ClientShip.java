@@ -763,16 +763,16 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
      *
      * @param batteriesToConsume The list of battery components to discharge by 1 unit of charge.
      */
-    public void consumeEnergy(List<ComponentHelper<Void>> batteriesToConsume) {
+    public void consumeEnergy(List<Pair<Integer, Integer>> batteriesToConsume) {
         if (batteriesToConsume != null) {
             // Removing any null pointers inside the list
             batteriesToConsume = batteriesToConsume.stream().filter(Objects::nonNull).toList();
 
             // Discharging each battery by 1 unit of charge
-            for (ComponentHelper<Void> componentCoords : batteriesToConsume) {
+            for (Pair<Integer, Integer> componentCoords : batteriesToConsume) {
                 ClientComponent component = this.getComponent(
-                        componentCoords.getI(),
-                        componentCoords.getJ()
+                        componentCoords.getKey(),
+                        componentCoords.getValue()
                 );
 
                 switch (component) {

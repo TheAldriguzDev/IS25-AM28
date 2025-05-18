@@ -46,7 +46,7 @@ public class WarZone extends EventCard {
     private String prevPlayer;
     private Map<String, List<Map<String, Object>>> removedComponents;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
-    private Map<String, List<ComponentHelper<Void>>> removedBatteries;
+    private Map<String, List<Pair<Integer, Integer>>> removedBatteries;
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private List<String> eliminatedPlayers;
@@ -233,7 +233,7 @@ public class WarZone extends EventCard {
             if (this.getCurrentPlayer().isPresent()) {
                 Player p = this.getCurrentPlayer().get();
 
-                List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleCannons
+                List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleCannons
                         = p.getShip().activateComponents(warZoneJSON.getCannonList());
 
                 float totalFirePower = p.getShip().getFirePower(
@@ -307,7 +307,7 @@ public class WarZone extends EventCard {
             if (this.getCurrentPlayer().isPresent()) {
                 Player p = this.getCurrentPlayer().get();
 
-                List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleEngines
+                List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleEngines
                         = p.getShip().activateComponents(warZoneJSON.getEngineList());
 
                 // Get the total power of the player and store it
@@ -581,7 +581,8 @@ public class WarZone extends EventCard {
         boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
-        List<Shield> shieldList;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate;
+        List<Shield> activatedShieldsList;
         Component toHit;
         Ship shipPtr;
         PlasmaShot currPlasmaShot;
@@ -592,32 +593,35 @@ public class WarZone extends EventCard {
 
         shipPtr = player.getShip();
         currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
+        shieldsToActivate = warZoneJSON.getShieldList();
 
-        shieldList = shipPtr.activateComponents(warZoneJSON.getShieldList())
-                .stream()
-                .map(Pair::getKey)
-                .map(
-                    (ch) -> {
-                        return shipPtr.getComponent(ch.getI(), ch.getJ());
-                    }
-                )
-                .map(
-                    (c) -> {
-                        switch (c) {
-                            case Shield shield -> {
-                                return shield;
-                            }
-                            case null, default -> {}
-                        }
-                        return null;
-                    }
-                )
+        // Filtering out all coordinates that don't point to a shield.
+        shieldsToActivate = shieldsToActivate.stream()
                 .filter(Objects::nonNull)
+                .filter(
+                    (pair) -> {
+                        Pair<Integer, Integer> shieldCoords = pair.getKey();
+                        Component component = shipPtr.getComponent(shieldCoords.getKey(), shieldCoords.getValue());
+
+                        return switch (component) {
+                            case Shield shield -> true;
+                            case null, default -> false;
+                        };
+                    }
+                ).toList();
+
+        // Activating shields (which consumes 1 energy unit from the battery each shield is paired with)
+        shieldsToActivate = shipPtr.activateComponents(shieldsToActivate);
+
+        // NOTE: The cast is safe thanks to the previous check
+        activatedShieldsList = shieldsToActivate.stream()
+                .map(Pair::getKey)
+                .map(p -> (Shield) shipPtr.getComponent(p.getKey(), p.getValue()))
                 .toList();
 
         this.removedBatteries.put(
                 player.getNickname(),
-                warZoneJSON.getShieldList().stream()
+                shieldsToActivate.stream()
                         .map(Pair::getValue).toList()
         );
 
@@ -694,18 +698,20 @@ public class WarZone extends EventCard {
             default -> throw new IllegalStateException("ERROR: Only 4 directions allowed");
         }
 
-        // Activate all shields chosen by the player (even if unnecessary)
-        if (!shieldList.isEmpty()) {
-            for (Shield activeShield : shieldList) {
-                int[] shieldCoverage = activeShield.getCoveredSide();
+        // Check if the shields can stop the threat
+        if (currPlasmaShot.getSize() == 1) {
+            if (!activatedShieldsList.isEmpty()) {
+                for (Shield activeShield : activatedShieldsList) {
+                    int[] shieldCoverage = activeShield.getCoveredSide();
 
-                for (int j : shieldCoverage) {
-                    if (j == inboundDirection) {
-                        // Checking if the shield selected for activation
-                        // can actually defend the ship from the small meteor
-                        // by checking if it's correctly oriented towards the threat
-                        threatDestroyed = true;
-                        break;
+                    for (int j : shieldCoverage) {
+                        if (j == inboundDirection) {
+                            // Checking if the shield selected for activation
+                            // can actually defend the ship from the small meteor
+                            // by checking if it's correctly oriented towards the threat
+                            threatDestroyed = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -714,7 +720,6 @@ public class WarZone extends EventCard {
         // that was hit from the current player's ship
         if (!threatDestroyed) {
             try {
-
                 Cabin tmpPurpleAlienPos = shipPtr.getPurpleAlienPosition();
                 Cabin tmpBrownAlienPos = shipPtr.getBrownAlienPosition();
 
@@ -722,6 +727,7 @@ public class WarZone extends EventCard {
 
                 // If there were any aliens that have been removed, add them to the removed lifeForms
                 List<ComponentHelper<LifeformType>> removedAliensList = new ArrayList<>();
+
                 if (tmpPurpleAlienPos != null && shipPtr.getPurpleAlienPosition() == null) {
                     ComponentHelper<LifeformType> purpleAlienCH = new ComponentHelper<>(tmpPurpleAlienPos.getPosition()[0], tmpPurpleAlienPos.getPosition()[1]);
                     purpleAlienCH.addItem(LifeformType.PURPLE_ALIEN);
@@ -756,16 +762,6 @@ public class WarZone extends EventCard {
     private int generateDiceResult() {
         return (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
         //return 7; // Column 6
-    }
-
-    @Override
-    protected void bonusEffect() {
-
-    }
-
-    @Override
-    protected void malusEffect() {
-
     }
 
     /**

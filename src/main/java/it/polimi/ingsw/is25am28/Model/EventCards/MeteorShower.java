@@ -8,11 +8,9 @@ import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.Components.Cannon;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
-import it.polimi.ingsw.is25am28.Model.Components.Engine;
 import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities.Meteor;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.InsufficientEnergyException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
@@ -33,7 +31,7 @@ public class MeteorShower extends EventCard {
     private String prevPlayer;
 
     private final Map<String, List<Map<String, Object>>> removedComponents;
-    private final Map<String, List<ComponentHelper<Void>>> removedBatteries;
+    private final Map<String, List<Pair<Integer, Integer>>> removedBatteries;
     private final List<String> eliminatedPlayers;
     private final Map<String, Integer> lostPieces;
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
@@ -73,16 +71,6 @@ public class MeteorShower extends EventCard {
         catch (Exception e) {
             throw new IllegalArgumentException("ERROR: JSON parsing error in MeteorShower constructor -> " + e.getMessage() );
         }
-    }
-
-    @Override
-    protected void bonusEffect() {
-        // Nothing
-    }
-
-    @Override
-    protected void malusEffect() {
-        // Nothing
     }
 
     @Override
@@ -129,8 +117,8 @@ public class MeteorShower extends EventCard {
         boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate;
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivate;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivate;
         List<Shield> activatedShieldsList;
         List<Cannon> activatedDoubleCannonsList;
         Component toHit;
@@ -248,8 +236,8 @@ public class MeteorShower extends EventCard {
                 .filter(Objects::nonNull)
                 .filter(
                     (pair) -> {
-                        ComponentHelper<Void> key = pair.getKey();
-                        Component component = shipPtr.getComponent(key.getI(), key.getJ());
+                        Pair<Integer, Integer> shieldCoords = pair.getKey();
+                        Component component = shipPtr.getComponent(shieldCoords.getKey(), shieldCoords.getValue());
 
                         return switch (component) {
                             case Shield shield -> true;
@@ -263,8 +251,8 @@ public class MeteorShower extends EventCard {
                 .filter(Objects::nonNull)
                 .filter(
                     (pair) -> {
-                        ComponentHelper<Void> key = pair.getKey();
-                        Component component = shipPtr.getComponent(key.getI(), key.getJ());
+                        Pair<Integer, Integer> cannonCoords = pair.getKey();
+                        Component component = shipPtr.getComponent(cannonCoords.getKey(), cannonCoords.getValue());
 
                         return switch (component) {
                             case Cannon cannon -> (cannon.requiresEnergy());
@@ -279,7 +267,7 @@ public class MeteorShower extends EventCard {
             // NOTE: The cast is safe thanks to the previous check
             activatedShieldsList = shieldsToActivate.stream()
                     .map(Pair::getKey)
-                    .map(ch -> (Shield) shipPtr.getComponent(ch.getI(), ch.getJ()))
+                    .map(p -> (Shield) shipPtr.getComponent(p.getKey(), p.getValue()))
                     .toList();
 
             // Activating double cannons (which consumes 1 energy unit from the battery each shield is paired with)
@@ -288,10 +276,10 @@ public class MeteorShower extends EventCard {
             // NOTE: The cast is safe thanks to the previous check
             activatedDoubleCannonsList = doubleCannonsToActivate.stream()
                     .map(Pair::getKey)
-                    .map(ch -> (Cannon) shipPtr.getComponent(ch.getI(), ch.getJ()))
+                    .map(p -> (Cannon) shipPtr.getComponent(p.getKey(), p.getValue()))
                     .toList();
 
-            List<ComponentHelper<Void>> usedBatteries = new ArrayList<>();
+            List<Pair<Integer, Integer>> usedBatteries = new ArrayList<>();
 
             usedBatteries.addAll(shieldsToActivate.stream().map(Pair::getValue).toList());
             usedBatteries.addAll(doubleCannonsToActivate.stream().map(Pair::getValue).toList());
@@ -301,18 +289,20 @@ public class MeteorShower extends EventCard {
                     usedBatteries
             );
 
-            // Activate all shields chosen by the player (even if unnecessary)
-            if (!activatedShieldsList.isEmpty()) {
-                for (Shield activeShield : activatedShieldsList) {
-                    int[] shieldCoverage = activeShield.getCoveredSide();
+            // Check if the shields can stop the threat
+            if (currMeteor.getSize() == 1) {
+                if (!activatedShieldsList.isEmpty()) {
+                    for (Shield activeShield : activatedShieldsList) {
+                        int[] shieldCoverage = activeShield.getCoveredSide();
 
-                    for (int j : shieldCoverage) {
-                        if (j == inboundDirection) {
-                            // Checking if the shield selected for activation
-                            // can actually defend the ship from the small meteor
-                            // by checking if it's correctly oriented towards the threat
-                            threatDestroyed = true;
-                            break;
+                        for (int j : shieldCoverage) {
+                            if (j == inboundDirection) {
+                                // Checking if the shield selected for activation
+                                // can actually defend the ship from the small meteor
+                                // by checking if it's correctly oriented towards the threat
+                                threatDestroyed = true;
+                                break;
+                            }
                         }
                     }
                 }
@@ -401,6 +391,7 @@ public class MeteorShower extends EventCard {
 
                     // If there were any aliens that have been removed, add them to the removed lifeForms
                     List<ComponentHelper<LifeformType>> removedAliensList = new ArrayList<>();
+
                     if (tmpPurpleAlienPos != null && shipPtr.getPurpleAlienPosition() == null) {
                         ComponentHelper<LifeformType> purpleAlienCH = new ComponentHelper<>(tmpPurpleAlienPos.getPosition()[0], tmpPurpleAlienPos.getPosition()[1]);
                         purpleAlienCH.addItem(LifeformType.PURPLE_ALIEN);

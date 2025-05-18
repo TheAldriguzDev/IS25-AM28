@@ -35,7 +35,7 @@ public class Pirates extends EventCard {
     private final Map<String, Integer> updatedPositions;
     private final Map<String, Integer> updatedCredits;
     private final Map<String, List<Map<String, Object>>> removedComponents;
-    private final Map<String, List<ComponentHelper<Void>>> removedBatteries; // TODO: Implement in the state (both firepower and shields)
+    private final Map<String, List<Pair<Integer, Integer>>> removedBatteries; // TODO: Implement in the state (both firepower and shields)
     private final Map<String, Integer> lostPieces;
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
@@ -131,7 +131,7 @@ public class Pirates extends EventCard {
                     }
                     // if the first round of meteors has passed, this block won't be executed, assuring that no players will get the same reward twice (or activate the cannons twice)
                     if (firstRound) {
-                        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleCannonsCoordinates
+                        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleCannonsCoordinates
                                 = player.getShip().activateComponents(piratesData.getDoubleCannonsToActivateCoordinates());
 
                         // Power consumed by the DoubleCannons
@@ -218,6 +218,7 @@ public class Pirates extends EventCard {
         return this;
     }
 
+    @Override
     protected void bonusEffect() {
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
@@ -228,6 +229,7 @@ public class Pirates extends EventCard {
         );
     }
 
+    @Override
     protected void malusEffect(ActionJSON data) throws ClassCastException {
         Optional<Player> playerOptional = getCurrentPlayer();
         PiratesJSON piratesData = (PiratesJSON) data;
@@ -237,14 +239,14 @@ public class Pirates extends EventCard {
                 (Player player) -> {
                     Boolean[] shieldedSides = new Boolean[] {false, false, false, false};
 
-                    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedShieldsCoordinates
+                    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedShieldsCoordinates
                             = player.getShip().activateComponents(piratesData.getShieldsActivatedCoordinates());
 
                     List<Shield> activatedShields = activatedShieldsCoordinates.stream()
                             .map(Pair::getKey)
                             .map(
-                                (ch) -> {
-                                    return player.getShip().getComponent(ch.getI(), ch.getJ());
+                                (p) -> {
+                                    return player.getShip().getComponent(p.getKey(), p.getValue());
                                 }
                             )
                             .map(
@@ -408,8 +410,6 @@ public class Pirates extends EventCard {
                 }
         );
     }
-
-    protected void malusEffect() {}
 
     @Override
     public CardStateJSON generateState() {

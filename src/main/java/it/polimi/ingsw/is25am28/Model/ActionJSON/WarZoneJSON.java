@@ -13,9 +13,9 @@ import java.util.List;
 public class WarZoneJSON extends ActionJSON {
     private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
     private List<ComponentHelper<ItemColor>> itemsToBeRemoved;
-    private List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldList;
-    private List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> cannonList;
-    private List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> engineList;
+    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldList;
+    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonList;
+    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> engineList;
 
     /**
      * Default constructor
@@ -32,9 +32,9 @@ public class WarZoneJSON extends ActionJSON {
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("lifeformsToBeRemoved") List<ComponentHelper<LifeformType>> lifeformsToBeRemoved,
             @JsonProperty("itemsToBeRemoved") List<ComponentHelper<ItemColor>> itemsToBeRemoved,
-            @JsonProperty("shieldList") List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldList,
-            @JsonProperty("cannonList") List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> cannonList,
-            @JsonProperty("cannonList") List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> engineList
+            @JsonProperty("shieldList") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldList,
+            @JsonProperty("cannonList") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonList,
+            @JsonProperty("cannonList") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> engineList
     ) {
         this.playerNickname = playerNickname;
         this.lifeformsToBeRemoved = lifeformsToBeRemoved;
@@ -69,32 +69,32 @@ public class WarZoneJSON extends ActionJSON {
     }
 
     @JsonGetter("shieldList")
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getShieldList() {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getShieldList() {
         return this.shieldList;
     }
 
     @JsonSetter("shieldList")
-    public void setShieldList(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldList) {
+    public void setShieldList(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldList) {
         this.shieldList = shieldList;
     }
 
     @JsonGetter("cannonList")
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getCannonList() {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getCannonList() {
         return this.cannonList;
     }
 
     @JsonSetter("cannonList")
-    public void setCannonList(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> cannonList) {
+    public void setCannonList(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> cannonList) {
         this.cannonList = cannonList;
     }
 
     @JsonGetter("engineList")
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getEngineList() {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getEngineList() {
         return this.engineList;
     }
 
     @JsonSetter("engineList")
-    public void setEngineList(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> engineList) {
+    public void setEngineList(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> engineList) {
         this.engineList = engineList;
     }
 }

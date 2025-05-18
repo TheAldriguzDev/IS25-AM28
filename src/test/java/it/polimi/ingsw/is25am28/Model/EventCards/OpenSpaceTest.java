@@ -7,7 +7,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
 import it.polimi.ingsw.is25am28.Model.Components.*;
-import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -82,9 +81,9 @@ class OpenSpaceTest {
                 Structural structural3 = new Structural(connectors, "");
 
                 Cabin cabin1 = new Cabin(connectors, false, "");
-                cabin1.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
+//                cabin1.addInhabitant(new Lifeform(LifeformType.PURPLE_ALIEN));
                 Cabin cabin2 = new Cabin(connectors, false, "");
-                cabin2.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+//                cabin2.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
 
                 Vital vital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
                 Vital vital2 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
@@ -111,8 +110,10 @@ class OpenSpaceTest {
                 player.getShip().addComponent(structural3, 7, 3);
                 player.getShip().addComponent(cabin1, 7, 4);
                 player.getShip().addComponent(vital1, 7, 5);
+                player.getShip().addLifeformToCabin(7, 4, LifeformType.PURPLE_ALIEN);
                 player.getShip().addComponent(cabin2, 7, 6);
                 player.getShip().addComponent(vital2, 7, 7);
+                player.getShip().addLifeformToCabin(7, 6, LifeformType.BROWN_ALIEN);
                 player.getShip().addComponent(battery3, 7, 8);
 
                 player.getShip().addComponent(normalEngine1, 8, 3);
@@ -143,10 +144,11 @@ class OpenSpaceTest {
                 Structural structural3 = new Structural(connectors, "");
 
                 Cabin cabin1 = new Cabin(connectors, false, "");
-                cabin1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
-                cabin1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+//                cabin1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
+//                cabin1.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
                 Cabin cabin2 = new Cabin(connectors, false, "");
-                cabin2.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+//                cabin2.addInhabitant(new Lifeform(LifeformType.BROWN_ALIEN));
+
 
                 Vital vital1 = new Vital(connectors, VitalType.PURPLE_VITAL.ordinal(), "");
                 Vital vital2 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
@@ -172,9 +174,12 @@ class OpenSpaceTest {
 
                 player.getShip().addComponent(structural3, 7, 3);
                 player.getShip().addComponent(cabin1, 7, 4);
+                player.getShip().addLifeformToCabin(7, 4, LifeformType.ASTRONAUT);
+                player.getShip().addLifeformToCabin(7, 4, LifeformType.ASTRONAUT);
                 player.getShip().addComponent(vital1, 7, 5);
                 player.getShip().addComponent(cabin2, 7, 6);
                 player.getShip().addComponent(vital2, 7, 7);
+                player.getShip().addLifeformToCabin(7, 6, LifeformType.BROWN_ALIEN);
                 player.getShip().addComponent(battery3, 7, 8);
 
                 // player.getShip().addComponent(normalEngine1, 8, 3);
@@ -236,8 +241,8 @@ class OpenSpaceTest {
             openSpaceJSON.setDoubleEnginesToActivate(
                 List.of(
                     new Pair<>(
-                            new ComponentHelper<>(8, 9),
-                            new ComponentHelper<>(7, 8)
+                            new Pair<>(8, 9),
+                            new Pair<>(7, 8)
                     )
                 )
             );
@@ -307,7 +312,7 @@ class OpenSpaceTest {
         assertEquals(7, cardState.getUpdatedPositions().get("Player 4"));
         assertTrue(cardState.getNeedsUpdatedBatteries());
         assertEquals(1, cardState.getRemovedBatteries().size());
-        assertEquals(1, cardState.getRemovedBatteries().get("Player 4"));
+        assertEquals(1, cardState.getRemovedBatteries().get("Player 4").size());
         assertFalse(cardState.getNeedsUpdatedEliminatedPlayers());
         // =============================== //
         // ======== WIDGET TESTING ======== //

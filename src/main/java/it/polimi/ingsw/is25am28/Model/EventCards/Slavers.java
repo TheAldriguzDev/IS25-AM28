@@ -23,7 +23,7 @@ public class Slavers extends EventCard {
     private List<String> eliminatedPlayers;
     private Map<String, Integer> updatedPositions;
     private Map<String, Integer> updatedCredits;
-    private Map<String, List<ComponentHelper<Void>>> removedBatteries;
+    private Map<String, List<Pair<Integer, Integer>>> removedBatteries;
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private boolean isPlayerDefeated;
 
@@ -81,7 +81,7 @@ public class Slavers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
                     if (!this.isPlayerDefeated) { // If the player has not been set as defeated it means its the first time he uses the card
-                        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleCannons
+                        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleCannons
                                 = player.getShip().activateComponents(slaversData.getDoubleCannonsToActivateCoordinates());
 
                         // Power consumed by the DoubleCannons
@@ -157,6 +157,7 @@ public class Slavers extends EventCard {
      * configurazioni non valide (vuota, equipaggio rimosso non sufficiente, 3 volte la stessa cabina...)
      * */
 
+    @Override
     protected void malusEffect(ActionJSON data) {
         Optional<Player> playerOptional = getCurrentPlayer();
         SlaversJSON slaversData = (SlaversJSON) data;

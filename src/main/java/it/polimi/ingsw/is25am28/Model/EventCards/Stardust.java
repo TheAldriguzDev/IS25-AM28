@@ -58,12 +58,6 @@ public class Stardust extends EventCard {
         return this;
     }
 
-    @Override
-    protected void bonusEffect() {}
-
-    @Override
-    protected void malusEffect() {}
-
     /**
      * This method will be used in the specific class, but also from outside (game model).
      * It returns true if the current player is the last one of the card players or if there are no active players in the card

@@ -28,7 +28,7 @@ public class Smugglers extends EventCard {
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
     private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
-    private Map<String, List<ComponentHelper<Void>>> removedBatteries;
+    private Map<String, List<Pair<Integer, Integer>>> removedBatteries;
     private List<String> eliminatedPlayers;
 
     private String prevPlayerNickname;
@@ -95,7 +95,7 @@ public class Smugglers extends EventCard {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
                     if (!this.isPlayerDefeated) {
-                        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleCannons
+                        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleCannons
                                 = player.getShip().activateComponents(smugglersData.getDoubleCannonsToActivateCoordinates());
 
                         // Power consumed by the DoubleCannons
@@ -150,6 +150,7 @@ public class Smugglers extends EventCard {
         return this;
     }
 
+    @Override
     protected void bonusEffect(ActionJSON data) throws ClassCastException {
         SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
@@ -178,9 +179,7 @@ public class Smugglers extends EventCard {
     }
 
     @Override
-    protected void bonusEffect() {}
-
-    protected void malusEffect(ActionJSON data) throws ClassCastException {
+    protected void malusEffect(ActionJSON data) {
         SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
@@ -219,7 +218,7 @@ public class Smugglers extends EventCard {
                                         resourceDrop.getJ()));
                     }
 
-                    List<ComponentHelper<Void>> consumableBatteries = new ArrayList<>();
+                    List<Pair<Integer, Integer>> consumableBatteries = new ArrayList<>();
 
                     for (Battery battery : player.getShip().getBatteryList()) {
                         int[] pos = battery.getPosition();
@@ -230,7 +229,7 @@ public class Smugglers extends EventCard {
                         if (charge > 0) {
                             for (int i = 0; i < charge; i++) {
                                 consumableBatteries.add(
-                                        new ComponentHelper<>(pos[0], pos[1])
+                                        new Pair<>(pos[0], pos[1])
                                 );
                             }
                         }

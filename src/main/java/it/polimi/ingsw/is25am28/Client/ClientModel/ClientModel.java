@@ -13,6 +13,7 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 
@@ -295,21 +296,10 @@ public class ClientModel {
 
         // Removes the specified amount of batteries from the specified ships
         if (cardStateJSON.getNeedsUpdatedBatteries()) {
-            System.out.println("NEEDS BATTERIES UPDATE");
-
             for (String playerNickname : cardStateJSON.getRemovedBatteries().keySet()) {
                 if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
-                    System.out.println("\tUPDATING SHIP OF " + cardStateJSON.getPrevPlayerNickname() + " INTO MODEL OF " + this.nickname);
-
                     this.getShipOfPlayer(playerNickname).ifPresent(
                         (ship) -> {
-
-                            if (cardStateJSON.getRemovedBatteries().get(cardStateJSON.getPrevPlayerNickname()) != null) {
-                                for (ComponentHelper<Void> ch : cardStateJSON.getRemovedBatteries().get(cardStateJSON.getPrevPlayerNickname())) {
-                                    System.out.println("\t\t => Battery @ (row=" + ch.getI() + ", col=" + ch.getJ() + ")");
-                                }
-                            }
-
                             ship.consumeEnergy(
                                 cardStateJSON.getRemovedBatteries().get(cardStateJSON.getPrevPlayerNickname())
                             );

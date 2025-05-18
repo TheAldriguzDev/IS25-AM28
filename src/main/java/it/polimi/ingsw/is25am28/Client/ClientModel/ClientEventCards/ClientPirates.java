@@ -133,23 +133,23 @@ public class ClientPirates extends ClientEventCard {
 
     // Shields
     @Override
-    public void setShieldsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate) throws UnsupportedOperationException {
+    public void setShieldsToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate) throws UnsupportedOperationException {
         this.piratesJSON.setShieldsActivatedCoordinates(shieldsToActivate);
     }
 
     @Override
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getShieldsToActivate() throws UnsupportedOperationException {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getShieldsToActivate() throws UnsupportedOperationException {
         return this.piratesJSON.getShieldsActivatedCoordinates();
     }
 
     // Cannons
     @Override
-    public void setDoubleCannonsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.piratesJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
     }
 
     @Override
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         return this.piratesJSON.getDoubleCannonsToActivateCoordinates();
     }
 

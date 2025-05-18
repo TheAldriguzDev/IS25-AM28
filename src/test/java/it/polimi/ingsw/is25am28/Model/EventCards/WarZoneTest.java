@@ -44,10 +44,10 @@ class WarZoneTest {
     // All THREE_PIPES connectors
     List<Integer> connectorsThree = new ArrayList<Integer>();
 
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannons_1 = new ArrayList<>();
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannons_2 = new ArrayList<>();
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannons_3 = new ArrayList<>();
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannons_4 = new ArrayList<>();
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannons_1 = new ArrayList<>();
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannons_2 = new ArrayList<>();
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannons_3 = new ArrayList<>();
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannons_4 = new ArrayList<>();
 
     List<ComponentHelper<LifeformType>> lifeformsToRemove_empty = new ArrayList<>();
     List<ComponentHelper<LifeformType>> lifeformsToRemove_4;
@@ -55,11 +55,11 @@ class WarZoneTest {
     List<ComponentHelper<LifeformType>> lifeformsToRemove_2;
     List<ComponentHelper<LifeformType>> lifeformsToRemove_1;
 
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getShieldsToActivate_empty = new ArrayList<>();
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate1;
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate2;
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getShieldsToActivate_empty = new ArrayList<>();
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate1;
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate2;
 
-    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannons_empty = new ArrayList<>();
+    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannons_empty = new ArrayList<>();
 
     ResourceBank resourceBank;
 
@@ -180,12 +180,12 @@ class WarZoneTest {
         // Player order: 1, 3, 4, 2
 
         //Lowest enginePower action : input
-            List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate = new ArrayList<>();
+            List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate = new ArrayList<>();
 
             doubleEnginesToActivate.add(
                 new Pair<>(
-                        new ComponentHelper<>(7, 7),
-                        new ComponentHelper<>(6, 5)
+                        new Pair<>(7, 7),
+                        new Pair<>(6, 5)
                 )
             );
 
@@ -227,8 +227,8 @@ class WarZoneTest {
             doubleEnginesToActivate.clear();
             doubleEnginesToActivate.add(
                     new Pair<>(
-                            new ComponentHelper<>(7, 6),
-                            new ComponentHelper<>(6, 5)
+                            new Pair<>(7, 6),
+                            new Pair<>(6, 5)
                     )
             );
             actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, doubleEnginesToActivate);
@@ -385,12 +385,12 @@ class WarZoneTest {
 
         // Lowest enginePower
         // player 2
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate = new ArrayList<>();
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate = new ArrayList<>();
 
         doubleEnginesToActivate.add(
                 new Pair<>(
-                        new ComponentHelper<>(7, 6),
-                        new ComponentHelper<>(6, 5)
+                        new Pair<>(7, 6),
+                        new Pair<>(6, 5)
                 )
         );
         actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, doubleEnginesToActivate);
@@ -411,8 +411,8 @@ class WarZoneTest {
         doubleEnginesToActivate.clear();
         doubleEnginesToActivate.add(
                 new Pair<>(
-                        new ComponentHelper<>(7, 7),
-                        new ComponentHelper<>(6, 5)
+                        new Pair<>(7, 7),
+                        new Pair<>(6, 5)
                 )
         );
         actionJSON = new WarZoneJSON("Player 1", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, doubleEnginesToActivate); // TODO: 1 engine to activate
@@ -454,8 +454,8 @@ class WarZoneTest {
         // protection for top and right sides
         shieldsToActivate2.add(
                 new Pair<>(
-                        new ComponentHelper<>(7, 7),
-                        new ComponentHelper<>(6, 5)
+                        new Pair<>(7, 7),
+                        new Pair<>(6, 5)
                 )
         );
         actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty, new ArrayList<>());
@@ -469,8 +469,8 @@ class WarZoneTest {
         // protection for top and right sides
         shieldsToActivate2.add(
                 new Pair<>(
-                        new ComponentHelper<>(7, 7),
-                        new ComponentHelper<>(6, 5)
+                        new Pair<>(7, 7),
+                        new Pair<>(6, 5)
                 )
         );
         actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty, new ArrayList<>());
@@ -484,8 +484,8 @@ class WarZoneTest {
         // protection for bottom and left sides (in this case it will not work as the shot is big)
         shieldsToActivate2.add(
                 new Pair<>(
-                        new ComponentHelper<>(7, 5),
-                        new ComponentHelper<>(6, 5)
+                        new Pair<>(7, 5),
+                        new Pair<>(5, 6)
                 )
         );
         actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty, new ArrayList<>());
@@ -499,8 +499,8 @@ class WarZoneTest {
         // protection for top and right sides
         shieldsToActivate2.add(
                 new Pair<>(
-                        new ComponentHelper<>(7, 5),
-                        new ComponentHelper<>(5, 6)
+                        new Pair<>(7, 5),
+                        new Pair<>(5, 6)
                 )
         );
         actionJSON = new WarZoneJSON("Player 2", lifeformsToRemove_empty, new ArrayList<>(), shieldsToActivate2, doubleCannons_empty, new ArrayList<>());
@@ -512,6 +512,12 @@ class WarZoneTest {
         assertNotNull(p2.getShip().getComponent(6, 8));
         assertNull(p2.getShip().getComponent(6, 4));
         assertNotNull(p2.getShip().getComponent(7, 5));
+
+        /* [SHIP p2]
+         *               BAT1
+         * CAN2   BAT2   CORE    CAB1    PURV
+         *        SHDBL  2ENG    SHDTR   1ENG
+         */
     }
 
 
@@ -609,8 +615,8 @@ class WarZoneTest {
         shieldsToActivate1 = new ArrayList<>();
         shieldsToActivate1.add(
                 new Pair<>(
-                        new ComponentHelper<>(7, 5),
-                        new ComponentHelper<>(6, 5)
+                        new Pair<>(7, 5),
+                        new Pair<>(6, 5)
                 )
         );
     }
@@ -708,8 +714,8 @@ class WarZoneTest {
 
         doubleCannons_2.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 4),
-                        new ComponentHelper<>(5, 6)
+                        new Pair<>(6, 4),
+                        new Pair<>(5, 6)
                 )
         );
 
@@ -718,8 +724,8 @@ class WarZoneTest {
         lifeformsToRemove_2.add(new ComponentHelper<LifeformType>(6,6).addItem(ASTRONAUT));
 
 //        shieldsToActivate2 = new ArrayList<>();
-//        shieldsToActivate2.add(new ComponentHelper<>(7, 7)); // top right shield
-//        shieldsToActivate2.add(new ComponentHelper<>(7, 5)); // bottom left shield
+//        shieldsToActivate2.add(new Pair<>(7, 7)); // top right shield
+//        shieldsToActivate2.add(new Pair<>(7, 5)); // bottom left shield
     }
 
 
@@ -915,8 +921,8 @@ class WarZoneTest {
 
         doubleCannons_4.add(
                 new Pair<>(
-                        new ComponentHelper<>(6, 8),
-                        new ComponentHelper<>(6, 7)
+                        new Pair<>(6, 8),
+                        new Pair<>(6, 7)
                 )
         );
 

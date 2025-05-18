@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OpenSpaceJSON extends ActionJSON {
-    private List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate;
+    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate;
 
     @JsonCreator
     public OpenSpaceJSON() {
@@ -21,19 +21,19 @@ public class OpenSpaceJSON extends ActionJSON {
     @JsonCreator
     public OpenSpaceJSON(
             @JsonProperty("playerNickname") String playerNickname,
-            @JsonProperty("doubleEnginesToActivate") List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate
+            @JsonProperty("doubleEnginesToActivate") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate
     ) {
         super(playerNickname);
         this.doubleEnginesToActivate = doubleEnginesToActivate;
     }
 
     @JsonGetter("doubleEnginesToActivate")
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleEnginesToActivate() {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleEnginesToActivate() {
         return this.doubleEnginesToActivate;
     }
 
     @JsonSetter("doubleEnginesToActivate")
-    public void setDoubleEnginesToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate) {
+    public void setDoubleEnginesToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate) {
         this.doubleEnginesToActivate = doubleEnginesToActivate;
     }
 }
