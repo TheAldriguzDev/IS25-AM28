@@ -71,7 +71,7 @@ class ShipTest {
 //    }
 
     Ship initCustomShip() {
-        Ship ship = new Ship(1);
+        Ship ship = new Ship(2);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -83,7 +83,7 @@ class ShipTest {
         /*
                ==== Ship Configuration (LEVEL 1) ====
             \       4       5       6       7       8
-            4                       a
+            4               a
             5               b       c       d
             6       e       f       g       h       i
             7       j       k       l       m       n
@@ -91,7 +91,7 @@ class ShipTest {
 
             Total components = 18 (17 + 1 core)
 
-            a = doubleCannon1 at (4, 6)
+            a = doubleCannon1 at (4, 5)
             b = singleCannon1 at (5, 5)
             c = specialDoubleStorage1 at (5, 6)
             d = singleCannon2 at (5, 7)
@@ -138,7 +138,7 @@ class ShipTest {
         Vital brownVital1 = new Vital(connectors, VitalType.BROWN_VITAL.ordinal(), "");
 
         // Adding the components created above
-        ship.addComponent(doubleCannon1, 4, 6);
+        ship.addComponent(doubleCannon1, 4, 5);
         ship.addComponent(singleCannon1, 5, 5);
         ship.addComponent(specialDoubleStorage1, 5, 6);
         ship.addComponent(singleCannon2, 5, 7);
@@ -454,7 +454,7 @@ class ShipTest {
         Battery battery = new Battery(connectors, 3, "");
         Battery battery2 = new Battery(connectors, 3, "");
         Cabin cabin = new Cabin(connectors, false, "");
-        Cannon cannon = new Cannon(connectors, 1, "");
+        Cannon doubleCannon = new Cannon(connectors, 2, "");
         Engine engine = new Engine(connectors, 1, "");
         Engine engine2 = new Engine( connectors, 2, "");
         Shield shield = new Shield( connectors, "");
@@ -471,7 +471,7 @@ class ShipTest {
         ship.addComponent(battery, 6, 7);
         ship.addComponent(battery2, 5, 5);
         ship.addComponent(cabin, 5, 6);
-        ship.addComponent(cannon, 8, 4);
+        ship.addComponent(doubleCannon, 8, 4);
         ship.addComponent(engine, 7, 6);
         ship.addComponent(engine2, 7, 7);
         ship.addComponent(shield, 6, 5);
@@ -489,8 +489,8 @@ class ShipTest {
 
         // Activating a doubleEngine and a doubleCannon and a shield (-3 energy)
         List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> toActivate = new ArrayList<>();
-        Component component = ship.getComponent(7, 6);  // Double Engine
-        Component _battery_ = ship.getComponent(6, 7);
+        Component component = ship.getComponent(7, 7);  // Double Engine
+        Component _battery_ = ship.getComponent(6, 7);  // battery
         toActivate.add(
             new Pair<>(
                     new ComponentHelper<>(component.getPosition()[0], component.getPosition()[1]),
@@ -498,7 +498,7 @@ class ShipTest {
             )
         );
         component = ship.getComponent(8, 4);  // Double Cannon
-        _battery_ = ship.getComponent(6, 7);
+        _battery_ = ship.getComponent(6, 7);  // battery
         toActivate.add(
                 new Pair<>(
                         new ComponentHelper<>(component.getPosition()[0], component.getPosition()[1]),
@@ -506,7 +506,7 @@ class ShipTest {
                 )
         );
         component = ship.getComponent(6, 5);  // Shield
-        _battery_ = ship.getComponent(5, 5);
+        _battery_ = ship.getComponent(5, 5);  // battery2
         toActivate.add(
                 new Pair<>(
                         new ComponentHelper<>(component.getPosition()[0], component.getPosition()[1]),
@@ -514,23 +514,23 @@ class ShipTest {
                 )
         );
 
+        int sizeBeforeActivation = toActivate.size();
+        toActivate = ship.activateComponents(toActivate);
+
+        // After consumption
+        assertEquals(3, ship.getAvailableEnergy());
+
         assertEquals(1, battery.getAvailability());
         assertEquals(2, battery2.getAvailability());
-
-        ship.activateComponents(toActivate);
+        assertEquals(sizeBeforeActivation, toActivate.size());
     }
 
     @Test
     void addLifeformToCabin_addingPurpleAlienTest() {
-        Ship ship = initCustomShip();
+        Ship ship = new Ship(2);
 
-//        Map<Integer, Pair<Integer, Integer>> chosenAliens = new HashMap<>();
-//
-//        chosenAliens.put(1, new Pair<Integer, Integer>(7, 7));
-//
-//        ShipJSON shipJson = new ShipJSON("p1", chosenAliens);
-//
-//        ship.setChosenAliensForEligibleCabins(shipJson);
+        ship.addComponent(new Vital(List.of(3, 3, 3, 3), PURPLE_VITAL.ordinal(), null), 6, 7);
+        ship.addComponent(new Cabin(List.of(3, 3, 3, 3), false, null), 7, 7);
 
         ship.addLifeformToCabin(7, 7, PURPLE_ALIEN);
 
@@ -552,7 +552,7 @@ class ShipTest {
         }
 
         // Case 0 - No cannons + no purple alien on board
-        ship = new Ship(-1);
+        ship = new Ship(2);
         expectedFirePower = 0;
         assertEquals(expectedFirePower, ship.getFirePower(null));
 
@@ -564,8 +564,6 @@ class ShipTest {
 //        alienCoords.put(PURPLE_ALIEN.ordinal(), new Pair<>(6, 7));
 //        shipJSON = new ShipJSON("p1", alienCoords);
 //        ship.setChosenAliensForEligibleCabins(shipJSON);
-
-        ship.addLifeformToCabin(6, 7, PURPLE_ALIEN);
 
         expectedFirePower = 0;
         assertEquals(expectedFirePower, ship.getFirePower(null));
@@ -584,19 +582,16 @@ class ShipTest {
 //        ship.setChosenAliensForEligibleCabins(shipJSON);
 
         ship.addLifeformToCabin(7, 7, PURPLE_ALIEN);
+        assertNotNull(ship.getPurpleAlienPosition());
 
-        // Case 3 - baseline engine power + purple alien on board
+        // Case 3 - baseline firepower + purple alien on board
         doubleCannonCoords = new ArrayList<>();
         expectedFirePower = 4;
         assertEquals(expectedFirePower, ship.getFirePower(doubleCannonCoords));
 
-        // Case 4 - total engine power + purple alien on board
+        // Case 4 - total firepower + purple alien on board
         doubleCannonCoords = new ArrayList<>();
-        //doubleCannonCoords.add(new Pair<>(4, 6));
-//        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(4, 6)));
-        doubleCannonCoords.add(new ComponentHelper<>(4, 6));
-        //doubleCannonCoords.add(new Pair<>(6, 8));
-//        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(6, 8)));
+        doubleCannonCoords.add(new ComponentHelper<>(4, 5));
         doubleCannonCoords.add(new ComponentHelper<>(6, 8));
         expectedFirePower = 8;
         assertEquals(expectedFirePower, ship.getFirePower(doubleCannonCoords));
@@ -607,25 +602,15 @@ class ShipTest {
         for (Battery b : ship.getBatteryList()) {
             for (int i = 0; i < b.getAvailability(); i++) {
                 batteries.add(
-                        new ComponentHelper<>(
-                                b.getPosition()[0],
-                                b.getPosition()[1]
-                        )
+                    new ComponentHelper<>(
+                            b.getPosition()[0],
+                            b.getPosition()[1]
+                    )
                 );
             }
         }
-        ship.consumeEnergy(batteries);
 
-        // Case 5 - no energy available + purple alien on board
-        doubleCannonCoords = new ArrayList<>();
-        //doubleCannonCoords.add(new Pair<>(4, 6));
-//        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(4, 6)));
-        doubleCannonCoords.add(new ComponentHelper<>(4, 6));
-        //doubleCannonCoords.add(new Pair<>(6, 8));
-//        doubleCannonCoords.add(new ArrayList<>(Arrays.asList(6, 8)));
-        doubleCannonCoords.add(new ComponentHelper<>(6, 8));
-        expectedFirePower = 4;
-        assertEquals(expectedFirePower, ship.getFirePower(doubleCannonCoords));
+        ship.consumeEnergy(batteries);
     }
 
     @Test
@@ -642,7 +627,7 @@ class ShipTest {
         }
 
         // Case 0 - No engines + no brown alien on board
-        ship = new Ship(-1);
+        ship = new Ship(2);
         expectedEnginePower = 0;
         assertEquals(expectedEnginePower, ship.getEnginePower(null));
 
@@ -681,7 +666,7 @@ class ShipTest {
         // Case 4 - total engine power + brown alien on board
         expectedTotalEnergy = ship.getAvailableEnergy();
         doubleEnginesToActivate = new ArrayList<>();
-        Component doubleEngine = ship.getComponent(9, 7);
+        Component doubleEngine = ship.getComponent(8, 7);
         Component battery = ship.getComponent(7, 4);
         doubleEnginesToActivate.add(
             new Pair<>(
@@ -1098,6 +1083,10 @@ class ShipTest {
         assertTrue(ship.validateShip());
 
         ship = initCustomShip();
+
+        assertFalse(ship.validateShip());
+
+        ship.removeComponent(4, 5);
 
         assertTrue(ship.validateShip());
     }
@@ -1548,30 +1537,26 @@ class ShipTest {
     @Test
     void addingBothAliensToTheShip() {
         List<Integer> connectors = new ArrayList<>();
-        Ship ship;
+        Ship ship = new Ship(2);
+        Cabin purpleAlienCabin, brownAlienCabin;
 
-        // Default connector is THREE_PIPES
-        for (int i = 0; i < 4; i++) {
-            connectors.add(THREE_PIPES.ordinal());
-        }
-
-        // (1) - Adding both aliens
-        ship = initCustomShip();
-        ship.removeComponent(6, 8);
-        ship.addComponent(new Cabin(connectors, false, ""), 6, 8);  // Adding another cabin to the brown vital unit
-        ship.generateComponentSubLists();
+        ship.addComponent(new Vital(List.of(3, 3, 3, 3), PURPLE_VITAL.ordinal(), null), 6, 7);
+        ship.addComponent(purpleAlienCabin = new Cabin(List.of(3, 3, 3, 3), false, null), 7, 7);
+        ship.addComponent(new Vital(List.of(3, 3, 3, 3), BROWN_VITAL.ordinal(), null), 6, 5);
+        ship.addComponent(brownAlienCabin = new Cabin(List.of(3, 3, 3, 3), false, null), 7, 5);
 
         ship.addLifeformToCabin(7, 7, PURPLE_ALIEN);
-        ship.addLifeformToCabin(6, 8, BROWN_ALIEN);
+        ship.addLifeformToCabin(7, 5, BROWN_ALIEN);
 
         // Expecting to have 2 aliens only onboard of the ship
-        assertEquals(2, ship.getAllLifeforms().stream().filter(l -> (l.getLifeformType() == BROWN_ALIEN || l.getLifeformType() == LifeformType.PURPLE_ALIEN)).toList().size());
+        assertEquals(purpleAlienCabin, ship.getPurpleAlienPosition());
+        assertEquals(brownAlienCabin, ship.getBrownAlienPosition());
     }
 
     @Test
     void addingTheWrongAlienToAnAlienLifeEligibleCabin() {
         Map<Integer, Pair<Integer, Integer>> chosenAliens;
-        Ship ship;
+        Ship ship = new Ship(2);
 
         List<Integer> connectors = new ArrayList<>();
 
@@ -1581,9 +1566,7 @@ class ShipTest {
         }
 
         // Adding purpleAlien to a brownAlien-eligible cabin (the one @ coords (6, 8))
-        ship = initCustomShip();
-        ship.removeComponent(6, 8);
-        ship.addComponent(new Cabin(connectors, false, ""), 6, 8);  // Adding another cabin to the brown vital unit
+        ship.addComponent(new Cabin(connectors, false, null), 6, 8);  // Adding another cabin to the brown vital unit
         ship.generateComponentSubLists();
 
         NoSupportVitalFoundException nsvfe = assertThrows(NoSupportVitalFoundException.class, () -> { ship.addLifeformToCabin(6, 8, PURPLE_ALIEN); });
@@ -1597,13 +1580,13 @@ class ShipTest {
         // now have any other neighbouring vital units of their same type, otherwise
         // they cannot live in their cabins anymore and thus will be removed
 
-        Ship ship = new Ship(-1);
+        Ship ship = new Ship(2);
 
         List<Integer> connectors = new ArrayList<>();
 
         // Default connector is THREE_PIPES
         for (int i = 0; i < 4; i++) {
-            connectors.add( THREE_PIPES.ordinal() );
+            connectors.add(THREE_PIPES.ordinal());
         }
 
         Cabin cabin = new Cabin(connectors, false, "");

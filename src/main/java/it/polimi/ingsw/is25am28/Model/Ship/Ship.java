@@ -596,7 +596,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
         // Finally, add the contribution of the single purple alien onboard the ship to the
         // overall firepower (only if it's present and if the total firepower is > 0)
         if (this.purpleAlienPosition != null && totalFirepower > 0) {
-            totalFirepower += this.purpleAlienPosition.getInhabitants().getFirst().getPowerBoost();
+            totalFirepower += this.purpleAlienPosition.getInhabitants().getFirst().getAttackBoost();
         }
 
         return totalFirepower;
@@ -724,25 +724,28 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
 
         if (componentsAndRelativeBatteries != null && !componentsAndRelativeBatteries.isEmpty()) {
             for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> componentAndBattery : componentsAndRelativeBatteries) {
-                Component component = this.getComponent(
-                        componentAndBattery.getKey().getI(),
-                        componentAndBattery.getKey().getJ()
-                );
+                if (componentAndBattery != null) {
 
-                if (component != null && component.requiresEnergy()) {
-                    component = this.getComponent(
-                        componentAndBattery.getValue().getI(),
-                        componentAndBattery.getValue().getJ()
+                    Component component = this.getComponent(
+                            componentAndBattery.getKey().getI(),
+                            componentAndBattery.getKey().getJ()
                     );
 
-                    switch (component) {
-                        case Battery battery -> {
-                            if (battery.getAvailability() > 0) {
-                                battery.useBattery(1);
-                                activatedComponents.add(componentAndBattery);
+                    if (component != null && component.requiresEnergy()) {
+                        component = this.getComponent(
+                                componentAndBattery.getValue().getI(),
+                                componentAndBattery.getValue().getJ()
+                        );
+
+                        switch (component) {
+                            case Battery battery -> {
+                                if (battery.getAvailability() > 0) {
+                                    battery.useBattery(1);
+                                    activatedComponents.add(componentAndBattery);
+                                }
                             }
+                            case null, default -> {}
                         }
-                        case null, default -> {}
                     }
                 }
             }

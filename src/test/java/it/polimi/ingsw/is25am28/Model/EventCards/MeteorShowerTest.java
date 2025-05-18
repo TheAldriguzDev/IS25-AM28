@@ -649,7 +649,7 @@ class MeteorShowerTest {
         // Player 2 response
         shieldsCoordinates.add(null);   // P2 no shields selected
 
-        // P2 chooses 3 non-cannon components, equivalent to doing nothin
+        // P2 chooses 3 non-cannon components, equivalent to doing nothing
         cannonsCoordinates.add(
                 new Pair<>(
                         new ComponentHelper<>(6, 4),

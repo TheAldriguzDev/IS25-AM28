@@ -209,11 +209,11 @@ class OpenSpaceTest {
         assertFalse(cardState.getNeedsBoardUpdate());
         assertNull(cardState.getPlayerNickname());
         // =============================== //
+
         // ======== WIDGET TESTING ======== //
         clientOpenSpace = new ClientOpenSpace(cardState);
         clientOpenSpace.generateWidget().printWidget();
         // ================================ //
-
 
         // Init the players that will use the card
         openSpaceCard.initCardPlayers();
@@ -234,12 +234,12 @@ class OpenSpaceTest {
             openSpaceJSON.setPlayerNickname(player.getNickname());
 
             openSpaceJSON.setDoubleEnginesToActivate(
-                    List.of(
-                            new Pair<>(
-                                    new ComponentHelper<>(8, 9),
-                                    new ComponentHelper<>(7, 8)
-                            )
+                List.of(
+                    new Pair<>(
+                            new ComponentHelper<>(8, 9),
+                            new ComponentHelper<>(7, 8)
                     )
+                )
             );
 
             // ======== STATE TESTING ======== //
@@ -260,7 +260,7 @@ class OpenSpaceTest {
                     assertEquals(13, cardState.getUpdatedPositions().get("Player 1"));
                     assertTrue(cardState.getNeedsUpdatedBatteries());
                     assertEquals(1, cardState.getRemovedBatteries().size());
-                    assertEquals(1, cardState.getRemovedBatteries().get("Player 1"));
+                    assertEquals(1, cardState.getRemovedBatteries().get("Player 1").size());
                     assertFalse(cardState.getNeedsUpdatedEliminatedPlayers());
                 }
                 case 2 -> { // State relative to player 2
@@ -279,13 +279,14 @@ class OpenSpaceTest {
                     assertEquals(8, cardState.getUpdatedPositions().get("Player 3"));
                     assertTrue(cardState.getNeedsUpdatedBatteries());
                     assertEquals(1, cardState.getRemovedBatteries().size());
-                    assertEquals(1, cardState.getRemovedBatteries().get("Player 3"));
+                    assertEquals(1, cardState.getRemovedBatteries().get("Player 3").size());
                     assertFalse(cardState.getNeedsUpdatedEliminatedPlayers());
                 }
             }
+
             assertEquals(player.getNickname(), cardState.getPlayerNickname());
-            // =============================== //
             count++;
+
             // ======== WIDGET TESTING ======== //
             clientOpenSpace.updateCard(cardState);
             clientOpenSpace.generateWidget().printWidget();
@@ -319,7 +320,7 @@ class OpenSpaceTest {
         assertEquals(tmpCursors.get(2) + 7, players.get(2).getCursor());
         assertEquals(tmpCursors.get(3) + 7, players.get(3).getCursor());
 
-        assertEquals(board.getEliminatedPlayers().size(), 1);
+        assertEquals(1, board.getEliminatedPlayers().size());
         assertEquals(tmpPlayer, this.board.getEliminatedPlayers().getFirst());
 
         // The power that initially was 6, now has been decreased to 5
