@@ -10,7 +10,8 @@ public enum GuiScenes {
     INSUFFICIENT_PLAYER_SCENE("insufficientPlayer.fxml"),
     END_GAME_SCENE("endGame.fxml"),
     FIX_SHIP_SCENE("fixShip.fxml"),
-    POPULATE_SHIP_SCENE("populateShip.fxml");
+    POPULATE_SHIP_SCENE("populateShip.fxml"),
+    CARD_ROUND_SCENE("cardRound.fxml");
 
     private final String fxmlFile;
 

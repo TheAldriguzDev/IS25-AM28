@@ -29,7 +29,8 @@ public class EndGameController {
             leaderBoard.getChildren().add(label);
         }
 
-
+//TODO: colores (gui handler should have a method to get the mode
+// )
 
         List<String> orderedPlayers = new ArrayList<>();
         orderedPlayers = state.getPlayersPositionResult().entrySet()

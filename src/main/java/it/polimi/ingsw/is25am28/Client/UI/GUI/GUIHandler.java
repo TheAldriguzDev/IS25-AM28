@@ -274,8 +274,29 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
-        Platform.runLater(() -> {
 
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader(
+                    Objects.requireNonNull(
+                            getClass().getResource(GuiScenes.POPULATE_SHIP_SCENE.getFxmlFile())
+                    )
+            );
+
+            try {
+
+                Parent root = loader.load();
+                FixShipController controller = loader.getController();
+
+                //...
+
+                Scene newScene = new Scene(root);
+                this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
+                this.stage.setScene(newScene);
+                this.stage.show();
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         });
     }
 
