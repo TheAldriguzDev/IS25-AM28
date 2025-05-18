@@ -457,8 +457,8 @@ public class LobbyScreen extends Screen {
     public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
         if (isFirstAccess) {
             printTitle();
-            this.initLobbyCommandsWidget(state);
         }
+        this.initLobbyCommandsWidget(state);
 
         this.getLobbyCommand();
     }

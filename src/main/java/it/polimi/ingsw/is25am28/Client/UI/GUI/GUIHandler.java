@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -15,12 +16,10 @@ import it.polimi.ingsw.is25am28.Network.VirtualView;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.LoadException;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -59,6 +58,10 @@ public class GUIHandler extends Application implements ClientUI {
 
     public static void setClientModel(ClientModel model) {
         GUIHandler.model = model;
+    }
+
+    public ClientModel getClientModel() {
+        return GUIHandler.model;
     }
 
     public static VirtualView getVirtualClient() {
@@ -212,7 +215,49 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
-        System.out.println("SHIP CONSTRUCTION DTO ARRIVED");
+        Platform.runLater(() -> {
+            if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
+                ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
+                controller.initShipConstruction();
+
+                return;
+            }
+
+            FXMLLoader loader = new FXMLLoader(
+                    Objects.requireNonNull(
+                            getClass().getResource(GuiScenes.SHIP_CONSTRUCTION_SCENE.getFxmlFile())
+                    )
+            );
+
+            try {
+                Parent root = loader.load();
+                ShipConstructionController controller = loader.getController();
+
+                // Store the root and the controller
+                controllers.put(GuiScenes.SHIP_CONSTRUCTION_SCENE, controller);
+                roots.put(GuiScenes.SHIP_CONSTRUCTION_SCENE, root);
+
+                controller.initShipConstruction();
+
+                Scene newScene = new Scene(root);
+                this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
+                this.stage.setScene(newScene);
+                this.stage.show();
+            }
+            catch (IOException e) {
+                throw new RuntimeException(e);
+            } finally {
+                this.currentScene = GuiScenes.SHIP_CONSTRUCTION_SCENE;
+            }
+        });
+    }
+
+    // TODO: Understand if we need to create an interface for the GUI that is more specific than the TUI
+    public void updateShipConstructionComponent(ConstructionComponentDTO component) {
+        if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
+            ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
+            controller.updateComponent(component.getId());
+        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
@@ -14,6 +15,8 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
 public abstract class GUIController {
+    protected ClientModel clientModel;
+
     @FXML
     protected StackPane rootPane;
 

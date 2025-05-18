@@ -11,7 +11,8 @@ public enum GuiScenes {
     END_GAME_SCENE("endGame.fxml"),
     FIX_SHIP_SCENE("fixShip.fxml"),
     POPULATE_SHIP_SCENE("populateShip.fxml"),
-    CARD_ROUND_SCENE("cardRound.fxml");
+    CARD_ROUND_SCENE("cardRound.fxml"),
+    SHIP_CONSTRUCTION_SCENE("shipConstruction.fxml");
 
     private final String fxmlFile;
 

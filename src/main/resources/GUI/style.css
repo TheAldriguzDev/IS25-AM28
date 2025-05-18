@@ -154,6 +154,12 @@
     -fx-background-color: transparent;
 }
 
+#sidePanel VBox {
+    -fx-padding: 10 20 10 20;
+    -fx-spacing: 20;
+}
+
+
 /* EndGame */
 
 .leaderBoard {
