@@ -243,50 +243,52 @@ public class MeteorShower extends EventCard {
             // If a small meteor will hit a smooth side, then it'll bounce
             threatDestroyed = ((currMeteor.getSize() == 1) && (sideToHit == ZERO_PIPES.ordinal()));
 
+            // Filtering out all coordinates that don't point to a shield.
+            shieldsToActivate = shieldsToActivate.stream()
+                .filter(Objects::nonNull)
+                .filter(
+                    (pair) -> {
+                        ComponentHelper<Void> key = pair.getKey();
+                        Component component = shipPtr.getComponent(key.getI(), key.getJ());
+
+                        return switch (component) {
+                            case Shield shield -> true;
+                            case null, default -> false;
+                        };
+                    }
+                ).toList();
+
+            // Filtering out all coordinates that don't point to a double cannon.
+            doubleCannonsToActivate = doubleCannonsToActivate.stream()
+                .filter(Objects::nonNull)
+                .filter(
+                    (pair) -> {
+                        ComponentHelper<Void> key = pair.getKey();
+                        Component component = shipPtr.getComponent(key.getI(), key.getJ());
+
+                        return switch (component) {
+                            case Cannon cannon -> (cannon.requiresEnergy());
+                            case null, default -> false;
+                        };
+                    }
+                ).toList();
+
+            // Activating shields (which consumes 1 energy unit from the battery each shield is paired with)
             shieldsToActivate = shipPtr.activateComponents(shieldsToActivate);
+
+            // NOTE: The cast is safe thanks to the previous check
             activatedShieldsList = shieldsToActivate.stream()
                     .map(Pair::getKey)
-                    .map(
-                        (ch) -> {
-                            return shipPtr.getComponent(ch.getI(), ch.getJ());
-                        }
-                    )
-                    .map(
-                        (c) -> {
-                            switch (c) {
-                                case Shield shield -> {
-                                    return shield;
-                                }
-                                case null, default -> {}
-                            }
-                            return null;
-                        }
-                    )
-                    .filter(Objects::nonNull)
+                    .map(ch -> (Shield) shipPtr.getComponent(ch.getI(), ch.getJ()))
                     .toList();
 
+            // Activating double cannons (which consumes 1 energy unit from the battery each shield is paired with)
             doubleCannonsToActivate = shipPtr.activateComponents(doubleCannonsToActivate);
+
+            // NOTE: The cast is safe thanks to the previous check
             activatedDoubleCannonsList = doubleCannonsToActivate.stream()
                     .map(Pair::getKey)
-                    .map(
-                        (ch) -> {
-                            return shipPtr.getComponent(ch.getI(), ch.getJ());
-                        }
-                    )
-                    .map(
-                        (c) -> {
-                            switch (c) {
-                                case Cannon cannon -> {
-                                    if (cannon.requiresEnergy()) {
-                                        return cannon;
-                                    }
-                                }
-                                case null, default -> {}
-                            }
-                            return null;
-                        }
-                    )
-                    .filter(Objects::nonNull)
+                    .map(ch -> (Cannon) shipPtr.getComponent(ch.getI(), ch.getJ()))
                     .toList();
 
             List<ComponentHelper<Void>> usedBatteries = new ArrayList<>();

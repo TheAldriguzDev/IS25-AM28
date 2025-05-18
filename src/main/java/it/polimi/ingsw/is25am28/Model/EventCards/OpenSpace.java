@@ -56,8 +56,8 @@ public class OpenSpace extends EventCard {
                     ship = this.getCurrentPlayer().get().getShip();
 
                     List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleEngines = ship.activateComponents(doubleEnginesToActivate);
-
                     totalEnginePower = ship.getEnginePower(activatedDoubleEngines.stream().map(Pair::getKey).toList());
+
                     this.removedBatteries.put(
                         playerNickname,
                         activatedDoubleEngines.stream()
