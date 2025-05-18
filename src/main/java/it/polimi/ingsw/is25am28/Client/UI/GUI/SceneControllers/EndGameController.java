@@ -18,16 +18,18 @@ public class EndGameController {
 
     public void setLeaderBoard(EndGameDTO state) {
         if (state.getWinner() != null) {
-            VBox winnerBox = new VBox();
-            winnerBox.getStyleClass().add("winnerBox");
-            winnerBox.setAlignment(Pos.CENTER);
+//            VBox winnerBox = new VBox();
+//            winnerBox.getStyleClass().add("winnerBox");
+//            winnerBox.setAlignment(Pos.CENTER);
 
             Label label = new Label(state.getWinner() + " won the game!");
-            label.setStyle("-fx-text-fill: purple;");
+            label.getStyleClass().add("winner-label");
 
-            winnerBox.getChildren().add(label);
-            leaderBoard.getChildren().add(winnerBox);
+//            winnerBox.getChildren().add(label);
+            leaderBoard.getChildren().add(label);
         }
+
+
 
         List<String> orderedPlayers = new ArrayList<>();
         orderedPlayers = state.getPlayersPositionResult().entrySet()
@@ -43,10 +45,12 @@ public class EndGameController {
             String text = placements.get(i) + " - " + orderedPlayers.get(i) + " (Final credits: " + credits + ")";
 
             Label label = new Label(text);
-            label.getStyleClass().add("label");
+            label.getStyleClass().add("leaderBoard-label");
 
             this.leaderBoard.getChildren().add(label);
+
         }
+
 
 //        for (int i = 0; i < orderedPlayers.size(); i++) {
 //            int credits = state.getPlayersCredits().get(orderedPlayers.get(i));
