@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.Battery;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
@@ -82,19 +83,21 @@ public class Smugglers extends EventCard {
         SmugglersJSON smugglersData;
         try {
             smugglersData = (SmugglersJSON) data;
-        } catch (ClassCastException e) {
+        }
+        catch (ClassCastException e) {
             throw new ClassCastException("Card data type in invalid");
         }
 
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
-
                     String playerNickname = smugglersData.getPlayerNickname();
                     this.prevPlayerNickname = playerNickname;
+
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
+
                     if (!this.isPlayerDefeated) {
                         List<Pair<CoordinatePair, CoordinatePair>> activatedDoubleCannons
                                 = player.getShip().activateComponents(smugglersData.getDoubleCannonsToActivateCoordinates());
@@ -120,23 +123,28 @@ public class Smugglers extends EventCard {
                             if (smugglersData.getTakeLoot()) {
                                 bonusEffect(data);
                                 getBoard().movePlayerBackwards(player, movementSteps);
+
                                 this.updatedPositions.put(playerNickname, player.getCursor());
                                 int tmp = getBoard().getEliminatedPlayers().size();
                                 this.getBoard().validatePlayersPosition();
+
                                 for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
                                     this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
                                 }
                             }
                         } else if (playerFirepower < requiredFirepower) {
                             this.isPlayerDefeated = true;
-                            //playersToTakeItemsFrom.add(player);
-                            //malusEffect(smugglersData);
+                            // playersToTakeItemsFrom.add(player);
+                            // malusEffect(smugglersData);
                         }
                     } else {
                         malusEffect(data);
                         this.isPlayerDefeated = false;
                     }
-                    if (!isPlayerDefeated) { // If the player has been defeated the current player does not change, and the game does not end
+
+                    // If the player has been defeated the current player
+                    // does not change, and the card does not end.
+                    if (!isPlayerDefeated) {
                         if (player.equals(players.getLast())) {
                             cardUsed();
                         } else {
@@ -156,26 +164,26 @@ public class Smugglers extends EventCard {
         SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
-                (Player player) -> {
-                    List<ComponentHelper<ItemColor>> resourcesToLoad = smugglersData.getItemsToBeTaken();
-                    List<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
-                    if (!resourcesToDrop.isEmpty()) {
-                        this.droppedResources.put(player.getNickname(), resourcesToDrop);
-                    }
-                    if (!resourcesToLoad.isEmpty()) {
-                        this.takenResources.put(player.getNickname(), resourcesToLoad);
-                    }
-                    // Item da lasciare per fare spazio
-                    for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
-                        resourceDrop.getItem().ifPresent( i ->
-                                this.resourceBank.addResourceToBankFromPlayer(player, i, resourceDrop.getI(), resourceDrop.getJ()));
-                    }
-                    // Item da caricare sulla nave
-                    for ( ComponentHelper<ItemColor> resourceTake : resourcesToLoad) {
-                        resourceTake.getItem().ifPresent( i ->
-                                this.resourceBank.addResourceToPlayerFromBank(player, i, resourceTake.getI(), resourceTake.getJ()));
-                    }
+            (Player player) -> {
+                List<ComponentHelper<ItemColor>> resourcesToLoad = smugglersData.getItemsToBeTaken();
+                List<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
+                if (!resourcesToDrop.isEmpty()) {
+                    this.droppedResources.put(player.getNickname(), resourcesToDrop);
                 }
+                if (!resourcesToLoad.isEmpty()) {
+                    this.takenResources.put(player.getNickname(), resourcesToLoad);
+                }
+                // Items to drop
+                for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
+                    resourceDrop.getItem().ifPresent( i ->
+                            this.resourceBank.addResourceToBankFromPlayer(player, i, resourceDrop.getI(), resourceDrop.getJ()));
+                }
+                // Items to take
+                for ( ComponentHelper<ItemColor> resourceTake : resourcesToLoad) {
+                    resourceTake.getItem().ifPresent( i ->
+                            this.resourceBank.addResourceToPlayerFromBank(player, i, resourceTake.getI(), resourceTake.getJ()));
+                }
+            }
         );
     }
 
@@ -184,63 +192,96 @@ public class Smugglers extends EventCard {
         SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
         playerOptional.ifPresent(
-                (Player player) -> {
-                    // Creates a tmp List of the n=takenItems most valuable item colors in the ship
-                    List<ItemColor> mostValuableItems = player.getShip().getAllItems().stream()
-                            .sorted(Comparator.comparingInt(Item::getValue).reversed())
-                            .limit(this.takenItems)
-                            .map(Item::getColor)
-                            .toList();
+            (Player player) -> {
+                // Creates a tmp List of the n=takenItems most valuable item colors in the ship
+                List<ItemColor> mostValuableItems = player.getShip().getAllItems().stream()
+                        .sorted(Comparator.comparingInt(Item::getValue).reversed())
+                        .limit(this.takenItems)
+                        .map(Item::getColor)
+                        .toList();
 
-                    List<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
-                    // Extracts the colors form the resourcesToDrop
-                    List<ItemColor> colorsToDrop = resourcesToDrop.stream()
-                            .map(item -> item.getItem().orElse(null))
-                            .toList();
+                List<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
 
-                    // This covers also the case in which there are not enough resources on board
-                    if (resourcesToDrop.size() != mostValuableItems.size()) {
-                        throw new IllegalArgumentException("The dropped items are not enough");
-                    } else if (this.countOccurrences(mostValuableItems).equals(colorsToDrop)) {
-                        throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
-                    }
+                // Extracts the colors form the resourcesToDrop
+                List<ItemColor> colorsToDrop = resourcesToDrop.stream()
+                        .map(item -> item.getItem().orElse(null))
+                        .toList();
 
-                    if (!resourcesToDrop.isEmpty()) {
-                        this.droppedResources.put(player.getNickname(), resourcesToDrop);
-                    }
+                // This covers also the case in which there are not enough resources on board
+                if (resourcesToDrop.size() != mostValuableItems.size()) {
+                    throw new IllegalArgumentException("The dropped items are not enough");
+                }
+                else if (this.countOccurrences(mostValuableItems).equals(colorsToDrop)) {
+                    throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
+                }
 
-                    // Items to drop
-                    for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
-                        resourceDrop.getItem().ifPresent( i ->
-                                this.resourceBank.addResourceToBankFromPlayer(
-                                        player,
-                                        i,
-                                        resourceDrop.getI(),
-                                        resourceDrop.getJ()));
-                    }
+                if (!resourcesToDrop.isEmpty()) {
+                    this.droppedResources.put(player.getNickname(), resourcesToDrop);
+                }
 
-                    List<CoordinatePair> consumableBatteries = new ArrayList<>();
+                // Items to drop
+                for (ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
+                    resourceDrop.getItem().ifPresent(i ->
+                            this.resourceBank.addResourceToBankFromPlayer(
+                                    player,
+                                    i,
+                                    resourceDrop.getI(),
+                                    resourceDrop.getJ()));
+                }
 
-                    for (Battery battery : player.getShip().getBatteryList()) {
-                        int[] pos = battery.getPosition();
-                        int charge = battery.getAvailability();
+                List<CoordinatePair> consumedBatteries = new ArrayList<>();
+                int batteriesToTake = this.takenItems - resourcesToDrop.size();
 
-                        // Adding a component helper per battery charge
-                        // (i.e.: a battery has 3/3 energy => it gets added 3 times)
-                        if (charge > 0) {
-                            for (int i = 0; i < charge; i++) {
-                                consumableBatteries.add(new CoordinatePair(pos[0], pos[1]));
+                if (batteriesToTake > 0) {
+                    // Removing 1 unit of charge from each battery selected by the player
+                    for (CoordinatePair coords : smugglersData.getBatteriesToBeStolen()) {
+                        Component component = player.getShip().getComponent(
+                                coords.getI(),
+                                coords.getJ()
+                        );
+
+                        switch (component) {
+                            case Battery battery -> {
+                                consumedBatteries.add(coords);
+                                batteriesToTake--;
                             }
+                            case null, default -> {}
                         }
                     }
 
-                    if (player.getShip().getAvailableEnergy() >= (takenItems - resourcesToDrop.size())) {
-                        consumableBatteries = consumableBatteries.subList(0, takenItems - resourcesToDrop.size());
+                    // If the player specified fewer batteries than required, the rest
+                    // will be taken at random (iff. there are any available)
+                    if (batteriesToTake > 0) {
+                        List<Battery> consumableBatteries = player.getShip().getBatteryList().stream()
+                                .filter(b -> b.getAvailability() > 0)
+                                .flatMap(
+                                    (b) -> {
+                                        List<Battery> dupedBatteries = new ArrayList<>();
+                                        int dupes = b.getAvailability();
+
+                                        for (int i = 0; i < dupes; i++) {
+                                            dupedBatteries.add(b);
+                                        }
+                                        return dupedBatteries.stream();
+                                    }
+                                )
+                                .toList();
+
+                        for (Battery battery : consumableBatteries) {
+                            int[] pos = battery.getPosition();
+                            consumedBatteries.add(new CoordinatePair(pos[0], pos[1]));
+                            batteriesToTake--;
+                            if (batteriesToTake == 0) break;
+                        }
                     }
 
-                    this.removedBatteries.put(player.getNickname(), consumableBatteries);
-                    player.getShip().consumeEnergy(consumableBatteries);
+                    // Consuming each battery by 1 unit of charge
+                    player.getShip().consumeEnergy(consumedBatteries);
+
+                    // Logging the consumed batteries for the current player
+                    this.removedBatteries.put(player.getNickname(), consumedBatteries);
                 }
+            }
         );
     }
 

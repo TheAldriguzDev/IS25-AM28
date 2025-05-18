@@ -14,12 +14,14 @@ public class SmugglersJSON extends ActionJSON {
     private boolean takeLoot;
     private List<ComponentHelper<ItemColor>> itemsToBeTaken;
     private List<ComponentHelper<ItemColor>> itemsToBeRemoved;
+    private List<CoordinatePair> batteriesToBeStolen;
     private List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates;
 
     public SmugglersJSON() {
         this.takeLoot = false;
         this.itemsToBeTaken = new ArrayList<>();
         this.itemsToBeRemoved = new ArrayList<>();
+        this.batteriesToBeStolen = new ArrayList<>();
         this.doubleCannonsToActivateCoordinates = new ArrayList<>();
     }
 
@@ -28,12 +30,14 @@ public class SmugglersJSON extends ActionJSON {
             @JsonProperty("takeLoot") boolean takeLoot,
             @JsonProperty("itemsToBeTaken") List<ComponentHelper<ItemColor>> itemsToBeTaken,
             @JsonProperty("itemsToBeRemoved") List<ComponentHelper<ItemColor>> itemsToBeRemoved,
+            @JsonProperty("batteriesToBeStolen") List<CoordinatePair> batteriesToBeStolen,
             @JsonProperty("doubleCannonsToActivateCoordinates") List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates
     ) {
         super(playerNickname);
         this.takeLoot = takeLoot;
         this.itemsToBeTaken = itemsToBeTaken;
         this.itemsToBeRemoved = itemsToBeRemoved;
+        this.batteriesToBeStolen = batteriesToBeStolen;
         this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
 
@@ -42,7 +46,7 @@ public class SmugglersJSON extends ActionJSON {
         return takeLoot;
     }
 
-    @JsonSetter
+    @JsonSetter("takeLoot")
     public void setTakeLoot(boolean takeLoot) {
         this.takeLoot = takeLoot;
     }
@@ -65,6 +69,16 @@ public class SmugglersJSON extends ActionJSON {
     @JsonSetter("itemsToBeRemoved")
     public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) {
         this.itemsToBeRemoved = itemsToBeRemoved;
+    }
+
+    @JsonGetter("batteriesToBeStolen")
+    public List<CoordinatePair> getBatteriesToBeStolen() {
+        return this.batteriesToBeStolen;
+    }
+
+    @JsonSetter("batteriesToBeStolen")
+    public void setBatteriesToBeStolen(List<CoordinatePair> batteriesToBeStolen) {
+        this.batteriesToBeStolen = batteriesToBeStolen;
     }
 
     @JsonGetter("doubleCannonsToActivateCoordinates")
