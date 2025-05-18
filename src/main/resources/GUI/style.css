@@ -174,3 +174,14 @@
     -fx-pref-width: 250px;
 }
 
+.leaderBoard-label {
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+}
+
+.winner-label {
+    -fx-text-fill: purple;
+    -fx-font-size: 19px;
+    -fx-padding: 0 0 15 0;
+}
+
