@@ -63,4 +63,13 @@ public enum PlayerColor {
     public String getColorString() {
         return this.colorString;
     }
+
+    public String getPlayerColorString() {
+        return switch (this) {
+            case RED -> "RED";
+            case YELLOW -> "YELLOW";
+            case GREEN -> "GREEN";
+            case BLUE -> "BLUE";
+        };
+    }
 }
