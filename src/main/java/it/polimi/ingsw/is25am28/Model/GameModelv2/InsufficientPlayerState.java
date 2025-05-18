@@ -15,7 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class InsufficientPlayerState extends State implements TimerObserver {
-    public static int countdownMillis = 90 * 1000;
+    //public static int countdownMillis = 90 * 1000;
+    public static int countdownMillis = 20 * 1000;
 
     // This is the previous game state that was active before we entered the "InsufficientPlayerState"
     private final State prevState;

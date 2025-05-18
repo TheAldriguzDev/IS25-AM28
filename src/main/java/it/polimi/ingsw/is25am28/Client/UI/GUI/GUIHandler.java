@@ -263,21 +263,94 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showShipFixing(FixShipDTO fixShip) throws Exception {
 
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader(
+                    Objects.requireNonNull(
+                            getClass().getResource(GuiScenes.FIX_SHIP_SCENE.getFxmlFile())
+                    )
+            );
+
+            try {
+
+                Parent root = loader.load();
+                FixShipController controller = loader.getController();
+
+                //...
+
+                Scene newScene = new Scene(root);
+                this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
+                this.stage.setScene(newScene);
+                this.stage.show();
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
     }
 
     @Override
     public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
 
+        Platform.runLater(() -> {
+            FXMLLoader loader = new FXMLLoader(
+                    Objects.requireNonNull(
+                            getClass().getResource(GuiScenes.POPULATE_SHIP_SCENE.getFxmlFile())
+                    )
+            );
+
+            try {
+
+                Parent root = loader.load();
+                FixShipController controller = loader.getController();
+
+                //...
+
+                Scene newScene = new Scene(root);
+                this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
+                this.stage.setScene(newScene);
+                this.stage.show();
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
+        Platform.runLater(() -> {
 
+        });
     }
 
     @Override
     public void showEndGame(EndGameDTO endGame) {
+        System.out.println("END GAME DTO ARRIVED");
 
+        Platform.runLater(() -> {
+
+            FXMLLoader loader = new FXMLLoader(
+                    Objects.requireNonNull(
+                            getClass().getResource(GuiScenes.END_GAME_SCENE.getFxmlFile())
+                    )
+            );
+
+            try {
+                Parent root = loader.load();
+                EndGameController controller = loader.getController();
+
+                controller.setLeaderBoard(endGame);
+
+                Scene newScene = new Scene(root);
+                this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
+                this.stage.setScene(newScene);
+                this.stage.show();
+
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     @Override
