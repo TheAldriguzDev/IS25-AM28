@@ -55,7 +55,7 @@ public class OpenSpaceJSONTest {
         // Serialize the object
         String json = objectMapper.writeValueAsString(openSpace);
 
-        System.out.println(json);
+//        System.out.println(json);
 
         // Verify that the string contains the given JSON data
         assertTrue(json.contains("\"playerNickname\":\"TestPlayer\""), "The JSON does not contains the playerNickname");
@@ -63,14 +63,18 @@ public class OpenSpaceJSONTest {
 
     @Test
     void test_deserialization() throws JsonProcessingException {
-//        // From a given string we try to get the JSON object
-//        String json = "{\"playerNickname\":\"TestPlayer\",\"usedEnergy\":55}";
-//
-//        // Deserialize the JSON string
-//        OpenSpaceJSON openSpace = objectMapper.readValue(json, OpenSpaceJSON.class);
-//
-//        // Verify that we have the correct values with the class methods
-//        assertEquals("TestPlayer", openSpace.getPlayerNickname());
-//        assertEquals(55, openSpace.getUsedEnergy());
+        // From a given string we try to get the JSON object
+        String json = "{\"playerNickname\":\"TestPlayer\",\"doubleEnginesToActivate\":[{\"key\":{\"key\":7,\"value\":5},\"value\":{\"key\":7,\"value\":8}}]}";
+
+        // Deserialize the JSON string
+        OpenSpaceJSON openSpace = objectMapper.readValue(json, OpenSpaceJSON.class);
+
+        // Verify that we have the correct values with the class methods
+        assertEquals("TestPlayer", openSpace.getPlayerNickname());
+        assertEquals(1, openSpace.getDoubleEnginesToActivate().size());
+        assertEquals(7, openSpace.getDoubleEnginesToActivate().getFirst().getKey().getKey());
+        assertEquals(5, openSpace.getDoubleEnginesToActivate().getFirst().getKey().getValue());
+        assertEquals(7, openSpace.getDoubleEnginesToActivate().getFirst().getValue().getKey());
+        assertEquals(8, openSpace.getDoubleEnginesToActivate().getFirst().getValue().getValue());
     }
 }
