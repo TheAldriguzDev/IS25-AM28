@@ -40,13 +40,13 @@ public class OpenSpaceJSONTest {
 
     @Test
     void test_serialization() throws JsonProcessingException {
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate = new ArrayList<>();
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate = new ArrayList<>();
 
         doubleEnginesToActivate.add(
-                new Pair<>(
-                        new ComponentHelper<>(7, 5),
-                        new ComponentHelper<>(7, 8)
-                )
+            new Pair<>(
+                new Pair<>(7, 5),
+                new Pair<>(7, 8)
+            )
         );
 
         // Create a new JSON instance and verify it contains the given data

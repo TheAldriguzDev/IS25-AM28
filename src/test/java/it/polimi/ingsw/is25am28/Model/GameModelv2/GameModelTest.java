@@ -448,7 +448,6 @@ class GameModelTest {
         return deck;
     }
 
-
     @Test
     public void test_game_model_when_players_got_eliminated_except_for_one() throws JsonProcessingException, IllegalArgumentException {
         // ========================================

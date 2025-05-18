@@ -13,7 +13,7 @@ public class SlaversJSON extends ActionJSON {
     private boolean takeCredits;
     private boolean isPlayerDefeated;
     private List<ComponentHelper<LifeformType>> crewToRemove;
-    private List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivateCoordinates;
+    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivateCoordinates;
 
     public SlaversJSON() {
         this.takeCredits = false;
@@ -25,7 +25,7 @@ public class SlaversJSON extends ActionJSON {
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("takeCredits") boolean takeCredits,
             @JsonProperty("crewToRemove") List<ComponentHelper<LifeformType>> crewToRemove,
-            @JsonProperty("doubleCannonsToActivateCoordinates") List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivateCoordinates
+            @JsonProperty("doubleCannonsToActivateCoordinates") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivateCoordinates
     ) {
         super(playerNickname);
         this.takeCredits = takeCredits;
@@ -54,12 +54,12 @@ public class SlaversJSON extends ActionJSON {
     }
 
     @JsonGetter("doubleCannonsToActivateCoordinates")
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleCannonsToActivateCoordinates() {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleCannonsToActivateCoordinates() {
         return doubleCannonsToActivateCoordinates;
     }
 
     @JsonSetter("doubleCannonsToActivateCoordinates")
-    public void setDoubleCannonsToActivateCoordinates(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivateCoordinates) {
+    public void setDoubleCannonsToActivateCoordinates(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivateCoordinates) {
         this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
 }

@@ -291,7 +291,7 @@ class SmugglersTest {
         itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
         itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
 
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonActivated = new ArrayList<>();
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonActivated = new ArrayList<>();
 //        List<Integer> x = new ArrayList<>();
 //        List<Integer> y = new ArrayList<>();
 //        x.add(7);
@@ -302,8 +302,8 @@ class SmugglersTest {
 
         doubleCannonActivated.add(
             new Pair<>(
-                    new ComponentHelper<>(7, 9),
-                    new ComponentHelper<>(7, 7)
+                    new Pair<>(7, 9),
+                    new Pair<>(7, 7)
             )
         );
 

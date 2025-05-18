@@ -289,12 +289,12 @@ public class ClientWarZone extends ClientEventCard {
 
     // Cannons
     @Override
-    public void setDoubleCannonsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.warZoneJSON.setCannonList(doubleCannonsToActivate);
     }
 
     @Override
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         return this.warZoneJSON.getCannonList();
     }
 
@@ -311,23 +311,23 @@ public class ClientWarZone extends ClientEventCard {
 
     // Engines
     @Override
-    public void setDoubleEnginesToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate) {
+    public void setDoubleEnginesToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate) {
         this.warZoneJSON.setEngineList(doubleEnginesToActivate);
     }
 
     @Override
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getDoubleEnginesToActivate() {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleEnginesToActivate() {
         return this.warZoneJSON.getEngineList();
     }
 
     // Shields
     @Override
-    public void setShieldsToActivate(List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate) throws UnsupportedOperationException {
+    public void setShieldsToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate) throws UnsupportedOperationException {
         this.warZoneJSON.setShieldList(shieldsToActivate);
     }
 
     @Override
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> getShieldsToActivate() throws UnsupportedOperationException {
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getShieldsToActivate() throws UnsupportedOperationException {
         return this.warZoneJSON.getShieldList();
     }
 

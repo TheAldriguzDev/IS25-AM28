@@ -174,15 +174,15 @@ public class CardRoundScreen extends Screen {
 
         // (7) - Shields to activate
         try {
-            List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> shieldsToActivate = this.currEventCard.getShieldsToActivate();
+            List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate = this.currEventCard.getShieldsToActivate();
 
             if (shieldsToActivate != null && !shieldsToActivate.isEmpty()) {
                 this.playerActionsRecapWidget.appendString("Shields to activate:");
 
-                for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> shieldToActivate : shieldsToActivate) {
+                for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> shieldToActivate : shieldsToActivate) {
                     this.playerActionsRecapWidget
-                            .appendString(TAB + "Shield @ (row=" + (shieldToActivate.getKey().getI() + 1) + ", col=" + (shieldToActivate.getKey().getJ() + 1) + ")")
-                            .appendString(TAB + TAB + "Battery @ (row=" + (shieldToActivate.getValue().getI() + 1) + ", col=" + (shieldToActivate.getValue().getJ() + 1) + ")");
+                            .appendString(TAB + "Shield @ (row=" + (shieldToActivate.getKey().getKey() + 1) + ", col=" + (shieldToActivate.getKey().getValue() + 1) + ")")
+                            .appendString(TAB + TAB + "Battery @ (row=" + (shieldToActivate.getValue().getKey() + 1) + ", col=" + (shieldToActivate.getValue().getValue() + 1) + ")");
                 }
             }
         } catch (UnsupportedOperationException e) {
@@ -191,15 +191,15 @@ public class CardRoundScreen extends Screen {
 
         // (8) - Double cannons to activate
         try {
-            List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleCannonsToActivate = this.currEventCard.getDoubleCannonsToActivate();
+            List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivate = this.currEventCard.getDoubleCannonsToActivate();
 
             if (doubleCannonsToActivate != null && !doubleCannonsToActivate.isEmpty()) {
                 this.playerActionsRecapWidget.appendString("Double cannons to activate:");
 
-                for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> doubleCannonToActivate : doubleCannonsToActivate) {
+                for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> doubleCannonToActivate : doubleCannonsToActivate) {
                     this.playerActionsRecapWidget
-                            .appendString(TAB + "Double Cannon @ (row=" + (doubleCannonToActivate.getKey().getI() + 1) + ", col=" + (doubleCannonToActivate.getKey().getJ() + 1) + ")")
-                            .appendString(TAB + TAB + "Battery @ (row=" + (doubleCannonToActivate.getValue().getI() + 1) + ", col=" + (doubleCannonToActivate.getValue().getJ() + 1) + ")");
+                            .appendString(TAB + "Double Cannon @ (row=" + (doubleCannonToActivate.getKey().getKey() + 1) + ", col=" + (doubleCannonToActivate.getKey().getValue() + 1) + ")")
+                            .appendString(TAB + TAB + "Battery @ (row=" + (doubleCannonToActivate.getValue().getKey() + 1) + ", col=" + (doubleCannonToActivate.getValue().getValue() + 1) + ")");
                 }
             }
         } catch (UnsupportedOperationException e) {
@@ -208,15 +208,15 @@ public class CardRoundScreen extends Screen {
 
         // (9) - Double engines to activate
         try {
-            List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate = this.currEventCard.getDoubleEnginesToActivate();
+            List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate = this.currEventCard.getDoubleEnginesToActivate();
 
             if (doubleEnginesToActivate != null && !doubleEnginesToActivate.isEmpty()) {
                this.playerActionsRecapWidget.appendString("Double engines to activate:");
 
-               for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> doubleEngineToActivate : doubleEnginesToActivate) {
+               for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> doubleEngineToActivate : doubleEnginesToActivate) {
                    this.playerActionsRecapWidget
-                           .appendString(TAB + "Double Engine @ (row=" + (doubleEngineToActivate.getKey().getI() + 1) + ", col=" + (doubleEngineToActivate.getKey().getJ() + 1) + ")")
-                           .appendString(TAB + TAB + "Battery @ (row=" + (doubleEngineToActivate.getValue().getI() + 1) + ", col=" + (doubleEngineToActivate.getValue().getJ() + 1) + ")");
+                           .appendString(TAB + "Double Engine @ (row=" + (doubleEngineToActivate.getKey().getKey() + 1) + ", col=" + (doubleEngineToActivate.getKey().getValue() + 1) + ")")
+                           .appendString(TAB + TAB + "Battery @ (row=" + (doubleEngineToActivate.getValue().getKey() + 1) + ", col=" + (doubleEngineToActivate.getValue().getValue() + 1) + ")");
                }
             }
         } catch (UnsupportedOperationException e) {
@@ -1061,8 +1061,8 @@ public class CardRoundScreen extends Screen {
      * a shield that the player wants to activate.
      */
     public void getShieldToActivate() {
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> componentHelperList;
-        ComponentHelper<Void> componentHelper;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> coodinatesList;
+        Pair<Integer, Integer> coordinates;
         AtomicReference<ClientShield> selectedShield;
         InputWidgetTUI availableShields;
         CommandWidgetTUI command;
@@ -1078,14 +1078,14 @@ public class CardRoundScreen extends Screen {
         }
 
         List<ClientShield> shieldList = ship.getShieldList();
-        componentHelperList = this.currEventCard.getShieldsToActivate();
+        coodinatesList = this.currEventCard.getShieldsToActivate();
         selectedShield = new AtomicReference<>(null);
         availableShields = new InputWidgetTUI(this.inputThread);
         availableShields.setColumnGroupingAmount(4);
 
         // Removing already selected double cannons from the double cannons list
-        for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> ch : componentHelperList) {
-            ClientShield s = (ClientShield) ship.getComponent(ch.getKey().getI(), ch.getKey().getJ());
+        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> coords : coodinatesList) {
+            ClientShield s = (ClientShield) ship.getComponent(coords.getKey().getKey(), coords.getKey().getValue());
             shieldList.remove(s);
         }
 
@@ -1153,16 +1153,16 @@ public class CardRoundScreen extends Screen {
         }
         while (!commandSelected);
 
-        ComponentHelper<Void> batteryToConsume = this.getBatteryToConsume();
+        Pair<Integer, Integer> batteryToConsume = this.getBatteryToConsume();
         if (batteryToConsume == null) return;
 
-        componentHelper = new ComponentHelper<>(
+        coordinates = new Pair<>(
                 selectedShield.get().getI(),
                 selectedShield.get().getJ()
         );
 
-        componentHelperList.add(new Pair<>(componentHelper, batteryToConsume));
-        this.currEventCard.setShieldsToActivate(componentHelperList);
+        coodinatesList.add(new Pair<>(coordinates, batteryToConsume));
+        this.currEventCard.setShieldsToActivate(coodinatesList);
 
         ship.consumeEnergy(List.of(batteryToConsume));
     }
@@ -1172,8 +1172,8 @@ public class CardRoundScreen extends Screen {
      * a double cannon that the player wants to activate.
      */
     public void getDoubleCannonToActivate() {
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> componentHelperList;
-        ComponentHelper<Void> componentHelper;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> coordinatesList;
+        Pair<Integer, Integer> coordinates;
         AtomicReference<ClientCannon> selectedDoubleCannon;
         InputWidgetTUI availableCannons;
         CommandWidgetTUI command;
@@ -1189,14 +1189,14 @@ public class CardRoundScreen extends Screen {
         }
 
         List<ClientCannon> doubleCannonList = ship.getDoubleCannons();
-        componentHelperList = this.currEventCard.getDoubleCannonsToActivate();
+        coordinatesList = this.currEventCard.getDoubleCannonsToActivate();
         selectedDoubleCannon = new AtomicReference<>(null);
         availableCannons = new InputWidgetTUI(this.inputThread);
         availableCannons.setColumnGroupingAmount(4);
 
         // Removing already selected double cannons from the double cannons list
-        for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> ch : componentHelperList) {
-            ClientCannon dc = (ClientCannon) ship.getComponent(ch.getKey().getI(), ch.getKey().getJ());
+        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> coords : coordinatesList) {
+            ClientCannon dc = (ClientCannon) ship.getComponent(coords.getKey().getKey(), coords.getKey().getValue());
             doubleCannonList.remove(dc);
         }
 
@@ -1264,16 +1264,16 @@ public class CardRoundScreen extends Screen {
         }
         while (!commandSelected);
 
-        ComponentHelper<Void> batteryToConsume = this.getBatteryToConsume();
+        Pair<Integer, Integer> batteryToConsume = this.getBatteryToConsume();
         if (batteryToConsume == null) return;
 
-        componentHelper = new ComponentHelper<>(
+        coordinates = new Pair<>(
                 selectedDoubleCannon.get().getI(),
                 selectedDoubleCannon.get().getJ()
         );
 
-        componentHelperList.add(new Pair<>(componentHelper, batteryToConsume));
-        this.currEventCard.setDoubleCannonsToActivate(componentHelperList);
+        coordinatesList.add(new Pair<>(coordinates, batteryToConsume));
+        this.currEventCard.setDoubleCannonsToActivate(coordinatesList);
 
         ship.consumeEnergy(List.of(batteryToConsume));
     }
@@ -1285,8 +1285,8 @@ public class CardRoundScreen extends Screen {
      * server-side this is equivalent to activating all double engines (input saturation)
      */
     public void getDoubleEngineToActivate() {
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> componentHelperList;
-        ComponentHelper<Void> componentHelper;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> coordinatesList;
+        Pair<Integer, Integer> coordinates;
         AtomicReference<ClientEngine> selectedDoubleEngine;
         InputWidgetTUI availableEngines;
         CommandWidgetTUI command;
@@ -1302,14 +1302,14 @@ public class CardRoundScreen extends Screen {
         }
 
         List<ClientEngine> doubleEngineList = ship.getDoubleEngines();
-        componentHelperList = this.currEventCard.getDoubleEnginesToActivate();
+        coordinatesList = this.currEventCard.getDoubleEnginesToActivate();
         selectedDoubleEngine = new AtomicReference<>(null);
         availableEngines = new InputWidgetTUI(this.inputThread);
         availableEngines.setColumnGroupingAmount(4);
 
         // Removing already selected double cannons from the double cannons list
-        for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> ch : componentHelperList) {
-            ClientEngine e = (ClientEngine) ship.getComponent(ch.getKey().getI(), ch.getKey().getJ());
+        for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> coords : coordinatesList) {
+            ClientEngine e = (ClientEngine) ship.getComponent(coords.getKey().getKey(), coords.getKey().getValue());
             doubleEngineList.remove(e);
         }
 
@@ -1377,16 +1377,16 @@ public class CardRoundScreen extends Screen {
         }
         while (!commandSelected);
 
-        ComponentHelper<Void> batteryToConsume = this.getBatteryToConsume();
+        Pair<Integer, Integer> batteryToConsume = this.getBatteryToConsume();
         if (batteryToConsume == null) return;
 
-        componentHelper = new ComponentHelper<>(
+        coordinates = new Pair<>(
                 selectedDoubleEngine.get().getI(),
                 selectedDoubleEngine.get().getJ()
         );
 
-        componentHelperList.add(new Pair<>(componentHelper, batteryToConsume));
-        this.currEventCard.setDoubleEnginesToActivate(componentHelperList);
+        coordinatesList.add(new Pair<>(coordinates, batteryToConsume));
+        this.currEventCard.setDoubleEnginesToActivate(coordinatesList);
 
         ship.consumeEnergy(List.of(batteryToConsume));
     }
@@ -1395,9 +1395,9 @@ public class CardRoundScreen extends Screen {
      * Adds a component helper with coordinates pointing to
      * a battery that the player wants to consume by 1 unit of charge.
      */
-    public ComponentHelper<Void> getBatteryToConsume() {
-        List<ComponentHelper<Void>> componentHelperList;
-        ComponentHelper<Void> componentHelper;
+    public Pair<Integer, Integer> getBatteryToConsume() {
+        List<Pair<Integer, Integer>> coordinatesList;
+        Pair<Integer, Integer> coordinates;
         AtomicReference<ClientBattery> selectedBattery;
         InputWidgetTUI availableBatteries;
         CommandWidgetTUI command;
@@ -1412,11 +1412,11 @@ public class CardRoundScreen extends Screen {
             return null;
         }
 
-        componentHelperList = new ArrayList<>();
+        coordinatesList = new ArrayList<>();
 
         try {
             // Add all batteries bound to double cannons (if the method is supported=
-            componentHelperList.addAll(
+            coordinatesList.addAll(
                     this.currEventCard.getDoubleCannonsToActivate().stream()
                             .map(Pair::getValue)
                             .toList()
@@ -1428,7 +1428,7 @@ public class CardRoundScreen extends Screen {
 
         try {
             // Add all batteries bound to double engines (if the method is supported)
-            componentHelperList.addAll(
+            coordinatesList.addAll(
                     this.currEventCard.getDoubleEnginesToActivate().stream()
                             .map(Pair::getValue)
                             .toList()
@@ -1505,12 +1505,12 @@ public class CardRoundScreen extends Screen {
         }
         while (!commandSelected);
 
-        componentHelper = new ComponentHelper<>(
+        coordinates = new Pair<>(
                 selectedBattery.get().getI(),
                 selectedBattery.get().getJ()
         );
 
-        return componentHelper;
+        return coordinates;
     }
 
     /**

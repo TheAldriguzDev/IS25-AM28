@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.Ship;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStructural;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.Exceptions.*;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
@@ -206,56 +205,22 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                 .sum();
     }
 
-//    /**
-//     * Consumes the given amount of energy from the ship's total energy
-//     *
-//     * @param energyToConsume The amount of energy to consume from the total available energy on the ship.<br>
-//     *                        The method doesn't do anything if <code>energyToConsume <= 0</code>.
-//     *
-//     * @throws InsufficientEnergyException If <code>energyToConsume</code> is greater than the energy currently available on the ship
-//     */
-//    public void consumeEnergy(int energyToConsume) throws InsufficientEnergyException {
-//        int availableEnergy;
-//
-//        if (energyToConsume > 0) {
-//            if (energyToConsume <= this.getAvailableEnergy()) {
-//                // If there's enough energy, then consume the given amount
-//                for (Battery battery : this.batteryList) {
-//                    availableEnergy = battery.getAvailability();
-//
-//                    if (availableEnergy < energyToConsume) {
-//                        energyToConsume -= availableEnergy;
-//                        battery.setAvailability(0);
-//                    }
-//                    else {
-//                        battery.setAvailability(availableEnergy - energyToConsume);
-//                        break;
-//                    }
-//                }
-//            }
-//            else {
-//                // Otherwise, throw an InsufficientEnergyException
-//                throw new InsufficientEnergyException("ERROR: Cannot consume more energy than available");
-//            }
-//        }
-//    }
-
     /**
      * Consumes 1 unit of charge from each battery found in the given battery list.
      * If a battery is empty it'll be skipped.
      *
      * @param batteriesToConsume The list of battery components to discharge by 1 unit of charge.
      */
-    public void consumeEnergy(List<ComponentHelper<Void>> batteriesToConsume) {
+    public void consumeEnergy(List<Pair<Integer, Integer>> batteriesToConsume) {
         if (batteriesToConsume != null) {
             // Removing any null pointers inside the list
             batteriesToConsume = batteriesToConsume.stream().filter(Objects::nonNull).toList();
 
             // Discharging each battery by 1 unit of charge
-            for (ComponentHelper<Void> componentCoords : batteriesToConsume) {
+            for (Pair<Integer, Integer> componentCoords : batteriesToConsume) {
                 Component component = this.getComponent(
-                    componentCoords.getI(),
-                    componentCoords.getJ()
+                    componentCoords.getKey(),
+                    componentCoords.getValue()
                 );
 
                 switch (component) {
@@ -479,73 +444,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
         }
     }
 
-//    /**
-//     * Returns the real firepower by considering the baseline firepower (given by single cannons) and
-//     * the additional firepower (given by activating the given amount of double cannons) and also
-//     * takes into account the bonus given by the purple alien (if present)
-//     *
-//     * @param doubleCannonsToActivate The list of double cannons to activate. If it's set to <code>null</code>
-//     *                                or it's given empty, then it returns the baseline firepower
-//     *
-//     * @return The current ship's total firepower
-//     */
-//    public float getFirePower(List<ComponentHelper<Void>> doubleCannonsToActivate) {
-//        float totalFirePower;
-//        boolean allEnergyConsumed;
-//
-//        totalFirePower = 0;
-//        allEnergyConsumed = false;
-//
-//        // Adding the firepower of only the single cannons
-//        totalFirePower += (float) this.cannonList.stream()
-//                .filter((Cannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
-//                .mapToDouble(Cannon::getFirePower)
-//                .sum();
-//
-//        // Adding the firepower of only the double cannons (if there are any)
-//        if (doubleCannonsToActivate != null) {
-//            for (ComponentHelper<Void> doubleCannonCoords : doubleCannonsToActivate) {
-//                if (doubleCannonCoords != null) {
-//                    Component component = this.getComponent(
-//                        doubleCannonCoords.getI(),
-//                        doubleCannonCoords.getJ()
-//                    );
-//
-//                    switch (component) {
-//                        case Cannon c -> {
-//                            // If the given component at those coordinates is effectively a double cannon, then activate
-//                            // it as requested and consume 1 energy from the total. If no energy is available, then the
-//                            // remaining double cannons will not be activated
-//                            if ((c.getFirePower() == 2 && c.getDirection() == 0) || (c.getFirePower() == 1 && c.getDirection() != 0)) {
-//                                try {
-//                                    this.consumeEnergy(1);
-//                                    totalFirePower += c.getFirePower();
-//                                }
-//                                catch (InsufficientEnergyException e) {
-//                                    // If it fails, the double cannon will not be activated
-//                                    allEnergyConsumed = true;
-//                                }
-//                            }
-//                        }
-//                        case null, default -> {}
-//                    }
-//                }
-//
-//                if (allEnergyConsumed) {
-//                    break;
-//                }
-//            }
-//        }
-//
-//        // Finally, add the contribution of the single purple alien onboard the ship
-//        // to the overall firepower (only if it's present and if the baseline firepower is > 0)
-//        if (this.purpleAlienPosition != null && totalFirePower > 0) {
-//            totalFirePower += this.purpleAlienPosition.getInhabitants().getFirst().getAttackBoost();
-//        }
-//
-//        return totalFirePower;
-//    }
-
     /**
      * Returns the real firepower by considering the baseline firepower (given by single cannons) and
      * the additional firepower (given by activating the given amount of double cannons) and also
@@ -553,7 +451,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
      *
      * @return The current ship's total firepower.
      */
-    public float getFirePower(List<ComponentHelper<Void>> activatedDoubleCannonsCoordinates) {
+    public float getFirePower(List<Pair<Integer, Integer>> activatedDoubleCannonsCoordinates) {
         List<Cannon> activatedDoubleCannons;
         float totalFirepower;
 
@@ -566,14 +464,12 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
         if (activatedDoubleCannonsCoordinates != null && !activatedDoubleCannonsCoordinates.isEmpty()) {
             // Filtering out all activated components that are not double cannons
             activatedDoubleCannons = activatedDoubleCannonsCoordinates.stream()
+                    .filter(Objects::nonNull)
                     .map(
-                        ch -> {
-                            return this.getComponent(ch.getI(), ch.getJ());
-                        }
-                    )
-                    .map(
-                        (c) -> {
-                            switch (c) {
+                        (p) -> {
+                            Component component = this.getComponent(p.getKey(), p.getValue());
+
+                            switch (component) {
                                 case Cannon cannon -> {
                                     if (cannon.requiresEnergy()) {
                                         return cannon;
@@ -602,60 +498,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
         return totalFirepower;
     }
 
-//    /**
-//     * Returns the real engine power by considering the baseline engine power (given by single engines)
-//     * and the additional engine power (given by activating the given amount of double engines) and also
-//     * takes into account the bonus given by the brown alien (if present)
-//     *
-//     * @param doubleEnginesToActivate The amount of double engines to activate.
-//     *                                If set to 0, the method returns the baseline engine power
-//     *                                (+ the contribution of the brown alien (if present))
-//     *
-//     * @return The current ship's total engine power
-//     */
-//    public int getEnginePower(int doubleEnginesToActivate) {
-//        List<Engine> doubleEngineList;
-//        int doubleEngineAmount;
-//        int totalEnginePower;
-//        int availableEnergy;
-//
-//        doubleEngineList = this.getDoubleEngines();
-//        doubleEngineAmount = doubleEngineList.size();
-//        totalEnginePower = 0;
-//
-//        // Adding the engine power of only the single engines
-//        totalEnginePower += (int) this.engineList.stream()
-//                .filter(e -> (e.getSpeed() == 1))
-//                .count();
-//
-//        // Adding the engine power of the double engines
-//        if (doubleEnginesToActivate > 0) {
-//            if (doubleEngineAmount < doubleEnginesToActivate) {
-//                // If I want to activate more engines than available, then
-//                // saturate the request to the max amount of double engines
-//                doubleEnginesToActivate = doubleEngineAmount;
-//            }
-//
-//            availableEnergy = this.getAvailableEnergy();
-//            if (availableEnergy < doubleEnginesToActivate) {
-//                // Saturating the amount of engines to activate to the
-//                // remaining amount of energy on the ship
-//                doubleEnginesToActivate = availableEnergy;
-//            }
-//
-//            this.consumeEnergy(doubleEnginesToActivate);
-//            totalEnginePower += doubleEngineList.getFirst().getSpeed() * doubleEnginesToActivate;
-//        }
-//
-//        // Finally, add the contribution of the single purple alien onboard the ship
-//        // to the overall firepower (only if it's present and if the baseline firepower is > 0)
-//        if (this.brownAlienPosition != null && totalEnginePower > 0) {
-//            totalEnginePower += this.brownAlienPosition.getInhabitants().getFirst().getPowerBoost();
-//        }
-//
-//        return totalEnginePower;
-//    }
-
     /**
      * Returns the real engine power by considering the baseline firepower (given by single cannons) and
      * the additional firepower (given by activating the given amount of double cannons) and also
@@ -663,7 +505,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
      *
      * @return The current ship's total engine power.
      */
-    public int getEnginePower(List<ComponentHelper<Void>> activatedDoubleEnginesCoordinates) {
+    public int getEnginePower(List<Pair<Integer, Integer>> activatedDoubleEnginesCoordinates) {
         List<Engine> activatedDoubleEngines;
         int totalEnginePower;
 
@@ -676,14 +518,12 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
         if (activatedDoubleEnginesCoordinates != null && !activatedDoubleEnginesCoordinates.isEmpty()) {
             // Filtering out all activated components that are not double engines
             activatedDoubleEngines = activatedDoubleEnginesCoordinates.stream()
+                    .filter(Objects::nonNull)
                     .map(
-                        (ch) -> {
-                            return this.getComponent(ch.getI(), ch.getJ());
-                        }
-                    )
-                    .map(
-                        (c) -> {
-                            switch (c) {
+                        (p) -> {
+                            Component component = this.getComponent(p.getKey(), p.getValue());
+
+                            switch (component) {
                                 case Engine engine -> {
                                     if (engine.requiresEnergy()) {
                                         return engine;
@@ -717,24 +557,24 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
      * returns which of these have actually been checked and powered on, and also consumes
      * 1 unit of charge from each relative batteries of each activated component.
      */
-    public List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activateComponents(
-            List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> componentsAndRelativeBatteries
+    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activateComponents(
+            List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> componentsAndRelativeBatteries
     ) {
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedComponents = new ArrayList<>();
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedComponents = new ArrayList<>();
 
         if (componentsAndRelativeBatteries != null && !componentsAndRelativeBatteries.isEmpty()) {
-            for (Pair<ComponentHelper<Void>, ComponentHelper<Void>> componentAndBattery : componentsAndRelativeBatteries) {
+            for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> componentAndBattery : componentsAndRelativeBatteries) {
                 if (componentAndBattery != null) {
 
                     Component component = this.getComponent(
-                            componentAndBattery.getKey().getI(),
-                            componentAndBattery.getKey().getJ()
+                            componentAndBattery.getKey().getKey(),
+                            componentAndBattery.getKey().getValue()
                     );
 
                     if (component != null && component.requiresEnergy()) {
                         component = this.getComponent(
-                                componentAndBattery.getValue().getI(),
-                                componentAndBattery.getValue().getJ()
+                                componentAndBattery.getValue().getKey(),
+                                componentAndBattery.getValue().getValue()
                         );
 
                         switch (component) {

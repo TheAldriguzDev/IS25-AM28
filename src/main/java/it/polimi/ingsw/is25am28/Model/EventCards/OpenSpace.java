@@ -5,6 +5,9 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
+import it.polimi.ingsw.is25am28.Model.Components.Engine;
+import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -15,7 +18,7 @@ public class OpenSpace extends EventCard {
     private final Map<String, Integer> playerPowerResult;
     private final Map<String, Integer> updatedPositions;
     private final List<String> eliminatedPlayers;
-    private final Map<String, List<ComponentHelper<Void>>> removedBatteries;
+    private final Map<String, List<Pair<Integer, Integer>>> removedBatteries;
 
     public OpenSpace(String name, int level, Board board, int cardID, String path) {
         super(name, level, board, cardID, path);
@@ -28,7 +31,7 @@ public class OpenSpace extends EventCard {
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> doubleEnginesToActivate;
+        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate;
         OpenSpaceJSON openSpace;
         String playerNickname;
         Ship ship;
@@ -55,8 +58,28 @@ public class OpenSpace extends EventCard {
                 if (playerNickname.equals(this.getCurrentPlayer().get().getNickname())) {
                     ship = this.getCurrentPlayer().get().getShip();
 
-                    List<Pair<ComponentHelper<Void>, ComponentHelper<Void>>> activatedDoubleEngines = ship.activateComponents(doubleEnginesToActivate);
-                    totalEnginePower = ship.getEnginePower(activatedDoubleEngines.stream().map(Pair::getKey).toList());
+                    // Filtering out all coordinates that don't point to a double engine.
+                    doubleEnginesToActivate = doubleEnginesToActivate.stream()
+                            .filter(Objects::nonNull)
+                            .filter(
+                                (pair) -> {
+                                    Pair<Integer, Integer> engineCoords = pair.getKey();
+                                    Component component = ship.getComponent(engineCoords.getKey(), engineCoords.getValue());
+
+                                    return switch (component) {
+                                        case Engine engine -> (engine.requiresEnergy());
+                                        case null, default -> false;
+                                    };
+                                }
+                            ).toList();
+
+                    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleEngines
+                            = ship.activateComponents(doubleEnginesToActivate);
+
+                    totalEnginePower = ship.getEnginePower(
+                            activatedDoubleEngines.stream()
+                                    .map(Pair::getKey).toList()
+                    );
 
                     this.removedBatteries.put(
                         playerNickname,
