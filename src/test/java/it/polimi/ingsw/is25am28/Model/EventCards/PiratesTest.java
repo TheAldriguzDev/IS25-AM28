@@ -17,6 +17,7 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -47,11 +48,11 @@ class PiratesTest {
     Pirates pirates;
     ClientPirates clientPirates;
 
-    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> ShieldsToActivate;
-    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate1;
-    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate2;
-    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate3;
-    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate4;
+    List<Pair<CoordinatePair, CoordinatePair>> ShieldsToActivate;
+    List<Pair<CoordinatePair, CoordinatePair>> shieldsToActivate1;
+    List<Pair<CoordinatePair, CoordinatePair>> shieldsToActivate2;
+    List<Pair<CoordinatePair, CoordinatePair>> shieldsToActivate3;
+    List<Pair<CoordinatePair, CoordinatePair>> shieldsToActivate4;
 
     ArrayList<Integer> dicesResults;
 
@@ -232,8 +233,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
             new Pair<>(
-                new Pair<>(5, 7),
-                new Pair<>(7, 7)
+                new CoordinatePair(5, 7),
+                new CoordinatePair(7, 7)
             )
         ); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
         //ShieldsToActivate.add(new int[] {5, 7}); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
@@ -267,8 +268,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
             new Pair<>(
-                new Pair<>(8, 5),
-                new Pair<>(7, 7)
+                new CoordinatePair(8, 5),
+                new CoordinatePair(7, 7)
             )
         ); // Non lo proteggerà
 //        ShieldsToActivate.add(new int[] {8, 5}); // Non lo proteggerà
@@ -285,8 +286,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
                 new Pair<>(
-                        new Pair<>(8, 5),
-                        new Pair<>(7, 7)
+                        new CoordinatePair(8, 5),
+                        new CoordinatePair(7, 7)
                 )
         ); // Lo proteggerà
         actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
@@ -302,8 +303,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
                 new Pair<>(
-                        new Pair<>(8, 5),
-                        new Pair<>(7, 7)
+                        new CoordinatePair(8, 5),
+                        new CoordinatePair(7, 7)
                 )
         ); // Non lo proteggerà
 //        ShieldsToActivate.add(new int[] {8, 5});
@@ -335,8 +336,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
                 new Pair<>(
-                        new Pair<>(8, 5),
-                        new Pair<>(7, 7)
+                        new CoordinatePair(8, 5),
+                        new CoordinatePair(7, 7)
                 )
         ); // Non lo proteggerà
 //        ShieldsToActivate.add(new int[] {8, 5});
@@ -353,8 +354,8 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
         ShieldsToActivate.add(
                 new Pair<>(
-                        new Pair<>(8, 5),
-                        new Pair<>(7, 7)
+                        new CoordinatePair(8, 5),
+                        new CoordinatePair(7, 7)
                 )
         ); // Non lo proteggerà
 //        ShieldsToActivate.add(new int[] {8, 5});
@@ -446,14 +447,14 @@ class PiratesTest {
 
         ShieldsToActivate = new ArrayList<>();
 
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonActivated = new ArrayList<>();
+        List<Pair<CoordinatePair, CoordinatePair>> doubleCannonActivated = new ArrayList<>();
 //        x.add(5);
 //        y.add(6);
 //        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(5, 6)));
         doubleCannonActivated.add(
                 new Pair<>(
-                        new Pair<>(5, 6),
-                        new Pair<>(7, 7)
+                        new CoordinatePair(5, 6),
+                        new CoordinatePair(7, 7)
                 )
         );
 //        doubleCannonActivated.add(y);
@@ -788,8 +789,8 @@ class PiratesTest {
 //        shieldsToActivate3.add(new int[] {8, 5});
         shieldsToActivate3.add(
                 new Pair<>(
-                        new Pair<>(8, 5),
-                        new Pair<>(7, 7)
+                        new CoordinatePair(8, 5),
+                        new CoordinatePair(7, 7)
                 )
         );
 

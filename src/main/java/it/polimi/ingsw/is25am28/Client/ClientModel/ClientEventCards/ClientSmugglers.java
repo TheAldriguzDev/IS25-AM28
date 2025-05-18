@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.ArrayList;
@@ -119,12 +120,12 @@ public class ClientSmugglers extends ClientEventCard {
 
     // Cannons
     @Override
-    public void setDoubleCannonsToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.smugglersJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
     }
 
     @Override
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<Pair<CoordinatePair, CoordinatePair>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         return this.smugglersJSON.getDoubleCannonsToActivateCoordinates();
     }
 

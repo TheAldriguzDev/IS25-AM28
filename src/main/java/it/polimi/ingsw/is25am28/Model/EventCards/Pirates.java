@@ -12,6 +12,7 @@ import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
@@ -35,7 +36,7 @@ public class Pirates extends EventCard {
     private final Map<String, Integer> updatedPositions;
     private final Map<String, Integer> updatedCredits;
     private final Map<String, List<Map<String, Object>>> removedComponents;
-    private final Map<String, List<Pair<Integer, Integer>>> removedBatteries; // TODO: Implement in the state (both firepower and shields)
+    private final Map<String, List<CoordinatePair>> removedBatteries; // TODO: Implement in the state (both firepower and shields)
     private final Map<String, Integer> lostPieces;
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
@@ -131,7 +132,7 @@ public class Pirates extends EventCard {
                     }
                     // if the first round of meteors has passed, this block won't be executed, assuring that no players will get the same reward twice (or activate the cannons twice)
                     if (firstRound) {
-                        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleCannonsCoordinates
+                        List<Pair<CoordinatePair, CoordinatePair>> activatedDoubleCannonsCoordinates
                                 = player.getShip().activateComponents(piratesData.getDoubleCannonsToActivateCoordinates());
 
                         // Power consumed by the DoubleCannons
@@ -239,14 +240,14 @@ public class Pirates extends EventCard {
                 (Player player) -> {
                     Boolean[] shieldedSides = new Boolean[] {false, false, false, false};
 
-                    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedShieldsCoordinates
+                    List<Pair<CoordinatePair, CoordinatePair>> activatedShieldsCoordinates
                             = player.getShip().activateComponents(piratesData.getShieldsActivatedCoordinates());
 
                     List<Shield> activatedShields = activatedShieldsCoordinates.stream()
                             .map(Pair::getKey)
                             .map(
                                 (p) -> {
-                                    return player.getShip().getComponent(p.getKey(), p.getValue());
+                                    return player.getShip().getComponent(p.getI(), p.getJ());
                                 }
                             )
                             .map(

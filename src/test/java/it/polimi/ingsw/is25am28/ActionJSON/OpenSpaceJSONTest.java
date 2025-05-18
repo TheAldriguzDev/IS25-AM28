@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import org.junit.jupiter.api.Test;
 
@@ -40,12 +41,12 @@ public class OpenSpaceJSONTest {
 
     @Test
     void test_serialization() throws JsonProcessingException {
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate = new ArrayList<>();
+        List<Pair<CoordinatePair, CoordinatePair>> doubleEnginesToActivate = new ArrayList<>();
 
         doubleEnginesToActivate.add(
             new Pair<>(
-                new Pair<>(7, 5),
-                new Pair<>(7, 8)
+                new CoordinatePair(7, 5),
+                new CoordinatePair(7, 8)
             )
         );
 
@@ -64,7 +65,7 @@ public class OpenSpaceJSONTest {
     @Test
     void test_deserialization() throws JsonProcessingException {
         // From a given string we try to get the JSON object
-        String json = "{\"playerNickname\":\"TestPlayer\",\"doubleEnginesToActivate\":[{\"key\":{\"key\":7,\"value\":5},\"value\":{\"key\":7,\"value\":8}}]}";
+        String json = "{\"playerNickname\":\"TestPlayer\",\"doubleEnginesToActivate\":[{\"key\":{\"i\":7,\"j\":5},\"value\":{\"i\":7,\"j\":8}}]}";
 
         // Deserialize the JSON string
         OpenSpaceJSON openSpace = objectMapper.readValue(json, OpenSpaceJSON.class);
@@ -72,9 +73,9 @@ public class OpenSpaceJSONTest {
         // Verify that we have the correct values with the class methods
         assertEquals("TestPlayer", openSpace.getPlayerNickname());
         assertEquals(1, openSpace.getDoubleEnginesToActivate().size());
-        assertEquals(7, openSpace.getDoubleEnginesToActivate().getFirst().getKey().getKey());
-        assertEquals(5, openSpace.getDoubleEnginesToActivate().getFirst().getKey().getValue());
-        assertEquals(7, openSpace.getDoubleEnginesToActivate().getFirst().getValue().getKey());
-        assertEquals(8, openSpace.getDoubleEnginesToActivate().getFirst().getValue().getValue());
+        assertEquals(7, openSpace.getDoubleEnginesToActivate().getFirst().getKey().getI());
+        assertEquals(5, openSpace.getDoubleEnginesToActivate().getFirst().getKey().getJ());
+        assertEquals(7, openSpace.getDoubleEnginesToActivate().getFirst().getValue().getI());
+        assertEquals(8, openSpace.getDoubleEnginesToActivate().getFirst().getValue().getJ());
     }
 }

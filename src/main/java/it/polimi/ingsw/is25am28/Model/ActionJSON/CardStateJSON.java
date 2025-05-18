@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.Map;
@@ -59,7 +60,7 @@ public class CardStateJSON extends ActionJSON {
         private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
         private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
         private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
-        private Map<String, List<Pair<Integer, Integer>>> removedBatteries;
+        private Map<String, List<CoordinatePair>> removedBatteries;
         private Map<String, List<Map<String, Object>>> removedComponents;
     // ===============================================//
 
@@ -672,12 +673,12 @@ public class CardStateJSON extends ActionJSON {
         }
 
         @JsonSetter("removedBatteries")
-        public void setRemovedBatteries(Map<String, List<Pair<Integer, Integer>>> removedBatteries) {
+        public void setRemovedBatteries(Map<String, List<CoordinatePair>> removedBatteries) {
             this.removedBatteries = removedBatteries;
         }
 
         @JsonSetter("removedBatteries")
-        public Map<String, List<Pair<Integer, Integer>>> getRemovedBatteries() {
+        public Map<String, List<CoordinatePair>> getRemovedBatteries() {
             return this.removedBatteries;
         }
 

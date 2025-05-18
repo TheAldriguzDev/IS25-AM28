@@ -10,6 +10,7 @@ import it.polimi.ingsw.is25am28.Model.Components.Engine;
 import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
@@ -18,7 +19,7 @@ public class OpenSpace extends EventCard {
     private final Map<String, Integer> playerPowerResult;
     private final Map<String, Integer> updatedPositions;
     private final List<String> eliminatedPlayers;
-    private final Map<String, List<Pair<Integer, Integer>>> removedBatteries;
+    private final Map<String, List<CoordinatePair>> removedBatteries;
 
     public OpenSpace(String name, int level, Board board, int cardID, String path) {
         super(name, level, board, cardID, path);
@@ -31,7 +32,7 @@ public class OpenSpace extends EventCard {
 
     @Override
     public EventCard useCard(ActionJSON data) throws IllegalArgumentException {
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate;
+        List<Pair<CoordinatePair, CoordinatePair>> doubleEnginesToActivate;
         OpenSpaceJSON openSpace;
         String playerNickname;
         Ship ship;
@@ -63,8 +64,8 @@ public class OpenSpace extends EventCard {
                             .filter(Objects::nonNull)
                             .filter(
                                 (pair) -> {
-                                    Pair<Integer, Integer> engineCoords = pair.getKey();
-                                    Component component = ship.getComponent(engineCoords.getKey(), engineCoords.getValue());
+                                    CoordinatePair engineCoords = pair.getKey();
+                                    Component component = ship.getComponent(engineCoords.getI(), engineCoords.getJ());
 
                                     return switch (component) {
                                         case Engine engine -> (engine.requiresEnergy());
@@ -73,7 +74,7 @@ public class OpenSpace extends EventCard {
                                 }
                             ).toList();
 
-                    List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedDoubleEngines
+                    List<Pair<CoordinatePair, CoordinatePair>> activatedDoubleEngines
                             = ship.activateComponents(doubleEnginesToActivate);
 
                     totalEnginePower = ship.getEnginePower(

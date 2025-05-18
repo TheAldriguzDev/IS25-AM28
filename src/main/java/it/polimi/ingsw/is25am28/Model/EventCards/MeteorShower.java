@@ -15,6 +15,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
@@ -31,7 +32,7 @@ public class MeteorShower extends EventCard {
     private String prevPlayer;
 
     private final Map<String, List<Map<String, Object>>> removedComponents;
-    private final Map<String, List<Pair<Integer, Integer>>> removedBatteries;
+    private final Map<String, List<CoordinatePair>> removedBatteries;
     private final List<String> eliminatedPlayers;
     private final Map<String, Integer> lostPieces;
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
@@ -117,8 +118,8 @@ public class MeteorShower extends EventCard {
         boolean threatDestroyed;
         Component[] gridRow;
         Component[] gridColumn;
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate;
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivate;
+        List<Pair<CoordinatePair, CoordinatePair>> shieldsToActivate;
+        List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivate;
         List<Shield> activatedShieldsList;
         List<Cannon> activatedDoubleCannonsList;
         Component toHit;
@@ -236,8 +237,8 @@ public class MeteorShower extends EventCard {
                 .filter(Objects::nonNull)
                 .filter(
                     (pair) -> {
-                        Pair<Integer, Integer> shieldCoords = pair.getKey();
-                        Component component = shipPtr.getComponent(shieldCoords.getKey(), shieldCoords.getValue());
+                        CoordinatePair shieldCoords = pair.getKey();
+                        Component component = shipPtr.getComponent(shieldCoords.getI(), shieldCoords.getJ());
 
                         return switch (component) {
                             case Shield shield -> true;
@@ -251,8 +252,8 @@ public class MeteorShower extends EventCard {
                 .filter(Objects::nonNull)
                 .filter(
                     (pair) -> {
-                        Pair<Integer, Integer> cannonCoords = pair.getKey();
-                        Component component = shipPtr.getComponent(cannonCoords.getKey(), cannonCoords.getValue());
+                        CoordinatePair cannonCoords = pair.getKey();
+                        Component component = shipPtr.getComponent(cannonCoords.getI(), cannonCoords.getJ());
 
                         return switch (component) {
                             case Cannon cannon -> (cannon.requiresEnergy());
@@ -267,7 +268,7 @@ public class MeteorShower extends EventCard {
             // NOTE: The cast is safe thanks to the previous check
             activatedShieldsList = shieldsToActivate.stream()
                     .map(Pair::getKey)
-                    .map(p -> (Shield) shipPtr.getComponent(p.getKey(), p.getValue()))
+                    .map(p -> (Shield) shipPtr.getComponent(p.getI(), p.getJ()))
                     .toList();
 
             // Activating double cannons (which consumes 1 energy unit from the battery each shield is paired with)
@@ -276,10 +277,10 @@ public class MeteorShower extends EventCard {
             // NOTE: The cast is safe thanks to the previous check
             activatedDoubleCannonsList = doubleCannonsToActivate.stream()
                     .map(Pair::getKey)
-                    .map(p -> (Cannon) shipPtr.getComponent(p.getKey(), p.getValue()))
+                    .map(p -> (Cannon) shipPtr.getComponent(p.getI(), p.getJ()))
                     .toList();
 
-            List<Pair<Integer, Integer>> usedBatteries = new ArrayList<>();
+            List<CoordinatePair> usedBatteries = new ArrayList<>();
 
             usedBatteries.addAll(shieldsToActivate.stream().map(Pair::getValue).toList());
             usedBatteries.addAll(doubleCannonsToActivate.stream().map(Pair::getValue).toList());

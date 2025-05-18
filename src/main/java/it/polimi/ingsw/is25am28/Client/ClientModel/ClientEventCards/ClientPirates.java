@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.ArrayList;
@@ -133,23 +134,23 @@ public class ClientPirates extends ClientEventCard {
 
     // Shields
     @Override
-    public void setShieldsToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate) throws UnsupportedOperationException {
+    public void setShieldsToActivate(List<Pair<CoordinatePair, CoordinatePair>> shieldsToActivate) throws UnsupportedOperationException {
         this.piratesJSON.setShieldsActivatedCoordinates(shieldsToActivate);
     }
 
     @Override
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getShieldsToActivate() throws UnsupportedOperationException {
+    public List<Pair<CoordinatePair, CoordinatePair>> getShieldsToActivate() throws UnsupportedOperationException {
         return this.piratesJSON.getShieldsActivatedCoordinates();
     }
 
     // Cannons
     @Override
-    public void setDoubleCannonsToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.piratesJSON.setDoubleCannonsToActivateCoordinates(doubleCannonsToActivate);
     }
 
     @Override
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<Pair<CoordinatePair, CoordinatePair>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         return this.piratesJSON.getDoubleCannonsToActivateCoordinates();
     }
 

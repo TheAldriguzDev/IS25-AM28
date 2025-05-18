@@ -12,6 +12,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
@@ -211,16 +212,16 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
      *
      * @param batteriesToConsume The list of battery components to discharge by 1 unit of charge.
      */
-    public void consumeEnergy(List<Pair<Integer, Integer>> batteriesToConsume) {
+    public void consumeEnergy(List<CoordinatePair> batteriesToConsume) {
         if (batteriesToConsume != null) {
             // Removing any null pointers inside the list
             batteriesToConsume = batteriesToConsume.stream().filter(Objects::nonNull).toList();
 
             // Discharging each battery by 1 unit of charge
-            for (Pair<Integer, Integer> componentCoords : batteriesToConsume) {
+            for (CoordinatePair componentCoords : batteriesToConsume) {
                 Component component = this.getComponent(
-                    componentCoords.getKey(),
-                    componentCoords.getValue()
+                    componentCoords.getI(),
+                    componentCoords.getJ()
                 );
 
                 switch (component) {
@@ -451,7 +452,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
      *
      * @return The current ship's total firepower.
      */
-    public float getFirePower(List<Pair<Integer, Integer>> activatedDoubleCannonsCoordinates) {
+    public float getFirePower(List<CoordinatePair> activatedDoubleCannonsCoordinates) {
         List<Cannon> activatedDoubleCannons;
         float totalFirepower;
 
@@ -467,7 +468,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                     .filter(Objects::nonNull)
                     .map(
                         (p) -> {
-                            Component component = this.getComponent(p.getKey(), p.getValue());
+                            Component component = this.getComponent(p.getI(), p.getJ());
 
                             switch (component) {
                                 case Cannon cannon -> {
@@ -505,7 +506,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
      *
      * @return The current ship's total engine power.
      */
-    public int getEnginePower(List<Pair<Integer, Integer>> activatedDoubleEnginesCoordinates) {
+    public int getEnginePower(List<CoordinatePair> activatedDoubleEnginesCoordinates) {
         List<Engine> activatedDoubleEngines;
         int totalEnginePower;
 
@@ -521,7 +522,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                     .filter(Objects::nonNull)
                     .map(
                         (p) -> {
-                            Component component = this.getComponent(p.getKey(), p.getValue());
+                            Component component = this.getComponent(p.getI(), p.getJ());
 
                             switch (component) {
                                 case Engine engine -> {
@@ -557,24 +558,24 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
      * returns which of these have actually been checked and powered on, and also consumes
      * 1 unit of charge from each relative batteries of each activated component.
      */
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activateComponents(
-            List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> componentsAndRelativeBatteries
+    public List<Pair<CoordinatePair, CoordinatePair>> activateComponents(
+            List<Pair<CoordinatePair, CoordinatePair>> componentsAndRelativeBatteries
     ) {
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> activatedComponents = new ArrayList<>();
+        List<Pair<CoordinatePair, CoordinatePair>> activatedComponents = new ArrayList<>();
 
         if (componentsAndRelativeBatteries != null && !componentsAndRelativeBatteries.isEmpty()) {
-            for (Pair<Pair<Integer, Integer>, Pair<Integer, Integer>> componentAndBattery : componentsAndRelativeBatteries) {
+            for (Pair<CoordinatePair, CoordinatePair> componentAndBattery : componentsAndRelativeBatteries) {
                 if (componentAndBattery != null) {
 
                     Component component = this.getComponent(
-                            componentAndBattery.getKey().getKey(),
-                            componentAndBattery.getKey().getValue()
+                            componentAndBattery.getKey().getI(),
+                            componentAndBattery.getKey().getJ()
                     );
 
                     if (component != null && component.requiresEnergy()) {
                         component = this.getComponent(
-                                componentAndBattery.getValue().getKey(),
-                                componentAndBattery.getValue().getValue()
+                                componentAndBattery.getValue().getI(),
+                                componentAndBattery.getValue().getJ()
                         );
 
                         switch (component) {

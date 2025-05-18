@@ -8,6 +8,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.ArrayList;
@@ -93,12 +94,12 @@ public class ClientOpenSpace extends ClientEventCard {
 
     // Engines
     @Override
-    public void setDoubleEnginesToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate) {
+    public void setDoubleEnginesToActivate(List<Pair<CoordinatePair, CoordinatePair>> doubleEnginesToActivate) {
         this.openSpaceJSON.setDoubleEnginesToActivate(doubleEnginesToActivate);
     }
 
     @Override
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleEnginesToActivate() {
+    public List<Pair<CoordinatePair, CoordinatePair>> getDoubleEnginesToActivate() {
         return this.openSpaceJSON.getDoubleEnginesToActivate();
     }
 }

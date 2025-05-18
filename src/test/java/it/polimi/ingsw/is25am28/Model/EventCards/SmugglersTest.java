@@ -16,6 +16,7 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -291,7 +292,7 @@ class SmugglersTest {
         itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
         itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
 
-        List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonActivated = new ArrayList<>();
+        List<Pair<CoordinatePair, CoordinatePair>> doubleCannonActivated = new ArrayList<>();
 //        List<Integer> x = new ArrayList<>();
 //        List<Integer> y = new ArrayList<>();
 //        x.add(7);
@@ -302,8 +303,8 @@ class SmugglersTest {
 
         doubleCannonActivated.add(
             new Pair<>(
-                    new Pair<>(7, 9),
-                    new Pair<>(7, 7)
+                    new CoordinatePair(7, 9),
+                    new CoordinatePair(7, 7)
             )
         );
 

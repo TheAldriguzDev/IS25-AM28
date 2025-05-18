@@ -18,6 +18,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
@@ -763,16 +764,16 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
      *
      * @param batteriesToConsume The list of battery components to discharge by 1 unit of charge.
      */
-    public void consumeEnergy(List<Pair<Integer, Integer>> batteriesToConsume) {
+    public void consumeEnergy(List<CoordinatePair> batteriesToConsume) {
         if (batteriesToConsume != null) {
             // Removing any null pointers inside the list
             batteriesToConsume = batteriesToConsume.stream().filter(Objects::nonNull).toList();
 
             // Discharging each battery by 1 unit of charge
-            for (Pair<Integer, Integer> componentCoords : batteriesToConsume) {
+            for (CoordinatePair componentCoords : batteriesToConsume) {
                 ClientComponent component = this.getComponent(
-                        componentCoords.getKey(),
-                        componentCoords.getValue()
+                        componentCoords.getI(),
+                        componentCoords.getJ()
                 );
 
                 switch (component) {

@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
@@ -402,7 +403,7 @@ public abstract class EventCard {
      */
     protected void setUpdatedRemovedBatteriesIfNecessary(
             CardStateJSON cardState,
-            Map<String, List<Pair<Integer, Integer>>> removedBatteries
+            Map<String, List<CoordinatePair>> removedBatteries
     ) {
         if (!removedBatteries.isEmpty()) {
             cardState.setNeedsShipUpdate(true);

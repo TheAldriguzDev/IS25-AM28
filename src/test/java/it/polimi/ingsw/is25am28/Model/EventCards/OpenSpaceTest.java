@@ -10,6 +10,7 @@ import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -241,8 +242,8 @@ class OpenSpaceTest {
             openSpaceJSON.setDoubleEnginesToActivate(
                 List.of(
                     new Pair<>(
-                            new Pair<>(8, 9),
-                            new Pair<>(7, 8)
+                            new CoordinatePair(8, 9),
+                            new CoordinatePair(7, 8)
                     )
                 )
             );

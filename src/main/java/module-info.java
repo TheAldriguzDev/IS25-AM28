@@ -61,6 +61,7 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer;
     exports it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer;
     exports it.polimi.ingsw.is25am28.Utils.Pair;
+    exports it.polimi.ingsw.is25am28.Utils.CoordinatePair;
 
     exports it.polimi.ingsw.is25am28.Loader.Cards to com.fasterxml.jackson.databind;
     exports it.polimi.ingsw.is25am28.Loader.Tiles to com.fasterxml.jackson.databind;

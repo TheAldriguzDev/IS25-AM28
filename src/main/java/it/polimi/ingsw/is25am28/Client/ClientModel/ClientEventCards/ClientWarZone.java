@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
@@ -289,12 +290,12 @@ public class ClientWarZone extends ClientEventCard {
 
     // Cannons
     @Override
-    public void setDoubleCannonsToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleCannonsToActivate) throws UnsupportedOperationException {
+    public void setDoubleCannonsToActivate(List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivate) throws UnsupportedOperationException {
         this.warZoneJSON.setCannonList(doubleCannonsToActivate);
     }
 
     @Override
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
+    public List<Pair<CoordinatePair, CoordinatePair>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         return this.warZoneJSON.getCannonList();
     }
 
@@ -311,23 +312,23 @@ public class ClientWarZone extends ClientEventCard {
 
     // Engines
     @Override
-    public void setDoubleEnginesToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate) {
+    public void setDoubleEnginesToActivate(List<Pair<CoordinatePair, CoordinatePair>> doubleEnginesToActivate) {
         this.warZoneJSON.setEngineList(doubleEnginesToActivate);
     }
 
     @Override
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleEnginesToActivate() {
+    public List<Pair<CoordinatePair, CoordinatePair>> getDoubleEnginesToActivate() {
         return this.warZoneJSON.getEngineList();
     }
 
     // Shields
     @Override
-    public void setShieldsToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> shieldsToActivate) throws UnsupportedOperationException {
+    public void setShieldsToActivate(List<Pair<CoordinatePair, CoordinatePair>> shieldsToActivate) throws UnsupportedOperationException {
         this.warZoneJSON.setShieldList(shieldsToActivate);
     }
 
     @Override
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getShieldsToActivate() throws UnsupportedOperationException {
+    public List<Pair<CoordinatePair, CoordinatePair>> getShieldsToActivate() throws UnsupportedOperationException {
         return this.warZoneJSON.getShieldList();
     }
 

@@ -5,13 +5,14 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class OpenSpaceJSON extends ActionJSON {
-    private List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate;
+    private List<Pair<CoordinatePair, CoordinatePair>> doubleEnginesToActivate;
 
     @JsonCreator
     public OpenSpaceJSON() {
@@ -21,19 +22,19 @@ public class OpenSpaceJSON extends ActionJSON {
     @JsonCreator
     public OpenSpaceJSON(
             @JsonProperty("playerNickname") String playerNickname,
-            @JsonProperty("doubleEnginesToActivate") List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate
+            @JsonProperty("doubleEnginesToActivate") List<Pair<CoordinatePair, CoordinatePair>> doubleEnginesToActivate
     ) {
         super(playerNickname);
         this.doubleEnginesToActivate = doubleEnginesToActivate;
     }
 
     @JsonGetter("doubleEnginesToActivate")
-    public List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> getDoubleEnginesToActivate() {
+    public List<Pair<CoordinatePair, CoordinatePair>> getDoubleEnginesToActivate() {
         return this.doubleEnginesToActivate;
     }
 
     @JsonSetter("doubleEnginesToActivate")
-    public void setDoubleEnginesToActivate(List<Pair<Pair<Integer, Integer>, Pair<Integer, Integer>>> doubleEnginesToActivate) {
+    public void setDoubleEnginesToActivate(List<Pair<CoordinatePair, CoordinatePair>> doubleEnginesToActivate) {
         this.doubleEnginesToActivate = doubleEnginesToActivate;
     }
 }
