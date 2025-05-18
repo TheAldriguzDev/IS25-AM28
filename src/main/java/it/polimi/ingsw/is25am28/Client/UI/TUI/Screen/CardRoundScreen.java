@@ -93,7 +93,8 @@ public class CardRoundScreen extends Screen {
                     );
                 }
             }
-        } catch (UnsupportedOperationException e) {
+        }
+        catch (UnsupportedOperationException e) {
             // Nothing is added
         }
 
@@ -221,6 +222,19 @@ public class CardRoundScreen extends Screen {
                }
             }
         } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (10) - Batteries to be stolen
+        try {
+            List<CoordinatePair> batteriesToBeStolen = this.currEventCard.getBatteriesToBeStolen();
+
+            for (CoordinatePair batteryToBeStolen : batteriesToBeStolen) {
+                this.playerActionsRecapWidget
+                        .appendString(TAB + TAB + "Battery @ (row=" + (batteryToBeStolen.getI() + 1) + ", col=" + (batteryToBeStolen.getJ() + 1) + ")");
+            }
+        }
+        catch (UnsupportedOperationException e) {
             // Nothing is added
         }
 
@@ -383,6 +397,25 @@ public class CardRoundScreen extends Screen {
         );
         command.appendString("Set double engines to activate");
         this.indexedCardInputMethods.put("setDoubleEnginesToActivate", new Pair<>(false, command));
+
+        // (11) - Add battery to be stolen
+        command = new CommandWidgetTUI(
+                "11",
+                () -> {
+                    CoordinatePair batteryCoordinates = this.getBatteryToConsume();
+
+                    if (batteryCoordinates != null) {
+                        List<CoordinatePair> batteriesToBeStolen = this.currEventCard.getBatteriesToBeStolen();
+                        batteriesToBeStolen.add(batteryCoordinates);
+                        this.currEventCard.setBatteriesToBeStolen(batteriesToBeStolen);
+                    }
+
+                    // Go back to the card round available commands
+                    this.getCardRoundCommand();
+                }
+        );
+        command.appendString("Add battery to be stolen");
+        this.indexedCardInputMethods.put("batteriesToBeStolen", new Pair<>(false, command));
     }
 
     /**

@@ -185,6 +185,15 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         throw new UnsupportedOperationException("The method 'getDoubleEnginesToActivate()' is not supported in " + this + " state");
     }
 
+    // BATTERIES TO STEAL (by Smugglers & co.)
+    public void setBatteriesToBeStolen(List<CoordinatePair> batteriesToBeStolen) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'setBatteriesToBeStolen()' is not supported in " + this + " state");
+    }
+
+    public List<CoordinatePair> getBatteriesToBeStolen() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getBatteriesToBeStolen()' is not supported in " + this + " state");
+    }
+
     // Card specific methods
     public List<ItemColor> getAvailableItemColors() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getAvailableColors()' is not supported in " + this + " card");

@@ -139,10 +139,10 @@ class SmugglersTest {
 
         smugglers = new Smugglers("Smugglers", 2, 3, 5, 4, 1, 2, 1, 0, board, resourceBank, 0, "");
 
-        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>()); // Total FirePower: 2
-        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>()); // Total FirePower: 2
-        actionJSON3 = new SmugglersJSON("Player 3", false, itemsToBeTaken3, itemsToBeRemoved3, new ArrayList<>()); // Total FirePower: 3
-        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, new ArrayList<>()); // Total FirePower: 3
+        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 2
+        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 2
+        actionJSON3 = new SmugglersJSON("Player 3", false, itemsToBeTaken3, itemsToBeRemoved3, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 3
+        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 3
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Non initialized card");
@@ -158,7 +158,7 @@ class SmugglersTest {
         clientSmugglers.generateWidget().printWidget();
         // ================================ //
         // Player 1 sends input
-        smugglers.useCard(new SmugglersJSON("Player 1", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        smugglers.useCard(new SmugglersJSON("Player 1", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
         // ======== WIDGET TESTING ======== //
@@ -178,7 +178,7 @@ class SmugglersTest {
         clientSmugglers.generateWidget().printWidget();
         // ================================ //
         // Player 2 sends input
-        smugglers.useCard(new SmugglersJSON("Player 2", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        smugglers.useCard(new SmugglersJSON("Player 2", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
 
@@ -200,7 +200,7 @@ class SmugglersTest {
         clientSmugglers.generateWidget().printWidget();
         // ================================ //
         // Player 3 sends input
-        smugglers.useCard(new SmugglersJSON("Player 3", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        smugglers.useCard(new SmugglersJSON("Player 3", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
         // ======== WIDGET TESTING ======== //
@@ -220,7 +220,7 @@ class SmugglersTest {
         clientSmugglers.generateWidget().printWidget();
         // ================================ //
         // Player 4 sends input
-        smugglers.useCard(new SmugglersJSON("Player 4", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        smugglers.useCard(new SmugglersJSON("Player 4", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
         // ======== WIDGET TESTING ======== //
@@ -234,21 +234,14 @@ class SmugglersTest {
 
             // The defeated players now need to specify what resources to get rid of
 
-
-
-
-
-
-
-
         assertEquals(0, ship_1.getAvailableEnergy()); // Non avendo items, subisce -4 alle batterie -> -3 in quanto ne ha solo 3
 
         // System.out.println("p2 storage: ");
-        for (Storage storage : ship_2.getStorageList()) {
-            for(Item item : storage.getStoredItems()) {
-                // System.out.println(item.toString());
-            }
-        }
+//        for (Storage storage : ship_2.getStorageList()) {
+//            for(Item item : storage.getStoredItems()) {
+//                System.out.println(item.toString());
+//            }
+//        }
 
         assertEquals(2, ship_2.getAvailableEnergy()); // Rimossi 3 items (G,G,Y) e 1 batteria
 
@@ -308,10 +301,10 @@ class SmugglersTest {
             )
         );
 
-        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>()); // Total FirePower: 2
-        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>()); // Total FirePower: 3
-        actionJSON3 = new SmugglersJSON("Player 3", true, itemsToBeTaken3, itemsToBeRemoved3, doubleCannonActivated); // Total FirePower: 5
-        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, new ArrayList<>()); // Total FirePower: 3
+        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 2
+        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 3
+        actionJSON3 = new SmugglersJSON("Player 3", true, itemsToBeTaken3, itemsToBeRemoved3, new ArrayList<>(), doubleCannonActivated); // Total FirePower: 5
+        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 3
 
         smugglers = new Smugglers("Smugglers", 2, 3, 3, 2, 1, 2, 1, 0, board, resourceBank, 0, "");
 
@@ -323,14 +316,14 @@ class SmugglersTest {
         smugglers.initCardPlayers();
 
         // Input gathering phase
-        smugglers.useCard(new SmugglersJSON("Player 1", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        smugglers.useCard(new SmugglersJSON("Player 1", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
         // The defeated players now need to specify what resources to get rid of
         smugglers.useCard(actionJSON1);
         assertFalse(smugglers.hasFinished());
 
-        smugglers.useCard(new SmugglersJSON("Player 2", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
+        smugglers.useCard(new SmugglersJSON("Player 2", false, new ArrayList<>(), new ArrayList<>(), new ArrayList<>(), new ArrayList<>()));
         assertFalse(smugglers.hasFinished());
 
         smugglers.useCard(actionJSON3); // P3

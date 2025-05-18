@@ -55,17 +55,22 @@ public class ClientSmugglers extends ClientEventCard {
     public void updateCard(CardStateJSON smugglersState) {
         this.playerNickname = smugglersState.getPlayerNickname();
         this.isPlayerDefeated = smugglersState.getIsPlayerDefeated();
+
         enabledCommands.clear();
         enabledCommands.add("playCard");
+
         if (this.isPlayerDefeated) {
             enabledCommands.add("setItemsToBeRemoved");
-        } else {
+
+            // TODO: (@Filippo) Make it so that this flag is enabled <==> The items are not enough
+            enabledCommands.add("batteriesToBeStolen");
+        }
+        else {
             enabledCommands.add("setDoubleCannonsToActivate");
             enabledCommands.add("setTakeReward");
             enabledCommands.add("setItemsToBeRemoved");
             enabledCommands.add("setItemsToBeTaken");
         }
-
     }
 
     @Override
