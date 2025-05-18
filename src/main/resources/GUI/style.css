@@ -185,3 +185,37 @@
     -fx-padding: 0 0 15 0;
 }
 
+.actions-VBox {
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+}
+
+.resourceBank-VBox {
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+}
+
+.stats-VBox {
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+}
+
+.stats-label {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+}
+
+.resourceBank-label {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+}
+
+.actions-label {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+}
+
+
