@@ -72,6 +72,13 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     }
 
     /**
+     * @return This client card's image path
+     */
+    public String getCardPath() {
+        return this.path;
+    }
+
+    /**
      * @return An ActionJSON compiled with the user input, ready to be sent.
      */
     public abstract ActionJSON useCard();

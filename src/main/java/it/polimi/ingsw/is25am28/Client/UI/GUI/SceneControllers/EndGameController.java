@@ -18,19 +18,13 @@ public class EndGameController {
 
     public void setLeaderBoard(EndGameDTO state) {
         if (state.getWinner() != null) {
-//            VBox winnerBox = new VBox();
-//            winnerBox.getStyleClass().add("winnerBox");
-//            winnerBox.setAlignment(Pos.CENTER);
-
             Label label = new Label(state.getWinner() + " won the game!");
             label.getStyleClass().add("winner-label");
 
-//            winnerBox.getChildren().add(label);
             leaderBoard.getChildren().add(label);
         }
 
-//TODO: colores (gui handler should have a method to get the mode
-// )
+//TODO: color through model
 
         List<String> orderedPlayers = new ArrayList<>();
         orderedPlayers = state.getPlayersPositionResult().entrySet()
@@ -51,29 +45,6 @@ public class EndGameController {
             this.leaderBoard.getChildren().add(label);
 
         }
-
-
-//        for (int i = 0; i < orderedPlayers.size(); i++) {
-//            int credits = state.getPlayersCredits().get(orderedPlayers.get(i));
-//            String text = placements.get(i) + " - " + orderedPlayers.get(i) + " (Final credits: " + credits + ")";
-//
-//            Label label = new Label(text);
-//            label.getStyleClass().add("label");
-//
-//            this.leaderBoard.getChildren().add(label);
-//        }
-
-//        for (String player : orderedPlayers) {
-//            int credits = state.getPlayersCredits().get(player);
-//            String text = player + " - " + credits;
-//
-//            Label label = new Label(text);
-//            label.getStyleClass().add("label");
-//
-//            this.leaderBoard.getChildren().add(label);
-//        }
-
-
     }
 
     public void onQuitButtonClick(ActionEvent actionEvent) {

@@ -16,12 +16,12 @@
          <children>
             <VBox alignment="CENTER" prefHeight="500.0" prefWidth="250.0" spacing="20.0">
                <children>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="resourceBank-VBox">
+                  <VBox fx:id="resourceBankVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="resourceBank-VBox">
                      <children>
                         <Label styleClass="resourceBank-label" text="ResourceBank" />
                      </children>
                   </VBox>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="stats-VBox">
+                  <VBox fx:id="statsVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="stats-VBox">
                      <children>
                         <Label styleClass="stats-label" text="Stats" />
                      </children>
@@ -37,9 +37,9 @@
                   <Insets left="20.0" right="10.0" />
                </padding>
             </VBox>
-            <StackPane prefHeight="150.0" prefWidth="200.0">
+            <StackPane prefHeight="900.0" prefWidth="1500.0">
                <children>
-                  <ImageView fitHeight="900.0" fitWidth="1500.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="shipBoardImageView" fitHeight="900.0" fitWidth="1500.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../imgs/cardboard/level-2-ship-bridge.jpg" />
                      </image>
@@ -62,7 +62,7 @@
                         <Insets />
                      </VBox.margin>
                   </ImageView>
-                  <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="actions-VBox">
+                  <VBox fx:id="actionsVBox" alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" styleClass="actions-VBox">
                      <children>
                         <Label styleClass="actions-label" text="Your Actions" />
                      </children>
