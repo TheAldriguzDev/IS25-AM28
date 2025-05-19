@@ -11,6 +11,7 @@ import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Network.Messages.DeselectTile;
 import it.polimi.ingsw.is25am28.Network.Messages.PlaceTile;
 import it.polimi.ingsw.is25am28.Network.Messages.SelectTile;
+import it.polimi.ingsw.is25am28.Network.Messages.SendShipConfirmation;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -263,6 +264,8 @@ public class ShipConstructionController extends GUIController {
         // Remove from the screen the main content and display the request ship
 
         System.out.println("The player requested to view the ship of " + requestedPlayerShip);
+
+
     }
 
     @FXML
@@ -270,18 +273,34 @@ public class ShipConstructionController extends GUIController {
         System.out.println("Requested to flip the timer");
     }
 
+    // Send the player ship to the server
     @FXML void handleConfirmShip() {
-        System.out.println("Requested to confirm the ship");
+        GUIHandler.setCommandCTX(new CommandCTX(
+                "sendShip",
+                () -> {
+
+                    // TODO: DISABLE THE UI TO PREVENT THE USER TO DO ANY FORM OF ACTION
+
+                },
+                this::handleConfirmShip
+        ));
+
+        try {
+            GUIHandler.getVirtualClient().sendMessage(
+                    new SendShipConfirmation(
+                            this.clientModel.getNickname(),
+                            this.clientModel.getState().getReservedComponents().size()
+                    )
+            );
+        } catch (Exception e) {
+            this.showError(e.getMessage());
+        }
     }
 
     @FXML void handleViewSubDeck(MouseEvent event) {
         ImageView clicked = (ImageView) event.getSource();
         System.out.println("Subdeck clicked: " + clicked.getId());
     }
-
-
-
-
 
     // Method used when a tile is selected by the user
     private void handleTileSelection(ClientComponent selectedComponent) {
@@ -595,9 +614,5 @@ public class ShipConstructionController extends GUIController {
             });
 
         });
-    }
-
-    public void enableTimer(TimerDTO timerDTO) {
-
     }
 }
