@@ -12,7 +12,7 @@ import javafx.scene.control.Label;
 
 import java.util.*;
 
-public class EndGameController {
+public class EndGameController extends GUIController {
     @FXML private VBox leaderBoard;
     @FXML private Button quitButton;
 

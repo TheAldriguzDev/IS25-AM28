@@ -153,6 +153,11 @@ public class ViewUpdater implements StateVisitor {
                         state.getJ()
                 );
 
+                // TODO: work on gui removedComponentUpdate
+                if (this.ui instanceof GUIHandler) {
+                    //
+                }
+
                 if (state.isShipFixed()) {
                     this.model.getState().removePlayerFromFixList(state.getPlayerNickname());
                 }
