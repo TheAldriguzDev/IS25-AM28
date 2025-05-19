@@ -397,6 +397,7 @@ public class ShipConstructionController extends GUIController {
         ImageView imgView = new ImageView(this.selectedComponentImage.getImage());
         imgView.setFitWidth(105);
         imgView.setFitHeight(105);
+        imgView.setRotate(this.selectedComponentImage.getRotate());
         imgView.setPreserveRatio(true);
 
         // TODO: Send the message to the server and return to the other page of the screen
