@@ -21,7 +21,6 @@ public class ClientShipConstructionState extends ClientState {
 
     // List containing the components inside the current player's ship
     private List<ClientComponent> currentShip;
-    private boolean isTimeRunning;
 
     // (NOT HERE --> IN THE CORRECT STATES
     // TODO: Add the list for the removedComponents to support the FIX SHIP PHASE
@@ -38,10 +37,6 @@ public class ClientShipConstructionState extends ClientState {
         this.reservedComponents = new ArrayList<>();
         this.currentlySelectedSubdecks = new HashMap<>();
         this.currentShip = new ArrayList<>();
-
-        // Initialize the timer state at the beginning
-        // of the ship building phase
-        this.isTimeRunning = true;
 
         // Initialize the map that stores for each subdeck a flag tha
         // is TRUE if the corresponding deck can be viewed, or FALSE

@@ -177,7 +177,6 @@ public class GUIHandler extends Application implements ClientUI {
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.WAITING_FOR_PLAYERS_SCENE)) {
                 WaitingForPlayersController controller = (WaitingForPlayersController) this.controllers.get(GuiScenes.WAITING_FOR_PLAYERS_SCENE);
                 controller.showConnectedPlayers(waitingForPlayers);
-
                 return;
             }
 
@@ -204,7 +203,8 @@ public class GUIHandler extends Application implements ClientUI {
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
-            } finally {
+            }
+            finally {
                 this.currentScene = GuiScenes.WAITING_FOR_PLAYERS_SCENE;
             }
         });
@@ -281,7 +281,6 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showShipFixing(FixShipDTO fixShip) throws Exception {
-
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
@@ -310,7 +309,6 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
-
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
@@ -338,7 +336,6 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
-
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
@@ -435,7 +432,7 @@ public class GUIHandler extends Application implements ClientUI {
     public void receiveTimerDTO(TimerDTO timerDTO) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
-            controller.resetTimer(timerDTO);
+            controller.resetTimer();
         }
     }
 

@@ -145,8 +145,8 @@ public abstract class AbstractShip {
 
         // (2) - Setting the Ship dimensions per difficultyLevel
         // --> Dimensions per difficultyLevel represent the smallest square/rectangle that wraps the entire ship
-        shipDimensions.put(0, new Pair<Integer, Integer>(5, 5));
-        shipDimensions.put(1, new Pair<Integer, Integer>(5, 5));
+        shipDimensions.put(0, new Pair<Integer, Integer>(5, 7));
+        shipDimensions.put(1, new Pair<Integer, Integer>(5, 7));
         shipDimensions.put(2, new Pair<Integer, Integer>(5, 7));
         shipDimensions.put(3, new Pair<Integer, Integer>(6, 9));
 
@@ -154,8 +154,8 @@ public abstract class AbstractShip {
         // --> Offsets are between the 12x12 grid and the actual ship placement (just like in the cardboard version)
         // --> When scanning the 12x12 grid, you add these values to the respective row and column iterators
         //     to start scanning the ship from the top-left corner of the square/rectangle that wraps the entire ship
-        shipOffsets.put(0, new Pair<Integer, Integer>(4, 4));
-        shipOffsets.put(1, new Pair<Integer, Integer>(4, 4));
+        shipOffsets.put(0, new Pair<Integer, Integer>(4, 3));
+        shipOffsets.put(1, new Pair<Integer, Integer>(4, 3));
         shipOffsets.put(2, new Pair<Integer, Integer>(4, 3));
         shipOffsets.put(3, new Pair<Integer, Integer>(3, 2));
     }

@@ -36,6 +36,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShipConstructionController extends GUIController {
+    private static int TIMER_DURATION = 97; // seconds
 
     // Attributes to handle the others player ship
     @FXML private GridPane viewOtherShipsGrid; // Buttons to see the other players ship
@@ -52,7 +53,6 @@ public class ShipConstructionController extends GUIController {
     @FXML private Label timerLabel;
     @FXML private Button flipTimerButton;
     @FXML private HBox timerContainer;
-    private int countDown = 97; // HourGlass timer
     private Timeline timer;
 
     // ========== FXML ATTRIBUTES ========== //
@@ -85,6 +85,8 @@ public class ShipConstructionController extends GUIController {
 
     @FXML private Button goBackToConstructionButton;
 
+    private boolean isLastFlip;
+
     // Attributes needed when the player has finished his ship
     private boolean hasFinishedShip = false;
 
@@ -100,12 +102,13 @@ public class ShipConstructionController extends GUIController {
     public void initShipConstruction() {
         // TODO: Init the players ships --> Useful to update the specific client ship in real time
         this.clientModel = GUIHandler.getInstance().getClientModel();
-
-        // Init the component
-        this.initComponents();
+        this.isLastFlip = false;
 
         // INIT THE NAVBAR
         this.initSidePanel();
+
+        // Init the component
+        this.initComponents();
 
         // Init the ship dynamic page
         this.initShipPage();
@@ -135,7 +138,8 @@ public class ShipConstructionController extends GUIController {
         if (this.clientModel.getDifficultyLevel() != 0) {
             this.timerContainer.setVisible(true);
             this.startCountDownTimer();
-        } else {
+        }
+        else {
             this.timerContainer.setVisible(false);
         }
 
@@ -166,36 +170,39 @@ public class ShipConstructionController extends GUIController {
     }
 
     private void startCountDownTimer() {
-        AtomicInteger secondsLeft = new AtomicInteger(this.countDown);
+        AtomicInteger countdown = new AtomicInteger(TIMER_DURATION);
 
         // Check if there is already an active timer
-        if (timer != null) {
-            timer.stop();
+        if (this.timer != null) {
+            this.timer.stop();
         }
 
-        // Disable the button --> it will be enabled when the timerDTO arrives
-        this.flipTimerButton.setDisable(true);
-
         // Update the text every second
-        timer = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
-            if (secondsLeft.get() <= 0) {
-                timer.stop();
-                return;
-            }
+        this.timer = new Timeline(
+            new KeyFrame(
+                Duration.seconds(1),
+                _ -> {
+                    if (countdown.get() <= 0) {
+                        this.timer.stop();
+                        return;
+                    }
 
-            int minutes = secondsLeft.get() / 60;
-            int seconds = secondsLeft.get() % 60;
+                    int minutes = countdown.get() / 60;
+                    int seconds = countdown.get() % 60;
 
-            String timeFormatted = String.format("Flip available in %02d:%02d", minutes, seconds);
-            this.timerLabel.setText(timeFormatted);
+                    String timeFormatted = String.format("Flip available in %02d:%02d", minutes, seconds);
+                    this.timerLabel.setText(timeFormatted);
 
-            secondsLeft.getAndDecrement();
-        }));
+                    countdown.getAndDecrement();
+                }
+            )
+        );
 
+        this.flipTimerButton.setDisable(true);
         this.timerLabel.setWrapText(true);
 
-        timer.setCycleCount(Timeline.INDEFINITE);
-        timer.play();
+        this.timer.setCycleCount(Timeline.INDEFINITE);
+        this.timer.play();
     }
 
     private void initShipPage() {
@@ -345,7 +352,16 @@ public class ShipConstructionController extends GUIController {
         );
 
         try {
-            GUIHandler.getVirtualClient().sendMessage(new FlipTimer());
+            // If the current
+            if (this.isLastFlip) {
+                if (!this.clientModel.getState().getPlayerFinishedBuildingShip(this.clientModel.getNickname())) {
+                    throw new IllegalStateException("You must send your ship before making the last hourglass flip.");
+                }
+            }
+
+            GUIHandler.getVirtualClient().sendMessage(
+                new FlipTimer(this.clientModel.getNickname())
+            );
         }
         catch (Exception e) {
             this.showError(e.getMessage());
@@ -358,6 +374,12 @@ public class ShipConstructionController extends GUIController {
                 "sendShip",
                 () -> {
                     this.hasFinishedShip = true;
+
+                    // Sets the timer button as enabled
+                    if (this.flipTimerButton.isDisabled()) {
+                        this.resetTimer();
+                    }
+
                     Platform.runLater(this::showEndedShipConstruction);
                 },
                 this::handleConfirmShip
@@ -497,6 +519,7 @@ public class ShipConstructionController extends GUIController {
         this.setVisibility(this.tileScrollPane, true);
     }
 
+    @FXML
     private void handlePlaceTile(int i, int j) {
         ImageView imgView = new ImageView(this.selectedComponentImage.getImage());
         imgView.setFitWidth(105);
@@ -583,15 +606,12 @@ public class ShipConstructionController extends GUIController {
         rotate.play();
     }
 
-
     // ========== UTILS METHODS ========== //
     // Method used to set the visibility of a certain node
     private <T extends Node> void setVisibility(T node, boolean visible) {
         node.setVisible(visible);
         node.setManaged(visible);
     }
-
-
 
     // TODO: Understand if we need to move these methods to the GUIController class to share them
     private Image getImageFromPath(String path, int width, int height) {
@@ -738,9 +758,9 @@ public class ShipConstructionController extends GUIController {
         });
     }
 
-    public void resetTimer(TimerDTO timerDTO) {
-        if (timerDTO.getCanBeFlipped()) {
+    public void resetTimer() {
+        Platform.runLater(() -> {
             this.flipTimerButton.setDisable(false);
-        }
+        });
     }
 }
