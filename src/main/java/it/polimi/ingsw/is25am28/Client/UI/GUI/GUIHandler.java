@@ -81,6 +81,10 @@ public class GUIHandler extends Application implements ClientUI {
         return this.stage;
     }
 
+    public GUIHandler(ClientModel model) {
+        GUIHandler.model = model;
+    }
+
     /**
      * Handles the quit action when the user attempts to close the application window.
      * Displays a confirmation dialog to the user, prompting them to confirm or cancel the quit action.
@@ -108,14 +112,6 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void start(Stage stage) throws Exception {
         instance = this;
-
-        if (connectionType == 1) {
-            this.virtualClient = new RMIClient("127.0.0.1", 7777, UUID.randomUUID(), this, model);
-        } else {
-            this.virtualClient = new TCPClient("127.0.0.1", 8888, this, model);
-        }
-
-        // ========== BUILD THE INITIAL SCREEN OF THE GAME ========== //
 
         this.stage = stage;
         this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
@@ -363,7 +359,8 @@ public class GUIHandler extends Application implements ClientUI {
     public void showError(ErrorAnswer error) {
         if (ctx != null) {
             ctx.handleError(error.getError());
-        } else {
+        }
+        else {
             // Terminal output
             System.err.println(error.getError());
         }
@@ -378,16 +375,14 @@ public class GUIHandler extends Application implements ClientUI {
         Platform.runLater(() -> controller.showError(error.getError()));
     }
 
-
     @Override
     public boolean isCTXAvailable() {
         return (ctx != null);
     }
 
     @Override
-    public void setVirtualClient(VirtualView client) {
-        // Not used in the GUI since the instance is handled by JavaFX
-        // (no instance of GUIHandler is available to invoke the method before launching the GUI)
+    public void setVirtualClient(VirtualView virtualClient) {
+        GUIHandler.virtualClient = virtualClient;
     }
 
     public void saveRootAndController(GuiScenes scene, Parent root, Object controller) {
