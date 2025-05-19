@@ -153,6 +153,7 @@ public class ViewUpdater implements StateVisitor {
                         state.getJ()
                 );
 
+                // TODO: think about this
                 // TODO: work on gui removedComponentUpdate
                 if (this.ui instanceof GUIHandler) {
                     ((GUIHandler) this.ui).updateShipRemovedComponent(state);

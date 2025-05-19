@@ -269,7 +269,7 @@ public class GUIHandler extends Application implements ClientUI {
     public void enableTimer(TimerDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
-//            controller.handlePlayerShipConstruction((data);
+            //controller.handlePlayerShipConstruction((data));
         }
     }
 
@@ -295,7 +295,7 @@ public class GUIHandler extends Application implements ClientUI {
                 Parent root = loader.load();
                 FixShipController controller = loader.getController();
 
-                //...
+                controller.init(fixShip);
 
                 Scene newScene = new Scene(root);
                 this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);

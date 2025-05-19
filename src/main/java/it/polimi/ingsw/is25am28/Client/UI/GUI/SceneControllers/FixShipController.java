@@ -29,7 +29,6 @@ public class FixShipController extends GUIController {
 
     @FXML private ImageView shipImageView;
     @FXML private GridPane shipGrid;
-    @FXML  private VBox fixShipVBox;
     @FXML private Label fixShipLabel;
 
     private Pair<Integer, Integer> shipOffsets;
@@ -71,7 +70,7 @@ public class FixShipController extends GUIController {
         int[][] shipProfiles = AbstractShip.shipProfiles.get(this.clientModel.getDifficultyLevel());
 
         int endRow = shipDimensions.getKey() + shipOffsets.getKey();
-        int endCol = shipDimensions.getValue() + shipOffsets.getValue();;
+        int endCol = shipDimensions.getValue() + shipOffsets.getValue();
 
         for (int row = shipOffsets.getKey(); row < endRow; row++) {
             for (int col = shipOffsets.getValue(); col < endCol; col++) {
