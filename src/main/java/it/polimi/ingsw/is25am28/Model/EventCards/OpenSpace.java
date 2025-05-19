@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -20,6 +22,7 @@ public class OpenSpace extends EventCard {
     private final Map<String, Integer> updatedPositions;
     private final List<String> eliminatedPlayers;
     private final Map<String, List<CoordinatePair>> removedBatteries;
+    private String prevPlayerNickname;
 
     public OpenSpace(String name, int level, Board board, int cardID, String path) {
         super(name, level, board, cardID, path);
@@ -51,6 +54,8 @@ public class OpenSpace extends EventCard {
         catch (Exception e) {
             throw new IllegalArgumentException("The given JSON data is not a valid OpenSpace JSON");
         }
+
+        this.prevPlayerNickname = playerNickname;
 
         doubleEnginesToActivate = openSpace.getDoubleEnginesToActivate();
 
@@ -140,7 +145,7 @@ public class OpenSpace extends EventCard {
 
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
-
+            cardState.setPrevPlayerNickname(this.prevPlayerNickname);
             setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
             setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
             setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);

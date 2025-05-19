@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
@@ -67,9 +69,17 @@ public class ClientSmugglers extends ClientEventCard {
         }
         else {
             enabledCommands.add("setDoubleCannonsToActivate");
-            enabledCommands.add("setTakeReward");
-            enabledCommands.add("setItemsToBeRemoved");
-            enabledCommands.add("setItemsToBeTaken");
+            // TODO: also do this for ClientSlavers and ClientPirates
+//            ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+//            if (ship == null) {
+//                System.out.println(PrintUtils.addColor("[ERROR] [getDoubleCannonToActivate()] ClientShip is null", ANSIColors.RED));
+//                return;
+//            }
+//            if(ship.getFirePower(null) > this.requiredFirepower) {
+//                enabledCommands.add("setTakeReward");
+//            }
+
+//            if (this.model.getShipOfPlayer(this.model.getNickname()))
         }
     }
 
@@ -166,6 +176,14 @@ public class ClientSmugglers extends ClientEventCard {
         return this.smugglersJSON.getItemsToBeTaken();
     }
 
+    public void setBatteriesToBeStolen(List<CoordinatePair> batteriesToBeStolen) throws UnsupportedOperationException {
+        this.smugglersJSON.setBatteriesToBeStolen(batteriesToBeStolen);
+    }
+
+    public List<CoordinatePair> getBatteriesToBeStolen() throws UnsupportedOperationException {
+        return this.smugglersJSON.getBatteriesToBeStolen();
+    }
+
     // Method necessary to the availableColors widget
     // Returns a list of the available colors
     @Override
@@ -194,5 +212,10 @@ public class ClientSmugglers extends ClientEventCard {
             case BLUE -> this.blueItems--;
             case GREEN -> this.greenItems--;
         }
+    }
+
+    @Override
+    public int getFirepower() {
+        return this.requiredFirepower;
     }
 }

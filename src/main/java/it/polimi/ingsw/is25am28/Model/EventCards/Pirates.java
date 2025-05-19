@@ -39,6 +39,7 @@ public class Pirates extends EventCard {
     private final Map<String, List<CoordinatePair>> removedBatteries; // TODO: Implement in the state (both firepower and shields)
     private final Map<String, Integer> lostPieces;
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
+    private String prevPlayerNickname;
 
     public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board, int cardID, String path) {
         super(name, cardLevel, board, cardID, path);
@@ -127,6 +128,7 @@ public class Pirates extends EventCard {
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
                     String playerNickname = piratesData.getPlayerNickname();
+                    this.prevPlayerNickname = playerNickname;
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
@@ -306,7 +308,7 @@ public class Pirates extends EventCard {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
-                                            this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
+                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -328,7 +330,7 @@ public class Pirates extends EventCard {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
-                                            this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
+                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -350,7 +352,7 @@ public class Pirates extends EventCard {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
-                                            this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
+                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -372,7 +374,7 @@ public class Pirates extends EventCard {
                                             previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
-                                            this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
+                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
                                         } catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
@@ -430,6 +432,7 @@ public class Pirates extends EventCard {
 
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> piratesStateJSON.setPlayerNickname(player.getNickname()));
+            piratesStateJSON.setPrevPlayerNickname(this.prevPlayerNickname);
 
             // The clients need to know when to update the right parameters
             piratesStateJSON.setFirstRound(this.firstRound);

@@ -207,16 +207,25 @@ public class Smugglers extends EventCard {
                         .map(item -> item.getItem().orElse(null))
                         .toList();
 
+                List<CoordinatePair> stolenBatteries = smugglersData.getBatteriesToBeStolen();
+
                 // This covers also the case in which there are not enough resources on board
                 if (resourcesToDrop.size() != mostValuableItems.size()) {
-                    throw new IllegalArgumentException("The dropped items are not enough");
+                    throw new IllegalArgumentException("The dropped items are not enough!");
                 }
                 else if (this.countOccurrences(mostValuableItems).equals(colorsToDrop)) {
-                    throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
+                    throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board!");
+                } else if ((stolenBatteries.size() != this.takenItems - resourcesToDrop.size()) && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {
+                    // This exception is triggered only if a wrong number of batteries is sent, the case in which the player cannot select the required number of batteries is checked
+                    throw new IllegalArgumentException("The given up batteries are not enough!");
                 }
 
                 if (!resourcesToDrop.isEmpty()) {
                     this.droppedResources.put(player.getNickname(), resourcesToDrop);
+                }
+
+                if (!stolenBatteries.isEmpty()) {
+                    this.removedBatteries.put(player.getNickname(), stolenBatteries);
                 }
 
                 // Items to drop
@@ -246,32 +255,6 @@ public class Smugglers extends EventCard {
                                 batteriesToTake--;
                             }
                             case null, default -> {}
-                        }
-                    }
-
-                    // If the player specified fewer batteries than required, the rest
-                    // will be taken at random (iff. there are any available)
-                    if (batteriesToTake > 0) {
-                        List<Battery> consumableBatteries = player.getShip().getBatteryList().stream()
-                                .filter(b -> b.getAvailability() > 0)
-                                .flatMap(
-                                    (b) -> {
-                                        List<Battery> dupedBatteries = new ArrayList<>();
-                                        int dupes = b.getAvailability();
-
-                                        for (int i = 0; i < dupes; i++) {
-                                            dupedBatteries.add(b);
-                                        }
-                                        return dupedBatteries.stream();
-                                    }
-                                )
-                                .toList();
-
-                        for (Battery battery : consumableBatteries) {
-                            int[] pos = battery.getPosition();
-                            consumedBatteries.add(new CoordinatePair(pos[0], pos[1]));
-                            batteriesToTake--;
-                            if (batteriesToTake == 0) break;
                         }
                     }
 

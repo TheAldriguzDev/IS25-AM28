@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -36,6 +38,7 @@ public class MeteorShower extends EventCard {
     private final List<String> eliminatedPlayers;
     private final Map<String, Integer> lostPieces;
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
+    private String prevPlayerNickname;
 
     public MeteorShower(
             String cardName,
@@ -146,6 +149,8 @@ public class MeteorShower extends EventCard {
         catch (Exception e) {
             throw new IllegalArgumentException("[MeteorShower::useCard] " + e.getMessage());
         }
+
+        this.prevPlayerNickname = meteorShowerJSON.getPlayerNickname();
 
         // Skips any player marked as disconnected during their turn
         if (this.currentPlayer.get().isConnected()) {
@@ -408,7 +413,7 @@ public class MeteorShower extends EventCard {
                     }
 
                     this.removedComponents.put(this.prevPlayer, this.prevPlayerRemovedComponents.stream().map(Component::toMap).toList());
-                    this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
+                    this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + prevPlayerRemovedComponents.size());
                     this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
                 }
                 catch (CoreDeletionAttemptException e) {
@@ -461,6 +466,7 @@ public class MeteorShower extends EventCard {
 
             // If the current player is present, then add it to the card state
             this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
+            cardState.setPrevPlayerNickname(this.prevPlayerNickname);
 
             cardState.setCurrMeteorIndex(this.currMeteorIndex);
             cardState.setDiceThrowResult(this.diceThrowResult);

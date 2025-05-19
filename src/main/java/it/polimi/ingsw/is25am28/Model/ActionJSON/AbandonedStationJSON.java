@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AbandonedStationJSON extends ActionJSON {
-    private boolean wantToVisitStation;
+    private Boolean wantToVisitStation;
     private List<ComponentHelper<ItemColor>> itemsToBeRemoved;
     private List<ComponentHelper<ItemColor>> itemsToBeTaken;
 
@@ -30,11 +30,11 @@ public class AbandonedStationJSON extends ActionJSON {
         this.itemsToBeTaken = itemsToBeTaken;
     }
 
-    public boolean getWantToVisitStation() {
+    public Boolean getWantToVisitStation() {
         return this.wantToVisitStation;
     }
 
-    public void setWantToVisitStation(boolean wantToVisitStation) {
+    public void setWantToVisitStation(Boolean wantToVisitStation) {
         this.wantToVisitStation = wantToVisitStation;
     }
 
