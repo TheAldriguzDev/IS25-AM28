@@ -237,12 +237,7 @@ public class ShipConstructionController extends GUIController {
         for (int row = shipOffsets.getKey(); row < endRow; row++) {
             for (int col = shipOffsets.getValue(); col < endCol; col++) {
                 if (shipProfiles[row][col] == 1) {
-
-                    if (this.clientModel.getDifficultyLevel() == 0) {
-                        this.addCellEventListener(row - shipOffsets.getKey(), col - shipOffsets.getValue() + 1);
-                    } else {
-                        this.addCellEventListener(row - shipOffsets.getKey(), col - shipOffsets.getValue());
-                    }
+                    this.addCellEventListener(row - shipOffsets.getKey(), col - shipOffsets.getValue());
                 }
             }
         }
@@ -409,6 +404,7 @@ public class ShipConstructionController extends GUIController {
 
         // Remove the current grid
         this.viewOtherShipStackPane.getChildren().removeIf(node -> node instanceof GridPane);
+
         // Add the player grid
         GridPane newGrid = this.playersShipGridPane.get(this.clientModel.getNickname());
         StackPane.setAlignment(newGrid, Pos.CENTER);
@@ -427,7 +423,7 @@ public class ShipConstructionController extends GUIController {
     private void handleTileSelection(ClientComponent selectedComponent) {
         // Also add the transition to the new screen
         GUIHandler.setCommandCTX(new CommandCTX(
-                "selectTIle",
+                "selectTile",
                 () -> {
                     Platform.runLater(() -> {
                         this.selectedComponent = selectedComponent;
@@ -550,27 +546,15 @@ public class ShipConstructionController extends GUIController {
         ));
 
         try {
-            if (this.clientModel.getDifficultyLevel() == 0) {
-                GUIHandler.getVirtualClient().sendMessage(
-                        new PlaceTile(
-                                this.clientModel.getNickname(),
-                                this.selectedComponent.getID(),
-                                i + shipOffsets.getKey(),
-                                j + shipOffsets.getValue() - 1,
-                                this.selectedComponent.getDirection()
-                        )
-                );
-            } else {
-                GUIHandler.getVirtualClient().sendMessage(
-                        new PlaceTile(
-                                this.clientModel.getNickname(),
-                                this.selectedComponent.getID(),
-                                i + shipOffsets.getKey(),
-                                j + shipOffsets.getValue(),
-                                this.selectedComponent.getDirection()
-                        )
-                );
-            }
+            GUIHandler.getVirtualClient().sendMessage(
+                new PlaceTile(
+                    this.clientModel.getNickname(),
+                    this.selectedComponent.getID(),
+                    i + shipOffsets.getKey(),
+                    j + shipOffsets.getValue(),
+                    this.selectedComponent.getDirection()
+                )
+            );
         } catch (Exception e) {
             this.showError(e.getMessage());
         }
@@ -750,9 +734,8 @@ public class ShipConstructionController extends GUIController {
             imgView.setSmooth(true);
 
             // Add the image to the player board
-            int correctionJOffset = this.clientModel.getDifficultyLevel() == 0 ? 1 : 0; // Correction to handle the issue in the shipOffset for test level
             Platform.runLater(() -> {
-                playerGrid.add(imgView, data.getJ() - this.shipOffsets.getValue() + correctionJOffset, data.getI() - shipOffsets.getKey());
+                playerGrid.add(imgView, data.getJ() - this.shipOffsets.getValue(), data.getI() - shipOffsets.getKey());
             });
 
         });
