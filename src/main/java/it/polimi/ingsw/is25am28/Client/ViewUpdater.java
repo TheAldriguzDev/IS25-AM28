@@ -233,6 +233,8 @@ public class ViewUpdater implements StateVisitor {
             // Sets this player's homonymous flag to TRUE to mask the
             // commands he can no longer use (since he sent the ship)
             this.model.getState().setPlayerFinishedBuildingShip(state.getPlayerNickname());
+
+            // TODO: Send to the GUI the message the the player X has ended his ship --> and add it to the board
         }
     }
 

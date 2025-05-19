@@ -73,6 +73,7 @@ public class ShipConstructionController extends GUIController {
     @FXML private ScrollPane tileScrollPane;
     @FXML private VBox shipContainer;
     @FXML private VBox viewShipContainer;
+    @FXML private VBox viewGameBoardContainer;
 
     // View other player ship attributes
     @FXML private Label viewPlayerShipLabel;
@@ -190,25 +191,25 @@ public class ShipConstructionController extends GUIController {
         timer.play();
     }
 
-
-    // TODO: AGGIUNGERE A QUESTO METODO, ALLA FINE UN FLOW PER OGNI PLAYER PER INSERIRE ALL'INTERNO DELLA NAVE I COMPONENTI CHE GIà
-    //  SONO PRESENTI NELLA LORO NAVE (RICONNESSIONE) IN QUESTO MODO LE NAVI SONO GIà AGGIORNATE (OPPURE PER QUANDO SI RITORNA IN QUESTO SCHERMO DA INSUFFICIENT PLAYERS)
-
     private void initShipPage() {
+        String shipPath = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
+        URL shipResource = Objects.requireNonNull(getClass().getResource(shipPath));
 
-        String path = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
-        URL resource = Objects.requireNonNull(getClass().getResource(path));
-
-        // TODO AGGIUNGERE ANCHE IL CARICAMENTO DELL'IMMAGINE CORRETTA DELLA BOARD, RELATIVA AL LIVELLO DEL GIOCO
+        String boardPath = "/imgs/cardboard/board_level_" + this.clientModel.getDifficultyLevel() + ".png";
+        URL boardResource = Objects.requireNonNull(getClass().getResource(boardPath));
 
         // Set the image of the current level Ship
-        this.shipImageView.setImage(new Image(resource.toExternalForm()));
+        this.shipImageView.setImage(new Image(shipResource.toExternalForm()));
         this.shipImageView.setFitWidth(816.0);
         this.shipImageView.setPreserveRatio(true);
 
-        this.viewOtherShipImage.setImage(new Image(resource.toExternalForm()));
+        this.viewOtherShipImage.setImage(new Image(shipResource.toExternalForm()));
         this.viewOtherShipImage.setFitWidth(816.0);
         this.viewOtherShipImage.setPreserveRatio(true);
+
+        this.boardImageView.setImage(new Image(boardResource.toExternalForm()));
+        this.boardImageView.setFitWidth(816.0);
+        this.boardImageView.setPreserveRatio(true);
 
 
         Pair<Integer, Integer> shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
@@ -277,16 +278,18 @@ public class ShipConstructionController extends GUIController {
         cell.setOnMouseClicked(_ -> handlePlaceTile(row, col));
     }
 
+    private void initializePlayersShip() {
+        // For each player init the ship view
+        for (ClientPlayer p : this.clientModel.getAllClientPlayers().values()) {
 
-    // TODO: COMPLETE THESE 3 METHODS
+        }
+    }
 
     private void handleViewShipRequest(String requestedPlayerShip) {
         // Remove from the screen the main content and display the request ship
-
-        System.out.println("The player requested to view the ship of " + requestedPlayerShip);
-
         this.setVisibility(this.shipContainer, false);
         this.setVisibility(this.tileScrollPane, false);
+        this.setVisibility(this.viewGameBoardContainer, false);
 
         // Set the label text dynamically
         this.viewPlayerShipLabel.setText("You are now viewing "+ requestedPlayerShip +"'s ship");
@@ -298,18 +301,26 @@ public class ShipConstructionController extends GUIController {
         StackPane.setAlignment(newGrid, Pos.CENTER);
         this.viewOtherShipStackPane.getChildren().add(newGrid);
 
+        if (this.hasFinishedShip) {
+            this.goBackToConstructionButton.setText("Go back");
+            this.goBackToConstructionButton.setVisible(true);
+        }
+
         this.setVisibility(this.viewShipContainer, true);
     }
 
     @FXML
     // Method used to return to the main screen when the player is viewing other ship
     private void handleGoBackToConstructionButton() {
-        // TODO: HANDLE THE CASE OF THE SHIP ENDED
+        if (this.hasFinishedShip) {
+            this.showEndedShipConstruction();
+        } else {
+            this.setVisibility(this.shipContainer, false);
+            this.setVisibility(this.viewShipContainer, false);
+            this.setVisibility(this.viewGameBoardContainer, false);
 
-        this.setVisibility(this.shipContainer, false);
-        this.setVisibility(this.viewShipContainer, false);
-
-        this.setVisibility(this.tileScrollPane, true);
+            this.setVisibility(this.tileScrollPane, true);
+        }
     }
 
     @FXML
@@ -322,26 +333,8 @@ public class ShipConstructionController extends GUIController {
         GUIHandler.setCommandCTX(new CommandCTX(
                 "sendShip",
                 () -> {
-
-                    // TODO: DISABLE THE UI TO PREVENT THE USER TO DO ANY FORM OF ACTION
-                    // Remove from the screen the main content and display the request ship
-
-                    this.setVisibility(this.shipContainer, false);
-                    this.setVisibility(this.tileScrollPane, false);
-
-                    // Set the label text dynamically
-                    this.viewPlayerShipLabel.setText("You have finished building your ship");
-                    // this.goBackToConstructionButton.setVisible(false); // TODO FINISH THIS STEP FLOW
-                    this.confirmShipButton.setVisible(false);
-
-                    // Remove the current grid
-                    this.viewOtherShipStackPane.getChildren().removeIf(node -> node instanceof GridPane);
-                    // Add the player grid
-                    GridPane newGrid = this.playersShipGridPane.get(this.clientModel.getNickname());
-                    StackPane.setAlignment(newGrid, Pos.CENTER);
-                    this.viewOtherShipStackPane.getChildren().add(newGrid);
-
-                    this.setVisibility(this.viewShipContainer, true);
+                    this.hasFinishedShip = true;
+                    Platform.runLater(this::showEndedShipConstruction);
                 },
                 this::handleConfirmShip
         ));
@@ -356,6 +349,26 @@ public class ShipConstructionController extends GUIController {
         } catch (Exception e) {
             this.showError(e.getMessage());
         }
+    }
+
+    private void showEndedShipConstruction() {
+        this.setVisibility(this.shipContainer, false);
+        this.setVisibility(this.tileScrollPane, false);
+        this.setVisibility(this.viewGameBoardContainer, false);
+
+        // Set the label text dynamically
+        this.viewPlayerShipLabel.setText("You have finished building your ship");
+        this.goBackToConstructionButton.setVisible(false);
+        this.confirmShipButton.setVisible(false);
+
+        // Remove the current grid
+        this.viewOtherShipStackPane.getChildren().removeIf(node -> node instanceof GridPane);
+        // Add the player grid
+        GridPane newGrid = this.playersShipGridPane.get(this.clientModel.getNickname());
+        StackPane.setAlignment(newGrid, Pos.CENTER);
+        this.viewOtherShipStackPane.getChildren().add(newGrid);
+
+        this.setVisibility(this.viewShipContainer, true);
     }
 
     @FXML void handleViewSubDeck(MouseEvent event) {
@@ -373,6 +386,7 @@ public class ShipConstructionController extends GUIController {
                         this.selectedComponent = selectedComponent;
                         this.setVisibility(this.tileScrollPane, false);
                         this.setVisibility(this.viewShipContainer, false);
+                        this.setVisibility(this.viewGameBoardContainer, false);
 
                         this.selectedComponentImage.setImage(
                                 this.getImageFromPath(selectedComponent.getPath(), 105, 105)
@@ -414,6 +428,7 @@ public class ShipConstructionController extends GUIController {
                         // Before displaying the dynamic page --> set the tile info etc
                         this.setVisibility(this.shipContainer, false);
                         this.setVisibility(this.viewShipContainer, false);
+                        this.setVisibility(this.viewGameBoardContainer, false);
 
                         // Before displaying the dynamic page --> set the tile info etc
                         this.setVisibility(this.tileScrollPane, true);
@@ -451,6 +466,7 @@ public class ShipConstructionController extends GUIController {
         // Before displaying the dynamic page --> set the tile info etc
         this.setVisibility(this.shipContainer, false);
         this.setVisibility(this.viewShipContainer, false);
+        this.setVisibility(this.viewGameBoardContainer, false);
 
         // Before displaying the dynamic page --> set the tile info etc
         this.setVisibility(this.tileScrollPane, true);
@@ -474,6 +490,7 @@ public class ShipConstructionController extends GUIController {
                         // Before displaying the dynamic page --> set the tile info etc
                         this.setVisibility(this.shipContainer, false);
                         this.setVisibility(this.viewShipContainer, false);
+                        this.setVisibility(this.viewGameBoardContainer, false);
 
                         this.selectedComponentImage.setRotate(0.0);
 
