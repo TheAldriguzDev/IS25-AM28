@@ -396,7 +396,6 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
         Platform.runLater(() -> {
-
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.INSUFFICIENT_PLAYER_SCENE)) {
                 InsufficientPlayersController controller = (InsufficientPlayersController) this.controllers.get(GuiScenes.INSUFFICIENT_PLAYER_SCENE);
                 controller.setCountDown(insufficientPlayer);
@@ -434,7 +433,10 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void receiveTimerDTO(TimerDTO timerDTO) {
-
+        if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
+            ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
+            controller.resetTimer(timerDTO);
+        }
     }
 
     @Override

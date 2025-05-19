@@ -761,7 +761,6 @@ public class ShipConstructionScreen extends Screen {
                 true
             )
         );
-
     }
 
     /**

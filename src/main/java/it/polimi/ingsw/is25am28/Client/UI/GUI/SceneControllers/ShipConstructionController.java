@@ -5,8 +5,10 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Network.Messages.DeselectTile;
+import it.polimi.ingsw.is25am28.Network.Messages.FlipTimer;
 import it.polimi.ingsw.is25am28.Network.Messages.PlaceTile;
 import it.polimi.ingsw.is25am28.Network.Messages.SelectTile;
 import it.polimi.ingsw.is25am28.Network.Messages.SendShipConfirmation;
@@ -31,6 +33,7 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShipConstructionController extends GUIController {
 
@@ -163,6 +166,8 @@ public class ShipConstructionController extends GUIController {
     }
 
     private void startCountDownTimer() {
+        AtomicInteger secondsLeft = new AtomicInteger(this.countDown);
+
         // Check if there is already an active timer
         if (timer != null) {
             timer.stop();
@@ -173,19 +178,21 @@ public class ShipConstructionController extends GUIController {
 
         // Update the text every second
         timer = new Timeline(new KeyFrame(Duration.seconds(1), _ -> {
-            if (countDown <= 0) {
+            if (secondsLeft.get() <= 0) {
                 timer.stop();
                 return;
             }
 
-            int minutes = countDown / 60;
-            int seconds = countDown % 60;
+            int minutes = secondsLeft.get() / 60;
+            int seconds = secondsLeft.get() % 60;
 
             String timeFormatted = String.format("Flip available in %02d:%02d", minutes, seconds);
             this.timerLabel.setText(timeFormatted);
 
-            countDown--;
+            secondsLeft.getAndDecrement();
         }));
+
+        this.timerLabel.setWrapText(true);
 
         timer.setCycleCount(Timeline.INDEFINITE);
         timer.play();
@@ -259,23 +266,26 @@ public class ShipConstructionController extends GUIController {
         if (row == 2 && col == 3) {
             String playerColor = this.clientModel.getAllClientPlayers().get(this.clientModel.getNickname()).getColor().getPlayerColorString();
             URL resource = Objects.requireNonNull(getClass().getResource("/imgs/tiles/core_" + playerColor + ".jpg"));
-            Image img = new Image(resource.toExternalForm(), 105, 105, true, true);
 
+            Image img = new Image(resource.toExternalForm(), 105, 105, true, true);
             ImageView imgView = new ImageView(img);
+
             imgView.setImage(img);
 
             this.shipGrid.add(imgView, col, row);
+
             return;
         }
 
         Region cell = new Region(); // Place holder node
+
         cell.setPrefSize(100, 100);
         cell.setStyle("-fx-background-color: transparent;");
         cell.setCursor(Cursor.HAND);
         cell.setPickOnBounds(true);
+        cell.setOnMouseClicked(_ -> handlePlaceTile(row, col));
 
         this.shipGrid.add(cell, col, row);
-        cell.setOnMouseClicked(_ -> handlePlaceTile(row, col));
     }
 
     private void initializePlayersShip() {
@@ -285,6 +295,7 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+    @FXML
     private void handleViewShipRequest(String requestedPlayerShip) {
         // Remove from the screen the main content and display the request ship
         this.setVisibility(this.shipContainer, false);
@@ -325,7 +336,20 @@ public class ShipConstructionController extends GUIController {
 
     @FXML
     private void handleFlipTimer() {
-        System.out.println("Requested to flip the timer");
+        GUIHandler.setCommandCTX(
+            new CommandCTX(
+                "flipTimer",
+                this::startCountDownTimer,
+                () -> {}
+            )
+        );
+
+        try {
+            GUIHandler.getVirtualClient().sendMessage(new FlipTimer());
+        }
+        catch (Exception e) {
+            this.showError(e.getMessage());
+        }
     }
 
     // Send the player ship to the server
@@ -371,7 +395,8 @@ public class ShipConstructionController extends GUIController {
         this.setVisibility(this.viewShipContainer, true);
     }
 
-    @FXML void handleViewSubDeck(MouseEvent event) {
+    @FXML
+    void handleViewSubDeck(MouseEvent event) {
         ImageView clicked = (ImageView) event.getSource();
         System.out.println("Subdeck clicked: " + clicked.getId());
     }
@@ -711,5 +736,11 @@ public class ShipConstructionController extends GUIController {
             });
 
         });
+    }
+
+    public void resetTimer(TimerDTO timerDTO) {
+        if (timerDTO.getCanBeFlipped()) {
+            this.flipTimerButton.setDisable(false);
+        }
     }
 }
