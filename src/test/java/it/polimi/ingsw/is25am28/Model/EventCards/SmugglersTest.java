@@ -58,6 +58,11 @@ class SmugglersTest {
     ArrayList<ComponentHelper<ItemColor>> itemsToBeRemoved4;
     ArrayList<ComponentHelper<ItemColor>> itemsToBeTaken4;
 
+    List<CoordinatePair> batteriesToBeGivenUp1;
+    List<CoordinatePair> batteriesToBeGivenUp2;
+    List<CoordinatePair> batteriesToBeGivenUp3;
+    List<CoordinatePair> batteriesToBeGivenUp4;
+
     ArrayList<Storage> storageList1;
     ArrayList<Storage> storageList2;
     ArrayList<Storage> storageList3;
@@ -88,18 +93,22 @@ class SmugglersTest {
         itemsToBeRemoved1 = new ArrayList<>();
         itemsToBeTaken1 = new ArrayList<>();
         storageList1 = new ArrayList<>();
+        batteriesToBeGivenUp1 = new ArrayList<>();
 
         itemsToBeRemoved2 = new ArrayList<>();
         itemsToBeTaken2 = new ArrayList<>();
         storageList2 = new ArrayList<>();
+        batteriesToBeGivenUp2 = new ArrayList<>();
 
         itemsToBeRemoved3 = new ArrayList<>();
         itemsToBeTaken3 = new ArrayList<>();
         storageList3 = new ArrayList<>();
+        batteriesToBeGivenUp3 = new ArrayList<>();
 
         itemsToBeRemoved4 = new ArrayList<>();
         itemsToBeTaken4 = new ArrayList<>();
         storageList4 = new ArrayList<>();
+        batteriesToBeGivenUp4 = new ArrayList<>();
 
         ship_1 = p1.getShip();
         ship_init1(ship_1);
@@ -122,27 +131,36 @@ class SmugglersTest {
     public void all_players_lose() {
         System.out.println("======================== SMUGGLERS PRINT AND FUNCTION (1) TEST ==========================");
 
+        batteriesToBeGivenUp1.add(new CoordinatePair(7, 7));
+        batteriesToBeGivenUp1.add(new CoordinatePair(7, 7));
+        batteriesToBeGivenUp1.add(new CoordinatePair(7, 7));
 
         itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
         itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
         itemsToBeRemoved2.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
+
+        batteriesToBeGivenUp2.add(new CoordinatePair(7, 7));
 
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
 
+        // No batteries are removed from p3
+
         itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
         itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
         itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
         itemsToBeRemoved4.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
 
+        // No batteries are removed from p4
+
         smugglers = new Smugglers("Smugglers", 2, 3, 5, 4, 1, 2, 1, 0, board, resourceBank, 0, "");
 
-        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 2
-        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 2
-        actionJSON3 = new SmugglersJSON("Player 3", false, itemsToBeTaken3, itemsToBeRemoved3, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 3
-        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 3
+        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, batteriesToBeGivenUp1, new ArrayList<>()); // Total FirePower: 2
+        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, batteriesToBeGivenUp2, new ArrayList<>()); // Total FirePower: 2
+        actionJSON3 = new SmugglersJSON("Player 3", false, itemsToBeTaken3, itemsToBeRemoved3, batteriesToBeGivenUp3, new ArrayList<>()); // Total FirePower: 3
+        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, batteriesToBeGivenUp4, new ArrayList<>()); // Total FirePower: 3
 
         // ======== WIDGET TESTING ======== //
         System.out.println("Non initialized card");
@@ -277,6 +295,9 @@ class SmugglersTest {
 
     @Test void first_player_loses_second_player_ties_third_player_wins_fourth_player_does_nothing() {
 
+        batteriesToBeGivenUp1.add(new CoordinatePair(7, 7));
+        batteriesToBeGivenUp1.add(new CoordinatePair(7, 7));
+
         // In this test the first player will lose batteries, while the third will instead drop a green and a blue item to make space for 2 yellow items
         // The second(tie) player and the fourth(does nothing) player won't have anything changed
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
@@ -301,10 +322,10 @@ class SmugglersTest {
             )
         );
 
-        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 2
-        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 3
-        actionJSON3 = new SmugglersJSON("Player 3", true, itemsToBeTaken3, itemsToBeRemoved3, new ArrayList<>(), doubleCannonActivated); // Total FirePower: 5
-        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, new ArrayList<>(), new ArrayList<>()); // Total FirePower: 3
+        actionJSON1 = new SmugglersJSON("Player 1", false, itemsToBeTaken1, itemsToBeRemoved1, batteriesToBeGivenUp1, new ArrayList<>()); // Total FirePower: 2
+        actionJSON2 = new SmugglersJSON("Player 2", false, itemsToBeTaken2, itemsToBeRemoved2, batteriesToBeGivenUp2, new ArrayList<>()); // Total FirePower: 3
+        actionJSON3 = new SmugglersJSON("Player 3", true, itemsToBeTaken3, itemsToBeRemoved3, batteriesToBeGivenUp3, doubleCannonActivated); // Total FirePower: 5
+        actionJSON4 = new SmugglersJSON("Player 4", false, itemsToBeTaken4, itemsToBeRemoved4, batteriesToBeGivenUp4, new ArrayList<>()); // Total FirePower: 3
 
         smugglers = new Smugglers("Smugglers", 2, 3, 3, 2, 1, 2, 1, 0, board, resourceBank, 0, "");
 

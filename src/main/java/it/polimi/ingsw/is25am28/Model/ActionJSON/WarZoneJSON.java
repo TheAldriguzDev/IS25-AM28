@@ -36,7 +36,8 @@ public class WarZoneJSON extends ActionJSON {
             @JsonProperty("itemsToBeRemoved") List<ComponentHelper<ItemColor>> itemsToBeRemoved,
             @JsonProperty("shieldList") List<Pair<CoordinatePair, CoordinatePair>> shieldList,
             @JsonProperty("cannonList") List<Pair<CoordinatePair, CoordinatePair>> cannonList,
-            @JsonProperty("cannonList") List<Pair<CoordinatePair, CoordinatePair>> engineList
+            @JsonProperty("cannonList") List<Pair<CoordinatePair, CoordinatePair>> engineList,
+            @JsonProperty("batteriesToBeStolen") List<CoordinatePair> batteriesToBeStolen
     ) {
         this.playerNickname = playerNickname;
         this.lifeformsToBeRemoved = lifeformsToBeRemoved;
@@ -44,6 +45,7 @@ public class WarZoneJSON extends ActionJSON {
         this.shieldList = shieldList;
         this.cannonList = cannonList;
         this.engineList = engineList;
+        this.batteriesToBeStolen = batteriesToBeStolen;
     }
 
     @JsonGetter("lifeformsToBeRemoved")
@@ -68,16 +70,6 @@ public class WarZoneJSON extends ActionJSON {
     @JsonSetter("itemsToBeRemoved")
     public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) {
         this.itemsToBeRemoved = itemsToBeRemoved;
-    }
-
-    @JsonGetter("batteriesToBeStolen")
-    public List<CoordinatePair> getBatteriesToBeStolen() {
-        return this.batteriesToBeStolen;
-    }
-
-    @JsonSetter("batteriesToBeStolen")
-    public void setBatteriesToBeStolen(List<CoordinatePair> batteriesToBeStolen) {
-        this.batteriesToBeStolen = batteriesToBeStolen;
     }
 
     @JsonGetter("shieldList")
@@ -108,5 +100,15 @@ public class WarZoneJSON extends ActionJSON {
     @JsonSetter("engineList")
     public void setEngineList(List<Pair<CoordinatePair, CoordinatePair>> engineList) {
         this.engineList = engineList;
+    }
+
+    @JsonGetter("batteriesToBeStolen")
+    public List<CoordinatePair> getBatteriesToBeStolen() {
+        return this.batteriesToBeStolen;
+    }
+
+    @JsonSetter("batteriesToBeStolen")
+    public void setBatteriesToBeStolen(List<CoordinatePair> batteriesToBeStolen) {
+        this.batteriesToBeStolen = batteriesToBeStolen;
     }
 }

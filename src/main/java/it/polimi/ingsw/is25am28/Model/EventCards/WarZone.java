@@ -489,6 +489,7 @@ public class WarZone extends EventCard {
                 .toList();
 
         List<CoordinatePair> stolenBatteries = warZoneJSON.getBatteriesToBeStolen();
+        int batteriesToTake = this.requiredItems - resourcesToDrop.size();
 
         // This covers also the case in which there are not enough resources on board
         if (resourcesToDrop.size() != mostValuableItems.size()) {
@@ -497,7 +498,8 @@ public class WarZone extends EventCard {
         } else if (this.countOccurrencies(mostValuableItems).equals(colorsToDrop)) {
             this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
             throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
-        } else if ((stolenBatteries.size() != this.requiredItems - resourcesToDrop.size()) && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {
+        }
+        else if ((stolenBatteries.size() != this.requiredItems - resourcesToDrop.size()) && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {
             // This exception is triggered only if a wrong number of batteries is sent, the case in which the player cannot select the required number of batteries is checked
             throw new IllegalArgumentException("The given up batteries are not enough!");
         }
@@ -527,7 +529,6 @@ public class WarZone extends EventCard {
         }
 
         List<CoordinatePair> consumedBatteries = new ArrayList<>();
-        int batteriesToTake = this.requiredItems - resourcesToDrop.size();
 
         if (batteriesToTake > 0) {
             // Removing 1 unit of charge from each battery selected by the player
@@ -552,6 +553,7 @@ public class WarZone extends EventCard {
             // Logging the consumed batteries for the current player
             this.removedBatteries.put(player.getNickname(), consumedBatteries);
         }
+
         return this;
     }
 

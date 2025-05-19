@@ -67,21 +67,26 @@ public class Slavers extends EventCard {
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         SlaversJSON slaversData;
+
         try {
             slaversData = (SlaversJSON) data;
-        } catch (ClassCastException e) {
+        }
+        catch (ClassCastException e) {
             throw new IllegalArgumentException("Card data type in invalid");
         }
+
         Optional<Player> playerOptional = getCurrentPlayer();
 
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
                     String playerNickname = slaversData.getPlayerNickname();
                     this.prevPlayerNickname = playerNickname;
+
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
-                    if (!this.isPlayerDefeated) { // If the player has not been set as defeated it means its the first time he uses the card
+
+                    if (!this.isPlayerDefeated) { // If the player has not been set as defeated it means it's the first time he uses the card
                         List<Pair<CoordinatePair, CoordinatePair>> activatedDoubleCannons
                                 = player.getShip().activateComponents(slaversData.getDoubleCannonsToActivateCoordinates());
 
@@ -97,9 +102,11 @@ public class Slavers extends EventCard {
 
                         float playerFirepower = player.getShip().getFirePower(
                                 activatedDoubleCannons.stream()
-                                        .map(Pair::getValue)
+                                        .map(Pair::getKey)
                                         .toList()
                         );
+
+                        System.out.println("FP: " + playerFirepower);
 
                         if (playerFirepower > requiredFirepower) {
                             cardUsed();
@@ -113,18 +120,22 @@ public class Slavers extends EventCard {
                                     this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
                                 }
                             }
-                        } else if (playerFirepower < requiredFirepower) {
+                        }
+                        else if (playerFirepower < requiredFirepower) {
                             //malusEffect(data);
                             this.isPlayerDefeated = true;
                         }
-                    } else { // The player should've sent the info regarding the removedCrew
+                    }
+                    else { // The player should've sent the info regarding the removedCrew
                         malusEffect(data);
                         this.isPlayerDefeated = false;
                     }
+
                     if (!isPlayerDefeated) { // If the player has been defeated the current player does not change, and the game does not end
                         if (player.equals(players.getLast())) {
                             cardUsed();
-                        } else {
+                        }
+                        else {
                             getNextPlayer();
                         }
                     }
@@ -169,6 +180,7 @@ public class Slavers extends EventCard {
                     if (slaversData.getCrewToRemove().size() != this.takenCrew && slaversData.getCrewToRemove().size() != player.getShip().getAllLifeforms().size()) {
                         throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
                     }
+
                     // Remove the crew members from the given cabins
                     for (ComponentHelper<LifeformType> lifeform : slaversData.getCrewToRemove()) {
                         Cabin tmpCabin;
@@ -191,12 +203,12 @@ public class Slavers extends EventCard {
                     }
 
                     this.removedLifeforms.put(player.getNickname(), slaversData.getCrewToRemove());
+
                     // Check if the player has finished all of its astronauts --> if yes it needs to be eliminated from the game
                     if (player.getShip().getCabinList().stream().flatMap(c -> c.getInhabitants().stream()).noneMatch(i -> i.getLifeformType().equals(LifeformType.ASTRONAUT))) {
                         this.eliminatedPlayers.add(player.getNickname());
                         this.getBoard().eliminatePlayer(player);
                     }
-
                 }
         );
     }

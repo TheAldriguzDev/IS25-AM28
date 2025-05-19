@@ -208,6 +208,7 @@ public class Smugglers extends EventCard {
                         .toList();
 
                 List<CoordinatePair> stolenBatteries = smugglersData.getBatteriesToBeStolen();
+                int batteriesToTake = this.takenItems - resourcesToDrop.size();
 
                 // This covers also the case in which there are not enough resources on board
                 if (resourcesToDrop.size() != mostValuableItems.size()) {
@@ -215,8 +216,10 @@ public class Smugglers extends EventCard {
                 }
                 else if (this.countOccurrences(mostValuableItems).equals(colorsToDrop)) {
                     throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board!");
-                } else if ((stolenBatteries.size() != this.takenItems - resourcesToDrop.size()) && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {
-                    // This exception is triggered only if a wrong number of batteries is sent, the case in which the player cannot select the required number of batteries is checked
+                }
+                else if ((stolenBatteries.size() != batteriesToTake) && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {
+                    // This exception is triggered only if a wrong number of batteries is sent, the
+                    // case in which the player cannot select the required number of batteries is checked
                     throw new IllegalArgumentException("The given up batteries are not enough!");
                 }
 
@@ -239,7 +242,6 @@ public class Smugglers extends EventCard {
                 }
 
                 List<CoordinatePair> consumedBatteries = new ArrayList<>();
-                int batteriesToTake = this.takenItems - resourcesToDrop.size();
 
                 if (batteriesToTake > 0) {
                     // Removing 1 unit of charge from each battery selected by the player
