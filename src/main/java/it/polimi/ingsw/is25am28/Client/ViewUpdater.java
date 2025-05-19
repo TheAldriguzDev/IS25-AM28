@@ -213,6 +213,11 @@ public class ViewUpdater implements StateVisitor {
 
                 Optional<ClientShip> optionalShip = this.model.getShipOfPlayer(state.getPlayerNickname());
                 optionalShip.ifPresent(ship -> ship.addComponent(comp, state.getI(), state.getJ()));
+
+                // Update the player ship in the GUI
+                if (this.ui instanceof GUIHandler) {
+                    ((GUIHandler) this.ui).updateShipPlacedComponent(state);
+                }
             }
         }
     }

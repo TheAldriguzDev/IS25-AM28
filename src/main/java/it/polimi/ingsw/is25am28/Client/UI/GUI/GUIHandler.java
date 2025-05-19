@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -257,6 +258,14 @@ public class GUIHandler extends Application implements ClientUI {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
             controller.updateComponent(component.getId());
+        }
+    }
+
+    // TODO: Understand if we need to create an interface for the GUI that is more specific than the TUI
+    public void updateShipPlacedComponent(PlacedComponentDTO data) {
+        if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
+            ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
+            controller.handlePlayerShipConstruction(data);
         }
     }
 

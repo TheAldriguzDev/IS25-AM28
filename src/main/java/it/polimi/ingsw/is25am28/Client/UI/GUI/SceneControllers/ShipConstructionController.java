@@ -4,6 +4,8 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCompone
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Network.Messages.DeselectTile;
 import it.polimi.ingsw.is25am28.Network.Messages.PlaceTile;
@@ -22,6 +24,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
 
@@ -29,6 +32,9 @@ import java.net.URL;
 import java.util.*;
 
 public class ShipConstructionController extends GUIController {
+
+    // Attributes to handle the others player ship
+    @FXML private GridPane viewOtherShipsGrid;
 
     // Attributes to handle the selected component
     @FXML private ImageView selectedComponentImage;
@@ -113,6 +119,30 @@ public class ShipConstructionController extends GUIController {
             this.timerContainer.setVisible(false);
         }
 
+        this.populateViewShipButtons();
+    }
+
+    private void populateViewShipButtons() {
+        // Clear all the nodes
+        this.viewOtherShipsGrid.getChildren().clear();
+
+        // Default positions
+        int[][] positions = { {0, 0}, {1, 0}, {0, 1}, {1, 1} };
+
+        List<ClientPlayer> players = this.clientModel.getAllClientPlayers().values().stream().toList();
+        for (int i = 0; i < players.size(); i++) {
+            String name = players.get(i).getNickname();
+            int col = positions[i][0];
+            int row = positions[i][1];
+
+            Button playerButton = new Button(name);
+            playerButton.setMaxWidth(Double.MAX_VALUE);
+            // playerButton.setMaxHeight(Double.MAX_VALUE);
+
+            playerButton.setOnAction((_) -> handleViewShipRequest(name));
+
+            this.viewOtherShipsGrid.add(playerButton, col, row);
+        }
     }
 
     private void startCountDownTimer() {
@@ -186,33 +216,16 @@ public class ShipConstructionController extends GUIController {
 
         // Init the gridShipPane for each player
         for (ClientPlayer p : this.clientModel.getAllClientPlayers().values()) {
-            this.playersShipGridPane.put(p.getNickname(), createEmptyShipGrid());
+            // Create the new grid for each player different from the currentPlayer
+            if (!this.clientModel.getNickname().equals(p.getNickname())) {
+                this.playersShipGridPane.put(p.getNickname(), createEmptyShipGrid());
+            }
         }
     }
 
-    private GridPane createEmptyShipGrid() {
-        GridPane grid = new GridPane();
-        grid.setHgap(2.5);
-        grid.setVgap(2.5);
-        grid.setAlignment(Pos.CENTER);
-        grid.setPrefSize(659, 459);
-
-        for (int i = 0; i < 5; i++) {
-            RowConstraints row = new RowConstraints();
-            row.setPrefHeight(105);
-            grid.getRowConstraints().add(row);
-        }
-
-        for (int i = 0; i < 7; i++) {
-            ColumnConstraints col = new ColumnConstraints();
-            col.setPrefWidth(105);
-            grid.getColumnConstraints().add(col);
-        }
-
-        return grid;
-    }
-
-
+    /**
+     * Method used to add the event listener to the clickable cells of the player ship
+     * */
     private void addCellEventListener(int row, int col) {
         // Add the core to the ship
         if (row == 2 && col == 3) {
@@ -229,8 +242,7 @@ public class ShipConstructionController extends GUIController {
 
         Region cell = new Region(); // Place holder node
         cell.setPrefSize(100, 100);
-        cell.setStyle("-fx-background-color: rgba(255, 0, 0, 0.2);"); // solo per test
-        //cell.setStyle("-fx-background-color: transparent;");
+        cell.setStyle("-fx-background-color: transparent;");
         cell.setCursor(Cursor.HAND);
         cell.setPickOnBounds(true);
 
@@ -238,66 +250,32 @@ public class ShipConstructionController extends GUIController {
         cell.setOnMouseClicked(_ -> handlePlaceTile(row, col));
     }
 
-    private ImageView getComponentImageView(ClientComponent c, Image img) {
-        ImageView imgView = new ImageView(img);
-        imgView.setFitWidth(90);
-        imgView.setFitHeight(90);
-        imgView.setPreserveRatio(true);
 
-        // If the component is visible set the opacity to 1, otherwise it will be 0. Furthermore, if visible add the onClick handler
-        if (c.isVisible()) {
-            imgView.setOpacity(1.0);
-            imgView.setOnMouseClicked(_ -> {
-                handleTileSelection(c);
-            });
-        } else {
-            imgView.setOpacity(0.0);
-        }
-        return imgView;
+    // TODO: COMPLETE THESE 3 METHODS
+
+    private void handleViewShipRequest(String requestedPlayerShip) {
+        // Remove from the screen the main content and display the request ship
+
+        System.out.println("The player requested to view the ship of " + requestedPlayerShip);
     }
 
-    /**
-     * Updates the visual representation of a specific component in the ship construction view
-     * based on the given component ID. Updates include the component's image, visibility,
-     * and behavior when interacted with, depending on its state.
-     *
-     * The method fetches the component from the current model's state, checks its properties
-     * (such as flipped/unflipped state and visibility), and applies corresponding updates
-     * to the associated {@code ImageView}.
-     *
-     * @param id The unique identifier of the component which needs to be updated.
-     */
-    public void updateComponent(Integer id) {
-        ClientComponent component = this.clientModel.getState().getConstructionShipComponents().stream()
-                .filter(c -> c.getID() == id).findFirst().orElse(null);
-
-        if (component == null) return;
-
-        ImageView imgView = this.components.get(id);
-
-        if (imgView == null) return;
-
-        Platform.runLater(() -> {
-            URL resource;
-            if (component.isFlipped()) {
-                System.out.println(component.getPath());
-                resource = Objects.requireNonNull(getClass().getResource(component.getPath()));
-            } else {
-                resource = Objects.requireNonNull(getClass().getResource("/imgs/tiles/unflipped.png"));
-            }
-
-            Image img = new Image(resource.toExternalForm(), 85, 85, true, true);
-            imgView.setImage(img);
-
-            if (component.isVisible()) {
-                imgView.setOpacity(1.0);
-                imgView.setOnMouseClicked(_ -> handleTileSelection(component));
-            } else {
-                imgView.setOpacity(0.0);
-                imgView.setOnMouseClicked(null);
-            }
-        });
+    @FXML
+    private void handleFlipTimer() {
+        System.out.println("Requested to flip the timer");
     }
+
+    @FXML void handleConfirmShip() {
+        System.out.println("Requested to confirm the ship");
+    }
+
+    @FXML void handleViewSubDeck(MouseEvent event) {
+        ImageView clicked = (ImageView) event.getSource();
+        System.out.println("Subdeck clicked: " + clicked.getId());
+    }
+
+
+
+
 
     // Method used when a tile is selected by the user
     private void handleTileSelection(ClientComponent selectedComponent) {
@@ -407,9 +385,6 @@ public class ShipConstructionController extends GUIController {
                     this.clientModel.getState().getReservedComponents().remove(this.selectedComponent);
 
                     Platform.runLater(() -> {
-                        // Add the component to the grid -- TODO: REMOVE FROM HERE SINCE SHOULD BE TRIGGERED FROM THE VIEW UPDATER
-                        this.shipGrid.add(imgView, j, i);
-
                         // Before displaying the dynamic page --> set the tile info etc
                         this.shipContainer.setVisible(false);
                         this.shipContainer.setManaged(false);
@@ -422,11 +397,6 @@ public class ShipConstructionController extends GUIController {
         ));
 
         try {
-            int temp = this.clientModel.getDifficultyLevel() == 0 ? 1 : 0;
-
-            System.out.println("i " + (i + shipOffsets.getKey()));
-            System.out.println("j " + (j + shipOffsets.getValue()));
-
             if (this.clientModel.getDifficultyLevel() == 0) {
                 GUIHandler.getVirtualClient().sendMessage(
                         new PlaceTile(
@@ -451,10 +421,6 @@ public class ShipConstructionController extends GUIController {
         } catch (Exception e) {
             this.showError(e.getMessage());
         }
-    }
-
-    private void handlePlayerShipConstruction() {
-
     }
 
     @FXML
@@ -493,5 +459,135 @@ public class ShipConstructionController extends GUIController {
     private Image getImageFromPath(String path, int width, int height) {
         URL resource = Objects.requireNonNull(getClass().getResource(path));
         return new Image(resource.toExternalForm(), width, height, true, true);
+    }
+
+    private ImageView getComponentImageView(ClientComponent c, Image img) {
+        ImageView imgView = new ImageView(img);
+        imgView.setFitWidth(90);
+        imgView.setFitHeight(90);
+        imgView.setPreserveRatio(true);
+
+        // If the component is visible set the opacity to 1, otherwise it will be 0. Furthermore, if visible add the onClick handler
+        if (c.isVisible()) {
+            imgView.setOpacity(1.0);
+            imgView.setOnMouseClicked(_ -> {
+                handleTileSelection(c);
+            });
+        } else {
+            imgView.setOpacity(0.0);
+        }
+        return imgView;
+    }
+
+    /**
+     * Creates and returns an empty ship grid represented as a {@code GridPane}.
+     * The grid is configured with specific row and column constraints,
+     * including spacing between grid elements and center alignment.
+     * Each cell in the grid has predefined dimensions.
+     *
+     * @return A {@code GridPane} instance configured as an empty ship grid.
+     */
+    private GridPane createEmptyShipGrid() {
+        GridPane grid = new GridPane();
+        grid.setHgap(2.5);
+        grid.setVgap(2.5);
+        grid.setAlignment(Pos.CENTER);
+        grid.setPrefSize(659, 459);
+
+        for (int i = 0; i < 5; i++) {
+            RowConstraints row = new RowConstraints();
+            row.setPrefHeight(105);
+            grid.getRowConstraints().add(row);
+        }
+
+        for (int i = 0; i < 7; i++) {
+            ColumnConstraints col = new ColumnConstraints();
+            col.setPrefWidth(105);
+            grid.getColumnConstraints().add(col);
+        }
+
+        return grid;
+    }
+
+
+    // ===== METHOD USED BY THE VIEW UPDATER TO UPDATE THE VIEW IN REAL TIME ===== //
+
+    /**
+     * Updates the visual representation of a specific component in the ship construction view
+     * based on the given component ID. Updates include the component's image, visibility,
+     * and behavior when interacted with, depending on its state.
+     *
+     * The method fetches the component from the current model's state, checks its properties
+     * (such as flipped/unflipped state and visibility), and applies corresponding updates
+     * to the associated {@code ImageView}.
+     *
+     * @param id The unique identifier of the component which needs to be updated.
+     */
+    public void updateComponent(Integer id) {
+        ClientComponent component = this.clientModel.getState().getConstructionShipComponents().stream()
+                .filter(c -> c.getID() == id).findFirst().orElse(null);
+
+        if (component == null) return;
+
+        ImageView imgView = this.components.get(id);
+
+        if (imgView == null) return;
+
+        Platform.runLater(() -> {
+            URL resource;
+            if (component.isFlipped()) {
+                resource = Objects.requireNonNull(getClass().getResource(component.getPath()));
+            } else {
+                resource = Objects.requireNonNull(getClass().getResource("/imgs/tiles/unflipped.png"));
+            }
+
+            Image img = new Image(resource.toExternalForm(), 85, 85, true, true);
+            imgView.setImage(img);
+
+            if (component.isVisible()) {
+                imgView.setOpacity(1.0);
+                imgView.setOnMouseClicked(_ -> handleTileSelection(component));
+            } else {
+                imgView.setOpacity(0.0);
+                imgView.setOnMouseClicked(null);
+            }
+        });
+    }
+
+    /**
+     * Method used to update the player ship
+     * */
+    public void handlePlayerShipConstruction(PlacedComponentDTO data) {
+        // Get the player gridPane
+        GridPane playerGrid = this.playersShipGridPane.get(data.getPlayerNickname());
+        if (playerGrid == null) {
+            this.showError("No gridPane found for the given player");
+            return;
+        }
+
+        // Load the component, get the image and save it to the grid in the correct position with the correct rotation
+        this.clientModel.getState().getConstructionShipComponents().stream().filter(c -> c.getID() == data.getId()).findFirst().ifPresent(c -> {
+            // Build the ImageView with the component image
+            URL resource = getClass().getResource(c.getPath());
+            if (resource == null) {
+                this.showError("Component image not found: " + c.getPath());
+                return;
+            }
+
+            Image img = new Image(resource.toExternalForm(), 85, 85, true, true);
+            ImageView imgView = new ImageView(img);
+            imgView.setRotate(data.getRotation() * 90.0);
+            imgView.setFitWidth(105);
+            imgView.setFitHeight(105);
+            imgView.setPreserveRatio(true);
+            imgView.setSmooth(true);
+
+            // Add the image to the player board
+            int correctionJOffset = this.clientModel.getDifficultyLevel() == 0 ? 1 : 0; // Correction to handle the issue in the shipOffset for test level
+            Platform.runLater(() -> {
+                playerGrid.add(imgView, data.getJ() - this.shipOffsets.getValue() + correctionJOffset, data.getI() - shipOffsets.getKey());
+            });
+
+        });
     }
 }
