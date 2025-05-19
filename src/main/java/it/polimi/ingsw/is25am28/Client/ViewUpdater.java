@@ -155,7 +155,7 @@ public class ViewUpdater implements StateVisitor {
 
                 // TODO: work on gui removedComponentUpdate
                 if (this.ui instanceof GUIHandler) {
-                    //
+                    ((GUIHandler) this.ui).updateShipRemovedComponent(state);
                 }
 
                 if (state.isShipFixed()) {

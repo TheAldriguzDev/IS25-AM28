@@ -13,10 +13,12 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -27,6 +29,8 @@ public class FixShipController extends GUIController {
 
     @FXML private ImageView shipImageView;
     @FXML private GridPane shipGrid;
+    @FXML  private VBox fixShipVBox;
+    @FXML private Label fixShipLabel;
 
     private Pair<Integer, Integer> shipOffsets;
     private boolean isShipValid;
@@ -48,6 +52,10 @@ public class FixShipController extends GUIController {
         }
 
         this.componentsImagesMap = new HashMap<>();
+        this.componentsRegionMap = new HashMap<>();
+
+        // Sets the fixShipLabel and the isShipValid flag
+        this.setShipLabelText(state.getPlayerWithInvalidShip().contains(this.clientModel.getNickname()));
 
         // Initializing the ship to display
         String path = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
@@ -65,7 +73,6 @@ public class FixShipController extends GUIController {
         int endRow = shipDimensions.getKey() + shipOffsets.getKey();
         int endCol = shipDimensions.getValue() + shipOffsets.getValue();;
 
-        // TODO: add the cellEvent only if there is actually a placed component
         for (int row = shipOffsets.getKey(); row < endRow; row++) {
             for (int col = shipOffsets.getValue(); col < endCol; col++) {
                 if (shipProfiles[row][col] == 1) {
@@ -82,10 +89,13 @@ public class FixShipController extends GUIController {
                         // Adds the component to the images map, so the reference can be easily retrieve in case of removal of the component
                         this.componentsImagesMap.put(new Pair<>(row, col), componentImgView);
 
-                        if (this.clientModel.getDifficultyLevel() == 0) {
-                            this.addCellEventListener(row - shipOffsets.getKey(), col - shipOffsets.getValue() + 1);
-                        } else {
-                            this.addCellEventListener(row - shipOffsets.getKey(), col - shipOffsets.getValue());
+                        // If the ship is valid there's no need to add the cellEventListeners
+                        if (!isShipValid) { // TODO: can be optimized
+                            if (this.clientModel.getDifficultyLevel() == 0) {
+                                this.addCellEventListener(row - shipOffsets.getKey(), col - shipOffsets.getValue() + 1);
+                            } else {
+                                this.addCellEventListener(row - shipOffsets.getKey(), col - shipOffsets.getValue());
+                            }
                         }
                     }
                 }
@@ -131,16 +141,6 @@ public class FixShipController extends GUIController {
                 () -> {
                 this.clientModel.getState().removeComponentFromShip(row, col);
 
-                    // TODO: move this in the removedComponent
-//                    Platform.runLater(() -> {
-
-//                        // Remove the clickable region
-//                        this.shipGrid.getChildren().remove(cell);
-//
-//                        // removing the component's image
-//                        this.shipGrid.getChildren().remove(this.componentsImagesMap.get(new Pair<>(row, col)));
-//                        this.componentsImagesMap.remove(new Pair<>(row, col));
-//                    });
                 },
                 () -> {}
         ));
@@ -168,12 +168,43 @@ public class FixShipController extends GUIController {
         }
     }
 
-    //TODO: label at the bottom of the ship stating the ship's validity
-    //TODO: allow tile removal only if the ship is invalid
-    //TODO: updateFunctions
-
     // ===== METHOD USED BY THE VIEW UPDATER TO UPDATE THE VIEW IN REAL TIME ===== //
 
-    public void removeComponent(int row, int col) {}
+    public void removeComponent(int row, int col, boolean isShipValid) {
+        Platform.runLater(() -> {
+            // Remove the clickable region
+            this.shipGrid.getChildren().remove(this.componentsRegionMap.get(new Pair<>(row, col)));
+            this.componentsRegionMap.remove(new Pair<>(row, col));
 
+            // removing the component's image
+            this.shipGrid.getChildren().remove(this.componentsImagesMap.get(new Pair<>(row, col)));
+            this.componentsImagesMap.remove(new Pair<>(row, col));
+
+            this.setShipLabelText(isShipValid);
+
+            // If the ship is valid all clickable regions must be deactivated/removed
+            if (this.isShipValid) {
+                if (!this.componentsRegionMap.isEmpty()) {
+                    for (Region cell : this.componentsRegionMap.values()) {
+                        // Remove the clickable region
+                        this.shipGrid.getChildren().remove(this.componentsRegionMap.get(new Pair<>(row, col)));
+                        this.componentsRegionMap.remove(new Pair<>(row, col));
+                    }
+                }
+            }
+        });
+    }
+
+    private void setShipLabelText(boolean isShipValid) {
+        String validityLabel;
+        if (!isShipValid) {
+            this.isShipValid = false;
+            validityLabel = "Your ship is " + PrintUtils.addColor("INVALID! ", ANSIColors.RED) + "please select the components to remove";
+            this.fixShipLabel.setText(validityLabel);
+        } else {
+            this.isShipValid = true;
+            validityLabel = "Your ship is " + PrintUtils.addColor("VALID! ", ANSIColors.GREEN) + "please wait for the other players to fix their ships";
+            this.fixShipLabel.setText(validityLabel);
+        }
+    }
 }

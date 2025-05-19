@@ -6,10 +6,7 @@ import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
 import it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient;
@@ -272,7 +269,14 @@ public class GUIHandler extends Application implements ClientUI {
     public void enableTimer(TimerDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
-            controller.handlePlayerShipConstruction(data);
+//            controller.handlePlayerShipConstruction((data);
+        }
+    }
+
+    public void updateShipRemovedComponent(FixedComponentDTO data) {
+        if (this.currentScene != null && this.currentScene.equals(GuiScenes.FIX_SHIP_SCENE)) {
+            FixShipController controller = (FixShipController) this.controllers.get(GuiScenes.FIX_SHIP_SCENE);
+            controller.removeComponent(data.getI(), data.getJ(), data.isShipFixed());
         }
     }
 
