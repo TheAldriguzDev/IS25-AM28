@@ -202,4 +202,8 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     public void removeItem(ItemColor itemColor) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'removeColor()' is not supported in " + this + " card");
     }
+
+    public int getFirepower() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("The method 'getFirepower()' is not supported in " + this + " card");
+    }
 }

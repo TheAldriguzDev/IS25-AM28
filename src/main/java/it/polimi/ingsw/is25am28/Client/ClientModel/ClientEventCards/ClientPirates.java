@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
@@ -56,7 +58,6 @@ public class ClientPirates extends ClientEventCard {
             enabledCommands.add("setShieldsToActivate");
         } else {
             enabledCommands.add("setDoubleCannonsToActivate");
-            enabledCommands.add("setTakeReward");
         }
     }
 
@@ -163,6 +164,11 @@ public class ClientPirates extends ClientEventCard {
     @Override
     public Boolean getTakeReward() {
         return this.piratesJSON.getTakeCredits();
+    }
+
+    @Override
+    public int getFirepower() {
+        return this.requiredFirepower;
     }
 }
 

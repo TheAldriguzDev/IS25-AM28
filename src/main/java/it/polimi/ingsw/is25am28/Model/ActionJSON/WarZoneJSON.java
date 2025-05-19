@@ -17,6 +17,7 @@ public class WarZoneJSON extends ActionJSON {
     private List<Pair<CoordinatePair, CoordinatePair>> shieldList;
     private List<Pair<CoordinatePair, CoordinatePair>> cannonList;
     private List<Pair<CoordinatePair, CoordinatePair>> engineList;
+    private List<CoordinatePair> batteriesToBeStolen;
 
     /**
      * Default constructor
@@ -67,6 +68,16 @@ public class WarZoneJSON extends ActionJSON {
     @JsonSetter("itemsToBeRemoved")
     public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) {
         this.itemsToBeRemoved = itemsToBeRemoved;
+    }
+
+    @JsonGetter("batteriesToBeStolen")
+    public List<CoordinatePair> getBatteriesToBeStolen() {
+        return this.batteriesToBeStolen;
+    }
+
+    @JsonSetter("batteriesToBeStolen")
+    public void setBatteriesToBeStolen(List<CoordinatePair> batteriesToBeStolen) {
+        this.batteriesToBeStolen = batteriesToBeStolen;
     }
 
     @JsonGetter("shieldList")

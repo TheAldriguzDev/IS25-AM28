@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStorage
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
@@ -301,7 +302,7 @@ public class ClientModel {
                     this.getShipOfPlayer(playerNickname).ifPresent(
                         (ship) -> {
                             ship.consumeEnergy(
-                                cardStateJSON.getRemovedBatteries().get(cardStateJSON.getPrevPlayerNickname())
+                                cardStateJSON.getRemovedBatteries().get(playerNickname)
                             );
                         }
                     );

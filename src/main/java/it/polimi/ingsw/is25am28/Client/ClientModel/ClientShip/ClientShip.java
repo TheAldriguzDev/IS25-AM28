@@ -743,8 +743,61 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
         return (float) this.cannonList.stream()
                 .filter((ClientCannon c) -> ((c.getFirePower() < 1 && c.getDirection() != 0) || (c.getFirePower() == 1 && c.getDirection() == 0)))
                 .mapToDouble(ClientCannon::getFirePower)
-                .sum()
-                + (this.purpleAlienPosition != null ? LifeformType.PURPLE_ALIEN.getAttackBoost() : 0);
+                .sum();
+    }
+
+    /**
+     * Returns the real firepower by considering the baseline firepower (given by single cannons) and
+     * the additional firepower (given by activating the given amount of double cannons) and also
+     * takes into account the bonus given by the purple alien (if present)
+     *
+     * @return The current ship's total firepower.
+     */
+    public float getFirePower(List<CoordinatePair> activatedDoubleCannonsCoordinates) {
+        List<ClientCannon> activatedDoubleCannons;
+        float totalFirepower;
+
+        // Starting from the firepower of only the single cannons
+        totalFirepower = (float) this.cannonList.stream()
+                .filter(c -> !c.requiresEnergy())
+                .mapToDouble(ClientCannon::getFirePower)
+                .sum();
+
+        if (activatedDoubleCannonsCoordinates != null && !activatedDoubleCannonsCoordinates.isEmpty()) {
+            // Filtering out all activated components that are not double cannons
+            activatedDoubleCannons = activatedDoubleCannonsCoordinates.stream()
+                    .filter(Objects::nonNull)
+                    .map(
+                            (p) -> {
+                                ClientComponent component = this.getComponent(p.getI(), p.getJ());
+
+                                switch (component) {
+                                    case ClientCannon cannon -> {
+                                        if (cannon.requiresEnergy()) {
+                                            return cannon;
+                                        }
+                                    }
+                                    case null, default -> {}
+                                }
+                                return null;
+                            }
+                    )
+                    .filter(Objects::nonNull)
+                    .toList();
+
+            // Add the double cannon contribution to the total firepower
+            totalFirepower += (float) activatedDoubleCannons.stream()
+                    .mapToDouble(ClientCannon::getFirePower)
+                    .sum();
+        }
+
+        // Finally, add the contribution of the single purple alien onboard the ship to the
+        // overall firepower (only if it's present and if the total firepower is > 0)
+        if (this.purpleAlienPosition != null && totalFirepower > 0) {
+            totalFirepower += this.purpleAlienPosition.getInhabitants().getFirst().getAttackBoost();
+        }
+
+        return totalFirepower;
     }
 
     /**
@@ -756,6 +809,60 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 .filter(e -> (e.getSpeed() == 1))
                 .count()
                 + (this.brownAlienPosition != null ? LifeformType.BROWN_ALIEN.getPowerBoost() : 0);
+    }
+
+    /**
+     * Returns the real engine power by considering the baseline firepower (given by single cannons) and
+     * the additional firepower (given by activating the given amount of double cannons) and also
+     * takes into account the bonus given by the purple alien (if present)
+     *
+     * @return The current ship's total engine power.
+     */
+    public int getEnginePower(List<CoordinatePair> activatedDoubleEnginesCoordinates) {
+        List<ClientEngine> activatedDoubleEngines;
+        int totalEnginePower;
+
+        // Starting from the engine power of only the single engines
+        totalEnginePower = this.engineList.stream()
+                .filter(e -> !e.requiresEnergy())
+                .mapToInt(ClientEngine::getSpeed)
+                .sum();
+
+        if (activatedDoubleEnginesCoordinates != null && !activatedDoubleEnginesCoordinates.isEmpty()) {
+            // Filtering out all activated components that are not double engines
+            activatedDoubleEngines = activatedDoubleEnginesCoordinates.stream()
+                    .filter(Objects::nonNull)
+                    .map(
+                            (p) -> {
+                                ClientComponent component = this.getComponent(p.getI(), p.getJ());
+
+                                switch (component) {
+                                    case ClientEngine engine -> {
+                                        if (engine.requiresEnergy()) {
+                                            return engine;
+                                        }
+                                    }
+                                    case null, default -> {}
+                                }
+                                return null;
+                            }
+                    )
+                    .filter(Objects::nonNull)
+                    .toList();
+
+            // Add the double engine contribution to the total engine power
+            totalEnginePower += activatedDoubleEngines.stream()
+                    .mapToInt(ClientEngine::getSpeed)
+                    .sum();
+        }
+
+        // Finally, add the contribution of the single brown alien onboard the ship to the
+        // overall engine power (only if it's present and if the total engine power is > 0)
+        if (this.brownAlienPosition != null && totalEnginePower > 0) {
+            totalEnginePower += this.brownAlienPosition.getInhabitants().getFirst().getPowerBoost();
+        }
+
+        return totalEnginePower;
     }
 
     /**

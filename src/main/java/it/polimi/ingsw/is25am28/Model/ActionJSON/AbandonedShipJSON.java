@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AbandonedShipJSON extends ActionJSON {
-    private boolean wantToVisitShip;
+    private Boolean wantToVisitShip;
     private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
 
     /**
@@ -26,11 +26,11 @@ public class AbandonedShipJSON extends ActionJSON {
         this.lifeformsToBeRemoved = lifeformsToBeRemoved;
     }
 
-    public boolean getWantToVisitShip() {
+    public Boolean getWantToVisitShip() {
         return this.wantToVisitShip;
     }
 
-    public void setWantToVisitShip(boolean wantToVisitShip) {
+    public void setWantToVisitShip(Boolean wantToVisitShip) {
         this.wantToVisitShip = wantToVisitShip;
     }
 

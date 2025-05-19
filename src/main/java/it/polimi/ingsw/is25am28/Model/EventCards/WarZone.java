@@ -5,10 +5,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
-import it.polimi.ingsw.is25am28.Model.Components.Cabin;
-import it.polimi.ingsw.is25am28.Model.Components.Cannon;
-import it.polimi.ingsw.is25am28.Model.Components.Component;
-import it.polimi.ingsw.is25am28.Model.Components.Shield;
+import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities.PlasmaShot;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.InsufficientEnergyException;
@@ -491,6 +488,8 @@ public class WarZone extends EventCard {
                 .map(item -> item.getItem().orElse(null))
                 .toList();
 
+        List<CoordinatePair> stolenBatteries = warZoneJSON.getBatteriesToBeStolen();
+
         // This covers also the case in which there are not enough resources on board
         if (resourcesToDrop.size() != mostValuableItems.size()) {
             throw new IllegalArgumentException("The dropped items are not enough");
@@ -498,6 +497,9 @@ public class WarZone extends EventCard {
         } else if (this.countOccurrencies(mostValuableItems).equals(colorsToDrop)) {
             this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
             throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
+        } else if ((stolenBatteries.size() != this.requiredItems - resourcesToDrop.size()) && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {
+            // This exception is triggered only if a wrong number of batteries is sent, the case in which the player cannot select the required number of batteries is checked
+            throw new IllegalArgumentException("The given up batteries are not enough!");
         }
 
         // This check cannot be made, if the list sent by the player is smaller than requiredItems, the player's batteries must be taken instead
@@ -510,6 +512,10 @@ public class WarZone extends EventCard {
             this.droppedResources.put(player.getNickname(), itemsToBeRemoved);
         }
 
+        if (!stolenBatteries.isEmpty()) {
+            this.removedBatteries.put(player.getNickname(), stolenBatteries);
+        }
+
         // Remove the resources from the player to the bank
         for ( ComponentHelper<ItemColor> resourceDrop : itemsToBeRemoved ) {
             resourceDrop.getItem().ifPresent( i ->
@@ -520,19 +526,32 @@ public class WarZone extends EventCard {
                             resourceDrop.getJ()));
         }
 
-        // TODO: Modify this part (@Filippo)
-//        if (player.getShip().getAvailableEnergy() >= (requiredItems - itemsToBeRemoved.size())) {
-//            if (requiredItems - itemsToBeRemoved.size() > 0) {
-//                this.removedBatteries.put(player.getNickname(), requiredItems - itemsToBeRemoved.size());
-//            }
-//            player.getShip().consumeEnergy(requiredItems - itemsToBeRemoved.size());
-//        } else {
-//            if (player.getShip().getAvailableEnergy() > 0) {
-//                this.removedBatteries.put(player.getNickname(), player.getShip().getAvailableEnergy());
-//            }
-//            player.getShip().consumeEnergy(player.getShip().getAvailableEnergy());
-//        }
+        List<CoordinatePair> consumedBatteries = new ArrayList<>();
+        int batteriesToTake = this.requiredItems - resourcesToDrop.size();
 
+        if (batteriesToTake > 0) {
+            // Removing 1 unit of charge from each battery selected by the player
+            for (CoordinatePair coords : warZoneJSON.getBatteriesToBeStolen()) {
+                Component component = player.getShip().getComponent(
+                        coords.getI(),
+                        coords.getJ()
+                );
+
+                switch (component) {
+                    case Battery battery -> {
+                        consumedBatteries.add(coords);
+                        batteriesToTake--;
+                    }
+                    case null, default -> {}
+                }
+            }
+
+            // Consuming each battery by 1 unit of charge
+            player.getShip().consumeEnergy(consumedBatteries);
+
+            // Logging the consumed batteries for the current player
+            this.removedBatteries.put(player.getNickname(), consumedBatteries);
+        }
         return this;
     }
 
@@ -745,7 +764,7 @@ public class WarZone extends EventCard {
 
                 this.prevPlayer = player.getNickname();
                 this.removedComponents.put(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
-                this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
+                this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
                 this.lostPieces.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getLostPieces());
             }
             catch (CoreDeletionAttemptException e) {

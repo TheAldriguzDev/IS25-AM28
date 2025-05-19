@@ -39,6 +39,7 @@ public class CardRoundScreen extends Screen {
     private WidgetTUI currEventCardWidget;
     private WidgetTUI shipGridWidget;
     private WidgetTUI shipStatsWidget;
+    private WidgetTUI statsWidget;
     private WidgetTUI playerNameWidget;
     private WidgetTUI playerTurnWidget;
     private WidgetTUI resourceBankWidget;
@@ -77,7 +78,31 @@ public class CardRoundScreen extends Screen {
     private void generatePlayerActionsRecapWidget() {
         this.playerActionsRecapWidget = new WidgetTUI();
 
-        // (1) - Crew to remove
+        // (1) - Visit the POI?
+        try {
+            Boolean wantsToVisit = this.currEventCard.getWantsToVisit();
+
+            if (wantsToVisit != null) {
+                this.playerActionsRecapWidget
+                        .appendString("Visit the POI?: " + (wantsToVisit ? "Yes" : "No"));
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (2) - Take reward?
+        try {
+            Boolean takeReward = this.currEventCard.getTakeReward();
+
+            if (takeReward != null) {
+                this.playerActionsRecapWidget
+                        .appendString("Take reward?: " + (takeReward ? "Yes" : "No"));
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (3) - Crew to remove
         try {
             List<ComponentHelper<LifeformType>> crewToRemove = this.currEventCard.getCrewToRemove();
 
@@ -98,7 +123,7 @@ public class CardRoundScreen extends Screen {
             // Nothing is added
         }
 
-        // (2) - Items to remove
+        // (4) - Items to remove
         try {
             List<ComponentHelper<ItemColor>> itemsToRemove = this.currEventCard.getItemsToBeRemoved();
 
@@ -118,7 +143,7 @@ public class CardRoundScreen extends Screen {
             // Nothing is added
         }
 
-        // (3) - Items to take
+        // (5) - Items to take
         try {
             List<ComponentHelper<ItemColor>> itemsToTake = this.currEventCard.getItemsToBeTaken();
 
@@ -138,37 +163,13 @@ public class CardRoundScreen extends Screen {
             // Nothing is added
         }
 
-        // (4) - Take reward?
-        try {
-            Boolean takeReward = this.currEventCard.getTakeReward();
-
-            if (takeReward != null) {
-                this.playerActionsRecapWidget
-                        .appendString("Take reward?: " + (takeReward ? "Yes" : "No"));
-            }
-        } catch (UnsupportedOperationException e) {
-            // Nothing is added
-        }
-
-        // (5) - Chosen planet index
+        // (6) - Chosen planet index
         try {
             Integer chosenPlanetIndex = this.currEventCard.getChosenPlanetIndex();
 
             if (chosenPlanetIndex != null) {
                 this.playerActionsRecapWidget
                         .appendString("Chosen planet index: " + chosenPlanetIndex);
-            }
-        } catch (UnsupportedOperationException e) {
-            // Nothing is added
-        }
-
-        // (6) - Visit the POI?
-        try {
-            Boolean wantsToVisit = this.currEventCard.getWantsToVisit();
-
-            if (wantsToVisit != null) {
-                this.playerActionsRecapWidget
-                        .appendString("Visit the POI?: " + (wantsToVisit ? "Yes" : "No"));
             }
         } catch (UnsupportedOperationException e) {
             // Nothing is added
@@ -228,10 +229,13 @@ public class CardRoundScreen extends Screen {
         // (10) - Batteries to be stolen
         try {
             List<CoordinatePair> batteriesToBeStolen = this.currEventCard.getBatteriesToBeStolen();
+            if (batteriesToBeStolen != null && !batteriesToBeStolen.isEmpty()) {
+                this.playerActionsRecapWidget.appendString("Batteries to give up:");
 
-            for (CoordinatePair batteryToBeStolen : batteriesToBeStolen) {
-                this.playerActionsRecapWidget
-                        .appendString(TAB + TAB + "Battery @ (row=" + (batteryToBeStolen.getI() + 1) + ", col=" + (batteryToBeStolen.getJ() + 1) + ")");
+                for (CoordinatePair batteryToBeStolen : batteriesToBeStolen) {
+                    this.playerActionsRecapWidget
+                            .appendString(TAB + "Battery @ (row=" + (batteryToBeStolen.getI() + 1) + ", col=" + (batteryToBeStolen.getJ() + 1) + ")");
+                }
             }
         }
         catch (UnsupportedOperationException e) {
@@ -403,11 +407,18 @@ public class CardRoundScreen extends Screen {
                 "11",
                 () -> {
                     CoordinatePair batteryCoordinates = this.getBatteryToConsume();
+                    ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+
+                    if (ship == null) {
+                        System.out.println(PrintUtils.addColor("[ERROR] [getShieldToActivate()] ClientShip is null", ANSIColors.RED));
+                        return;
+                    }
 
                     if (batteryCoordinates != null) {
                         List<CoordinatePair> batteriesToBeStolen = this.currEventCard.getBatteriesToBeStolen();
                         batteriesToBeStolen.add(batteryCoordinates);
                         this.currEventCard.setBatteriesToBeStolen(batteriesToBeStolen);
+                        ship.consumeEnergy(List.of(batteryCoordinates));
                     }
 
                     // Go back to the card round available commands
@@ -976,7 +987,29 @@ public class CardRoundScreen extends Screen {
      * the resources of a card that poses this question, FALSE otherwise.
      */
     public void getTakeReward() {
-        this.currEventCard.setTakeReward(this.getBooleanAnswerToQuestion("Do you want to take the reward?"));
+        boolean answer = this.getBooleanAnswerToQuestion("Do you want to take the reward?");
+
+        this.currEventCard.setTakeReward(answer);
+
+        if (answer) {
+            CommandWidgetTUI command;
+
+            // Disables the "setTakeReward" command
+            command = this.indexedCardInputMethods.get("setTakeReward").getValue();
+            this.indexedCardInputMethods.replace("setTakeReward", new Pair<>(false, command));
+
+            if (this.currEventCard.getClass().equals(ClientSmugglers.class)) {
+                // Enables the "setItemsToBeTaken" command
+                command = this.indexedCardInputMethods.get("setItemsToBeTaken").getValue();
+                this.indexedCardInputMethods.replace("setItemsToBeTaken", new Pair<>(true, command));
+
+                // Enables the "setItemsToBeRemoved" command
+                command = this.indexedCardInputMethods.get("setItemsToBeRemoved").getValue();
+                this.indexedCardInputMethods.replace("setItemsToBeRemoved", new Pair<>(true, command));
+            }
+            // Generates the updated command widget
+            this.generateCardRoundCommandsWidget();
+        }
     }
 
     /**
@@ -1310,6 +1343,19 @@ public class CardRoundScreen extends Screen {
         this.currEventCard.setDoubleCannonsToActivate(coordinatesList);
 
         ship.consumeEnergy(List.of(batteryToConsume));
+
+        try {
+            if (ship.getFirePower(coordinatesList.stream().map(Pair::getKey).toList()) > this.currEventCard.getFirepower()) {
+                // Enables the "setTakeReward" command only if a sufficient number of double cannons has been activated
+                command = this.indexedCardInputMethods.get("setTakeReward").getValue();
+                this.indexedCardInputMethods.replace("setTakeReward", new Pair<>(true, command));
+
+                // Generates the updated command widget
+                this.generateCardRoundCommandsWidget();
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing to do if the card does not support the operation
+        }
     }
 
     /**
@@ -1572,10 +1618,90 @@ public class CardRoundScreen extends Screen {
                     // Ensuring all components are present
                     ship.generateComponentSubLists();
 
-                    this.shipStatsWidget = ship.getShipStatsWidget();
+                    //this.shipStatsWidget = ship.getShipStatsWidget();
                     this.shipGridWidget = ship.getShipGridWidget();
                 }
         );
+    }
+
+    /**
+     * Generates the stats widget (both ship and player)
+     */
+    private void generateStatsWidget() {
+        WidgetTUI statsWidget = new WidgetTUI();
+        List<String> statsScreen = new ArrayList<String>();
+
+        ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+        if (ship == null) {
+            System.out.println(PrintUtils.addColor("[ERROR] [generateShipStatsWidget] ClientShip is null", ANSIColors.RED));
+            return;
+        }
+
+        List<Item> storedItems = ship.getAllItems();
+        long totalRedItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.RED)).count();
+        long totalYellowItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.YELLOW)).count();
+        long totalGreenItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.GREEN)).count();
+        long totalBlueItems = storedItems.stream().filter(i -> i.getColor().equals(ItemColor.BLUE)).count();
+
+        String redItemsString = totalRedItems + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.RED) + SPACE;
+        String yellowItemsString = totalYellowItems + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.YELLOW) + SPACE;
+        String greenItemsString = totalGreenItems + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.GREEN) + SPACE;
+        String blueItemsString = totalBlueItems + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ANSIColors.BLUE) + SPACE;
+
+        List<CoordinatePair> activatedDoubleCannons = null;
+        List<CoordinatePair> activatedDoubleEngines = null;
+
+        try {
+            // Gets the doubleCannons/doubleEngines activated in the card's ActionJSON
+            activatedDoubleCannons = this.currEventCard.getDoubleCannonsToActivate().stream().map(Pair::getKey).toList();
+        } catch (UnsupportedOperationException e) {
+            // If the card does not support the operation the lists is set to null, so that the getFirepower() computes the baselinePower (since it cannot be activated in the card)
+        }
+
+        try {
+            // Gets the doubleCannons/doubleEngines activated in the card's ActionJSON
+            activatedDoubleEngines = this.currEventCard.getDoubleEnginesToActivate().stream().map(Pair::getKey).toList();
+        } catch (UnsupportedOperationException e) {
+            // If the card does not support the operation the lists is set to null, so that the getEnginePower computes the baselinePower (since it cannot be activated in the card)
+        }
+
+        float currentFirePower = ship.getFirePower(activatedDoubleCannons);
+        int doubleEnginePower = ship.getEnginePower(activatedDoubleEngines);
+
+        List<CoordinatePair> allDoubleCannons = ship.getDoubleCannons().stream()
+                .map(cannon -> new CoordinatePair(cannon.getI(), cannon.getJ()))
+                .toList();
+        float maxFirePower = ship.getFirePower(allDoubleCannons);
+
+        List<CoordinatePair> allDoubleEngines = ship.getDoubleEngines().stream()
+                .map(engine -> new CoordinatePair(engine.getI(), engine.getJ()))
+                .toList();
+        int maxEnginePower = ship.getEnginePower(allDoubleEngines);
+
+        ClientPlayer player = this.model.getAllClientPlayers().get(this.model.getNickname());
+
+        // Getting all the ship's stats
+        statsScreen.add("Total credits: " + player.getCredits());
+        statsScreen.add("Total Crew: " + ship.getAllLifeforms().size());
+        statsScreen.add("FirePower: " + currentFirePower + " (Max= " + maxFirePower + ")");
+        statsScreen.add("EnginePower: " + doubleEnginePower + " (Max= " + maxEnginePower + ")");
+        statsScreen.add("Total Batteries: " + ship.getAvailableEnergy());
+        statsScreen.add("Total Items: " + redItemsString + yellowItemsString + greenItemsString + blueItemsString);
+        statsScreen.add("Lost Components: " + player.getLostComponents());
+
+        WidgetTUI tmp = statsWidget.setScreen(statsScreen);
+        statsWidget = new WidgetTUI();
+
+        statsWidget
+                .setWidth(tmp.getWidth())
+                .appendString("[STATS]")
+//                .addPadding(0, 0, 1, 0)
+                .centerWidgetScreen()
+                .appendScreen(tmp.getScreen())
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder();
+
+        this.statsWidget = statsWidget;
     }
 
     /**
@@ -1797,6 +1923,7 @@ public class CardRoundScreen extends Screen {
         // Updating all widgets before using them
         this.generateCurrEventCardWidget();
         this.generateShipWidgets();
+        this.generateStatsWidget();
         this.generateResourceBankWidget();
         this.boardWidget = this.model.getClientBoard().generateWidget();
 
@@ -1829,8 +1956,8 @@ public class CardRoundScreen extends Screen {
         WidgetTUI.composeTwoWidgetsHorizontally(
                 WidgetTUI.fillScreenWithSpaces(
                         WidgetTUI.composeTwoWidgetsVertically(
-                                this.boardWidget.addPadding(0, 0, 1, 0),
-                                this.shipStatsWidget
+                                this.boardWidget.addPadding(0, 0, 0, 0),
+                                this.statsWidget
                         )
                         .centerWidgetScreen()
                         .addPadding(0, 1, 0, 0)
@@ -1953,7 +2080,7 @@ public class CardRoundScreen extends Screen {
         ActionJSON response = this.currEventCard.useCard();
 
         // If the current card supports the action, it removes
-        // any take/remove operations that target the same storage
+        // any take/remove operations that target the same storage (only if taken and removed in 1 turn from one card)
         // and the same item color
         try {
             List<ComponentHelper<ItemColor>>[][] matrix = new List[ClientShip.grid_rows][ClientShip.grid_cols];
@@ -2047,15 +2174,27 @@ public class CardRoundScreen extends Screen {
                     }
                 }
 
-                if (this.indexedCardInputMethods.get("setItemsToBeRemoved").getKey() && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
-                    // Revert the changes to the dropped resources
-                    for(ComponentHelper<ItemColor> icch : this.currEventCard.getItemsToBeRemoved()) {
-                        ItemColor ic = icch.getItem().orElse(null);
-                        if (ic != null) {
-                            ClientStorage storage = (ClientStorage) ship.getComponent(icch.getI(), icch.getJ());
-                            storage.storeItem(new Item(ic));
+                try {
+
+                    if (this.indexedCardInputMethods.get("setItemsToBeRemoved").getKey() && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
+                        // Revert the changes to the dropped resources
+                        for (ComponentHelper<ItemColor> icch : this.currEventCard.getItemsToBeRemoved()) {
+                            ItemColor ic = icch.getItem().orElse(null);
+                            if (ic != null) {
+                                ClientStorage storage = (ClientStorage) ship.getComponent(icch.getI(), icch.getJ());
+                                storage.storeItem(new Item(ic));
+                            }
+                        }
+                        // Revert the changes to the batteries
+                        if (!this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
+                            for (CoordinatePair bch : this.currEventCard.getBatteriesToBeStolen()) {
+                                ClientBattery battery = (ClientBattery) ship.getComponent(bch.getI(), bch.getJ());
+                                battery.setAvailability(battery.getAvailability() + 1);
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
                 System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
@@ -2088,12 +2227,31 @@ public class CardRoundScreen extends Screen {
         // getting the current event card
         this.getCurrEventCard();
         this.generateShipWidgets();
+        this.generateStatsWidget();
         this.generatePlayerTurnWidget();
 
         // Updating the current event card
         this.currEventCard.updateCard(cardRound.getCardInfo());
 
         this.generateIndexedCardInputMethodsMap();
+
+        // TODO: figure a way to move this piece of code to a more adequate location
+        try {
+            ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+            if (ship == null) {
+                System.out.println(PrintUtils.addColor("[ERROR] [getDoubleCannonToActivate()] ClientShip is null", ANSIColors.RED));
+                return;
+            }
+            if(ship.getFirePower(null) > this.currEventCard.getFirepower()) {
+                CommandWidgetTUI command;
+
+                // Enables the "setTakeReward" command if the baseline firepower is enough
+                command = this.indexedCardInputMethods.get("setTakeReward").getValue();
+                this.indexedCardInputMethods.replace("setTakeReward", new Pair<>(true, command));
+            }
+        } catch (UnsupportedOperationException e) {
+            // Do nothing
+        }
 
         // Available commands will be shown only to the
         // player that the card expects to see
