@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Network.Messages.DeselectTile;
@@ -174,11 +175,16 @@ public class ShipConstructionController extends GUIController {
         timer.play();
     }
 
-    // TODO: Aggiungere a questo metodo un flow che permetta anche di inizializzare le navi dei player con i componenti che sono già presenti nelle loro navi (caso di riconnessione)
+
+    // TODO: AGGIUNGERE A QUESTO METODO, ALLA FINE UN FLOW PER OGNI PLAYER PER INSERIRE ALL'INTERNO DELLA NAVE I COMPONENTI CHE GIà
+    //  SONO PRESENTI NELLA LORO NAVE (RICONNESSIONE) IN QUESTO MODO LE NAVI SONO GIà AGGIORNATE (OPPURE PER QUANDO SI RITORNA IN QUESTO SCHERMO DA INSUFFICIENT PLAYERS)
+
     private void initShipPage() {
 
         String path = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
         URL resource = Objects.requireNonNull(getClass().getResource(path));
+
+        // TODO AGGIUNGERE ANCHE IL CARICAMENTO DELL'IMMAGINE CORRETTA DELLA BOARD, RELATIVA AL LIVELLO DEL GIOCO
 
         this.shipImageView.setImage(new Image(resource.toExternalForm()));
         this.shipImageView.setFitWidth(816.0);
@@ -589,5 +595,9 @@ public class ShipConstructionController extends GUIController {
             });
 
         });
+    }
+
+    public void enableTimer(TimerDTO timerDTO) {
+
     }
 }

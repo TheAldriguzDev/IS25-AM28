@@ -269,6 +269,13 @@ public class GUIHandler extends Application implements ClientUI {
         }
     }
 
+    public void enableTimer(TimerDTO data) {
+        if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
+            ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
+            controller.handlePlayerShipConstruction(data);
+        }
+    }
+
     @Override
     public void showShipFixing(FixShipDTO fixShip) throws Exception {
 
