@@ -154,7 +154,6 @@ public class ViewUpdater implements StateVisitor {
                 );
 
                 // TODO: think about this
-                // TODO: work on gui removedComponentUpdate
                 if (this.ui instanceof GUIHandler) {
                     ((GUIHandler) this.ui).updateShipRemovedComponent(state);
                 }
@@ -165,6 +164,7 @@ public class ViewUpdater implements StateVisitor {
 
                 this.ui.showShipFixing(this.model.getState().getFixShipDTO());
             }
+            //TODO: handle updates towards other ships
         }
     }
 
@@ -197,6 +197,13 @@ public class ViewUpdater implements StateVisitor {
                     );
                 }
             );
+
+            if (state.getPlayerNickname().equals(this.model.getNickname())) {
+                if (this.ui instanceof GUIHandler) {
+                    ((GUIHandler) this.ui).updateShipPlacedLifeForm(state);
+                }
+            }
+            //TODO: handle updates towards other ships
 
             if (state.isShipPopulated()) {
                 this.model.getState().addPlayerToPopulateList(state.getPlayerNickname());

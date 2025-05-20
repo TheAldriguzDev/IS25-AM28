@@ -141,17 +141,16 @@ public class FixShipController extends GUIController {
      * Removes the selected component
      */
     public void handleRemoveComponent(int row, int col) {
-        System.out.println("CLICK!");
-        // Write method
         GUIHandler.setCommandCTX(new CommandCTX(
                 "removeTile", //
                 () -> {
-                this.clientModel.getState().removeComponentFromShip(row, col);
+                    this.clientModel.getState().removeComponentFromShip(row, col);
 
                 },
                 () -> {}
         ));
 
+        // TODO: can be simplified
         try {
             if (this.clientModel.getDifficultyLevel() == 0) {
                 GUIHandler.getVirtualClient().sendMessage(

@@ -232,6 +232,18 @@
     -fx-font-size: 20px;
 }
 
+.populateSHip-VBox {
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+}
+
+.viewOtherShips-VBox {
+    -fx-border-color: #FFFFFF;
+    -fx-border-width: 2px;
+    -fx-padding: 10px;
+}
+
 /* Populate Ship's toggle buttons*/
 
 .toggle-button {

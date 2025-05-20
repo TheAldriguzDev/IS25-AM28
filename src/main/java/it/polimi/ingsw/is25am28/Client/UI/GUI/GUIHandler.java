@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.*;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
@@ -98,7 +99,6 @@ public class GUIHandler extends Application implements ClientUI {
 
         Optional<ButtonType> result = quitConfirmationAlert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK) {
-            System.out.println("here");
             GUIHandler.getInstance().getStage().close();
             System.exit(0);
         } else {
@@ -279,6 +279,13 @@ public class GUIHandler extends Application implements ClientUI {
         }
     }
 
+    public void updateShipPlacedLifeForm(PopulateShipComponentDTO data) {
+        if (this.currentScene != null && this.currentScene.equals(GuiScenes.POPULATE_SHIP_SCENE)) {
+            PopulateShipController controller = (PopulateShipController) this.controllers.get(GuiScenes.POPULATE_SHIP_SCENE);
+            controller.placeLifeform(data);
+        }
+    }
+
     @Override
     public void showShipFixing(FixShipDTO fixShip) throws Exception {
         Platform.runLater(() -> {
@@ -334,6 +341,10 @@ public class GUIHandler extends Application implements ClientUI {
 
                 Parent root = loader.load();
                 PopulateShipController controller = loader.getController();
+
+                // Store the root and the controller
+                controllers.put(GuiScenes.POPULATE_SHIP_SCENE, controller);
+                roots.put(GuiScenes.POPULATE_SHIP_SCENE, root);
 
                 controller.init(populateShip);
 

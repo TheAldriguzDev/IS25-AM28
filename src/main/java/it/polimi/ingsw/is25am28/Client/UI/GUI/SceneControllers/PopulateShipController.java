@@ -2,21 +2,29 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCabin;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientVital;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PopulateShipComponentDTO;
+import it.polimi.ingsw.is25am28.Model.Components.VitalType;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
+import it.polimi.ingsw.is25am28.Network.Messages.PopulateShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
-import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -24,11 +32,9 @@ import javafx.scene.text.TextFlow;
 
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-
-import static it.polimi.ingsw.is25am28.Model.Ship.AbstractShip.shipOffsets;
-import static it.polimi.ingsw.is25am28.Model.Ship.AbstractShip.shipProfiles;
 
 //TODO: for now use colors to indicate full cabins
 
@@ -38,13 +44,26 @@ public class PopulateShipController extends GUIController {
     @FXML private GridPane shipGrid;
     @FXML private TextFlow populateShipLabel;
 
+    @FXML private ToggleGroup lifeFormsToggles;
+    @FXML private ToggleButton purpleToggle;
+    @FXML private ToggleButton brownToggle;
+    @FXML private ToggleButton whiteToggle;
+
     private Pair<Integer, Integer> shipOffsets;
     private boolean isShipFull;
 
     // Map of the component's clickable regions
-    private Map<String, Region> componentsRegionMap;
+    private Map<String, Region> cabinRegions;
+
+    private Map<String, Region> purpleAlienCabinRegion;
+
+    private Map<String, Region> brownAlienCabinRegion;
+
+    private LifeformType currentSelectableLifeForm;
 
     public void init(PopulateShipDTO state) {
+
+        this.initLifeFormsToggles();
 
         this.clientModel = GUIHandler.getInstance().getClientModel();
 
@@ -53,8 +72,6 @@ public class PopulateShipController extends GUIController {
             System.out.println(PrintUtils.addColor("[ERROR] [FixShipController] ClientShip is null", ANSIColors.RED));
             return;
         }
-
-        this.componentsRegionMap = new HashMap<>();
 
         // Sets the populateShipLabel and the isShipFull flag
         this.setShipLabelText(state.getPlayersReady().contains(this.clientModel.getNickname()));
@@ -95,43 +112,153 @@ public class PopulateShipController extends GUIController {
                         int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
                         this.shipGrid.add(componentImgView, ofsCol, ofsRow);
 
-                        if(!isShipFull) {this.addCellEventListener(row, col);}
+//                        if(!isShipFull && component.getClass().equals(ClientCabin.class)) {}
                     }
                 }
             }
         }
 
+        ship.generateComponentSubLists();
+        List<ClientCabin> cabins = ship.getCabinList();
+        // Removing the core from the list, since it's automatically filled with astronauts
+        cabins.removeIf(ClientCabin::isCore);
 
+        // Create the 3 clickable regions maps
+        // After placing an alien disable the toggle
+        // If there are no suitable cabins for aliens, disable the toggle
+        if(!isShipFull && !cabins.isEmpty()) {
+            this.whiteToggle.setDisable(false);
+            this.cabinRegions = new HashMap<>();
+            this.purpleAlienCabinRegion = new HashMap<>();
+            this.brownAlienCabinRegion = new HashMap<>();
 
+            for(ClientCabin cabin : cabins) {
 
-    }
+                // Create a clickable region for every cabin, with clicks disabled, then put it in the general cabinRegions map
+                Region cell = new Region(); // Place holder node
+                cell.setPrefSize(100, 100);
+                cell.setStyle("-fx-background-color: transparent;");
+                cell.setCursor(Cursor.DEFAULT);
+                cell.setPickOnBounds(false);
+                this.cabinRegions.put(keyFromCoords(cabin.getI(), cabin.getJ()), cell);
 
-    /**
-     * Method used to add the event listener to the clickable cells of the player ship
-     * */
-    public void addCellEventListener(int row, int col) {
+                for(ClientComponent component : ship.getNearestReachableComponents(cabin)) {
+                    if (component != null && component.getClass().equals(ClientVital.class)) {
+                        ClientVital vital = (ClientVital) component;
+                        if (vital.getVitalType().equals(VitalType.PURPLE_VITAL)) {
+                            this.purpleToggle.setDisable(false);
+                            // Add the cabin to the purpleAlienRegion
+                            this.purpleAlienCabinRegion.put(keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                        } else { // Purple vital
+                            this.brownToggle.setDisable(false);
+                            // Add the cabin to the brownAlienRegion
+                            this.brownAlienCabinRegion.put(keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                        }
+                    }
+                }
 
-        int ofsRow = row - shipOffsets.getKey();
-        int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
-
-        if (ofsRow == 2 && ofsCol == 3) {
-
-            // TODO: Add visual representation of full core
-            return;
+                // Places the regions on the shipGrid
+                int ofsRow = cabin.getI() - shipOffsets.getKey();
+                int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? cabin.getJ() - shipOffsets.getValue() + 1 : cabin.getJ() - shipOffsets.getValue();
+                this.shipGrid.add(cell, ofsCol, ofsRow);
+                cell.setOnMouseClicked(_ -> handlePlacedLifeform(ofsRow, ofsCol));
+//                cell.setOnMouseClicked(_ -> handleRemoveComponent(ofsRow, ofsCol)); // TODO: HandlePlacedLifeForm
+            }
         }
-
-        Region cell = new Region(); // Place holder node
-        cell.setPrefSize(100, 100);
-        cell.setStyle("-fx-background-color: transparent;");
-        cell.setCursor(Cursor.HAND);
-        cell.setPickOnBounds(true);
-
-        // Adds the component to the regionss map, so the reference can be easily retrieve in case of removal of the component
-        this.componentsRegionMap.put(this.keyFromCoords(row, col), cell);
-
-        this.shipGrid.add(cell, ofsCol, ofsRow);
-//        cell.setOnMouseClicked(_ -> handleRemoveComponent(ofsRow, ofsCol));
     }
+
+    public void handlePlacedLifeform(int row, int col) {
+
+        if (this.currentSelectableLifeForm == null) { return; }
+
+        GUIHandler.setCommandCTX(new CommandCTX(
+                "addLifeform",
+                () -> {
+                    this.clientModel.getState().addLifeFormToShip(row, col, this.currentSelectableLifeForm);
+                },
+                () -> {}
+        ));
+
+        // TODO: can be simplified
+        try {
+            if (this.clientModel.getDifficultyLevel() == 0) {
+                ComponentHelper<LifeformType> lifeFormToAdd = new ComponentHelper<>(row + shipOffsets.getKey(), col + shipOffsets.getValue() -1);
+                lifeFormToAdd.addItem(this.currentSelectableLifeForm);
+                GUIHandler.getVirtualClient().sendMessage(
+                        new PopulateShip(
+                                this.clientModel.getNickname(),
+                                lifeFormToAdd
+                        )
+                );
+            } else {
+                ComponentHelper<LifeformType> lifeFormToAdd = new ComponentHelper<>(row + shipOffsets.getKey(), col + shipOffsets.getValue());
+                lifeFormToAdd.addItem(this.currentSelectableLifeForm);
+                GUIHandler.getVirtualClient().sendMessage(
+                        new PopulateShip(
+                                this.clientModel.getNickname(),
+                                lifeFormToAdd
+                        )
+                );
+            }
+        } catch (Exception e) {
+            this.showError(e.getMessage());
+        }
+    }
+
+    public void placeLifeform(PopulateShipComponentDTO data) {
+//        System.out.println("INFO: {isShipFull: " + data.isShipPopulated() + "}, {Coordinates: (" + data.getComponent().getI() + "," + data.getComponent().getJ() + ")}, {LF: " + data.getComponent().getItem().orElse(null) + "}");
+
+        Platform.runLater(() -> {
+
+            ComponentHelper<LifeformType> lfch = data.getComponent();
+
+            int row = lfch.getI();
+            int col = lfch.getJ();
+
+            // If an alien is added, disable the corresponding button since there can be only one alien per type onboard
+            LifeformType lf = lfch.getItem().orElse(null);
+            if (lf != null) {
+                if (lf.equals(LifeformType.PURPLE_ALIEN)) {
+                    this.purpleToggle.setDisable(true);
+                    this.currentSelectableLifeForm = null;
+                    this.disableRegion();
+                } else if (lf.equals(LifeformType.BROWN_ALIEN)) {
+                    this.brownToggle.setDisable(true);
+                    this.currentSelectableLifeForm = null;
+                    this.disableRegion();
+                }
+            }
+
+            Region region = this.cabinRegions.get(keyFromCoords(row, col));
+
+            // Remove the clickable region from the 3 maps, and set the color to red (to signal that it is now occupied) // TODO: little icons would be far better, or simply do not highlight anymore
+            this.cabinRegions.remove(keyFromCoords(row, col));;
+            // If it's not present in these maps, nothing happens
+            this.purpleAlienCabinRegion.remove(keyFromCoords(row, col));
+            this.brownAlienCabinRegion.remove(keyFromCoords(row, col));
+
+            // Deactivating the region and setting its background color
+            region.setDisable(true);
+            region.setPickOnBounds(false);
+            region.setCursor(Cursor.DEFAULT);
+            region.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+
+            // Setting the shipLabelText
+            this.setShipLabelText(data.isShipPopulated());
+            if (this.isShipFull) {
+                if (!this.cabinRegions.isEmpty()) {
+                    for (Map.Entry<String, Region> entry : this.cabinRegions.entrySet()) {
+                        // Remove all the clickable regions
+                        this.shipGrid.getChildren().remove(entry.getValue());
+                    }
+                    this.cabinRegions.clear();
+                    this.purpleAlienCabinRegion.clear();
+                    this.brownAlienCabinRegion.clear();
+                }
+            }
+        });
+    }
+
 
     private void addCoreImg() {
         String playerColor = this.clientModel.getAllClientPlayers().get(this.clientModel.getNickname()).getColor().getPlayerColorString();
@@ -175,6 +302,66 @@ public class PopulateShipController extends GUIController {
             text3.setFill(Color.WHITE);
             text3.setFont(Font.font(20));
             this.populateShipLabel.getChildren().addAll(text1, text2, text3);
+        }
+    }
+
+    private void initLifeFormsToggles() {
+
+        //Will be reactivated only if the ship is not full
+        this.purpleToggle.setDisable(true);
+        this.brownToggle.setDisable(true);
+        this.whiteToggle.setDisable(true);
+
+        this.lifeFormsToggles.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+
+            if (newToggle == null) {
+                // If no toggle is selected, disable all the regions
+                this.currentSelectableLifeForm = null;
+                this.disableRegion();
+                return;
+            }
+
+            ToggleButton selected = (ToggleButton) newToggle;
+
+            switch (selected.getId()) {
+                case "purpleToggle" -> {
+                    this.currentSelectableLifeForm = LifeformType.PURPLE_ALIEN;
+                    enableRegion(this.purpleAlienCabinRegion);
+                }
+                    case "brownToggle"-> {
+                    this.currentSelectableLifeForm = LifeformType.BROWN_ALIEN;
+                    enableRegion(this.brownAlienCabinRegion);
+                    }
+                case "whiteToggle" -> {
+                    this.currentSelectableLifeForm = LifeformType.ASTRONAUT;
+                    enableRegion(this.cabinRegions);
+                }
+            }
+        });
+    }
+
+    /**
+     * @param regionMap to activate
+     */
+    private void enableRegion(Map<String, Region> regionMap) {
+        // Deactivates the old regions
+        this.disableRegion();
+        // Activates the new regions
+        for(Region region : regionMap.values()) {
+            region.setPickOnBounds(true);
+            region.setCursor(Cursor.HAND);
+            region.setStyle("-fx-background-color: rgba(160, 212, 104, 0.5);");
+        }
+    }
+
+    /**
+     * Deactivates all the regions
+     */
+    private void disableRegion() {
+        for(Region region : this.cabinRegions.values()) {
+            region.setPickOnBounds(false);
+            region.setCursor(Cursor.DEFAULT);
+            region.setStyle("-fx-background-color: transparent;");
         }
     }
 }
