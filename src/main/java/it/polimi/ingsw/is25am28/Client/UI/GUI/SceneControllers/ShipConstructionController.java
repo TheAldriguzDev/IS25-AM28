@@ -47,7 +47,7 @@ public class ShipConstructionController extends GUIController {
     private Pair<Integer, Integer> shipOffsets;
 
     // Handle the players ship
-    private final Map<String, GridPane> playersShipGridPane = new HashMap<>();
+//    private final Map<String, GridPane> playersShipGridPane = new HashMap<>();
 
     // Attributes to handle the timer
     @FXML private Label timerLabel;

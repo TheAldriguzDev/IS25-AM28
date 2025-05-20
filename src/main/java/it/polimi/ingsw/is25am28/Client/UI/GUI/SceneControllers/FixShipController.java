@@ -45,6 +45,12 @@ public class FixShipController extends GUIController {
 
     public void init(FixShipDTO state) {
 
+//        System.out.println("Prima (init)");
+//        for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
+//            System.out.println("Name: " + entry.getKey() + ", gridReference: " + entry.getValue());
+//        }
+//        System.out.println("Dopo (init)");
+
         this.clientModel = GUIHandler.getInstance().getClientModel();
 
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
@@ -105,6 +111,10 @@ public class FixShipController extends GUIController {
                 }
             }
         }
+
+        // Sets the main ship to the calculated one
+//        this.playersShipGridPane.replace(this.clientModel.getNickname(), this.shipGrid);
+
 
         // The player cannot remove the core
 //        this.componentsImagesMap.remove(keyFromCoords(7, 7)); // TODO: check component coordinates

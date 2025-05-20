@@ -43,7 +43,7 @@ public class GUIHandler extends Application implements ClientUI {
     // Stores each page root to avoid page reloads when switching scenes
     private final Map<GuiScenes, Parent> roots = new HashMap<>();
     // Stores the controller instance for each page, when created
-    private final Map<GuiScenes, Object> controllers = new HashMap<>();
+    private final Map<GuiScenes, GUIController> controllers = new HashMap<>();
     // Stores the current page scene
     private GuiScenes currentScene;
 
@@ -308,6 +308,9 @@ public class GUIHandler extends Application implements ClientUI {
                 controllers.put(GuiScenes.FIX_SHIP_SCENE, controller);
                 roots.put(GuiScenes.FIX_SHIP_SCENE, root);
 
+//                GUIController prevController = this.controllers.get(this.currentScene);
+//                controller.setPlayersShipGridPane(prevController.getPlayersShipGridPane());
+
                 controller.init(fixShip);
 
                 Scene newScene = new Scene(root);
@@ -346,6 +349,14 @@ public class GUIHandler extends Application implements ClientUI {
                 controllers.put(GuiScenes.POPULATE_SHIP_SCENE, controller);
                 roots.put(GuiScenes.POPULATE_SHIP_SCENE, root);
 
+                GUIController prevController;
+                if (this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
+                    prevController = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
+                } else {
+                    prevController = (FixShipController) this.controllers.get(GuiScenes.FIX_SHIP_SCENE);
+                }
+                controller.setPlayersShipGridPane(prevController.getPlayersShipGridPane());
+
                 controller.init(populateShip);
 
                 Scene newScene = new Scene(root);
@@ -366,14 +377,14 @@ public class GUIHandler extends Application implements ClientUI {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
-                            getClass().getResource(GuiScenes.POPULATE_SHIP_SCENE.getFxmlFile())
+                            getClass().getResource(GuiScenes.CARD_ROUND_SCENE.getFxmlFile())
                     )
             );
 
             try {
 
                 Parent root = loader.load();
-                FixShipController controller = loader.getController();
+                CardRoundController controller = loader.getController();
 
                 //...
 
@@ -502,7 +513,7 @@ public class GUIHandler extends Application implements ClientUI {
     }
 
     public void saveRootAndController(GuiScenes scene, Parent root, Object controller) {
-        this.controllers.put(scene, controller);
+        this.controllers.put(scene, (GUIController) controller);
         this.roots.put(scene, root);
     }
 

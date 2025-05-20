@@ -9,13 +9,18 @@ import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public abstract class GUIController {
     protected ClientModel clientModel;
+    protected Map<String, GridPane> playersShipGridPane = new HashMap<>();
 
     @FXML
     protected StackPane rootPane;
@@ -71,5 +76,19 @@ public abstract class GUIController {
             case GREEN -> "#66ff66";
             case YELLOW -> "#ffeb3b";
         };
+    }
+
+    /**
+     * @return The map containing all the shipGrids
+     */
+    public Map<String, GridPane> getPlayersShipGridPane() {
+        return this.playersShipGridPane;
+    }
+
+    /**
+     * Sets the map containing all the shipGrids
+     */
+    public void setPlayersShipGridPane(Map<String, GridPane> playersShipGridPane) {
+        this.playersShipGridPane = playersShipGridPane;
     }
 }

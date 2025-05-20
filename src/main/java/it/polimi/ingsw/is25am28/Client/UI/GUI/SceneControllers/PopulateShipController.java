@@ -25,6 +25,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -43,6 +44,7 @@ public class PopulateShipController extends GUIController {
     @FXML private ImageView shipImageView;
     @FXML private GridPane shipGrid;
     @FXML private TextFlow populateShipLabel;
+    @FXML private StackPane imagePane;
 
     @FXML private ToggleGroup lifeFormsToggles;
     @FXML private ToggleButton purpleToggle;
@@ -95,6 +97,9 @@ public class PopulateShipController extends GUIController {
         // Add the core's image
         this.addCoreImg();
 
+        // Sets the initial shipGrid
+//        this.setShipGrid(this.clientModel.getNickname());
+
         for (int row = shipOffsets.getKey(); row < endRow; row++) {
             for (int col = shipOffsets.getValue(); col < endCol; col++) {
                 if (shipProfiles[row][col] == 1) {
@@ -111,8 +116,6 @@ public class PopulateShipController extends GUIController {
                         int ofsRow = row - shipOffsets.getKey();
                         int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
                         this.shipGrid.add(componentImgView, ofsCol, ofsRow);
-
-//                        if(!isShipFull && component.getClass().equals(ClientCabin.class)) {}
                     }
                 }
             }
@@ -164,6 +167,7 @@ public class PopulateShipController extends GUIController {
                 cell.setOnMouseClicked(_ -> handlePlacedLifeform(ofsRow, ofsCol));
 //                cell.setOnMouseClicked(_ -> handleRemoveComponent(ofsRow, ofsCol)); // TODO: HandlePlacedLifeForm
             }
+
         }
     }
 
@@ -219,10 +223,12 @@ public class PopulateShipController extends GUIController {
             LifeformType lf = lfch.getItem().orElse(null);
             if (lf != null) {
                 if (lf.equals(LifeformType.PURPLE_ALIEN)) {
+                    // Added purple alien
                     this.purpleToggle.setDisable(true);
                     this.currentSelectableLifeForm = null;
                     this.disableRegion();
                 } else if (lf.equals(LifeformType.BROWN_ALIEN)) {
+                    // Added brown alien
                     this.brownToggle.setDisable(true);
                     this.currentSelectableLifeForm = null;
                     this.disableRegion();
@@ -236,6 +242,14 @@ public class PopulateShipController extends GUIController {
             // If it's not present in these maps, nothing happens
             this.purpleAlienCabinRegion.remove(keyFromCoords(row, col));
             this.brownAlienCabinRegion.remove(keyFromCoords(row, col));
+
+            // If an astronaut occupied a valid alien cabin we check if there are valid alien cabins left
+            if (this.purpleAlienCabinRegion.isEmpty()) {
+                this.purpleToggle.setDisable(true);
+            }
+            if (this.brownAlienCabinRegion.isEmpty()) {
+                this.brownToggle.setDisable(true);
+            }
 
             // Deactivating the region and setting its background color
             region.setDisable(true);
@@ -363,5 +377,23 @@ public class PopulateShipController extends GUIController {
             region.setCursor(Cursor.DEFAULT);
             region.setStyle("-fx-background-color: transparent;");
         }
+    }
+
+    /**
+     * Sets the shipGrid to display the ship of the given player
+     */
+    private void setShipGrid(String playerNickname) {
+            if (this.shipGrid != null) {
+                this.imagePane.getChildren().remove(this.playersShipGridPane.get(playerNickname));
+            }
+
+        System.out.println("Prima (init)");
+            for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
+                System.out.println("Name: " + entry.getKey() + ", gridReference: " + entry.getValue());
+            }
+        System.out.println("Dopo (init)");
+
+
+            this.imagePane.getChildren().add(this.playersShipGridPane.get(playerNickname));
     }
 }
