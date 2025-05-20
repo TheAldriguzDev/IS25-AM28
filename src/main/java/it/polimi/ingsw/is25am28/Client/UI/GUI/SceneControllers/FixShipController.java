@@ -1,18 +1,23 @@
 package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.FixedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Network.Messages.FixShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -26,6 +31,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
+import static it.polimi.ingsw.is25am28.Model.Ship.AbstractShip.shipProfiles;
+
 public class FixShipController extends GUIController {
 
     @FXML private ImageView shipImageView;
@@ -33,118 +40,78 @@ public class FixShipController extends GUIController {
     @FXML private TextFlow fixShipLabel;
     @FXML private StackPane imagePane;
     @FXML private VBox fixShipVBox;
+    @FXML private GridPane viewOtherShipsGrid;
 
-    private Pair<Integer, Integer> shipOffsets;
     private boolean isShipValid;
 
-    // Map of the components' images
-    private Map<String, ImageView> componentsImagesMap;
-
-    // Map of the component's clickable regions
+    // Map of the component's clickable regions, only relevant for the client
     private Map<String, Region> componentsRegionMap;
+
+    // Handle the players ship
+    private Map<String, GridPane> playersShipGridPane;
 
     public void init(FixShipDTO state) {
 
-//        System.out.println("Prima (init)");
-//        for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
-//            System.out.println("Name: " + entry.getKey() + ", gridReference: " + entry.getValue());
-//        }
-//        System.out.println("Dopo (init)");
+        this.componentsImagesMap = new HashMap<>();
+        this.componentsRegionMap = new HashMap<>();
+        this.playersShipGridPane = new HashMap<>();
 
         this.clientModel = GUIHandler.getInstance().getClientModel();
-
+        this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
         if (ship == null) {
             System.out.println(PrintUtils.addColor("[ERROR] [FixShipController] ClientShip is null", ANSIColors.RED));
             return;
         }
 
-        this.componentsImagesMap = new HashMap<>();
-        this.componentsRegionMap = new HashMap<>();
+        // Setting the buttons to view other ships
+        this.initViewOtherShipsGrid();
 
-        // Sets the fixShipLabel and the isShipValid flag
+        // Setting the correct background
+        this.setShipGridBackground(this.shipImageView);
+
+        for (ClientPlayer player : this.clientModel.getAllClientPlayers().values()) {
+            // Creating an empty ship grid
+            GridPane shipGrid = createEmptyShipGrid(player);
+            // Creating the ship's visuals
+            this.componentsImagesMap.put(player.getNickname(), this.createShipVisuals(player.getNickname(), shipGrid));
+            // Adding the shipGrid to the map
+            this.playersShipGridPane.put(player.getNickname(), shipGrid);
+        }
+
+        // Setting the current shipGrid to this client's ship
+        this.imagePane.getChildren().remove(this.shipGrid);
+        this.shipGrid = this.playersShipGridPane.get(this.clientModel.getNickname());
+        this.imagePane.getChildren().add(this.shipGrid);
+
+        // Setting both the shipLabelText and the isShipValid flag
         this.setShipLabelText(!state.getPlayerWithInvalidShip().contains(this.clientModel.getNickname()));
 
-        // Initializing the ship to display
-        String path = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
-        URL resource = Objects.requireNonNull(getClass().getResource(path));
+        // Gets the visited components from the componentsImagesMap, since there's the need to set a region for every ship's component
+        for (Map.Entry<String, ImageView> entry : this.componentsImagesMap.get(this.clientModel.getNickname()).entrySet()) {
+            Pair coords = this.coordsFromKey(entry.getKey());
+            int row = (int) coords.getKey();
+            int col = (int) coords.getValue();
 
-        this.shipImageView.setImage(new Image(resource.toExternalForm()));
-        this.shipImageView.setFitWidth(816.0);
-        this.shipImageView.setPreserveRatio(true);
-//        this.shipImageView.fitWidthProperty().bind(imagePane.widthProperty().subtract(40));
-//        this.imagePane.setMaxSize(1000, 1000);
+            int ofsRow = row - shipOffsets.getKey();
+            int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
 
-        Pair<Integer, Integer> shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
-        this.shipOffsets = shipOffsets;
-        Pair<Integer, Integer> shipDimensions = AbstractShip.shipDimensions.get(this.clientModel.getDifficultyLevel());
-        int[][] shipProfiles = AbstractShip.shipProfiles.get(this.clientModel.getDifficultyLevel());
+            // The player must not be able to remove the core
+            if (!(ofsRow == 2 && ofsCol == 3) && !isShipValid) {
 
-        int endRow = shipDimensions.getKey() + shipOffsets.getKey();
-        int endCol = shipDimensions.getValue() + shipOffsets.getValue();
+                Region cell = new Region();
+                cell.setPrefSize(100, 100);
+                cell.setStyle("-fx-background-color: transparent;");
+                cell.setCursor(Cursor.HAND);
+                cell.setPickOnBounds(true);
 
-        // Add the core's image
-        this.addCoreImg();
+                // Adds the component to the regions map, so the reference can be easily retrieve in case of removal of the component
+                this.componentsRegionMap.put(this.keyFromCoords(row, col), cell);
 
-        for (int row = shipOffsets.getKey(); row < endRow; row++) {
-            for (int col = shipOffsets.getValue(); col < endCol; col++) {
-                if (shipProfiles[row][col] == 1) {
-                    // The cellEventListener is added only if there is an actual component in the computed coordinates
-                    ClientComponent component = ship.getComponent(row, col);
-                    if(component != null) {
-
-                        // Adding the component's image in the shipGrid
-                        URL componentImagePath = Objects.requireNonNull(getClass().getResource(component.getPath()));
-                        Image img = new Image(componentImagePath.toExternalForm(), 105, 105, true, true);
-                        ImageView componentImgView = new ImageView(img);
-                        componentImgView.setImage(img);
-
-                        int ofsRow = row - shipOffsets.getKey();
-                        int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
-                        this.shipGrid.add(componentImgView, ofsCol, ofsRow);
-
-                        // Adds the component to the images map, so the reference can be easily retrieve in case of removal of the component
-                        this.componentsImagesMap.put(this.keyFromCoords(row, col), componentImgView);
-
-                        if(!isShipValid) {this.addCellEventListener(row, col);}
-                    }
-                }
+                this.shipGrid.add(cell, ofsCol, ofsRow);
+                cell.setOnMouseClicked(_ -> handleRemoveComponent(ofsRow, ofsCol));
             }
         }
-
-        // Sets the main ship to the calculated one
-//        this.playersShipGridPane.replace(this.clientModel.getNickname(), this.shipGrid);
-
-
-        // The player cannot remove the core
-//        this.componentsImagesMap.remove(keyFromCoords(7, 7)); // TODO: check component coordinates
-
-    }
-
-    /**
-     * Method used to add the event listener to the clickable cells of the player ship
-     * */
-    public void addCellEventListener(int row, int col) {
-
-        int ofsRow = row - shipOffsets.getKey();
-        int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
-
-        if (ofsRow == 2 && ofsCol == 3) {
-            // The player cannot remove the core
-            return;
-        }
-
-        Region cell = new Region(); // Place holder node
-        cell.setPrefSize(100, 100);
-        cell.setStyle("-fx-background-color: transparent;");
-        cell.setCursor(Cursor.HAND);
-        cell.setPickOnBounds(true);
-
-        // Adds the component to the regionss map, so the reference can be easily retrieve in case of removal of the component
-        this.componentsRegionMap.put(this.keyFromCoords(row, col), cell);
-
-        this.shipGrid.add(cell, ofsCol, ofsRow);
-        cell.setOnMouseClicked(_ -> handleRemoveComponent(ofsRow, ofsCol));
     }
 
     /**
@@ -186,46 +153,40 @@ public class FixShipController extends GUIController {
 
     // ===== METHOD USED BY THE VIEW UPDATER TO UPDATE THE VIEW IN REAL TIME ===== //
 
-    public void removeComponent(int row, int col, boolean isShipValid) {
+    public void removeComponent(FixedComponentDTO data) {
+
+        int row = data.getI();
+        int col = data.getJ();
+        boolean isShipValid = data.isShipFixed();
+        String targetPlayer = data.getPlayerNickname();
+
         Platform.runLater(() -> {
 
-            // Remove the clickable region
-            this.shipGrid.getChildren().remove(this.componentsRegionMap.get(keyFromCoords(row, col)));
-            this.componentsRegionMap.remove(keyFromCoords(row, col));
-
             // removing the component's image
-            this.shipGrid.getChildren().remove(this.componentsImagesMap.get(keyFromCoords(row, col)));
+            this.playersShipGridPane.get(targetPlayer).getChildren().remove(this.componentsImagesMap.get(targetPlayer).get(keyFromCoords(row, col)));
             this.componentsImagesMap.remove(keyFromCoords(row, col));
 
-            // Setting the shipLabelText
-            this.setShipLabelText(isShipValid);
+            // Update the label and regions only if the targetPlayer is the client himself
+            if (targetPlayer.equals(this.clientModel.getNickname())) {
+                // Remove the clickable region
+                this.playersShipGridPane.get(this.clientModel.getNickname()).getChildren().remove(this.componentsRegionMap.get(keyFromCoords(row, col)));
+                this.componentsRegionMap.remove(keyFromCoords(row, col));
 
-            // If the ship is valid all clickable regions must be deactivated/removed
-            if (this.isShipValid) {
-                if (!this.componentsRegionMap.isEmpty()) {
-                    for (Map.Entry<String, Region> entry : this.componentsRegionMap.entrySet()) {
-                        // Remove all the clickable regions
-                        this.shipGrid.getChildren().remove(entry.getValue());
+                // Setting the shipLabelText
+                this.setShipLabelText(isShipValid);
+
+                // If the ship is valid all clickable regions must be deactivated/removed
+                if (this.isShipValid) {
+                    if (!this.componentsRegionMap.isEmpty()) {
+                        for (Map.Entry<String, Region> entry : this.componentsRegionMap.entrySet()) {
+                            // Remove all the clickable regions
+                            this.shipGrid.getChildren().remove(entry.getValue());
+                        }
+                        this.componentsRegionMap.clear();
                     }
-                    this.componentsRegionMap.clear();
                 }
             }
         });
-    }
-
-    private void addCoreImg() {
-        String playerColor = this.clientModel.getAllClientPlayers().get(this.clientModel.getNickname()).getColor().getPlayerColorString();
-        URL resource = Objects.requireNonNull(getClass().getResource("/imgs/tiles/core_" + playerColor + ".jpg"));
-        Image img = new Image(resource.toExternalForm(), 105, 105, true, true);
-
-        ImageView imgView = new ImageView(img);
-        imgView.setImage(img);
-
-        this.shipGrid.add(imgView, 3, 2);
-    }
-
-    private String keyFromCoords(int row, int col) {
-        return row + "_" + col;
     }
 
     private void setShipLabelText(boolean isShipValid) {
@@ -256,5 +217,63 @@ public class FixShipController extends GUIController {
             text3.setFont(Font.font(20));
             this.fixShipLabel.getChildren().addAll(text1, text2, text3);
         }
+    }
+
+    /**
+     * Creates a 0*1 grid, subsequently adding a number of rows (each one containing a toggleButton) equal to the number of players - 1 in the current game
+     */
+    private void initViewOtherShipsGrid() {
+        ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
+        int i = 0;
+        for (String playerNickname : this.clientModel.getAllClientPlayers().keySet()) {
+            if (playerNickname.equals(this.clientModel.getNickname())) {
+                continue;
+            }
+            RowConstraints row = new RowConstraints();
+            row.setPercentHeight(100.0);
+            row.setVgrow(Priority.ALWAYS);
+            this.viewOtherShipsGrid.getRowConstraints().add(row);
+
+            ToggleButton toggleButton = new ToggleButton();
+            toggleButton.setToggleGroup(viewOtherShipsToggleGroup);
+            toggleButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+            toggleButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            toggleButton.setText(playerNickname);
+            toggleButton.getStyleClass().add("blue");
+            this.viewOtherShipsGrid.add(toggleButton, 0, i);
+            i++;
+        }
+            viewOtherShipsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+
+                // If no toggle is selected, enable all teh regions
+                if (newToggle == null) {
+                    // Enabling clickable areas
+                    for (Region cell: this.componentsRegionMap.values()) {
+                        cell.setDisable(false);
+                    }
+                    // Go back to view the client's own ship
+                    this.setShipGrid(this.clientModel.getNickname());
+                } else {
+                    ToggleButton selected = (ToggleButton) newToggle;
+
+                    // Disabling clickable areas
+                    for (Region cell: this.componentsRegionMap.values()) {
+                        cell.setDisable(true);
+                    }
+                    this.setShipGrid(selected.getText());
+                }
+            });
+    }
+
+    /**
+     * Sets the shipGrid to display the ship of the given player
+     */
+    private void setShipGrid(String playerNickname) {
+        if (this.shipGrid != null) {
+            this.imagePane.getChildren().remove(this.shipGrid);
+        }
+
+        this.shipGrid = this.playersShipGridPane.get(playerNickname);
+        this.imagePane.getChildren().add(this.shipGrid);
     }
 }

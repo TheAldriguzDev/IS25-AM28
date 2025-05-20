@@ -153,11 +153,6 @@ public class ViewUpdater implements StateVisitor {
                         state.getJ()
                 );
 
-                // TODO: think about this
-                if (this.ui instanceof GUIHandler) {
-                    ((GUIHandler) this.ui).updateShipRemovedComponent(state);
-                }
-
                 if (state.isShipFixed()) {
                     this.model.getState().removePlayerFromFixList(state.getPlayerNickname());
                 }
@@ -165,6 +160,10 @@ public class ViewUpdater implements StateVisitor {
                 this.ui.showShipFixing(this.model.getState().getFixShipDTO());
             }
             //TODO: handle updates towards other ships
+            // TODO: think about this
+            if (this.ui instanceof GUIHandler) {
+                ((GUIHandler) this.ui).updateShipRemovedComponent(state);
+            }
         }
     }
 

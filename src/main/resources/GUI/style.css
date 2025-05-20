@@ -257,6 +257,20 @@
     -fx-transition: all 0.2s ease-in-out;
 }
 
+/* Blue toggle*/
+.toggle-button.blue {
+    -fx-background-color: #4A90E2;
+    -fx-text-fill: white;
+}
+
+.toggle-button.blue:hover {
+    -fx-background-color: #5AA0F2;
+}
+
+.toggle-button.blue:pressed {
+    -fx-background-color: #357ABD;
+}
+
 /* Purple toggle */
 .toggle-button.purple {
     -fx-background-color: #8e44ad;

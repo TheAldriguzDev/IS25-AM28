@@ -63,6 +63,9 @@ public class PopulateShipController extends GUIController {
 
     private LifeformType currentSelectableLifeForm;
 
+    // Handle the players ship
+    private final Map<String, GridPane> playersShipGridPane = new HashMap<>();
+
     public void init(PopulateShipDTO state) {
 
         this.initLifeFormsToggles();
@@ -100,6 +103,7 @@ public class PopulateShipController extends GUIController {
         // Sets the initial shipGrid
 //        this.setShipGrid(this.clientModel.getNickname());
 
+        // TODO: need to account for component's rotation
         for (int row = shipOffsets.getKey(); row < endRow; row++) {
             for (int col = shipOffsets.getValue(); col < endCol; col++) {
                 if (shipProfiles[row][col] == 1) {
@@ -285,9 +289,9 @@ public class PopulateShipController extends GUIController {
         this.shipGrid.add(imgView, 3, 2);
     }
 
-    private String keyFromCoords(int row, int col) {
-        return row + "_" + col;
-    }
+//    private String keyFromCoords(int row, int col) {
+//        return row + "_" + col;
+//    }
 
     private void setShipLabelText(boolean isShipFull) {
         String validityLabel;
@@ -386,13 +390,6 @@ public class PopulateShipController extends GUIController {
             if (this.shipGrid != null) {
                 this.imagePane.getChildren().remove(this.playersShipGridPane.get(playerNickname));
             }
-
-        System.out.println("Prima (init)");
-            for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
-                System.out.println("Name: " + entry.getKey() + ", gridReference: " + entry.getValue());
-            }
-        System.out.println("Dopo (init)");
-
 
             this.imagePane.getChildren().add(this.playersShipGridPane.get(playerNickname));
     }

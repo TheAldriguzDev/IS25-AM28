@@ -278,7 +278,7 @@ public class GUIHandler extends Application implements ClientUI {
     public void updateShipRemovedComponent(FixedComponentDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.FIX_SHIP_SCENE)) {
             FixShipController controller = (FixShipController) this.controllers.get(GuiScenes.FIX_SHIP_SCENE);
-            controller.removeComponent(data.getI(), data.getJ(), data.isShipFixed());
+            controller.removeComponent(data);
         }
     }
 
@@ -309,9 +309,6 @@ public class GUIHandler extends Application implements ClientUI {
                 // Store the root and the controller
                 controllers.put(GuiScenes.FIX_SHIP_SCENE, controller);
                 roots.put(GuiScenes.FIX_SHIP_SCENE, root);
-
-//                GUIController prevController = this.controllers.get(this.currentScene);
-//                controller.setPlayersShipGridPane(prevController.getPlayersShipGridPane());
 
                 controller.init(fixShip);
 
@@ -349,14 +346,6 @@ public class GUIHandler extends Application implements ClientUI {
                 // Store the root and the controller
                 controllers.put(GuiScenes.POPULATE_SHIP_SCENE, controller);
                 roots.put(GuiScenes.POPULATE_SHIP_SCENE, root);
-
-                GUIController prevController;
-                if (this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
-                    prevController = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
-                } else {
-                    prevController = (FixShipController) this.controllers.get(GuiScenes.FIX_SHIP_SCENE);
-                }
-                controller.setPlayersShipGridPane(prevController.getPlayersShipGridPane());
 
                 controller.init(populateShip);
 

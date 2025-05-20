@@ -44,7 +44,7 @@ public class ShipConstructionController extends GUIController {
     private Pair<Integer, Integer> shipOffsets;
 
     // Handle the players ship
-//    private final Map<String, GridPane> playersShipGridPane = new HashMap<>();
+    private final Map<String, GridPane> playersShipGridPane = new HashMap<>();
 
     // Attributes to handle the timer
     @FXML private Label timerLabel;
@@ -753,46 +753,6 @@ public class ShipConstructionController extends GUIController {
             imgView.setOpacity(0.0);
         }
         return imgView;
-    }
-
-    /**
-     * Creates and returns an empty ship grid represented as a {@code GridPane}.
-     * The grid is configured with specific row and column constraints,
-     * including spacing between grid elements and center alignment.
-     * Each cell in the grid has predefined dimensions.
-     *
-     * @return A {@code GridPane} instance configured as an empty ship grid.
-     */
-    private GridPane createEmptyShipGrid(ClientPlayer player) {
-        GridPane grid = new GridPane();
-        grid.setHgap(2.5);
-        grid.setVgap(2.5);
-        grid.setAlignment(Pos.CENTER);
-        grid.setPrefSize(659, 459);
-
-        for (int i = 0; i < 5; i++) {
-            RowConstraints row = new RowConstraints();
-            row.setPrefHeight(105);
-            grid.getRowConstraints().add(row);
-        }
-
-        for (int i = 0; i < 7; i++) {
-            ColumnConstraints col = new ColumnConstraints();
-            col.setPrefWidth(105);
-            grid.getColumnConstraints().add(col);
-        }
-
-        // Get the player color to initialize the core cabin
-        String playerColor = player.getColor().getPlayerColorString();
-        URL resource = Objects.requireNonNull(getClass().getResource("/imgs/tiles/core_" + playerColor + ".jpg"));
-        Image img = new Image(resource.toExternalForm(), 105, 105, true, true);
-
-        ImageView imgView = new ImageView(img);
-        imgView.setImage(img);
-
-        grid.add(imgView, 3, 2);
-
-        return grid;
     }
 
     // ===== METHOD USED BY THE VIEW UPDATER TO UPDATE THE VIEW IN REAL TIME ===== //
