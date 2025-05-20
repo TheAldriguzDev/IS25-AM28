@@ -112,7 +112,8 @@ public class GUIHandler extends Application implements ClientUI {
 
         if (connectionType == 1) {
             this.virtualClient = new RMIClient("127.0.0.1", 7777, UUID.randomUUID(), this, model);
-        } else {
+        }
+        else {
             this.virtualClient = new TCPClient("127.0.0.1", 8888, this, model);
         }
 
@@ -134,7 +135,6 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showLobbies(AvailableGamesDTO availableGames, boolean isFirstAccess) throws Exception {
         Platform.runLater(() -> {
-
             // Check if the LOBBY_SCENE is already loaded
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.LOBBY_SCENE)) {
                 LobbyController controller = (LobbyController) this.controllers.get(GuiScenes.LOBBY_SCENE);
@@ -163,9 +163,11 @@ public class GUIHandler extends Application implements ClientUI {
                 Scene scene = new Scene(root);
                 this.stage.setScene(scene);
                 this.stage.show();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException(e);
-            } finally {
+            }
+            finally {
                 this.currentScene = GuiScenes.LOBBY_SCENE;
             }
         });
@@ -244,7 +246,8 @@ public class GUIHandler extends Application implements ClientUI {
         }
         catch (IOException e) {
             throw new RuntimeException(e);
-        } finally {
+        }
+        finally {
             this.currentScene = GuiScenes.SHIP_CONSTRUCTION_SCENE;
         }
     }
@@ -300,7 +303,6 @@ public class GUIHandler extends Application implements ClientUI {
             );
 
             try {
-
                 Parent root = loader.load();
                 FixShipController controller = loader.getController();
 
@@ -341,7 +343,6 @@ public class GUIHandler extends Application implements ClientUI {
             );
 
             try {
-
                 Parent root = loader.load();
                 PopulateShipController controller = loader.getController();
 
@@ -382,7 +383,6 @@ public class GUIHandler extends Application implements ClientUI {
             );
 
             try {
-
                 Parent root = loader.load();
                 CardRoundController controller = loader.getController();
 
@@ -485,7 +485,8 @@ public class GUIHandler extends Application implements ClientUI {
     public void showError(ErrorAnswer error) {
         if (ctx != null) {
             ctx.handleError(error.getError());
-        } else {
+        }
+        else {
             // Terminal output
             System.err.println(error.getError());
         }
