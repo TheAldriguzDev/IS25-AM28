@@ -232,5 +232,59 @@
     -fx-font-size: 20px;
 }
 
+/* Populate Ship's toggle buttons*/
+
+.toggle-button {
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 2px;
+    -fx-border-color: transparent;
+    -fx-text-fill: black;
+    -fx-padding: 8 16;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+/* Purple toggle */
+.toggle-button.purple {
+    -fx-background-color: #8e44ad;
+    -fx-text-fill: white;
+}
+.toggle-button.purple:hover {
+    -fx-background-color: #9b59b6;
+}
+.toggle-button.purple:pressed {
+    -fx-background-color: #732d91;
+}
+
+/* Brown toggle*/
+.toggle-button.brown {
+    -fx-background-color: #8b4513;
+    -fx-text-fill: white;
+}
+.toggle-button.brown:hover {
+    -fx-background-color: #a0522d;
+}
+.toggle-button.brown:pressed {
+    -fx-background-color: #5c3317;
+}
+
+/* White toggle */
+.toggle-button.white {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: black;
+}
+.toggle-button.white:hover {
+    -fx-background-color: #f0f0f0;
+}
+.toggle-button.white:pressed {
+    -fx-background-color: #dcdcdc;
+}
+
+/* Pressed toggle */
+.toggle-button:selected {
+    -fx-border-color: #333333;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 1);
+}
 
 

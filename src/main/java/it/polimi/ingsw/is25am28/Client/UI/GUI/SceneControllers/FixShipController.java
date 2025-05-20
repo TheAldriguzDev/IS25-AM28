@@ -13,12 +13,13 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -29,16 +30,18 @@ public class FixShipController extends GUIController {
 
     @FXML private ImageView shipImageView;
     @FXML private GridPane shipGrid;
-    @FXML private Label fixShipLabel;
+    @FXML private TextFlow fixShipLabel;
+    @FXML private StackPane imagePane;
+    @FXML private VBox fixShipVBox;
 
     private Pair<Integer, Integer> shipOffsets;
     private boolean isShipValid;
 
     // Map of the components' images
-    private Map<Pair<Integer, Integer>, ImageView> componentsImagesMap;
+    private Map<String, ImageView> componentsImagesMap;
 
     // Map of the component's clickable regions
-    private Map<Pair<Integer, Integer>, Region> componentsRegionMap;
+    private Map<String, Region> componentsRegionMap;
 
     public void init(FixShipDTO state) {
 
@@ -54,7 +57,7 @@ public class FixShipController extends GUIController {
         this.componentsRegionMap = new HashMap<>();
 
         // Sets the fixShipLabel and the isShipValid flag
-        this.setShipLabelText(state.getPlayerWithInvalidShip().contains(this.clientModel.getNickname()));
+        this.setShipLabelText(!state.getPlayerWithInvalidShip().contains(this.clientModel.getNickname()));
 
         // Initializing the ship to display
         String path = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
@@ -63,6 +66,8 @@ public class FixShipController extends GUIController {
         this.shipImageView.setImage(new Image(resource.toExternalForm()));
         this.shipImageView.setFitWidth(816.0);
         this.shipImageView.setPreserveRatio(true);
+//        this.shipImageView.fitWidthProperty().bind(imagePane.widthProperty().subtract(40));
+//        this.imagePane.setMaxSize(1000, 1000);
 
         Pair<Integer, Integer> shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
         this.shipOffsets = shipOffsets;
@@ -71,6 +76,9 @@ public class FixShipController extends GUIController {
 
         int endRow = shipDimensions.getKey() + shipOffsets.getKey();
         int endCol = shipDimensions.getValue() + shipOffsets.getValue();
+
+        // Add the core's image
+        this.addCoreImg();
 
         for (int row = shipOffsets.getKey(); row < endRow; row++) {
             for (int col = shipOffsets.getValue(); col < endCol; col++) {
@@ -84,29 +92,22 @@ public class FixShipController extends GUIController {
                         Image img = new Image(componentImagePath.toExternalForm(), 105, 105, true, true);
                         ImageView componentImgView = new ImageView(img);
                         componentImgView.setImage(img);
-                        this.shipGrid.add(componentImgView, col, row);
-                        // Adds the component to the images map, so the reference can be easily retrieve in case of removal of the component
-                        this.componentsImagesMap.put(new Pair<>(row, col), componentImgView);
 
-                        // If the ship is valid there's no need to add the cellEventListeners
-                        if (!isShipValid) { // TODO: can be optimized
-                            if (this.clientModel.getDifficultyLevel() == 0) {
-                                this.addCellEventListener(row - shipOffsets.getKey(), col - shipOffsets.getValue() + 1);
-                            } else {
-                                this.addCellEventListener(row - shipOffsets.getKey(), col - shipOffsets.getValue());
-                            }
-                        }
+                        int ofsRow = row - shipOffsets.getKey();
+                        int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
+                        this.shipGrid.add(componentImgView, ofsCol, ofsRow);
+
+                        // Adds the component to the images map, so the reference can be easily retrieve in case of removal of the component
+                        this.componentsImagesMap.put(this.keyFromCoords(row, col), componentImgView);
+
+                        if(!isShipValid) {this.addCellEventListener(row, col);}
                     }
                 }
             }
         }
 
-//        for (int col = 0; col < 2; col++) {
-//            Region cell = new Region(); // Place holder node
-//            cell.setPrefSize(100, 100);
-//            cell.setStyle("-fx-background-color: transparent;");
-//            this.shipGrid.add(cell, col, 0);
-//        }
+        // The player cannot remove the core
+//        this.componentsImagesMap.remove(keyFromCoords(7, 7)); // TODO: check component coordinates
 
     }
 
@@ -114,9 +115,12 @@ public class FixShipController extends GUIController {
      * Method used to add the event listener to the clickable cells of the player ship
      * */
     public void addCellEventListener(int row, int col) {
-        if (row == 2 && col == 3) {
+
+        int ofsRow = row - shipOffsets.getKey();
+        int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
+
+        if (ofsRow == 2 && ofsCol == 3) {
             // The player cannot remove the core
-            this.componentsImagesMap.remove(new Pair<>(row, col));
             return;
         }
 
@@ -126,14 +130,18 @@ public class FixShipController extends GUIController {
         cell.setCursor(Cursor.HAND);
         cell.setPickOnBounds(true);
 
-        this.shipGrid.add(cell, col, row);
-        cell.setOnMouseClicked(_ -> handleRemoveComponent(row, col));
+        // Adds the component to the regionss map, so the reference can be easily retrieve in case of removal of the component
+        this.componentsRegionMap.put(this.keyFromCoords(row, col), cell);
+
+        this.shipGrid.add(cell, ofsCol, ofsRow);
+        cell.setOnMouseClicked(_ -> handleRemoveComponent(ofsRow, ofsCol));
     }
 
     /**
      * Removes the selected component
      */
     public void handleRemoveComponent(int row, int col) {
+        System.out.println("CLICK!");
         // Write method
         GUIHandler.setCommandCTX(new CommandCTX(
                 "removeTile", //
@@ -171,39 +179,73 @@ public class FixShipController extends GUIController {
 
     public void removeComponent(int row, int col, boolean isShipValid) {
         Platform.runLater(() -> {
+
             // Remove the clickable region
-            this.shipGrid.getChildren().remove(this.componentsRegionMap.get(new Pair<>(row, col)));
-            this.componentsRegionMap.remove(new Pair<>(row, col));
+            this.shipGrid.getChildren().remove(this.componentsRegionMap.get(keyFromCoords(row, col)));
+            this.componentsRegionMap.remove(keyFromCoords(row, col));
 
             // removing the component's image
-            this.shipGrid.getChildren().remove(this.componentsImagesMap.get(new Pair<>(row, col)));
-            this.componentsImagesMap.remove(new Pair<>(row, col));
+            this.shipGrid.getChildren().remove(this.componentsImagesMap.get(keyFromCoords(row, col)));
+            this.componentsImagesMap.remove(keyFromCoords(row, col));
 
+            // Setting the shipLabelText
             this.setShipLabelText(isShipValid);
 
             // If the ship is valid all clickable regions must be deactivated/removed
             if (this.isShipValid) {
                 if (!this.componentsRegionMap.isEmpty()) {
-                    for (Region cell : this.componentsRegionMap.values()) {
-                        // Remove the clickable region
-                        this.shipGrid.getChildren().remove(this.componentsRegionMap.get(new Pair<>(row, col)));
-                        this.componentsRegionMap.remove(new Pair<>(row, col));
+                    for (Map.Entry<String, Region> entry : this.componentsRegionMap.entrySet()) {
+                        // Remove all the clickable regions
+                        this.shipGrid.getChildren().remove(entry.getValue());
                     }
+                    this.componentsRegionMap.clear();
                 }
             }
         });
     }
 
+    private void addCoreImg() {
+        String playerColor = this.clientModel.getAllClientPlayers().get(this.clientModel.getNickname()).getColor().getPlayerColorString();
+        URL resource = Objects.requireNonNull(getClass().getResource("/imgs/tiles/core_" + playerColor + ".jpg"));
+        Image img = new Image(resource.toExternalForm(), 105, 105, true, true);
+
+        ImageView imgView = new ImageView(img);
+        imgView.setImage(img);
+
+        this.shipGrid.add(imgView, 3, 2);
+    }
+
+    private String keyFromCoords(int row, int col) {
+        return row + "_" + col;
+    }
+
     private void setShipLabelText(boolean isShipValid) {
         String validityLabel;
+        this.fixShipLabel.getChildren().clear();
         if (!isShipValid) {
             this.isShipValid = false;
-            validityLabel = "Your ship is " + PrintUtils.addColor("INVALID! ", ANSIColors.RED) + "please select the components to remove";
-            this.fixShipLabel.setText(validityLabel);
+            Text text1 = new Text("Your ship is ");
+            text1.setFill(Color.WHITE);
+            text1.setFont(Font.font(20));
+            Text text2 = new Text("INVALID! ");
+            text2.setFill(Color.RED);
+            text2.setFont(Font.font(20));
+            Text text3 = new Text("please select the components to remove");
+            text3.setFill(Color.WHITE);
+            text3.setFont(Font.font(20));
+            this.fixShipLabel.getChildren().addAll(text1, text2, text3);
         } else {
             this.isShipValid = true;
-            validityLabel = "Your ship is " + PrintUtils.addColor("VALID! ", ANSIColors.GREEN) + "please wait for the other players to fix their ships";
-            this.fixShipLabel.setText(validityLabel);
+            Text text1 = new Text("Your ship is ");
+            text1.setFill(Color.WHITE);
+            text1.setFont(Font.font(20));
+            Text text2 = new Text("VALID! ");
+            text2.setFill(Color.GREEN);
+            text2.setFont(Font.font(20));
+            Text text3 = new Text("please wait for the other players to fix their ships");
+            text3.setFill(Color.WHITE);
+            text3.setFont(Font.font(20));
+            this.fixShipLabel.getChildren().addAll(text1, text2, text3);
         }
     }
 }

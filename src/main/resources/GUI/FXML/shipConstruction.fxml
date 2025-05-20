@@ -104,7 +104,7 @@
             </VBox>
 
              <!-- viewShipContainer used to see the selected player ship -->
-             <VBox prefHeight="200.0" prefWidth="100.0" managed="false" visible="false">
+             <VBox managed="false" prefHeight="200.0" prefWidth="100.0" visible="false">
                <children>
                   <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
                      <children>

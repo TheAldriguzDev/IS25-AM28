@@ -282,8 +282,11 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showShipFixing(FixShipDTO fixShip) throws Exception {
-
         Platform.runLater(() -> {
+            if (this.currentScene != null && this.currentScene.equals(GuiScenes.FIX_SHIP_SCENE)) {
+                return;
+            }
+
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
                             getClass().getResource(GuiScenes.FIX_SHIP_SCENE.getFxmlFile())
@@ -295,6 +298,10 @@ public class GUIHandler extends Application implements ClientUI {
                 Parent root = loader.load();
                 FixShipController controller = loader.getController();
 
+                // Store the root and the controller
+                controllers.put(GuiScenes.FIX_SHIP_SCENE, controller);
+                roots.put(GuiScenes.FIX_SHIP_SCENE, root);
+
                 controller.init(fixShip);
 
                 Scene newScene = new Scene(root);
@@ -304,6 +311,8 @@ public class GUIHandler extends Application implements ClientUI {
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } finally {
+                this.currentScene = GuiScenes.FIX_SHIP_SCENE;
             }
         });
 
@@ -313,6 +322,10 @@ public class GUIHandler extends Application implements ClientUI {
     public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
 
         Platform.runLater(() -> {
+            if (this.currentScene != null && this.currentScene.equals(GuiScenes.POPULATE_SHIP_SCENE)) {
+                return;
+            }
+
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
                             getClass().getResource(GuiScenes.POPULATE_SHIP_SCENE.getFxmlFile())
@@ -322,9 +335,9 @@ public class GUIHandler extends Application implements ClientUI {
             try {
 
                 Parent root = loader.load();
-                FixShipController controller = loader.getController();
+                PopulateShipController controller = loader.getController();
 
-                //...
+                controller.init(populateShip);
 
                 Scene newScene = new Scene(root);
                 this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
@@ -333,6 +346,8 @@ public class GUIHandler extends Application implements ClientUI {
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } finally {
+                this.currentScene = GuiScenes.POPULATE_SHIP_SCENE;
             }
         });
     }
