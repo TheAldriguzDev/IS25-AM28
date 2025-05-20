@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
-import it.polimi.ingsw.is25am28.Loader.CardLoader;
 import it.polimi.ingsw.is25am28.Loader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
@@ -8,13 +7,11 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Timer.HourGlass;
 import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
-import java.io.IOException;
 import java.util.*;
 
 // TODO: Implement the HourGlass here (the state contains the HourGlass instance and implements the onTimerEnd method)
@@ -115,7 +112,7 @@ public final class ShipContructionState extends State implements TimerObserver {
         }
         else {
             if (!this.selectedSubDecks.containsKey(selectedDeck)) {
-                throw new IllegalStateException("The given sub-deck cardTypeId is not selected by anyone");
+                throw new IllegalStateException("The given sub-deck id is not selected by anyone");
             }
 
             if (!this.selectedSubDecks.get(selectedDeck).equals(player)) {
