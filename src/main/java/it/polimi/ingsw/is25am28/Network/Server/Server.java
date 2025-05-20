@@ -40,7 +40,7 @@ public class Server {
     private final TCPServer tcpServer;
 
 
-    // This map stores the cardTypeId of the game with its instance
+    // This map stores the id of the game with its instance
     private final Map<Integer, GameInstance> gameInstances;
 
     // This map stores the players nickname and their network connection (nickname --> virtualView)
@@ -344,7 +344,7 @@ public class Server {
 
                         // Check if the client is disconnected
                         if (pingHelper.getFailedPings() > 2) { // TODO: adjust right pings number
-                            // Get the game cardTypeId
+                            // Get the game id
                             int gameID;
                             synchronized (this.clientToGame) {
                                 gameID = this.clientToGame.get(pingHelper.getNickname());

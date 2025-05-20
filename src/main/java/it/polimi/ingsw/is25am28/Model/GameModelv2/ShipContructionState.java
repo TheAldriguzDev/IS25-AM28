@@ -36,7 +36,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
     private final List<EventCard> cards;
 
-    // The map will store the pair of sub-deck cardTypeId with the playerNickname that selected it
+    // The map will store the pair of sub-deck id with the playerNickname that selected it
     private final Map<Integer, String> selectedSubDecks;
 
     private boolean shipConfigEnded;

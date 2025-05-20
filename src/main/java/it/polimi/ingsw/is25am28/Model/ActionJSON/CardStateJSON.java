@@ -337,7 +337,7 @@ public class CardStateJSON extends ActionJSON {
     }
 
     /**
-     * Returns the card's cardTypeId
+     * Returns the card's id
      */
     @JsonGetter("id")
     public int getId() {
@@ -345,7 +345,7 @@ public class CardStateJSON extends ActionJSON {
     }
 
     /**
-     * Sets the card's cardTypeId
+     * Sets the card's id
      */
     @JsonSetter("id")
     public void setId(int id) {

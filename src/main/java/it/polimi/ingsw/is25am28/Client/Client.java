@@ -2,78 +2,425 @@ package it.polimi.ingsw.is25am28.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
+import it.polimi.ingsw.is25am28.Client.UI.ConnectionType;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.UIType;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.CommandWidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
 import it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.stage.Stage;
 
-import java.util.Scanner;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicReference;
 
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen.DEFAULT_COMMAND_PREFIX;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen.UNKNOWN_COMMAND_ERROR;
+import static it.polimi.ingsw.is25am28.Client.UI.UIType.*;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 
 public class Client {
+    public static String IP_LOOPBACK_ADDRESS = "127.0.0.1";
+    public static int TCP_SOCKET_PORT = 8888;
+    public static int RMI_PORT = 7777;
 
+    private static InputWidgetTUI connectionTypeSelectorWidget;
+    private static InputWidgetTUI uiTypeSelectorWidget;
+    private static InputThread inputThread;
+
+    /**
+     * @param ipAddress The IPv4 address string to validate.
+     *
+     * @return TRUE if the given string is a valid IPv4 address,
+     *         FALSE otherwise.
+     */
+    private static boolean validateIPAddress(String ipAddress) {
+        String[] values;
+
+        if (ipAddress != null && !ipAddress.isEmpty()) {
+            values = ipAddress.trim().split("\\.");
+
+            if (values.length != 4) return false;
+
+            try {
+                for (String value : values) {
+                    int octet = Integer.parseInt(value);
+
+                    if ((octet >> 8) != 0) {
+                        return false;
+                    }
+                }
+            }
+            catch (NumberFormatException e) {
+                System.out.println(
+                        PrintUtils.addColor(
+                                "[ERROR] [Invalid input] Please insert a number.",
+                                ANSIColors.RED
+                        )
+                );
+
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return The player's selected IPv4 server address.
+     */
+    private static String getIpAddress() {
+        String ipAddress;
+        boolean validIPAddress;
+
+        new WidgetTUI()
+                .appendString("[CONNECT TO SERVER]")
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder()
+                .printWidget();
+
+        do {
+            System.out.println();
+            System.out.print("Insert server's IPv4 address to connect to: ");
+
+            try {
+                ipAddress = inputThread.waitForInput();
+
+                if (ipAddress == null) {
+                    // A forced interrupt arrived
+                    return null;
+                }
+
+                validIPAddress = validateIPAddress(ipAddress);
+
+                if (!validIPAddress) {
+                    System.out.println(
+                            PrintUtils.addColor(
+                                    "[ERROR] Given string does not represent an IPv4 address.",
+                                    ANSIColors.RED
+                            )
+                    );
+
+                    System.out.println("\t(IPv4 format is: x.y.z.w -> [0-255].[0.255].[0-255].[0-255])");
+                }
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return null;
+            }
+        }
+        while (!validIPAddress);
+
+        return ipAddress;
+    }
+
+    /**
+     * Starts the input thread for the input widgets.
+     * If the input thread is null, then it'll also instantiate it
+     * right before starting it.
+     */
+    private static void startInputThread() {
+        if (inputThread == null || !inputThread.isAlive()) {
+            inputThread = new InputThread();
+            inputThread.setDaemon(true);
+            inputThread.start();
+        }
+    }
+
+    /**
+     * Stops and dereferences the currently available input thread
+     * (only if there is one instantiated and alive)
+     */
+    private static void stopInputThread() {
+        if (inputThread != null && inputThread.isAlive()) {
+            inputThread.interruptInputReader();
+            inputThread.interrupt();
+            inputThread = null;
+        }
+    }
+
+    /**
+     * Generates the input widget containing all the available connection types
+     * that each player can choose from.
+     *
+     * @param connectionType An atomic reference passed externally
+     *                       to store the chosen connection type
+     */
+    private static void generateConnectionTypeSelectorWidget(AtomicReference<ConnectionType> connectionType) throws IllegalArgumentException {
+        CommandWidgetTUI command;
+
+        if (connectionType == null) {
+            throw new IllegalArgumentException("[ERROR] connectionType atomic reference cannot be null (can't store the result).");
+        }
+
+        startInputThread();
+        connectionTypeSelectorWidget = new InputWidgetTUI(inputThread);
+
+        for (ConnectionType connection : ConnectionType.values()) {
+            command = new CommandWidgetTUI(
+                    "" + connection.ordinal(),
+                    () -> {
+                        connectionType.set(connection);
+                    }
+            );
+            command.appendString(connection.name());
+            connectionTypeSelectorWidget.addCommand(command);
+        }
+
+        connectionTypeSelectorWidget.setColumnGroupingAmount(
+                connectionTypeSelectorWidget.getCommandMap().size()
+        );
+    }
+
+    /**
+     * Generates the input widget containing all the available UI types
+     * that each player can choose from
+     *
+     * @param uiType An atomic reference passed externally
+     *               to store the chosen UI type
+     */
+    private static void generateUITypeSelectorWidget(AtomicReference<UIType> uiType) throws IllegalArgumentException {
+        CommandWidgetTUI command;
+
+        if (uiType == null) {
+            throw new IllegalArgumentException("[ERROR] UIType atomic reference cannot be null (can't store the result).");
+        }
+
+        uiTypeSelectorWidget = new InputWidgetTUI(inputThread);
+
+        for (UIType ui : UIType.values()) {
+            command = new CommandWidgetTUI(
+                    "" + ui.ordinal(),
+                    () -> {
+                        uiType.set(ui);
+                    }
+            );
+            command.appendString(ui.name());
+            uiTypeSelectorWidget.addCommand(command);
+        }
+
+        uiTypeSelectorWidget.setColumnGroupingAmount(
+                uiTypeSelectorWidget.getCommandMap().size()
+        );
+    }
+
+    /**
+     * Keeps asking the user for a valid connection type
+     */
+    private static void getConnectionTypeCommand() {
+        boolean commandSelected;
+
+        do {
+            try {
+                System.out.println();
+                System.out.println("Choose a connection type:");
+                commandSelected = connectionTypeSelectorWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+
+                if (!commandSelected) {
+                    System.out.println(UNKNOWN_COMMAND_ERROR);
+                }
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return;
+            }
+        }
+        while (!commandSelected);
+    }
+
+    /**
+     * Keeps asking the user for a valid UI type
+     */
+    private static void getUITypeCommand() {
+        boolean commandSelected;
+
+        do {
+            try {
+                System.out.println();
+                System.out.println("Choose an UI type:");
+                commandSelected = uiTypeSelectorWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+
+                if (!commandSelected) {
+                    System.out.println(UNKNOWN_COMMAND_ERROR);
+                }
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
+                return;
+            }
+        }
+        while (!commandSelected);
+    }
+
+    // Main
     public static void main(String[] args) throws Exception {
-        // Will store the specific network implementation (RMI / Socket)
-        VirtualView client;
+        ClientUI clientUI;
+        VirtualView virtualClient;
+        ClientModel model;
+        String ipAddress;
 
-        Scanner scanner = new Scanner(System.in);
-        int connectionType = -1;
-        int uiType = -1;
+        // Initializations
+        AtomicReference<ConnectionType> connectionType = new AtomicReference<>(null);
+        AtomicReference<UIType> uiType = new AtomicReference<>(null);
+        model = new ClientModel();
 
-        System.out.flush();
+        startInputThread();
 
-        do {
-            System.out.println("Choose a connection type: ");
-            System.out.println("1 --> RMI");
-            System.out.println("2 --> Socket");
-            connectionType = scanner.nextInt();
-
-            if (connectionType == -1) {
-                System.err.println("Invalid connection type, the value must be 1 or 2!");
-            }
-        } while (connectionType == -1);
-
-
-        do {
-            System.out.println("Choose an ui type: ");
-            System.out.println("1 --> TUI");
-            System.out.println("2 --> GUI (Coming soon)");
-            uiType = scanner.nextInt();
-
-            if (uiType == -1) {
-                System.err.println("Invalid ui type, the value must be 1 or 2!");
-            }
-        } while (uiType == -1);
+        generateConnectionTypeSelectorWidget(connectionType);
+        generateUITypeSelectorWidget(uiType);
 
         clearTerminal();
         System.out.flush();
 
-        // ================= CREATE THE CLIENT ================= //
-        ClientUI clientUI;
-        VirtualView virtualClient;
+        ipAddress = getIpAddress();
+        getConnectionTypeCommand();
+        getUITypeCommand();
 
-        ClientModel model = new ClientModel();
-
-        if (uiType == 1) {
-            clientUI = new TUIHandler(model);
-        } else {
-            // Application.Launch is a blocking task
-            GUIHandler.setConnectionType(connectionType);
-            GUIHandler.setClientModel(model);
-            Application.launch(GUIHandler.class, args);
-            return;
+        // Instantiating the clientUI chosen by the player
+        switch (uiType.get()) {
+            case TUI -> {
+                clientUI = new TUIHandler(model, inputThread);
+            }
+            case GUI -> {
+                clientUI = new GUIHandler(model);
+            }
+            case null, default -> {
+                System.err.println("[ERROR] UI type not selected");
+                return;
+            }
         }
 
-        if (connectionType == 1) {
-            virtualClient = new RMIClient(args[0], 7777, UUID.randomUUID(), clientUI, model);
-        } else {
-            virtualClient = new TCPClient("127.0.0.1", 8888, clientUI, model);
+        // Instantiating the virtualClient chosen by the player
+        switch (connectionType.get()) {
+            case RMI -> {
+                virtualClient = new RMIClient(ipAddress, RMI_PORT, UUID.randomUUID(), clientUI, model);
+            }
+            case TCP_SOCKET -> {
+                virtualClient = new TCPClient(ipAddress, TCP_SOCKET_PORT, clientUI, model);
+            }
+            case null, default -> {
+                System.err.println("[ERROR] Connection type not selected");
+                return;
+            }
         }
 
         clientUI.setVirtualClient(virtualClient);
+
+        if (uiType.get().equals(GUI)) {
+            Application app;
+
+            // Stop and dereference the input thread since the GUI doesn't use it
+            stopInputThread();
+
+            switch (clientUI) {
+                case Application application -> app = application;
+                case null, default -> {
+                    throw new IllegalArgumentException("[ERROR] clientUI is not an instance of Application");
+                }
+            }
+
+            Platform.startup(
+                    () -> {
+                        try {
+                            app.start(new Stage());
+                        }
+                        catch (Exception e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+            );
+        }
     }
 }
+
+// OLD CLIENT IMPLEMENTATION
+
+//package it.polimi.ingsw.is25am28.Client;
+//
+//import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+//import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
+//import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
+//import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
+//import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
+//import it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient;
+//import it.polimi.ingsw.is25am28.Network.VirtualView;
+//import javafx.application.Application;
+//
+//import java.util.Scanner;
+//import java.util.UUID;
+//
+//import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
+//
+//public class Client {
+//
+//    public static void main(String[] args) throws Exception {
+//        // Will store the specific network implementation (RMI / Socket)
+//        VirtualView client;
+//
+//        Scanner scanner = new Scanner(System.in);
+//        int connectionType = -1;
+//        int uiType = -1;
+//
+//        System.out.flush();
+//
+//        do {
+//            System.out.println("Choose a connection type: ");
+//            System.out.println("1 --> RMI");
+//            System.out.println("2 --> Socket");
+//            connectionType = scanner.nextInt();
+//
+//            if (connectionType == -1) {
+//                System.err.println("Invalid connection type, the value must be 1 or 2!");
+//            }
+//        } while (connectionType == -1);
+//
+//
+//        do {
+//            System.out.println("Choose an ui type: ");
+//            System.out.println("1 --> TUI");
+//            System.out.println("2 --> GUI (Coming soon)");
+//            uiType = scanner.nextInt();
+//
+//            if (uiType == -1) {
+//                System.err.println("Invalid ui type, the value must be 1 or 2!");
+//            }
+//        } while (uiType == -1);
+//
+//        clearTerminal();
+//        System.out.flush();
+//
+//        // ================= CREATE THE CLIENT ================= //
+//        ClientUI clientUI;
+//        VirtualView virtualClient;
+//
+//        ClientModel model = new ClientModel();
+//
+//        if (uiType == 1) {
+//            clientUI = new TUIHandler(model);
+//        } else {
+//            // Application.Launch is a blocking task
+//            GUIHandler.setConnectionType(connectionType);
+//            GUIHandler.setClientModel(model);
+//            Application.launch(GUIHandler.class, args);
+//            return;
+//        }
+//
+//        if (connectionType == 1) {
+//            virtualClient = new RMIClient(args[0], 7777, UUID.randomUUID(), clientUI, model);
+//        } else {
+//            virtualClient = new TCPClient("127.0.0.1", 8888, clientUI, model);
+//        }
+//
+//        clientUI.setVirtualClient(virtualClient);
+//    }
+//}

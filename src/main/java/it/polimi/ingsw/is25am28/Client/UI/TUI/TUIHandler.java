@@ -19,11 +19,18 @@ public class TUIHandler implements ClientUI {
     private final Object ioLock;
     private VirtualView virtualClient;
 
+    @Deprecated
     public TUIHandler(ClientModel model) {
         this.model = model;
         this.inputThread = new InputThread();
         this.inputThread.setDaemon(true); // set the thread as daemon = true to avoid his termination
         this.inputThread.start();
+        this.ioLock = new Object();
+    }
+
+    public TUIHandler(ClientModel model, InputThread inputThread) {
+        this.model = model;
+        this.inputThread = inputThread;
         this.ioLock = new Object();
     }
 
