@@ -4,13 +4,10 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.*;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
-import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
-import it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -26,40 +23,40 @@ import java.io.IOException;
 import java.util.*;
 
 public class GUIHandler extends Application implements ClientUI {
+    public static final String GALAXY_TRUCKER = "Galaxy Trucker";
+
     private static GUIHandler instance;
-
-    // connectionType is used to create the RMI or the Socket client
-    private static int connectionType;
-    // model is the reference to the clientModel
     private static ClientModel model;
-    // virtualClient is the reference to the client network protocol
     private static VirtualView virtualClient;
-
     private static CommandCTX ctx;
 
     // ========== ATTRIBUTES NEEDED TO HANDLE THE GUI ========== //
+
+    /**
+     * The stage where each GUI screen will live
+     */
     private Stage stage;
 
-    // Stores each page root to avoid page reloads when switching scenes
+    /**
+     * Stores each page root to avoid page reloads when switching scenes
+     */
     private final Map<GuiScenes, Parent> roots = new HashMap<>();
-    // Stores the controller instance for each page, when created
+
+    /**
+     * Stores the controller instance for each page, when created
+     */
     private final Map<GuiScenes, GUIController> controllers = new HashMap<>();
-    // Stores the current page scene
+
+    /**
+     * Stores the current page scene
+     */
     private GuiScenes currentScene;
 
     public static GUIHandler getInstance() {
-        return instance;
+        return GUIHandler.instance;
     }
 
-    public static void setConnectionType(int connectionType) {
-        GUIHandler.connectionType = connectionType;
-    }
-
-    public static void setClientModel(ClientModel model) {
-        GUIHandler.model = model;
-    }
-
-    public ClientModel getClientModel() {
+    public static ClientModel getClientModel() {
         return GUIHandler.model;
     }
 
@@ -98,36 +95,39 @@ public class GUIHandler extends Application implements ClientUI {
         quitConfirmationAlert.setContentText("Do you want to proceed?");
 
         Optional<ButtonType> result = quitConfirmationAlert.showAndWait();
+
         if (result.isPresent() && result.get() == ButtonType.OK) {
             GUIHandler.getInstance().getStage().close();
             System.exit(0);
-        } else {
+        }
+        else {
             windowEvent.consume();
         }
+    }
+
+    // Constructor
+    public GUIHandler(ClientModel model) {
+        GUIHandler.instance = this;
+        GUIHandler.model = model;
     }
 
     @Override
     public void start(Stage stage) throws Exception {
         instance = this;
 
-        if (connectionType == 1) {
-            this.virtualClient = new RMIClient("127.0.0.1", 7777, UUID.randomUUID(), this, model);
-        }
-        else {
-            this.virtualClient = new TCPClient("127.0.0.1", 8888, this, model);
-        }
-
-        // ========== BUILD THE INITIAL SCREEN OF THE GAME ========== //
-
+        // Builds the initial screen of the game
         this.stage = stage;
         this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
 
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/GUI/FXML/login.fxml")));
-        stage.setTitle("Galaxy Trucker");
+        Parent root = FXMLLoader.load(
+                Objects.requireNonNull(
+                        getClass().getResource(GuiScenes.LOBBY_SCENE.getFxmlFile())
+                )
+        );
 
         Scene scene = new Scene(root);
+        stage.setTitle(GALAXY_TRUCKER);
         stage.setScene(scene);
-        this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
 
         Platform.runLater(stage::show);
     }
@@ -139,12 +139,11 @@ public class GUIHandler extends Application implements ClientUI {
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.LOBBY_SCENE)) {
                 LobbyController controller = (LobbyController) this.controllers.get(GuiScenes.LOBBY_SCENE);
                 controller.init(availableGames);
-
                 return;
             }
 
-            // Otherwise load the new page, store the root, store the controller and init the page content
-
+            // Otherwise load the new page, store the root, store the
+            // controller and init the page content
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
                             getClass().getResource(GuiScenes.LOBBY_SCENE.getFxmlFile())
@@ -156,8 +155,8 @@ public class GUIHandler extends Application implements ClientUI {
                 LobbyController controller = loader.getController();
 
                 // Store the root and the controller
-                controllers.put(GuiScenes.LOBBY_SCENE, controller);
-                roots.put(GuiScenes.LOBBY_SCENE, root);
+                this.saveRootAndController(GuiScenes.LOBBY_SCENE, root, controller);
+
                 controller.init(availableGames);
 
                 Scene scene = new Scene(root);
@@ -175,6 +174,7 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
+        // Check if the WAITING_FOR_PLAYERS_SCENE is already loaded
         Platform.runLater(() -> {
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.WAITING_FOR_PLAYERS_SCENE)) {
                 WaitingForPlayersController controller = (WaitingForPlayersController) this.controllers.get(GuiScenes.WAITING_FOR_PLAYERS_SCENE);
@@ -182,6 +182,8 @@ public class GUIHandler extends Application implements ClientUI {
                 return;
             }
 
+            // Otherwise load the new page, store the root, store the
+            // controller and init the page content
             FXMLLoader loader = new FXMLLoader(
                 Objects.requireNonNull(
                     getClass().getResource(GuiScenes.WAITING_FOR_PLAYERS_SCENE.getFxmlFile())
@@ -193,8 +195,7 @@ public class GUIHandler extends Application implements ClientUI {
                 WaitingForPlayersController controller = loader.getController();
 
                 // Store the root and the controller
-                controllers.put(GuiScenes.WAITING_FOR_PLAYERS_SCENE, controller);
-                roots.put(GuiScenes.WAITING_FOR_PLAYERS_SCENE, root);
+                this.saveRootAndController(GuiScenes.WAITING_FOR_PLAYERS_SCENE, root, controller);
 
                 controller.showConnectedPlayers(waitingForPlayers);
 
@@ -214,13 +215,15 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
+        // Check if the SHIP_CONSTRUCTION_SCENE is already loaded
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
             Platform.runLater(controller::initShipConstruction);
-
             return;
         }
 
+        // Otherwise load the new page, store the root, store the
+        // controller and init the page content
         FXMLLoader loader = new FXMLLoader(
                 Objects.requireNonNull(
                         getClass().getResource(GuiScenes.SHIP_CONSTRUCTION_SCENE.getFxmlFile())
@@ -232,8 +235,7 @@ public class GUIHandler extends Application implements ClientUI {
             ShipConstructionController controller = loader.getController();
 
             // Store the root and the controller
-            controllers.put(GuiScenes.SHIP_CONSTRUCTION_SCENE, controller);
-            roots.put(GuiScenes.SHIP_CONSTRUCTION_SCENE, root);
+            this.saveRootAndController(GuiScenes.SHIP_CONSTRUCTION_SCENE, root, controller);
 
             controller.initShipConstruction();
 
@@ -292,10 +294,14 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showShipFixing(FixShipDTO fixShip) throws Exception {
         Platform.runLater(() -> {
+            // Check if the FIX_SHIP_SCENE is already loaded
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.FIX_SHIP_SCENE)) {
+                // TODO
                 return;
             }
 
+            // Otherwise load the new page, store the root, store the
+            // controller and init the page content
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
                             getClass().getResource(GuiScenes.FIX_SHIP_SCENE.getFxmlFile())
@@ -307,8 +313,7 @@ public class GUIHandler extends Application implements ClientUI {
                 FixShipController controller = loader.getController();
 
                 // Store the root and the controller
-                controllers.put(GuiScenes.FIX_SHIP_SCENE, controller);
-                roots.put(GuiScenes.FIX_SHIP_SCENE, root);
+                this.saveRootAndController(GuiScenes.FIX_SHIP_SCENE, root, controller);
 
 //                GUIController prevController = this.controllers.get(this.currentScene);
 //                controller.setPlayersShipGridPane(prevController.getPlayersShipGridPane());
@@ -320,9 +325,11 @@ public class GUIHandler extends Application implements ClientUI {
                 this.stage.setScene(newScene);
                 this.stage.show();
 
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException(e);
-            } finally {
+            }
+            finally {
                 this.currentScene = GuiScenes.FIX_SHIP_SCENE;
             }
         });
@@ -332,10 +339,14 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
         Platform.runLater(() -> {
+            // Check if the POPULATE_SHIP_SCENE is already loaded
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.POPULATE_SHIP_SCENE)) {
+                // TODO
                 return;
             }
 
+            // Otherwise load the new page, store the root, store the
+            // controller and init the page content
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
                             getClass().getResource(GuiScenes.POPULATE_SHIP_SCENE.getFxmlFile())
@@ -347,8 +358,7 @@ public class GUIHandler extends Application implements ClientUI {
                 PopulateShipController controller = loader.getController();
 
                 // Store the root and the controller
-                controllers.put(GuiScenes.POPULATE_SHIP_SCENE, controller);
-                roots.put(GuiScenes.POPULATE_SHIP_SCENE, root);
+                this.saveRootAndController(GuiScenes.POPULATE_SHIP_SCENE, root, controller);
 
                 GUIController prevController;
                 if (this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
@@ -365,9 +375,11 @@ public class GUIHandler extends Application implements ClientUI {
                 this.stage.setScene(newScene);
                 this.stage.show();
 
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException(e);
-            } finally {
+            }
+            finally {
                 this.currentScene = GuiScenes.POPULATE_SHIP_SCENE;
             }
         });
@@ -376,6 +388,14 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
         Platform.runLater(() -> {
+            // Check if the CARD_ROUND_SCENE is already loaded
+            if (this.currentScene != null && this.currentScene.equals(GuiScenes.CARD_ROUND_SCENE)) {
+                // TODO
+                return;
+            }
+
+            // Otherwise load the new page, store the root, store the
+            // controller and init the page content
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
                             getClass().getResource(GuiScenes.CARD_ROUND_SCENE.getFxmlFile())
@@ -386,7 +406,10 @@ public class GUIHandler extends Application implements ClientUI {
                 Parent root = loader.load();
                 CardRoundController controller = loader.getController();
 
-                //...
+                // Store the root and controller
+                this.saveRootAndController(GuiScenes.CARD_ROUND_SCENE, root, controller);
+
+                // TODO
 
                 Scene newScene = new Scene(root);
                 this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
@@ -401,10 +424,7 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showEndGame(EndGameDTO endGame) {
-        System.out.println("END GAME DTO ARRIVED");
-
         Platform.runLater(() -> {
-
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
                             getClass().getResource(GuiScenes.END_GAME_SCENE.getFxmlFile())
@@ -421,8 +441,8 @@ public class GUIHandler extends Application implements ClientUI {
                 this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
                 this.stage.setScene(newScene);
                 this.stage.show();
-
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
@@ -431,13 +451,15 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
         Platform.runLater(() -> {
+            // Check if the INSUFFICIENT_PLAYER_SCENE is already loaded
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.INSUFFICIENT_PLAYER_SCENE)) {
                 InsufficientPlayersController controller = (InsufficientPlayersController) this.controllers.get(GuiScenes.INSUFFICIENT_PLAYER_SCENE);
                 controller.setCountDown(insufficientPlayer);
-
                 return;
             }
 
+            // Otherwise load the new page, store the root, store the
+            // controller and init the page content
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
                             getClass().getResource(GuiScenes.INSUFFICIENT_PLAYER_SCENE.getFxmlFile())
@@ -460,7 +482,8 @@ public class GUIHandler extends Application implements ClientUI {
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
-            } finally {
+            }
+            finally {
                 this.currentScene = GuiScenes.INSUFFICIENT_PLAYER_SCENE;
             }
         });
@@ -501,18 +524,24 @@ public class GUIHandler extends Application implements ClientUI {
         Platform.runLater(() -> controller.showError(error.getError()));
     }
 
-
     @Override
     public boolean isCTXAvailable() {
         return (ctx != null);
     }
 
     @Override
-    public void setVirtualClient(VirtualView client) {
-        // Not used in the GUI since the instance is handled by JavaFX
-        // (no instance of GUIHandler is available to invoke the method before launching the GUI)
+    public void setVirtualClient(VirtualView virtualClient) {
+        GUIHandler.virtualClient = virtualClient;
     }
 
+    /**
+     * Stores the given root and controller belonging to the given GUI scene
+     * to be able to reuse them, thus avoiding reconstructing a specific scene.
+     *
+     * @param scene The scene type to which the given root and controller belong.
+     * @param root The root of the scene to store.
+     * @param controller The controller of the scene to store.
+     */
     public void saveRootAndController(GuiScenes scene, Parent root, Object controller) {
         this.controllers.put(scene, (GUIController) controller);
         this.roots.put(scene, root);
