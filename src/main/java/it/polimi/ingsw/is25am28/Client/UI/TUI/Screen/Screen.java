@@ -91,7 +91,6 @@ public class Screen implements ClientUI {
 
     @Override
     public void showError(ErrorAnswer error) {
-        // TODO: Clear terminal
         if (this.ctx != null) {
             this.ctx.handleError(error.getError());
             // this.ctx = null;

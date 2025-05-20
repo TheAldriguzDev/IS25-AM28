@@ -17,6 +17,8 @@ public class WaitingForPlayersController extends GUIController {
     @FXML private Label playerCounters;
     @FXML private Label loadingLabel;
 
+    private String base = "Waiting";
+
     public void initialize() {
         startLoadingAnimation();
     }
@@ -24,7 +26,13 @@ public class WaitingForPlayersController extends GUIController {
     public void showConnectedPlayers(WaitPlayersStateDTO state) {
         int i = 1;
 
-        playerCounters.setText("Waiting for more players to connect (" + state.getUsedNicknames().size() + "/" + state.getLobbyTotalSpot() + ")");
+        if (state.getUsedNicknames().size() == state.getLobbyTotalSpot()) {
+            playerCounters.setText("All the players are connected. Starting the game!");
+            this.base = "Initializing game";
+        } else {
+            playerCounters.setText("Waiting for more players to connect (" + state.getUsedNicknames().size() + "/" + state.getLobbyTotalSpot() + ")");
+        }
+
         connectedPlayers.getChildren().clear();
 
         for (Map.Entry<String, PlayerColor> player : state.getUsedNicknames().entrySet()) {
@@ -39,7 +47,6 @@ public class WaitingForPlayersController extends GUIController {
     }
 
     private void startLoadingAnimation() {
-        String base = "Waiting";
         Timeline loadingAnimation = new Timeline(
                 new KeyFrame(Duration.seconds(0), e -> loadingLabel.setText(base + ".")),
                 new KeyFrame(Duration.seconds(0.5), e -> loadingLabel.setText(base + "..")),

@@ -174,11 +174,9 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
         Platform.runLater(() -> {
-
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.WAITING_FOR_PLAYERS_SCENE)) {
                 WaitingForPlayersController controller = (WaitingForPlayersController) this.controllers.get(GuiScenes.WAITING_FOR_PLAYERS_SCENE);
                 controller.showConnectedPlayers(waitingForPlayers);
-
                 return;
             }
 
@@ -205,7 +203,8 @@ public class GUIHandler extends Application implements ClientUI {
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
-            } finally {
+            }
+            finally {
                 this.currentScene = GuiScenes.WAITING_FOR_PLAYERS_SCENE;
             }
         });
@@ -213,41 +212,41 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
-        Platform.runLater(() -> {
-            if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
-                ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
-                controller.initShipConstruction();
+        if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
+            ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
+            Platform.runLater(controller::initShipConstruction);
 
-                return;
-            }
+            return;
+        }
 
-            FXMLLoader loader = new FXMLLoader(
-                    Objects.requireNonNull(
-                            getClass().getResource(GuiScenes.SHIP_CONSTRUCTION_SCENE.getFxmlFile())
-                    )
-            );
+        FXMLLoader loader = new FXMLLoader(
+                Objects.requireNonNull(
+                        getClass().getResource(GuiScenes.SHIP_CONSTRUCTION_SCENE.getFxmlFile())
+                )
+        );
 
-            try {
-                Parent root = loader.load();
-                ShipConstructionController controller = loader.getController();
+        try {
+            Parent root = loader.load();
+            ShipConstructionController controller = loader.getController();
 
-                // Store the root and the controller
-                controllers.put(GuiScenes.SHIP_CONSTRUCTION_SCENE, controller);
-                roots.put(GuiScenes.SHIP_CONSTRUCTION_SCENE, root);
+            // Store the root and the controller
+            controllers.put(GuiScenes.SHIP_CONSTRUCTION_SCENE, controller);
+            roots.put(GuiScenes.SHIP_CONSTRUCTION_SCENE, root);
 
-                controller.initShipConstruction();
+            controller.initShipConstruction();
 
+            Platform.runLater(() -> {
                 Scene newScene = new Scene(root);
                 this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
                 this.stage.setScene(newScene);
-                this.stage.show();
-            }
-            catch (IOException e) {
-                throw new RuntimeException(e);
-            } finally {
-                this.currentScene = GuiScenes.SHIP_CONSTRUCTION_SCENE;
-            }
-        });
+                stage.show();
+            });
+        }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        } finally {
+            this.currentScene = GuiScenes.SHIP_CONSTRUCTION_SCENE;
+        }
     }
 
     // TODO: Understand if we need to create an interface for the GUI that is more specific than the TUI
@@ -320,7 +319,6 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
-
         Platform.runLater(() -> {
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.POPULATE_SHIP_SCENE)) {
                 return;
@@ -354,7 +352,6 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
-
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
                     Objects.requireNonNull(
@@ -412,7 +409,6 @@ public class GUIHandler extends Application implements ClientUI {
     @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
         Platform.runLater(() -> {
-
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.INSUFFICIENT_PLAYER_SCENE)) {
                 InsufficientPlayersController controller = (InsufficientPlayersController) this.controllers.get(GuiScenes.INSUFFICIENT_PLAYER_SCENE);
                 controller.setCountDown(insufficientPlayer);
@@ -450,7 +446,10 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public void receiveTimerDTO(TimerDTO timerDTO) {
-
+        if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
+            ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
+            controller.resetTimer();
+        }
     }
 
     @Override

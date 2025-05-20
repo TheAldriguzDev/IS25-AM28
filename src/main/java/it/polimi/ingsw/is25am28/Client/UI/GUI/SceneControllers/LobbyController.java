@@ -75,8 +75,6 @@ public class LobbyController extends GUIController {
         }
     }
 
-
-
     public void onCreateGameButtonClick(ActionEvent actionEvent) {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
