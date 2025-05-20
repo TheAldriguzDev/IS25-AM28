@@ -1072,7 +1072,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
     }
 
     /**
-     * @return The widget containing this ship's statistics
+     * @return The widget containing this ship's statistics.
      */
     public WidgetTUI getShipStatsWidget() {
         // Creating the ship's stats widget with the correct dimensions
