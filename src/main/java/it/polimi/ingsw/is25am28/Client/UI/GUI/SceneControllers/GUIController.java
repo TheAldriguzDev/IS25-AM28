@@ -35,7 +35,7 @@ public abstract class GUIController {
     protected Map<String, Map<String, ImageView>> componentsImagesMap;
 
     // Map of every ship's grid
-    protected Map<String, GridPane> shipGridsMap;
+    protected Map<String, GridPane> playersShipGridPane;
 
     @FXML
     protected StackPane rootPane;

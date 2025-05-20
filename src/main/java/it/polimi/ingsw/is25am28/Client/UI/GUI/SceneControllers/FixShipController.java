@@ -48,7 +48,7 @@ public class FixShipController extends GUIController {
     private Map<String, Region> componentsRegionMap;
 
     // Handle the players ship
-    private Map<String, GridPane> playersShipGridPane;
+//    private Map<String, GridPane> playersShipGridPane;
 
     public void init(FixShipDTO state) {
 

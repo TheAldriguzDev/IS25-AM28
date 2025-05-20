@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCabin;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientVital;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
@@ -23,9 +24,7 @@ import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -45,85 +44,63 @@ public class PopulateShipController extends GUIController {
     @FXML private GridPane shipGrid;
     @FXML private TextFlow populateShipLabel;
     @FXML private StackPane imagePane;
+    @FXML private GridPane viewOtherShipsGrid;
 
     @FXML private ToggleGroup lifeFormsToggles;
     @FXML private ToggleButton purpleToggle;
     @FXML private ToggleButton brownToggle;
     @FXML private ToggleButton whiteToggle;
 
-    private Pair<Integer, Integer> shipOffsets;
     private boolean isShipFull;
 
     // Map of the component's clickable regions
     private Map<String, Region> cabinRegions;
-
     private Map<String, Region> purpleAlienCabinRegion;
-
     private Map<String, Region> brownAlienCabinRegion;
-
     private LifeformType currentSelectableLifeForm;
+    private boolean canEnablePurple;
+    private boolean canEnableBrown;
 
     // Handle the players ship
-    private final Map<String, GridPane> playersShipGridPane = new HashMap<>();
+//    private Map<String, GridPane> playersShipGridPane;
 
     public void init(PopulateShipDTO state) {
+
+        this.playersShipGridPane = new HashMap<>();
+        this.componentsImagesMap = new HashMap<>();
 
         this.initLifeFormsToggles();
 
         this.clientModel = GUIHandler.getInstance().getClientModel();
-
+        this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
         if (ship == null) {
             System.out.println(PrintUtils.addColor("[ERROR] [FixShipController] ClientShip is null", ANSIColors.RED));
             return;
         }
 
+        // Setting the buttons to view other ships
+        this.initViewOtherShipsGrid();
+
+        // Setting the correct background
+        this.setShipGridBackground(this.shipImageView);
+
+        for (ClientPlayer player : this.clientModel.getAllClientPlayers().values()) {
+            // Creating an empty ship grid
+            GridPane shipGrid = createEmptyShipGrid(player);
+            // Creating the ship's visuals
+            this.componentsImagesMap.put(player.getNickname(), this.createShipVisuals(player.getNickname(), shipGrid));
+            // Adding the shipGrid to the map
+            this.playersShipGridPane.put(player.getNickname(), shipGrid);
+        }
+
+        // Setting the current shipGrid to this client's ship
+        this.imagePane.getChildren().remove(this.shipGrid);
+        this.shipGrid = this.playersShipGridPane.get(this.clientModel.getNickname());
+        this.imagePane.getChildren().add(this.shipGrid);
+
         // Sets the populateShipLabel and the isShipFull flag
         this.setShipLabelText(state.getPlayersReady().contains(this.clientModel.getNickname()));
-
-        // Initializing the ship to display
-        String path = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
-        URL resource = Objects.requireNonNull(getClass().getResource(path));
-
-        this.shipImageView.setImage(new Image(resource.toExternalForm()));
-        this.shipImageView.setFitWidth(816.0);
-        this.shipImageView.setPreserveRatio(true);
-
-        Pair<Integer, Integer> shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
-        this.shipOffsets = shipOffsets;
-        Pair<Integer, Integer> shipDimensions = AbstractShip.shipDimensions.get(this.clientModel.getDifficultyLevel());
-        int[][] shipProfiles = AbstractShip.shipProfiles.get(this.clientModel.getDifficultyLevel());
-
-        int endRow = shipDimensions.getKey() + shipOffsets.getKey();
-        int endCol = shipDimensions.getValue() + shipOffsets.getValue();
-
-        // Add the core's image
-        this.addCoreImg();
-
-        // Sets the initial shipGrid
-//        this.setShipGrid(this.clientModel.getNickname());
-
-        // TODO: need to account for component's rotation
-        for (int row = shipOffsets.getKey(); row < endRow; row++) {
-            for (int col = shipOffsets.getValue(); col < endCol; col++) {
-                if (shipProfiles[row][col] == 1) {
-                    // The cellEventListener is added only if there is an actual component in the computed coordinates
-                    ClientComponent component = ship.getComponent(row, col);
-                    if(component != null) {
-
-                        // Adding the component's image in the shipGrid
-                        URL componentImagePath = Objects.requireNonNull(getClass().getResource(component.getPath()));
-                        Image img = new Image(componentImagePath.toExternalForm(), 105, 105, true, true);
-                        ImageView componentImgView = new ImageView(img);
-                        componentImgView.setImage(img);
-
-                        int ofsRow = row - shipOffsets.getKey();
-                        int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
-                        this.shipGrid.add(componentImgView, ofsCol, ofsRow);
-                    }
-                }
-            }
-        }
 
         ship.generateComponentSubLists();
         List<ClientCabin> cabins = ship.getCabinList();
@@ -169,9 +146,7 @@ public class PopulateShipController extends GUIController {
                 int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? cabin.getJ() - shipOffsets.getValue() + 1 : cabin.getJ() - shipOffsets.getValue();
                 this.shipGrid.add(cell, ofsCol, ofsRow);
                 cell.setOnMouseClicked(_ -> handlePlacedLifeform(ofsRow, ofsCol));
-//                cell.setOnMouseClicked(_ -> handleRemoveComponent(ofsRow, ofsCol)); // TODO: HandlePlacedLifeForm
             }
-
         }
     }
 
@@ -223,75 +198,76 @@ public class PopulateShipController extends GUIController {
             int row = lfch.getI();
             int col = lfch.getJ();
 
-            // If an alien is added, disable the corresponding button since there can be only one alien per type onboard
-            LifeformType lf = lfch.getItem().orElse(null);
-            if (lf != null) {
-                if (lf.equals(LifeformType.PURPLE_ALIEN)) {
-                    // Added purple alien
-                    this.purpleToggle.setDisable(true);
-                    this.currentSelectableLifeForm = null;
-                    this.disableRegion();
-                } else if (lf.equals(LifeformType.BROWN_ALIEN)) {
-                    // Added brown alien
-                    this.brownToggle.setDisable(true);
-                    this.currentSelectableLifeForm = null;
-                    this.disableRegion();
-                }
-            }
+            String targetPlayer = data.getPlayerNickname();
 
-            Region region = this.cabinRegions.get(keyFromCoords(row, col));
-
-            // Remove the clickable region from the 3 maps, and set the color to red (to signal that it is now occupied) // TODO: little icons would be far better, or simply do not highlight anymore
-            this.cabinRegions.remove(keyFromCoords(row, col));;
-            // If it's not present in these maps, nothing happens
-            this.purpleAlienCabinRegion.remove(keyFromCoords(row, col));
-            this.brownAlienCabinRegion.remove(keyFromCoords(row, col));
-
-            // If an astronaut occupied a valid alien cabin we check if there are valid alien cabins left
-            if (this.purpleAlienCabinRegion.isEmpty()) {
-                this.purpleToggle.setDisable(true);
-            }
-            if (this.brownAlienCabinRegion.isEmpty()) {
-                this.brownToggle.setDisable(true);
-            }
-
-            // Deactivating the region and setting its background color
-            region.setDisable(true);
-            region.setPickOnBounds(false);
-            region.setCursor(Cursor.DEFAULT);
-            region.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
-
-            // Setting the shipLabelText
-            this.setShipLabelText(data.isShipPopulated());
-            if (this.isShipFull) {
-                if (!this.cabinRegions.isEmpty()) {
-                    for (Map.Entry<String, Region> entry : this.cabinRegions.entrySet()) {
-                        // Remove all the clickable regions
-                        this.shipGrid.getChildren().remove(entry.getValue());
+            if (targetPlayer.equals(this.clientModel.getNickname())) {
+                // If an alien is added, disable the corresponding button since there can be only one alien per type onboard
+                LifeformType lf = lfch.getItem().orElse(null);
+                if (lf != null) {
+                    if (lf.equals(LifeformType.PURPLE_ALIEN)) {
+                        // Added purple alien
+                        this.purpleToggle.setDisable(true);
+                        this.currentSelectableLifeForm = null;
+                        this.disableRegion();
+                    } else if (lf.equals(LifeformType.BROWN_ALIEN)) {
+                        // Added brown alien
+                        this.brownToggle.setDisable(true);
+                        this.currentSelectableLifeForm = null;
+                        this.disableRegion();
                     }
-                    this.cabinRegions.clear();
-                    this.purpleAlienCabinRegion.clear();
-                    this.brownAlienCabinRegion.clear();
                 }
+
+                Region region = this.cabinRegions.get(keyFromCoords(row, col));
+
+                // Remove the clickable region from the 3 maps, and set the color to red (to signal that it is now occupied) // TODO: little icons would be far better, or simply do not highlight anymore
+                this.cabinRegions.remove(keyFromCoords(row, col));
+                // If it's not present in these maps, nothing happens
+                this.purpleAlienCabinRegion.remove(keyFromCoords(row, col));
+                this.brownAlienCabinRegion.remove(keyFromCoords(row, col));
+
+                // If an astronaut occupied a valid alien cabin we check if there are valid alien cabins left
+                if (this.purpleAlienCabinRegion.isEmpty()) {
+                    this.purpleToggle.setDisable(true);
+                }
+                if (this.brownAlienCabinRegion.isEmpty()) {
+                    this.brownToggle.setDisable(true);
+                }
+
+                // Deactivating the region and setting its background color
+                region.setDisable(true);
+                region.setPickOnBounds(false);
+                region.setCursor(Cursor.DEFAULT);
+                region.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+
+                // TODO: if someone has finished the colored regions will disappear, will be resolved with the addition of custom pawns
+                // Setting the shipLabelText
+                this.setShipLabelText(data.isShipPopulated());
+                if (this.isShipFull) {
+                    if (!this.cabinRegions.isEmpty()) {
+                        for (Map.Entry<String, Region> entry : this.cabinRegions.entrySet()) {
+                            // Remove all the clickable regions
+//                            this.shipGrid.getChildren().remove(entry.getValue());
+                            this.playersShipGridPane.get(this.clientModel.getNickname()).getChildren().add(entry.getValue());
+                        }
+                        this.cabinRegions.clear();
+                        this.purpleAlienCabinRegion.clear();
+                        this.brownAlienCabinRegion.clear();
+                    }
+                }
+            } else {
+                // If a secondary ship is being updated, the only necessary action is to set the background by adding a region
+                int ofsRow = row - shipOffsets.getKey();
+                int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
+
+                Region cell = new Region();
+                cell.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+
+                this.playersShipGridPane.get(targetPlayer).add(cell, ofsCol, ofsRow);
             }
+
+
         });
     }
-
-
-    private void addCoreImg() {
-        String playerColor = this.clientModel.getAllClientPlayers().get(this.clientModel.getNickname()).getColor().getPlayerColorString();
-        URL resource = Objects.requireNonNull(getClass().getResource("/imgs/tiles/core_" + playerColor + ".jpg"));
-        Image img = new Image(resource.toExternalForm(), 105, 105, true, true);
-
-        ImageView imgView = new ImageView(img);
-        imgView.setImage(img);
-
-        this.shipGrid.add(imgView, 3, 2);
-    }
-
-//    private String keyFromCoords(int row, int col) {
-//        return row + "_" + col;
-//    }
 
     private void setShipLabelText(boolean isShipFull) {
         String validityLabel;
@@ -383,14 +359,75 @@ public class PopulateShipController extends GUIController {
         }
     }
 
+    // TODO: create method in upper class to remove duplicate code
+    /**
+     * Creates a 0*1 grid, subsequently adding a number of rows (each one containing a toggleButton) equal to the number of players - 1 in the current game
+     */
+    private void initViewOtherShipsGrid() {
+        ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
+        int i = 0;
+        for (String playerNickname : this.clientModel.getAllClientPlayers().keySet()) {
+            if (playerNickname.equals(this.clientModel.getNickname())) {
+                continue;
+            }
+            RowConstraints row = new RowConstraints();
+            row.setPercentHeight(100.0);
+            row.setVgrow(Priority.ALWAYS);
+            this.viewOtherShipsGrid.getRowConstraints().add(row);
+
+            ToggleButton toggleButton = new ToggleButton();
+            toggleButton.setToggleGroup(viewOtherShipsToggleGroup);
+            toggleButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+            toggleButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            toggleButton.setText(playerNickname);
+            toggleButton.getStyleClass().add("blue");
+            this.viewOtherShipsGrid.add(toggleButton, 0, i);
+            i++;
+        }
+        viewOtherShipsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+
+            if (newToggle == null) {
+
+                // Enable the lifeFormToggles (only the ones that have not been disabled in other methods)
+                this.whiteToggle.setDisable(false);
+
+                if (this.canEnablePurple) { this.purpleToggle.setDisable(false); }
+                if (this.canEnableBrown) { this.brownToggle.setDisable(false); }
+
+                // Go back to view the client's own ship
+                this.setShipGrid(this.clientModel.getNickname());
+            } else {
+
+                // Deselect the lifeFormToggles (if any is active)
+                this.lifeFormsToggles.selectToggle(null);
+                // Disable the lifeForm toggles after saving the flags that determine if the alien buttons are to be reactivated (won't be done if they were already disabled)
+                this.canEnablePurple = !this.purpleToggle.isDisabled();
+                this.canEnablePurple = !this.purpleToggle.isDisabled();
+
+                this.whiteToggle.setDisable(true);
+                this.purpleToggle.setDisable(true);
+                this.brownToggle.setDisable(true);
+
+                ToggleButton selected = (ToggleButton) newToggle;
+                this.setShipGrid(selected.getText());
+            }
+
+
+
+            // Todo: change method, this is the populateships version, could also do half method in upper class and override invoking super, adding this part
+
+        });
+    }
+
     /**
      * Sets the shipGrid to display the ship of the given player
      */
     private void setShipGrid(String playerNickname) {
-            if (this.shipGrid != null) {
-                this.imagePane.getChildren().remove(this.playersShipGridPane.get(playerNickname));
-            }
+        if (this.shipGrid != null) {
+            this.imagePane.getChildren().remove(this.shipGrid);
+        }
 
-            this.imagePane.getChildren().add(this.playersShipGridPane.get(playerNickname));
+        this.shipGrid = this.playersShipGridPane.get(playerNickname);
+        this.imagePane.getChildren().add(this.shipGrid);
     }
 }
