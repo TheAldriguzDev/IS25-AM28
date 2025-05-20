@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public sealed abstract class ClientComponent implements WidgetTUIGenerator permits ClientBattery, ClientCabin, ClientCannon, ClientEngine, ClientShield, ClientStorage, ClientStructural, ClientVital {
-    // The cardTypeId represent the coordinate of the component in the shipConstructionPhase. It's calculated with (19 * i) + j
+    // The id represent the coordinate of the component in the shipConstructionPhase. It's calculated with (19 * i) + j
     private int id;
 
     protected Connector[] sides;

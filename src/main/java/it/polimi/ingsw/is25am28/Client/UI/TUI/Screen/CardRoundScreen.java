@@ -1956,14 +1956,14 @@ public class CardRoundScreen extends Screen {
         WidgetTUI.composeTwoWidgetsHorizontally(
                 WidgetTUI.fillScreenWithSpaces(
                         WidgetTUI.composeTwoWidgetsVertically(
-                                this.boardWidget.addPadding(0, 0, 0, 0),
+                                this.boardWidget,
                                 this.statsWidget
                         )
                         .centerWidgetScreen()
                         .addPadding(0, 1, 0, 0)
                 ),
                 WidgetTUI.composeTwoWidgetsHorizontally(
-                        this.shipGridWidget.addPadding(0, 1, 0, 0),
+                        this.shipGridWidget,
                         currCardAndPlayerActions
                 )
         ).printWidget();

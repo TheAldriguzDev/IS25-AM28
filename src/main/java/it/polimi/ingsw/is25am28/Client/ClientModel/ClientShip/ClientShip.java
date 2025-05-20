@@ -1200,6 +1200,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
             // Top Right Corner
             tmpString.append(UnicodeCharacters.SINGLE_LINE_TR_CORNER);
+            tmpString.append(SPACE.repeat(Integer.toString(index).length() - 1));
             shipGridWidget.appendString(tmpString.toString());
 
             // Middle
@@ -1274,6 +1275,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
             // Bottom Right Corner
             tmpString.append(UnicodeCharacters.SINGLE_LINE_BR_CORNER);
+            tmpString.append(SPACE.repeat(Integer.toString(index).length() - 1));
             shipGridWidget.appendString(tmpString.toString());
 
             // Adding the thickness of the borders

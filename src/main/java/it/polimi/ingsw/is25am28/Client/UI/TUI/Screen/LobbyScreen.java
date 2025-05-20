@@ -220,7 +220,7 @@ public class LobbyScreen extends Screen {
      */
     private void joinGameInput(GameInfoDTO game, List<String> usedNicknames) throws Exception {
         System.out.println();
-        System.out.println("Joining the game with cardTypeId " + game.getId() + "...");
+        System.out.println("Joining the game with id " + game.getId() + "...");
 
         // Ask for nickname
         String playerName;

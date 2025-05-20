@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
@@ -40,6 +41,8 @@ public class ShipConstructionScreen extends Screen {
 
     private WidgetTUI coveredComponentWidget;
     private WidgetTUI emptyComponentWidget;
+
+    private WidgetTUI playersFinishedShipWidget;
 
     private ClientComponent selectedComponent;
     private ClientShip currPlayerShip;
@@ -356,6 +359,42 @@ public class ShipConstructionScreen extends Screen {
     }
 
     /**
+     * Generates the widget containing all the players that
+     * have finished building and already sent their ships.
+     */
+    private void generatePlayersFinishedShipWidget() {
+        List<ClientPlayer> playersThatFinished = new ArrayList<>();
+
+        for (ClientPlayer player : this.model.getAllClientPlayers().values()) {
+            if (this.model.getState().getPlayerFinishedBuildingShip(player.getNickname())) {
+                playersThatFinished.add(player);
+            }
+        }
+
+        if (!playersThatFinished.isEmpty()) {
+            this.playersFinishedShipWidget =
+                    new WidgetTUI()
+                            .appendString("[PLAYERS THAT FINISHED]")
+                            .addPadding(0, 0, 1, 0);
+
+            for (ClientPlayer player : playersThatFinished) {
+                    this.playersFinishedShipWidget
+                            .appendString(
+                                    PrintUtils.addColor(
+                                            player.getNickname(),
+                                            player.getColor().getColorString()
+                                    )
+                            );
+            }
+
+            this.playersFinishedShipWidget
+                    .centerWidgetScreen()
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder();
+        }
+    }
+
+    /**
      * @return A widget that is the result of the composition of the
      *         widgets that make up the component selection screen
      */
@@ -363,10 +402,15 @@ public class ShipConstructionScreen extends Screen {
         // Ensuring each widget is updated
         this.generateReservedComponentsWidget();
         this.generateComponentSelectionWidget();
+        this.generatePlayersFinishedShipWidget();
 
         return WidgetTUI.composeTwoWidgetsHorizontally(
-            this.reservedComponentsWidget,
-            this.componentSelectionWidget
+                WidgetTUI.composeTwoWidgetsVertically(
+                        this.reservedComponentsWidget,
+                        this.playersFinishedShipWidget
+                )
+                .addPadding(0, 1, 0, 0),
+                this.componentSelectionWidget
         );
     }
 
@@ -378,6 +422,7 @@ public class ShipConstructionScreen extends Screen {
         // Ensuring each widget is updated
         this.generateSelectedComponentWidget();
         this.generateReservedComponentsWidget();
+        this.generatePlayersFinishedShipWidget();
         this.currPlayerShipWidget = this.currPlayerShip.getShipGridWidget();
 
         return WidgetTUI.composeTwoWidgetsHorizontally(
@@ -385,7 +430,10 @@ public class ShipConstructionScreen extends Screen {
                     this.selectedComponentWidget,
                     this.reservedComponentsWidget
             ).addPadding(0, 1, 0, 0).centerWidgetScreen(),
-            this.currPlayerShipWidget
+            WidgetTUI.composeTwoWidgetsHorizontally(
+                    this.currPlayerShipWidget,
+                    this.playersFinishedShipWidget
+            )
         );
     }
 
