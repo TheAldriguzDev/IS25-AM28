@@ -15,6 +15,7 @@ import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -76,19 +77,23 @@ public class ShipConstructionController extends GUIController {
     @FXML private VBox shipContainer;
     @FXML private VBox viewShipContainer;
     @FXML private VBox viewGameBoardContainer;
-    @FXML private HBox allSubdeckCardsContainer;
+    @FXML private VBox subdeckViewerContainer;
 
     // View other player ship attributes
     @FXML private Label viewPlayerShipLabel;
     @FXML private StackPane viewOtherShipStackPane;
     @FXML private ImageView viewOtherShipImage;
 
+    // Subdeck Visualization
+    @FXML private Label deselectSubdeckLabel;
+    @FXML private Button deselectSubdeckButton;
+    @FXML private HBox allSubdeckCardsContainer;
+
     @FXML private Button goBackToConstructionButton;
 
-    private boolean isLastFlip;
-
-    private List<Pair<ImageView, Boolean>> subdeckImageAndStatus;
-    private Node prevContainer;
+    private int selectedSubdeckId;
+    private List<ImageView> subdeckImages;
+    private List<Node> subdeckCards;
 
     // Attributes needed when the player has finished his ship
     private boolean hasFinishedShip = false;
@@ -104,8 +109,7 @@ public class ShipConstructionController extends GUIController {
     // Method used to initialize the page information that needs to be displayed
     public void initShipConstruction() {
         // TODO: Init the players ships --> Useful to update the specific client ship in real time
-        this.clientModel = GUIHandler.getInstance().getClientModel();
-        this.isLastFlip = false;
+        this.clientModel = GUIHandler.getClientModel();
 
         this.guiUtils = new GUIUtils(this.clientModel);
 
@@ -177,7 +181,7 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
-    private void startCountDownTimer() {
+    public void startCountDownTimer() {
         AtomicInteger countdown = new AtomicInteger(TIMER_DURATION);
 
         // Check if there is already an active timer
@@ -269,10 +273,11 @@ public class ShipConstructionController extends GUIController {
     }
 
     private void initSubdecks() {
-        this.subdeckImageAndStatus = new ArrayList<>();
-        this.subdeckImageAndStatus.add(new Pair<>(this.subDeckOne, false));
-        this.subdeckImageAndStatus.add(new Pair<>(this.subDeckTwo, false));
-        this.subdeckImageAndStatus.add(new Pair<>(this.subDeckThree, false));
+        this.subdeckImages = new ArrayList<>();
+
+        this.subdeckImages.add(this.subDeckOne);
+        this.subdeckImages.add(this.subDeckTwo);
+        this.subdeckImages.add(this.subDeckThree);
 
         this.allSubdeckCardsContainer.getChildren().clear();
 
@@ -301,7 +306,7 @@ public class ShipConstructionController extends GUIController {
                     this.allSubdeckCardsContainer.getChildren().add(cardImageView);
                 }
                 catch (Exception e) {
-                    System.out.println("CARD: " + card);
+                    System.out.println("CARD: " + card + " -> Missing path: " + card.getCardPath());
                     e.printStackTrace();
                 }
             }
@@ -351,7 +356,11 @@ public class ShipConstructionController extends GUIController {
         this.setVisibility(this.shipContainer, false);
         this.setVisibility(this.tileScrollPane, false);
         this.setVisibility(this.viewGameBoardContainer, false);
-        this.setVisibility(this.allSubdeckCardsContainer, false);
+        this.setVisibility(this.subdeckViewerContainer, false);
+
+        if (this.subdeckCards != null && this.selectedSubdeckId != -1) {
+            this.handleDeselectSubdeck();
+        }
 
         // Set the label text dynamically
         this.viewPlayerShipLabel.setText("You are now viewing "+ requestedPlayerShip +"'s ship");
@@ -381,7 +390,11 @@ public class ShipConstructionController extends GUIController {
             this.setVisibility(this.shipContainer, false);
             this.setVisibility(this.viewShipContainer, false);
             this.setVisibility(this.viewGameBoardContainer, false);
-            this.setVisibility(this.allSubdeckCardsContainer, false);
+            this.setVisibility(this.subdeckViewerContainer, false);
+
+            if (this.subdeckCards != null && this.selectedSubdeckId != -1) {
+                this.handleDeselectSubdeck();
+            }
 
             this.setVisibility(this.tileScrollPane, true);
         }
@@ -398,13 +411,6 @@ public class ShipConstructionController extends GUIController {
         );
 
         try {
-            // If the current
-            if (this.isLastFlip) {
-                if (!this.clientModel.getState().getPlayerFinishedBuildingShip(this.clientModel.getNickname())) {
-                    throw new IllegalStateException("You must send your ship before making the last hourglass flip.");
-                }
-            }
-
             GUIHandler.getVirtualClient().sendMessage(
                 new FlipTimer(this.clientModel.getNickname())
             );
@@ -415,16 +421,16 @@ public class ShipConstructionController extends GUIController {
     }
 
     // Send the player ship to the server
-    @FXML void handleConfirmShip() {
+    @FXML public void handleConfirmShip() {
         GUIHandler.setCommandCTX(new CommandCTX(
                 "sendShip",
                 () -> {
                     this.hasFinishedShip = true;
 
-                    // Sets the timer button as enabled
-                    if (this.flipTimerButton.isDisabled()) {
-                        this.resetTimer();
-                    }
+//                    // Sets the timer button as enabled
+//                    if (this.flipTimerButton.isDisabled()) {
+//                        this.resetTimer();
+//                    }
 
                     Platform.runLater(this::showEndedShipConstruction);
                 },
@@ -447,7 +453,11 @@ public class ShipConstructionController extends GUIController {
         this.setVisibility(this.shipContainer, false);
         this.setVisibility(this.tileScrollPane, false);
         this.setVisibility(this.viewGameBoardContainer, false);
-        this.setVisibility(this.allSubdeckCardsContainer, false);
+        this.setVisibility(this.subdeckViewerContainer, false);
+
+        if (this.subdeckCards != null && this.selectedSubdeckId != -1) {
+            this.handleDeselectSubdeck();
+        }
 
         // Set the label text dynamically
         this.viewPlayerShipLabel.setText("You have finished building your ship");
@@ -468,71 +478,51 @@ public class ShipConstructionController extends GUIController {
     @FXML
     void handleViewSubDeck(MouseEvent event) {
         ImageView clickedSubdeck;
-        String fxId;
-        boolean wasSelected;
-        int subdeckIndex = 0;
+        int subdeckIndex;
 
         clickedSubdeck = (ImageView) event.getSource();
+        subdeckIndex = 0;
 
-        for (Pair<ImageView, Boolean> p : this.subdeckImageAndStatus) {
-            if (clickedSubdeck.equals(p.getKey())) break;
+        for (ImageView subdeckImg : this.subdeckImages) {
+            if (clickedSubdeck.equals(subdeckImg)) break;
             subdeckIndex++;
         }
 
-        if (subdeckIndex == this.subdeckImageAndStatus.size()) return;
-
-        fxId = this.subdeckImageAndStatus.get(subdeckIndex).getKey().getId();
-        wasSelected = this.subdeckImageAndStatus.get(subdeckIndex).getValue();
-        final int finalSubdeckIdx = subdeckIndex;
+        if (subdeckIndex == this.subdeckImages.size()) return;
+        this.selectedSubdeckId = subdeckIndex;
 
         GUIHandler.setCommandCTX(
             new CommandCTX(
                 "selectSubdeck",
                 () -> {
                     int subdeckSize = this.clientModel.getClientEventCards().size() / 4;
-                    int start = (finalSubdeckIdx * subdeckSize);
+                    int start = (this.selectedSubdeckId * subdeckSize);
                     int end = (start + subdeckSize);
 
-                    List<Node> cardsToShow = this.allSubdeckCardsContainer.getChildren().subList(start, end);
+                    this.subdeckCards = this.allSubdeckCardsContainer.getChildren().subList(start, end);
 
                     Platform.runLater(() -> {
-//                        for (ImageView subdeckImg : this.subdeckImageAndStatus.stream().map(Pair::getKey).toList()) {
-//                            if (wasSelected) {
-//                                this.setVisibility(subdeckImg, true);
-//                            }
-//                            else {
-//                                this.setVisibility(subdeckImg, subdeckImg.getId().equals(fxId));
-//                            }
-//                        }
-
-                        if (wasSelected) {
-                            for (Node n : cardsToShow) {
-                                this.setVisibility(n, false);
-                            }
-
-                            for (Node n : this.contentContainer.getChildren()) {
-                                this.setVisibility(n, n.equals(this.prevContainer));
-                            }
-
-                            this.prevContainer = null;
-                        }
-                        else {
-                            for (Node n : this.contentContainer.getChildren()) {
-                                if (n.isVisible()) {
-                                    this.prevContainer = n;
-                                }
-
-                                this.setVisibility(n, false);
-                            }
-
-                            for (Node n : cardsToShow) {
-                                this.setVisibility(n, true);
-                            }
-
-                            this.setVisibility(this.allSubdeckCardsContainer, true);
+                        for (ImageView subdeckImg : this.subdeckImages) {
+                            subdeckImg.setDisable(true);
+                            subdeckImg.setOpacity(0.5);
                         }
 
-                        this.subdeckImageAndStatus.get(finalSubdeckIdx).setValue(!wasSelected);
+                        for (Node n : this.contentContainer.getChildren()) {
+                            this.setVisibility(n, false);
+                        }
+
+                        for (Node n : subdeckCards) {
+                            this.setVisibility(n, true);
+                        }
+
+                        this.deselectSubdeckLabel.setText("You are now viewing subdeck #" + (this.selectedSubdeckId + 1));
+
+                        this.setVisibility(this.subdeckViewerContainer, true);
+                        this.subdeckViewerContainer.setAlignment(Pos.CENTER);
+
+                        this.setVisibility(this.deselectSubdeckLabel, true);
+                        this.setVisibility(this.deselectSubdeckButton, true);
+                        this.setVisibility(this.allSubdeckCardsContainer, true);
                     });
                 },
                 () -> {}
@@ -543,8 +533,47 @@ public class ShipConstructionController extends GUIController {
             GUIHandler.getVirtualClient().sendMessage(
                 new SelectDeselectSubdeck(
                     this.clientModel.getNickname(),
-                    subdeckIndex + 1,
-                    !this.subdeckImageAndStatus.get(subdeckIndex).getValue()
+                    this.selectedSubdeckId,
+                    true
+                )
+            );
+        }
+        catch (Exception e) {
+            this.showError(e.getMessage());
+        }
+    }
+
+    public void handleDeselectSubdeck() {
+        GUIHandler.setCommandCTX(
+            new CommandCTX(
+                "deselectSubdeck",
+                () -> {
+                    Platform.runLater(() -> {
+                        for (ImageView subdeckImg : this.subdeckImages) {
+                            subdeckImg.setDisable(false);
+                            subdeckImg.setOpacity(1);
+                        }
+
+                        for (Node n : this.subdeckCards) {
+                            this.setVisibility(n, false);
+                        }
+
+                        this.subdeckCards = null;
+                        this.selectedSubdeckId = -1;
+
+                        this.setVisibility(this.subdeckViewerContainer, false);
+                    });
+                },
+                () -> {}
+            )
+        );
+
+        try {
+            GUIHandler.getVirtualClient().sendMessage(
+                new SelectDeselectSubdeck(
+                    this.clientModel.getNickname(),
+                    this.selectedSubdeckId,
+                    false
                 )
             );
         }
@@ -564,7 +593,7 @@ public class ShipConstructionController extends GUIController {
                         this.setVisibility(this.tileScrollPane, false);
                         this.setVisibility(this.viewShipContainer, false);
                         this.setVisibility(this.viewGameBoardContainer, false);
-                        this.setVisibility(this.allSubdeckCardsContainer, false);
+                        this.setVisibility(this.subdeckViewerContainer, false);
 
                         this.selectedComponentImage.setImage(
                                 this.getImageFromPath(selectedComponent.getPath(), 105, 105)
@@ -606,7 +635,7 @@ public class ShipConstructionController extends GUIController {
                         this.setVisibility(this.shipContainer, false);
                         this.setVisibility(this.viewShipContainer, false);
                         this.setVisibility(this.viewGameBoardContainer, false);
-                        this.setVisibility(this.allSubdeckCardsContainer, false);
+                        this.setVisibility(this.subdeckViewerContainer, false);
 
                         // Before displaying the dynamic page --> set the tile info etc
                         this.setVisibility(this.tileScrollPane, true);
@@ -645,7 +674,7 @@ public class ShipConstructionController extends GUIController {
         this.setVisibility(this.shipContainer, false);
         this.setVisibility(this.viewShipContainer, false);
         this.setVisibility(this.viewGameBoardContainer, false);
-        this.setVisibility(this.allSubdeckCardsContainer, false);
+        this.setVisibility(this.subdeckViewerContainer, false);
 
         // Before displaying the dynamic page --> set the tile info etc
         this.setVisibility(this.tileScrollPane, true);
@@ -671,7 +700,7 @@ public class ShipConstructionController extends GUIController {
                         this.setVisibility(this.shipContainer, false);
                         this.setVisibility(this.viewShipContainer, false);
                         this.setVisibility(this.viewGameBoardContainer, false);
-                        this.setVisibility(this.allSubdeckCardsContainer, false);
+                        this.setVisibility(this.subdeckViewerContainer, false);
 
                         this.selectedComponentImage.setRotate(0.0);
 

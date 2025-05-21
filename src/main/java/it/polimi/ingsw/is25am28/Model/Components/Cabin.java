@@ -128,7 +128,7 @@ public final class Cabin extends Component {
                         // Case 1 - Cabin has ASTRONAUTS
                         padding = (width - 3) / 2;
 
-                        // Creating the cardName
+                        // Creating the name
                         nameAlias.append(SPACE);
                         nameAlias.append(addColor(Cabin.alias, ANSIColors.WHITE));
 
@@ -139,7 +139,7 @@ public final class Cabin extends Component {
                             nameAlias.append(SPACE.repeat(width - coreLabel.length() - Cabin.alias.length() - 2));
                         }
                         else {
-                            // Otherwise just adds the remaining right padding spaces to the cardName alias string
+                            // Otherwise just adds the remaining right padding spaces to the name alias string
                             nameAlias.append(nameAliasRightPadding);
                         }
 
@@ -167,7 +167,7 @@ public final class Cabin extends Component {
                     else if (storedLifeformType == LifeformType.PURPLE_ALIEN) {
                         // Case 2 - Cabin has a PURPLE ALIEN
 
-                        // Creating the cardName
+                        // Creating the name
                         nameAlias.append(SPACE);
                         nameAlias.append(addColor(Cabin.alias, ANSIColors.MAGENTA));
                         nameAlias.append(nameAliasRightPadding);
@@ -181,7 +181,7 @@ public final class Cabin extends Component {
                     else {
                         // Case 3 - Cabin has a BROWN ALIEN
 
-                        // Creating the cardName
+                        // Creating the name
                         nameAlias.append(SPACE);
                         nameAlias.append(addColor(Cabin.alias, ANSIColors.YELLOW));
                         nameAlias.append(nameAliasRightPadding);

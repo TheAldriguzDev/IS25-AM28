@@ -66,7 +66,7 @@ public abstract class EventCard {
     }
 
     /**
-     * @return This card's cardName
+     * @return This card's name
      */
     public String getCardName() {
         return this.cardName;
@@ -390,9 +390,9 @@ public abstract class EventCard {
         }
     }
 
-    // TODO: The cardName should be UpdatedBatteries since it contains the new batteries
+    // TODO: The name should be UpdatedBatteries since it contains the new batteries
     //       count, but i will be changed in the future to contain the coordinates of the
-    //       actual components from which to remove the batteries, so in theory a cardName
+    //       actual components from which to remove the batteries, so in theory a name
     //       change is not necessary.
     /**
      * If the map of removedBatteries is not empty, it means that there is something to send

@@ -75,7 +75,7 @@ public final class ClientBattery extends ClientComponent {
         // used by the wrapper to create the border
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding the cardName
+        // Adding the name
         screen.add(nameAlias + SPACE.repeat(width - nameAlias.length()));
 
         // Adding the battery indicator and all the padding spaces
