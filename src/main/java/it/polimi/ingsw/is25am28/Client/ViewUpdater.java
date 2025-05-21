@@ -147,18 +147,21 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(FixedComponentDTO state) throws Exception {
         synchronized (this.model) {
-            if (state.getPlayerNickname().equals(this.model.getNickname())) {
-                this.model.getState().removeComponentFromShip(
-                        state.getI(),
-                        state.getJ()
-                );
+//            this.model.getState().removeComponentFromShip(
+//                    state.getI(),
+//                    state.getJ()
+//            );
+            this.model.getShipOfPlayer(state.getPlayerNickname()).ifPresent(
+                    (ClientShip ship) -> {
+                        if (state.isShipFixed()) {
+                            this.model.getState().removePlayerFromFixList(state.getPlayerNickname());
+                        }
 
-                if (state.isShipFixed()) {
-                    this.model.getState().removePlayerFromFixList(state.getPlayerNickname());
-                }
+                        ship.removeComponent(state.getI(), state.getJ());
+                    }
+            );
 
-                this.ui.showShipFixing(this.model.getState().getFixShipDTO());
-            }
+            this.ui.showShipFixing(this.model.getState().getFixShipDTO());
 
             if (this.ui instanceof GUIHandler) {
                 ((GUIHandler) this.ui).updateShipRemovedComponent(state);
