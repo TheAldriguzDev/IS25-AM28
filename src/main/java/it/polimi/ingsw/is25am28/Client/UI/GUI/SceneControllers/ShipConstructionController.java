@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventC
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
@@ -105,6 +106,8 @@ public class ShipConstructionController extends GUIController {
         // TODO: Init the players ships --> Useful to update the specific client ship in real time
         this.clientModel = GUIHandler.getInstance().getClientModel();
         this.isLastFlip = false;
+
+        this.guiUtils = new GUIUtils(this.clientModel);
 
         // INIT THE NAVBAR
         this.initSidePanel();
@@ -260,7 +263,7 @@ public class ShipConstructionController extends GUIController {
         for (ClientPlayer p : this.clientModel.getAllClientPlayers().values()) {
             // Create the new grid for each player different from the currentPlayer
             if (!this.clientModel.getNickname().equals(p.getNickname())) {
-                this.playersShipGridPane.put(p.getNickname(), createEmptyShipGrid(p));
+                this.playersShipGridPane.put(p.getNickname(), this.guiUtils.createEmptyShipGrid(p));
             }
         }
     }

@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -66,12 +67,14 @@ public class PopulateShipController extends GUIController {
 
     public void init(PopulateShipDTO state) {
 
+        this.clientModel = GUIHandler.getInstance().getClientModel();
+        this.guiUtils = new GUIUtils(this.clientModel);
+
         this.playersShipGridPane = new HashMap<>();
         this.componentsImagesMap = new HashMap<>();
 
         this.initLifeFormsToggles();
 
-        this.clientModel = GUIHandler.getInstance().getClientModel();
         this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
         if (ship == null) {
@@ -83,13 +86,13 @@ public class PopulateShipController extends GUIController {
         this.initViewOtherShipsGrid();
 
         // Setting the correct background
-        this.setShipGridBackground(this.shipImageView);
+        this.guiUtils.setShipGridBackground(this.shipImageView);
 
         for (ClientPlayer player : this.clientModel.getAllClientPlayers().values()) {
             // Creating an empty ship grid
-            GridPane shipGrid = createEmptyShipGrid(player);
+            GridPane shipGrid = this.guiUtils.createEmptyShipGrid(player);
             // Creating the ship's visuals
-            this.componentsImagesMap.put(player.getNickname(), this.createShipVisuals(player.getNickname(), shipGrid));
+            this.componentsImagesMap.put(player.getNickname(), this.guiUtils.createShipVisuals(player.getNickname(), shipGrid));
             // Adding the shipGrid to the map
             this.playersShipGridPane.put(player.getNickname(), shipGrid);
         }
@@ -124,7 +127,7 @@ public class PopulateShipController extends GUIController {
                 cell.setStyle("-fx-background-color: transparent;");
                 cell.setCursor(Cursor.DEFAULT);
                 cell.setPickOnBounds(false);
-                this.cabinRegions.put(keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                this.cabinRegions.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
 
                 for(ClientComponent component : ship.getNearestReachableComponents(cabin)) {
                     if (component != null && component.getClass().equals(ClientVital.class)) {
@@ -132,11 +135,11 @@ public class PopulateShipController extends GUIController {
                         if (vital.getVitalType().equals(VitalType.PURPLE_VITAL)) {
                             this.purpleToggle.setDisable(false);
                             // Add the cabin to the purpleAlienRegion
-                            this.purpleAlienCabinRegion.put(keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                            this.purpleAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
                         } else { // Purple vital
                             this.brownToggle.setDisable(false);
                             // Add the cabin to the brownAlienRegion
-                            this.brownAlienCabinRegion.put(keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                            this.brownAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
                         }
                     }
                 }
@@ -217,13 +220,13 @@ public class PopulateShipController extends GUIController {
                     }
                 }
 
-                Region region = this.cabinRegions.get(keyFromCoords(row, col));
+                Region region = this.cabinRegions.get(this.guiUtils.keyFromCoords(row, col));
 
                 // Remove the clickable region from the 3 maps, and set the color to red (to signal that it is now occupied) // TODO: little icons would be far better, or simply do not highlight anymore
-                this.cabinRegions.remove(keyFromCoords(row, col));
+                this.cabinRegions.remove(this.guiUtils.keyFromCoords(row, col));
                 // If it's not present in these maps, nothing happens
-                this.purpleAlienCabinRegion.remove(keyFromCoords(row, col));
-                this.brownAlienCabinRegion.remove(keyFromCoords(row, col));
+                this.purpleAlienCabinRegion.remove(this.guiUtils.keyFromCoords(row, col));
+                this.brownAlienCabinRegion.remove(this.guiUtils.keyFromCoords(row, col));
 
                 // If an astronaut occupied a valid alien cabin we check if there are valid alien cabins left
                 if (this.purpleAlienCabinRegion.isEmpty()) {

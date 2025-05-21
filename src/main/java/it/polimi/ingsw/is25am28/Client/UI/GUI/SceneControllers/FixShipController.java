@@ -1,10 +1,10 @@
 package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
@@ -15,10 +15,8 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -26,12 +24,8 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-
-import static it.polimi.ingsw.is25am28.Model.Ship.AbstractShip.shipProfiles;
 
 public class FixShipController extends GUIController {
 
@@ -52,11 +46,14 @@ public class FixShipController extends GUIController {
 
     public void init(FixShipDTO state) {
 
+        this.clientModel = GUIHandler.getInstance().getClientModel();
+        this.guiUtils = new GUIUtils(this.clientModel);
+
         this.componentsImagesMap = new HashMap<>();
         this.componentsRegionMap = new HashMap<>();
         this.playersShipGridPane = new HashMap<>();
 
-        this.clientModel = GUIHandler.getInstance().getClientModel();
+
         this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
         if (ship == null) {
@@ -68,13 +65,13 @@ public class FixShipController extends GUIController {
         this.initViewOtherShipsGrid();
 
         // Setting the correct background
-        this.setShipGridBackground(this.shipImageView);
+        this.guiUtils.setShipGridBackground(this.shipImageView);
 
         for (ClientPlayer player : this.clientModel.getAllClientPlayers().values()) {
             // Creating an empty ship grid
-            GridPane shipGrid = createEmptyShipGrid(player);
+            GridPane shipGrid = this.guiUtils.createEmptyShipGrid(player);
             // Creating the ship's visuals
-            this.componentsImagesMap.put(player.getNickname(), this.createShipVisuals(player.getNickname(), shipGrid));
+            this.componentsImagesMap.put(player.getNickname(), this.guiUtils.createShipVisuals(player.getNickname(), shipGrid));
             // Adding the shipGrid to the map
             this.playersShipGridPane.put(player.getNickname(), shipGrid);
         }
@@ -89,7 +86,7 @@ public class FixShipController extends GUIController {
 
         // Gets the visited components from the componentsImagesMap, since there's the need to set a region for every ship's component
         for (Map.Entry<String, ImageView> entry : this.componentsImagesMap.get(this.clientModel.getNickname()).entrySet()) {
-            Pair coords = this.coordsFromKey(entry.getKey());
+            Pair coords = this.guiUtils.coordsFromKey(entry.getKey());
             int row = (int) coords.getKey();
             int col = (int) coords.getValue();
 
@@ -106,7 +103,7 @@ public class FixShipController extends GUIController {
                 cell.setPickOnBounds(true);
 
                 // Adds the component to the regions map, so the reference can be easily retrieve in case of removal of the component
-                this.componentsRegionMap.put(this.keyFromCoords(row, col), cell);
+                this.componentsRegionMap.put(this.guiUtils.keyFromCoords(row, col), cell);
 
                 this.shipGrid.add(cell, ofsCol, ofsRow);
                 cell.setOnMouseClicked(_ -> handleRemoveComponent(ofsRow, ofsCol));
@@ -163,14 +160,14 @@ public class FixShipController extends GUIController {
         Platform.runLater(() -> {
 
             // removing the component's image
-            this.playersShipGridPane.get(targetPlayer).getChildren().remove(this.componentsImagesMap.get(targetPlayer).get(keyFromCoords(row, col)));
-            this.componentsImagesMap.remove(keyFromCoords(row, col));
+            this.playersShipGridPane.get(targetPlayer).getChildren().remove(this.componentsImagesMap.get(targetPlayer).get(this.guiUtils.keyFromCoords(row, col)));
+            this.componentsImagesMap.remove(this.guiUtils.keyFromCoords(row, col));
 
             // Update the label and regions only if the targetPlayer is the client himself
             if (targetPlayer.equals(this.clientModel.getNickname())) {
                 // Remove the clickable region
-                this.playersShipGridPane.get(this.clientModel.getNickname()).getChildren().remove(this.componentsRegionMap.get(keyFromCoords(row, col)));
-                this.componentsRegionMap.remove(keyFromCoords(row, col));
+                this.playersShipGridPane.get(this.clientModel.getNickname()).getChildren().remove(this.componentsRegionMap.get(this.guiUtils.keyFromCoords(row, col)));
+                this.componentsRegionMap.remove(this.guiUtils.keyFromCoords(row, col));
 
                 // Setting the shipLabelText
                 this.setShipLabelText(isShipValid);

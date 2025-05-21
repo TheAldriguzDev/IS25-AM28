@@ -296,7 +296,7 @@ public class GUIHandler extends Application implements ClientUI {
         Platform.runLater(() -> {
             // Check if the FIX_SHIP_SCENE is already loaded
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.FIX_SHIP_SCENE)) {
-                // TODO
+
                 return;
             }
 
@@ -338,7 +338,7 @@ public class GUIHandler extends Application implements ClientUI {
         Platform.runLater(() -> {
             // Check if the POPULATE_SHIP_SCENE is already loaded
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.POPULATE_SHIP_SCENE)) {
-                // TODO
+
                 return;
             }
 
@@ -379,7 +379,7 @@ public class GUIHandler extends Application implements ClientUI {
         Platform.runLater(() -> {
             // Check if the CARD_ROUND_SCENE is already loaded
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.CARD_ROUND_SCENE)) {
-                // TODO
+
                 return;
             }
 
@@ -398,7 +398,7 @@ public class GUIHandler extends Application implements ClientUI {
                 // Store the root and controller
                 this.saveRootAndController(GuiScenes.CARD_ROUND_SCENE, root, controller);
 
-                // TODO
+                controller.init(cardRound);
 
                 Scene newScene = new Scene(root);
                 this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
@@ -407,6 +407,8 @@ public class GUIHandler extends Application implements ClientUI {
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } finally {
+                this.currentScene = GuiScenes.CARD_ROUND_SCENE;
             }
         });
     }
