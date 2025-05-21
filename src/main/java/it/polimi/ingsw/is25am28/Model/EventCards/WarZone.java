@@ -58,7 +58,7 @@ public class WarZone extends EventCard {
 
     /**
      * WarZone constructor that sets:
-     * - General information about the card (cardName, level, board)
+     * - General information about the card (name, level, board)
      * - Specific information about the specs of the card (movementSteps, requiredCrew, shootingSequence)
      * - The order of the action of the card
      * */
@@ -870,7 +870,7 @@ public class WarZone extends EventCard {
 
         } else {
             cardState.setId(this.cardTypeId);
-            // Set the card cardName
+            // Set the card name
             cardState.setCardName(this.getCardName());
             // Set the card level
             cardState.setCardLevel(this.cardLevel);
@@ -919,7 +919,7 @@ public class WarZone extends EventCard {
         CardStateJSON cardState = new CardStateJSON();
         cardState.setCardID(this.getCardID());
         cardState.setId(this.cardTypeId);
-        // Set the card cardName
+        // Set the card name
         cardState.setCardName(this.getCardName());
         // Set the card level
         cardState.setCardLevel(this.cardLevel);

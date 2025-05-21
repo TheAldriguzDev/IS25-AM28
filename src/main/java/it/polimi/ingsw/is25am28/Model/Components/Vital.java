@@ -57,7 +57,7 @@ public final class Vital extends Component {
         List<String> customBorderScheme = generateComponentCustomBorder();
         padding = width - Vital.alias.length() - 1;
 
-        // Setting the cardName with the same color as the vital unit's color
+        // Setting the name with the same color as the vital unit's color
         if (this.getVitalType() == VitalType.PURPLE_VITAL) {
             paddedString.append(addColor(SPACE + Vital.alias, ANSIColors.MAGENTA));
         }
@@ -65,7 +65,7 @@ public final class Vital extends Component {
             paddedString.append(addColor(SPACE + Vital.alias, ANSIColors.BRIGHT_YELLOW));
         }
 
-        // Adding the colored cardName string to the screen
+        // Adding the colored name string to the screen
         paddedString.append(SPACE.repeat(padding));
         screen.add(paddedString.toString());
 

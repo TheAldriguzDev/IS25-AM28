@@ -42,7 +42,7 @@ public final class ClientEngine extends ClientComponent {
         // used by the wrapper to create the border
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding the component's cardName
+        // Adding the component's name
         paddedString = new StringBuilder(PrintUtils.SPACE + Engine.alias);
         screen.add(paddedString + PrintUtils.SPACE.repeat(width - paddedString.length()));
 

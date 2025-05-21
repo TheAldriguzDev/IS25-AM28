@@ -48,7 +48,7 @@ public final class NewPlayer implements Message {
         List<String> errors = new ArrayList<>();
 
         if (playerNickname == null || playerNickname.isEmpty()) {
-            errors.add("Your cardName cannot be null or empty");
+            errors.add("Your name cannot be null or empty");
         }
 
         if (playerColor == null) {

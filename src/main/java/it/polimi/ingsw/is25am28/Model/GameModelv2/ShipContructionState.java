@@ -68,7 +68,8 @@ public final class ShipContructionState extends State implements TimerObserver {
 
             // TODO (NOTE: Add this if you want to run the "test_game_model_hourglass" in GameModelTest.java)
             //      (It only reduces the time to wait when running said test) or just test the game
-//            this.hourGlass.setDurationInMillis(3000);
+//            this.hourGlass.setDurationInMillis(3000);   // 3s
+//            this.hourGlass.setDurationInMillis(10000);  // 10s
 
             this.hourGlass.flip();
         }
@@ -142,7 +143,7 @@ public final class ShipContructionState extends State implements TimerObserver {
             throw new IllegalStateException("The time to select the tiles has ended");
         }
 
-        // TODO: Understand if we need to put the player cardName in the Exception
+        // TODO: Understand if we need to put the player name in the Exception
         if (selected.contains(id)) {
             throw new IllegalStateException("The required tile has already been selected from someone else");
         }

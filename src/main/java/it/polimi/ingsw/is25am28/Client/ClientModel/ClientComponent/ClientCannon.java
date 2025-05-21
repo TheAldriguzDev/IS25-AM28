@@ -51,7 +51,7 @@ public final class ClientCannon extends ClientComponent {
         // used by the wrapper to create the border
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding the component's cardName
+        // Adding the component's name
         paddedString = new StringBuilder(SPACE + Cannon.alias);
         screen.add(paddedString + SPACE.repeat(width - paddedString.length()));
 

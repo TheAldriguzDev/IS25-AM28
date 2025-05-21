@@ -484,7 +484,18 @@ public class GUIHandler extends Application implements ClientUI {
     public void receiveTimerDTO(TimerDTO timerDTO) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
-            controller.resetTimer();
+
+            if (timerDTO.getHasEnded()) {
+                controller.handleConfirmShip();
+            }
+            else {
+                if (!timerDTO.getIsServerAction()) {
+                    controller.startCountDownTimer();
+                }
+                else {
+                    controller.resetTimer();
+                }
+            }
         }
     }
 

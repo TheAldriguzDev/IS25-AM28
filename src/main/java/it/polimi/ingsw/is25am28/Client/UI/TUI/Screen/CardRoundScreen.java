@@ -1594,7 +1594,7 @@ public class CardRoundScreen extends Screen {
     }
 
     /**
-     * Generates a widget with the player's cardName and some
+     * Generates a widget with the player's name and some
      * information about the fact that he's viewing his ship
      */
     private void generatePlayerNameWidget() {

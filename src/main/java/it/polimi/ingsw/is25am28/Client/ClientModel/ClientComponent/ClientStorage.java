@@ -84,7 +84,7 @@ public final class ClientStorage extends ClientComponent {
         // used by the wrapper to create the border
         List<String> customBorderScheme = generateComponentCustomBorder();
 
-        // Adding the cardName (if this is a special storage, it gets colored with RED)
+        // Adding the name (if this is a special storage, it gets colored with RED)
         if (this.isSpecialStorage) {
             nameAlias = SPACE + addColor(Storage.alias, ANSIColors.RED);
         }
