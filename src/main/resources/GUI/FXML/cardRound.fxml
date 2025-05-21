@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -10,72 +12,170 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
 
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.CardRoundController">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.CardRoundController">
    <children>
-      <VBox alignment="CENTER">
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css">
          <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../imgs/cardboard/board_level_2.png" />
-               </image>
-            </ImageView>
-            <VBox alignment="TOP_CENTER" styleClass="viewOtherShips-VBox">
+            <VBox alignment="CENTER" spacing="15.0">
                <children>
-                  <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="View other ships" />
-                  <GridPane fx:id="viewOtherShipsGrid" hgap="5.0" vgap="5.0">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                  </GridPane>
+                  <VBox alignment="CENTER" styleClass="generic-VBox">
+                     <children>
+                        <Label text="It's YOUR turn !!!">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" styleClass="generic-VBox">
+                     <children>
+                        <Label text="Your Stats">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label text="Total Credits: 0" />
+                        <Label text="Total Crew: 0" />
+                        <Label layoutX="74.0" layoutY="56.0" text="FirePower: 0.0 (Max= 0.0) " />
+                        <Label layoutX="74.0" layoutY="73.0" text="EnginePower: 0 (Max= 0)" />
+                        <Label layoutX="74.0" layoutY="90.0" text="Total Batteries: 0" />
+                        <Label layoutX="64.0" layoutY="107.0" text="Total Items: 0 🟥 0🟨 0🟩 0🟦" />
+                        <Label layoutX="64.0" layoutY="124.0" text="Lost Components: 0" />
+                     </children>
+                  </VBox>
+                  <VBox alignment="CENTER" styleClass="resourceBank-VBox">
+                     <children>
+                        <Label text="Resource Bank">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label>
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
+                        <Label text="0 🟥 0🟨 0🟩 0🟦" />
+                     </children>
+                  </VBox>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../imgs/cardboard/board_level_2.png" />
+                     </image>
+                  </ImageView>
+                  <VBox alignment="TOP_CENTER" styleClass="viewOtherShips-VBox">
+                     <children>
+                        <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="View other ships" />
+                        <GridPane fx:id="viewOtherShipsGrid" hgap="10.0" vgap="10.0">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                           </rowConstraints>
+                           <children>
+                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" />
+                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" GridPane.columnIndex="1" />
+                              <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+                           </children>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </children>
+               <HBox.margin>
+                  <Insets left="30.0" right="10.0" />
+               </HBox.margin>
+            </VBox>
+            <VBox fx:id="fixShipVBox" alignment="CENTER" stylesheets="@../style.css">
+               <children>
+                  <TextFlow fx:id="selectedCommandLabel" textAlignment="CENTER" />
+                  <StackPane fx:id="imagePane" maxHeight="-Infinity" maxWidth="-Infinity">
+                     <padding>
+                        <Insets bottom="20.0" left="10.0" right="20.0" top="20.0" />
+                     </padding>
+                     <children>
+                        <ImageView fx:id="shipImageView" fitWidth="816.0" preserveRatio="true">
+                           <image>
+                              <Image url="@../../imgs/cardboard/level_2.jpg" />
+                           </image>
+                        </ImageView>
+                        <GridPane fx:id="shipGrid" alignment="CENTER" hgap="2.5" prefHeight="459.0" prefWidth="659.0" vgap="2.5">
+                           <rowConstraints>
+                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                           </rowConstraints>
+                           <columnConstraints>
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                           </columnConstraints>
+                        </GridPane>
+                     </children>
+                  </StackPane>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+            </VBox>
+            <VBox alignment="CENTER" spacing="15.0">
+               <HBox.margin>
+                  <Insets left="10.0" right="30.0" />
+               </HBox.margin>
+               <children>
+                  <VBox alignment="CENTER" styleClass="generic-Hbox">
+                     <children>
+                        <Label text="Label" />
+                     </children>
+                  </VBox>
+                  <ImageView fx:id="cardImageView" fitHeight="316.0" fitWidth="235.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../imgs/cards/GT-cards_II_IT_0121.jpg" />
+                     </image>
+                  </ImageView>
+                  <ScrollPane prefHeight="200.0" prefWidth="200.0">
+                     <content>
+                        <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
+                           <children>
+                              <Label text="Label" />
+                           </children>
+                        </VBox>
+                     </content>
+                  </ScrollPane>
                </children>
             </VBox>
          </children>
-      </VBox>
-      <VBox fx:id="fixShipVBox" alignment="CENTER" stylesheets="@../style.css">
+      </HBox>
+      <HBox fx:id="commandsBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="generic-Hbox">
          <children>
-            <TextFlow fx:id="populateShipLabel" textAlignment="CENTER" />
-            <StackPane fx:id="imagePane" maxHeight="-Infinity" maxWidth="-Infinity">
-               <padding>
-                  <Insets bottom="20.0" left="10.0" right="20.0" top="20.0" />
-               </padding>
+            <VBox alignment="CENTER" styleClass="generic-Hbox">
                <children>
-                  <ImageView fx:id="shipImageView" fitWidth="816.0" preserveRatio="true" />
-                  <GridPane fx:id="shipGrid" alignment="CENTER" hgap="2.5" prefHeight="459.0" prefWidth="659.0" vgap="2.5">
-                     <rowConstraints>
-                        <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                        <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                        <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                        <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                        <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                     </rowConstraints>
-                     <columnConstraints>
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                     </columnConstraints>
-                  </GridPane>
+                  <Label text="Chose an action!">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </Label>
                </children>
-            </StackPane>
+            </VBox>
          </children>
+         <VBox.margin>
+            <Insets bottom="30.0" left="30.0" right="30.0" />
+         </VBox.margin>
          <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            <Insets left="10.0" />
          </padding>
-      </VBox>
-      <VBox alignment="CENTER">
-         <children>
-            <ImageView fx:id="cardImageView" fitHeight="316.0" fitWidth="235.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../imgs/cards/GT-cards_II_IT_0121.jpg" />
-               </image>
-            </ImageView>
-         </children>
-      </VBox>
+      </HBox>
    </children>
-</HBox>
+</VBox>

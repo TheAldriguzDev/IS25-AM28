@@ -48,7 +48,7 @@
                   "red": 2,
                   "days": 1,
                   "people": 6,
-                  "path": "/imgs/cards/abandonedShip/GT-cards_I_IT_0120.jpg"
+                  "path": "/imgs/cards/abandonedStation/GT-cards_I_IT_0120.jpg"
             },
             {
                   "level": 2,
@@ -58,7 +58,7 @@
                   "red": 1,
                   "days": 1,
                   "people": 7,
-                  "path": "/imgs/cards/abandonedShip/GT-cards_II_IT_0119.jpg"
+                  "path": "/imgs/cards/abandonedStation/GT-cards_II_IT_0119.jpg"
             },
             {
                   "level": 2,
@@ -68,7 +68,7 @@
                   "red": 0,
                   "days": 2,
                   "people": 8,
-                  "path": "/imgs/cards/abandonedShip/GT-cards_II_IT_0120.jpg"
+                  "path": "/imgs/cards/abandonedStation/GT-cards_II_IT_0120.jpg"
             }
       ],
       "meteors" : [

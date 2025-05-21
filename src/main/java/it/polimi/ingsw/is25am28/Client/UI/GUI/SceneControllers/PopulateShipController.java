@@ -146,7 +146,7 @@ public class PopulateShipController extends GUIController {
 
                 // Places the regions on the shipGrid
                 int ofsRow = cabin.getI() - shipOffsets.getKey();
-                int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? cabin.getJ() - shipOffsets.getValue() + 1 : cabin.getJ() - shipOffsets.getValue();
+                int ofsCol = cabin.getJ() - shipOffsets.getValue();
                 this.shipGrid.add(cell, ofsCol, ofsRow);
                 cell.setOnMouseClicked(_ -> handlePlacedLifeform(ofsRow, ofsCol));
             }
@@ -167,25 +167,16 @@ public class PopulateShipController extends GUIController {
 
         // TODO: can be simplified
         try {
-            if (this.clientModel.getDifficultyLevel() == 0) {
-                ComponentHelper<LifeformType> lifeFormToAdd = new ComponentHelper<>(row + shipOffsets.getKey(), col + shipOffsets.getValue() -1);
-                lifeFormToAdd.addItem(this.currentSelectableLifeForm);
-                GUIHandler.getVirtualClient().sendMessage(
-                        new PopulateShip(
-                                this.clientModel.getNickname(),
-                                lifeFormToAdd
-                        )
-                );
-            } else {
-                ComponentHelper<LifeformType> lifeFormToAdd = new ComponentHelper<>(row + shipOffsets.getKey(), col + shipOffsets.getValue());
-                lifeFormToAdd.addItem(this.currentSelectableLifeForm);
-                GUIHandler.getVirtualClient().sendMessage(
-                        new PopulateShip(
-                                this.clientModel.getNickname(),
-                                lifeFormToAdd
-                        )
-                );
-            }
+
+            ComponentHelper<LifeformType> lifeFormToAdd = new ComponentHelper<>(row + shipOffsets.getKey(), col + shipOffsets.getValue());
+            lifeFormToAdd.addItem(this.currentSelectableLifeForm);
+            GUIHandler.getVirtualClient().sendMessage(
+                    new PopulateShip(
+                            this.clientModel.getNickname(),
+                            lifeFormToAdd
+                    )
+            );
+
         } catch (Exception e) {
             this.showError(e.getMessage());
         }
@@ -243,6 +234,7 @@ public class PopulateShipController extends GUIController {
                 region.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
 
                 // TODO: if someone has finished the colored regions will disappear, will be resolved with the addition of custom pawns
+                // TODO: revise this part
                 // Setting the shipLabelText
                 this.setShipLabelText(data.isShipPopulated());
                 if (this.isShipFull) {
@@ -260,7 +252,7 @@ public class PopulateShipController extends GUIController {
             } else {
                 // If a secondary ship is being updated, the only necessary action is to set the background by adding a region
                 int ofsRow = row - shipOffsets.getKey();
-                int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
+                int ofsCol = col - shipOffsets.getValue();
 
                 Region cell = new Region();
                 cell.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");

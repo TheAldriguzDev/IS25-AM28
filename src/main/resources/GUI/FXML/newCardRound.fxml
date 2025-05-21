@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.TextFlow?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <center>
+      <StackPane prefHeight="150.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+         <children>
+            <GridPane fx:id="shipGrid" alignment="CENTER" hgap="2.5" prefHeight="459.0" prefWidth="659.0" vgap="2.5">
+               <rowConstraints>
+                  <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                  <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                  <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                  <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                  <RowConstraints minHeight="105.0" prefHeight="105.0" />
+               </rowConstraints>
+               <columnConstraints>
+                  <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                  <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                  <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                  <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                  <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                  <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                  <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+               </columnConstraints>
+            </GridPane>
+            <ImageView fx:id="shipImageView" fitWidth="816.0" preserveRatio="true" />
+         </children>
+      </StackPane>
+   </center>
+   <bottom>
+      <HBox BorderPane.alignment="CENTER" />
+   </bottom>
+   <left>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets left="10.0" right="30.0" />
+         </BorderPane.margin>
+         <children>
+            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../imgs/cardboard/board_level_2.png" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+   </left>
+   <right>
+      <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="15.0" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets left="30.0" right="10.0" />
+         </padding>
+         <children>
+            <ImageView fx:id="cardImageView" fitHeight="316.0" fitWidth="235.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../../imgs/cards/GT-cards_II_IT_0121.jpg" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
+   </right>
+   <top>
+      <TextFlow fx:id="selectedCommandLabel" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+   </top>
+</BorderPane>

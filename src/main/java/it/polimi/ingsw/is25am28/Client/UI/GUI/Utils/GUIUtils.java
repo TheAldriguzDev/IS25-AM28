@@ -115,7 +115,7 @@ public class GUIUtils {
                         componentImgView.setImage(img);
 
                         int ofsRow = row - shipOffsets.getKey();
-                        int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
+                        int ofsCol = col - shipOffsets.getValue();
                         shipGrid.add(componentImgView, ofsCol, ofsRow);
 
                         // Adds the image to the images map, so that the reference can be easily retrieve in case of removal of the component

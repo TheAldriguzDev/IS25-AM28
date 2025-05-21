@@ -91,7 +91,7 @@ public class FixShipController extends GUIController {
             int col = (int) coords.getValue();
 
             int ofsRow = row - shipOffsets.getKey();
-            int ofsCol = this.clientModel.getDifficultyLevel() == 0 ? col - shipOffsets.getValue() + 1 : col - shipOffsets.getValue();
+            int ofsCol = col - shipOffsets.getValue();
 
             // The player must not be able to remove the core
             if (!(ofsRow == 2 && ofsCol == 3) && !isShipValid) {
@@ -126,23 +126,15 @@ public class FixShipController extends GUIController {
 
         // TODO: can be simplified
         try {
-            if (this.clientModel.getDifficultyLevel() == 0) {
-                GUIHandler.getVirtualClient().sendMessage(
-                        new FixShip(
-                                this.clientModel.getNickname(),
-                                row + shipOffsets.getKey(),
-                                col + shipOffsets.getValue() -1
-                        )
-                );
-            } else {
-                GUIHandler.getVirtualClient().sendMessage(
-                        new FixShip(
-                                this.clientModel.getNickname(),
-                                row + shipOffsets.getKey(),
-                                col + shipOffsets.getValue()
-                        )
-                );
-            }
+
+            GUIHandler.getVirtualClient().sendMessage(
+                    new FixShip(
+                            this.clientModel.getNickname(),
+                            row + shipOffsets.getKey(),
+                            col + shipOffsets.getValue()
+                    )
+            );
+
         } catch (Exception e) {
             this.showError(e.getMessage());
         }

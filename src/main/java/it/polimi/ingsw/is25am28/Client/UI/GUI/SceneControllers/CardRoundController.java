@@ -105,12 +105,11 @@ public class CardRoundController extends GUIController {
         }
 
         // Setting the card's image
-//        URL resource;
-//        System.out.println(PrintUtils.addColor("Card's PATH: " + this.currEventCard.getCardPath(), ANSIColors.GREEN));
-////        resource = Objects.requireNonNull(getClass().getResource(this.currEventCard.getCardPath()));
-////        resource = Objects.requireNonNull(getClass().getResource("imgs/cards/GT-cards_II_IT_0121.jpg"));
-//        Image img = new Image(resource.toExternalForm(), 235, 315, true, true);
-//        this.cardImageView.setImage(img);
+        URL resource;
+        System.out.println(PrintUtils.addColor("Card's PATH: " + this.currEventCard.getCardPath(), ANSIColors.GREEN));
+        resource = Objects.requireNonNull(getClass().getResource(this.currEventCard.getCardPath()));
+        Image img = new Image(resource.toExternalForm(), 235, 315, true, true);
+        this.cardImageView.setImage(img);
 
     }
 
@@ -138,5 +137,9 @@ public class CardRoundController extends GUIController {
             this.viewOtherShipsGrid.add(toggleButton, 0, i);
             i++;
         }
+    }
+
+    private void initCommandBox() {
+
     }
 }
