@@ -131,6 +131,30 @@
     -fx-cursor: default;
 }
 
+.toast-info-container {
+    -fx-background-color: rgba(50, 130, 230, 0.9); /* blu */
+    -fx-padding: 12px 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0.3, 0, 2);
+    -fx-cursor: default;
+}
+
+.toast-success-container {
+    -fx-background-color: rgba(50, 200, 100, 0.9); /* verde */
+    -fx-padding: 12px 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0.3, 0, 2);
+    -fx-cursor: default;
+}
+
+.toast-warning-container {
+    -fx-background-color: rgba(230, 180, 40, 0.9); /* arancione */
+    -fx-padding: 12px 20px;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 6, 0.3, 0, 2);
+    -fx-cursor: default;
+}
+
 .loading-label {
     -fx-text-fill: white;
     -fx-font-size: 18px;

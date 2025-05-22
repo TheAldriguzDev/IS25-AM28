@@ -11,10 +11,12 @@
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.shape.Polygon?>
 <?import javafx.scene.text.Font?>
 
 <StackPane fx:id="rootPane" prefHeight="939.0" prefWidth="1130.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.ShipConstructionController">
@@ -22,7 +24,7 @@
       <StackPane fx:id="contentContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="1018.0" prefWidth="818.0" HBox.hgrow="ALWAYS">
          <children>
 
-              <!-- Scroll con FlowPane dinamico -->
+              <!-- ScrollPane that contains all the selectable tiles in the flowPane -->
               <ScrollPane fx:id="tileScrollPane" fitToHeight="true" fitToWidth="true">
                   <FlowPane fx:id="tileFlow" hgap="5" prefWrapLength="800" vgap="5">
                       <padding>
@@ -105,92 +107,78 @@
 
              <!-- viewShipContainer used to see the selected player ship -->
              <VBox fx:id="viewShipContainer" managed="false" prefHeight="200.0" prefWidth="100.0" visible="false">
-               <children>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
-                     <children>
-                        <Label fx:id="viewPlayerShipLabel" text="You are now viewing Player 1's ship">
-                           <font>
-                              <Font size="32.0" />
-                           </font>
-                        </Label>
-                        <Button fx:id="goBackToConstructionButton" mnemonicParsing="false" onAction="#handleGoBackToConstructionButton" text="Resume Ship Construction" />
-                     </children>
-                  </VBox>
-                  <Region VBox.vgrow="ALWAYS" />
-                  <StackPane fx:id="viewOtherShipStackPane" maxHeight="-Infinity" maxWidth="-Infinity">
-                     <children>
-                        <ImageView fx:id="viewOtherShipImage" fitWidth="816.0" preserveRatio="true">
-                           <image>
-                              <Image url="@../../imgs/cardboard/level_2.jpg" />
-                           </image>
-                        </ImageView>
-                        <GridPane alignment="CENTER" hgap="2.5" prefHeight="459.0" prefWidth="659.0" vgap="2.5">
-                           <rowConstraints>
-                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                           </rowConstraints>
-                           <columnConstraints>
-                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                           </columnConstraints>
-                        </GridPane>
-                     </children>
-                  </StackPane>
-                  <Region VBox.vgrow="ALWAYS" />
-               </children>
-            </VBox>
+                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+                     <Label fx:id="viewPlayerShipLabel" text="You are now viewing Player 1's ship">
+                         <font>
+                             <Font size="32.0" />
+                         </font>
+                     </Label>
+                     <Button fx:id="goBackToConstructionButton" mnemonicParsing="false" onAction="#handleGoBackToConstructionButton" text="Resume Ship Construction" />
+                 </VBox>
+                 <Region VBox.vgrow="ALWAYS" />
+                 <StackPane fx:id="viewOtherShipStackPane" maxHeight="-Infinity" maxWidth="-Infinity">
+                     <ImageView fx:id="viewOtherShipImage" fitWidth="816.0" preserveRatio="true">
+                         <Image url="@../../imgs/cardboard/level_2.jpg" />
+                     </ImageView>
+                     <GridPane alignment="CENTER" hgap="2.5" prefHeight="459.0" prefWidth="659.0" vgap="2.5">
+                         <rowConstraints>
+                             <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                             <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                             <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                             <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                             <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                         </rowConstraints>
+                         <columnConstraints>
+                             <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                             <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                             <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                             <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                             <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                             <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                             <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                         </columnConstraints>
+                     </GridPane>
+                 </StackPane>
+                 <Region VBox.vgrow="ALWAYS" />
+             </VBox>
 
              <!-- viewGameBoardContainer used to display the currentBoard state -->
-             <VBox fx:id="viewGameBoardContainer" managed="false" prefHeight="200.0" prefWidth="100.0" visible="false">
-                 <children>
-                     <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
-                         <children>
-                             <Label text="You are now viewing the game board">
-                                 <font>
-                                     <Font size="32.0" />
-                                 </font>
-                             </Label>
-                             <Button fx:id="goBackToConstructionButtonFromViewBoard" mnemonicParsing="false" onAction="#handleGoBackToConstructionButton" text="Resume Ship Construction" />
-                         </children>
-                     </VBox>
-                     <Region VBox.vgrow="ALWAYS" />
-                     <StackPane fx:id="viewGameBoardStackPane" maxHeight="-Infinity" maxWidth="-Infinity">
-                         <children>
-                             <ImageView fx:id="viewGameBoard" fitWidth="816.0" preserveRatio="true">
-                                 <image>
-                                     <Image url="@../../imgs/cardboard/board_level_2.png" />
-                                 </image>
-                             </ImageView>
-                         </children>
-                     </StackPane>
-                     <Region VBox.vgrow="ALWAYS" />
-                 </children>
+             <VBox fx:id="viewGameBoardContainer" prefHeight="200.0" prefWidth="100.0" managed="false" visible="false">
+                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+                     <Label text="You are now viewing the game board">
+                         <font>
+                             <Font size="32.0" />
+                         </font>
+                     </Label>
+                     <Button fx:id="goBackToConstructionButtonFromViewBoard" mnemonicParsing="false" onAction="#handleGoBackToConstructionButton" text="Resume Ship Construction" />
+                 </VBox>
+                 <Region VBox.vgrow="ALWAYS" />
+                 <Pane fx:id="viewGameBoardStackPaneLevel2" maxHeight="-Infinity" maxWidth="-Infinity">
+                     <ImageView fitWidth="816.0" layoutY="1.0" preserveRatio="true">
+                         <Image url="@../../imgs/cardboard/board_level_2.png" />
+                     </ImageView>
+                 </Pane>
+
+                 <Pane fx:id="viewGameBoardStackPaneLevel0" maxHeight="-Infinity" maxWidth="-Infinity" managed="false" visible="false">
+                     <ImageView fitWidth="816.0" layoutY="1.0" preserveRatio="true">
+                         <Image url="@../../imgs/cardboard/board_level_0.png" />
+                     </ImageView>
+                 </Pane>
+                 <Region VBox.vgrow="ALWAYS" />
              </VBox>
-            <VBox fx:id="subdeckViewerContainer" alignment="CENTER" managed="false" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
-               <children>
-                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-                     <children>
-                        <Label fx:id="deselectSubdeckLabel" alignment="CENTER" contentDisplay="CENTER" text="You are now viewing subdeck #" visible="false">
-                           <font>
-                              <Font size="32.0" />
-                           </font>
-                        </Label>
-                        <Button fx:id="deselectSubdeckButton" mnemonicParsing="false" onAction="#handleGoBackToConstructionButton" text="Deselect Subdeck" visible="false" />
-                     </children>
-                  </VBox>
-                  <Region prefHeight="100.0" />
-         
-                        <HBox fx:id="allSubdeckCardsContainer" alignment="CENTER" managed="false" prefHeight="200.0" prefWidth="100.0" spacing="30.0" />
-               </children>
-            </VBox>
+
+             <VBox fx:id="subdeckViewerContainer" alignment="CENTER" managed="false" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
+                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
+                     <Label fx:id="deselectSubdeckLabel" alignment="CENTER" contentDisplay="CENTER" text="You are now viewing subdeck #" visible="false">
+                         <font>
+                             <Font size="32.0" />
+                         </font>
+                     </Label>
+                     <Button fx:id="deselectSubdeckButton" mnemonicParsing="false" onAction="#handleGoBackToConstructionButton" text="Deselect Subdeck" visible="false" />
+                 </VBox>
+                 <Region prefHeight="100.0" />
+                 <HBox fx:id="allSubdeckCardsContainer" alignment="CENTER" managed="false" prefHeight="200.0" prefWidth="100.0" spacing="30.0" />
+             </VBox>
          </children>
       </StackPane>
 
@@ -218,7 +206,7 @@
             </ImageView>
 
             <!-- Board level -->
-            <ImageView fx:id="boardImageView" fitHeight="150.0" preserveRatio="true" VBox.vgrow="ALWAYS">
+            <ImageView fx:id="boardImageView" fitHeight="150.0" preserveRatio="true" VBox.vgrow="ALWAYS" onMouseClicked="#handleViewGameBoard">
                 <Image url="@../../imgs/cardboard/board_level_2.png" />
                 <cursor><Cursor fx:constant="HAND" /></cursor>
             </ImageView>

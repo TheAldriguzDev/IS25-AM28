@@ -28,7 +28,7 @@ public class ClientState {
         throw new UnsupportedOperationException("The 'getPlayerFinishedBuildingShip' is not supported in the " + this + " state");
     }
 
-    public void setPlayerFinishedBuildingShip(String playerNickname) throws UnsupportedOperationException {
+    public void setPlayerFinishedBuildingShip(String playerNickname, int cursor) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'setPlayerFinishedBuildingShip' is not supported in the " + this + " state");
     }
 

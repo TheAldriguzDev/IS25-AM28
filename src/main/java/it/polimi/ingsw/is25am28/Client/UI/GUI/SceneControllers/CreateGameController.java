@@ -54,23 +54,23 @@ public class CreateGameController extends GUIController {
 
             // Validate the input
             if (nickname.isBlank()) {
-                showError("Nickname cannot be empty.");
+                this.showToast("Nickname cannot be empty.", ToastType.ERROR);
                 return;
             }
             if (color == null) {
-                showError("You must select a color.");
+                this.showToast("You must select a color.", ToastType.ERROR);
                 return;
             }
             if (level == null) {
-                showError("You must select a game level.");
+                this.showToast("You must select a game level.", ToastType.ERROR);
                 return;
             }
             if (lobbySize == null) {
-                showError("You must select a lobby size.");
+                this.showToast("You must select a lobby size.", ToastType.ERROR);
                 return;
             }
             if (lobbySize < 2 || lobbySize > 4) {
-                showError("Lobby size must be between 2 and 4.");
+                this.showToast("Lobby size must be between 2 and 4.", ToastType.ERROR);
                 return;
             }
 

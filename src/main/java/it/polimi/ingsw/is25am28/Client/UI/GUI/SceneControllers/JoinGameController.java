@@ -54,11 +54,11 @@ public class JoinGameController extends GUIController {
         Platform.runLater(() -> {
             // Validate the input
             if (nickname.isBlank()) {
-                showError("Nickname cannot be empty.");
+                this.showToast("Nickname cannot be empty.", ToastType.ERROR);
                 return;
             }
             if (color == null) {
-                showError("Please select a color.");
+                this.showToast("Please select a color.", ToastType.ERROR);
                 return;
             }
 

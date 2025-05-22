@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -15,7 +16,6 @@ import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -27,10 +27,13 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShipConstructionController extends GUIController {
@@ -55,17 +58,12 @@ public class ShipConstructionController extends GUIController {
     private Timeline timer;
 
     // ========== FXML ATTRIBUTES ========== //
-    @FXML private Button deselectButton;
-    @FXML private Button rotateRightButton;
-    @FXML private Button rotateLeftButton;
-    @FXML private Button reserveButton;
     @FXML private ImageView shipImageView;
     @FXML private GridPane shipGrid;
     @FXML private GridPane reservedComponentGrid;
     @FXML private Button confirmShipButton;
 
     @FXML private FlowPane tileFlow;
-    @FXML private VBox sidePanel;
     @FXML private ImageView subDeckOne;
     @FXML private ImageView subDeckTwo;
     @FXML private ImageView subDeckThree;
@@ -88,8 +86,11 @@ public class ShipConstructionController extends GUIController {
     @FXML private Label deselectSubdeckLabel;
     @FXML private Button deselectSubdeckButton;
     @FXML private HBox allSubdeckCardsContainer;
+    @FXML private Pane viewGameBoardStackPaneLevel2;
+    @FXML private Pane viewGameBoardStackPaneLevel0;
 
     @FXML private Button goBackToConstructionButton;
+    @FXML private Button goBackToConstructionButtonFromViewBoard;
 
     private int selectedSubdeckId;
     private List<ImageView> subdeckImages;
@@ -98,6 +99,7 @@ public class ShipConstructionController extends GUIController {
     // Attributes needed when the player has finished his ship
     private boolean hasFinishedShip = false;
 
+    private Map<String, ImageView> playersRocketBoard = new HashMap<>();
 
     // ========== GAME ATTRIBUTES ========== //
     // Map used to target a specific component when an update arrives
@@ -124,6 +126,13 @@ public class ShipConstructionController extends GUIController {
 
         // Init each subdeck
         this.initSubdecks();
+
+        // Set the board that will be visible in the main content
+        if (this.clientModel.getDifficultyLevel() == 2) {
+            this.setVisibility(this.viewGameBoardStackPaneLevel2, true);
+        } else {
+            this.setVisibility(this.viewGameBoardStackPaneLevel0, true);
+        }
     }
 
     private void initComponents() {
@@ -343,13 +352,6 @@ public class ShipConstructionController extends GUIController {
         this.shipGrid.add(cell, col, row);
     }
 
-    private void initializePlayersShip() {
-        // For each player init the ship view
-        for (ClientPlayer p : this.clientModel.getAllClientPlayers().values()) {
-
-        }
-    }
-
     @FXML
     private void handleViewShipRequest(String requestedPlayerShip) {
         // Remove from the screen the main content and display the request ship
@@ -416,7 +418,7 @@ public class ShipConstructionController extends GUIController {
             );
         }
         catch (Exception e) {
-            this.showError(e.getMessage());
+            this.showToast(e.getMessage(), ToastType.ERROR);
         }
     }
 
@@ -427,14 +429,9 @@ public class ShipConstructionController extends GUIController {
                 () -> {
                     this.hasFinishedShip = true;
 
-//                    // Sets the timer button as enabled
-//                    if (this.flipTimerButton.isDisabled()) {
-//                        this.resetTimer();
-//                    }
-
                     Platform.runLater(this::showEndedShipConstruction);
                 },
-                this::handleConfirmShip
+                () -> {}
         ));
 
         try {
@@ -445,7 +442,7 @@ public class ShipConstructionController extends GUIController {
                     )
             );
         } catch (Exception e) {
-            this.showError(e.getMessage());
+            this.showToast(e.getMessage(), ToastType.ERROR);
         }
     }
 
@@ -476,7 +473,7 @@ public class ShipConstructionController extends GUIController {
     }
 
     @FXML
-    void handleViewSubDeck(MouseEvent event) {
+    private void handleViewSubDeck(MouseEvent event) {
         ImageView clickedSubdeck;
         int subdeckIndex;
 
@@ -539,11 +536,11 @@ public class ShipConstructionController extends GUIController {
             );
         }
         catch (Exception e) {
-            this.showError(e.getMessage());
+            this.showToast(e.getMessage(), ToastType.ERROR);
         }
     }
 
-    public void handleDeselectSubdeck() {
+    private void handleDeselectSubdeck() {
         GUIHandler.setCommandCTX(
             new CommandCTX(
                 "deselectSubdeck",
@@ -578,7 +575,7 @@ public class ShipConstructionController extends GUIController {
             );
         }
         catch (Exception e) {
-            this.showError(e.getMessage());
+            this.showToast(e.getMessage(), ToastType.ERROR);
         }
     }
 
@@ -614,7 +611,7 @@ public class ShipConstructionController extends GUIController {
                     )
             );
         } catch (Exception e) {
-            this.showError(e.getMessage());
+            this.showToast(e.getMessage(), ToastType.ERROR);
         }
     }
 
@@ -622,7 +619,7 @@ public class ShipConstructionController extends GUIController {
     private void handleDeselectTile() {
         // Check if the selected component is reserved
         if (this.clientModel.getState().getReservedComponents().contains(this.selectedComponent)) {
-            this.showError("You cannot deselect a reserved component!");
+            this.showToast("You cannot deselect a reserved component!", ToastType.ERROR);
             return;
         }
 
@@ -652,7 +649,7 @@ public class ShipConstructionController extends GUIController {
                     )
             );
         } catch (Exception e) {
-            this.showError(e.getMessage());
+            this.showToast(e.getMessage(), ToastType.ERROR);
         }
     }
 
@@ -660,7 +657,7 @@ public class ShipConstructionController extends GUIController {
     private void handleReserveTile() {
         List<ClientComponent> reservedComp = this.clientModel.getState().getReservedComponents();
         if (reservedComp.size() >= 2) {
-            this.showError("You cannot reserve more than 2 components!");
+            this.showToast("You cannot reserve more than 2 components!", ToastType.ERROR);
             return;
         }
 
@@ -722,7 +719,7 @@ public class ShipConstructionController extends GUIController {
                 )
             );
         } catch (Exception e) {
-            this.showError(e.getMessage());
+            this.showToast(e.getMessage(), ToastType.ERROR);
         }
     }
 
@@ -754,6 +751,23 @@ public class ShipConstructionController extends GUIController {
         rotate.setCycleCount(1);
         rotate.setOnFinished(e -> rotationInProgress = false);
         rotate.play();
+    }
+
+    @FXML
+    // Method used to display the current game board
+    private void handleViewGameBoard() {
+        // Disable all the previous containers
+        this.setVisibility(this.tileScrollPane, false);
+        this.setVisibility(this.viewShipContainer, false);
+        this.setVisibility(this.subdeckViewerContainer, false);
+        this.setVisibility(this.shipContainer, false);
+
+        if (this.hasFinishedShip) {
+            this.goBackToConstructionButtonFromViewBoard.setText("Go back");
+        }
+
+        // Enable the board container
+        this.setVisibility(this.viewGameBoardContainer, true);
     }
 
     // ========== UTILS METHODS ========== //
@@ -838,7 +852,7 @@ public class ShipConstructionController extends GUIController {
         // Get the player gridPane
         GridPane playerGrid = this.playersShipGridPane.get(data.getPlayerNickname());
         if (playerGrid == null) {
-            this.showError("No gridPane found for the given player");
+            this.showToast("No gridPane has been found for the given player", ToastType.ERROR);
             return;
         }
 
@@ -847,7 +861,7 @@ public class ShipConstructionController extends GUIController {
             // Build the ImageView with the component image
             URL resource = getClass().getResource(c.getPath());
             if (resource == null) {
-                this.showError("Component image not found: " + c.getPath());
+                this.showToast("Component image not found: " + c.getPath(), ToastType.ERROR);
                 return;
             }
 
@@ -870,5 +884,15 @@ public class ShipConstructionController extends GUIController {
         Platform.runLater(() -> {
             this.flipTimerButton.setDisable(false);
         });
+    }
+
+    public void placePlayerInTheBoard(PlayerEndedShipDTO data) {
+        this.showToast(data.getPlayerNickname() + " has finished building his ship", ToastType.INFO);
+
+        if (this.clientModel.getDifficultyLevel() == 2) {
+            this.guiUtils.placePlayerInBoard(data.getPlayerNickname(), 2, 24, this.viewGameBoardStackPaneLevel2, this.playersRocketBoard);
+        } else {
+            this.guiUtils.placePlayerInBoard(data.getPlayerNickname(), 0, 18, this.viewGameBoardStackPaneLevel0, this.playersRocketBoard);
+        }
     }
 }
