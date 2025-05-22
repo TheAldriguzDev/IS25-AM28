@@ -32,6 +32,7 @@ import javafx.scene.text.TextAlignment;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
@@ -52,6 +53,9 @@ public class CardRoundController extends GUIController {
     @FXML private GridPane commandsGrid;
 
     // Icons maps and interactable regions
+    Map<String, Map<String, HBox>> lifeFormsMap = new HashMap<>();
+    Map<String, Map<String, HBox>> itemsMap = new HashMap<>();
+    Map<String, Map<String, HBox>> batteriesMap = new HashMap<>();
 
 
     ToggleGroup commandsToggleGroup = new ToggleGroup();
@@ -93,6 +97,11 @@ public class CardRoundController extends GUIController {
             this.componentsImagesMap.put(player.getNickname(), this.guiUtils.createShipVisuals(player.getNickname(), shipGrid));
             // Adding the shipGrid to the map
             this.playersShipGridPane.put(player.getNickname(), shipGrid);
+
+            // Setting the ship's icons
+            this.lifeFormsMap.put(player.getNickname(), this.guiUtils.initShipLifeFormIcons(player.getNickname(), shipGrid));
+            this.itemsMap.put(player.getNickname(), this.guiUtils.initShipItemIcons(player.getNickname(), shipGrid));
+            this.batteriesMap.put(player.getNickname(), this.guiUtils.initShipBatteryIcons(player.getNickname(), shipGrid));
         }
 
         // Setting the current shipGrid to this client's ship
@@ -107,9 +116,16 @@ public class CardRoundController extends GUIController {
         * ...
         * */
 
+
+
+        // Setting thi single ship lifeform
+        this.lifeFormsMap.put(this.clientModel.getNickname(), guiUtils.initShipLifeFormIcons(this.clientModel.getNickname(), this.playersShipGridPane.get(this.clientModel.getNickname())));
+
+        this.itemsMap.put(this.clientModel.getNickname(), guiUtils.initShipItemIcons(this.clientModel.getNickname(), this.playersShipGridPane.get(this.clientModel.getNickname())));
+
         this.initStatsBox();
 
-        this. initCommandBox();
+        this.initCommandBox();
 
 
 
@@ -226,8 +242,12 @@ public class CardRoundController extends GUIController {
 
         ClientPlayer player = this.clientModel.getAllClientPlayers().get(this.clientModel.getNickname());
 
+        Label titleLabel = new Label("Stats");
+        titleLabel.setStyle("-fx-font-weight: bold;");
+
         // Creating all the labels and adding them to the statsBox
 
+        this.statsBox.getChildren().add(titleLabel);
         this.statsBox.getChildren().add(new Label("Total credits: " + player.getCredits()));
         this.statsBox.getChildren().add(new Label("Total Crew: " + ship.getAllLifeforms().size()));
         this.statsBox.getChildren().add(new Label("FirePower: " + currentFirePower + " (Max= " + maxFirePower + ")"));

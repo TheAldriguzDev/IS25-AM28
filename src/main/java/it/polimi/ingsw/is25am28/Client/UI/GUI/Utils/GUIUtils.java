@@ -1,12 +1,18 @@
 package it.polimi.ingsw.is25am28.Client.UI.GUI.Utils;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientBattery;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCabin;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStorage;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
+import it.polimi.ingsw.is25am28.Model.Items.Item;
+import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -14,12 +20,10 @@ import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
@@ -246,14 +250,157 @@ public class GUIUtils {
         });
     }
 
-    public Map<String, Map<String, ImageView>> addLifeFormIcons() {
-        return null;
+    /**
+     * Adds the lifeForm icons to the shipGrid in input
+     * @return A map containing the panes containing the icons
+     */
+    public Map<String, HBox> initShipLifeFormIcons(String playerNickname, GridPane shipGrid) {
+        Map<String, HBox> lifeFormsMap = new HashMap<>();
+
+        // Getting the player's ship
+        ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
+        if (ship == null) {
+            System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
+            return null;
+        }
+
+        ship.generateComponentSubLists();
+
+        for(ClientCabin cabin : ship.getCabinList()) {
+            HBox cabinBox = initCabinLifeFormIcons(cabin);
+            if (cabinBox != null) {
+                int row = cabin.getI();
+                int col = cabin.getJ();
+
+                lifeFormsMap.put(keyFromCoords(cabin.getI(), cabin.getJ()), cabinBox);
+
+                int ofsRow = row - shipOffsets.getKey();
+                int ofsCol = col - shipOffsets.getValue();
+
+                shipGrid.add(cabinBox, ofsCol, ofsRow);
+            }
+        }
+        return lifeFormsMap;
     }
 
-    public Pair<Integer, Integer> lifeFormIconCoordinates(ClientComponent component) {
+    /**
+     * @return A HBox containing the cabin's lifeForms icons
+     */
+    public HBox initCabinLifeFormIcons(ClientCabin cabin) {
+        HBox cabinBox = new HBox();
+        cabinBox.setAlignment(Pos.CENTER);
+        URL resource;
+
+        if (!cabin.getInhabitants().isEmpty()) {
+            for (Lifeform  lifeform : cabin.getInhabitants()) {
+                resource = Objects.requireNonNull(getClass().getResource(lifeform.getLifeformType().getImagePath()));
+                ImageView icon = new ImageView(new Image(resource.toExternalForm(), 40, 40, true, true));
+                cabinBox.getChildren().add(icon);
+            }
+            return cabinBox;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * Adds the item icons to the shipGrid in input
+     * @return A map containing the HBoxes containing the icons
+     */
+    public Map<String, HBox> initShipItemIcons(String playerNickname, GridPane shipGrid) {
+        Map<String, HBox> itemsMap = new HashMap<>();
+
+        // Getting the player's ship
+        ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
+        if (ship == null) {
+            System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
+            return null;
+        }
+
+        ship.generateComponentSubLists();
+
+        for (ClientStorage storage : ship.getStorageList()) {
+            HBox storageBox = initStorageItemIcons(storage);
+            if (storageBox != null) {
+                int row = storage.getI();
+                int col = storage.getJ();
+
+                itemsMap.put(keyFromCoords(row, col), storageBox);
+
+                int ofsRow = row - shipOffsets.getKey();
+                int ofsCol = col - shipOffsets.getValue();
+
+                shipGrid.add(storageBox, ofsCol, ofsRow);
+            }
+        }
+        return itemsMap;
+    }
+
+    /**
+     * @return A HBox containing the storage's items icons
+     */
+    public HBox initStorageItemIcons(ClientStorage storage) {
+        HBox storageBox = new HBox();
+        storageBox.setAlignment(Pos.CENTER);
+        URL resource;
+
+        if (!storage.getStoredItems().isEmpty()) {
+            for (Item item : storage.getStoredItems()) {
+                resource = Objects.requireNonNull(getClass().getResource(item.getColor().getImagePath()));
+                ImageView icon = new ImageView(new Image(resource.toExternalForm(), 40, 40, true, true));
+                storageBox.getChildren().add(icon);
+            }
+            return storageBox;
+        } else {
+            return null;
+        }
+    }
+
+    public Map<String, HBox> initShipBatteryIcons(String playerNickname, GridPane shipGrid) {
+        Map<String, HBox> batteryMap = new HashMap<>();
+
+        // Getting the player's ship
+        ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
+        if (ship == null) {
+            System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
+            return null;
+        }
+
+        ship.generateComponentSubLists();
+
+        for(ClientBattery battery : ship.getBatteryList()) {
+            HBox batteryBox = initBatteryIcons(battery);
+            if (batteryBox != null) {
+                int row = battery.getI();
+                int col = battery.getJ();
+
+                batteryMap.put(keyFromCoords(row, col), batteryBox);
+
+                int ofsRow = row - shipOffsets.getKey();
+                int ofsCol = col - shipOffsets.getValue();
+
+                shipGrid.add(batteryBox, ofsCol, ofsRow);
+            }
+        }
+        return batteryMap;
+    }
+
+    public HBox initBatteryIcons(ClientBattery battery) {
+        HBox batteryBox = new HBox();
+        batteryBox.setAlignment(Pos.CENTER);
+        URL resource;
+
+        if (battery.getAvailability() > 0) {
+            for (int i = 0; i < battery.getAvailability(); i++) {
+                resource = Objects.requireNonNull(getClass().getResource("/imgs/icons/batteries/Battery.png"));
+                ImageView icon = new ImageView(new Image(resource.toExternalForm(), 40, 40, true, true));
+                batteryBox.getChildren().add(icon);
+            }
+            return batteryBox;
+        } else {
+            return null;
+        }
 
 
-
-        return null;
     }
 }

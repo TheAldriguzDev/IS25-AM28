@@ -35,4 +35,12 @@ public enum LifeformType {
             case BROWN_ALIEN -> "BROWN_ALIEN";
         };
     }
+
+    public String getImagePath() {
+        return switch(this) {
+            case ASTRONAUT -> "/imgs/icons/lifeforms/astronaut/astronaut.png";
+            case PURPLE_ALIEN -> "/imgs/icons/lifeforms/purple_alien/PurpleAlien.png";
+            case BROWN_ALIEN -> "/imgs/icons/lifeforms/brown_alien/BrownAlien.png";
+        };
+    }
 }
