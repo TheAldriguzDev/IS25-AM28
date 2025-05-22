@@ -58,6 +58,10 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         }
     }
 
+    public List<String> getAvailableCommands() {
+        return this.enabledCommands;
+    }
+
     /**
      * @return This client card's ID (the type of the card)
      */

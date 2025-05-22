@@ -13,63 +13,67 @@
 <?import javafx.scene.text.TextFlow?>
 
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.FixShipController">
+<StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.FixShipController">
    <children>
-      <VBox alignment="CENTER" spacing="15.0">
+      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css">
          <children>
-            <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../../imgs/cardboard/board_level_2.png" />
-               </image>
-            </ImageView>
-            <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="viewOtherShips-VBox">
+            <VBox alignment="CENTER" spacing="15.0">
                <children>
-                  <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="View other ships" />
-                  <GridPane fx:id="viewOtherShipsGrid" hgap="5.0" vgap="5.0" VBox.vgrow="ALWAYS">
-                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                     </columnConstraints>
-                  </GridPane>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../imgs/cardboard/board_level_2.png" />
+                     </image>
+                  </ImageView>
+                  <VBox alignment="TOP_CENTER" spacing="15.0" styleClass="viewOtherShips-VBox">
+                     <children>
+                        <Label style="-fx-text-fill: white; -fx-font-weight: bold;" text="View other ships" />
+                        <GridPane fx:id="viewOtherShipsGrid" hgap="5.0" vgap="5.0" VBox.vgrow="ALWAYS">
+                           <columnConstraints>
+                              <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                           </columnConstraints>
+                        </GridPane>
+                     </children>
+                  </VBox>
                </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" />
+               </padding>
+            </VBox>
+            <VBox fx:id="fixShipVBox" alignment="CENTER" stylesheets="@../style.css">
+               <children>
+                  <TextFlow fx:id="fixShipLabel" textAlignment="CENTER" />
+                  <StackPane fx:id="imagePane" maxHeight="-Infinity" maxWidth="-Infinity">
+                     <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                     </padding>
+                     <children>
+                        <ImageView fx:id="shipImageView" fitWidth="816.0" preserveRatio="true" />
+                        <GridPane fx:id="shipGrid" alignment="CENTER" hgap="2.5" prefHeight="459.0" prefWidth="659.0" vgap="2.5">
+                           <rowConstraints>
+                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                              <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                           </rowConstraints>
+                           <columnConstraints>
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                              <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                           </columnConstraints>
+                        </GridPane>
+                     </children>
+                  </StackPane>
+               </children>
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
             </VBox>
          </children>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" />
-         </padding>
-      </VBox>
-      <VBox fx:id="fixShipVBox" alignment="CENTER" stylesheets="@../style.css">
-         <children>
-            <TextFlow fx:id="fixShipLabel" textAlignment="CENTER" />
-            <StackPane fx:id="imagePane" maxHeight="-Infinity" maxWidth="-Infinity">
-               <padding>
-                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
-               </padding>
-               <children>
-                  <ImageView fx:id="shipImageView" fitWidth="816.0" preserveRatio="true" />
-                  <GridPane fx:id="shipGrid" alignment="CENTER" hgap="2.5" prefHeight="459.0" prefWidth="659.0" vgap="2.5">
-                     <rowConstraints>
-                        <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                        <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                        <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                        <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                        <RowConstraints minHeight="105.0" prefHeight="105.0" />
-                     </rowConstraints>
-                     <columnConstraints>
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                        <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
-                     </columnConstraints>
-                  </GridPane>
-               </children>
-            </StackPane>
-         </children>
-         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-         </padding>
-      </VBox>
+      </HBox>
    </children>
-</HBox>
+</StackPane>

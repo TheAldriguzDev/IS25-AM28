@@ -159,9 +159,7 @@ public class PopulateShipController extends GUIController {
 
         GUIHandler.setCommandCTX(new CommandCTX(
                 "addLifeform",
-                () -> {
-                    this.clientModel.getState().addLifeFormToShip(row, col, this.currentSelectableLifeForm);
-                },
+                () -> {},
                 () -> {}
         ));
 

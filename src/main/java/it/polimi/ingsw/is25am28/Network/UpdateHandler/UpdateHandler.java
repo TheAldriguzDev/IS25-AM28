@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is25am28.Network.UpdateHandler;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
@@ -119,7 +121,6 @@ public class UpdateHandler {
      * */
     private CompletableFuture<Void> acceptState(CompletableFuture<Void> future, StateDTO state, ExecutorService executor, String errorPrefix) {
         if (state == null) return future;
-
         return future.thenRunAsync(() -> {
             try {
                 state.accept(this.viewUpdater);

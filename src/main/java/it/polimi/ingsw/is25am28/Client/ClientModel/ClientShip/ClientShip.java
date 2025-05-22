@@ -1071,6 +1071,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
         return shipGridWidget;
     }
 
+    // TODO: should be deleted, the new version does the same thing + playerStats
     /**
      * @return The widget containing this ship's statistics.
      */

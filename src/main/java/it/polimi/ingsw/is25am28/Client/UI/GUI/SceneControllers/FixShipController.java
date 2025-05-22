@@ -117,10 +117,7 @@ public class FixShipController extends GUIController {
     public void handleRemoveComponent(int row, int col) {
         GUIHandler.setCommandCTX(new CommandCTX(
                 "removeTile", //
-                () -> {
-                    this.clientModel.getState().removeComponentFromShip(row, col);
-
-                },
+                () -> {},
                 () -> {}
         ));
 
