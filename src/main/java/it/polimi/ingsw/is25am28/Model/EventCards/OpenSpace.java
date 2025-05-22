@@ -1,15 +1,11 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Components.Engine;
-import it.polimi.ingsw.is25am28.Model.Components.Shield;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
@@ -24,8 +20,8 @@ public class OpenSpace extends EventCard {
     private final Map<String, List<CoordinatePair>> removedBatteries;
     private String prevPlayerNickname;
 
-    public OpenSpace(String name, int level, Board board, int cardID, String path) {
-        super(name, level, board, cardID, path);
+    public OpenSpace(String name, int level, Board board, int uniqueCardId, String path) {
+        super(name, level, board, uniqueCardId, path);
 
         this.playerPowerResult = new HashMap<>();
         this.updatedPositions = new HashMap<>();
@@ -138,7 +134,7 @@ public class OpenSpace extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
+        cardState.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
             initStateFlags(cardState);
@@ -151,7 +147,7 @@ public class OpenSpace extends EventCard {
             setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
         }
         else {
-            cardState.setId(this.cardTypeId);
+            cardState.setCardTypeId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
@@ -165,8 +161,8 @@ public class OpenSpace extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardTypeId);
+        cardState.setCardTypeId(this.cardTypeId);
+        cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.cardLevel);

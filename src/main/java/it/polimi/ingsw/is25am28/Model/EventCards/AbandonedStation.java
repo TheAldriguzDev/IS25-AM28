@@ -28,8 +28,8 @@ public class AbandonedStation extends EventCard {
 
     private String prevPlayerNickname;
 
-    public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> givenItems, Board board, ResourceBank resourceBank, int cardID, String path) {
-        super(name, cardLevel, board, cardID, path);
+    public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> givenItems, Board board, ResourceBank resourceBank, int uniqueCardId, String path) {
+        super(name, cardLevel, board, uniqueCardId, path);
         this.requiredCrew = requiredCrew;
         this.movementStep = movementStep;
         this.givenItems = givenItems;
@@ -161,7 +161,7 @@ public class AbandonedStation extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
+        cardState.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
             initStateFlags(cardState);
@@ -176,7 +176,7 @@ public class AbandonedStation extends EventCard {
             setUpdatedPositionsIfNecessary(cardState, updatedPositions);
         } else {
             // Card information that are needed to play
-            cardState.setId(this.cardTypeId);
+            cardState.setCardTypeId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
@@ -208,8 +208,8 @@ public class AbandonedStation extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardTypeId);
+        cardState.setCardTypeId(this.cardTypeId);
+        cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.cardLevel);

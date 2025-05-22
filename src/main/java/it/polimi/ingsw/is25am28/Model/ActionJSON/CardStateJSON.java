@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
-import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.Map;
 import java.util.List;
@@ -21,8 +20,8 @@ import java.util.ArrayList;
  * */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CardStateJSON extends ActionJSON {
-    private int cardID;
-    private int id;
+    private int cardTypeId;
+    private int uniqueCardId;
     private String cardName;
     private int cardLevel;
     private String imagePath;
@@ -313,43 +312,43 @@ public class CardStateJSON extends ActionJSON {
     }
 
     public CardStateJSON(
-            @JsonProperty("id") int id,
+            @JsonProperty("uniqueCardId") int uniqueCardId,
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
             @JsonProperty("isCardUsable") boolean isCardUsable
     ) {
         super(playerNickname);
-        this.id = id;
+        this.uniqueCardId = uniqueCardId;
         this.cardName = cardName;
         this.cardLevel = cardLevel;
         this.isCardUsable = isCardUsable;
     }
 
-    @JsonGetter("cardID")
-    public int getCardID() {
-        return this.cardID;
+    @JsonGetter("cardTypeId")
+    public int getCardTypeId() {
+        return this.cardTypeId;
     }
 
-    @JsonSetter("cardID")
-    public void setCardID(int cardID) {
-        this.cardID = cardID;
+    @JsonSetter("cardTypeId")
+    public void setCardTypeId(int cardTypeId) {
+        this.cardTypeId = cardTypeId;
     }
 
     /**
      * Returns the card's id
      */
-    @JsonGetter("id")
-    public int getId() {
-        return this.id;
+    @JsonGetter("uniqueCardId")
+    public int getUniqueCardId() {
+        return this.uniqueCardId;
     }
 
     /**
      * Sets the card's id
      */
-    @JsonSetter("id")
-    public void setId(int id) {
-        this.id = id;
+    @JsonSetter("uniqueCardId")
+    public void setUniqueCardId(int uniqueCardId) {
+        this.uniqueCardId = uniqueCardId;
     }
 
     /**

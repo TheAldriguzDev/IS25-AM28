@@ -1873,13 +1873,12 @@ public class CardRoundScreen extends Screen {
      * by the server through the CardRoundDTO
      */
     private void getCurrEventCard() {
-        int cardId;
+        int uniqueCardId;
 
-
-        cardId = this.currEventCardState.getCardID();
+        uniqueCardId = this.currEventCardState.getUniqueCardId();
 
         for (ClientEventCard card : this.model.getClientEventCards()) {
-            if (card.getCardID() == cardId) {
+            if (card.getUniqueCardId() == uniqueCardId) {
                 this.currEventCard = card;
                 return;
             }

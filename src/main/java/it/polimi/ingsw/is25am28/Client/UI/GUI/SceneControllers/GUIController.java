@@ -1,16 +1,10 @@
 package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
@@ -18,17 +12,13 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
-import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 public abstract class GUIController {
     protected ClientModel clientModel;
@@ -100,13 +90,9 @@ public abstract class GUIController {
         };
     }
 
-
-
-
-
-
-
-
-
-
+    // Method used to set the visibility of a certain node
+    protected <T extends Node> void setVisibility(T node, boolean visible) {
+        node.setVisible(visible);
+        node.setManaged(visible);
+    }
 }

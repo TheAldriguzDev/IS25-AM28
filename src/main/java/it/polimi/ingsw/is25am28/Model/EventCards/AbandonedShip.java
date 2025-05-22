@@ -25,8 +25,8 @@ public class AbandonedShip extends EventCard {
 
     private List<String> playersThatCanUseTheCard;
 
-    public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits, Board board, int cardID, String path) {
-        super(name, cardLevel, board, cardID, path);
+    public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits, Board board, int uniqueCardId, String path) {
+        super(name, cardLevel, board, uniqueCardId, path);
         this.requiredCrew = requireCrew;
         this.movementStep = movementStep;
         this.givenCredits = givenCredits;
@@ -177,7 +177,7 @@ public class AbandonedShip extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
+        cardState.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
             initStateFlags(cardState);
@@ -194,7 +194,8 @@ public class AbandonedShip extends EventCard {
             }
         } else {
             // Set the card information that are needed to play the game
-            cardState.setId(this.cardTypeId);
+            cardState.setCardTypeId(this.cardTypeId);
+            cardState.setUniqueCardId(this.uniqueCardId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
@@ -211,8 +212,8 @@ public class AbandonedShip extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardTypeId);
+        cardState.setCardTypeId(this.cardTypeId);
+        cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.cardLevel);

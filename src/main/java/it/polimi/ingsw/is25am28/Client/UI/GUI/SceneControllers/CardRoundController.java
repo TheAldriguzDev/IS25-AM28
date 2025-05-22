@@ -5,14 +5,11 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventC
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
-import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
@@ -40,7 +37,6 @@ import java.net.URL;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.TAB;
 
 public class CardRoundController extends GUIController {
@@ -124,7 +120,6 @@ public class CardRoundController extends GUIController {
             System.out.println(PrintUtils.addColor("[ERROR] [FixShipController] ClientShip is null", ANSIColors.RED));
             return;
         }
-
 
         // Setting the buttons to view other ships
         this.initViewOtherShipsGrid();
@@ -230,7 +225,7 @@ public class CardRoundController extends GUIController {
     private void setCurrentEventCard(CardStateJSON cardInfo) {
         // Setting the current eventCard
         for(ClientEventCard card : this.cards) {
-            if(card.getCardID() == card.getId()) {
+            if(card.getUniqueCardId() == cardInfo.getUniqueCardId()) {
                 this.currEventCard = card;
             }
         }
@@ -1239,6 +1234,4 @@ public class CardRoundController extends GUIController {
 
         ship.consumeEnergy(List.of(batteryToConsume));
     }
-
-
 }

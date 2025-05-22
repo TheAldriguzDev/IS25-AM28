@@ -8,7 +8,6 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
-import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -20,7 +19,7 @@ public abstract class EventCard {
     protected final String cardName;
     protected final int cardLevel;
     protected final Board board;
-    protected final int cardID;
+    protected final int uniqueCardId;
     protected final String path;
     protected List<Player> players;
     protected Optional<Player> currentPlayer;
@@ -31,11 +30,11 @@ public abstract class EventCard {
     /**
      * General constructor shared between the classes
      */
-    protected EventCard(String cardName, int cardLevel, Board board, int cardID, String path) {
+    protected EventCard(String cardName, int cardLevel, Board board, int uniqueCardId, String path) {
         this.cardName = cardName;
         this.cardLevel = cardLevel;
         this.board = board;
-        this.cardID = cardID;
+        this.uniqueCardId = uniqueCardId;
         this.path = path;
 
         this.cardTypeId = this.getCardTypeId();
@@ -89,8 +88,8 @@ public abstract class EventCard {
     /**
      * @return The card's ID (given by the CardLoader)
      */
-    public int getCardID() {
-        return cardID;
+    public int getUniqueCardId() {
+        return uniqueCardId;
     }
 
     /**

@@ -12,8 +12,8 @@ public class Stardust extends EventCard {
     private Map<String, Integer> updatedPositions;
     private List<String> eliminatedPlayers;
 
-    public Stardust(String name, int cardLevel, Board board, int cardID, String path) {
-        super(name, cardLevel, board, cardID, path);
+    public Stardust(String name, int cardLevel, Board board, int uniqueCardId, String path) {
+        super(name, cardLevel, board, uniqueCardId, path);
         this.updatedPositions = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
     }
@@ -79,7 +79,7 @@ public class Stardust extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON stardustStateJSON = new CardStateJSON();
-        stardustStateJSON.setCardID(this.getCardID());
+        stardustStateJSON.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
             // Initializing the state flags
@@ -94,7 +94,7 @@ public class Stardust extends EventCard {
             // Sets the eliminatedPlayer (if there are any)
             setUpdatedEliminatedPlayersIfNecessary(stardustStateJSON, this.eliminatedPlayers);
         } else {
-            stardustStateJSON.setId(this.cardTypeId);
+            stardustStateJSON.setCardTypeId(this.cardTypeId);
             stardustStateJSON.setCardName(getCardName());
             stardustStateJSON.setImagePath(this.path);
             stardustStateJSON.setCardLevel(getCardLevel());
@@ -108,8 +108,8 @@ public class Stardust extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardTypeId);
+        cardState.setCardTypeId(this.cardTypeId);
+        cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(getCardLevel());

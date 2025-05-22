@@ -16,8 +16,8 @@ public class Epidemy extends EventCard {
     private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
     // Constructor
-    public Epidemy(String name, int cardLevel, Board board, int cardID, String path) {
-        super(name, cardLevel, board, cardID, path);
+    public Epidemy(String name, int cardLevel, Board board, int uniqueCardId, String path) {
+        super(name, cardLevel, board, uniqueCardId, path);
         this.removedLifeforms = new HashMap<>();
     }
 
@@ -95,7 +95,7 @@ public class Epidemy extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
+        cardState.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
             initStateFlags(cardState);
@@ -106,7 +106,7 @@ public class Epidemy extends EventCard {
             setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
         }
         else {
-            cardState.setId(this.cardTypeId);
+            cardState.setCardTypeId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
             cardState.setCardLevel(this.cardLevel);
@@ -120,8 +120,8 @@ public class Epidemy extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardTypeId);
+        cardState.setCardTypeId(this.cardTypeId);
+        cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.cardLevel);

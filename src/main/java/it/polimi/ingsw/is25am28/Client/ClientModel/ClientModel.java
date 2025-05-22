@@ -5,7 +5,6 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStorage
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
@@ -14,7 +13,6 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
-import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 
@@ -184,7 +182,7 @@ public class ClientModel {
 
         List<ClientEventCard> eventCards = this.getClientEventCards();
         for (CardStateJSON cardState : cards) {
-            switch (cardState.getId()) {
+            switch (cardState.getCardTypeId()) {
                 case 0 -> eventCards.add(new ClientAbandonedShip(cardState));
                 case 1 -> eventCards.add(new ClientAbandonedStation(cardState));
                 case 2 -> eventCards.add(new ClientEpidemy(cardState));

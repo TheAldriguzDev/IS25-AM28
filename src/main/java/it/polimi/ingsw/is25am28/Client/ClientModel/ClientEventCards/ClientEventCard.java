@@ -20,8 +20,8 @@ import java.util.Map;
 public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected final List<String> enabledCommands = new ArrayList<>();
 
-    protected final int cardID;
-    protected final int id;
+    protected final int cardTypeId;
+    protected final int uniqueCardId;
     protected String playerNickname;
     protected String cardName;
     protected String path;
@@ -33,8 +33,8 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected InputThread inputThread;
 
     public ClientEventCard(CardStateJSON cardState) {
-        this.cardID = cardState.getCardID();
-        this.id = cardState.getId();
+        this.uniqueCardId = cardState.getUniqueCardId();
+        this.cardTypeId = cardState.getCardTypeId();
         this.cardName = cardState.getCardName();
         this.cardLevel = cardState.getCardLevel();
         this.path = cardState.getImagePath();
@@ -65,15 +65,15 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     /**
      * @return This client card's ID (the type of the card)
      */
-    public int getId() {
-        return this.id;
+    public int getCardTypeId() {
+        return this.cardTypeId;
     }
 
     /**
      * @return This client card's unique ID (progressive number)
      */
-    public int getCardID() {
-        return this.cardID;
+    public int getUniqueCardId() {
+        return this.uniqueCardId;
     }
 
     /**

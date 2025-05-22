@@ -13,8 +13,11 @@ import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Network.Messages.FixShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
@@ -35,6 +38,16 @@ public class FixShipController extends GUIController {
     @FXML private StackPane imagePane;
     @FXML private VBox fixShipVBox;
     @FXML private GridPane viewOtherShipsGrid;
+
+    // Board visualization
+    @FXML private VBox viewGameBoardContainer;
+    @FXML private Pane viewGameBoardStackPaneLevel0;
+    @FXML private Pane viewGameBoardStackPaneLevel2;
+    @FXML private Button goBackToConstructionButtonFromViewBoard;
+
+    ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
+
+    private Map<String, ImageView> playersRocketBoard = new HashMap<>();
 
     private boolean isShipValid;
 
@@ -63,6 +76,9 @@ public class FixShipController extends GUIController {
 
         // Setting the buttons to view other ships
         this.initViewOtherShipsGrid();
+
+        // Initializes the board background image
+        this.initViewGameBoard();
 
         // Setting the correct background
         this.guiUtils.setShipGridBackground(this.shipImageView);
@@ -108,6 +124,19 @@ public class FixShipController extends GUIController {
                 this.shipGrid.add(cell, ofsCol, ofsRow);
                 cell.setOnMouseClicked(_ -> handleRemoveComponent(ofsRow, ofsCol));
             }
+        }
+    }
+
+    /**
+     * Sets the correct game board image based
+     * on the current difficulty level.
+     */
+    private void initViewGameBoard() {
+        if (this.clientModel.getDifficultyLevel() == 2) {
+            this.setVisibility(this.viewGameBoardStackPaneLevel2, true);
+        }
+        else {
+            this.setVisibility(this.viewGameBoardStackPaneLevel0, true);
         }
     }
 
@@ -209,7 +238,6 @@ public class FixShipController extends GUIController {
      * Creates a 0*1 grid, subsequently adding a number of rows (each one containing a toggleButton) equal to the number of players - 1 in the current game
      */
     private void initViewOtherShipsGrid() {
-        ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
         int i = 0;
         for (String playerNickname : this.clientModel.getAllClientPlayers().keySet()) {
             if (playerNickname.equals(this.clientModel.getNickname())) {
@@ -221,7 +249,7 @@ public class FixShipController extends GUIController {
             this.viewOtherShipsGrid.getRowConstraints().add(row);
 
             ToggleButton toggleButton = new ToggleButton();
-            toggleButton.setToggleGroup(viewOtherShipsToggleGroup);
+            toggleButton.setToggleGroup(this.viewOtherShipsToggleGroup);
             toggleButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
             toggleButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             toggleButton.setText(playerNickname);
@@ -229,7 +257,7 @@ public class FixShipController extends GUIController {
             this.viewOtherShipsGrid.add(toggleButton, 0, i);
             i++;
         }
-            viewOtherShipsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+            this.viewOtherShipsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
 
                 // If no toggle is selected, enable all teh regions
                 if (newToggle == null) {
@@ -241,6 +269,8 @@ public class FixShipController extends GUIController {
                     this.setShipGrid(this.clientModel.getNickname());
                 } else {
                     ToggleButton selected = (ToggleButton) newToggle;
+
+                    this.handleGoBackToFixButton(new ActionEvent());
 
                     // Disabling clickable areas
                     for (Region cell: this.componentsRegionMap.values()) {
@@ -261,5 +291,30 @@ public class FixShipController extends GUIController {
 
         this.shipGrid = this.playersShipGridPane.get(playerNickname);
         this.imagePane.getChildren().add(this.shipGrid);
+    }
+
+    @FXML
+    public void handleGoBackToFixButton(ActionEvent actionEvent) {
+        this.setVisibility(this.viewGameBoardContainer, false);
+        this.setVisibility(this.shipImageView, true);
+        this.setVisibility(this.shipGrid, true);
+        actionEvent.consume();
+    }
+
+    @FXML
+    // Method used to display the current game board
+    private void handleViewGameBoard() {
+        // Disable all the previous containers
+        this.viewOtherShipsToggleGroup.selectToggle(null);
+
+        this.setVisibility(this.shipImageView, false);
+        this.setVisibility(this.shipGrid, false);
+
+        if (this.isShipValid) {
+            this.goBackToConstructionButtonFromViewBoard.setText("Go back");
+        }
+
+        // Enable the board container
+        this.setVisibility(this.viewGameBoardContainer, true);
     }
 }

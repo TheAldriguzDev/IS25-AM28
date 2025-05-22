@@ -3,7 +3,6 @@ package it.polimi.ingsw.is25am28.Model.EventCards;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.Cabin;
-import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
@@ -30,8 +29,8 @@ public class Slavers extends EventCard {
 
     private String prevPlayerNickname;
 
-    public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board, int cardID, String path) {
-        super(name, cardLevel, board, cardID, path);
+    public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board, int uniqueCardId, String path) {
+        super(name, cardLevel, board, uniqueCardId, path);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.givenCredits = givenCredits;
@@ -218,7 +217,7 @@ public class Slavers extends EventCard {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON slaversStateJSON = new CardStateJSON();
 
-        slaversStateJSON.setCardID(this.getCardID());
+        slaversStateJSON.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
             // Initializing the state flags
@@ -251,7 +250,7 @@ public class Slavers extends EventCard {
 
         } else {
             // Static info about the card
-            slaversStateJSON.setId(this.cardTypeId);
+            slaversStateJSON.setCardTypeId(this.cardTypeId);
             slaversStateJSON.setCardName(this.getCardName());
             slaversStateJSON.setImagePath(this.path);
             slaversStateJSON.setCardLevel(this.getCardLevel());
@@ -269,8 +268,8 @@ public class Slavers extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardTypeId);
+        cardState.setCardTypeId(this.cardTypeId);
+        cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.getCardLevel());
