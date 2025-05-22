@@ -1,26 +1,32 @@
 package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
+import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
-import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
-import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
+
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -31,12 +37,10 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.TAB;
 
 public class CardRoundController extends GUIController {
     @FXML private ImageView cardImageView;
@@ -48,6 +52,7 @@ public class CardRoundController extends GUIController {
     @FXML private ImageView shipImageView;
     @FXML private StackPane imagePane;
     @FXML private GridPane viewOtherShipsGrid;
+    @FXML private ScrollPane playerActionsScrollPane;
 
     @FXML private VBox statsBox;
     @FXML private HBox commandsBox;
@@ -295,7 +300,6 @@ public class CardRoundController extends GUIController {
                 return;
             }
             if(ship.getFirePower(null) > this.currEventCard.getFirepower()) {
-                CommandWidgetTUI command;
 
                 // Enables the "setTakeReward" command if the baseline firepower is enough
                 availableCommands.add("setTakeReward");
@@ -377,11 +381,734 @@ public class CardRoundController extends GUIController {
                     case "setWantsToVisit" -> {}
                     case "setShieldsToActivate" -> {}
                     case "setDoubleCannonsToActivate" -> {}
+                    case "setDoubleEnginesToActivate" -> {}
                     case "batteriesToBeStolen" -> {}
                 }
-
             }
         });
+    }
+
+    /**
+     * Prints the current ActionJSON giving the current player
+     * an overview of the changes he's staging for submission when
+     * he'll play the current event card.
+     */
+    private void visualizePlayerActions() {
+        VBox actionsContainer;
+        VBox scrollPaneContent;
+        Label label;
+
+        this.playerActionsScrollPane.setContent(null);
+
+        scrollPaneContent = new VBox();
+        scrollPaneContent.setAlignment(Pos.TOP_CENTER);
+
+        actionsContainer = new VBox();
+        actionsContainer.setAlignment(Pos.TOP_LEFT);
+
+        // (1) - Visit the POI?
+        try {
+            Boolean wantsToVisit = this.currEventCard.getWantsToVisit();
+
+            if (wantsToVisit != null) {
+                label = new Label();
+                label.setText("Visit the POI?: " + (wantsToVisit ? "Yes" : "No"));
+                actionsContainer.getChildren().add(label);
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (2) - Take reward?
+        try {
+            Boolean takeReward = this.currEventCard.getTakeReward();
+
+            if (takeReward != null) {
+                label = new Label();
+                label.setText("Take reward?: " + (takeReward ? "Yes" : "No"));
+                actionsContainer.getChildren().add(label);
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (3) - Crew to remove
+        try {
+            List<ComponentHelper<LifeformType>> crewToRemove = this.currEventCard.getCrewToRemove();
+
+            if (crewToRemove != null && !crewToRemove.isEmpty()) {
+                label = new Label();
+                label.setText("Crew to remove:");
+                actionsContainer.getChildren().add(label);
+
+                for (ComponentHelper<LifeformType> lfToRemove : crewToRemove) {
+                    lfToRemove.getItem().ifPresent(
+                        (LifeformType lfType) -> {
+                            Label l = new Label();
+                            l.setText(TAB + lfType + " @ (row=" + (lfToRemove.getI() + 1) + ", col=" + (lfToRemove.getJ() + 1) + ")");
+                            actionsContainer.getChildren().add(l);
+                        }
+                    );
+                }
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (4) - Items to remove
+        try {
+            List<ComponentHelper<ItemColor>> itemsToRemove = this.currEventCard.getItemsToBeRemoved();
+
+            if (itemsToRemove != null && !itemsToRemove.isEmpty()) {
+                label = new Label();
+                label.setText("Items to remove:");
+                actionsContainer.getChildren().add(label);
+
+                for (ComponentHelper<ItemColor> itemToRemove : itemsToRemove) {
+                    itemToRemove.getItem().ifPresent(
+                        (ItemColor itemColor) -> {
+                            Label l = new Label();
+                            l.setText(TAB + itemColor + " @ (row=" + (itemToRemove.getI() + 1) + ", col=" + (itemToRemove.getJ() + 1) + ")");
+                            actionsContainer.getChildren().add(l);
+                        }
+                    );
+                }
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (5) - Items to take
+        try {
+            List<ComponentHelper<ItemColor>> itemsToTake = this.currEventCard.getItemsToBeTaken();
+
+            if (itemsToTake != null && !itemsToTake.isEmpty()) {
+                label = new Label();
+                label.setText("Items to take:");
+                actionsContainer.getChildren().add(label);
+
+                for (ComponentHelper<ItemColor> itemToTake : itemsToTake) {
+                    itemToTake.getItem().ifPresent(
+                        (ItemColor itemColor) -> {
+                            Label l = new Label();
+                            l.setText(TAB + itemColor + " @ (row=" + (itemToTake.getI() + 1) + ", col=" + (itemToTake.getJ() + 1) + ")");
+                            actionsContainer.getChildren().add(l);
+                        }
+                    );
+                }
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (6) - Chosen planet index
+        try {
+            Integer chosenPlanetIndex = this.currEventCard.getChosenPlanetIndex();
+
+            if (chosenPlanetIndex != null) {
+                label = new Label();
+                label.setText("Chosen planet index: " + chosenPlanetIndex);
+                actionsContainer.getChildren().add(label);
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (7) - Shields to activate
+        try {
+            List<Pair<CoordinatePair, CoordinatePair>> shieldsToActivate = this.currEventCard.getShieldsToActivate();
+
+            if (shieldsToActivate != null && !shieldsToActivate.isEmpty()) {
+                label = new Label();
+                label.setText("Shields to activate:");
+                actionsContainer.getChildren().add(label);
+
+                for (Pair<CoordinatePair, CoordinatePair> shieldToActivate : shieldsToActivate) {
+                    Label componentLabel = new Label();
+                    Label batteryLabel = new Label();
+
+                    componentLabel.setText(TAB + "Shield @ (row=" + (shieldToActivate.getKey().getI() + 1) + ", col=" + (shieldToActivate.getKey().getJ() + 1) + ")");
+                    batteryLabel.setText(TAB + TAB + "Battery @ (row=" + (shieldToActivate.getValue().getJ() + 1) + ", col=" + (shieldToActivate.getValue().getJ() + 1) + ")");
+
+                    actionsContainer.getChildren().add(componentLabel);
+                    actionsContainer.getChildren().add(batteryLabel);
+                }
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (8) - Double cannons to activate
+        try {
+            List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivate = this.currEventCard.getDoubleCannonsToActivate();
+
+            if (doubleCannonsToActivate != null && !doubleCannonsToActivate.isEmpty()) {
+                label = new Label();
+                label.setText("Double cannons to activate:");
+                actionsContainer.getChildren().add(label);
+
+                for (Pair<CoordinatePair, CoordinatePair> doubleCannonToActivate : doubleCannonsToActivate) {
+                    Label componentLabel = new Label();
+                    Label batteryLabel = new Label();
+
+                    componentLabel.setText(TAB + "Double Cannon @ (row=" + (doubleCannonToActivate.getKey().getI() + 1) + ", col=" + (doubleCannonToActivate.getKey().getJ() + 1) + ")");
+                    batteryLabel.setText(TAB + TAB + "Battery @ (row=" + (doubleCannonToActivate.getValue().getI() + 1) + ", col=" + (doubleCannonToActivate.getValue().getJ() + 1) + ")");
+
+                    actionsContainer.getChildren().add(componentLabel);
+                    actionsContainer.getChildren().add(batteryLabel);
+                }
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (9) - Double engines to activate
+        try {
+            List<Pair<CoordinatePair, CoordinatePair>> doubleEnginesToActivate = this.currEventCard.getDoubleEnginesToActivate();
+
+            if (doubleEnginesToActivate != null && !doubleEnginesToActivate.isEmpty()) {
+                label = new Label();
+                label.setText("Double engines to activate:");
+                actionsContainer.getChildren().add(label);
+
+                for (Pair<CoordinatePair, CoordinatePair> doubleEngineToActivate : doubleEnginesToActivate) {
+                    Label componentLabel = new Label();
+                    Label batteryLabel = new Label();
+
+                    componentLabel.setText(TAB + "Double Engine @ (row=" + (doubleEngineToActivate.getKey().getI() + 1) + ", col=" + (doubleEngineToActivate.getKey().getJ() + 1) + ")");
+                    batteryLabel.setText(TAB + TAB + "Battery @ (row=" + (doubleEngineToActivate.getValue().getI() + 1) + ", col=" + (doubleEngineToActivate.getValue().getJ() + 1) + ")");
+
+                    actionsContainer.getChildren().add(componentLabel);
+                    actionsContainer.getChildren().add(batteryLabel);
+                }
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (10) - Batteries to be stolen
+        try {
+            List<CoordinatePair> batteriesToBeStolen = this.currEventCard.getBatteriesToBeStolen();
+            if (batteriesToBeStolen != null && !batteriesToBeStolen.isEmpty()) {
+                label = new Label();
+                label.setText("Batteries to give up:");
+                actionsContainer.getChildren().add(label);
+
+                for (CoordinatePair batteryToBeStolen : batteriesToBeStolen) {
+                    label = new Label();
+                    label.setText(TAB + "Battery @ (row=" + (batteryToBeStolen.getI() + 1) + ", col=" + (batteryToBeStolen.getJ() + 1) + ")");
+                    actionsContainer.getChildren().add(label);
+                }
+            }
+        }
+        catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        if (actionsContainer.getChildren().isEmpty()) {
+            label = new Label();
+            label.setText("No actions selected");
+            actionsContainer.getChildren().add(label);
+        }
+
+        label = new Label();
+        label.setText("Your Actions:");
+
+        scrollPaneContent.getChildren().add(label);
+        scrollPaneContent.getChildren().add(actionsContainer);
+
+        this.playerActionsScrollPane.setContent(scrollPaneContent);
+    }
+
+    public void handlePlayCard() {
+        ActionJSON response = this.currEventCard.useCard();
+
+        // If the current card supports the action, it removes
+        // any take/remove operations that target the same storage (only if taken and removed in 1 turn from one card)
+        // and the same item color
+        try {
+            List<ComponentHelper<ItemColor>>[][] matrix = new List[ClientShip.grid_rows][ClientShip.grid_cols];
+
+            List<ComponentHelper<ItemColor>> itemsToTake = this.currEventCard.getItemsToBeTaken();
+            List<ComponentHelper<ItemColor>> itemsToRemove = this.currEventCard.getItemsToBeRemoved();
+
+            List<ComponentHelper<ItemColor>> itemsToTakeFinal = new ArrayList<>();
+            List<ComponentHelper<ItemColor>> itemsToRemoveFinal = new ArrayList<>();
+
+            for (int i = 0; i < ClientShip.grid_rows; i++) {
+                for (int j = 0; j < ClientShip.grid_cols; j++) {
+                    matrix[i][j] = new ArrayList<>();
+                }
+            }
+
+            for (ComponentHelper<ItemColor> toTake : itemsToTake) {
+                if (toTake.getItem().isPresent()) {
+                    matrix[toTake.getI()][toTake.getJ()].add(toTake);
+                }
+            }
+
+            for (ComponentHelper<ItemColor> toRemove : itemsToRemove) {
+                if (toRemove.getItem().isPresent()) {
+                    if (matrix[toRemove.getI()][toRemove.getJ()].isEmpty()) {
+                        itemsToRemoveFinal.add(toRemove);
+                    }
+                    else {
+                        ItemColor colorToRemove = toRemove.getItem().get();
+                        boolean colorFound = false;
+
+                        for (ComponentHelper<ItemColor> ch : matrix[toRemove.getI()][toRemove.getJ()]) {
+                            if (ch.getItem().isPresent()) {
+                                if (ch.getItem().get().equals(colorToRemove)) {
+                                    matrix[toRemove.getI()][toRemove.getJ()].remove(ch);
+                                    colorFound = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!colorFound) {
+                            itemsToRemoveFinal.add(toRemove);
+                        }
+                    }
+                }
+            }
+
+            for (int i = 0; i < ClientShip.grid_rows; i++) {
+                for (int j = 0; j < ClientShip.grid_cols; j++) {
+                    if (matrix[i][j] != null) {
+                        itemsToTakeFinal.addAll(matrix[i][j]);
+                        matrix[i][j] = null;
+                    }
+                }
+            }
+
+            this.currEventCard.setItemsToBeTaken(itemsToTakeFinal);
+            this.currEventCard.setItemsToBeRemoved(itemsToRemoveFinal);
+        }
+        catch (UnsupportedOperationException e) {
+            // Don't check for duplicate items if the current
+            // card doesn't enable the relative commands
+        }
+
+        GUIHandler.setCommandCTX(
+            new CommandCTX(
+                "playCard",
+                () -> {
+                    GUIHandler.setCommandCTX(null);
+                    this.visualizePlayerActions();
+                    this.currEventCard.clearJSON();
+                },
+                () -> {
+                    // TODO: Reset local change since the playCard failed
+                    //       (@Filippo)
+
+                    this.showToast(
+                            "[ERROR] There was an error while playing the card. Please try again.",
+                            ToastType.ERROR
+                    );
+
+                    GUIHandler.setCommandCTX(null);
+                    this.currEventCard.clearJSON();
+                }
+            )
+        );
+    }
+
+    public void handleCrewToRemove(int row, int col, LifeformType lifeformType) {
+        ComponentHelper<LifeformType> componentHelper;
+        ClientShip ship;
+
+        ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+
+        if (ship == null) {
+            this.showToast("[ERROR] [getCrewToRemove()] ClientShip is null", ToastType.ERROR);
+            return;
+        }
+
+        // Local update
+        try {
+            ship.removeLifeformFromCabin(row, col, lifeformType);
+
+            componentHelper = new ComponentHelper<>(row, col);
+            componentHelper.addItem(lifeformType);
+
+            this.currEventCard.getCrewToRemove().add(componentHelper);
+            this.visualizePlayerActions();
+
+            this.showToast(
+                    "Successfully removed " + lifeformType + " item from Cabin @ (row=" + row + ", col=" + col + ")",
+                    ToastType.SUCCESS
+            );
+        }
+        catch (Exception e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+        }
+    }
+
+    public void handleItemToRemove(int row, int col, ItemColor itemColor) {
+        ComponentHelper<ItemColor> componentHelper;
+        ClientComponent component;
+        ClientShip ship;
+
+        ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+
+        if (ship == null) {
+            this.showToast("[ERROR] [getCrewToRemove()] ClientShip is null", ToastType.ERROR);
+            return;
+        }
+
+        try {
+            component = ship.getComponent(row, col);
+        }
+        catch (OutOfGridException e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+            return;
+        }
+
+        switch (component) {
+            case ClientStorage storage -> {
+                Optional<Item> foundItem = storage.getStoredItems().stream()
+                        .filter(i -> i.getColor().equals(itemColor))
+                        .findFirst();
+
+                // Local update
+                if (foundItem.isPresent()) {
+                    try {
+                        storage.removeItem(foundItem.get());
+                        this.clientModel.getResourceBank().addResourceToBank(itemColor);
+
+                        componentHelper = new ComponentHelper<>(row, col);
+                        componentHelper.addItem(itemColor);
+
+                        this.currEventCard.getItemsToBeRemoved().add(componentHelper);
+                        this.visualizePlayerActions();
+
+                        this.showToast(
+                                "Successfully removed " + itemColor + " item in Storage @ (row=" + row + ", col=" + col + ")",
+                                ToastType.SUCCESS
+                        );
+                    }
+                    catch (UnsupportedOperationException e) {
+                        this.showToast(e.getMessage(), ToastType.ERROR);
+                    }
+                }
+                else {
+                    this.showToast(
+                            "Couldn't find " + itemColor + " item in Storage @ (row=" + row + ", col=" + col + ")",
+                            ToastType.ERROR
+                    );
+                }
+            }
+            case null, default -> {
+                this.showToast(
+                    "[ERROR] Component @ (row=" + row + ", col=" + col + ") is not a storage",
+                    ToastType.ERROR
+                );
+            }
+        }
+    }
+
+    public void handleItemToTake(int row, int col, ItemColor itemColor) {
+        ComponentHelper<ItemColor> componentHelper;
+        ClientComponent component;
+        ClientShip ship;
+
+        ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+
+        if (ship == null) {
+            this.showToast("[ERROR] [getCrewToRemove()] ClientShip is null", ToastType.ERROR);
+            return;
+        }
+
+        try {
+            component = ship.getComponent(row, col);
+        }
+        catch (OutOfGridException e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+            return;
+        }
+
+        switch (component) {
+            case ClientStorage storage -> {
+                if (storage.availableSpace() > 0) {
+                    try {
+                        componentHelper = new ComponentHelper<>(row, col);
+                        componentHelper.addItem(itemColor);
+
+                        storage.storeItem(new Item(itemColor));
+                        this.clientModel.getResourceBank().removeResourceFromBank(itemColor);
+
+                        this.currEventCard.getItemsToBeTaken().add(componentHelper);
+                        this.currEventCard.removeItem(itemColor);
+                        this.visualizePlayerActions();
+
+                        this.showToast(
+                                "Successfully added " + itemColor + " item in Storage @ (row=" + row + ", col=" + col + ")",
+                                ToastType.SUCCESS
+                        );
+                    }
+                    catch (UnsupportedOperationException e) {
+                        this.showToast(e.getMessage(), ToastType.ERROR);
+                    }
+                }
+                else {
+                    this.showToast(
+                            "[ERROR] Storage @ (row=" + row + ", col=" + col + ") is full",
+                            ToastType.ERROR
+                    );
+                }
+            }
+            case null, default -> {
+                this.showToast(
+                        "[ERROR] Component @ (row=" + row + ", col=" + col + ") is not a storage",
+                        ToastType.ERROR
+                );
+            }
+        }
+    }
+
+    public void handleTakeReward(boolean choice) {
+        try {
+            this.currEventCard.setTakeReward(choice);
+            this.visualizePlayerActions();
+        }
+        catch (UnsupportedOperationException e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+        }
+    }
+
+    public void handleChosenPlanetIndex(int chosenPlanetIndex) {
+        try {
+            this.currEventCard.setChosenPlanetIndex(chosenPlanetIndex);
+            this.visualizePlayerActions();
+        }
+        catch (UnsupportedOperationException e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+        }
+    }
+
+    public void handleWantsToVisit(boolean choice) {
+        try {
+            this.currEventCard.setWantsToVisit(choice);
+            this.visualizePlayerActions();
+        }
+        catch (UnsupportedOperationException e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+        }
+    }
+
+    public void handleShieldToActivate(CoordinatePair shieldToActivate, CoordinatePair batteryToConsume) {
+        ClientComponent possibleShield, possibleBattery;
+        ClientShip ship;
+
+        ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+
+        if (ship == null) {
+            this.showToast("[ERROR] [getCrewToRemove()] ClientShip is null", ToastType.ERROR);
+            return;
+        }
+
+        try {
+            possibleShield = ship.getComponent(
+                    shieldToActivate.getI(),
+                    shieldToActivate.getJ()
+            );
+
+            possibleBattery = ship.getComponent(
+                    batteryToConsume.getI(),
+                    batteryToConsume.getJ()
+            );
+        }
+        catch (OutOfGridException e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+            return;
+        }
+
+        switch (possibleShield) {
+            case ClientShield shield -> {}
+            case null, default -> {
+                this.showToast(
+                        "[ERROR] Component @ (row=" + shieldToActivate.getI() + ", col=" + shieldToActivate.getJ() + ") is not a shield",
+                        ToastType.ERROR
+                );
+                return;
+            }
+        }
+
+        switch (possibleBattery) {
+            case ClientBattery battery -> {
+                if (battery.getAvailability() <= 0) {
+                    this.showToast(
+                            "[ERROR] Given battery is depleted",
+                            ToastType.ERROR
+                    );
+                    return;
+                }
+            }
+            case null, default -> {
+                this.showToast(
+                        "[ERROR] Component @ (row=" + batteryToConsume.getI() + ", col=" + batteryToConsume.getJ() + ") is not a battery",
+                        ToastType.ERROR
+                );
+                return;
+            }
+        }
+
+        this.currEventCard.getShieldsToActivate().add(
+                new Pair<>(shieldToActivate, batteryToConsume)
+        );
+
+        this.visualizePlayerActions();
+
+        ship.consumeEnergy(List.of(batteryToConsume));
+    }
+
+    public void handleDoubleCannonToActivate(CoordinatePair doubleCannonToActivate, CoordinatePair batteryToConsume) {
+        ClientComponent possibleDoubleCannon, possibleBattery;
+        ClientShip ship;
+
+        ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+
+        if (ship == null) {
+            this.showToast("[ERROR] [getCrewToRemove()] ClientShip is null", ToastType.ERROR);
+            return;
+        }
+
+        try {
+            possibleDoubleCannon = ship.getComponent(
+                    doubleCannonToActivate.getI(),
+                    doubleCannonToActivate.getJ()
+            );
+
+            possibleBattery = ship.getComponent(
+                    batteryToConsume.getI(),
+                    batteryToConsume.getJ()
+            );
+        }
+        catch (OutOfGridException e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+            return;
+        }
+
+        switch (possibleDoubleCannon) {
+            case ClientCannon cannon -> {
+                if (!cannon.requiresEnergy()) {
+                    this.showToast(
+                            "[ERROR] Cannon @ (row=" + possibleDoubleCannon.getI() + ", col=" + possibleDoubleCannon.getJ() + ") is a single cannon",
+                            ToastType.ERROR
+                    );
+                    return;
+                }
+            }
+            case null, default -> {
+                this.showToast(
+                        "[ERROR] Component @ (row=" + doubleCannonToActivate.getI() + ", col=" + doubleCannonToActivate.getJ() + ") is not a cannon",
+                        ToastType.ERROR
+                );
+                return;
+            }
+        }
+
+        switch (possibleBattery) {
+            case ClientBattery battery -> {
+                if (battery.getAvailability() <= 0) {
+                    this.showToast(
+                            "[ERROR] Given battery is depleted",
+                            ToastType.ERROR
+                    );
+                    return;
+                }
+            }
+            case null, default -> {
+                this.showToast(
+                        "[ERROR] Component @ (row=" + batteryToConsume.getI() + ", col=" + batteryToConsume.getJ() + ") is not a battery",
+                        ToastType.ERROR
+                );
+                return;
+            }
+        }
+
+        this.currEventCard.getDoubleCannonsToActivate().add(
+                new Pair<>(doubleCannonToActivate, batteryToConsume)
+        );
+
+        this.visualizePlayerActions();
+
+        ship.consumeEnergy(List.of(batteryToConsume));
+    }
+
+    public void handleDoubleEngineToActivate(CoordinatePair doubleEngineToActivate, CoordinatePair batteryToConsume) {
+        ClientComponent possibleDoubleEngine, possibleBattery;
+        ClientShip ship;
+
+        ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+
+        if (ship == null) {
+            this.showToast("[ERROR] [getCrewToRemove()] ClientShip is null", ToastType.ERROR);
+            return;
+        }
+
+        try {
+            possibleDoubleEngine = ship.getComponent(
+                    doubleEngineToActivate.getI(),
+                    doubleEngineToActivate.getJ()
+            );
+
+            possibleBattery = ship.getComponent(
+                    batteryToConsume.getI(),
+                    batteryToConsume.getJ()
+            );
+        }
+        catch (OutOfGridException e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+            return;
+        }
+
+        switch (possibleDoubleEngine) {
+            case ClientEngine engine -> {
+                if (!engine.requiresEnergy()) {
+                    this.showToast(
+                            "[ERROR] Engine @ (row=" + possibleDoubleEngine.getI() + ", col=" + possibleDoubleEngine.getJ() + ") is a single engine",
+                            ToastType.ERROR
+                    );
+                    return;
+                }
+            }
+            case null, default -> {
+                this.showToast(
+                        "[ERROR] Component @ (row=" + doubleEngineToActivate.getI() + ", col=" + doubleEngineToActivate.getJ() + ") is not an engine",
+                        ToastType.ERROR
+                );
+                return;
+            }
+        }
+
+        switch (possibleBattery) {
+            case ClientBattery battery -> {
+                if (battery.getAvailability() <= 0) {
+                    this.showToast(
+                            "[ERROR] Given battery is depleted",
+                            ToastType.ERROR
+                    );
+                    return;
+                }
+            }
+            case null, default -> {
+                this.showToast(
+                        "[ERROR] Component @ (row=" + batteryToConsume.getI() + ", col=" + batteryToConsume.getJ() + ") is not a battery",
+                        ToastType.ERROR
+                );
+                return;
+            }
+        }
+
+        this.currEventCard.getDoubleEnginesToActivate().add(
+                new Pair<>(doubleEngineToActivate, batteryToConsume)
+        );
+
+        this.visualizePlayerActions();
+
+        ship.consumeEnergy(List.of(batteryToConsume));
     }
 
     /**
@@ -395,6 +1122,4 @@ public class CardRoundController extends GUIController {
         this.shipGrid = this.playersShipGridPane.get(playerNickname);
         this.imagePane.getChildren().add(this.shipGrid);
     }
-
-
 }

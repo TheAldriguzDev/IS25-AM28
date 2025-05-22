@@ -1476,7 +1476,6 @@ public class CardRoundScreen extends Screen {
      * a battery that the player wants to consume by 1 unit of charge.
      */
     public CoordinatePair getBatteryToConsume() {
-        List<CoordinatePair> coordinatesList;
         CoordinatePair coordinates;
         AtomicReference<ClientBattery> selectedBattery;
         InputWidgetTUI availableBatteries;
@@ -1490,32 +1489,6 @@ public class CardRoundScreen extends Screen {
         if (ship == null) {
             System.out.println(PrintUtils.addColor("[ERROR] [getBatteryToConsume()] ClientShip is null", ANSIColors.RED));
             return null;
-        }
-
-        coordinatesList = new ArrayList<>();
-
-        try {
-            // Add all batteries bound to double cannons (if the method is supported=
-            coordinatesList.addAll(
-                    this.currEventCard.getDoubleCannonsToActivate().stream()
-                            .map(Pair::getValue)
-                            .toList()
-            );
-        }
-        catch (UnsupportedOperationException e) {
-           // Nothing
-        }
-
-        try {
-            // Add all batteries bound to double engines (if the method is supported)
-            coordinatesList.addAll(
-                    this.currEventCard.getDoubleEnginesToActivate().stream()
-                            .map(Pair::getValue)
-                            .toList()
-            );
-        }
-        catch (UnsupportedOperationException e) {
-            // Nothing
         }
 
         List<ClientBattery> batteryList = new ArrayList<>();
