@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.CommandWidgetTUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
@@ -62,6 +63,20 @@ public class CardRoundController extends GUIController {
 
     List<ClientEventCard> cards;
     ClientEventCard currEventCard;
+
+    // All possible commands that can be selected during a cardRound (based on the card)
+    private final static List<String> allCommands = List.of(
+            "playCard",
+            "setTakeReward",
+            "setWantsToVisit",
+            "setChosenPlanetIndex",
+            "setCrewToRemove",
+            "setItemsToBeRemoved",
+            "setItemsToBeTaken",
+            "setDoubleCannonsToActivate",
+            "setShieldsToActivate",
+            "batteriesToBeStolen"
+    );
 
     public void init(CardRoundDTO state) {
 
@@ -189,6 +204,18 @@ public class CardRoundController extends GUIController {
             this.viewOtherShipsGrid.add(toggleButton, 0, i);
             i++;
         }
+
+        viewOtherShipsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+
+            if (newToggle == null) {
+                // Go back to view the client's own ship
+                this.setShipGrid(this.clientModel.getNickname());
+            } else {
+
+                ToggleButton selected = (ToggleButton) newToggle;
+                this.setShipGrid(selected.getText());
+            }
+        });
     }
 
     private void initStatsBox() {
@@ -259,6 +286,24 @@ public class CardRoundController extends GUIController {
 
     private void initCommandBox() {
 
+        List<String> availableCommands = this.currEventCard.getAvailableCommands();
+
+        try {
+            ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+            if (ship == null) {
+                System.out.println(PrintUtils.addColor("[ERROR] [CardRoundScene] ClientShip is null", ANSIColors.RED));
+                return;
+            }
+            if(ship.getFirePower(null) > this.currEventCard.getFirepower()) {
+                CommandWidgetTUI command;
+
+                // Enables the "setTakeReward" command if the baseline firepower is enough
+                availableCommands.add("setTakeReward");
+            }
+        } catch (UnsupportedOperationException e) {
+            // Do nothing, the command will not be added
+        }
+
         // Clearing the existing toggles from the grid
         this.commandsGrid.getChildren().clear();
 
@@ -273,49 +318,51 @@ public class CardRoundController extends GUIController {
 //        commandsDescriptionBox.getChildren().add(commandsDescriptionLabel);
 //        this.commandsBox.getChildren().add(commandsDescriptionBox);
 
-        //G
-
         // Generating the toggles
         int col = 0;
-        for (String command : this.currEventCard.getAvailableCommands()) {
+        for (String command : allCommands) {
             Label toggleLabel = new Label();
             System.out.println(command);
-            switch (command) {
-                case "playCard" -> {toggleLabel.setText("Play Card");}
-                case "setCrewToRemove" -> {toggleLabel.setText("Set Crew\nTo Remove");}
-                case "setItemsToBeRemoved" -> {toggleLabel.setText("Set Items\nTo Be Removed");}
-                case "setItemsToBeTaken" -> {toggleLabel.setText("Set Items\nTo Be Taken");}
-                case "setTakeReward" -> {toggleLabel.setText("Take the Reward?");}
-                case "setChosenPlanetIndex" -> {toggleLabel.setText("Chose the\nplanet to visit");}
-                case "setWantsToVisit" -> {toggleLabel.setText("Visit the POI?");}
-                case "setShieldsToActivate" -> {toggleLabel.setText("Activate Shields");}
-                case "setDoubleCannonsToActivate" -> {toggleLabel.setText("Activate\nDouble Cannons");}
-                case "setDoubleEnginesToActivate" -> {toggleLabel.setText("Activate\nDouble Engines");}
-                case "batteriesToBeStolen" -> {toggleLabel.setText("Batteries to Give Up");}
+            // A command is added only if it's present in the available commands
+            if (availableCommands.contains(command)) {
+                switch (command) {
+                    case "playCard" -> {toggleLabel.setText("Play Card");}
+                    case "setCrewToRemove" -> {toggleLabel.setText("Set Crew\nTo Remove");}
+                    case "setItemsToBeRemoved" -> {toggleLabel.setText("Set Items\nTo Be Removed");}
+                    case "setItemsToBeTaken" -> {toggleLabel.setText("Set Items\nTo Be Taken");}
+                    case "setTakeReward" -> {toggleLabel.setText("Take the Reward?");}
+                    case "setChosenPlanetIndex" -> {toggleLabel.setText("Chose the\nplanet to visit");}
+                    case "setWantsToVisit" -> {toggleLabel.setText("Visit the POI?");}
+                    case "setShieldsToActivate" -> {toggleLabel.setText("Activate Shields");}
+                    case "setDoubleCannonsToActivate" -> {toggleLabel.setText("Activate\nDouble Cannons");}
+                    case "setDoubleEnginesToActivate" -> {toggleLabel.setText("Activate\nDouble Engines");}
+                    case "batteriesToBeStolen" -> {toggleLabel.setText("Batteries to Give Up");}
+                }
+
+                toggleLabel.setTextAlignment(TextAlignment.CENTER);
+                toggleLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+
+                // Creates a toggle with the assigned label
+                ToggleButton toggleCommand = new ToggleButton();
+                toggleCommand.setToggleGroup(this.commandsToggleGroup);
+                toggleCommand.getStyleClass().add("blue");
+                toggleCommand.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+                toggleCommand.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+                toggleCommand.setAlignment(Pos.CENTER);
+                toggleCommand.setGraphic(toggleLabel);
+
+                this.commandsGrid.add(toggleCommand, col, 0);
+                col++;
             }
-
-            toggleLabel.setTextAlignment(TextAlignment.CENTER);
-            toggleLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
-
-            // Creates a toggle with the assigned label
-            ToggleButton toggleCommand = new ToggleButton();
-            toggleCommand.setToggleGroup(this.commandsToggleGroup);
-            toggleCommand.getStyleClass().add("blue");
-            toggleCommand.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-            toggleCommand.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
-            toggleCommand.setAlignment(Pos.CENTER);
-            toggleCommand.setGraphic(toggleLabel);
-
-            this.commandsGrid.add(toggleCommand, col, 0);
-            col++;
         }
 
         // Add listener
         commandsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
 
-            if (newToggle != null) {
-                ToggleButton selected = (ToggleButton) newToggle;
-                System.out.println("Selezionato: " + selected.getText());
+            if (newToggle == null) {
+
+                // TODO: see what to do
+
             } else {
 
                 ToggleButton selected = (ToggleButton) newToggle;
@@ -337,6 +384,17 @@ public class CardRoundController extends GUIController {
         });
     }
 
+    /**
+     * Sets the shipGrid to display the ship of the given player
+     */
+    private void setShipGrid(String playerNickname) {
+        if (this.shipGrid != null) {
+            this.imagePane.getChildren().remove(this.shipGrid);
+        }
+
+        this.shipGrid = this.playersShipGridPane.get(playerNickname);
+        this.imagePane.getChildren().add(this.shipGrid);
+    }
 
 
 }
