@@ -416,5 +416,7 @@ public class GUIUtils {
         cell.setCursor(Cursor.HAND);
         cell.setPickOnBounds(true);
         cell.setDisable(true);
+
+        return cell;
     }
 }
