@@ -19,6 +19,7 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
@@ -402,5 +403,18 @@ public class GUIUtils {
         }
 
 
+    }
+
+    /**
+     * @return a clickable region (in the disabled state) without a click listener
+     */
+    public Region generateDisabledRegion() {
+        // Generate a region without clickListener
+        Region cell = new Region();
+        cell.setPrefSize(100, 100);
+        cell.setStyle("-fx-background-color: transparent;");
+        cell.setCursor(Cursor.HAND);
+        cell.setPickOnBounds(true);
+        cell.setDisable(true);
     }
 }

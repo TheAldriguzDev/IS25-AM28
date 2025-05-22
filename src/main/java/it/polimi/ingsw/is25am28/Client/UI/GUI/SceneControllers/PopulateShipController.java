@@ -122,7 +122,7 @@ public class PopulateShipController extends GUIController {
             for(ClientCabin cabin : cabins) {
 
                 // Create a clickable region for every cabin, with clicks disabled, then put it in the general cabinRegions map
-                Region cell = new Region(); // Place holder node
+                Region cell = new Region();
                 cell.setPrefSize(100, 100);
                 cell.setStyle("-fx-background-color: transparent;");
                 cell.setCursor(Cursor.DEFAULT);
