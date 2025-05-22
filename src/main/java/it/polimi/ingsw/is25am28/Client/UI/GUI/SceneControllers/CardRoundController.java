@@ -36,7 +36,6 @@ import javafx.scene.text.TextAlignment;
 import java.net.URL;
 import java.util.*;
 
-import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.TAB;
 
 public class CardRoundController extends GUIController {
@@ -152,9 +151,12 @@ public class CardRoundController extends GUIController {
     private void setCurrentEventCard(CardStateJSON cardInfo) {
         // Setting the current eventCard
         for(ClientEventCard card : this.cards) {
-            if(card.getCardID() == card.getCardID()) {
+            if(card.getUniqueCardId() == cardInfo.getUniqueCardId()) {
                 this.currEventCard = card;
             }
+
+            System.out.println("card: " + card.getUniqueCardId());
+            System.out.println("cardInfo: " + cardInfo.getUniqueCardId());
         }
 
         // Setting the card's image

@@ -35,8 +35,8 @@ public class Smugglers extends EventCard {
 
     private String prevPlayerNickname;
 
-    public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank, int cardID, String path) {
-        super(name, cardLevel, board, cardID, path);
+    public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank, int uniqueCardId, String path) {
+        super(name, cardLevel, board, uniqueCardId, path);
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.redItems = redItems;
@@ -282,7 +282,7 @@ public class Smugglers extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON smugglersStateJSON = new CardStateJSON();
-        smugglersStateJSON.setCardID(this.getCardID());
+        smugglersStateJSON.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
             // Initializing the state flags
@@ -318,7 +318,7 @@ public class Smugglers extends EventCard {
 
         } else {
             // Setting the card's static data
-            smugglersStateJSON.setId(this.cardTypeId);
+            smugglersStateJSON.setCardTypeId(this.cardTypeId);
             smugglersStateJSON.setCardName(this.getCardName());
             smugglersStateJSON.setImagePath(this.path);
             smugglersStateJSON.setCardLevel(this.getCardLevel());
@@ -339,8 +339,8 @@ public class Smugglers extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardTypeId);
+        cardState.setCardTypeId(this.cardTypeId);
+        cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.getCardLevel());

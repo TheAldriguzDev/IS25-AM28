@@ -4,7 +4,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON;
-import it.polimi.ingsw.is25am28.Model.Components.Cannon;
 import it.polimi.ingsw.is25am28.Model.Components.Cabin;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Components.Shield;
@@ -41,8 +40,8 @@ public class Pirates extends EventCard {
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private String prevPlayerNickname;
 
-    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board, int cardID, String path) {
-        super(name, cardLevel, board, cardID, path);
+    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board, int uniqueCardId, String path) {
+        super(name, cardLevel, board, uniqueCardId, path);
         this.requiredFirepower = requiredFirepower;
         this.givenCredits = givenCredits;
         this.movementSteps = movementSteps;
@@ -418,7 +417,7 @@ public class Pirates extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON piratesStateJSON = new CardStateJSON();
-        piratesStateJSON.setCardID(this.getCardID());
+        piratesStateJSON.setUniqueCardId(this.uniqueCardId);
 
         // The dice throw is performed by generateState only at the beginning
         // since the card hasn't been used yet
@@ -468,7 +467,7 @@ public class Pirates extends EventCard {
 
         } else {
             // This static info will be sent to the clients only when the card has not been activated yet
-            piratesStateJSON.setId(this.cardTypeId);
+            piratesStateJSON.setCardTypeId(this.cardTypeId);
             piratesStateJSON.setCardName(getCardName());
             piratesStateJSON.setImagePath(this.path);
             piratesStateJSON.setCardLevel(getCardLevel());
@@ -485,8 +484,8 @@ public class Pirates extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardID);
+        cardState.setCardTypeId(this.cardTypeId);
+        cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(getCardLevel());

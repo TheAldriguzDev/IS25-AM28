@@ -38,10 +38,10 @@ public class VisitPlanets extends EventCard {
             @JsonProperty("itemsPerPlanet") List<Map<String, Integer>> itemsPerPlanet,
             ResourceBank resourceBank,
             Board board,
-            int cardID,
+            int uniqueCardId,
             String path
     ) {
-        super(cardName, cardLevel, board, cardID, path);
+        super(cardName, cardLevel, board, uniqueCardId, path);
 
         updatedPositions = new HashMap<>();
 
@@ -315,7 +315,7 @@ public class VisitPlanets extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
+        cardState.setUniqueCardId(this.uniqueCardId);
 
         Map<Integer, Map<ItemColor, Integer>> availablePlanets;
 
@@ -341,7 +341,7 @@ public class VisitPlanets extends EventCard {
 
             setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
         } else {
-            cardState.setId(this.cardTypeId);
+            cardState.setCardTypeId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
             cardState.setCardLevel(this.getCardLevel());
@@ -360,8 +360,8 @@ public class VisitPlanets extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardTypeId);
+        cardState.setCardTypeId(this.cardTypeId);
+        cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.getCardLevel());

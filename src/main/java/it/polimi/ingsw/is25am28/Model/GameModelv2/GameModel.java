@@ -308,8 +308,8 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(36)); // Stardust
 //        fakeDeck.add(AllCards.get(37)); // Stardust
 
-        //this.deck.clear();
-        //this.deck.addAll(fakeDeck);
+//        this.deck.clear();
+//        this.deck.addAll(fakeDeck);
     }
 
     /**

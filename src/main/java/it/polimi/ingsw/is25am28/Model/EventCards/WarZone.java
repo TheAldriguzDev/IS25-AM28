@@ -8,7 +8,6 @@ import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Components.*;
 import it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities.PlasmaShot;
 import it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException;
-import it.polimi.ingsw.is25am28.Model.Exceptions.InsufficientEnergyException;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
@@ -72,10 +71,10 @@ public class WarZone extends EventCard {
             int requiredItems,
             List<PlasmaShot> shootingSequence,
             List<WarZoneActionConsequencePair> cardActions,
-            int cardID,
+            int uniqueCardId,
             String path
     ) {
-        super(name, level, board, cardID, path);
+        super(name, level, board, uniqueCardId, path);
         this.resourceBank = resourceBank;
         this.movementSteps = movementSteps;
         this.requiredCrew = requiredCrew;
@@ -794,7 +793,7 @@ public class WarZone extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
+        cardState.setUniqueCardId(this.uniqueCardId);
 
         if (this.hasBeenActivated()) {
             initStateFlags(cardState);
@@ -869,7 +868,7 @@ public class WarZone extends EventCard {
             }
 
         } else {
-            cardState.setId(this.cardTypeId);
+            cardState.setCardTypeId(this.cardTypeId);
             // Set the card name
             cardState.setCardName(this.getCardName());
             // Set the card level
@@ -917,8 +916,8 @@ public class WarZone extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setCardID(this.getCardID());
-        cardState.setId(this.cardTypeId);
+        cardState.setCardTypeId(this.cardTypeId);
+        cardState.setUniqueCardId(this.uniqueCardId);
         // Set the card name
         cardState.setCardName(this.getCardName());
         // Set the card level

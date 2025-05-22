@@ -769,11 +769,6 @@ public class ShipConstructionController extends GUIController {
     }
 
     // ========== UTILS METHODS ========== //
-    // Method used to set the visibility of a certain node
-    private <T extends Node> void setVisibility(T node, boolean visible) {
-        node.setVisible(visible);
-        node.setManaged(visible);
-    }
 
     // TODO: Understand if we need to move these methods to the GUIController class to share them
     private Image getImageFromPath(String path, int width, int height) {
