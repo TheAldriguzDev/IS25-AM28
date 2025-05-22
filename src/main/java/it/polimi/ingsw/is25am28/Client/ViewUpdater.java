@@ -237,11 +237,18 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(PlayerEndedShipDTO state) throws Exception {
         synchronized (this.model) {
-            // Sets this player's homonymous flag to TRUE to mask the
-            // commands he can no longer use (since he sent the ship)
-            this.model.getState().setPlayerFinishedBuildingShip(state.getPlayerNickname());
+            try {
+                // Sets this player's homonymous flag to TRUE to mask the
+                // commands he can no longer use (since he sent the ship)
+                this.model.getState().setPlayerFinishedBuildingShip(state.getPlayerNickname(), state.getPlayerCursors());
 
-            // TODO: Send to the GUI the message the the player X has ended his ship --> and add it to the board
+                // Update the game board
+                if (this.ui instanceof GUIHandler) {
+                    ((GUIHandler) this.ui).placePlayerInTheBoard(state);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -133,7 +133,7 @@ public class FixShipController extends GUIController {
             );
 
         } catch (Exception e) {
-            this.showError(e.getMessage());
+            this.showToast(e.getMessage(), ToastType.ERROR);
         }
     }
 

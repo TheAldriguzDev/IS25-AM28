@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCompone
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
@@ -13,6 +14,7 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.animation.FadeTransition;
 import javafx.animation.PauseTransition;
 import javafx.animation.SequentialTransition;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -47,12 +49,12 @@ public abstract class GUIController {
         return rootPane;
     }
 
-    public void showError(String error) {
-        Label errorLabel = new Label(error);
+    public void showToast(String text, ToastType type) {
+        Label errorLabel = new Label(text);
         errorLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
 
         HBox container = new HBox(errorLabel);
-        container.getStyleClass().add("toast-error-container");
+        container.getStyleClass().add("toast-" + type.toString() + "-container");
         container.setPrefWidth(Region.USE_COMPUTED_SIZE);
         container.setMinWidth(Region.USE_PREF_SIZE);
         container.setMaxWidth(Region.USE_PREF_SIZE);
@@ -65,10 +67,12 @@ public abstract class GUIController {
         StackPane.setAlignment(container, Pos.TOP_RIGHT);
         StackPane.setMargin(container, new Insets(20, 20, 0, 0));
 
-        rootPane.getChildren().add(container);
+        Platform.runLater(() -> {
+            rootPane.getChildren().add(container);
 
-        SequentialTransition sequence = getTransition(container);
-        sequence.play();
+            SequentialTransition sequence = getTransition(container);
+            sequence.play();
+        });
     }
 
     private SequentialTransition getTransition(HBox errorBox) {

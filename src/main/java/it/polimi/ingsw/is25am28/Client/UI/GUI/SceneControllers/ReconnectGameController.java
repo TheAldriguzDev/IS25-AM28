@@ -19,7 +19,7 @@ public class ReconnectGameController extends GUIController {
         Platform.runLater(() -> {
             // Validate the input
             if (nickname.isBlank()) {
-                showError("Nickname cannot be empty.");
+                this.showToast("Nickname cannot be empty.", ToastType.ERROR);
                 return;
             }
 

@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 
@@ -251,10 +252,14 @@ public class ClientShipConstructionState extends ClientState {
      *                       corresponding flag will be set to true.
      */
     @Override
-    public void setPlayerFinishedBuildingShip(String playerNickname) {
+    public void setPlayerFinishedBuildingShip(String playerNickname, int cursor) {
         if (playerNickname != null && !playerNickname.isEmpty()) {
             if (this.playersFinishedBuildingShip != null) {
                 this.playersFinishedBuildingShip.put(playerNickname, true);
+                ClientPlayer p = this.model.getAllClientPlayers().get(playerNickname);
+                if (p != null) {
+                    p.setCursor(cursor);
+                }
             }
             else {
                 throw new IllegalArgumentException("ERROR: \"" + playerNickname + "\" is not in the map (init failed)");

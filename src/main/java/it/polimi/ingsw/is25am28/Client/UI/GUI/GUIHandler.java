@@ -272,10 +272,11 @@ public class GUIHandler extends Application implements ClientUI {
         }
     }
 
-    public void enableTimer(TimerDTO data) {
+    // TODO: Make a public interface shared between the TUI and GUI (UI) that implements this methods --> in the TUI this methods will be empty
+    public void placePlayerInTheBoard(PlayerEndedShipDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
-            //controller.handlePlayerShipConstruction((data));
+            controller.placePlayerInTheBoard(data);
         }
     }
 
@@ -525,7 +526,7 @@ public class GUIHandler extends Application implements ClientUI {
             return;
         }
 
-        Platform.runLater(() -> controller.showError(error.getError()));
+        Platform.runLater(() -> controller.showToast(error.getError(), ToastType.ERROR));
     }
 
     @Override
