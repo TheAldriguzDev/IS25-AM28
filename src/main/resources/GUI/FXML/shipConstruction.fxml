@@ -16,7 +16,6 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.shape.Polygon?>
 <?import javafx.scene.text.Font?>
 
 <StackPane fx:id="rootPane" prefHeight="939.0" prefWidth="1130.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.ShipConstructionController">
@@ -153,7 +152,7 @@
                      <Button fx:id="goBackToConstructionButtonFromViewBoard" mnemonicParsing="false" onAction="#handleGoBackToConstructionButton" text="Resume Ship Construction" />
                  </VBox>
                  <Region VBox.vgrow="ALWAYS" />
-                 <Pane fx:id="viewGameBoardStackPaneLevel2" maxHeight="-Infinity" maxWidth="-Infinity">
+                 <Pane fx:id="viewGameBoardStackPaneLevel2" maxHeight="-Infinity" maxWidth="-Infinity" managed="false" visible="false">
                      <ImageView fitWidth="816.0" layoutY="1.0" preserveRatio="true">
                          <Image url="@../../imgs/cardboard/board_level_2.png" />
                      </ImageView>
