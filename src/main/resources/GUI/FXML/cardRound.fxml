@@ -174,25 +174,25 @@
                         <Insets right="25.0" />
                      </HBox.margin>
                   </VBox>
-                  <GridPane hgap="10.0">
+                  <GridPane fx:id="commandsGrid" alignment="CENTER" hgap="10.0">
                     <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="10.0" prefWidth="150.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" />
-                        <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" GridPane.columnIndex="5" />
-                        <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" GridPane.columnIndex="4" />
-                        <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" GridPane.columnIndex="3" />
-                        <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" GridPane.columnIndex="2" />
-                        <Button maxHeight="-Infinity" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Button" GridPane.columnIndex="1" />
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Command 1" />
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Command 6" GridPane.columnIndex="5" />
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Command 5" GridPane.columnIndex="4" />
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Command 4" GridPane.columnIndex="3" />
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Command 3" GridPane.columnIndex="2" />
+                        <Button maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" text="Command 2" GridPane.columnIndex="1" />
                      </children>
                   </GridPane>
                </children>

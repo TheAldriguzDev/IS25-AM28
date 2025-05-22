@@ -136,4 +136,15 @@ public class GUIUtils {
         shipImageView.setFitWidth(816.0);
         shipImageView.setPreserveRatio(true);
     }
+
+    public Map<String, Map<String, ImageView>> addLifeFormIcons() {
+        return null;
+    }
+
+    public Pair<Integer, Integer> lifeFormIconCoordinates(ClientComponent component) {
+
+
+
+        return null;
+    }
 }

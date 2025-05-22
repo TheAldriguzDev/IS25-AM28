@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
@@ -24,6 +25,9 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
+import javafx.scene.text.TextAlignment;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -45,6 +49,10 @@ public class CardRoundController extends GUIController {
 
     @FXML private VBox statsBox;
     @FXML private HBox commandsBox;
+    @FXML private GridPane commandsGrid;
+
+    // Icons maps and interactable regions
+
 
     ToggleGroup commandsToggleGroup = new ToggleGroup();
 
@@ -59,7 +67,7 @@ public class CardRoundController extends GUIController {
         this.cards = this.clientModel.getClientEventCards();
 
         // Setting the card's image
-        this.setCurrentEventCard(state.getCardInfo().getCardID());
+        this.setCurrentEventCard(state.getCardInfo());
 
         this.componentsImagesMap = new HashMap<>();
         this.playersShipGridPane = new HashMap<>();
@@ -101,6 +109,8 @@ public class CardRoundController extends GUIController {
 
         this.initStatsBox();
 
+        this. initCommandBox();
+
 
 
 
@@ -120,10 +130,10 @@ public class CardRoundController extends GUIController {
     /**
      * Sets the current card's image based on the ID
      */
-    private void setCurrentEventCard(int cardID) {
+    private void setCurrentEventCard(CardStateJSON cardInfo) {
         // Setting the current eventCard
         for(ClientEventCard card : this.cards) {
-            if(card.getCardID() == cardID) {
+            if(card.getCardID() == card.getCardID()) {
                 this.currEventCard = card;
             }
         }
@@ -134,6 +144,9 @@ public class CardRoundController extends GUIController {
         resource = Objects.requireNonNull(getClass().getResource(this.currEventCard.getCardPath()));
         Image img = new Image(resource.toExternalForm(), 235, 315, true, true);
         this.cardImageView.setImage(img);
+
+        // Updating the card
+//        this.currEventCard.updateCard(cardInfo);
     }
 
     /**
@@ -225,49 +238,84 @@ public class CardRoundController extends GUIController {
     }
 
     private void initCommandBox() {
-        // Clearing the commands box
-        this.commandsBox.getChildren().clear();
 
-        //TODO: no need to delete it, only change the text, the buttons are removed from the preset grid, which is never removed
+        // Clearing the existing toggles from the grid
+        this.commandsGrid.getChildren().clear();
+
         // Creating and adding the command description box
-        VBox commandsDescriptionBox = new VBox();
-        commandsDescriptionBox.getStyleClass().add("generic-Hbox");
-        commandsDescriptionBox.setAlignment(Pos.CENTER);
-        Label commandsDescriptionLabel = new Label();
-        // TODO: set other types of texd based on selected command! (or turn)
-        commandsDescriptionLabel.setText("PLACEHOLDER");
-        commandsDescriptionLabel.setStyle("-fx-font-weight: bold;");
-        commandsDescriptionBox.getChildren().add(commandsDescriptionLabel);
-        this.commandsBox.getChildren().add(commandsDescriptionBox);
+//        VBox commandsDescriptionBox = new VBox();
+//        commandsDescriptionBox.getStyleClass().add("generic-Hbox");
+//        commandsDescriptionBox.setAlignment(Pos.CENTER);
+//        Label commandsDescriptionLabel = new Label();
+        // TODO: set other types of text based on selected command! (or turn)
+//        commandsDescriptionLabel.setText("PLACEHOLDER");
+//        commandsDescriptionLabel.setStyle("-fx-font-weight: bold;");
+//        commandsDescriptionBox.getChildren().add(commandsDescriptionLabel);
+//        this.commandsBox.getChildren().add(commandsDescriptionBox);
 
         //G
 
         // Generating the toggles
-        String toggleLabel;
+        int col = 0;
         for (String command : this.currEventCard.getAvailableCommands()) {
+            Label toggleLabel = new Label();
+            System.out.println(command);
             switch (command) {
-                case "playCard" -> {toggleLabel = "Play Card";}
-                case "setCrewToRemove" -> {toggleLabel = "Set Crew To Remove";}
-                case "setItemsToBeRemoved" -> {toggleLabel = "Set Items To Be Removed";}
-                case "setItemsToBeTaken" -> {toggleLabel = "Set Items To Be Taken";}
-                case "setTakeReward" -> {toggleLabel = "Take the Reward?";}
-                case "setChosenPlanetIndex" -> {toggleLabel = "Chose the planet to visit";}
-                case "setWantsToVisit" -> {toggleLabel = "Visit the POI?";}
-                case "setShieldsToActivate" -> {toggleLabel = "Activate Shields";}
-                case "setDoubleCannonsToActivate" -> {toggleLabel = "Activate Double Cannons";}
-                case "setDoubleEnginesToActivate" -> {toggleLabel = "Activate Double Engines";}
-                case "batteriesToBeStolen" -> {toggleLabel = "Batteries to Give Up";}
+                case "playCard" -> {toggleLabel.setText("Play Card");}
+                case "setCrewToRemove" -> {toggleLabel.setText("Set Crew\nTo Remove");}
+                case "setItemsToBeRemoved" -> {toggleLabel.setText("Set Items\nTo Be Removed");}
+                case "setItemsToBeTaken" -> {toggleLabel.setText("Set Items\nTo Be Taken");}
+                case "setTakeReward" -> {toggleLabel.setText("Take the Reward?");}
+                case "setChosenPlanetIndex" -> {toggleLabel.setText("Chose the\nplanet to visit");}
+                case "setWantsToVisit" -> {toggleLabel.setText("Visit the POI?");}
+                case "setShieldsToActivate" -> {toggleLabel.setText("Activate Shields");}
+                case "setDoubleCannonsToActivate" -> {toggleLabel.setText("Activate\nDouble Cannons");}
+                case "setDoubleEnginesToActivate" -> {toggleLabel.setText("Activate\nDouble Engines");}
+                case "batteriesToBeStolen" -> {toggleLabel.setText("Batteries to Give Up");}
             }
+
+            toggleLabel.setTextAlignment(TextAlignment.CENTER);
+            toggleLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
 
             // Creates a toggle with the assigned label
             ToggleButton toggleCommand = new ToggleButton();
-            toggleCommand.setToggleGroup(toggleCommand.getToggleGroup());
+            toggleCommand.setToggleGroup(this.commandsToggleGroup);
             toggleCommand.getStyleClass().add("blue");
+            toggleCommand.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+            toggleCommand.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            toggleCommand.setAlignment(Pos.CENTER);
+            toggleCommand.setGraphic(toggleLabel);
 
-
+            this.commandsGrid.add(toggleCommand, col, 0);
+            col++;
         }
-    }
 
+        // Add listener
+        commandsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+
+            if (newToggle != null) {
+                ToggleButton selected = (ToggleButton) newToggle;
+                System.out.println("Selezionato: " + selected.getText());
+            } else {
+
+                ToggleButton selected = (ToggleButton) newToggle;
+
+                switch (selected.getId()) {
+                    case "playCard" -> {}
+                    case "setCrewToRemove" -> {}
+                    case "setItemsToBeRemoved" -> {}
+                    case "setItemsToBeTaken" -> {}
+                    case "setTakeReward" -> {}
+                    case "setChosenPlanetIndex" -> {}
+                    case "setWantsToVisit" -> {}
+                    case "setShieldsToActivate" -> {}
+                    case "setDoubleCannonsToActivate" -> {}
+                    case "batteriesToBeStolen" -> {}
+                }
+
+            }
+        });
+    }
 
 
 
