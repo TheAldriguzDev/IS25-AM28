@@ -668,10 +668,17 @@ public class ShipConstructionController extends GUIController {
 
     @FXML
     private void handlePlaceTile(int i, int j) {
-        ImageView imgView = new ImageView(this.selectedComponentImage.getImage());
+        URL resource = getClass().getResource(this.selectedComponent.getPath());
+        if (resource == null) {
+            this.showToast("Component image not found: " + this.selectedComponent.getPath(), ToastType.ERROR);
+            return;
+        }
+
+        Image img = new Image(resource.toExternalForm(), 105, 105, true, true);
+        ImageView imgView = new ImageView(img);
+        imgView.setRotate(this.selectedComponent.getDirection() * 90.0);
         imgView.setFitWidth(105);
         imgView.setFitHeight(105);
-        imgView.setRotate(this.selectedComponentImage.getRotate());
         imgView.setPreserveRatio(true);
         imgView.setSmooth(true);
 
