@@ -52,6 +52,7 @@ public class CardRoundController extends GUIController {
     @FXML private ScrollPane playerActionsScrollPane;
     @FXML private VBox turnBox;
     @FXML private VBox commandDescriptionBox;
+    @FXML private VBox additionalInfoBox;
 
     @FXML private VBox statsBox;
     @FXML private HBox commandsBox;
@@ -1648,6 +1649,44 @@ public class CardRoundController extends GUIController {
 //
 //                    }
 //                }
+
+
+//            if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
+//                for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
+//
+//
+//
+//                }
+//            }
+
+
+            if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
+                for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
+                    for (Map<String, Object> componentToRemove : cardStateJSON.getRemovedComponents().get(playerNickname)) {
+
+                        // Getting the player's ship
+                        ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
+                        if (ship == null) {
+                            System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
+                            return;
+                        }
+
+                        GridPane playerShipGrid = this.playersShipGridPane.get(playerNickname);
+
+                        int row = (int) componentToRemove.get("row");
+                        int col = (int) componentToRemove.get("col");
+
+                        int ofsRow = row - this.shipOffsets.getKey();
+                        int ofsCol = col - this.shipOffsets.getValue();
+
+                        shipGrid.getChildren().removeIf(cell ->
+                                GridPane.getRowIndex(cell) == row &&
+                                GridPane.getColumnIndex(cell) == col
+                        );
+                        // TODO: check on regions
+                    }
+                }
+            }
 
             // TODO: do a separate method to only update within the same round, for now is setting the card again
 

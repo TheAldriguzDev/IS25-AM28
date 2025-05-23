@@ -162,16 +162,16 @@
                         <Insets left="10.0" right="30.0" />
                      </HBox.margin>
                      <children>
-                        <VBox alignment="CENTER" styleClass="generic-Hbox">
-                           <children>
-                              <Label text="Label" />
-                           </children>
-                        </VBox>
                         <ImageView fx:id="cardImageView" fitHeight="316.0" fitWidth="235.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../imgs/cards/GT-cards_II_IT_0121.jpg" />
                            </image>
                         </ImageView>
+                        <VBox fx:id="additionalInfoBox" alignment="CENTER" styleClass="generic-Hbox">
+                           <children>
+                              <Label text="Label" />
+                           </children>
+                        </VBox>
                         <ScrollPane fx:id="playerActionsScrollPane" prefHeight="200.0" prefWidth="200.0" />
                      </children>
                   </VBox>

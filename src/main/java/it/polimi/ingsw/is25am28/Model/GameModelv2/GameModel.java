@@ -274,7 +274,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(5)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(6)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(7)); // AbandonedStation
-//        fakeDeck.add(AllCards.get(8)); // MeteorShower
+        fakeDeck.add(AllCards.get(8)); // MeteorShower
 //        fakeDeck.add(AllCards.get(9)); // MeteorShower
 //        fakeDeck.add(AllCards.get(10)); // MeteorShower
 //        fakeDeck.add(AllCards.get(11)); // MeteorShower
