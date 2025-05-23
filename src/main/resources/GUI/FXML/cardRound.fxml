@@ -179,7 +179,7 @@
             </HBox>
             <HBox fx:id="commandsBox" alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="generic-Hbox">
                <children>
-                  <VBox alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefWidth="225.0" styleClass="generic-Hbox">
+                  <VBox fx:id="commandDescriptionBox" alignment="CENTER" minHeight="-Infinity" minWidth="-Infinity" prefWidth="225.0" styleClass="generic-Hbox">
                      <children>
                         <Label text="Chose an action!">
                            <font>

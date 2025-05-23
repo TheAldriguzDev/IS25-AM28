@@ -1,8 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
@@ -52,6 +51,7 @@ public class CardRoundController extends GUIController {
     @FXML private GridPane viewOtherShipsGrid;
     @FXML private ScrollPane playerActionsScrollPane;
     @FXML private VBox turnBox;
+    @FXML private VBox commandDescriptionBox;
 
     @FXML private VBox statsBox;
     @FXML private HBox commandsBox;
@@ -64,6 +64,8 @@ public class CardRoundController extends GUIController {
     @FXML private Button goBackToCardRoundButtonFromViewBoard;
 
     private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
+
+    private String currentPlayerNickname;
 
     // Icons maps and interactable regions
     private final Map<String, Map<String, HBox>> lifeFormsMap = new HashMap<>();
@@ -113,6 +115,8 @@ public class CardRoundController extends GUIController {
             "setShieldsToActivate",
             "batteriesToBeStolen"
     );
+
+    private List<String> availableCommands;
 
     private ClientShip mainShip;
 
@@ -172,16 +176,7 @@ public class CardRoundController extends GUIController {
 
         this.initCommandBox();
 
-        // TODO: Improve the text
-        Label turnLabel = new Label();
-        turnLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
-        this.turnBox.getChildren().clear();
-        if (state.getCardInfo().getPlayerNickname().equals(this.clientModel.getNickname())) {
-            turnLabel.setText("It's YOUR turn!!!");
-        } else {
-            turnLabel.setText("It's NOT YOUR turn!!!");
-        }
-        this.turnBox.getChildren().add(turnLabel);
+        this.initTurnBox();
 
         // Initializes the board image to display on a view board request
         this.initViewGameBoard();
@@ -308,6 +303,8 @@ public class CardRoundController extends GUIController {
 
         // Updating the card
         this.currEventCard.updateCard(cardInfo);
+
+        this.availableCommands = this.currEventCard.getAvailableCommands();
     }
 
     /**
@@ -429,11 +426,31 @@ public class CardRoundController extends GUIController {
         this.statsBox.getChildren().add(new Label("Lost Components: " + player.getLostComponents()));
     }
 
-    private void initTurnBox() {}
+    private void initTurnBox() {
+        // TODO: Improve the text
+        Label turnLabel = new Label();
+        turnLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+        this.turnBox.getChildren().clear();
+        if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
+            turnLabel.setText("It's YOUR turn!!!");
+        } else {
+            turnLabel.setText("It's NOT YOUR turn!!!");
+        }
+        this.turnBox.getChildren().add(turnLabel);
+    }
 
+    // Todo: handle commands availability based also un card resources amount (and ship) / or display error in the command description
     private void initCommandBox() {
 
-        List<String> availableCommands = this.currEventCard.getAvailableCommands();
+//        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+//        if (stackTrace.length > 2) {
+//            StackTraceElement caller = stackTrace[2];
+//            System.out.println("Metodo chiamante: " + caller.getMethodName());
+//            System.out.println("Classe chiamante: " + caller.getClassName());
+//            System.out.println("Linea: " + caller.getLineNumber());
+//        }
+
+//        List<String> availableCommands = this.currEventCard.getAvailableCommands();
 
         try {
             ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
@@ -446,11 +463,12 @@ public class CardRoundController extends GUIController {
             if(ship.getFirePower(null) > this.currEventCard.getFirepower()) {
 
                 // Enables the "setTakeReward" command if the baseline firepower is enough
-                availableCommands.add("setTakeReward");
+                this.availableCommands.add("setTakeReward");
             }
         } catch (UnsupportedOperationException e) {
             // Do nothing, the command will not be added
         }
+
 
         // Clearing the existing toggles from the grid
         this.commandsGrid.getChildren().clear();
@@ -466,16 +484,16 @@ public class CardRoundController extends GUIController {
 //        commandsDescriptionBox.getChildren().add(commandsDescriptionLabel);
 //        this.commandsBox.getChildren().add(commandsDescriptionBox);
 
-        System.out.println("Available commands: " + availableCommands);
+        System.out.println("Available commands: " + this.availableCommands);
 
         // Generating the toggles
         int col = 0;
         for (String command : allCommands) {
             Label toggleLabel = new Label();
-            System.out.println("CONFRONTO: " + command + " RISULTATO: " + availableCommands.contains(command));
+            System.out.println("CONFRONTO: " + command + " RISULTATO: " + this.availableCommands.contains(command));
             // A command is added only if it's present in the available commands
-            if (availableCommands.contains(command)) {
-                System.out.println("CONTIENE: " + command);
+            if (this.availableCommands.contains(command)) {
+                System.out.println("CONTIENE: " + command + "TRIGGER: " + command);
                 switch (command) {
                     case "playCard" -> {toggleLabel.setText("Play Card");}
                     case "setCrewToRemove" -> {toggleLabel.setText("Set Crew\nTo Remove");}
@@ -508,12 +526,26 @@ public class CardRoundController extends GUIController {
             }
         }
 
-        // Add listener
+        // Adding the description to the commandDescriptionBox
+        this.commandDescriptionBox.getChildren().clear();
+        Label commandDescriptionLabel = new Label();
+        commandDescriptionLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+        // Disables the toggles if it's not this player's turn
+        if (!this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
+            // TODO: beautify this with a text flow
+            commandDescriptionLabel.setText("No actions available, it's NOT YOUR turn!");
+            for (Toggle toggleButtonCommand : this.commandsToggleGroup.getToggles()) {
+                ((ToggleButton) toggleButtonCommand).setDisable(true);
+            }
+        } else {
+            commandDescriptionLabel.setText("Chose an action!");
+        }
+        this.commandDescriptionBox.getChildren().add(commandDescriptionLabel);
+
+        // Adding the listener
         commandsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
 
             if (newToggle == null) {
-
-                // TODO: see what to do
 
                 if (this.currEnergyConsumer != null) {
                     CoordinatePair energyConsumerCoords = this.currEnergyConsumer.getValue();
@@ -524,11 +556,13 @@ public class CardRoundController extends GUIController {
                         case SHIELD -> this.shieldsRegions.get(guiUtils.keyFromCoords(energyConsumerCoords.getI(), energyConsumerCoords.getJ())).setStyle("-fx-background-color: transparent;");
                     }
 
-//                    System.out.println("currentRegion: " + this.currentRegions.toString());
-//                    System.out.println("energyConsumerCoords: " + energyConsumerCoords.getI() + " " + energyConsumerCoords.getJ());
+
                     this.currEnergyConsumer = null;
                 }
+
+                System.out.println(PrintUtils.addColor("CURRENT REGION BEFORE" + this.currentRegions, ANSIColors.CYAN));
                 disableRegion(this.currentRegions);
+                System.out.println(PrintUtils.addColor("CURRENT REGION AFTER" + this.currentRegions, ANSIColors.CYAN));
 
 
             } else {
@@ -537,17 +571,19 @@ public class CardRoundController extends GUIController {
 
                 // Exit the board visualization if the toggle
                 // is pressed during that phase
-                this.handleGoBackToCardRoundButton(new ActionEvent());
+                // TODO: move to some other location, here it destroys the logic by re-calling the initCommandBox()
+//                this.handleGoBackToCardRoundButton(new ActionEvent());
 
 //                this.disableRegion();
 
                 switch (selected.getId()) {
-                    case "playCard" -> {this.playCard();}
+                    case "playCard" -> {this.playCard(); disableRegion(this.currentRegions);}
                     case "setCrewToRemove" -> {this.enableRegion(this.cabinsRegions);}
-                    case "setItemsToBeRemoved", "setItemsToBeTaken" -> {this.enableRegion(this.storagesRegions);}
-                    case "setTakeReward" -> {this.addTakeReward(true);} // TODO: add dynamic selection buttons
-//                    case "setChosenPlanetIndex" -> {this.addChosenPlanetIndex();} // TODO: NEEDS dynamic selection buttons
-                    case "setWantsToVisit" -> {this.addWantsToVisit(true);} // TODO: add dynamic selection buttons
+//                    case "setItemsToBeRemoved" -> {this.enableRegion(this.storagesRegions);}
+//                    case "setItemsToBeTaken" -> {this.disableRegion(this.storagesRegions);}
+                    case "setTakeReward" -> {this.handleTakeReward();} // TODO: add dynamic selection buttons
+                    case "setChosenPlanetIndex" -> {this.handleChosenPlanetIndex();} // TODO: NEEDS dynamic selection buttons
+                    case "setWantsToVisit" -> {this.handleWantsToVisit();} // TODO: add dynamic selection buttons
                     case "setShieldsToActivate" -> {this.enableRegion(this.shieldsRegions);}
                     case "setDoubleCannonsToActivate" -> {this.enableRegion(this.doubleCannonsRegions);}
                     case "setDoubleEnginesToActivate" -> {this.enableRegion(this.doubleEnginesRegions);}
@@ -557,10 +593,13 @@ public class CardRoundController extends GUIController {
         });
     }
 
+    // TODO: variabile di commandsGridSwap, utile per boardView e altri
+
     /**
      * Sets disabled(true) for all the regions in the given map
      */
     private void disableRegion(Map<String, Region> regionMap) {
+        if(regionMap == null) return;
         for (Region region : regionMap.values()) {
             region.setDisable(true);
             region.setStyle("-fx-background-color: transparent;");
@@ -584,6 +623,14 @@ public class CardRoundController extends GUIController {
 
     @FXML
     private void handleViewGameBoard() {
+
+        // Disable the commands
+        if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
+            for (Toggle toggleButtonCommand : this.commandsToggleGroup.getToggles()) {
+                ((ToggleButton) toggleButtonCommand).setDisable(true);
+            }
+        }
+
         // Disable all the previous containers
         this.setVisibility(this.shipImageView, false);
         this.setVisibility(this.shipGrid, false);
@@ -597,6 +644,10 @@ public class CardRoundController extends GUIController {
 
     @FXML
     private void handleGoBackToCardRoundButton(ActionEvent actionEvent) {
+
+        // Enable the commands
+        this.initCommandBox();
+
         this.setVisibility(this.viewGameBoardContainer, false);
 
         this.setVisibility(this.shipImageView, true);
@@ -953,7 +1004,24 @@ public class CardRoundController extends GUIController {
     // Methods to select the components to execute a command on (+ Visual Updates)
     // ofsRow, ofsCol relative to the gridPane
     private void handleCrewToRemove(int ofsRow, int ofsCol) {
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
 
+        ClientCabin selectedCabin = (ClientCabin) this.mainShip.getComponent(row, col);
+        LifeformType selectedLifeForm = selectedCabin.getInhabitants().getFirst().getLifeformType();
+        this.addCrewToRemove(row, col, selectedLifeForm);
+
+        // Updating the HBox containing the icons
+        HBox boxToUpdate = this.batteriesMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
+        guiUtils.initCabinLifeFormIcons(selectedCabin, boxToUpdate);
+
+        // If the cabin has no more inhabitants, we remove the region
+        if (selectedCabin.getInhabitants().isEmpty()) {
+            this.shipGrid.getChildren().remove(this.batteriesRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.shipGrid.getChildren().remove(boxToUpdate);
+            // TODO: attention on re-enabling on revert!!!
+            this.batteriesMap.remove(guiUtils.keyFromCoords(row, col));
+        }
     }
 
     private void handleItemToRemove(int ofsRow, int ofsCol) {
@@ -962,11 +1030,69 @@ public class CardRoundController extends GUIController {
 
     private void handleItemToTake(int ofsRow, int ofsCol) {}
 
-    private void handleTakeReward(int ofsRow, int ofsCol) {}
+    private void handleTakeReward() {
+        this.addTakeReward(true);
 
-    private void handleChosenPlanetIndex(int ofsRow, int ofsCol) {}
+        this.availableCommands.remove("setTakeReward");
 
-    private void handleWantsToVisit(int ofsRow, int ofsCol) {}
+        if (this.currEventCard.getClass().equals(ClientSmugglers.class)) {
+
+            this.availableCommands.add("setItemsToBeTaken");
+            this.availableCommands.add("setItemsToBeRemoved");
+
+        }
+// TODO: make this check also for the cannon selection
+        this.initCommandBox();
+    }
+
+    /**
+     * Substitutes the commandBox commands with a set of buttons used to choose the planet to land on
+     */
+    private void handleChosenPlanetIndex() {
+        Button planetButton;
+
+        this.commandsGrid.getChildren().clear();
+
+        List<Integer> availablePlanetIndexes =
+                ((ClientVisitPlanets) this.currEventCard)
+                        .getAvailablePlanets()
+                        .keySet().stream().toList();
+
+        int col = 0;
+        for (Integer index : availablePlanetIndexes) {
+            planetButton = new Button();
+            planetButton.setOnAction(event -> this.addChosenPlanetIndex(index));
+            planetButton.getStyleClass().add("button");
+            planetButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+            planetButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+            planetButton.setAlignment(Pos.CENTER);
+            Label planetButtonLabel = new Label(index.toString());
+            planetButtonLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+            planetButton.setGraphic(planetButtonLabel);
+
+            this.commandsGrid.add(planetButton, col, 0);
+        }
+
+
+    }
+
+    private void handleWantsToVisit() {
+        this.addWantsToVisit(true);
+
+        this.availableCommands.remove("setWantsToVisit");
+
+        if (this.currEventCard.getClass().equals(ClientAbandonedShip.class)) {
+
+            this.availableCommands.add("setCrewToRemove");
+
+        } else if (this.currEventCard.getClass().equals(ClientAbandonedStation.class)) {
+
+            this.availableCommands.add("setItemsToBeTaken");
+            this.availableCommands.add("setItemsToBeRemoved");
+        }
+
+        this.initCommandBox();
+    }
 
     private void handleShieldsToActivate(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
@@ -1035,16 +1161,21 @@ public class CardRoundController extends GUIController {
         this.shipGrid.getChildren().remove(energyConsumerRegion);
 
         this.initStatsBox();
-//        this.batteriesMap.replace(this.clientModel.getNickname(), this.guiUtils.initShipBatteryIcons(this.clientModel.getNickname(), shipGrid));
-//        guiUtils.updateBatteryIcon(this.clientModel.getNickname(), this.shipGrid, this.batteriesMap.get(this.clientModel.getNickname()), batteryRow, batteryCol);
-
-        // Updating
-//        this.batteriesMap.get(this.clientModel.getNickname()).replace(guiUtils.keyFromCoords(batteryRow, batteryCol), guiUtils.initBatteryIcons( (ClientBattery) this.mainShip.getComponent(batteryRow, batteryCol)));
 
         // Updating the HBox containing the icons
         ClientBattery batteryToUpdate = (ClientBattery) this.mainShip.getComponent(batteryRow, batteryCol);
         HBox boxToUpdate = this.batteriesMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(batteryRow, batteryCol));
         guiUtils.initBatteryIcons(batteryToUpdate, boxToUpdate);
+
+        // If the battery has no more charges, we remove the region
+        if (batteryToUpdate.getAvailability() == 0) {
+            this.shipGrid.getChildren().remove(this.batteriesRegions.get(guiUtils.keyFromCoords(batteryRow, batteryCol)));
+            this.shipGrid.getChildren().remove(boxToUpdate);
+             // TODO: attention on re-enabling on revert!!!
+            this.batteriesMap.remove(guiUtils.keyFromCoords(batteryRow, batteryCol));
+        }
+
+
 
         this.currEnergyConsumer = null;
         this.commandsToggleGroup.selectToggle(null);
@@ -1466,8 +1597,6 @@ public class CardRoundController extends GUIController {
 
     public void updateCardRound(CardStateJSON cardStateJSON) {
 
-        System.out.println(PrintUtils.addColor("INIZIATO UPDATE!", ANSIColors.RED));
-
         Platform.runLater(() -> {
 
             // Updating other ship's visuals
@@ -1479,6 +1608,7 @@ public class CardRoundController extends GUIController {
                 // TODO: can be shortened by improving the init methods and invoking them if something changes
 
                 if (!playerNickname.equals(this.clientModel.getNickname())) {
+
 
                     // Getting the player's ship
                     ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
@@ -1527,7 +1657,10 @@ public class CardRoundController extends GUIController {
 
             this.initViewGameBoard();
 
-            System.out.println(PrintUtils.addColor("FINITO UPDATE!", ANSIColors.RED));
+            this.visualizePlayerActions();
+
+            this.initCommandBox();
+
         });
     }
 
