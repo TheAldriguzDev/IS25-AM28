@@ -273,7 +273,7 @@ public class LobbyScreen extends Screen {
             }
         );
 
-        this.client.sendMessage(new NewPlayer(playerName, playerColor, game.getId()));
+        this.client.joinGame(playerName, playerColor, game.getId());
     }
 
     /**
@@ -366,7 +366,7 @@ public class LobbyScreen extends Screen {
             }
         );
 
-        this.client.sendMessage(new ConfigGame(playerName, playerColor, gameLevel, totalPlayers));
+        this.client.createNewGame(playerName, playerColor, gameLevel, totalPlayers);
     }
 
     /**
@@ -408,7 +408,7 @@ public class LobbyScreen extends Screen {
             this::getLobbyCommand
         );
 
-        this.client.sendMessage(new Reconnect(playerName));
+        this.client.reconnectClient(playerName);
     }
 
     /**
@@ -416,7 +416,7 @@ public class LobbyScreen extends Screen {
      */
     private void refreshGames() throws Exception {
         System.out.println();
-        this.client.sendMessage(new RefreshGames());
+        this.client.refreshGames();
 
         new WidgetTUI()
                 .appendString(COMPUTER_MSG_TAG + "Refreshing games...")

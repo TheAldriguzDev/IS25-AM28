@@ -216,6 +216,7 @@ public class AbandonedStation extends EventCard {
         cardState.setRequiredCrewMembers(this.requiredCrew);
         cardState.setMovementSteps(this.movementStep);
         cardState.setStationResources(new ArrayList<>(this.givenItems.stream().map(Item::getColor).toList()));
+        cardState.setImagePath(this.path);
 
         return cardState;
     }

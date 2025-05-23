@@ -9,10 +9,6 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface VirtualViewRMI extends Remote, VirtualView {
-
-    @Override
-    public void updateView(StateDTO state) throws RemoteException;
-
     @Override
     public void updateState(Answer answer) throws Exception;
 

@@ -74,33 +74,37 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(ReconnectDTO state) throws Exception {
-        if (this.model.getNickname().equals(state.getTargetNickname())) {
+        try {
+            if (this.model.getNickname().equals(state.getTargetNickname())) {
 
-            this.model.setNickname(state.getTargetNickname());
-            this.model.setDifficultyLevel(state.getGameLevel());
+                this.model.setNickname(state.getTargetNickname());
+                this.model.setDifficultyLevel(state.getGameLevel());
 
-            // 1. Create the players --> and set their ship
-            List<PlayerJSON> players = state.getPlayers();
-            for (PlayerJSON player : players) {
-                this.model.addNewPlayer(player.getNickname(), PlayerColor.valueOf(player.getColor()), player.getCredits(), player.getLostPieces(), player.getShip());
+                // 1. Create the players --> and set their ship
+                List<PlayerJSON> players = state.getPlayers();
+                for (PlayerJSON player : players) {
+                    this.model.addNewPlayer(player.getNickname(), PlayerColor.valueOf(player.getColor()), player.getCredits(), player.getLostPieces(), player.getShip());
+                }
+
+                // 2. Create the board
+                BoardJSON board = state.getBoard();
+                this.model.setClientBoard(new ClientBoard(board, this.model));
+
+                // 3. Reset the resourceBank to the correct amount of resources
+                this.model.getResourceBank().resetResourcesQuantity(state.getResourceBank());
+
+                // 4. cards
+                this.model.generateClientEventCards(state.getCards());
+            } else {
+                System.out.println();
+                new WidgetTUI()
+                        .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getTargetNickname() + " reconnected to the game.", ANSIColors.BRIGHT_MAGENTA))
+                        .addPadding(0, 1, 0, 1)
+                        .wrapWidgetWithBorder()
+                        .printWidget();
             }
-
-            // 2. Create the board
-            BoardJSON board = state.getBoard();
-            this.model.setClientBoard(new ClientBoard(board, this.model));
-
-            // 3. Reset the resourceBank to the correct amount of resources
-            this.model.getResourceBank().resetResourcesQuantity(state.getResourceBank());
-
-            // 4. cards
-            this.model.generateClientEventCards(state.getCards());
-        } else {
-            System.out.println();
-            new WidgetTUI()
-                    .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getTargetNickname() + " reconnected to the game.", ANSIColors.BRIGHT_MAGENTA))
-                    .addPadding(0, 1, 0, 1)
-                    .wrapWidgetWithBorder()
-                    .printWidget();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -115,7 +119,11 @@ public class ViewUpdater implements StateVisitor {
             }
         }
 
-        this.ui.showShipConstruction(state);
+        try {
+            this.ui.showShipConstruction(state);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

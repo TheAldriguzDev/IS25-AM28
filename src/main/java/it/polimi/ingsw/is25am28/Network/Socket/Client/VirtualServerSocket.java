@@ -17,7 +17,5 @@ import java.util.UUID;
  * */
 
 public interface VirtualServerSocket extends VirtualServer {
-
     public void sendMessage(Message message) throws Exception;
-
 }

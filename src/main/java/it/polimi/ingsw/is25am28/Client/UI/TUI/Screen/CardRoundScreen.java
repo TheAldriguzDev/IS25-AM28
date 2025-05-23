@@ -2176,12 +2176,7 @@ public class CardRoundScreen extends Screen {
             }
         );
 
-        this.client.sendMessage(
-            new PlayCard(
-                this.model.getNickname(),
-                response
-            )
-        );
+        this.client.playCard(this.model.getNickname(), response);
     }
 
     /**

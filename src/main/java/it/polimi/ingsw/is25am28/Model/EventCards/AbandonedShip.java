@@ -220,6 +220,7 @@ public class AbandonedShip extends EventCard {
         cardState.setRequiredCrewMembers(this.requiredCrew);
         cardState.setGivenCredits(this.givenCredits);
         cardState.setMovementSteps(this.movementStep);
+        cardState.setImagePath(this.path);
 
         return cardState;
     }

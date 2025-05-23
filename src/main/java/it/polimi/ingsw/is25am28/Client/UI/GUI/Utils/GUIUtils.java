@@ -150,6 +150,8 @@ public class GUIUtils {
      * @return A map containing the references to the image containers, along with their coordinates
      */
     public Map<String, ImageView> createShipVisuals(String playerNickname, GridPane shipGrid) {
+        System.out.println(shipGrid);
+
         Map<String, ImageView> imagesMap = new HashMap<>();
 
         ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
@@ -170,9 +172,11 @@ public class GUIUtils {
 
                     ClientComponent component = ship.getComponent(row, col);
                     if(component != null) {
+                        System.out.println("Adding component");
 
                         // Adding the component's image in the shipGrid
                         URL componentImagePath = Objects.requireNonNull(getClass().getResource(component.getPath()));
+                        System.out.println(component.getPath());
                         Image img = new Image(componentImagePath.toExternalForm(), 105, 105, true, true);
                         ImageView componentImgView = new ImageView(img);
                         componentImgView.setRotate(component.getDirection() * 90);

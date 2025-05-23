@@ -4,16 +4,21 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.Messages.Ping;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
+import it.polimi.ingsw.is25am28.Network.RMI.ThrowingRunnable;
 import it.polimi.ingsw.is25am28.Network.UpdateHandler.UpdateHandler;
 
 import javax.smartcardio.Card;
@@ -97,13 +102,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
      * Method used to connect the client to the server
      * */
     private void run() throws Exception, RemoteException {
-        queueHandler.enqueue(() -> {
-            try {
-                this.server.connectClient(this, this.uuid);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
+        this.enqueueCommunication(() -> this.server.connectClient(this, this.uuid));
     }
 
     /**
@@ -111,47 +110,71 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
      * */
     private void pingServer() {
         this.pingScheduler.scheduleAtFixedRate(() -> {
-            queueHandler.enqueue(() -> {
-                try {
-                    this.sendMessage(new Ping());
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-            });
+            this.enqueueCommunication(() -> server.ping(this.uuid));
         }, 5000, 5000, TimeUnit.MILLISECONDS);
     }
 
-    /**
-     * Method used to send Messages to the client
-     * */
-    public void sendMessage(Message message) throws Exception {
-        queueHandler.enqueue(() -> {
-            try {
-                server.sendMessage(message, this.uuid);
-            } catch (RemoteException e) {
-                System.out.println("\n[Server offline] The connection with the server has been lost");
-                System.exit(1);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }
-        });
-    }
-
-    /**
-     * Method used to update the client view (display the new content)
-     * */
-    @Override
-    public void updateView(StateDTO state) throws RemoteException {
-//        this.updateThread.submit(() -> {
-//            try {
-//                state.accept(viewUpdater);
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
-    }
-
     // TODO: Maybe is better to put the interrupting events on a separate thread, so in every moment that they arrive, we can switch without any issue
+
+    @Override
+    public void refreshGames() throws Exception {
+        this.enqueueCommunication(() -> server.refreshGames(this.uuid));
+    }
+
+    @Override
+    public void createNewGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers) throws Exception {
+        this.enqueueCommunication(() -> server.createNewGame(playerNickname, playerColor, gameLevel, totalPlayers, this.uuid));
+    }
+
+    @Override
+    public void joinGame(String playerNickname, PlayerColor playerColor, int gameID) throws Exception {
+        this.enqueueCommunication(() -> server.joinGame(playerNickname, playerColor, gameID, this.uuid));
+    }
+
+    @Override
+    public void selectTile(String playerNickname, int id) throws Exception {
+        this.enqueueCommunication(() -> server.selectTile(playerNickname, id, this.uuid));
+    }
+
+    @Override
+    public void deselectTile(String playerNickname, int id) throws Exception {
+        this.enqueueCommunication(() -> server.deselectTile(playerNickname, id, this.uuid));
+    }
+
+    @Override
+    public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
+        this.enqueueCommunication(() -> server.placeTile(playerNickname, componentID, i, j, rotation, this.uuid));
+    }
+
+    @Override
+    public void sendShipConfirmation(String playerNickname, int reservedTiles) throws Exception {
+        this.enqueueCommunication(() -> server.sendShipConfirmation(playerNickname, reservedTiles, this.uuid));
+    }
+
+    @Override
+    public void flipTimer(String playerNickname) throws Exception {
+        this.enqueueCommunication(() -> server.flipTimer(playerNickname, this.uuid));
+    }
+
+    @Override
+    public void selectDeselectSubdeck(String playerNickname, Integer subdeck, Boolean isSelectAction) throws Exception {
+        this.enqueueCommunication(() -> server.selectDeselectSubdeck(playerNickname, subdeck, isSelectAction, this.uuid));
+    }
+
+    @Override
+    public void fixShip(String playerNickname, Integer i, Integer j) throws Exception {
+        this.enqueueCommunication(() -> server.fixShip(playerNickname, i, j, this.uuid));
+    }
+
+    @Override
+    public void populateShip(String playerNickname, ComponentHelper<LifeformType> lifeFormToAdd) throws Exception {
+        this.enqueueCommunication(() -> server.populateShip(playerNickname, lifeFormToAdd, this.uuid));
+    }
+
+    @Override
+    public void playCard(String playerNickname, ActionJSON action) throws Exception {
+        this.enqueueCommunication(() -> server.playCard(playerNickname, action, this.uuid));
+    }
 
     @Override
     public void updateState(Answer answer) {
@@ -161,5 +184,21 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
     @Override
     public void reportError(ErrorAnswer error) throws RemoteException {
         this.updateHandler.reportErrorUpdate(error);
+    }
+
+    @Override
+    public void reconnectClient(String nickname) throws Exception {
+
+    }
+
+    private void enqueueCommunication(ThrowingRunnable runnable) {
+        queueHandler.enqueue(() -> {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                System.err.println("Server unavailable: " + e.getMessage());
+                throw new RuntimeException(e);
+            }
+        });
     }
 }

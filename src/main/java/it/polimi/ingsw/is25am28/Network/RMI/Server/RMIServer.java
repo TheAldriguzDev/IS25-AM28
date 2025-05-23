@@ -66,56 +66,6 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     }
 
     @Override
-    public void sendMessage(Message message, UUID uuid) throws Exception {
-        switch (message) {
-            case ConfigGame data -> {
-                this.createNewGame(data.getPlayerNickname(), data.getPlayerColor(), data.getGameLevel(), data.getTotalPlayers(), uuid);
-            }
-            case NewPlayer data -> {
-                this.joinGame(data.getPlayerNickname(), data.getPlayerColor(), data.getGameID(), uuid);
-            }
-            case Ping ignored -> {
-                this.ping(uuid);
-            }
-            case SelectTile data -> {
-                this.selectTile(data.getPlayerNickname(), data.getId(), uuid);
-            }
-            case DeselectTile data -> {
-                this.deselectTile(data.getPlayerNickname(), data.getId(), uuid);
-            }
-            case Reconnect data -> {
-                this.reconnectClient(data.getNickname(), uuid);
-            }
-            case RefreshGames ignored -> {
-                this.refreshGames(uuid);
-            }
-            case PlaceTile data -> {
-                this.placeTile(data.getNickname(), data.getComponentID(), data.getI(), data.getJ(), data.getRotation(), uuid);
-            }
-            case SendShipConfirmation data -> {
-                this.sendShipConfirmation(data.getPlayerNickname(), data.getReservedTiles(), uuid);
-            }
-            case FlipTimer data -> {
-                this.flipTimer(data.getPlayerNickname(), uuid);
-            }
-            case SelectDeselectSubdeck data -> {
-                this.selectDeselectSubdeck(data.getPlayerNickname(), data.getSubdeck(), data.isSelectAction(), uuid);
-            }
-            case FixShip data -> {
-                this.fixShip(data.getPlayerNickname(), data.getI(), data.getJ(), uuid);
-            }
-            case PopulateShip data -> {
-                this.populateShip(data.getPlayerNickname(), data.getLifeformToAdd(), uuid);
-            }
-            case PlayCard data -> {
-                this.playCard(data.getPlayerNickname(), data.getActionJSON(), uuid);
-            }
-            default -> {
-                throw new Exception("The given Message is not supported");
-            }
-        }
-    }
-
     public void refreshGames(UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -126,6 +76,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void createNewGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -136,6 +87,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void joinGame(String playerNickname, PlayerColor playerColor, int gameID, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -146,6 +98,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void selectTile(String playerNickname, int id, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -156,6 +109,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void deselectTile(String playerNickname, int id, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -166,6 +120,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -176,6 +131,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void sendShipConfirmation(String playerNickname, int reservedTiles, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -186,6 +142,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void flipTimer(String playerNickname, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -196,6 +153,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void selectDeselectSubdeck(String playerNickname, Integer subdeck, Boolean isSelectAction, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -207,6 +165,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void fixShip(String playerNickname, Integer i, Integer j, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -218,6 +177,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void populateShip(String playerNickname, ComponentHelper<LifeformType> lifeFormToAdd, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -229,6 +189,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    @Override
     public void playCard(String playerNickname, ActionJSON action, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
@@ -241,13 +202,15 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     }
 
     // ========== PING METHOD ========== //
-    private void ping(UUID uuid) throws Exception {
+    @Override
+    public void ping(UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
         this.controller.clientPing(client);
     }
 
-    private void reconnectClient(String nickname, UUID uuid) throws Exception {
+    @Override
+    public void reconnectClient(String nickname, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
         try {

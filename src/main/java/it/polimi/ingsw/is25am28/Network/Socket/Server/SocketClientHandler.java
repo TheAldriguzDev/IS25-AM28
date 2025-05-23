@@ -116,6 +116,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    @Override
     public void refreshGames() throws Exception {
         try {
             this.controller.onClientConnection(this);
@@ -124,6 +125,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    @Override
     public void createNewGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers) throws Exception {
         this.playerNickname = playerNickname;
 
@@ -134,6 +136,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    @Override
     public void joinGame(String playerNickname, PlayerColor playerColor, int gameID) throws Exception {
         this.playerNickname = playerNickname;
 
@@ -144,6 +147,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    @Override
     public void selectTile(String playerNickname, int id) throws Exception {
         try {
             this.controller.selectTile(playerNickname, id);
@@ -152,6 +156,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    @Override
     public void deselectTile(String playerNickname, int id) throws Exception {
         try {
             this.controller.deselectTile(playerNickname, id);
@@ -160,6 +165,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    @Override
     public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
         try {
             this.controller.placeTile(playerNickname, componentID, i, j, rotation);
@@ -168,6 +174,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    @Override
     public void sendShipConfirmation(String playerNickname, int reservedTiles) throws Exception {
         try {
             this.controller.playerEndedSendShip(playerNickname, reservedTiles);
@@ -176,6 +183,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    @Override
     public void flipTimer(String playerNickname) throws Exception {
         try {
             this.controller.flipTimer(playerNickname);
@@ -184,15 +192,17 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
-    public void selectDeselectSubdeck(String playerNickname, Integer selectedSubdeck, boolean isSelectAction) throws Exception {
+    @Override
+    public void selectDeselectSubdeck(String playerNickname, Integer subdeck, Boolean isSelectAction) throws Exception {
         try {
-            this.controller.selectDeselectSubdeck(playerNickname, selectedSubdeck, isSelectAction);
+            this.controller.selectDeselectSubdeck(playerNickname, subdeck, isSelectAction);
         }
         catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }
     }
 
+    @Override
     public void fixShip(String playerNickname, Integer i, Integer j) throws Exception {
         try {
             this.controller.fixShip(playerNickname, i, j);
@@ -202,6 +212,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    @Override
     public void populateShip(String playerNickname, ComponentHelper<LifeformType> lifeFormToAdd) throws Exception {
         try {
             this.controller.populateShip(playerNickname, lifeFormToAdd);
@@ -211,6 +222,7 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    @Override
     public void playCard(String playerNickname, ActionJSON action) throws Exception {
         try {
             this.controller.playCard(playerNickname, action);
@@ -221,33 +233,17 @@ public class SocketClientHandler implements VirtualViewSocket {
     }
 
     // ===== PING UTILITY METHODS ===== //
-
-    private void ping() throws Exception {
+    public void ping() throws Exception {
         this.controller.clientPing(this);
     }
 
-    private void reconnectClient(String nickname) throws Exception {
+    @Override
+    public void reconnectClient(String nickname) throws Exception {
         try {
             this.controller.reconnectClient(nickname, this);
         } catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }
-    }
-
-    // TODO: WE NEED TO IMPLEMENT THE CONTROLLER INTERFACE TO EXPOSE ALL THE METHODS
-
-    // TODO: Capisci come togliere sto metodo da qui
-    @Override
-    public void sendMessage(Message message) throws Exception {
-
-    }
-
-    @Override
-    public void updateView(StateDTO state) throws JsonProcessingException {
-        String stateString = this.mapper.writeValueAsString(state);;
-
-        this.output.println(stateString);
-        this.output.flush();
     }
 
     @Override

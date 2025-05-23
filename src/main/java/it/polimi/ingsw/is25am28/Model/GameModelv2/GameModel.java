@@ -127,7 +127,6 @@ public class GameModel {
 
         ReconnectDTO state = new ReconnectDTO();
 
-        State prev = this.currentState;
         if (this.currentState instanceof InsufficientPlayerState) {
             this.currentState.onComplete();
             state.setWasInsufficientState(true);

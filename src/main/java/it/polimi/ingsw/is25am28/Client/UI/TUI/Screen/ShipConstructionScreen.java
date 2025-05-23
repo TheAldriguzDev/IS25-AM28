@@ -802,13 +802,7 @@ public class ShipConstructionScreen extends Screen {
             }
         );
 
-        this.client.sendMessage(
-            new SelectDeselectSubdeck(
-                this.model.getNickname(),
-                subdeckIndex,
-                true
-            )
-        );
+        this.client.selectDeselectSubdeck(this.model.getNickname(), subdeckId, true);
     }
 
     /**
@@ -849,13 +843,7 @@ public class ShipConstructionScreen extends Screen {
             }
         );
 
-        this.client.sendMessage(
-            new SelectDeselectSubdeck(
-                this.model.getNickname(),
-                subdeckIndex,
-                false
-            )
-        );
+        this.client.selectDeselectSubdeck(this.model.getNickname(), subdeckIndex, false);
     }
 
     /**
@@ -1054,12 +1042,7 @@ public class ShipConstructionScreen extends Screen {
             }
         );
 
-        this.client.sendMessage(
-            new SelectTile(
-                this.model.getNickname(),
-                this.selectedComponent.getID()
-            )
-        );
+        this.client.selectTile(this.model.getNickname(), this.selectedComponent.getID());
     }
 
     /**
@@ -1082,16 +1065,7 @@ public class ShipConstructionScreen extends Screen {
             this::getShipConstructionCommand
         );
 
-        int id = this.selectedComponent.getID();
-        int construction_i = id / DEFAULT_COMPONENT_COLS;
-        int construction_j = id % DEFAULT_COMPONENT_COLS;
-
-        this.client.sendMessage(
-            new DeselectTile(
-                this.model.getNickname(),
-                this.selectedComponent.getID()
-            )
-        );
+        this.client.deselectTile(this.model.getNickname(), this.selectedComponent.getID());
     }
 
     /**
@@ -1196,14 +1170,12 @@ public class ShipConstructionScreen extends Screen {
 
             // Broadcasting to all players that the current player placed
             // his currently selected tile on his ship
-            this.client.sendMessage(
-                new PlaceTile(
+            this.client.placeTile(
                     this.model.getNickname(),
                     this.selectedComponent.getID(),
                     componentPosition.getKey(),
                     componentPosition.getValue(),
                     this.selectedComponent.getDirection()
-                )
             );
         }
     }
@@ -1318,11 +1290,9 @@ public class ShipConstructionScreen extends Screen {
 
         // Sends the current player's ship when he
         // decides to finish building it
-        this.client.sendMessage(
-            new SendShipConfirmation(
-                this.model.getNickname(),
-                this.model.getState().getReservedComponents().size()
-            )
+        this.client.sendShipConfirmation(
+            this.model.getNickname(),
+            this.model.getState().getReservedComponents().size()
         );
     }
 
@@ -1344,9 +1314,7 @@ public class ShipConstructionScreen extends Screen {
             this::getComponentSelectionCommand
         );
 
-        this.client.sendMessage(
-            new FlipTimer(this.model.getNickname())
-        );
+        this.client.flipTimer(this.model.getNickname());
     }
 
     /**
@@ -1375,12 +1343,7 @@ public class ShipConstructionScreen extends Screen {
 
         // Sends the current player's ship when he
         // decides to finish building it
-        this.client.sendMessage(
-            new SendShipConfirmation(
-                this.model.getNickname(),
-                this.model.getState().getReservedComponents().size()
-            )
-        );
+        this.client.sendShipConfirmation(this.model.getNickname(), this.model.getState().getReservedComponents().size());
     }
 
     /**

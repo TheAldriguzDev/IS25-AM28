@@ -5,14 +5,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
+import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
-import it.polimi.ingsw.is25am28.Network.Messages.Message;
-import it.polimi.ingsw.is25am28.Network.Messages.Ping;
+import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket;
 import it.polimi.ingsw.is25am28.Network.UpdateHandler.UpdateHandler;
 
@@ -107,12 +110,6 @@ public class TCPClient implements VirtualViewSocket {
         System.exit(1);
     }
 
-    // This will be the method used in the communication
-    @Override
-    public void sendMessage(Message message) throws Exception {
-        this.output.sendMessage(message); // This will invoke the SocketServerHandler
-    }
-
     /**
      * This method will ping every 5 seconds the server
      * */
@@ -126,11 +123,69 @@ public class TCPClient implements VirtualViewSocket {
         }, 5000, 5000, TimeUnit.MILLISECONDS);
     }
 
-    // TODO: This methods are always the same --> Maybe it could be useful to also have a middleware that handles all
-    //  this identical methods --> we avoid duplicated code
     @Override
-    public void updateView(StateDTO state) throws JsonProcessingException {
-        System.out.println("Update view client called");
+    public void refreshGames() throws Exception {
+        this.sendMessage(new RefreshGames());
+    }
+
+    @Override
+    public void createNewGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers) throws Exception {
+        this.sendMessage(new ConfigGame(playerNickname, playerColor, gameLevel, totalPlayers));
+    }
+
+    @Override
+    public void joinGame(String playerNickname, PlayerColor playerColor, int gameID) throws Exception {
+        this.sendMessage(new NewPlayer(playerNickname, playerColor, gameID));
+    }
+
+    @Override
+    public void selectTile(String playerNickname, int id) throws Exception {
+        this.sendMessage(new SelectTile(playerNickname, id));
+    }
+
+    @Override
+    public void deselectTile(String playerNickname, int id) throws Exception {
+        this.sendMessage(new DeselectTile(playerNickname, id));
+    }
+
+    @Override
+    public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
+        this.sendMessage(new PlaceTile(playerNickname, componentID, i, j, rotation));
+    }
+
+    @Override
+    public void sendShipConfirmation(String playerNickname, int reservedTiles) throws Exception {
+        this.sendMessage(new SendShipConfirmation(playerNickname, reservedTiles));
+    }
+
+    @Override
+    public void flipTimer(String playerNickname) throws Exception {
+        this.sendMessage(new FlipTimer(playerNickname));
+    }
+
+    @Override
+    public void selectDeselectSubdeck(String playerNickname, Integer subdeck, Boolean isSelectAction) throws Exception {
+        this.sendMessage(new SelectDeselectSubdeck(playerNickname, subdeck, isSelectAction));
+    }
+
+    @Override
+    public void fixShip(String playerNickname, Integer i, Integer j) throws Exception {
+        this.sendMessage(new FixShip(playerNickname, i, j));
+    }
+
+    @Override
+    public void populateShip(String playerNickname, ComponentHelper<LifeformType> lifeFormToAdd) throws Exception {
+        this.sendMessage(new PopulateShip(playerNickname, lifeFormToAdd));
+    }
+
+    @Override
+    public void playCard(String playerNickname, ActionJSON action) throws Exception {
+        this.sendMessage(new PlayCard(playerNickname, action));
+    }
+
+    @Override
+    public void reconnectClient(String nickname) throws Exception {
+        this.sendMessage(new Reconnect(nickname));
     }
 
     @Override
@@ -141,5 +196,10 @@ public class TCPClient implements VirtualViewSocket {
     @Override
     public void reportError(ErrorAnswer error) {
         this.updateHandler.reportErrorUpdate(error);
+    }
+
+    // This method will be used to communicate the server socket
+    private void sendMessage(Message message) throws Exception {
+        this.output.sendMessage(message); // This will invoke the SocketServerHandler
     }
 }

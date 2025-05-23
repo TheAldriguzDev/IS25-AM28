@@ -293,11 +293,9 @@ public class PopulateShipScreen extends Screen {
         );
 
         // Send message
-        this.client.sendMessage(
-            new PopulateShip(
-                this.model.getNickname(),
-                lifeformToAdd
-            )
+        this.client.populateShip(
+            this.model.getNickname(),
+            lifeformToAdd
         );
     }
 

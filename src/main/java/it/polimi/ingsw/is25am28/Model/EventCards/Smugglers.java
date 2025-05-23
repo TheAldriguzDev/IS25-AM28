@@ -351,6 +351,7 @@ public class Smugglers extends EventCard {
         cardState.setYellowItems(yellowItems);
         cardState.setBlueItems(blueItems);
         cardState.setGreenItems(greenItems);
+        cardState.setImagePath(this.path);
 
         return cardState;
     }

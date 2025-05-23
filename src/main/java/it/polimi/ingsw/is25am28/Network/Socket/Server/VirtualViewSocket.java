@@ -13,9 +13,6 @@ import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 public interface VirtualViewSocket extends VirtualView {
     @Override
-    public void updateView(StateDTO state) throws JsonProcessingException;
-
-    @Override
     public void updateState(Answer answer) throws JsonProcessingException;
 
     @Override

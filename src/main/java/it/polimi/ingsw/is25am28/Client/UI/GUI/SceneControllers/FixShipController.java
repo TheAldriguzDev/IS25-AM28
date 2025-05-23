@@ -153,12 +153,10 @@ public class FixShipController extends GUIController {
         // TODO: can be simplified
         try {
 
-            GUIHandler.getVirtualClient().sendMessage(
-                    new FixShip(
-                            this.clientModel.getNickname(),
-                            row + shipOffsets.getKey(),
-                            col + shipOffsets.getValue()
-                    )
+            GUIHandler.getVirtualClient().fixShip(
+                this.clientModel.getNickname(),
+                row + shipOffsets.getKey(),
+                col + shipOffsets.getValue()
             );
 
         } catch (Exception e) {

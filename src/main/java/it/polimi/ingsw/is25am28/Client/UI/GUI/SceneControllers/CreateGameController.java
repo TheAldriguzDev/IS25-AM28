@@ -78,13 +78,11 @@ public class CreateGameController extends GUIController {
             GUIHandler.getInstance().getClientModel().setDifficultyLevel(level);
 
             try {
-                GUIHandler.getVirtualClient().sendMessage(
-                    new ConfigGame(
-                        nickname,
-                        color,
-                        level,
-                        lobbySize
-                    )
+                GUIHandler.getVirtualClient().createNewGame(
+                    nickname,
+                    color,
+                    level,
+                    lobbySize
                 );
             }
             catch (Exception e) {

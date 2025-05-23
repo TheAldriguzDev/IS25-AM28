@@ -168,11 +168,9 @@ public class PopulateShipController extends GUIController {
 
             ComponentHelper<LifeformType> lifeFormToAdd = new ComponentHelper<>(row + shipOffsets.getKey(), col + shipOffsets.getValue());
             lifeFormToAdd.addItem(this.currentSelectableLifeForm);
-            GUIHandler.getVirtualClient().sendMessage(
-                    new PopulateShip(
-                            this.clientModel.getNickname(),
-                            lifeFormToAdd
-                    )
+            GUIHandler.getVirtualClient().populateShip(
+                this.clientModel.getNickname(),
+                lifeFormToAdd
             );
 
         } catch (Exception e) {
