@@ -99,6 +99,13 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
      */
     public abstract WidgetTUI generateWidget();
 
+    /**
+     * @return The current player's nickname
+     */
+    public String getPlayerNickname() {
+        return this.playerNickname;
+    }
+
 //    /**
 //     * Sets the clientModel in the card (needed for input validity checks)
 //     */
