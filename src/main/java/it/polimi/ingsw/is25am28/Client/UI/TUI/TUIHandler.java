@@ -4,6 +4,9 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.*;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
@@ -45,11 +48,35 @@ public class TUIHandler implements ClientUI {
      *     </ul>
      * </p>
      */
+//    public static void clearTerminal() {
+//        System.out.flush();
+//        System.out.print("\033[H\033[2J");
+//    }
+
     public static void clearTerminal() {
-        System.out.flush();
-        System.out.print("\033[H\033[2J");
-        System.out.flush();
+        try {
+            String operatingSystem = System.getProperty("os.name").toLowerCase();
+
+            if (operatingSystem.contains("win")) {
+                // For Windows
+                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+            }
+            else if (operatingSystem.contains("mac") || operatingSystem.contains("nix") || operatingSystem.contains("nux")) {
+                // For macOS and Linux
+                new ProcessBuilder("clear").inheritIO().start().waitFor();
+            }
+            else {
+                // For other platforms, you can print a message or handle it as needed
+                new WidgetTUI()
+                        .appendString(PrintUtils.addColor("Unsupported operating system. Unable to clear the terminal.", ANSIColors.RED))
+                        .addPadding(0, 1, 0, 1)
+                        .wrapWidgetWithBorder();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     private void setScreen(Screen screen) {
         this.screen = screen;
