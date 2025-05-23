@@ -10,7 +10,7 @@ import java.util.List;
 public class TileLoader extends Loader<Tiles> {
 
     public TileLoader() throws IOException {
-        super("./json/tiles.json", Tiles.class);
+        super(TileLoader.class.getResourceAsStream("/json/tiles.json"), Tiles.class);
     }
 
     public List<Component> getTiles() {

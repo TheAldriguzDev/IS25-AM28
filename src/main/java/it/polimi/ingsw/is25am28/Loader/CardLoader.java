@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class CardLoader extends Loader<Cards> {
 
     public CardLoader() throws IOException {
-        super("./json/cards.json", Cards.class);
+        super(CardLoader.class.getResourceAsStream("/json/cards.json"), Cards.class);
     }
 
     public List<EventCard> getCards(Board board, ResourceBank resourceBank, int level) {
