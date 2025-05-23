@@ -912,16 +912,22 @@ public class CardRoundController extends GUIController {
                 "playCard",
                 () -> {
                     GUIHandler.setCommandCTX(null);
-                    this.visualizePlayerActions();
+                    Platform.runLater(this::visualizePlayerActions);
                     this.currEventCard.clearJSON();
                 },
                 () -> {
-                    // TODO: Reset local change since the playCard failed
-                    //       (@Filippo)
+                    Platform.runLater(
+                            () -> {
 
-                    this.showToast(
-                            "[ERROR] There was an error while playing the card. Please try again.",
-                            ToastType.ERROR
+                                // TODO: Reset local change since the playCard failed
+                                //       (@Filippo)
+
+                                this.showToast(
+                                        "[ERROR] There was an error while playing the card. Please try again.",
+                                        ToastType.ERROR
+                                );
+                            }
+
                     );
 
                     GUIHandler.setCommandCTX(null);
@@ -929,6 +935,19 @@ public class CardRoundController extends GUIController {
                 }
             )
         );
+
+        try {
+            GUIHandler.getVirtualClient().playCard(this.clientModel.getNickname(), response);
+        } catch (Exception e) {
+            Platform.runLater(
+                    () -> {
+                        this.showToast(
+                                "There was an error while playing the card!!!",
+                                ToastType.ERROR
+                        );
+                    }
+            );
+        }
     }
 
     // Methods to select the components to execute a command on (+ Visual Updates)
@@ -1447,6 +1466,8 @@ public class CardRoundController extends GUIController {
 
     public void updateCardRound(CardStateJSON cardStateJSON) {
 
+        System.out.println(PrintUtils.addColor("INIZIATO UPDATE!", ANSIColors.RED));
+
         Platform.runLater(() -> {
 
             // Updating other ship's visuals
@@ -1489,8 +1510,8 @@ public class CardRoundController extends GUIController {
                         }
                     }
                 }
-
-                // TODO: this method
+            }
+            // TODO: this method
 //                // Updating the removed components
 //                if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
 //                    if (!cardStateJSON.getRemovedComponents().get(playerNickname).isEmpty()) {
@@ -1498,89 +1519,16 @@ public class CardRoundController extends GUIController {
 //                    }
 //                }
 
+            // TODO: do a separate method to only update within the same round, for now is setting the card again
 
-            }
+            this.setCurrentEventCard(cardStateJSON);
 
+            this.initTurnBox();
 
+            this.initViewGameBoard();
 
-//            // Updating battery icons
-//            if (cardStateJSON.getNeedsUpdatedBatteries()) {
-//                for (String playerNickname : cardStateJSON.getRemovedBatteries().keySet()) {
-//                    if (!this.clientModel.getNickname().equals(cardStateJSON.getPrevPlayerNickname())) {
-//                        for(CoordinatePair coords : cardStateJSON.getRemovedBatteries().get(playerNickname)) {
-//
-//                            int row = coords.getI();
-//                            int col = coords.getJ();
-//                            GridPane playerShipGrid = this.playersShipGridPane.get(playerNickname);
-//
-//                            guiUtils.updateBatteryIcon(playerNickname, playerShipGrid, this.batteriesMap.get(playerNickname), row, col);
-//                        }
-//                    }
-//                }
-//            }
-//
-//            // Updating LifeForms Icons
-//            if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
-//                Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms = cardStateJSON.getRemovedLifeforms();
-//                for (String playerNickname : removedLifeforms.keySet()) {
-//                    if (!this.clientModel.getNickname().equals(cardStateJSON.getPrevPlayerNickname())) {
-//                        for (ComponentHelper<LifeformType> lifeFormToRemove : removedLifeforms.get(playerNickname)) {
-//
-//                            int row = lifeFormToRemove.getI();
-//                            int col = lifeFormToRemove.getJ();
-//                            GridPane playerShipGrid = this.playersShipGridPane.get(playerNickname);
-//
-//                            guiUtils.updateCabinIcon(playerNickname, playerShipGrid, this.batteriesMap.get(playerNickname), row, col);
-//                        }
-//                    }
-//                }
-//            }
-
-
-
-//            if (cardStateJSON.getNeedsUpdatedDroppedResources()) {
-//                for (String playerNickname : cardStateJSON.getDroppedResources().keySet()) {
-//                    if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
-//                        for (ComponentHelper<ItemColor> itemToDrop : cardStateJSON.getDroppedResources().get(playerNickname)) {
-//
-//                        }
-//                    }
-//                }
-//            }
-
-
-
-
-            // Updating removed Components
-
-
+            System.out.println(PrintUtils.addColor("FINITO UPDATE!", ANSIColors.RED));
         });
-
-        // Updating other ship's visuals
-        for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
-
-
-            String playerName = entry.getKey();
-            GridPane shipGrid = entry.getValue();
-
-
-        }
-
-        for (ClientPlayer player : this.clientModel.getAllClientPlayers().values()) {
-            // Creating an empty ship grid
-            GridPane shipGrid = this.guiUtils.createEmptyShipGrid(player);
-            // Creating the ship's visuals
-            this.componentsImagesMap.put(player.getNickname(), this.guiUtils.createShipVisuals(player.getNickname(), shipGrid));
-            // Adding the shipGrid to the map
-            this.playersShipGridPane.put(player.getNickname(), shipGrid);
-
-            // Setting the ship's icons
-            this.lifeFormsMap.put(player.getNickname(), this.guiUtils.initShipLifeFormIcons(player.getNickname(), shipGrid));
-            this.itemsMap.put(player.getNickname(), this.guiUtils.initShipItemIcons(player.getNickname(), shipGrid));
-            this.batteriesMap.put(player.getNickname(), this.guiUtils.initShipBatteryIcons(player.getNickname(), shipGrid));
-        }
-
-
     }
 
 //    }

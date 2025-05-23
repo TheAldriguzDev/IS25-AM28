@@ -298,6 +298,7 @@ public class GUIHandler extends Application implements ClientUI {
     public void updateVisuals(CardRoundDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.CARD_ROUND_SCENE)) {
             CardRoundController controller = (CardRoundController) this.controllers.get(GuiScenes.CARD_ROUND_SCENE);
+            System.out.println("CHIAMTE DI UPDATECARD ROUND");
             controller.updateCardRound(data.getCardInfo());
         }
     }

@@ -2186,6 +2186,10 @@ public class CardRoundScreen extends Screen {
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
         this.forceStopScreen();
 
+        for (int i = 0; i < 10; i++) {
+            System.out.println("O");
+        }
+
         // Storing the current event card's card state and the currently playing player
         this.currEventCardState = cardRound.getCardInfo();
         this.currPlayerNickname = cardRound.getCardInfo().getPlayerNickname();
