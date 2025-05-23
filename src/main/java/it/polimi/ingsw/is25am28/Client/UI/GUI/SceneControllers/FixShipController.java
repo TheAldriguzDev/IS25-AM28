@@ -134,9 +134,29 @@ public class FixShipController extends GUIController {
     private void initViewGameBoard() {
         if (this.clientModel.getDifficultyLevel() == 2) {
             this.setVisibility(this.viewGameBoardStackPaneLevel2, true);
+
+            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+                this.guiUtils.placePlayerInBoard(
+                        playerNickname,
+                        2,
+                        24,
+                        this.viewGameBoardStackPaneLevel2,
+                        this.playersRocketBoard
+                );
+            }
         }
         else {
             this.setVisibility(this.viewGameBoardStackPaneLevel0, true);
+
+            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+                this.guiUtils.placePlayerInBoard(
+                        playerNickname,
+                        0,
+                        18,
+                        this.viewGameBoardStackPaneLevel2,
+                        this.playersRocketBoard
+                );
+            }
         }
     }
 
