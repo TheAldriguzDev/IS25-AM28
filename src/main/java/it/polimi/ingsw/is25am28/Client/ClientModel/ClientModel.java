@@ -196,6 +196,9 @@ public class ClientModel {
                 case 10 -> eventCards.add(new ClientWarZone(cardState));
 
                 default -> {
+                    System.out.println(cardState.getCardName());
+                    System.out.println(cardState.getCardTypeId());
+                    System.out.println(cardState.getUniqueCardId());
                     throw new IllegalArgumentException("ERROR: Illegal event card ID");
                 }
             }

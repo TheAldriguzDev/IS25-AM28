@@ -47,7 +47,7 @@ public class FixShipController extends GUIController {
 
     ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 
-    private Map<String, ImageView> playersRocketBoard = new HashMap<>();
+    private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
 
     private boolean isShipValid;
 

@@ -17,6 +17,7 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
@@ -114,7 +115,7 @@ public class CardRoundController extends GUIController {
         this.playersShipGridPane = new HashMap<>();
 
 
-//        this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
+        this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
         if (ship == null) {
             System.out.println(PrintUtils.addColor("[ERROR] [FixShipController] ClientShip is null", ANSIColors.RED));

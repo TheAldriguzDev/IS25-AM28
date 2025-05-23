@@ -18,7 +18,7 @@
 
 <StackPane fx:id="rootPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.FixShipController">
    <children>
-      <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css">
+      <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefWidth="1096.0" stylesheets="@../style.css">
          <children>
             <VBox alignment="CENTER" spacing="15.0">
                <children>
@@ -42,10 +42,11 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" />
                </padding>
             </VBox>
+
             <VBox fx:id="fixShipVBox" alignment="CENTER" stylesheets="@../style.css">
                <children>
                   <TextFlow fx:id="fixShipLabel" textAlignment="CENTER" />
-                  <StackPane fx:id="imagePane" maxHeight="-Infinity" maxWidth="-Infinity">
+                  <StackPane fx:id="imagePane" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308">
                      <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                      </padding>
@@ -69,9 +70,9 @@
                               <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
                            </columnConstraints>
                         </GridPane>
-                        <VBox fx:id="viewGameBoardContainer" managed="false" prefHeight="200.0" prefWidth="100.0" visible="false">
+                        <VBox fx:id="viewGameBoardContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" managed="false" visible="false">
                            <children>
-                              <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
+                              <VBox alignment="TOP_CENTER" spacing="30.0">
                                  <children>
                                     <Label text="You are now viewing the game board" wrapText="true">
                                        <font>
@@ -81,7 +82,7 @@
                                     <Button fx:id="goBackToConstructionButtonFromViewBoard" mnemonicParsing="false" onAction="#handleGoBackToFixButton" text="Resume Ship Fix" wrapText="true" />
                                  </children>
                               </VBox>
-                              <Region VBox.vgrow="ALWAYS" />
+                              <Region prefWidth="816.0" VBox.vgrow="ALWAYS" />
                               <Pane fx:id="viewGameBoardStackPaneLevel2" managed="false" maxHeight="-Infinity" maxWidth="-Infinity" visible="false">
                                  <children>
                                     <ImageView fitWidth="816.0" layoutY="1.0" preserveRatio="true">
