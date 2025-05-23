@@ -17,6 +17,7 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
@@ -50,6 +51,7 @@ public class CardRoundController extends GUIController {
     @FXML private StackPane imagePane;
     @FXML private GridPane viewOtherShipsGrid;
     @FXML private ScrollPane playerActionsScrollPane;
+    @FXML private VBox turnBox;
 
     @FXML private VBox statsBox;
     @FXML private HBox commandsBox;
@@ -70,6 +72,9 @@ public class CardRoundController extends GUIController {
 
     private Map<String, Region> currentRegions = null;
     private boolean isTakeAction = false;
+//    private CoordinatePair currConsumerCoords = null;
+//    private EnergyConsumers currConsumerType = null;
+    private Pair<EnergyConsumers, CoordinatePair> currEnergyConsumer = null;
 
     private final List<Map<String, Region>> allComponentMaps = List.of(
             this.doubleCannonsRegions,
@@ -96,6 +101,7 @@ public class CardRoundController extends GUIController {
             "setItemsToBeRemoved",
             "setItemsToBeTaken",
             "setDoubleCannonsToActivate",
+            "setDoubleEnginesToActivate",
             "setShieldsToActivate",
             "batteriesToBeStolen"
     );
@@ -114,7 +120,7 @@ public class CardRoundController extends GUIController {
         this.playersShipGridPane = new HashMap<>();
 
 
-//        this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
+        this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
         if (ship == null) {
             System.out.println(PrintUtils.addColor("[ERROR] [FixShipController] ClientShip is null", ANSIColors.RED));
@@ -156,6 +162,17 @@ public class CardRoundController extends GUIController {
 
         this.initCommandBox();
 
+        // TODO: Improve the text
+        Label turnLabel = new Label();
+        turnLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+        this.turnBox.getChildren().clear();
+        if (state.getCardInfo().getPlayerNickname().equals(this.clientModel.getNickname())) {
+            turnLabel.setText("It's YOUR turn!!!");
+        } else {
+            turnLabel.setText("It's NOT YOUR turn!!!");
+        }
+        this.turnBox.getChildren().add(turnLabel);
+
         // TODO: this.initResourceBank();
 
         // Setting all the regions with the corresponding listeners
@@ -170,7 +187,13 @@ public class CardRoundController extends GUIController {
                 this.handleItemToRemove(row, col);
             }
         });
-        this.initRegionMap(this.batteriesRegions, new ArrayList<>(ship.getBatteryList()), this::handleBatteriesToBeStolen);
+        this.initRegionMap(this.batteriesRegions, new ArrayList<>(ship.getBatteryList()), (row, col) -> {
+            if (this.currEnergyConsumer != null) {
+                this.handleMandatoryBatteryCoords(row, col);
+            } else {
+                this.handleBatteriesToBeStolen(row, col);
+            }
+        });
 
 
 
@@ -357,6 +380,8 @@ public class CardRoundController extends GUIController {
         this.statsBox.getChildren().add(new Label("Lost Components: " + player.getLostComponents()));
     }
 
+    private void initTurnBox() {}
+
     private void initCommandBox() {
 
         List<String> availableCommands = this.currEventCard.getAvailableCommands();
@@ -416,7 +441,6 @@ public class CardRoundController extends GUIController {
                     case "batteriesToBeStolen" -> {toggleLabel.setText("Batteries to Give Up");}
                 }
 
-                toggleLabel.setId(command);
                 toggleLabel.setTextAlignment(TextAlignment.CENTER);
                 toggleLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
 
@@ -428,6 +452,7 @@ public class CardRoundController extends GUIController {
                 toggleCommand.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
                 toggleCommand.setAlignment(Pos.CENTER);
                 toggleCommand.setGraphic(toggleLabel);
+                toggleCommand.setId(command);
 
                 this.commandsGrid.add(toggleCommand, col, 0);
                 col++;
@@ -440,6 +465,22 @@ public class CardRoundController extends GUIController {
             if (newToggle == null) {
 
                 // TODO: see what to do
+
+                if (this.currEnergyConsumer != null) {
+                    CoordinatePair energyConsumerCoords = this.currEnergyConsumer.getValue();
+                    // Disabling the red highlight on the selected energyConsumer
+                    switch(this.currEnergyConsumer.getKey()) {
+                        case CANNON -> this.doubleCannonsRegions.get(guiUtils.keyFromCoords(energyConsumerCoords.getI(), energyConsumerCoords.getJ())).setStyle("-fx-background-color: transparent;");
+                        case ENGINE -> this.doubleEnginesRegions.get(guiUtils.keyFromCoords(energyConsumerCoords.getI(), energyConsumerCoords.getJ())).setStyle("-fx-background-color: transparent;");
+                        case SHIELD -> this.shieldsRegions.get(guiUtils.keyFromCoords(energyConsumerCoords.getI(), energyConsumerCoords.getJ())).setStyle("-fx-background-color: transparent;");
+                    }
+
+//                    System.out.println("currentRegion: " + this.currentRegions.toString());
+//                    System.out.println("energyConsumerCoords: " + energyConsumerCoords.getI() + " " + energyConsumerCoords.getJ());
+                    this.currEnergyConsumer = null;
+                }
+                disableRegion(this.currentRegions);
+
 
             } else {
 
@@ -469,6 +510,8 @@ public class CardRoundController extends GUIController {
     private void disableRegion(Map<String, Region> regionMap) {
         for (Region region : regionMap.values()) {
             region.setDisable(true);
+            region.setStyle("-fx-background-color: transparent;");
+            this.currentRegions = null;
         }
     }
 
@@ -477,10 +520,11 @@ public class CardRoundController extends GUIController {
      */
     private void enableRegion(Map<String, Region> regionMap) {
         if (this.currentRegions != null) {
-            this.disableRegion(regionMap);
+            this.disableRegion(this.currentRegions);
         }
         for (Region region : regionMap.values()) {
             region.setDisable(false);
+            region.setStyle("-fx-background-color: rgba(160, 212, 104, 0.5);");
         }
         this.currentRegions = regionMap;
     }
@@ -812,32 +856,97 @@ public class CardRoundController extends GUIController {
     }
 
     // Methods to select the components to execute a command on (+ Visual Updates)
-    private void handleCrewToRemove(int row, int col) {
+    // ofsRow, ofsCol relative to the gridPane
+    private void handleCrewToRemove(int ofsRow, int ofsCol) {
 
     }
 
-    private void handleItemToRemove(int row, int col) {
+    private void handleItemToRemove(int ofsRow, int ofsCol) {
 
     }
 
-    private void handleItemToTake(int row, int col) {}
+    private void handleItemToTake(int ofsRow, int ofsCol) {}
 
-    private void handleTakeReward(int row, int col) {}
+    private void handleTakeReward(int ofsRow, int ofsCol) {}
 
-    private void handleChosenPlanetIndex(int row, int col) {}
+    private void handleChosenPlanetIndex(int ofsRow, int ofsCol) {}
 
-    private void handleWantsToVisit(int row, int col) {}
+    private void handleWantsToVisit(int ofsRow, int ofsCol) {}
 
-    private void handleShieldsToActivate(int row, int col) {}
+    private void handleShieldsToActivate(int ofsRow, int ofsCol) {
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
 
-    private void handleDoubleCannonToActivate(int row, int col) {}
+        // Coords of the doubleEngine to activate (relative to the ship)
 
-    private void handleDoubleEnginesToActivate(int row, int col) {}
+        this.currEnergyConsumer = new Pair<>(EnergyConsumers.SHIELD, new CoordinatePair(row, col));
+        this.handleEnergyConsumers(ofsRow, ofsCol);
+    }
 
-    private void handleBatteriesToBeStolen(int row, int col) {}
+    private void handleDoubleCannonToActivate(int ofsRow, int ofsCol) {
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
 
+        // Coords of the doubleEngine to activate (relative to the ship)
+
+        this.currEnergyConsumer = new Pair<>(EnergyConsumers.CANNON, new CoordinatePair(row, col));
+        this.handleEnergyConsumers(ofsRow, ofsCol);
+    }
+
+    private void handleDoubleEnginesToActivate(int ofsRow, int ofsCol) {
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
+
+        // Coords of the doubleEngine to activate (relative to the ship)
+        this.currEnergyConsumer = new Pair<>(EnergyConsumers.ENGINE, new CoordinatePair(row, col));
+        this.handleEnergyConsumers(ofsRow, ofsCol);
+
+        // TODO: removal also from grid? // better off to just disable it (easier revert on error)
+    }
+
+    private void handleBatteriesToBeStolen(int ofsRow, int ofsCol) {}
+
+    private void handleMandatoryBatteryCoords(int ofsRow, int ofsCol) {
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
+
+        CoordinatePair batteryCoords = new CoordinatePair(row, col);
+
+        switch (this.currEnergyConsumer.getKey()) {
+            case CANNON -> {
+                this.doubleCannonsRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: transparent;");
+                this.addDoubleCannonToActivate(this.currEnergyConsumer.getValue(), batteryCoords);
+            }
+            case ENGINE -> {
+                this.doubleEnginesRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: transparent;");
+                this.addDoubleEngineToActivate(this.currEnergyConsumer.getValue(), batteryCoords);
+            }
+            case SHIELD -> {
+                this.shieldsRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: transparent;");
+                this.addShieldToActivate(this.currEnergyConsumer.getValue(), batteryCoords);
+            }
+        }
+        this.currEnergyConsumer = null;
+        this.disableRegion(this.currentRegions);
+    }
+
+    private void handleEnergyConsumers(int ofsRow, int ofsCol) {
+        // TODO: see if it is possible to collapse the 3 energy the handles tha require energy here -> by setting the enum in the body and calling all this same function
+
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
+
+        // Get the current region, then enable the battery regions
+//        System.out.println("CURRENT REGION: " + this.currentRegions.toString());
+//        System.out.println("KEY USED TO GET THE SELECTD REGIO: " + row + ", " + col);
+        Region selectedRegion = this.currentRegions.get(guiUtils.keyFromCoords(row, col));
+        this.enableRegion(this.batteriesRegions);
+        // Coloring the region red to highlight the selectedRegion
+        selectedRegion.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+    }
 
     // Methods to modify the JSON (+ Local Updates)
+    // row, col relative to the shipGrid
     private void addCrewToRemove(int row, int col, LifeformType lifeformType) {
         ComponentHelper<LifeformType> componentHelper;
         ClientShip ship;
