@@ -15,6 +15,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient;
 import it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
+import it.polimi.ingsw.is25am28.Utils.ValidateIP;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -35,46 +36,6 @@ public class Client {
     private static InputWidgetTUI connectionTypeSelectorWidget;
     private static InputWidgetTUI uiTypeSelectorWidget;
     private static InputThread inputThread;
-
-    /**
-     * @param ipAddress The IPv4 address string to validate.
-     *
-     * @return TRUE if the given string is a valid IPv4 address,
-     *         FALSE otherwise.
-     */
-    private static boolean validateIPAddress(String ipAddress) {
-        String[] values;
-
-        if (ipAddress != null && !ipAddress.isEmpty()) {
-            values = ipAddress.trim().split("\\.");
-
-            if (values.length != 4) return false;
-
-            try {
-                for (String value : values) {
-                    int octet = Integer.parseInt(value);
-
-                    if ((octet >> 8) != 0) {
-                        return false;
-                    }
-                }
-            }
-            catch (NumberFormatException e) {
-                System.out.println(
-                        PrintUtils.addColor(
-                                "[ERROR] [Invalid input] Please insert a number.",
-                                ANSIColors.RED
-                        )
-                );
-
-                return false;
-            }
-
-            return true;
-        }
-
-        return false;
-    }
 
     /**
      * @return The player's selected IPv4 server address.
@@ -101,7 +62,7 @@ public class Client {
                     return null;
                 }
 
-                validIPAddress = validateIPAddress(ipAddress);
+                validIPAddress = ValidateIP.validateIPAddress(ipAddress);
 
                 if (!validIPAddress) {
                     System.out.println(
