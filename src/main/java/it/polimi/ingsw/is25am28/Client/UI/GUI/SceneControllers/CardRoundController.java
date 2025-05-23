@@ -163,6 +163,9 @@ public class CardRoundController extends GUIController {
 
         this.initCommandBox();
 
+        // Initializes the board image to display on a view board request
+        this.initViewGameBoard();
+
         // TODO: this.initResourceBank();
 
         // Setting all the regions with the corresponding listeners
@@ -311,6 +314,10 @@ public class CardRoundController extends GUIController {
                 // Go back to view the client's own ship
                 this.setShipGrid(this.clientModel.getNickname());
             } else {
+
+                // Exit the board visualization if the toggle
+                // is pressed during that phase
+                this.handleGoBackToCardRoundButton(new ActionEvent());
 
                 ToggleButton selected = (ToggleButton) newToggle;
                 this.setShipGrid(selected.getText());

@@ -79,7 +79,7 @@
                                           <Font size="32.0" />
                                        </font>
                                     </Label>
-                                    <Button fx:id="goBackToFixnButtonFromViewBoard" mnemonicParsing="false" onAction="#handleGoBackToFixButton" text="Resume Ship Fix" wrapText="true" />
+                                    <Button fx:id="goBackToFixButtonFromViewBoard" mnemonicParsing="false" onAction="#handleGoBackToFixButton" text="Resume Ship Fix" wrapText="true" />
                                  </children>
                               </VBox>
                               <Region prefWidth="816.0" VBox.vgrow="ALWAYS" />

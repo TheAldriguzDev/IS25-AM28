@@ -1,6 +1,8 @@
 package it.polimi.ingsw.is25am28.Network.Server;
 
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
@@ -58,14 +60,29 @@ public class Server {
         Scanner scanner = new Scanner(System.in);
         String ipAddress;
 
+        new WidgetTUI()
+                .appendString("[SETUP SERVER'S IPv4 ADDRESS]")
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder()
+                .printWidget();
+
         while (true) {
+            System.out.println();
             System.out.print("Enter a valid IPv4 address: ");
             ipAddress = scanner.nextLine().trim();
 
             if (ValidateIP.validateIPAddress(ipAddress)) {
                 break;
-            } else {
-                System.out.println(ANSIColors.RED + "Invalid IP address. Try again." + ANSIColors.RESET);
+            }
+            else {
+                System.out.println(
+                        PrintUtils.addColor(
+                                "[ERROR] Given string does not represent an IPv4 address.",
+                                ANSIColors.RED
+                        )
+                );
+
+                System.out.println("\t(IPv4 format is: x.y.z.w -> [0-255].[0.255].[0-255].[0-255])");
             }
         }
 
