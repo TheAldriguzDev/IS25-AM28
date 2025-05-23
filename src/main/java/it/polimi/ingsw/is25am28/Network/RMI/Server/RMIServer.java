@@ -225,6 +225,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
             try {
                 client.reportError(answer);
             } catch (Exception e) {
+                ServerLogger.error("NETWORK", "Failed to send the error message");
                 throw new RuntimeException(e);
             }
         });

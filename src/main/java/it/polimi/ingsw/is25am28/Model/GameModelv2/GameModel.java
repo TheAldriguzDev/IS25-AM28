@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Loader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
@@ -20,6 +21,7 @@ import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
+import it.polimi.ingsw.is25am28.Network.Server.GameInstance;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.io.IOException;
@@ -606,19 +608,12 @@ public class GameModel {
     void broadCastUpdate(Answer answer) {
         for (Map.Entry<String, VirtualView> entry : this.playerVirtualViews.entrySet()) {
             if (this.players.get(entry.getKey()).isConnected()) {
-                try {
-                    VirtualView virtualView = entry.getValue();
-                    queueHandler.enqueue(() -> {
-                        try {
-                            virtualView.updateState(answer);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
+                this.sendUpdateWithRetries(entry.getValue(), answer);
             }
         }
+    }
+
+    private void sendUpdateWithRetries(VirtualView view, Answer answer) {
+        GameInstance.sendUpdateWithRetries(view, answer, queueHandler, 0, 3, 2500);
     }
 }

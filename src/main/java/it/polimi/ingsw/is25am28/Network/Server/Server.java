@@ -139,10 +139,6 @@ public class Server {
         }
     }
 
-    public void refreshGames() {
-
-    }
-
     /**
      * This method will be used to create a new game when a Player request it.
      * It also the playerNickname and information to the
