@@ -37,22 +37,27 @@ public class TUIHandler implements ClientUI {
         this.ioLock = new Object();
     }
 
-    /**
-     * Clears the terminal from previous input.
-     * <p>
-     *     <b>NOTE on its functionality:</b>
-     *     <ul>
-     *         <li>This <b>will</b> work on terminals that support ANSI escape codes</li>
-     *         <li>It <b>will NOT</b> work on Windows' CMD</li>
-     *         <li>It <b>will NOT</b> work in the IDE's terminal</li>
-     *     </ul>
-     * </p>
-     */
+//    /**
+//     * Clears the terminal from previous input.
+//     * <p>
+//     *     <b>NOTE on its functionality:</b>
+//     *     <ul>
+//     *         <li>This <b>will</b> work on terminals that support ANSI escape codes</li>
+//     *         <li>It <b>will NOT</b> work on Windows' CMD</li>
+//     *         <li>It <b>will NOT</b> work in the IDE's terminal</li>
+//     *     </ul>
+//     * </p>
+//     */
 //    public static void clearTerminal() {
 //        System.out.flush();
 //        System.out.print("\033[H\033[2J");
 //    }
 
+    /**
+     * Runs the "clear" command on Unix-like systems or the
+     * "cls" command on Windows systems to clear the current
+     * terminal screen as well as the scrollback buffer.
+     */
     public static void clearTerminal() {
         try {
             String operatingSystem = System.getProperty("os.name").toLowerCase();
@@ -76,7 +81,6 @@ public class TUIHandler implements ClientUI {
             e.printStackTrace();
         }
     }
-
 
     private void setScreen(Screen screen) {
         this.screen = screen;
