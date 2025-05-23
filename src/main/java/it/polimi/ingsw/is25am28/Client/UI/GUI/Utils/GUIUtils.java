@@ -268,18 +268,20 @@ public class GUIUtils {
         ship.generateComponentSubLists();
 
         for(ClientCabin cabin : ship.getCabinList()) {
-            HBox cabinBox = initCabinLifeFormIcons(cabin);
-            if (cabinBox != null) {
-                int row = cabin.getI();
-                int col = cabin.getJ();
+            HBox cabinBox = new HBox();
+            cabinBox.setAlignment(Pos.CENTER);
+            initCabinLifeFormIcons(cabin, cabinBox);
 
-                lifeFormsMap.put(keyFromCoords(cabin.getI(), cabin.getJ()), cabinBox);
+            int row = cabin.getI();
+            int col = cabin.getJ();
 
-                int ofsRow = row - shipOffsets.getKey();
-                int ofsCol = col - shipOffsets.getValue();
+            lifeFormsMap.put(keyFromCoords(cabin.getI(), cabin.getJ()), cabinBox);
 
-                shipGrid.add(cabinBox, ofsCol, ofsRow);
-            }
+            int ofsRow = row - shipOffsets.getKey();
+            int ofsCol = col - shipOffsets.getValue();
+
+            shipGrid.add(cabinBox, ofsCol, ofsRow);
+
         }
         return lifeFormsMap;
     }
@@ -287,9 +289,8 @@ public class GUIUtils {
     /**
      * @return A HBox containing the cabin's lifeForms icons
      */
-    public HBox initCabinLifeFormIcons(ClientCabin cabin) {
-        HBox cabinBox = new HBox();
-        cabinBox.setAlignment(Pos.CENTER);
+    public void initCabinLifeFormIcons(ClientCabin cabin, HBox cabinBox) {
+        cabinBox.getChildren().clear();
         URL resource;
 
         if (!cabin.getInhabitants().isEmpty()) {
@@ -298,9 +299,6 @@ public class GUIUtils {
                 ImageView icon = new ImageView(new Image(resource.toExternalForm(), 40, 40, true, true));
                 cabinBox.getChildren().add(icon);
             }
-            return cabinBox;
-        } else {
-            return null;
         }
     }
 
@@ -321,18 +319,20 @@ public class GUIUtils {
         ship.generateComponentSubLists();
 
         for (ClientStorage storage : ship.getStorageList()) {
-            HBox storageBox = initStorageItemIcons(storage);
-            if (storageBox != null) {
-                int row = storage.getI();
-                int col = storage.getJ();
+            HBox storageBox = new HBox();
+            storageBox.setAlignment(Pos.CENTER);
+            initStorageItemIcons(storage, storageBox);
 
-                itemsMap.put(keyFromCoords(row, col), storageBox);
+            int row = storage.getI();
+            int col = storage.getJ();
 
-                int ofsRow = row - shipOffsets.getKey();
-                int ofsCol = col - shipOffsets.getValue();
+            itemsMap.put(keyFromCoords(row, col), storageBox);
 
-                shipGrid.add(storageBox, ofsCol, ofsRow);
-            }
+            int ofsRow = row - shipOffsets.getKey();
+            int ofsCol = col - shipOffsets.getValue();
+
+            shipGrid.add(storageBox, ofsCol, ofsRow);
+
         }
         return itemsMap;
     }
@@ -340,20 +340,15 @@ public class GUIUtils {
     /**
      * @return A HBox containing the storage's items icons
      */
-    public HBox initStorageItemIcons(ClientStorage storage) {
-        HBox storageBox = new HBox();
-        storageBox.setAlignment(Pos.CENTER);
+    public void initStorageItemIcons(ClientStorage storage, HBox storageBox) {
+        storageBox.getChildren().clear();
         URL resource;
-
         if (!storage.getStoredItems().isEmpty()) {
             for (Item item : storage.getStoredItems()) {
                 resource = Objects.requireNonNull(getClass().getResource(item.getColor().getImagePath()));
                 ImageView icon = new ImageView(new Image(resource.toExternalForm(), 40, 40, true, true));
                 storageBox.getChildren().add(icon);
             }
-            return storageBox;
-        } else {
-            return null;
         }
     }
 
@@ -370,25 +365,26 @@ public class GUIUtils {
         ship.generateComponentSubLists();
 
         for(ClientBattery battery : ship.getBatteryList()) {
-            HBox batteryBox = initBatteryIcons(battery);
-            if (batteryBox != null) {
-                int row = battery.getI();
-                int col = battery.getJ();
+            HBox batteryBox = new HBox();
+            batteryBox.setAlignment(Pos.CENTER);
+            initBatteryIcons(battery, batteryBox);
 
-                batteryMap.put(keyFromCoords(row, col), batteryBox);
+            int row = battery.getI();
+            int col = battery.getJ();
 
-                int ofsRow = row - shipOffsets.getKey();
-                int ofsCol = col - shipOffsets.getValue();
+            batteryMap.put(keyFromCoords(row, col), batteryBox);
 
-                shipGrid.add(batteryBox, ofsCol, ofsRow);
-            }
+            int ofsRow = row - shipOffsets.getKey();
+            int ofsCol = col - shipOffsets.getValue();
+
+            shipGrid.add(batteryBox, ofsCol, ofsRow);
+
         }
         return batteryMap;
     }
 
-    public HBox initBatteryIcons(ClientBattery battery) {
-        HBox batteryBox = new HBox();
-        batteryBox.setAlignment(Pos.CENTER);
+    public void initBatteryIcons(ClientBattery battery, HBox batteryBox) {
+        batteryBox.getChildren().clear();
         URL resource;
 
         if (battery.getAvailability() > 0) {
@@ -397,12 +393,7 @@ public class GUIUtils {
                 ImageView icon = new ImageView(new Image(resource.toExternalForm(), 40, 40, true, true));
                 batteryBox.getChildren().add(icon);
             }
-            return batteryBox;
-        } else {
-            return null;
         }
-
-
     }
 
     /**
@@ -419,4 +410,72 @@ public class GUIUtils {
 
         return cell;
     }
+
+
+
+//    public void updateBatteryIcon(String playerNickname, GridPane shipGrid, Map<String, HBox> batteriesMap, int row, int col) {
+//
+//        // Getting the player's ship
+//        ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
+//        if (ship == null) {
+//            System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
+//            return;
+//        }
+//
+//        ClientBattery batteryToUpdate = (ClientBattery) ship.getComponent(row, col);
+//        HBox oldBatteryBox = batteriesMap.get(this.keyFromCoords(row, col));
+//        HBox newBatteryBox = initBatteryIcons(batteryToUpdate);
+//
+//        batteriesMap.replace(this.keyFromCoords(row, col), newBatteryBox);
+//
+//        int ofsRow = row - shipOffsets.getKey();
+//        int ofsCol = col - shipOffsets.getValue();
+//
+//        shipGrid.getChildren().remove(oldBatteryBox);
+//        shipGrid.add(newBatteryBox, ofsCol, ofsRow);
+//    }
+//
+//    public void updateCabinIcon(String playerNickname, GridPane shipGrid, Map<String, HBox> cabinsMap, int row, int col) {
+//
+//        // Getting the player's ship
+//        ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
+//        if (ship == null) {
+//            System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
+//            return;
+//        }
+//
+//        ClientCabin cabinToUpdate = (ClientCabin) ship.getComponent(row, col);
+//        HBox oldCabinBox = cabinsMap.get(this.keyFromCoords(row, col));
+//        HBox newCabinBox = initCabinLifeFormIcons(cabinToUpdate);
+//
+//        cabinsMap.replace(this.keyFromCoords(row, col), newCabinBox);
+//
+//        int ofsRow = row - shipOffsets.getKey();
+//        int ofsCol = col - shipOffsets.getValue();
+//
+//        shipGrid.getChildren().remove(oldCabinBox);
+//        shipGrid.add(newCabinBox, ofsCol, ofsRow);
+//    }
+//
+//    public void updateStorageIcons(String playerNickname, GridPane shipGrid, Map<String, HBox> storageMap, int row, int col) {
+//
+//        // Getting the player's ship
+//        ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
+//        if (ship == null) {
+//            System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
+//            return;
+//        }
+//
+//        ClientStorage storageToUpdate = (ClientStorage) ship.getComponent(row, col);
+//        HBox oldStorageBox = storageMap.get(this.keyFromCoords(row, col));
+//        HBox newStorageBox = initStorageItemIcons(storageToUpdate);
+//
+//        storageMap.replace(this.keyFromCoords(row, col), newStorageBox);
+//
+//        int ofsRow = row - shipOffsets.getKey();
+//        int ofsCol = col - shipOffsets.getValue();
+//
+//        shipGrid.getChildren().remove(oldStorageBox);
+//        shipGrid.add(newStorageBox, ofsCol, ofsRow);
+//    }
 }

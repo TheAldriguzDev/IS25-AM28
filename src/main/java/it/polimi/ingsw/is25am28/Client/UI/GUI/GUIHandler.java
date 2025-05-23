@@ -6,6 +6,7 @@ import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.*;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
@@ -291,6 +292,13 @@ public class GUIHandler extends Application implements ClientUI {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.POPULATE_SHIP_SCENE)) {
             PopulateShipController controller = (PopulateShipController) this.controllers.get(GuiScenes.POPULATE_SHIP_SCENE);
             controller.placeLifeform(data);
+        }
+    }
+
+    public void updateVisuals(CardRoundDTO data) {
+        if (this.currentScene != null && this.currentScene.equals(GuiScenes.CARD_ROUND_SCENE)) {
+            CardRoundController controller = (CardRoundController) this.controllers.get(GuiScenes.CARD_ROUND_SCENE);
+            controller.updateCardRound(data.getCardInfo());
         }
     }
 

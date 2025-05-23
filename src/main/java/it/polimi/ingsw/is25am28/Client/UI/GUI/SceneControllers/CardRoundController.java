@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
@@ -21,6 +22,7 @@ import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -106,6 +108,8 @@ public class CardRoundController extends GUIController {
             "batteriesToBeStolen"
     );
 
+    private ClientShip mainShip;
+
     public void init(CardRoundDTO state) {
 
         this.clientModel = GUIHandler.getInstance().getClientModel();
@@ -121,8 +125,8 @@ public class CardRoundController extends GUIController {
 
 
         this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
-        ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
-        if (ship == null) {
+        this.mainShip = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+        if (mainShip == null) {
             System.out.println(PrintUtils.addColor("[ERROR] [FixShipController] ClientShip is null", ANSIColors.RED));
             return;
         }
@@ -176,18 +180,18 @@ public class CardRoundController extends GUIController {
         // TODO: this.initResourceBank();
 
         // Setting all the regions with the corresponding listeners
-        this.initRegionMap(this.doubleCannonsRegions, new ArrayList<>(ship.getDoubleCannons()), this::handleDoubleCannonToActivate);
-        this.initRegionMap(this.doubleEnginesRegions, new ArrayList<>(ship.getDoubleEngines()), this::handleDoubleEnginesToActivate);
-        this.initRegionMap(this.shieldsRegions, new ArrayList<>(ship.getShieldList()), this::handleShieldsToActivate);
-        this.initRegionMap(this.cabinsRegions, new ArrayList<>(ship.getCabinList()), this::handleCrewToRemove);
-        this.initRegionMap(this.storagesRegions, new ArrayList<>(ship.getStorageList()), (row, col) -> {
+        this.initRegionMap(this.doubleCannonsRegions, new ArrayList<>(mainShip.getDoubleCannons()), this::handleDoubleCannonToActivate);
+        this.initRegionMap(this.doubleEnginesRegions, new ArrayList<>(mainShip.getDoubleEngines()), this::handleDoubleEnginesToActivate);
+        this.initRegionMap(this.shieldsRegions, new ArrayList<>(mainShip.getShieldList()), this::handleShieldsToActivate);
+        this.initRegionMap(this.cabinsRegions, new ArrayList<>(mainShip.getCabinList()), this::handleCrewToRemove);
+        this.initRegionMap(this.storagesRegions, new ArrayList<>(mainShip.getStorageList()), (row, col) -> {
             if (this.isTakeAction) {
                 this.handleItemToTake(row, col);
             } else {
                 this.handleItemToRemove(row, col);
             }
         });
-        this.initRegionMap(this.batteriesRegions, new ArrayList<>(ship.getBatteryList()), (row, col) -> {
+        this.initRegionMap(this.batteriesRegions, new ArrayList<>(mainShip.getBatteryList()), (row, col) -> {
             if (this.currEnergyConsumer != null) {
                 this.handleMandatoryBatteryCoords(row, col);
             } else {
@@ -261,7 +265,7 @@ public class CardRoundController extends GUIController {
         this.cardImageView.setImage(img);
 
         // Updating the card
-//        this.currEventCard.updateCard(cardInfo);
+        this.currEventCard.updateCard(cardInfo);
     }
 
     /**
@@ -878,7 +882,6 @@ public class CardRoundController extends GUIController {
         int col = ofsCol + this.shipOffsets.getValue();
 
         // Coords of the doubleEngine to activate (relative to the ship)
-
         this.currEnergyConsumer = new Pair<>(EnergyConsumers.SHIELD, new CoordinatePair(row, col));
         this.handleEnergyConsumers(ofsRow, ofsCol);
     }
@@ -888,7 +891,6 @@ public class CardRoundController extends GUIController {
         int col = ofsCol + this.shipOffsets.getValue();
 
         // Coords of the doubleEngine to activate (relative to the ship)
-
         this.currEnergyConsumer = new Pair<>(EnergyConsumers.CANNON, new CoordinatePair(row, col));
         this.handleEnergyConsumers(ofsRow, ofsCol);
     }
@@ -907,27 +909,54 @@ public class CardRoundController extends GUIController {
     private void handleBatteriesToBeStolen(int ofsRow, int ofsCol) {}
 
     private void handleMandatoryBatteryCoords(int ofsRow, int ofsCol) {
-        int row = ofsRow + this.shipOffsets.getKey();
-        int col = ofsCol + this.shipOffsets.getValue();
+        int batteryRow = ofsRow + this.shipOffsets.getKey();
+        int batteryCol = ofsCol + this.shipOffsets.getValue();
 
-        CoordinatePair batteryCoords = new CoordinatePair(row, col);
+        int energyConsumerRow = this.currEnergyConsumer.getValue().getI();
+        int energyConsumerCol = this.currEnergyConsumer.getValue().getJ();
 
+        CoordinatePair batteryCoords = new CoordinatePair(batteryRow, batteryCol);
+
+
+
+        Region energyConsumerRegion = null;
+
+        // TODO: could add cool effects to high light the already selected components instead of simply removing them form the regions
+        // Updating the visuals
         switch (this.currEnergyConsumer.getKey()) {
             case CANNON -> {
-                this.doubleCannonsRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: transparent;");
+                energyConsumerRegion = this.doubleCannonsRegions.get(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
+                this.doubleCannonsRegions.remove(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
                 this.addDoubleCannonToActivate(this.currEnergyConsumer.getValue(), batteryCoords);
             }
             case ENGINE -> {
-                this.doubleEnginesRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: transparent;");
+                energyConsumerRegion = this.doubleEnginesRegions.get(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
+                this.doubleEnginesRegions.remove(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
                 this.addDoubleEngineToActivate(this.currEnergyConsumer.getValue(), batteryCoords);
             }
             case SHIELD -> {
-                this.shieldsRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: transparent;");
+                energyConsumerRegion = this.shieldsRegions.get(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
+                this.doubleCannonsRegions.remove(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
                 this.addShieldToActivate(this.currEnergyConsumer.getValue(), batteryCoords);
             }
         }
+
+        this.shipGrid.getChildren().remove(energyConsumerRegion);
+
+        this.initStatsBox();
+//        this.batteriesMap.replace(this.clientModel.getNickname(), this.guiUtils.initShipBatteryIcons(this.clientModel.getNickname(), shipGrid));
+//        guiUtils.updateBatteryIcon(this.clientModel.getNickname(), this.shipGrid, this.batteriesMap.get(this.clientModel.getNickname()), batteryRow, batteryCol);
+
+        // Updating
+//        this.batteriesMap.get(this.clientModel.getNickname()).replace(guiUtils.keyFromCoords(batteryRow, batteryCol), guiUtils.initBatteryIcons( (ClientBattery) this.mainShip.getComponent(batteryRow, batteryCol)));
+
+        // Updating the HBox containing the icons
+        ClientBattery batteryToUpdate = (ClientBattery) this.mainShip.getComponent(batteryRow, batteryCol);
+        HBox boxToUpdate = this.batteriesMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(batteryRow, batteryCol));
+        guiUtils.initBatteryIcons(batteryToUpdate, boxToUpdate);
+
         this.currEnergyConsumer = null;
-        this.disableRegion(this.currentRegions);
+        this.commandsToggleGroup.selectToggle(null);
     }
 
     private void handleEnergyConsumers(int ofsRow, int ofsCol) {
@@ -1343,4 +1372,156 @@ public class CardRoundController extends GUIController {
 
         ship.consumeEnergy(List.of(batteryToConsume));
     }
+
+    public void updateCardRound(CardStateJSON cardStateJSON) {
+
+        Platform.runLater(() -> {
+
+            // Updating other ship's visuals
+            for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
+
+                String playerNickname = entry.getKey();
+                GridPane shipGrid = entry.getValue();
+
+                // TODO: can be shortened by improving the init methods and invoking them if something changes
+
+                if (!playerNickname.equals(this.clientModel.getNickname())) {
+
+                    // Getting the player's ship
+                    ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
+                    if (ship == null) {
+                        System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
+                        return;
+                    }
+
+                    ship.generateComponentSubLists();
+
+                    // Updating batteries icons
+                    if (cardStateJSON.getNeedsUpdatedBatteries()) {
+                        for (ClientBattery battery : ship.getBatteryList()) {
+                            guiUtils.initBatteryIcons(battery, this.batteriesMap.get(playerNickname).get(guiUtils.keyFromCoords(battery.getI(), battery.getJ())));
+                        }
+                    }
+
+                    // Updating the lifeForms icons
+                    if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
+                        for (ClientCabin cabin : ship.getCabinList()) {
+                            guiUtils.initCabinLifeFormIcons(cabin, this.lifeFormsMap.get(playerNickname).get(guiUtils.keyFromCoords(cabin.getI(), cabin.getJ())));
+                        }
+                    }
+
+                    // Updating the storages icon
+                    if (cardStateJSON.getNeedsUpdatedDroppedResources() || cardStateJSON.getNeedsUpdatedTakenResources()) {
+                        for (ClientStorage storage : ship.getStorageList()) {
+                            guiUtils.initStorageItemIcons(storage, this.itemsMap.get(playerNickname).get(guiUtils.keyFromCoords(storage.getI(), storage.getJ())));
+                        }
+                    }
+                }
+
+                // TODO: this method
+//                // Updating the removed components
+//                if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
+//                    if (!cardStateJSON.getRemovedComponents().get(playerNickname).isEmpty()) {
+//
+//                    }
+//                }
+
+
+            }
+
+
+
+//            // Updating battery icons
+//            if (cardStateJSON.getNeedsUpdatedBatteries()) {
+//                for (String playerNickname : cardStateJSON.getRemovedBatteries().keySet()) {
+//                    if (!this.clientModel.getNickname().equals(cardStateJSON.getPrevPlayerNickname())) {
+//                        for(CoordinatePair coords : cardStateJSON.getRemovedBatteries().get(playerNickname)) {
+//
+//                            int row = coords.getI();
+//                            int col = coords.getJ();
+//                            GridPane playerShipGrid = this.playersShipGridPane.get(playerNickname);
+//
+//                            guiUtils.updateBatteryIcon(playerNickname, playerShipGrid, this.batteriesMap.get(playerNickname), row, col);
+//                        }
+//                    }
+//                }
+//            }
+//
+//            // Updating LifeForms Icons
+//            if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
+//                Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms = cardStateJSON.getRemovedLifeforms();
+//                for (String playerNickname : removedLifeforms.keySet()) {
+//                    if (!this.clientModel.getNickname().equals(cardStateJSON.getPrevPlayerNickname())) {
+//                        for (ComponentHelper<LifeformType> lifeFormToRemove : removedLifeforms.get(playerNickname)) {
+//
+//                            int row = lifeFormToRemove.getI();
+//                            int col = lifeFormToRemove.getJ();
+//                            GridPane playerShipGrid = this.playersShipGridPane.get(playerNickname);
+//
+//                            guiUtils.updateCabinIcon(playerNickname, playerShipGrid, this.batteriesMap.get(playerNickname), row, col);
+//                        }
+//                    }
+//                }
+//            }
+
+
+
+//            if (cardStateJSON.getNeedsUpdatedDroppedResources()) {
+//                for (String playerNickname : cardStateJSON.getDroppedResources().keySet()) {
+//                    if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
+//                        for (ComponentHelper<ItemColor> itemToDrop : cardStateJSON.getDroppedResources().get(playerNickname)) {
+//
+//                        }
+//                    }
+//                }
+//            }
+
+
+
+
+            // Updating removed Components
+
+
+        });
+
+        // Updating other ship's visuals
+        for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
+
+
+            String playerName = entry.getKey();
+            GridPane shipGrid = entry.getValue();
+
+
+        }
+
+        for (ClientPlayer player : this.clientModel.getAllClientPlayers().values()) {
+            // Creating an empty ship grid
+            GridPane shipGrid = this.guiUtils.createEmptyShipGrid(player);
+            // Creating the ship's visuals
+            this.componentsImagesMap.put(player.getNickname(), this.guiUtils.createShipVisuals(player.getNickname(), shipGrid));
+            // Adding the shipGrid to the map
+            this.playersShipGridPane.put(player.getNickname(), shipGrid);
+
+            // Setting the ship's icons
+            this.lifeFormsMap.put(player.getNickname(), this.guiUtils.initShipLifeFormIcons(player.getNickname(), shipGrid));
+            this.itemsMap.put(player.getNickname(), this.guiUtils.initShipItemIcons(player.getNickname(), shipGrid));
+            this.batteriesMap.put(player.getNickname(), this.guiUtils.initShipBatteryIcons(player.getNickname(), shipGrid));
+        }
+
+
+    }
+
+//    }
+//
+//    private void updateBoardVisuals(CardStateJSON cardState) {
+//
+//    }
+//
+//    private void updateBoardVisuals(CardStateJSON cardState) {
+//
+//    }
+//
+//    private void updateBoardVisuals(CardStateJSON cardState) {
+//
+//    }
 }

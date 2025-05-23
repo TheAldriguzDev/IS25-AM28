@@ -329,6 +329,11 @@ public class ViewUpdater implements StateVisitor {
             if(state.getCardInfo().getNeedsPlayerUpdate()) {
                 this.model.updatePlayers(state.getCardInfo());
             }
+
+            // Update the component in the GUI
+            if (this.ui instanceof GUIHandler) {
+                ((GUIHandler) this.ui).updateVisuals(state);
+            }
         }
     }
 
