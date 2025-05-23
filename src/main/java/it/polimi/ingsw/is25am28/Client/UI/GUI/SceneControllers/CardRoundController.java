@@ -96,7 +96,7 @@ public class CardRoundController extends GUIController {
             this.batteriesRegions
     );
 
-    private final ToggleGroup commandsToggleGroup = new ToggleGroup();
+    private ToggleGroup commandsToggleGroup;
     private final ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 
     private List<ClientEventCard> cards;
@@ -443,6 +443,8 @@ public class CardRoundController extends GUIController {
     // Todo: handle commands availability based also un card resources amount (and ship) / or display error in the command description
     private void initCommandBox() {
 
+        this.commandsToggleGroup = new ToggleGroup();
+
 //        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
 //        if (stackTrace.length > 2) {
 //            StackTraceElement caller = stackTrace[2];
@@ -574,6 +576,19 @@ public class CardRoundController extends GUIController {
                 // is pressed during that phase
                 // TODO: move to some other location, here it destroys the logic by re-calling the initCommandBox()
 //                this.handleGoBackToCardRoundButton(new ActionEvent());
+
+//                System.out.println("Toggle selezionato: " + selected.getText());
+//                System.out.println("ID del toggle: " + selected.getId());
+//                System.out.println("Classe chiamante: ");
+//                Thread.dumpStack(); // stampa lo stack trace nel terminale
+
+                       StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        if (stackTrace.length > 2) {
+            StackTraceElement caller = stackTrace[2];
+            System.out.println("Metodo chiamante: " + caller.getMethodName());
+            System.out.println("Classe chiamante: " + caller.getClassName());
+            System.out.println("Linea: " + caller.getLineNumber());
+        }
 
 //                this.disableRegion();
 
@@ -891,6 +906,14 @@ public class CardRoundController extends GUIController {
     }
 
     public void playCard() {
+//        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+//        if (stackTrace.length > 2) {
+//            StackTraceElement caller = stackTrace[2];
+//            System.out.println("Metodo chiamante: " + caller.getMethodName());
+//            System.out.println("Classe chiamante: " + caller.getClassName());
+//            System.out.println("Linea: " + caller.getLineNumber());
+//        }
+        System.out.println(PrintUtils.addColor("PLAYCARD PRESSED", ANSIColors.BACKGROUND_CYAN));
         ActionJSON response = this.currEventCard.useCard();
 
         // If the current card supports the action, it removes
