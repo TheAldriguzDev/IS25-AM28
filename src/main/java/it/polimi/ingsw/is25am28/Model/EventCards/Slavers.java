@@ -277,6 +277,7 @@ public class Slavers extends EventCard {
         cardState.setGivenCredits(this.givenCredits);
         cardState.setMovementSteps(this.movementSteps);
         cardState.setTakenCrew(this.takenCrew);
+        cardState.setImagePath(this.path);
 
         return cardState;
     }

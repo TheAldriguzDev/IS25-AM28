@@ -371,6 +371,7 @@ public class VisitPlanets extends EventCard {
         Map<Integer, Map<ItemColor, Integer>> availablePlanets;
         availablePlanets = new HashMap<>(this.itemsPerPlanet);
         cardState.setAvailablePlanets(availablePlanets);
+        cardState.setImagePath(this.path);
 
         return cardState;
     }

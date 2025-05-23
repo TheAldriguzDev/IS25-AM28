@@ -932,6 +932,7 @@ public class WarZone extends EventCard {
         cardState.setRequiredCrewMembers(this.requiredCrew);
         cardState.setMovementSteps(this.movementSteps);
         cardState.setRequiredResources(this.requiredItems);
+        cardState.setImagePath(this.path);
 
         return cardState;
     }

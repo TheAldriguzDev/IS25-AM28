@@ -1,7 +1,8 @@
 package it.polimi.ingsw.is25am28.Network.Server;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import it.polimi.ingsw.is25am28.Controller.GameController;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
@@ -11,10 +12,10 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
-import it.polimi.ingsw.is25am28.Network.ClientStatus;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.RMIServer;
 import it.polimi.ingsw.is25am28.Network.Socket.Server.TCPServer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
+import it.polimi.ingsw.is25am28.Utils.ValidateIP;
 
 import java.util.*;
 import java.util.concurrent.ScheduledExecutorService;
@@ -33,7 +34,6 @@ public class Server {
     // Server constants
     public static final String RMIServerName = "GameRMIServer";
     public static final int RMIServerPort = 7777;
-    public static final String TCPAddress = "127.0.0.1";
     public static final int TCPServerPort = 8888;
 
     private final RMIServer rmiServer;
@@ -57,7 +57,36 @@ public class Server {
 
     public Server() throws Exception {
         // Create the RMIServer and the TCPServer
-        this.tcpServer = new TCPServer(Server.TCPAddress, Server.TCPServerPort, this);
+        Scanner scanner = new Scanner(System.in);
+        String ipAddress;
+
+        new WidgetTUI()
+                .appendString("[SETUP SERVER'S IPv4 ADDRESS]")
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder()
+                .printWidget();
+
+        while (true) {
+            System.out.println();
+            System.out.print("Enter a valid IPv4 address: ");
+            ipAddress = scanner.nextLine().trim();
+
+            if (ValidateIP.validateIPAddress(ipAddress)) {
+                break;
+            }
+            else {
+                System.out.println(
+                        PrintUtils.addColor(
+                                "[ERROR] Given string does not represent an IPv4 address.",
+                                ANSIColors.RED
+                        )
+                );
+
+                System.out.println("\t(IPv4 format is: x.y.z.w -> [0-255].[0.255].[0-255].[0-255])");
+            }
+        }
+
+        this.tcpServer = new TCPServer(ipAddress, Server.TCPServerPort, this);
         this.rmiServer = new RMIServer(Server.RMIServerName, Server.RMIServerPort, this);
 
         this.gameInstances = new HashMap<>();
@@ -125,10 +154,6 @@ public class Server {
                             Map.Entry::getValue
                     ));
         }
-    }
-
-    public void refreshGames() {
-
     }
 
     /**

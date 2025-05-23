@@ -66,12 +66,10 @@ public class JoinGameController extends GUIController {
             GUIHandler.getInstance().getClientModel().setDifficultyLevel(this.gameLevel);
 
             try {
-                GUIHandler.getVirtualClient().sendMessage(
-                    new NewPlayer(
-                        nickname,
-                        color,
-                        this.gameID
-                    )
+                GUIHandler.getVirtualClient().joinGame(
+                    nickname,
+                    color,
+                    this.gameID
                 );
             }
             catch (Exception e) {

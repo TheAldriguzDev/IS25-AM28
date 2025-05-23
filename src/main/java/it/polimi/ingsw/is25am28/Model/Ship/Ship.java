@@ -715,6 +715,8 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
             }
         );
 
+        System.out.println("Step 1: " + isShipValid.get());
+
         if (isShipValid.get()) {
             for (int i = 0; i < grid_rows; i++) {
                 for (int j = 0; j < grid_cols; j++) {
@@ -726,6 +728,9 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                 isShipValid.set(false);
             }
         }
+
+        System.out.println("Step 2: " + isShipValid.get());
+        System.out.println(foundComponents.get() + " components found, " + placedComponents + " placed");
 
         return isShipValid.get();
     }
@@ -805,11 +810,9 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                 for (Component neighbour : neighbours) {
                     //      !nextLayer.contains(neighbours[i]) ==> Avoids overlapping
                     // !alreadyChecked.contains(neighbours[i]) ==> Avoids backtracking
-                    if (neighbour != null) {
-                        if (!nextLayer.contains(neighbour) && !alreadyChecked.contains(neighbour)) {
-                            nextLayer.add(neighbour);
-                            borderReached = false;
-                        }
+                    if (neighbour != null && !alreadyChecked.contains(neighbour) && !nextLayer.contains(neighbour)) {
+                        nextLayer.add(neighbour);
+                        borderReached = false;
                     }
                 }
             }

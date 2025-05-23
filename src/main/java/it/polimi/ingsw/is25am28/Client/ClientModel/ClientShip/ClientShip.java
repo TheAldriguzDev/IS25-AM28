@@ -115,6 +115,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
             int j = (int ) map.get("col");
 
             Object connectorsObj = map.get("connectors");
+            String path = (String) map.get("path");
             List<Integer> connectorOrdinals = null;
 
             if (connectorsObj != null) {
@@ -131,14 +132,14 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 case 0 -> {
                     int force = (int) map.get("force");
 
-                    ClientCannon component = new ClientCannon(id, connectorOrdinals, force, "");
+                    ClientCannon component = new ClientCannon(id, connectorOrdinals, force, path);
 
                     this.addComponent(component, i, j);
                 }
                 // Cabin
                 case 1 -> {
                     List<LifeformType> lifeform = (List<LifeformType>) map.get("inhabitants");
-                    ClientCabin component = new ClientCabin(id, connectorOrdinals, false, "");
+                    ClientCabin component = new ClientCabin(id, connectorOrdinals, false, path);
 
                     for (LifeformType lifeformType : lifeform) {
                         component.addInhabitant(new Lifeform(lifeformType));
@@ -152,7 +153,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                     boolean isSpecial = (boolean) map.get("special");
 
                     List<Integer> storedItems = (List<Integer>) map.get("storedItems");
-                    ClientStorage component = new ClientStorage(id, connectorOrdinals, capacity, isSpecial, "");
+                    ClientStorage component = new ClientStorage(id, connectorOrdinals, capacity, isSpecial, path);
 
                     for (Integer storedItem : storedItems) {
                         switch (storedItem) {
@@ -176,30 +177,30 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 // Vital
                 case 3 -> {
                     int type = (int) map.get("type");
-                    this.addComponent(new ClientVital(id, connectorOrdinals, type, ""), i, j);
+                    this.addComponent(new ClientVital(id, connectorOrdinals, type, path), i, j);
                 }
                 // Engine
                 case 4 -> {
                     int speed = (int) map.get("speed");
-                    this.addComponent(new ClientEngine(id, connectorOrdinals, speed, ""), i, j);
+                    this.addComponent(new ClientEngine(id, connectorOrdinals, speed, path), i, j);
                 }
                 // Battery
                 case 5 -> {
                     int capacity = (int) map.get("capacity");
                     int available = (int) map.get("available");
 
-                    ClientBattery component = new ClientBattery(id, connectorOrdinals, capacity, "");
+                    ClientBattery component = new ClientBattery(id, connectorOrdinals, capacity, path);
                     component.setAvailability(available);
 
                     this.addComponent(component, i, j);
                 }
                 // Shield
                 case 6 -> {
-                    this.addComponent(new ClientShield(id, connectorOrdinals, ""), i, j);
+                    this.addComponent(new ClientShield(id, connectorOrdinals, path), i, j);
                 }
                 // Structural
                 case 7 -> {
-                    this.addComponent(new ClientStructural(id, connectorOrdinals, ""), i, j);
+                    this.addComponent(new ClientStructural(id, connectorOrdinals, path), i, j);
                 }
                 default -> {
                     throw new RuntimeException("The given component is not recognised.");

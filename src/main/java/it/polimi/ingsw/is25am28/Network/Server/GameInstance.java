@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Network.Server;
 
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * This class is a helper to control the Game. It will handle all the communications between the players and the GameModel.
@@ -253,16 +255,25 @@ public class GameInstance {
 
             for (VirtualView client : this.connectedClients.values()) {
                 if (!this.disconnectedClients.contains(client)) {
-                    this.queueHandler.enqueue(() -> {
-                        try {
-                            client.updateState(answer);
-                        } catch (Exception e) {
-                            throw new RuntimeException(e);
-                        }
-                    });
+                    sendUpdateWithRetries(client, answer, queueHandler, 0, 3, 2500);
                 }
             }
         }
+    }
+
+    public static void sendUpdateWithRetries(VirtualView view, Answer answer, Queue queueHandler, int currentAttempt, int maxRetries, long delay) {
+        queueHandler.enqueue(() -> {
+            try {
+                view.updateState(answer);
+            } catch (Exception e) {
+                if (currentAttempt + 1 < maxRetries) {
+                    CompletableFuture.delayedExecutor(delay, java.util.concurrent.TimeUnit.MILLISECONDS)
+                            .execute(() -> sendUpdateWithRetries(view, answer, queueHandler, currentAttempt + 1, maxRetries, delay));
+                } else {
+                    ServerLogger.error("NETWORK", "Failed to send the message after " + maxRetries + " attempts");
+                }
+            }
+        });
     }
 
     // ========== PING UTILITY ========== //
@@ -309,14 +320,6 @@ public class GameInstance {
         if (reconnectState.size() > 1) {
             answer.setNextState(reconnectState.get(1));
         }
-
-//        this.queueHandler.enqueue(() -> {
-//            try {
-//                virtualClient.updateState(answer);
-//            } catch (Exception e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
 
         this.broadCastUpdate(answer);
     }

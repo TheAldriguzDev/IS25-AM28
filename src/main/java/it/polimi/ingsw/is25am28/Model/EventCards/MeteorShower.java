@@ -508,6 +508,7 @@ public class MeteorShower extends EventCard {
         cardState.setCardName(this.getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(this.cardLevel);
+        cardState.setImagePath(this.path);
 
         return cardState;
     }

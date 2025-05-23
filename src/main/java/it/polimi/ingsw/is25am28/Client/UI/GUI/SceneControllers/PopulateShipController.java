@@ -19,8 +19,10 @@ import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Network.Messages.PopulateShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
@@ -46,19 +48,31 @@ public class PopulateShipController extends GUIController {
     @FXML private TextFlow populateShipLabel;
     @FXML private StackPane imagePane;
     @FXML private GridPane viewOtherShipsGrid;
+    @FXML private VBox populateShipVBox;
 
     @FXML private ToggleGroup lifeFormsToggles;
     @FXML private ToggleButton purpleToggle;
     @FXML private ToggleButton brownToggle;
     @FXML private ToggleButton whiteToggle;
 
+    // Board visualization
+    @FXML private VBox viewGameBoardContainer;
+    @FXML private Pane viewGameBoardStackPaneLevel0;
+    @FXML private Pane viewGameBoardStackPaneLevel2;
+    @FXML private Button goBackToPopulateButtonFromViewBoard;
+
+    private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
+
     private boolean isShipFull;
+
+    ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 
     // Map of the component's clickable regions
     private Map<String, Region> cabinRegions;
     private Map<String, Region> purpleAlienCabinRegion;
     private Map<String, Region> brownAlienCabinRegion;
     private LifeformType currentSelectableLifeForm;
+    private boolean canEnableWhite;
     private boolean canEnablePurple;
     private boolean canEnableBrown;
 
@@ -67,7 +81,7 @@ public class PopulateShipController extends GUIController {
 
     public void init(PopulateShipDTO state) {
 
-        this.clientModel = GUIHandler.getInstance().getClientModel();
+        this.clientModel = GUIHandler.getClientModel();
         this.guiUtils = new GUIUtils(this.clientModel);
 
         this.playersShipGridPane = new HashMap<>();
@@ -84,6 +98,9 @@ public class PopulateShipController extends GUIController {
 
         // Setting the buttons to view other ships
         this.initViewOtherShipsGrid();
+
+        // Initializing the game board
+        this.initViewGameBoard();
 
         // Setting the correct background
         this.guiUtils.setShipGridBackground(this.shipImageView);
@@ -168,11 +185,9 @@ public class PopulateShipController extends GUIController {
 
             ComponentHelper<LifeformType> lifeFormToAdd = new ComponentHelper<>(row + shipOffsets.getKey(), col + shipOffsets.getValue());
             lifeFormToAdd.addItem(this.currentSelectableLifeForm);
-            GUIHandler.getVirtualClient().sendMessage(
-                    new PopulateShip(
-                            this.clientModel.getNickname(),
-                            lifeFormToAdd
-                    )
+            GUIHandler.getVirtualClient().populateShip(
+                this.clientModel.getNickname(),
+                lifeFormToAdd
             );
 
         } catch (Exception e) {
@@ -315,10 +330,10 @@ public class PopulateShipController extends GUIController {
                     this.currentSelectableLifeForm = LifeformType.PURPLE_ALIEN;
                     enableRegion(this.purpleAlienCabinRegion);
                 }
-                    case "brownToggle"-> {
+                case "brownToggle"-> {
                     this.currentSelectableLifeForm = LifeformType.BROWN_ALIEN;
                     enableRegion(this.brownAlienCabinRegion);
-                    }
+                }
                 case "whiteToggle" -> {
                     this.currentSelectableLifeForm = LifeformType.ASTRONAUT;
                     enableRegion(this.cabinRegions);
@@ -357,7 +372,6 @@ public class PopulateShipController extends GUIController {
      * Creates a 0*1 grid, subsequently adding a number of rows (each one containing a toggleButton) equal to the number of players - 1 in the current game
      */
     private void initViewOtherShipsGrid() {
-        ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
         int i = 0;
         for (String playerNickname : this.clientModel.getAllClientPlayers().keySet()) {
             if (playerNickname.equals(this.clientModel.getNickname())) {
@@ -382,8 +396,7 @@ public class PopulateShipController extends GUIController {
             if (newToggle == null) {
 
                 // Enable the lifeFormToggles (only the ones that have not been disabled in other methods)
-                this.whiteToggle.setDisable(false);
-
+                if (this.canEnableWhite) { this.whiteToggle.setDisable(false); }
                 if (this.canEnablePurple) { this.purpleToggle.setDisable(false); }
                 if (this.canEnableBrown) { this.brownToggle.setDisable(false); }
 
@@ -391,11 +404,15 @@ public class PopulateShipController extends GUIController {
                 this.setShipGrid(this.clientModel.getNickname());
             } else {
 
+                this.handleGoBackToPopulateButton(new ActionEvent());
+
                 // Deselect the lifeFormToggles (if any is active)
                 this.lifeFormsToggles.selectToggle(null);
+
                 // Disable the lifeForm toggles after saving the flags that determine if the alien buttons are to be reactivated (won't be done if they were already disabled)
+                this.canEnableWhite = !this.whiteToggle.isDisabled();
                 this.canEnablePurple = !this.purpleToggle.isDisabled();
-                this.canEnablePurple = !this.purpleToggle.isDisabled();
+                this.canEnableBrown = !this.brownToggle.isDisabled();
 
                 this.whiteToggle.setDisable(true);
                 this.purpleToggle.setDisable(true);
@@ -422,5 +439,79 @@ public class PopulateShipController extends GUIController {
 
         this.shipGrid = this.playersShipGridPane.get(playerNickname);
         this.imagePane.getChildren().add(this.shipGrid);
+    }
+
+    @FXML
+    public void handleGoBackToPopulateButton(ActionEvent actionEvent) {
+        this.setVisibility(this.viewGameBoardContainer, false);
+
+        this.setVisibility(this.populateShipLabel, true);
+        this.setVisibility(this.shipImageView, true);
+        this.setVisibility(this.shipGrid, true);
+
+        if (this.canEnableWhite)  { this.whiteToggle.setDisable(false); }
+        if (this.canEnablePurple) { this.purpleToggle.setDisable(false); }
+        if (this.canEnableBrown)  { this.brownToggle.setDisable(false); }
+
+        actionEvent.consume();
+    }
+
+    @FXML
+    private void handleViewGameBoard() {
+        // Disable all the previous containers
+        this.viewOtherShipsToggleGroup.selectToggle(null);
+        this.lifeFormsToggles.selectToggle(null);
+
+        this.canEnableWhite = !this.whiteToggle.isDisabled();
+        this.canEnablePurple = !this.purpleToggle.isDisabled();
+        this.canEnableBrown = !this.brownToggle.isDisabled();
+
+        this.whiteToggle.setDisable(true);
+        this.purpleToggle.setDisable(true);
+        this.brownToggle.setDisable(true);
+
+        this.setVisibility(this.populateShipLabel, false);
+        this.setVisibility(this.shipImageView, false);
+        this.setVisibility(this.shipGrid, false);
+
+        if (this.isShipFull) {
+            this.goBackToPopulateButtonFromViewBoard.setText("Go back");
+        }
+
+        // Enable the board container
+        this.setVisibility(this.viewGameBoardContainer, true);
+    }
+
+    /**
+     * Sets the correct game board image based
+     * on the current difficulty level.
+     */
+    private void initViewGameBoard() {
+        if (this.clientModel.getDifficultyLevel() == 2) {
+            this.setVisibility(this.viewGameBoardStackPaneLevel2, true);
+
+            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+                this.guiUtils.placePlayerInBoard(
+                        playerNickname,
+                        2,
+                        24,
+                        this.viewGameBoardStackPaneLevel2,
+                        this.playersRocketBoard
+                );
+            }
+        }
+        else {
+            this.setVisibility(this.viewGameBoardStackPaneLevel0, true);
+
+            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+                this.guiUtils.placePlayerInBoard(
+                        playerNickname,
+                        0,
+                        18,
+                        this.viewGameBoardStackPaneLevel2,
+                        this.playersRocketBoard
+                );
+            }
+        }
     }
 }

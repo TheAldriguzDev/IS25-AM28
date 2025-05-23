@@ -43,11 +43,11 @@ public class FixShipController extends GUIController {
     @FXML private VBox viewGameBoardContainer;
     @FXML private Pane viewGameBoardStackPaneLevel0;
     @FXML private Pane viewGameBoardStackPaneLevel2;
-    @FXML private Button goBackToConstructionButtonFromViewBoard;
+    @FXML private Button goBackToFixButtonFromViewBoard;
 
     ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 
-    private Map<String, ImageView> playersRocketBoard = new HashMap<>();
+    private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
 
     private boolean isShipValid;
 
@@ -134,9 +134,29 @@ public class FixShipController extends GUIController {
     private void initViewGameBoard() {
         if (this.clientModel.getDifficultyLevel() == 2) {
             this.setVisibility(this.viewGameBoardStackPaneLevel2, true);
+
+            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+                this.guiUtils.placePlayerInBoard(
+                        playerNickname,
+                        2,
+                        24,
+                        this.viewGameBoardStackPaneLevel2,
+                        this.playersRocketBoard
+                );
+            }
         }
         else {
             this.setVisibility(this.viewGameBoardStackPaneLevel0, true);
+
+            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+                this.guiUtils.placePlayerInBoard(
+                        playerNickname,
+                        0,
+                        18,
+                        this.viewGameBoardStackPaneLevel2,
+                        this.playersRocketBoard
+                );
+            }
         }
     }
 
@@ -153,12 +173,10 @@ public class FixShipController extends GUIController {
         // TODO: can be simplified
         try {
 
-            GUIHandler.getVirtualClient().sendMessage(
-                    new FixShip(
-                            this.clientModel.getNickname(),
-                            row + shipOffsets.getKey(),
-                            col + shipOffsets.getValue()
-                    )
+            GUIHandler.getVirtualClient().fixShip(
+                this.clientModel.getNickname(),
+                row + shipOffsets.getKey(),
+                col + shipOffsets.getValue()
             );
 
         } catch (Exception e) {
@@ -311,7 +329,7 @@ public class FixShipController extends GUIController {
         this.setVisibility(this.shipGrid, false);
 
         if (this.isShipValid) {
-            this.goBackToConstructionButtonFromViewBoard.setText("Go back");
+            this.goBackToFixButtonFromViewBoard.setText("Go back");
         }
 
         // Enable the board container

@@ -70,4 +70,6 @@ module it.polimi.ingsw.is25am {
 
     opens it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Client.UI.GUI to javafx.fxml;
+
+    exports it.polimi.ingsw.is25am28.Network.Queue;
 }

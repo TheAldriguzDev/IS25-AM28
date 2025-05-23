@@ -28,6 +28,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
+import org.controlsfx.control.spreadsheet.Grid;
 
 import java.net.URL;
 import java.util.*;
@@ -261,21 +262,21 @@ public class ShipConstructionController extends GUIController {
             }
         }
 
-        for (int col = 0; col < 2; col++) {
-            Region cell = new Region(); // Place holder node
-            cell.setPrefSize(100, 100);
-            cell.setStyle("-fx-background-color: transparent;");
-            this.shipGrid.add(cell, col, 0);
-        }
-
         this.playersShipGridPane.put(this.clientModel.getNickname(), this.shipGrid);
 
         // Init the gridShipPane for each player
         for (ClientPlayer p : this.clientModel.getAllClientPlayers().values()) {
+            String playerNickname = p.getNickname();
+
             // Create the new grid for each player different from the currentPlayer
-            if (!this.clientModel.getNickname().equals(p.getNickname())) {
-                this.playersShipGridPane.put(p.getNickname(), this.guiUtils.createEmptyShipGrid(p));
+            if (!this.clientModel.getNickname().equals(playerNickname)) {
+                this.playersShipGridPane.put(playerNickname, this.guiUtils.createEmptyShipGrid(p));
             }
+
+            GridPane playerGrid = this.playersShipGridPane.get(playerNickname);
+
+            // Create, for each player, the graphic ship
+            this.guiUtils.createShipVisuals(playerNickname, this.playersShipGridPane.get(playerNickname));
         }
     }
 
@@ -341,7 +342,7 @@ public class ShipConstructionController extends GUIController {
 
         Region cell = new Region(); // Place holder node
 
-        cell.setPrefSize(100, 100);
+        cell.setPrefSize(105, 105);
         cell.setStyle("-fx-background-color: transparent;");
         cell.setCursor(Cursor.HAND);
         cell.setPickOnBounds(true);
@@ -411,8 +412,8 @@ public class ShipConstructionController extends GUIController {
         );
 
         try {
-            GUIHandler.getVirtualClient().sendMessage(
-                new FlipTimer(this.clientModel.getNickname())
+            GUIHandler.getVirtualClient().flipTimer(
+                this.clientModel.getNickname()
             );
         }
         catch (Exception e) {
@@ -433,11 +434,9 @@ public class ShipConstructionController extends GUIController {
         ));
 
         try {
-            GUIHandler.getVirtualClient().sendMessage(
-                    new SendShipConfirmation(
-                            this.clientModel.getNickname(),
-                            this.clientModel.getState().getReservedComponents().size()
-                    )
+            GUIHandler.getVirtualClient().sendShipConfirmation(
+                this.clientModel.getNickname(),
+                this.clientModel.getState().getReservedComponents().size()
             );
         } catch (Exception e) {
             this.showToast(e.getMessage(), ToastType.ERROR);
@@ -525,12 +524,10 @@ public class ShipConstructionController extends GUIController {
         );
 
         try {
-            GUIHandler.getVirtualClient().sendMessage(
-                new SelectDeselectSubdeck(
-                    this.clientModel.getNickname(),
-                    this.selectedSubdeckId,
-                    true
-                )
+            GUIHandler.getVirtualClient().selectDeselectSubdeck(
+                this.clientModel.getNickname(),
+                this.selectedSubdeckId,
+                true
             );
         }
         catch (Exception e) {
@@ -564,12 +561,10 @@ public class ShipConstructionController extends GUIController {
         );
 
         try {
-            GUIHandler.getVirtualClient().sendMessage(
-                new SelectDeselectSubdeck(
-                    this.clientModel.getNickname(),
-                    this.selectedSubdeckId,
-                    false
-                )
+            GUIHandler.getVirtualClient().selectDeselectSubdeck(
+                this.clientModel.getNickname(),
+                this.selectedSubdeckId,
+                false
             );
         }
         catch (Exception e) {
@@ -602,11 +597,9 @@ public class ShipConstructionController extends GUIController {
         ));
 
         try {
-            GUIHandler.getVirtualClient().sendMessage(
-                    new SelectTile(
-                            this.clientModel.getNickname(),
-                            selectedComponent.getID()
-                    )
+            GUIHandler.getVirtualClient().selectTile(
+                this.clientModel.getNickname(),
+                selectedComponent.getID()
             );
         } catch (Exception e) {
             this.showToast(e.getMessage(), ToastType.ERROR);
@@ -640,11 +633,9 @@ public class ShipConstructionController extends GUIController {
         ));
 
         try {
-            GUIHandler.getVirtualClient().sendMessage(
-                    new DeselectTile(
-                            this.clientModel.getNickname(),
-                            this.selectedComponent.getID()
-                    )
+            GUIHandler.getVirtualClient().deselectTile(
+                this.clientModel.getNickname(),
+                this.selectedComponent.getID()
             );
         } catch (Exception e) {
             this.showToast(e.getMessage(), ToastType.ERROR);
@@ -707,14 +698,12 @@ public class ShipConstructionController extends GUIController {
         ));
 
         try {
-            GUIHandler.getVirtualClient().sendMessage(
-                new PlaceTile(
-                    this.clientModel.getNickname(),
-                    this.selectedComponent.getID(),
-                    i + shipOffsets.getKey(),
-                    j + shipOffsets.getValue(),
-                    this.selectedComponent.getDirection()
-                )
+            GUIHandler.getVirtualClient().placeTile(
+                this.clientModel.getNickname(),
+                this.selectedComponent.getID(),
+                i + shipOffsets.getKey(),
+                j + shipOffsets.getValue(),
+                this.selectedComponent.getDirection()
             );
         } catch (Exception e) {
             this.showToast(e.getMessage(), ToastType.ERROR);
@@ -858,7 +847,7 @@ public class ShipConstructionController extends GUIController {
                 return;
             }
 
-            Image img = new Image(resource.toExternalForm(), 85, 85, true, true);
+            Image img = new Image(resource.toExternalForm(), 105, 105, true, true);
             ImageView imgView = new ImageView(img);
             imgView.setRotate(data.getRotation() * 90.0);
             imgView.setFitWidth(105);

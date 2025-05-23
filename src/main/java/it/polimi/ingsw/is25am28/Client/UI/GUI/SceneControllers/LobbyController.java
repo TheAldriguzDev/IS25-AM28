@@ -168,7 +168,7 @@ public class LobbyController extends GUIController {
 
     public void onRefreshGamesButtonClick(ActionEvent actionEvent) {
         try {
-            GUIHandler.getVirtualClient().sendMessage(new RefreshGames());
+            GUIHandler.getVirtualClient().refreshGames();
         }
         catch (Exception e) {
             throw new RuntimeException(e);

@@ -113,6 +113,7 @@ public class Stardust extends EventCard {
         cardState.setCardName(getCardName());
         cardState.setImagePath(this.path);
         cardState.setCardLevel(getCardLevel());
+        cardState.setImagePath(this.path);
 
         return cardState;
     }

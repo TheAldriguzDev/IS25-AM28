@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ToggleButton?>
 <?import javafx.scene.control.ToggleGroup?>
@@ -9,17 +10,19 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.TextFlow?>
-
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.PopulateShipController">
    <children>
       <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" stylesheets="@../style.css">
          <children>
-            <VBox alignment="TOP_CENTER" spacing="15.0">
+            <VBox alignment="TOP_CENTER" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="15.0">
                <children>
                   <VBox spacing="15.0" styleClass="populateSHip-VBox">
                      <children>
@@ -38,13 +41,13 @@
                               <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                            </rowConstraints>
                            <children>
-                              <ToggleButton fx:id="purpleToggle" mnemonicParsing="false" prefHeight="37.0" prefWidth="125.0" styleClass="purple" text="Purple Alien">
+                              <ToggleButton fx:id="purpleToggle" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="purple" text="Purple Alien">
                                  <toggleGroup>
                                     <ToggleGroup fx:id="lifeFormsToggles" />
                                  </toggleGroup>
                               </ToggleButton>
-                              <ToggleButton fx:id="brownToggle" mnemonicParsing="false" prefHeight="37.0" prefWidth="110.0" styleClass="brown" text="Brown Alien" toggleGroup="$lifeFormsToggles" GridPane.columnIndex="1" />
-                              <ToggleButton fx:id="whiteToggle" mnemonicParsing="false" prefHeight="37.0" prefWidth="211.0" styleClass="white" text="Astronaut (2X)" toggleGroup="$lifeFormsToggles" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
+                              <ToggleButton fx:id="brownToggle" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="brown" text="Brown Alien" toggleGroup="$lifeFormsToggles" GridPane.columnIndex="1" />
+                              <ToggleButton fx:id="whiteToggle" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" mnemonicParsing="false" styleClass="white" text="Astronaut (2X)" toggleGroup="$lifeFormsToggles" GridPane.columnSpan="2" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" />
                            </children>
                            <padding>
                               <Insets bottom="10.0" />
@@ -52,7 +55,7 @@
                         </GridPane>
                      </children>
                   </VBox>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleViewGameBoard" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../imgs/cardboard/board_level_2.png" />
                      </image>
@@ -75,7 +78,7 @@
                   <Insets bottom="10.0" left="20.0" top="10.0" />
                </HBox.margin>
             </VBox>
-            <VBox fx:id="fixShipVBox" alignment="CENTER" stylesheets="@../style.css">
+            <VBox fx:id="populateShipVBox" alignment="CENTER" stylesheets="@../style.css">
                <children>
                   <TextFlow fx:id="populateShipLabel" textAlignment="CENTER" />
                   <StackPane fx:id="imagePane" maxHeight="-Infinity" maxWidth="-Infinity">
@@ -102,6 +105,40 @@
                               <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
                            </columnConstraints>
                         </GridPane>
+                        <VBox fx:id="viewGameBoardContainer" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" visible="false">
+                           <children>
+                              <VBox alignment="TOP_CENTER" spacing="30.0">
+                                 <children>
+                                    <Label text="You are now viewing the game board" wrapText="true">
+                                       <font>
+                                          <Font size="32.0" />
+                                       </font>
+                                    </Label>
+                                    <Button fx:id="goBackToPopulateButtonFromViewBoard" mnemonicParsing="false" onAction="#handleGoBackToPopulateButton" text="Resume Ship Populate" wrapText="true" />
+                                 </children>
+                              </VBox>
+                              <Region prefWidth="816.0" VBox.vgrow="ALWAYS" />
+                              <Pane fx:id="viewGameBoardStackPaneLevel2" managed="false" maxHeight="-Infinity" maxWidth="-Infinity" visible="false">
+                                 <children>
+                                    <ImageView fitWidth="816.0" layoutY="1.0" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../imgs/cardboard/board_level_2.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </Pane>
+                              <Pane fx:id="viewGameBoardStackPaneLevel0" managed="false" maxHeight="-Infinity" maxWidth="-Infinity" visible="false">
+                                 <children>
+                                    <ImageView fitWidth="816.0" layoutY="1.0" preserveRatio="true">
+                                       <image>
+                                          <Image url="@../../imgs/cardboard/board_level_0.png" />
+                                       </image>
+                                    </ImageView>
+                                 </children>
+                              </Pane>
+                              <Region VBox.vgrow="ALWAYS" />
+                           </children>
+                        </VBox>
                      </children>
                   </StackPane>
                </children>

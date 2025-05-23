@@ -23,12 +23,10 @@ import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -59,6 +57,14 @@ public class CardRoundController extends GUIController {
     @FXML private HBox commandsBox;
     @FXML private GridPane commandsGrid;
 
+    // Board visualization
+    @FXML private VBox viewGameBoardContainer;
+    @FXML private Pane viewGameBoardStackPaneLevel0;
+    @FXML private Pane viewGameBoardStackPaneLevel2;
+    @FXML private Button goBackToCardRoundButtonFromViewBoard;
+
+    private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
+
     // Icons maps and interactable regions
     private final Map<String, Map<String, HBox>> lifeFormsMap = new HashMap<>();
     private final Map<String, Map<String, HBox>> itemsMap = new HashMap<>();
@@ -87,11 +93,11 @@ public class CardRoundController extends GUIController {
             this.batteriesRegions
     );
 
+    private final ToggleGroup commandsToggleGroup = new ToggleGroup();
+    private final ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 
-    ToggleGroup commandsToggleGroup = new ToggleGroup();
-
-    List<ClientEventCard> cards;
-    ClientEventCard currEventCard;
+    private List<ClientEventCard> cards;
+    private ClientEventCard currEventCard;
 
     // All possible commands that can be selected during a cardRound (based on the card)
     private final static List<String> allCommands = List.of(
@@ -177,6 +183,9 @@ public class CardRoundController extends GUIController {
         }
         this.turnBox.getChildren().add(turnLabel);
 
+        // Initializes the board image to display on a view board request
+        this.initViewGameBoard();
+
         // TODO: this.initResourceBank();
 
         // Setting all the regions with the corresponding listeners
@@ -223,6 +232,39 @@ public class CardRoundController extends GUIController {
 
         // Setting the stats VBox
         // ...
+    }
+
+    /**
+     * Sets the correct game board image based
+     * on the current difficulty level.
+     */
+    private void initViewGameBoard() {
+        if (this.clientModel.getDifficultyLevel() == 2) {
+            this.setVisibility(this.viewGameBoardStackPaneLevel2, true);
+
+            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+                this.guiUtils.placePlayerInBoard(
+                        playerNickname,
+                        2,
+                        24,
+                        this.viewGameBoardStackPaneLevel2,
+                        this.playersRocketBoard
+                );
+            }
+        }
+        else {
+            this.setVisibility(this.viewGameBoardStackPaneLevel0, true);
+
+            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+                this.guiUtils.placePlayerInBoard(
+                        playerNickname,
+                        0,
+                        18,
+                        this.viewGameBoardStackPaneLevel2,
+                        this.playersRocketBoard
+                );
+            }
+        }
     }
 
     private void initRegionMap(Map<String, Region> componentsRegions, List<ClientComponent> components, BiConsumer<Integer, Integer> onClick) {
@@ -272,7 +314,6 @@ public class CardRoundController extends GUIController {
      * Creates a 0*1 grid, subsequently adding a number of rows (each one containing a toggleButton) equal to the number of players - 1 in the current game
      */
     private void initViewOtherShipsGrid() {
-        ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
         int i = 0;
         for (String playerNickname : this.clientModel.getAllClientPlayers().keySet()) {
             if (playerNickname.equals(this.clientModel.getNickname())) {
@@ -284,7 +325,7 @@ public class CardRoundController extends GUIController {
             this.viewOtherShipsGrid.getRowConstraints().add(row);
 
             ToggleButton toggleButton = new ToggleButton();
-            toggleButton.setToggleGroup(viewOtherShipsToggleGroup);
+            toggleButton.setToggleGroup(this.viewOtherShipsToggleGroup);
             toggleButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
             toggleButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             toggleButton.setText(playerNickname);
@@ -293,12 +334,16 @@ public class CardRoundController extends GUIController {
             i++;
         }
 
-        viewOtherShipsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+        this.viewOtherShipsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
 
             if (newToggle == null) {
                 // Go back to view the client's own ship
                 this.setShipGrid(this.clientModel.getNickname());
             } else {
+
+                // Exit the board visualization if the toggle
+                // is pressed during that phase
+                this.handleGoBackToCardRoundButton(new ActionEvent());
 
                 ToggleButton selected = (ToggleButton) newToggle;
                 this.setShipGrid(selected.getText());
@@ -490,6 +535,10 @@ public class CardRoundController extends GUIController {
 
                 ToggleButton selected = (ToggleButton) newToggle;
 
+                // Exit the board visualization if the toggle
+                // is pressed during that phase
+                this.handleGoBackToCardRoundButton(new ActionEvent());
+
 //                this.disableRegion();
 
                 switch (selected.getId()) {
@@ -531,6 +580,29 @@ public class CardRoundController extends GUIController {
             region.setStyle("-fx-background-color: rgba(160, 212, 104, 0.5);");
         }
         this.currentRegions = regionMap;
+    }
+
+    @FXML
+    private void handleViewGameBoard() {
+        // Disable all the previous containers
+        this.setVisibility(this.shipImageView, false);
+        this.setVisibility(this.shipGrid, false);
+
+        this.commandsToggleGroup.selectToggle(null);
+        this.viewOtherShipsToggleGroup.selectToggle(null);
+
+        // Enable the board container
+        this.setVisibility(this.viewGameBoardContainer, true);
+    }
+
+    @FXML
+    private void handleGoBackToCardRoundButton(ActionEvent actionEvent) {
+        this.setVisibility(this.viewGameBoardContainer, false);
+
+        this.setVisibility(this.shipImageView, true);
+        this.setVisibility(this.shipGrid, true);
+
+        actionEvent.consume();
     }
 
     /**

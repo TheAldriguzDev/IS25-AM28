@@ -81,12 +81,10 @@ public class FixShipScreen extends Screen {
             }
         );
 
-        this.client.sendMessage(
-            new FixShip(
-                this.model.getNickname(),
-                coordinates.getKey(),
-                coordinates.getValue()
-            )
+        this.client.fixShip(
+            this.model.getNickname(),
+            coordinates.getKey(),
+            coordinates.getValue()
         );
     }
 
