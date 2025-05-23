@@ -20,6 +20,8 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import java.util.List;
 import java.util.Map;
 
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
+
 public class LobbyScreen extends Screen {
     private static final int AVAILABLE_GAMES_GROUPING_FACTOR = 8;
 
@@ -456,6 +458,7 @@ public class LobbyScreen extends Screen {
     @Override
     public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
         if (isFirstAccess) {
+            clearTerminal();
             printTitle();
         }
         this.initLobbyCommandsWidget(state);
@@ -471,6 +474,8 @@ public class LobbyScreen extends Screen {
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
         WidgetTUI waitingForPlayersWidget = new WidgetTUI();
+
+        clearTerminal();
 
         if (this.model.getNickname() != null) {
             int connected = waitingForPlayers.getLobbyTotalSpot() - waitingForPlayers.getAvailableSpots();

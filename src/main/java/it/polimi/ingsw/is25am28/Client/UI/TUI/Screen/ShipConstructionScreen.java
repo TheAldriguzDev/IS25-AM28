@@ -802,7 +802,7 @@ public class ShipConstructionScreen extends Screen {
             }
         );
 
-        this.client.selectDeselectSubdeck(this.model.getNickname(), subdeckId, true);
+        this.client.selectDeselectSubdeck(this.model.getNickname(), subdeckIndex, true);
     }
 
     /**
@@ -1374,6 +1374,8 @@ public class ShipConstructionScreen extends Screen {
      */
     @Override
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
+        clearTerminal();
+
         // Show all selectable components grid as well as the reserved
         // components to display any components that the player might
         // choose to reserve during this phase

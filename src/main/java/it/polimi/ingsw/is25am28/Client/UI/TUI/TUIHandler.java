@@ -46,7 +46,9 @@ public class TUIHandler implements ClientUI {
      * </p>
      */
     public static void clearTerminal() {
+        System.out.flush();
         System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     private void setScreen(Screen screen) {
