@@ -95,7 +95,6 @@ public class TCPClient implements VirtualViewSocket {
         String line;
 
         while ((line = this.input.readLine()) != null) {
-            System.out.println(line);
             Answer state = mapper.readValue(line, Answer.class);
 
             if (Objects.requireNonNull(state) instanceof ErrorAnswer error) {
