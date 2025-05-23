@@ -43,7 +43,7 @@ public class FixShipController extends GUIController {
     @FXML private VBox viewGameBoardContainer;
     @FXML private Pane viewGameBoardStackPaneLevel0;
     @FXML private Pane viewGameBoardStackPaneLevel2;
-    @FXML private Button goBackToConstructionButtonFromViewBoard;
+    @FXML private Button goBackToFixButtonFromViewBoard;
 
     ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 
@@ -329,7 +329,7 @@ public class FixShipController extends GUIController {
         this.setVisibility(this.shipGrid, false);
 
         if (this.isShipValid) {
-            this.goBackToConstructionButtonFromViewBoard.setText("Go back");
+            this.goBackToFixButtonFromViewBoard.setText("Go back");
         }
 
         // Enable the board container

@@ -61,9 +61,9 @@ public class PopulateShipController extends GUIController {
     @FXML private Pane viewGameBoardStackPaneLevel2;
     @FXML private Button goBackToPopulateButtonFromViewBoard;
 
-    private boolean isShipFull;
-
     private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
+
+    private boolean isShipFull;
 
     ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 
@@ -444,6 +444,7 @@ public class PopulateShipController extends GUIController {
     @FXML
     public void handleGoBackToPopulateButton(ActionEvent actionEvent) {
         this.setVisibility(this.viewGameBoardContainer, false);
+
         this.setVisibility(this.populateShipLabel, true);
         this.setVisibility(this.shipImageView, true);
         this.setVisibility(this.shipGrid, true);
@@ -456,7 +457,6 @@ public class PopulateShipController extends GUIController {
     }
 
     @FXML
-    // Method used to display the current game board
     private void handleViewGameBoard() {
         // Disable all the previous containers
         this.viewOtherShipsToggleGroup.selectToggle(null);

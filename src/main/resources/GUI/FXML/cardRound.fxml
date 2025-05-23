@@ -9,6 +9,8 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
@@ -63,7 +65,7 @@
                               <Label text="0 🟥 0🟨 0🟩 0🟦" />
                            </children>
                         </VBox>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleViewGameBoard" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../imgs/cardboard/board_level_2.png" />
                            </image>
@@ -83,7 +85,7 @@
                         <Insets left="30.0" right="10.0" />
                      </HBox.margin>
                   </VBox>
-                  <VBox fx:id="fixShipVBox" alignment="CENTER" stylesheets="@../style.css">
+                  <VBox fx:id="cardRoundShipVBox" alignment="CENTER" stylesheets="@../style.css">
                      <children>
                         <TextFlow fx:id="selectedCommandLabel" textAlignment="CENTER" />
                         <StackPane fx:id="imagePane" maxHeight="-Infinity" maxWidth="-Infinity">
@@ -114,6 +116,40 @@
                                     <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
                                  </columnConstraints>
                               </GridPane>
+                              <VBox fx:id="viewGameBoardContainer" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" visible="false">
+                                 <children>
+                                    <VBox alignment="TOP_CENTER" spacing="30.0">
+                                       <children>
+                                          <Label text="You are now viewing the game board" wrapText="true">
+                                             <font>
+                                                <Font size="32.0" />
+                                             </font>
+                                          </Label>
+                                          <Button fx:id="goBackToCardRoundButtonFromViewBoard" mnemonicParsing="false" onAction="#handleGoBackToCardRoundButton" text="Resume Card Round" wrapText="true" />
+                                       </children>
+                                    </VBox>
+                                    <Region prefWidth="816.0" VBox.vgrow="ALWAYS" />
+                                    <Pane fx:id="viewGameBoardStackPaneLevel2" managed="false" maxHeight="-Infinity" maxWidth="-Infinity" visible="false">
+                                       <children>
+                                          <ImageView fitWidth="816.0" layoutY="1.0" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../imgs/cardboard/board_level_2.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </Pane>
+                                    <Pane fx:id="viewGameBoardStackPaneLevel0" managed="false" maxHeight="-Infinity" maxWidth="-Infinity" visible="false">
+                                       <children>
+                                          <ImageView fitWidth="816.0" layoutY="1.0" preserveRatio="true">
+                                             <image>
+                                                <Image url="@../../imgs/cardboard/board_level_0.png" />
+                                             </image>
+                                          </ImageView>
+                                       </children>
+                                    </Pane>
+                                    <Region VBox.vgrow="ALWAYS" />
+                                 </children>
+                              </VBox>
                            </children>
                         </StackPane>
                      </children>
