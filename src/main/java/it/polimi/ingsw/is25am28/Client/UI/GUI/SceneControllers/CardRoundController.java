@@ -1036,16 +1036,18 @@ public class CardRoundController extends GUIController {
         this.addCrewToRemove(row, col, selectedLifeForm);
 
         // Updating the HBox containing the icons
-        HBox boxToUpdate = this.batteriesMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
+        HBox boxToUpdate = this.lifeFormsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
         guiUtils.initCabinLifeFormIcons(selectedCabin, boxToUpdate);
 
         // If the cabin has no more inhabitants, we remove the region
         if (selectedCabin.getInhabitants().isEmpty()) {
-            this.shipGrid.getChildren().remove(this.batteriesRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.shipGrid.getChildren().remove(this.cabinsRegions.get(guiUtils.keyFromCoords(row, col)));
             this.shipGrid.getChildren().remove(boxToUpdate);
             // TODO: attention on re-enabling on revert!!!
-            this.batteriesMap.remove(guiUtils.keyFromCoords(row, col));
+            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col));
         }
+
+        this.commandsToggleGroup.selectToggle(null);
     }
 
     private void handleItemToRemove(int ofsRow, int ofsCol) {
@@ -1157,8 +1159,6 @@ public class CardRoundController extends GUIController {
         int energyConsumerCol = this.currEnergyConsumer.getValue().getJ();
 
         CoordinatePair batteryCoords = new CoordinatePair(batteryRow, batteryCol);
-
-
 
         Region energyConsumerRegion = null;
 
