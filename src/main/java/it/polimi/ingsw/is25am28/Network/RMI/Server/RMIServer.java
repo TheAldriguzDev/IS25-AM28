@@ -206,7 +206,12 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     public void ping(UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 
-        this.controller.clientPing(client);
+        try {
+            this.controller.clientPing(client);
+        }
+        catch (Exception e) {
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
+        }
     }
 
     @Override

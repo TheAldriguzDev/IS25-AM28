@@ -447,4 +447,28 @@ public class Server {
             this.viewToPingHelper.put(clientView, pingHelper);
         }
     }
+
+
+    // TODO: MAKE THIS METHOD PUBLIC IN ORDER TO BE INVOKED BY THE GAME MODEL TO END THE GAME
+    private void deleteGame(int gameID) {
+        // Remove the reference to the gameInstance to be removed by the Garbage Collector
+        this.gameInstances.put(gameID, null);
+
+        // Get all the clients connected to the given game
+        List<String> clientsToRemove = new ArrayList<>();
+        for (Map.Entry<String, Integer> entry : clientToGame.entrySet()) {
+            if (entry.getValue() == gameID) {
+                clientsToRemove.add(entry.getKey());
+            }
+        }
+
+        // Remove the clients from the Objects
+        for (String nickname : clientsToRemove) {
+            VirtualView view = connectedClients.remove(nickname);
+            if (view != null) {
+                viewToPingHelper.remove(view);
+            }
+            clientToGame.remove(nickname);
+        }
+    }
 }

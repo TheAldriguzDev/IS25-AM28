@@ -4,6 +4,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
@@ -16,10 +17,7 @@ import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 /**
