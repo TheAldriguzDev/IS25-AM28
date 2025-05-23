@@ -179,6 +179,8 @@ public class CardRoundController extends GUIController {
 
         this.initTurnBox();
 
+        this.initAdditionalInfoBox();
+
         // Initializes the board image to display on a view board request
         this.initViewGameBoard();
 
@@ -306,6 +308,8 @@ public class CardRoundController extends GUIController {
         this.currEventCard.updateCard(cardInfo);
 
         this.availableCommands = this.currEventCard.getAvailableCommands();
+
+
     }
 
     /**
@@ -438,6 +442,16 @@ public class CardRoundController extends GUIController {
             turnLabel.setText("It's NOT YOUR turn!!!");
         }
         this.turnBox.getChildren().add(turnLabel);
+    }
+
+    private void initAdditionalInfoBox() {
+        this.additionalInfoBox.getChildren().clear();
+
+        Label infoLabel = new Label(this.currEventCard.getAdditionalCardInfo());
+        infoLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+        infoLabel.setTextAlignment(TextAlignment.CENTER);
+
+        this.additionalInfoBox.getChildren().add(infoLabel);
     }
 
     // Todo: handle commands availability based also un card resources amount (and ship) / or display error in the command description
@@ -1703,8 +1717,8 @@ public class CardRoundController extends GUIController {
                         int ofsCol = col - this.shipOffsets.getValue();
 
                         shipGrid.getChildren().removeIf(cell ->
-                                GridPane.getRowIndex(cell) == row &&
-                                GridPane.getColumnIndex(cell) == col
+                                GridPane.getRowIndex(cell) == ofsRow &&
+                                GridPane.getColumnIndex(cell) == ofsCol
                         );
                         // TODO: check on regions
                     }
@@ -1723,20 +1737,8 @@ public class CardRoundController extends GUIController {
 
             this.initCommandBox();
 
+            this.initAdditionalInfoBox();
+
         });
     }
-
-//    }
-//
-//    private void updateBoardVisuals(CardStateJSON cardState) {
-//
-//    }
-//
-//    private void updateBoardVisuals(CardStateJSON cardState) {
-//
-//    }
-//
-//    private void updateBoardVisuals(CardStateJSON cardState) {
-//
-//    }
 }

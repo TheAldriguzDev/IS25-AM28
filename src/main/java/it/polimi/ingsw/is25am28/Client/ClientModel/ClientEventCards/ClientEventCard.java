@@ -106,6 +106,14 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         return this.playerNickname;
     }
 
+    /**
+     * @return Additional info on the current card (like the column where a plasmaShot is coming from)
+     */
+    public String getAdditionalCardInfo() {
+        return "No additional info\nin this card!";
+    }
+
+
 //    /**
 //     * Sets the clientModel in the card (needed for input validity checks)
 //     */
