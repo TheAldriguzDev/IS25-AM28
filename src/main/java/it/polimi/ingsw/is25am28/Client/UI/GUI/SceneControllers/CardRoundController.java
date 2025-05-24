@@ -299,7 +299,6 @@ public class CardRoundController extends GUIController {
 
         // Setting the card's image
         URL resource;
-        System.out.println(PrintUtils.addColor("Card's PATH: " + this.currEventCard.getCardPath(), ANSIColors.GREEN));
         resource = Objects.requireNonNull(getClass().getResource(this.currEventCard.getCardPath()));
         Image img = new Image(resource.toExternalForm(), 235, 315, true, true);
         this.cardImageView.setImage(img);
@@ -459,16 +458,6 @@ public class CardRoundController extends GUIController {
 
         this.commandsToggleGroup = new ToggleGroup();
 
-//        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-//        if (stackTrace.length > 2) {
-//            StackTraceElement caller = stackTrace[2];
-//            System.out.println("Metodo chiamante: " + caller.getMethodName());
-//            System.out.println("Classe chiamante: " + caller.getClassName());
-//            System.out.println("Linea: " + caller.getLineNumber());
-//        }
-
-//        List<String> availableCommands = this.currEventCard.getAvailableCommands();
-
         try {
             ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
             if (ship == null) {
@@ -486,31 +475,15 @@ public class CardRoundController extends GUIController {
             // Do nothing, the command will not be added
         }
 
-
         // Clearing the existing toggles from the grid
         this.commandsGrid.getChildren().clear();
-
-        // Creating and adding the command description box
-//        VBox commandsDescriptionBox = new VBox();
-//        commandsDescriptionBox.getStyleClass().add("generic-Hbox");
-//        commandsDescriptionBox.setAlignment(Pos.CENTER);
-//        Label commandsDescriptionLabel = new Label();
-        // TODO: set other types of text based on selected command! (or turn)
-//        commandsDescriptionLabel.setText("PLACEHOLDER");
-//        commandsDescriptionLabel.setStyle("-fx-font-weight: bold;");
-//        commandsDescriptionBox.getChildren().add(commandsDescriptionLabel);
-//        this.commandsBox.getChildren().add(commandsDescriptionBox);
-
-        System.out.println("Available commands: " + this.availableCommands);
 
         // Generating the toggles
         int col = 0;
         for (String command : allCommands) {
             Label toggleLabel = new Label();
-            System.out.println("CONFRONTO: " + command + " RISULTATO: " + this.availableCommands.contains(command));
             // A command is added only if it's present in the available commands
             if (this.availableCommands.contains(command)) {
-                System.out.println("CONTIENE: " + command + "TRIGGER: " + command);
                 switch (command) {
                     case "playCard" -> {toggleLabel.setText("Play Card");}
                     case "setCrewToRemove" -> {toggleLabel.setText("Set Crew\nTo Remove");}
@@ -577,37 +550,14 @@ public class CardRoundController extends GUIController {
                     this.currEnergyConsumer = null;
                 }
 
-                System.out.println(PrintUtils.addColor("CURRENT REGION BEFORE" + this.currentRegions, ANSIColors.CYAN));
                 disableRegion(this.currentRegions);
-                System.out.println(PrintUtils.addColor("CURRENT REGION AFTER" + this.currentRegions, ANSIColors.CYAN));
-
 
             } else {
 
                 ToggleButton selected = (ToggleButton) newToggle;
 
-                // Exit the board visualization if the toggle
-                // is pressed during that phase
-                // TODO: move to some other location, here it destroys the logic by re-calling the initCommandBox()
-//                this.handleGoBackToCardRoundButton(new ActionEvent());
-
-//                System.out.println("Toggle selezionato: " + selected.getText());
-//                System.out.println("ID del toggle: " + selected.getId());
-//                System.out.println("Classe chiamante: ");
-//                Thread.dumpStack(); // stampa lo stack trace nel terminale
-
-                       StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        if (stackTrace.length > 2) {
-            StackTraceElement caller = stackTrace[2];
-            System.out.println("Metodo chiamante: " + caller.getMethodName());
-            System.out.println("Classe chiamante: " + caller.getClassName());
-            System.out.println("Linea: " + caller.getLineNumber());
-        }
-
-//                this.disableRegion();
-
                 switch (selected.getId()) {
-                    case "playCard" -> {this.playCard(); disableRegion(this.currentRegions);}
+                    case "playCard" -> {this.playCard(); this.commandsToggleGroup.selectToggle(null);}
                     case "setCrewToRemove" -> {this.enableRegion(this.cabinsRegions);}
 //                    case "setItemsToBeRemoved" -> {this.enableRegion(this.storagesRegions);}
 //                    case "setItemsToBeTaken" -> {this.disableRegion(this.storagesRegions);}
@@ -920,14 +870,7 @@ public class CardRoundController extends GUIController {
     }
 
     public void playCard() {
-//        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-//        if (stackTrace.length > 2) {
-//            StackTraceElement caller = stackTrace[2];
-//            System.out.println("Metodo chiamante: " + caller.getMethodName());
-//            System.out.println("Classe chiamante: " + caller.getClassName());
-//            System.out.println("Linea: " + caller.getLineNumber());
-//        }
-        System.out.println(PrintUtils.addColor("PLAYCARD PRESSED", ANSIColors.BACKGROUND_CYAN));
+
         ActionJSON response = this.currEventCard.useCard();
 
         // If the current card supports the action, it removes
@@ -1002,6 +945,7 @@ public class CardRoundController extends GUIController {
                 () -> {
                     GUIHandler.setCommandCTX(null);
                     Platform.runLater(this::visualizePlayerActions);
+                    System.out.println();
                     this.currEventCard.clearJSON();
                 },
                 () -> {
@@ -1011,16 +955,43 @@ public class CardRoundController extends GUIController {
                                 // TODO: Reset local change since the playCard failed
                                 //       (@Filippo)
 
+                                // Revert the changes to the dropped lifeForms
+                                if(this.availableCommands.contains("setCrewToRemove") && this.currEventCard.getCrewToRemove() != null && !this.currEventCard.getCrewToRemove().isEmpty()) {
+                                    for(ComponentHelper<LifeformType> lfch : this.currEventCard.getCrewToRemove()) {
+                                        int row = lfch.getI();
+                                        int col = lfch.getJ();
+
+                                        LifeformType lfType = lfch.getItem().orElse(null);
+                                        if (lfType != null) {
+                                            this.mainShip.addLifeformToCabin(row, col, lfType);
+                                        }
+
+                                        int ofsRow = row - this.shipOffsets.getKey();
+                                        int ofsCol = col - this.shipOffsets.getValue();
+
+                                        ClientCabin cabinToRestore = (ClientCabin) this.mainShip.getComponent(row, col);
+//                                        HBox cabinBoxToRestore = new HBox();
+//                                        cabinBoxToRestore.setAlignment(Pos.CENTER);
+                                        // TODO: NEED TO ADD ALSO REGION BACK, decide whether to keep the box or not in handleCrew
+//                                        HBox cabinBoxToRestore = this.shipGrid.
+//                                                guiUtils.initCabinLifeFormIcons(cabinToRestore, cabinBoxToRestore);
+
+//                                        this.lifeFormsMap.get(this.clientModel.getNickname()).put(guiUtils.keyFromCoords(row, col), cabinBoxToRestore);
+//                                        this.shipGrid.add(cabinBoxToRestore, ofsCol, ofsRow);
+                                    }
+                                }
+
                                 this.showToast(
                                         "[ERROR] There was an error while playing the card. Please try again.",
                                         ToastType.ERROR
                                 );
-                            }
 
+                                GUIHandler.setCommandCTX(null);
+                                this.currEventCard.clearJSON();
+                            }
                     );
 
-                    GUIHandler.setCommandCTX(null);
-                    this.currEventCard.clearJSON();
+
                 }
             )
         );
@@ -1056,7 +1027,7 @@ public class CardRoundController extends GUIController {
         // If the cabin has no more inhabitants, we remove the region
         if (selectedCabin.getInhabitants().isEmpty()) {
             this.shipGrid.getChildren().remove(this.cabinsRegions.get(guiUtils.keyFromCoords(row, col)));
-            this.shipGrid.getChildren().remove(boxToUpdate);
+//            this.shipGrid.getChildren().remove(boxToUpdate); // Better to keep the box -> easier reverts
             // TODO: attention on re-enabling on revert!!!
             this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col));
         }
@@ -1208,7 +1179,7 @@ public class CardRoundController extends GUIController {
         // If the battery has no more charges, we remove the region
         if (batteryToUpdate.getAvailability() == 0) {
             this.shipGrid.getChildren().remove(this.batteriesRegions.get(guiUtils.keyFromCoords(batteryRow, batteryCol)));
-            this.shipGrid.getChildren().remove(boxToUpdate);
+//            this.shipGrid.getChildren().remove(boxToUpdate);
              // TODO: attention on re-enabling on revert!!!
             this.batteriesMap.remove(guiUtils.keyFromCoords(batteryRow, batteryCol));
         }
@@ -1720,7 +1691,13 @@ public class CardRoundController extends GUIController {
                                 GridPane.getRowIndex(cell) == ofsRow &&
                                 GridPane.getColumnIndex(cell) == ofsCol
                         );
+
                         // TODO: check on regions
+                        // Removing the components from the componentMaps
+                        this.batteriesMap.get(playerNickname).remove(guiUtils.keyFromCoords(row, col));
+                        this.lifeFormsMap.get(playerNickname).remove(guiUtils.keyFromCoords(row, col));
+                        this.itemsMap.get(playerNickname).remove(guiUtils.keyFromCoords(row, col));
+
                     }
                 }
             }

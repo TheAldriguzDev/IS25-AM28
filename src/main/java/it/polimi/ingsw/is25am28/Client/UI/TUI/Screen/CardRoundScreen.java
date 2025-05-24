@@ -2146,28 +2146,24 @@ public class CardRoundScreen extends Screen {
                     }
                 }
 
-                try {
-
-                    if (this.indexedCardInputMethods.get("setItemsToBeRemoved").getKey() && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
-                        // Revert the changes to the dropped resources
-                        for (ComponentHelper<ItemColor> icch : this.currEventCard.getItemsToBeRemoved()) {
-                            ItemColor ic = icch.getItem().orElse(null);
-                            if (ic != null) {
-                                ClientStorage storage = (ClientStorage) ship.getComponent(icch.getI(), icch.getJ());
-                                storage.storeItem(new Item(ic));
-                            }
-                        }
-                        // Revert the changes to the batteries
-                        if (!this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
-                            for (CoordinatePair bch : this.currEventCard.getBatteriesToBeStolen()) {
-                                ClientBattery battery = (ClientBattery) ship.getComponent(bch.getI(), bch.getJ());
-                                battery.setAvailability(battery.getAvailability() + 1);
-                            }
+                if (this.indexedCardInputMethods.get("setItemsToBeRemoved").getKey() && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
+                    // Revert the changes to the dropped resources
+                    for (ComponentHelper<ItemColor> icch : this.currEventCard.getItemsToBeRemoved()) {
+                        ItemColor ic = icch.getItem().orElse(null);
+                        if (ic != null) {
+                            ClientStorage storage = (ClientStorage) ship.getComponent(icch.getI(), icch.getJ());
+                            storage.storeItem(new Item(ic));
                         }
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    // Revert the changes to the batteries
+                    if (!this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
+                        for (CoordinatePair bch : this.currEventCard.getBatteriesToBeStolen()) {
+                            ClientBattery battery = (ClientBattery) ship.getComponent(bch.getI(), bch.getJ());
+                            battery.setAvailability(battery.getAvailability() + 1);
+                        }
+                    }
                 }
+
 
                 System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
                 this.ctx = null;
