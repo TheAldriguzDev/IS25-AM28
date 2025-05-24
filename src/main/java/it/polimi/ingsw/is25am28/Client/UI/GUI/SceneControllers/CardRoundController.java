@@ -66,12 +66,14 @@ public class CardRoundController extends GUIController {
 
     private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
 
-    private String currentPlayerNickname;
-
     // Icons maps and interactable regions
     private final Map<String, Map<String, HBox>> lifeFormsMap = new HashMap<>();
     private final Map<String, Map<String, HBox>> itemsMap = new HashMap<>();
     private final Map<String, Map<String, HBox>> batteriesMap = new HashMap<>();
+
+    // Temp icons maps for reverv purposes
+    private final Map<String, HBox> emptiedLifeforms = new HashMap<>();
+    private final Map<String, HBox> emptiedItemsMap = new HashMap<>();
 
     // Region maps
     private final Map<String, Region> doubleCannonsRegions = new HashMap<>();
@@ -81,10 +83,12 @@ public class CardRoundController extends GUIController {
     private final Map<String, Region> storagesRegions = new HashMap<>();
     private final Map<String, Region> batteriesRegions = new HashMap<>();
 
+    // Temp region maps for revert purposes
+    private final Map<String, Region> emptiedCabinsRegions = new HashMap<>();
+    private final Map<String, Region> emptiesStoragesRegions = new HashMap<>();
+
     private Map<String, Region> currentRegions = null;
     private boolean isTakeAction = false;
-//    private CoordinatePair currConsumerCoords = null;
-//    private EnergyConsumers currConsumerType = null;
     private Pair<EnergyConsumers, CoordinatePair> currEnergyConsumer = null;
 
     private final List<Map<String, Region>> allComponentMaps = List.of(
@@ -944,6 +948,10 @@ public class CardRoundController extends GUIController {
                 "playCard",
                 () -> {
                     GUIHandler.setCommandCTX(null);
+                    this.emptiedLifeforms.clear();
+                    this.emptiedCabinsRegions.clear();
+                    this.emptiedItemsMap.clear();
+                    this.emptiesStoragesRegions.clear();
                     Platform.runLater(this::visualizePlayerActions);
                     System.out.println();
                     this.currEventCard.clearJSON();
@@ -970,16 +978,24 @@ public class CardRoundController extends GUIController {
                                         int ofsCol = col - this.shipOffsets.getValue();
 
                                         ClientCabin cabinToRestore = (ClientCabin) this.mainShip.getComponent(row, col);
-//                                        HBox cabinBoxToRestore = new HBox();
-//                                        cabinBoxToRestore.setAlignment(Pos.CENTER);
-                                        // TODO: NEED TO ADD ALSO REGION BACK, decide whether to keep the box or not in handleCrew
-//                                        HBox cabinBoxToRestore = this.shipGrid.
-//                                                guiUtils.initCabinLifeFormIcons(cabinToRestore, cabinBoxToRestore);
 
-//                                        this.lifeFormsMap.get(this.clientModel.getNickname()).put(guiUtils.keyFromCoords(row, col), cabinBoxToRestore);
-//                                        this.shipGrid.add(cabinBoxToRestore, ofsCol, ofsRow);
+//                                        Region cell = guiUtils.generateDisabledRegion();
+
+//                                        this.shipGrid.add(cell, ofsRow, ofsCol);
+
+                                        // TODO: remove this checks
+                                        if (!this.emptiedCabinsRegions.isEmpty()) {
+                                            this.shipGrid.add(this.emptiedCabinsRegions.get(guiUtils.keyFromCoords(row, col)) ,ofsCol, ofsRow);
+                                        }
+                                        if (!this.emptiedLifeforms.isEmpty()) {
+                                            guiUtils.initCabinLifeFormIcons(cabinToRestore, this.emptiedLifeforms.get(guiUtils.keyFromCoords(row, col)));
+                                            this.lifeFormsMap.get(this.clientModel.getNickname()).put(guiUtils.keyFromCoords(row, col), this.emptiedLifeforms.get(guiUtils.keyFromCoords(row, col)));
+                                        }
                                     }
                                 }
+
+                                this.initCommandBox();
+                                this.visualizePlayerActions();
 
                                 this.showToast(
                                         "[ERROR] There was an error while playing the card. Please try again.",
@@ -1026,9 +1042,13 @@ public class CardRoundController extends GUIController {
 
         // If the cabin has no more inhabitants, we remove the region
         if (selectedCabin.getInhabitants().isEmpty()) {
+            // Populating the emptiedRegions/emptiedMaps with the cabin's data, in case we need to access it revert this changes
+            this.emptiedCabinsRegions.put(guiUtils.keyFromCoords(row, col), this.cabinsRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.emptiedLifeforms.put(guiUtils.keyFromCoords(row, col), boxToUpdate);
+
+
             this.shipGrid.getChildren().remove(this.cabinsRegions.get(guiUtils.keyFromCoords(row, col)));
-//            this.shipGrid.getChildren().remove(boxToUpdate); // Better to keep the box -> easier reverts
-            // TODO: attention on re-enabling on revert!!!
+            this.shipGrid.getChildren().remove(boxToUpdate);
             this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col));
         }
 
@@ -1650,23 +1670,6 @@ public class CardRoundController extends GUIController {
                     }
                 }
             }
-            // TODO: this method
-//                // Updating the removed components
-//                if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
-//                    if (!cardStateJSON.getRemovedComponents().get(playerNickname).isEmpty()) {
-//
-//                    }
-//                }
-
-
-//            if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
-//                for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
-//
-//
-//
-//                }
-//            }
-
 
             if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
                 for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
@@ -1692,7 +1695,6 @@ public class CardRoundController extends GUIController {
                                 GridPane.getColumnIndex(cell) == ofsCol
                         );
 
-                        // TODO: check on regions
                         // Removing the components from the componentMaps
                         this.batteriesMap.get(playerNickname).remove(guiUtils.keyFromCoords(row, col));
                         this.lifeFormsMap.get(playerNickname).remove(guiUtils.keyFromCoords(row, col));
