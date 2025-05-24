@@ -274,7 +274,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(5)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(6)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(7)); // AbandonedStation
-        fakeDeck.add(AllCards.get(8)); // MeteorShower
+//        fakeDeck.add(AllCards.get(8)); // MeteorShower
 //        fakeDeck.add(AllCards.get(9)); // MeteorShower
 //        fakeDeck.add(AllCards.get(10)); // MeteorShower
 //        fakeDeck.add(AllCards.get(11)); // MeteorShower
@@ -290,7 +290,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(21)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(22)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(23)); // VisitPlanets
-        fakeDeck.add(AllCards.get(24)); // OpenSpace
+//        fakeDeck.add(AllCards.get(24)); // OpenSpace
 //        fakeDeck.add(AllCards.get(25)); // OpenSpace
 //        fakeDeck.add(AllCards.get(26)); // OpenSpace
 //        fakeDeck.add(AllCards.get(27)); // OpenSpace
@@ -309,8 +309,8 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(36)); // Stardust
 //        fakeDeck.add(AllCards.get(37)); // Stardust
 
-        this.deck.clear();
-        this.deck.addAll(fakeDeck);
+          this.deck.clear();
+          this.deck.addAll(fakeDeck);
     }
 
     /**
