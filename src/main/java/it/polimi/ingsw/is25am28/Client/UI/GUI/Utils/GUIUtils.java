@@ -209,7 +209,7 @@ public class GUIUtils {
 
         ClientPlayer player = this.clientModel.getAllClientPlayers().get(playerNickname);
 
-        int cellIdx = (player.getCursor() / boardSize) + (player.getCursor() % boardSize);
+        int cellIdx = ((player.getCursor() % boardSize) + boardSize) % boardSize;
         String cellID = "level_" + difficultyLevel + "_" + cellIdx;
 
         Pair<Double, Double> positions = this.rocketPositions.get(cellID);
