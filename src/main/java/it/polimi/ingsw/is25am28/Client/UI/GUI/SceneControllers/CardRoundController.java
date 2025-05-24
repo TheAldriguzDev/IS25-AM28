@@ -29,6 +29,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -71,9 +73,10 @@ public class CardRoundController extends GUIController {
     private final Map<String, Map<String, HBox>> itemsMap = new HashMap<>();
     private final Map<String, Map<String, HBox>> batteriesMap = new HashMap<>();
 
-    // Temp icons maps for reverv purposes
+    // Temp icons maps for revert purposes
     private final Map<String, HBox> emptiedLifeforms = new HashMap<>();
     private final Map<String, HBox> emptiedItemsMap = new HashMap<>();
+    private final Map<String, HBox> emptiedBatteriesMap = new HashMap<>();
 
     // Region maps
     private final Map<String, Region> doubleCannonsRegions = new HashMap<>();
@@ -85,7 +88,8 @@ public class CardRoundController extends GUIController {
 
     // Temp region maps for revert purposes
     private final Map<String, Region> emptiedCabinsRegions = new HashMap<>();
-    private final Map<String, Region> emptiesStoragesRegions = new HashMap<>();
+    private final Map<String, Region> emptiedStoragesRegions = new HashMap<>();
+    private final Map<String, Region> emptiedBatteriesRegions = new HashMap<>();
 
     private Map<String, Region> currentRegions = null;
     private boolean isTakeAction = false;
@@ -100,11 +104,13 @@ public class CardRoundController extends GUIController {
             this.batteriesRegions
     );
 
+    private final ToggleGroup availableItemColorsToggleGroup = new ToggleGroup();
     private ToggleGroup commandsToggleGroup;
     private final ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 
     private List<ClientEventCard> cards;
     private ClientEventCard currEventCard;
+    private ItemColor chosenItemColor;
 
     // All possible commands that can be selected during a cardRound (based on the card)
     private final static List<String> allCommands = List.of(
@@ -197,9 +203,9 @@ public class CardRoundController extends GUIController {
         this.initRegionMap(this.cabinsRegions, new ArrayList<>(mainShip.getCabinList()), this::handleCrewToRemove);
         this.initRegionMap(this.storagesRegions, new ArrayList<>(mainShip.getStorageList()), (row, col) -> {
             if (this.isTakeAction) {
-                this.handleItemToTake(row, col);
+                this.handleItemToTake(row, col, this.chosenItemColor);
             } else {
-                this.handleItemToRemove(row, col);
+                this.handleItemToRemove(row, col, this.chosenItemColor);
             }
         });
         this.initRegionMap(this.batteriesRegions, new ArrayList<>(mainShip.getBatteryList()), (row, col) -> {
@@ -577,6 +583,44 @@ public class CardRoundController extends GUIController {
         });
     }
 
+    private VBox initAvailableItemColors(ClientStorage storage) {
+        VBox availableItemColors;
+
+        if (storage.getStoredItems().isEmpty()) {
+            throw new RuntimeException("Given storage is empty, therefore creating its VBox is a waste of time.");
+        }
+
+        availableItemColors = new VBox();
+
+        availableItemColors.setAlignment(Pos.CENTER);
+        availableItemColors.setSpacing(10);
+        availableItemColors.getChildren().add(
+            new Label("Select an item color:")
+        );
+
+        for (Item item : storage.getStoredItems()) {
+            ItemColor itemColor = item.getColor();
+            ToggleButton itemColorButton = new ToggleButton();
+
+            itemColorButton.setText(itemColor.toString());
+            itemColorButton.setToggleGroup(this.availableItemColorsToggleGroup);
+            itemColorButton.getStyleClass().add("button");
+            itemColorButton.setOnAction(
+                (e) -> {
+                    this.chosenItemColor = itemColor;
+                    e.consume();
+                }
+            );
+
+            // Overriding the color of the button
+            itemColorButton.setStyle("-fx-background-color: " + itemColor.toString().toLowerCase());
+
+            availableItemColors.getChildren().add(itemColorButton);
+        }
+
+        return availableItemColors;
+    }
+
     // TODO: variabile di commandsGridSwap, utile per boardView e altri
 
     /**
@@ -951,7 +995,7 @@ public class CardRoundController extends GUIController {
                     this.emptiedLifeforms.clear();
                     this.emptiedCabinsRegions.clear();
                     this.emptiedItemsMap.clear();
-                    this.emptiesStoragesRegions.clear();
+                    this.emptiedStoragesRegions.clear();
                     Platform.runLater(this::visualizePlayerActions);
                     System.out.println();
                     this.currEventCard.clearJSON();
@@ -1055,11 +1099,44 @@ public class CardRoundController extends GUIController {
         this.commandsToggleGroup.selectToggle(null);
     }
 
-    private void handleItemToRemove(int ofsRow, int ofsCol) {
+    private void handleItemToRemove(int ofsRow, int ofsCol, ItemColor colorToRemove) {
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
 
+        ClientStorage selectedStorage = (ClientStorage) this.mainShip.getComponent(row, col);
+        this.addItemToRemove(row, col, colorToRemove);
+
+        // Updating the HBox containing the icons
+        HBox boxToUpdate = this.itemsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
+        guiUtils.initStorageItemIcons(selectedStorage, boxToUpdate);
+
+        // If the storage has no more items, we remove the region
+        if (selectedStorage.getStoredItems().isEmpty()) {
+            // Populating the emptiedRegions/emptiedMaps with the storage's data, in case we need to access it revert this changes
+            this.emptiedStoragesRegions.put(guiUtils.keyFromCoords(row, col), this.storagesRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.emptiedItemsMap.put(guiUtils.keyFromCoords(row, col), boxToUpdate);
+
+            this.shipGrid.getChildren().remove(this.storagesRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.shipGrid.getChildren().remove(boxToUpdate);
+            this.itemsMap.remove(guiUtils.keyFromCoords(row, col));
+        }
+
+        this.commandsToggleGroup.selectToggle(null);
     }
 
-    private void handleItemToTake(int ofsRow, int ofsCol) {}
+    private void handleItemToTake(int ofsRow, int ofsCol, ItemColor colorToTake) {
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
+
+        ClientStorage selectedStorage = (ClientStorage) this.mainShip.getComponent(row, col);
+        this.addItemToTake(row, col, colorToTake);
+
+        // Updating the HBox containing the icons
+        HBox boxToUpdate = this.itemsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
+        guiUtils.initStorageItemIcons(selectedStorage, boxToUpdate);
+
+        this.commandsToggleGroup.selectToggle(null);
+    }
 
     private void handleTakeReward() {
         this.addTakeReward(true);
@@ -1154,7 +1231,30 @@ public class CardRoundController extends GUIController {
         // TODO: removal also from grid? // better off to just disable it (easier revert on error)
     }
 
-    private void handleBatteriesToBeStolen(int ofsRow, int ofsCol) {}
+    private void handleBatteriesToBeStolen(int ofsRow, int ofsCol) {
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
+
+        ClientBattery selectedBattery = (ClientBattery) this.mainShip.getComponent(row, col);
+        this.addBatteryToBeStolen(new CoordinatePair(row, col));
+
+        // Updating the HBox containing the icons
+        HBox boxToUpdate = this.batteriesMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
+        guiUtils.initBatteryIcons(selectedBattery, boxToUpdate);
+
+        // If the battery has no more charge, we remove the region
+        if (selectedBattery.getAvailability() <= 0) {
+            // Populating the emptiedRegions/emptiedMaps with the battery's data, in case we need to access it revert this changes
+            this.batteriesRegions.put(guiUtils.keyFromCoords(row, col), this.batteriesRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.emptiedBatteriesMap.put(guiUtils.keyFromCoords(row, col), boxToUpdate);
+
+            this.shipGrid.getChildren().remove(this.cabinsRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.shipGrid.getChildren().remove(boxToUpdate);
+            this.batteriesMap.remove(guiUtils.keyFromCoords(row, col));
+        }
+
+        this.commandsToggleGroup.selectToggle(null);
+    }
 
     private void handleMandatoryBatteryCoords(int ofsRow, int ofsCol) {
         int batteryRow = ofsRow + this.shipOffsets.getKey();
@@ -1417,7 +1517,7 @@ public class CardRoundController extends GUIController {
         ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
 
         if (ship == null) {
-            this.showToast("[ERROR] [getCrewToRemove()] ClientShip is null", ToastType.ERROR);
+            this.showToast("[ERROR] [addShieldToActivate()] ClientShip is null", ToastType.ERROR);
             return;
         }
 
@@ -1483,7 +1583,7 @@ public class CardRoundController extends GUIController {
         ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
 
         if (ship == null) {
-            this.showToast("[ERROR] [getCrewToRemove()] ClientShip is null", ToastType.ERROR);
+            this.showToast("[ERROR] [addDoubleCannonToActivate()] ClientShip is null", ToastType.ERROR);
             return;
         }
 
@@ -1622,6 +1722,54 @@ public class CardRoundController extends GUIController {
         this.visualizePlayerActions();
 
         ship.consumeEnergy(List.of(batteryToConsume));
+    }
+
+    private void addBatteryToBeStolen(CoordinatePair batteryToBeStolen) {
+        ClientComponent possibleBattery;
+        ClientShip ship;
+
+        ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+
+        if (ship == null) {
+            this.showToast("[ERROR] [addBatteryToBeStolen()] ClientShip is null", ToastType.ERROR);
+            return;
+        }
+
+        try {
+            possibleBattery = ship.getComponent(
+                    batteryToBeStolen.getI(),
+                    batteryToBeStolen.getJ()
+            );
+        }
+        catch (OutOfGridException e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+            return;
+        }
+
+        switch (possibleBattery) {
+            case ClientBattery battery -> {
+                if (battery.getAvailability() <= 0) {
+                    this.showToast(
+                            "[ERROR] Given battery is depleted",
+                            ToastType.ERROR
+                    );
+                    return;
+                }
+            }
+            case null, default -> {
+                this.showToast(
+                        "[ERROR] Component @ (row=" + batteryToBeStolen.getI() + ", col=" + batteryToBeStolen.getJ() + ") is not a battery",
+                        ToastType.ERROR
+                );
+                return;
+            }
+        }
+
+        this.currEventCard.getBatteriesToBeStolen().add(batteryToBeStolen);
+
+        this.visualizePlayerActions();
+
+        ship.consumeEnergy(List.of(batteryToBeStolen));
     }
 
     public void updateCardRound(CardStateJSON cardStateJSON) {
