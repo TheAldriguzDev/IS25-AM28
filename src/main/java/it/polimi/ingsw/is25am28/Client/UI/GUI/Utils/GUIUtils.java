@@ -33,6 +33,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class GUIUtils {
 
@@ -410,6 +412,43 @@ public class GUIUtils {
 
         return cell;
     }
+
+    // TODO: have the main player ship and grid reference
+
+    public <T> void revertVisuals(GridPane shipGrid, Map<String, HBox> emptiedIcons, Map<String, Region> emptiedRegions, Class<T> castType, BiConsumer<T, HBox> initIcons) {
+        // Getting the player's ship
+        ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+        if (ship == null) {
+            System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
+            return;
+        }
+
+        for (Map.Entry<String, HBox> entry : emptiedIcons.entrySet()) {
+
+            Pair<Integer, Integer> boxCoords = this.coordsFromKey(entry.getKey());
+            int row = boxCoords.getKey();
+            int col = boxCoords.getValue();
+
+            String restoreKey = entry.getKey();
+            HBox boxToRestore = emptiedIcons.get(restoreKey);
+
+            T componentToRestore = castType.cast(ship.getComponent(row, col));
+            initIcons.accept(componentToRestore, boxToRestore);
+
+            Region regionToRestore = emptiedRegions.get(restoreKey);
+            if (regionToRestore != null) {
+
+                int ofsRow = row - this.shipOffsets.getKey();
+                int ofsCol = col - this.shipOffsets.getValue();
+
+                shipGrid.add(regionToRestore, ofsCol, ofsRow);
+            }
+        }
+        emptiedIcons.clear();
+        emptiedRegions.clear();
+    }
+
+
 
 
 

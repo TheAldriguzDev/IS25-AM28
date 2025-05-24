@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
@@ -310,7 +311,7 @@ public class CardRoundController extends GUIController {
         // Updating the card
         this.currEventCard.updateCard(cardInfo);
 
-        this.availableCommands = this.currEventCard.getAvailableCommands();
+        this.availableCommands = new ArrayList<>(this.currEventCard.getAvailableCommands());
 
 
     }
@@ -973,27 +974,36 @@ public class CardRoundController extends GUIController {
                                         if (lfType != null) {
                                             this.mainShip.addLifeformToCabin(row, col, lfType);
                                         }
-
-                                        int ofsRow = row - this.shipOffsets.getKey();
-                                        int ofsCol = col - this.shipOffsets.getValue();
-
-                                        ClientCabin cabinToRestore = (ClientCabin) this.mainShip.getComponent(row, col);
-
-//                                        Region cell = guiUtils.generateDisabledRegion();
-
-//                                        this.shipGrid.add(cell, ofsRow, ofsCol);
-
-                                        // TODO: remove this checks
-                                        if (!this.emptiedCabinsRegions.isEmpty()) {
-                                            this.shipGrid.add(this.emptiedCabinsRegions.get(guiUtils.keyFromCoords(row, col)) ,ofsCol, ofsRow);
-                                        }
-                                        if (!this.emptiedLifeforms.isEmpty()) {
-                                            guiUtils.initCabinLifeFormIcons(cabinToRestore, this.emptiedLifeforms.get(guiUtils.keyFromCoords(row, col)));
-                                            this.lifeFormsMap.get(this.clientModel.getNickname()).put(guiUtils.keyFromCoords(row, col), this.emptiedLifeforms.get(guiUtils.keyFromCoords(row, col)));
-                                        }
                                     }
+                                    // Visual revert
+                                    guiUtils.revertVisuals(this.shipGrid, this.emptiedLifeforms, this.emptiedCabinsRegions, ClientCabin.class, guiUtils::initCabinLifeFormIcons);
                                 }
 
+                                if (this.availableCommands.contains("setItemsToBeRemoved") && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
+                                    // Revert the changes to the dropped resources
+                                    for (ComponentHelper<ItemColor> icch : this.currEventCard.getItemsToBeRemoved()) {
+                                        ItemColor ic = icch.getItem().orElse(null);
+                                        if (ic != null) {
+                                            ClientStorage storage = (ClientStorage) mainShip.getComponent(icch.getI(), icch.getJ());
+                                            storage.storeItem(new Item(ic));
+                                        }
+                                    }
+                                    // Visual revert
+                                    guiUtils.revertVisuals(this.shipGrid, this.emptiedItemsMap, this.emptiesStoragesRegions, ClientStorage.class, guiUtils::initStorageItemIcons);
+
+                                    // Revert the changes to the batteries
+                                    if (!this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
+                                        for (CoordinatePair bch : this.currEventCard.getBatteriesToBeStolen()) {
+                                            ClientBattery battery = (ClientBattery) mainShip.getComponent(bch.getI(), bch.getJ());
+                                            battery.setAvailability(battery.getAvailability() + 1);
+                                        }
+                                    }
+                                    // Visual revert
+                                    // TODO: battery visual revert
+                                }
+
+                                this.availableCommands = new ArrayList<>(this.currEventCard.getAvailableCommands());
+                                this.currEventCard.clearJSON();
                                 this.initCommandBox();
                                 this.visualizePlayerActions();
 
@@ -1003,7 +1013,7 @@ public class CardRoundController extends GUIController {
                                 );
 
                                 GUIHandler.setCommandCTX(null);
-                                this.currEventCard.clearJSON();
+
                             }
                     );
 
@@ -1040,16 +1050,22 @@ public class CardRoundController extends GUIController {
         HBox boxToUpdate = this.lifeFormsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
         guiUtils.initCabinLifeFormIcons(selectedCabin, boxToUpdate);
 
+
+        // Populating the emptiedRegions/emptiedMaps with the cabin's data, in case we need to access it revert this changes
+
+
+        // We add the boxToUpdate to the map, but only if it's not already in it
+        if (!this.emptiedLifeforms.containsValue(boxToUpdate)) {
+            this.emptiedLifeforms.put(guiUtils.keyFromCoords(row, col), boxToUpdate);
+        }
+
         // If the cabin has no more inhabitants, we remove the region
         if (selectedCabin.getInhabitants().isEmpty()) {
-            // Populating the emptiedRegions/emptiedMaps with the cabin's data, in case we need to access it revert this changes
             this.emptiedCabinsRegions.put(guiUtils.keyFromCoords(row, col), this.cabinsRegions.get(guiUtils.keyFromCoords(row, col)));
-            this.emptiedLifeforms.put(guiUtils.keyFromCoords(row, col), boxToUpdate);
-
 
             this.shipGrid.getChildren().remove(this.cabinsRegions.get(guiUtils.keyFromCoords(row, col)));
-            this.shipGrid.getChildren().remove(boxToUpdate);
-            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col));
+//            this.shipGrid.getChildren().remove(boxToUpdate); // TODO: remove in ONSuccess
+//            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO:remove in ONSuccess
         }
 
         this.commandsToggleGroup.selectToggle(null);
