@@ -321,6 +321,8 @@ public class CardRoundController extends GUIController {
                 this.initCommandBox();
             } else {
 
+                this.commandsToggleGroup.selectToggle(null);
+
                 // Exit the board visualization if the toggle
                 // is pressed during that phase
                 this.handleGoBackToCardRoundButton(new ActionEvent());
@@ -331,7 +333,6 @@ public class CardRoundController extends GUIController {
                         ((ToggleButton) toggleButtonCommand).setDisable(true);
                     }
                 }
-                this.commandsToggleGroup.selectToggle(null);
 
                 ToggleButton selected = (ToggleButton) newToggle;
                 this.setShipGrid(selected.getText());
@@ -715,15 +716,15 @@ public class CardRoundController extends GUIController {
     @FXML
     private void handleViewGameBoard() {
 
+        this.commandsToggleGroup.selectToggle(null);
+        this.viewOtherShipsToggleGroup.selectToggle(null);
+
         // Disable the commands
         if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
             for (Toggle toggleButtonCommand : this.commandsToggleGroup.getToggles()) {
                 ((ToggleButton) toggleButtonCommand).setDisable(true);
             }
         }
-
-        this.commandsToggleGroup.selectToggle(null);
-        this.viewOtherShipsToggleGroup.selectToggle(null);
 
         // Disable all the previous containers
         this.setVisibility(this.shipImageView, false);
@@ -1105,7 +1106,9 @@ public class CardRoundController extends GUIController {
                                             this.storagesToFillRegions.remove(guiUtils.keyFromCoords(storage.getI(), storage.getJ()));
                                         }
                                     }
+                                }
 
+                                if (this.availableCommands.contains("batteriesToBeStolen") && this.currEventCard.getBatteriesToBeStolen() != null && !this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
                                     // Revert the changes to the batteries
                                     if (!this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
                                         for (CoordinatePair bch : this.currEventCard.getBatteriesToBeStolen()) {
@@ -1119,6 +1122,7 @@ public class CardRoundController extends GUIController {
 
                                 this.availableCommands = new ArrayList<>(this.currEventCard.getAvailableCommands());
                                 this.currEventCard.clearJSON();
+                                this.initStatsBox();
                                 this.initCommandBox();
                                 this.visualizePlayerActions();
 
@@ -1387,6 +1391,7 @@ public class CardRoundController extends GUIController {
 //            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO:remove in ONSuccess
         }
 
+        this.initStatsBox();
         this.commandsToggleGroup.selectToggle(null);
     }
 

@@ -298,8 +298,8 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(29)); // OpenSpace
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
 //        fakeDeck.add(AllCards.get(31)); // Epidemy
-        fakeDeck.add(AllCards.get(32)); // Smugglers
-//        fakeDeck.add(AllCards.get(33)); // Smugglers
+//        fakeDeck.add(AllCards.get(32)); // Smugglers
+        fakeDeck.add(AllCards.get(33)); // Smugglers
 //        fakeDeck.add(AllCards.get(34)); // Slavers
 //        fakeDeck.add(AllCards.get(35)); // Slavers
 //        fakeDeck.add(AllCards.get(36)); // Stardust
