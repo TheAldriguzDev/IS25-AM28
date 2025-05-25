@@ -50,7 +50,7 @@
                               <Label layoutX="64.0" layoutY="124.0" text="Lost Components: 0" />
                            </children>
                         </VBox>
-                        <VBox alignment="CENTER" styleClass="resourceBank-VBox">
+                        <VBox fx:id="resourceBankBox" alignment="CENTER" styleClass="resourceBank-VBox">
                            <children>
                               <Label text="Resource Bank">
                                  <font>

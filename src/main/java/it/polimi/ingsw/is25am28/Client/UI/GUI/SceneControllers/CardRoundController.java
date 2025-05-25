@@ -18,6 +18,7 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -56,6 +57,7 @@ public class CardRoundController extends GUIController {
     @FXML private VBox turnBox;
     @FXML private VBox commandDescriptionBox;
     @FXML private VBox additionalInfoBox;
+    @FXML private VBox resourceBankBox;
 
     @FXML private VBox statsBox;
     @FXML private HBox commandsBox;
@@ -84,7 +86,8 @@ public class CardRoundController extends GUIController {
     private final Map<String, Region> doubleEnginesRegions = new HashMap<>();
     private final Map<String, Region> shieldsRegions = new HashMap<>();
     private final Map<String, Region> cabinsRegions = new HashMap<>();
-    private final Map<String, Region> storagesRegions = new HashMap<>();
+    private final Map<String, Region> storagesToFillRegions = new HashMap<>();
+    private final Map<String, Region> storagesToEmptyRegions = new HashMap<>();
     private final Map<String, Region> batteriesRegions = new HashMap<>();
 
     // Temp region maps for revert purposes
@@ -101,7 +104,8 @@ public class CardRoundController extends GUIController {
             this.doubleEnginesRegions,
             this.shieldsRegions,
             this.cabinsRegions,
-            this.storagesRegions,
+            this.storagesToFillRegions,
+            this.storagesToEmptyRegions,
             this.batteriesRegions
     );
 
@@ -178,12 +182,6 @@ public class CardRoundController extends GUIController {
         this.shipGrid = this.playersShipGridPane.get(this.clientModel.getNickname());
         this.imagePane.getChildren().add(this.shipGrid);
 
-        /*ADD the ICONS, or implement their addition in the initShip*/
-        /*...
-        * ...
-        * ...
-        * */
-
         this.initStatsBox();
 
         this.initCommandBox();
@@ -195,52 +193,41 @@ public class CardRoundController extends GUIController {
         // Initializes the board image to display on a view board request
         this.initViewGameBoard();
 
-        // TODO: this.initResourceBank();
+        this.initResourceBankBox();
+
+        List<ClientStorage> storages = this.mainShip.getStorageList();
+
+        List<ClientStorage> nonEmptyStorages = storages.stream()
+                .filter(storage -> !storage.getStoredItems().isEmpty())
+                .toList();
+
+        List<ClientStorage> nonFullStorages = storages.stream()
+                .filter(storage -> storage.getStoredItems().size() < storage.getCapacity())
+                .toList();
+
+        List<ClientCabin> nonEmptyCabins = this.mainShip.getCabinList().stream()
+                .filter(cabin -> !cabin.getInhabitants().isEmpty())
+                .toList();
+
+        List<ClientBattery> nonEmptyBatteries = this.mainShip.getBatteryList().stream()
+                .filter(battery -> battery.getAvailability() > 0)
+                .toList();
 
         // Setting all the regions with the corresponding listeners
-        this.initRegionMap(this.doubleCannonsRegions, new ArrayList<>(mainShip.getDoubleCannons()), this::handleDoubleCannonToActivate);
-        this.initRegionMap(this.doubleEnginesRegions, new ArrayList<>(mainShip.getDoubleEngines()), this::handleDoubleEnginesToActivate);
-        this.initRegionMap(this.shieldsRegions, new ArrayList<>(mainShip.getShieldList()), this::handleShieldsToActivate);
-        this.initRegionMap(this.cabinsRegions, new ArrayList<>(mainShip.getCabinList()), this::handleCrewToRemove);
-        this.initRegionMap(this.storagesRegions, new ArrayList<>(mainShip.getStorageList()), (row, col) -> {
-            if (this.isTakeAction) {
-                this.handleItemToTake(row, col, this.chosenItemColor);
-            } else {
-                this.handleItemToRemove(row, col, this.chosenItemColor);
-            }
-        });
-        this.initRegionMap(this.batteriesRegions, new ArrayList<>(mainShip.getBatteryList()), (row, col) -> {
+        this.initRegionMap(this.doubleCannonsRegions, new ArrayList<>(this.mainShip.getDoubleCannons()), this::handleDoubleCannonToActivate);
+        this.initRegionMap(this.doubleEnginesRegions, new ArrayList<>(this.mainShip.getDoubleEngines()), this::handleDoubleEnginesToActivate);
+        this.initRegionMap(this.shieldsRegions, new ArrayList<>(this.mainShip.getShieldList()), this::handleShieldsToActivate);
+        this.initRegionMap(this.cabinsRegions, new ArrayList<>(nonEmptyCabins), this::handleCrewToRemove);
+//        this.initRegionMap(this.storagesRegions, new ArrayList<>(mainShip.getStorageList()), this::initAvailableItemColors);
+        this.initRegionMap(this.storagesToFillRegions, new ArrayList<>(nonFullStorages), this::initAddColorCommands);
+        this.initRegionMap(this.storagesToEmptyRegions, new ArrayList<>(nonEmptyStorages), this::initRemoveColorCommands);
+        this.initRegionMap(this.batteriesRegions, new ArrayList<>(nonEmptyBatteries), (row, col) -> {
             if (this.currEnergyConsumer != null) {
                 this.handleMandatoryBatteryCoords(row, col);
             } else {
                 this.handleBatteriesToBeStolen(row, col);
             }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        /* SHIP SETTING */
-        /*
-         .........
-        */
-
-        // Setting the resourceBank's VBox
-//        ResourceBank bank = model.getResourceBank();
-        // ...
-
-        // Setting the stats VBox
-        // ...
     }
 
     /**
@@ -426,7 +413,7 @@ public class CardRoundController extends GUIController {
 
         ClientPlayer player = this.clientModel.getAllClientPlayers().get(this.clientModel.getNickname());
 
-        Label titleLabel = new Label("Stats");
+        Label titleLabel = new Label("YOUR Stats");
         titleLabel.setStyle("-fx-font-weight: bold;");
 
         // Creating all the labels and adding them to the statsBox
@@ -464,6 +451,15 @@ public class CardRoundController extends GUIController {
         this.additionalInfoBox.getChildren().add(infoLabel);
     }
 
+    private void initResourceBankBox() {
+        this.resourceBankBox.getChildren().clear();
+        Label resourceBankLabel = new Label();
+        resourceBankLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+        this.resourceBankBox.getChildren().add(resourceBankLabel);
+        Map<ItemColor, Integer> resources = this.clientModel.getResourceBank().getResources();
+        this.resourceBankBox.getChildren().add(new Label(resources.get(ItemColor.RED) + "🟥 " + resources.get(ItemColor.YELLOW) + "🟨 " + resources.get(ItemColor.GREEN) + "🟩 " + resources.get(ItemColor.BLUE) + "🟦 "));
+    }
+
     // Todo: handle commands availability based also un card resources amount (and ship) / or display error in the command description
     private void initCommandBox() {
 
@@ -491,8 +487,9 @@ public class CardRoundController extends GUIController {
 
         // Generating the toggles
         int col = 0;
+        Label toggleLabel;
         for (String command : allCommands) {
-            Label toggleLabel = new Label();
+            toggleLabel = new Label();
             // A command is added only if it's present in the available commands
             if (this.availableCommands.contains(command)) {
                 switch (command) {
@@ -527,21 +524,15 @@ public class CardRoundController extends GUIController {
             }
         }
 
-        // Adding the description to the commandDescriptionBox
-        this.commandDescriptionBox.getChildren().clear();
-        Label commandDescriptionLabel = new Label();
-        commandDescriptionLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
-        // Disables the toggles if it's not this player's turn
+        // Disables the toggles if it's not this player's turn (Also sets the command's description)
         if (!this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
-            // TODO: beautify this with a text flow
-            commandDescriptionLabel.setText("No actions available, it's NOT YOUR turn!");
+            this.initCommandDescriptionBox("No actions available, it's NOT YOUR turn!");
             for (Toggle toggleButtonCommand : this.commandsToggleGroup.getToggles()) {
                 ((ToggleButton) toggleButtonCommand).setDisable(true);
             }
         } else {
-            commandDescriptionLabel.setText("Chose an action!");
+            this.initCommandDescriptionBox("Chose an action!");
         }
-        this.commandDescriptionBox.getChildren().add(commandDescriptionLabel);
 
         // Adding the listener
         commandsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
@@ -570,8 +561,8 @@ public class CardRoundController extends GUIController {
                 switch (selected.getId()) {
                     case "playCard" -> {this.playCard(); this.commandsToggleGroup.selectToggle(null);}
                     case "setCrewToRemove" -> {this.enableRegion(this.cabinsRegions);}
-//                    case "setItemsToBeRemoved" -> {this.enableRegion(this.storagesRegions);}
-//                    case "setItemsToBeTaken" -> {this.disableRegion(this.storagesRegions);}
+                    case "setItemsToBeRemoved" -> {this.enableRegion(this.storagesToEmptyRegions);}
+                    case "setItemsToBeTaken" -> {this.enableRegion(this.storagesToFillRegions);}
                     case "setTakeReward" -> {this.handleTakeReward();} // TODO: add dynamic selection buttons
                     case "setChosenPlanetIndex" -> {this.handleChosenPlanetIndex();} // TODO: NEEDS dynamic selection buttons
                     case "setWantsToVisit" -> {this.handleWantsToVisit();} // TODO: add dynamic selection buttons
@@ -584,42 +575,156 @@ public class CardRoundController extends GUIController {
         });
     }
 
-    private VBox initAvailableItemColors(ClientStorage storage) {
-        VBox availableItemColors;
+    // TODO: change the string to a text flow (only if it's worth it)
+    private void initCommandDescriptionBox(String text) {
+        // Adding the description to the commandDescriptionBox
+        this.commandDescriptionBox.getChildren().clear();
+        Label commandDescriptionLabel = new Label();
+        commandDescriptionLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
 
-        if (storage.getStoredItems().isEmpty()) {
-            throw new RuntimeException("Given storage is empty, therefore creating its VBox is a waste of time.");
-        }
+        commandDescriptionLabel.setText(text);
+        this.commandDescriptionBox.getChildren().add(commandDescriptionLabel);
+    }
 
-        availableItemColors = new VBox();
+    private void initAvailableItemColors(int ofsRow, int ofsCol) {
 
-        availableItemColors.setAlignment(Pos.CENTER);
-        availableItemColors.setSpacing(10);
-        availableItemColors.getChildren().add(
-            new Label("Select an item color:")
-        );
+        // TODO: color selected region red
 
+        ClientStorage storage = (ClientStorage) this.mainShip.getComponent(ofsRow + this.shipOffsets.getKey(), ofsCol + this.shipOffsets.getValue());
+
+        this.commandsGrid.getChildren().clear();
+
+        // Create choseColorCommandDescritpion
+        this.initCommandDescriptionBox("Choose an available itemColor!");
+
+        this.chosenItemColor = null;
+
+        // TODO: go back button
+
+        int commandCol = 0;
+        Label colorLabel = new Label();
         for (Item item : storage.getStoredItems()) {
             ItemColor itemColor = item.getColor();
-            ToggleButton itemColorButton = new ToggleButton();
+            Button itemColorButton = new Button();
+
+            colorLabel = new Label();
+            colorLabel.setTextAlignment(TextAlignment.CENTER);
+            colorLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
 
             itemColorButton.setText(itemColor.toString());
-            itemColorButton.setToggleGroup(this.availableItemColorsToggleGroup);
             itemColorButton.getStyleClass().add("button");
-            itemColorButton.setOnAction(
-                (e) -> {
-                    this.chosenItemColor = itemColor;
-                    e.consume();
+            itemColorButton.setOnAction(event -> {
+                this.chosenItemColor = itemColor;
+                if (this.isTakeAction) {
+                    this.handleItemToTake(ofsRow, ofsCol);
+                } else {
+                    this.handleItemToRemove(ofsRow, ofsCol);
                 }
-            );
+            });
 
             // Overriding the color of the button
             itemColorButton.setStyle("-fx-background-color: " + itemColor.toString().toLowerCase());
 
-            availableItemColors.getChildren().add(itemColorButton);
+            this.commandsGrid.add(itemColorButton, commandCol, 0);
         }
+    }
 
-        return availableItemColors;
+    private void initRemoveColorCommands(int ofsRow, int ofsCol) {
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
+
+        ClientStorage storage = (ClientStorage) this.mainShip.getComponent(row, col);
+        this.commandsGrid.getChildren().clear();
+        this.initCommandDescriptionBox("Choose an itemColor to remove!");
+
+        this.chosenItemColor = null;
+        this.disableRegion(this.storagesToEmptyRegions);
+        // Highlighting the selectedStorage
+        this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+
+        Button goBackButton = this.createBackToCommandsButton();
+        goBackButton.setOnAction(event -> {
+            this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: transparent;");
+            this.initCommandBox();
+        });
+        this.commandsGrid.add(goBackButton, 0, 0);
+
+        int commandCol = 1;
+        for (Item item : storage.getStoredItems()) { // TODO: should filter to remove duplicates
+            ItemColor itemColor = item.getColor();
+            Button itemColorButton = this.createColorButton(itemColor);
+            itemColorButton.setOnAction(event -> {
+                this.chosenItemColor = itemColor;
+                this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: transparent;");
+                this.handleItemToRemove(ofsRow, ofsCol);
+            });
+            this.commandsGrid.add(itemColorButton, commandCol, 0);
+            commandCol++;
+        }
+    }
+
+    private void initAddColorCommands(int ofsRow, int ofsCol) {
+        int row = ofsRow + this.shipOffsets.getKey();
+        int col = ofsCol + this.shipOffsets.getValue();
+
+        ClientStorage storage = (ClientStorage) this.mainShip.getComponent(row, col);
+        this.commandsGrid.getChildren().clear();
+        this.initCommandDescriptionBox("Choose an itemColor to add!");
+
+        this.chosenItemColor = null;
+        this.disableRegion(this.storagesToFillRegions);
+        // Highlighting the selectedStorage
+        this.storagesToFillRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+
+        Button goBackButton = this.createBackToCommandsButton();
+        goBackButton.setOnAction(event -> {
+            this.storagesToFillRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: transparent;");
+            this.initCommandBox();
+        });
+        this.commandsGrid.add(goBackButton, 0, 0);
+
+        int commandCol = 1;
+        for(ItemColor itemColor : this.currEventCard.getAvailableItemColors()) {
+            if (!(itemColor.equals(ItemColor.RED) && !storage.isSpecialStorage())) {
+                Button itemColorButton = this.createColorButton(itemColor);
+                itemColorButton.setOnAction(event -> {
+                    this.chosenItemColor = itemColor;
+                    this.storagesToFillRegions.get(guiUtils.keyFromCoords(row, col)).setStyle("-fx-background-color: transparent;");
+                    this.handleItemToTake(ofsRow, ofsCol);
+                });
+                this.commandsGrid.add(itemColorButton, commandCol, 0);
+                commandCol++;
+            }
+        }
+    }
+
+    private Button createColorButton(ItemColor itemColor) {
+        Button itemColorButton = new Button();
+        itemColorButton.setText(
+                switch (itemColor) {
+                    case RED -> "Red";
+                    case YELLOW -> "Yellow";
+                    case BLUE -> "Blue";
+                    case GREEN -> "Green";
+                }
+        );
+        itemColorButton.getStyleClass().add("button");
+        itemColorButton.setStyle("-fx-background-color: " + itemColor.toString().toLowerCase());
+        itemColorButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+        itemColorButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        itemColorButton.setAlignment(Pos.CENTER);
+
+        return itemColorButton;
+    }
+
+    private Button createBackToCommandsButton() {
+        Button goBackButton = new Button();
+        goBackButton.setText("Go Back");
+        goBackButton.getStyleClass().add("goBack");
+        goBackButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
+        goBackButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
+        goBackButton.setAlignment(Pos.CENTER);
+        return goBackButton;
     }
 
     // TODO: variabile di commandsGridSwap, utile per boardView e altri
@@ -1030,7 +1135,16 @@ public class CardRoundController extends GUIController {
                                         }
                                     }
                                     // Visual revert
+                                    // Reverts the storagesToEmptyRegions/icons
                                     guiUtils.revertVisuals(this.shipGrid, this.emptiedItemsMap, this.emptiedStoragesRegions, ClientStorage.class, guiUtils::initStorageItemIcons);
+                                    // Reverts the storagesToFillRegions (in the removeItem the storagesToFillRegions can only increase, so a simple check on the available capacity of the storages is enough, since we do not have to create new regions but only to remove some)
+                                    this.mainShip.generateComponentSubLists();
+                                    for (ClientStorage storage : this.mainShip.getStorageList()) {
+                                        if (storage.getStoredItems().size() == storage.getCapacity()) {
+                                            // If the region already does not exist, nothing happens
+                                            this.storagesToFillRegions.remove(guiUtils.keyFromCoords(storage.getI(), storage.getJ()));
+                                        }
+                                    }
 
                                     // Revert the changes to the batteries
                                     if (!this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
@@ -1054,11 +1168,8 @@ public class CardRoundController extends GUIController {
                                 );
 
                                 GUIHandler.setCommandCTX(null);
-
                             }
                     );
-
-
                 }
             )
         );
@@ -1095,7 +1206,7 @@ public class CardRoundController extends GUIController {
         // Populating the emptiedRegions/emptiedMaps with the cabin's data, in case we need to access it revert this changes
 
 
-        // We add the boxToUpdate to the map, but only if it's not already in it
+        // We add the boxToUpdate to the map (for revert purposes), but only if it's not already in it
         if (!this.emptiedLifeforms.containsValue(boxToUpdate)) {
             this.emptiedLifeforms.put(guiUtils.keyFromCoords(row, col), boxToUpdate);
         }
@@ -1112,12 +1223,12 @@ public class CardRoundController extends GUIController {
         this.commandsToggleGroup.selectToggle(null);
     }
 
-    private void handleItemToRemove(int ofsRow, int ofsCol, ItemColor colorToRemove) {
+    private void handleItemToRemove(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
 
         ClientStorage selectedStorage = (ClientStorage) this.mainShip.getComponent(row, col);
-        this.addItemToRemove(row, col, colorToRemove);
+        this.addItemToRemove(row, col, this.chosenItemColor);
 
         // Updating the HBox containing the icons
         HBox boxToUpdate = this.itemsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
@@ -1127,35 +1238,58 @@ public class CardRoundController extends GUIController {
         // Populating the emptiedRegions/emptiedMaps with the storage's data, in case we need to access it revert this changes
 
 
-        // We add the boxToUpdate to the map, but only if it's not already in it
-        if (!this.emptiedBatteriesMap.containsValue(boxToUpdate)) {
-            this.emptiedBatteriesMap.put(guiUtils.keyFromCoords(row, col), boxToUpdate);
+        // We add the component to the storagesToFillRegions (only if the region is not present)
+        if(this.storagesToFillRegions.get(guiUtils.keyFromCoords(row, col)) == null) {
+            Region newRegion = guiUtils.generateDisabledRegion();
+            newRegion.setOnMouseClicked(e -> this.initAddColorCommands(row, col));
+            this.storagesToFillRegions.put(guiUtils.keyFromCoords(row, col), newRegion);
+            this.shipGrid.add(newRegion, ofsCol, ofsRow);
         }
 
-        // If the storage is empty, we remove the region
+        // We add the boxToUpdate to the map (for revert purposes), but only if it's not already in it
+        if (!this.emptiedItemsMap.containsValue(boxToUpdate)) {
+            this.emptiedItemsMap.put(guiUtils.keyFromCoords(row, col), boxToUpdate);
+        }
+
+        // If the storage is empty, we remove it from the storagesToEmptyRegions
         if (selectedStorage.getStoredItems().isEmpty()) {
-            this.emptiedStoragesRegions.put(guiUtils.keyFromCoords(row, col), this.storagesRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.emptiedStoragesRegions.put(guiUtils.keyFromCoords(row, col), this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
 
-            this.shipGrid.getChildren().remove(this.storagesRegions.get(guiUtils.keyFromCoords(row, col)));
-//            this.shipGrid.getChildren().remove(boxToUpdate); // TODO: remove in ONSuccess
-//            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO:remove in ONSuccess
+            this.shipGrid.getChildren().remove(this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
+//            this.storagesToEmptyRegions.remove(guiUtils.keyFromCoords(row, col)); //TODO: OnSuccess
         }
 
-        this.commandsToggleGroup.selectToggle(null);
+        this.initResourceBankBox();
+        this.initCommandBox();
     }
 
-    private void handleItemToTake(int ofsRow, int ofsCol, ItemColor colorToTake) {
+    private void handleItemToTake(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
 
         ClientStorage selectedStorage = (ClientStorage) this.mainShip.getComponent(row, col);
-        this.addItemToTake(row, col, colorToTake);
+        this.addItemToTake(row, col, this.chosenItemColor);
 
         // Updating the HBox containing the icons
         HBox boxToUpdate = this.itemsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
         guiUtils.initStorageItemIcons(selectedStorage, boxToUpdate);
 
-        this.commandsToggleGroup.selectToggle(null);
+        // We add the component to the storagesToEmptyRegions (only if the region is not present)
+        if(this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)) == null) {
+            Region newRegion = guiUtils.generateDisabledRegion();
+            newRegion.setOnMouseClicked(e -> this.initRemoveColorCommands(ofsRow, ofsCol));
+            this.storagesToEmptyRegions.put(guiUtils.keyFromCoords(row, col), newRegion);
+            this.shipGrid.add(newRegion, ofsCol, ofsRow);
+        }
+
+        // If the storage is full, we remove it from the storagesToFillRegions
+        if (selectedStorage.getStoredItems().size() == selectedStorage.getCapacity()) {
+            this.shipGrid.getChildren().remove(this.storagesToFillRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.storagesToFillRegions.remove(guiUtils.keyFromCoords(row, col));
+        }
+
+        this.initResourceBankBox();
+        this.initCommandBox();
     }
 
     private void handleTakeReward() {
@@ -1189,7 +1323,6 @@ public class CardRoundController extends GUIController {
         int col = 0;
         for (Integer index : availablePlanetIndexes) {
             planetButton = new Button();
-            planetButton.setOnAction(event -> this.addChosenPlanetIndex(index));
             planetButton.getStyleClass().add("button");
             planetButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
             planetButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
@@ -1197,8 +1330,16 @@ public class CardRoundController extends GUIController {
             Label planetButtonLabel = new Label(index.toString());
             planetButtonLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
             planetButton.setGraphic(planetButtonLabel);
+            planetButton.setOnAction(event -> {
+                this.addChosenPlanetIndex(index);
+                this.availableCommands.remove("setChosenPlanetIndex");
+                this.availableCommands.add("setItemsToBeRemoved");
+                this.availableCommands.add("setItemsToBeTaken");
+                this.initCommandBox();
+            });
 
             this.commandsGrid.add(planetButton, col, 0);
+            col++;
         }
 
 
@@ -1266,7 +1407,7 @@ public class CardRoundController extends GUIController {
         // Populating the emptiedRegions/emptiedMaps with the battery's data, in case we need to access it revert this changes
 
 
-        // We add the boxToUpdate to the map, but only if it's not already in it
+        // We add the boxToUpdate to the map (for revert purposes), but only if it's not already in it
         if (!this.emptiedBatteriesMap.containsValue(boxToUpdate)) {
             this.emptiedBatteriesMap.put(guiUtils.keyFromCoords(row, col), boxToUpdate);
         }
@@ -1327,7 +1468,7 @@ public class CardRoundController extends GUIController {
         if (batteryToUpdate.getAvailability() == 0) {
             this.shipGrid.getChildren().remove(this.batteriesRegions.get(guiUtils.keyFromCoords(batteryRow, batteryCol)));
 //            this.shipGrid.getChildren().remove(boxToUpdate);
-             // TODO: attention on re-enabling on revert!!!
+
             this.batteriesMap.remove(guiUtils.keyFromCoords(batteryRow, batteryCol));
         }
 
@@ -1886,6 +2027,8 @@ public class CardRoundController extends GUIController {
             this.initTurnBox();
 
             this.initViewGameBoard();
+
+            this.initResourceBankBox();
 
             this.visualizePlayerActions();
 

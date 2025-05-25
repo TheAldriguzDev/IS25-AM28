@@ -53,6 +53,30 @@
     -fx-translate-y: 1px;
 }
 
+/* Purple Go Back Button */
+.button.goBack {
+    -fx-background-color: #8E44AD; /* Viola principale */
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8px;
+    -fx-padding: 8px 16px;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0.2, 0, 2);
+    -fx-border-color: transparent;
+    -fx-border-radius: 8px;
+}
+
+.button.goBack:hover {
+    -fx-background-color: #9B59B6; /* Viola chiaro */
+}
+
+.button.goBack:pressed {
+    -fx-background-color: #6C3483; /* Viola scuro */
+    -fx-translate-y: 1px;
+}
+
+
 /* ---------- Form generico ---------- */
 .title-label {
     -fx-text-fill: white;
@@ -309,6 +333,11 @@
     *-fx-background-color: #357ABD;
     /*-fx-background-color: #FFA500;*/
     }
+
+/* When selected, make it orange */
+.toggle-button.blue:selected {
+    -fx-background-color: #FFA500;
+}
 
     /* Purple toggle */
     .toggle-button.purple {
