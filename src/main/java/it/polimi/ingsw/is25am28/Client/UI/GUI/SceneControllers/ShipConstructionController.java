@@ -874,7 +874,8 @@ public class ShipConstructionController extends GUIController {
 
         if (this.clientModel.getDifficultyLevel() == 2) {
             this.guiUtils.placePlayerInBoard(data.getPlayerNickname(), 2, 24, this.viewGameBoardStackPaneLevel2, this.playersRocketBoard);
-        } else {
+        }
+        else {
             this.guiUtils.placePlayerInBoard(data.getPlayerNickname(), 0, 18, this.viewGameBoardStackPaneLevel0, this.playersRocketBoard);
         }
     }
