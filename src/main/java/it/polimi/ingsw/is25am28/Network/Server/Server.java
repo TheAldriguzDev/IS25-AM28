@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Network.Server;
 
+import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
@@ -59,6 +60,8 @@ public class Server {
         // Create the RMIServer and the TCPServer
         Scanner scanner = new Scanner(System.in);
         String ipAddress;
+
+        TUIHandler.clearTerminal();
 
         new WidgetTUI()
                 .appendString("[SETUP SERVER'S IPv4 ADDRESS]")
