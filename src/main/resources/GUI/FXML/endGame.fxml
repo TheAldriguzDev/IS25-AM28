@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="450.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.EndGameController">
+<StackPane fx:id="rootPane" minHeight="-Infinity" minWidth="-Infinity" prefWidth="450.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.EndGameController">
    <children>
       <VBox alignment="CENTER" spacing="25.0">
          <children>

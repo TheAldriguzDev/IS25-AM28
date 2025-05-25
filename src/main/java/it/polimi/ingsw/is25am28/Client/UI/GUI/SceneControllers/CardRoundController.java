@@ -435,8 +435,12 @@ public class CardRoundController extends GUIController {
         this.turnBox.getChildren().clear();
         if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
             turnLabel.setText("It's YOUR turn!!!");
+
+            this.showToast("It's your turn!", ToastType.SUCCESS);
         } else {
             turnLabel.setText("It's NOT YOUR turn!!!");
+
+            this.showToast("It's not your turn!", ToastType.INFO);
         }
         this.turnBox.getChildren().add(turnLabel);
     }
