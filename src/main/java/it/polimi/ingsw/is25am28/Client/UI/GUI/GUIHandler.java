@@ -299,7 +299,6 @@ public class GUIHandler extends Application implements ClientUI {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.CARD_ROUND_SCENE)) {
             CardRoundController controller = (CardRoundController) this.controllers.get(GuiScenes.CARD_ROUND_SCENE);
             controller.updateVisuals(data.getCardInfo());
-            System.out.println(PrintUtils.addColor("Updated Card Visuals", ANSIColors.CYAN));
         }
     }
 
@@ -393,7 +392,6 @@ public class GUIHandler extends Application implements ClientUI {
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.CARD_ROUND_SCENE)) {
                 CardRoundController controller = (CardRoundController) this.controllers.get(GuiScenes.CARD_ROUND_SCENE);
                 controller.updateCardRound(cardRound.getCardInfo());
-                System.out.println(PrintUtils.addColor("Updated Card Round", ANSIColors.CYAN));
                 return;
             }
 
