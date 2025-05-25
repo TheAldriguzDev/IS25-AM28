@@ -12,7 +12,6 @@ import java.util.List;
 
 public class SlaversJSON extends ActionJSON {
     private boolean takeCredits;
-    private boolean isPlayerDefeated;
     private List<ComponentHelper<LifeformType>> crewToRemove;
     private List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates;
 

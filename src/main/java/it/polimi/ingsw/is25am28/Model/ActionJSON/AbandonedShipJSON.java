@@ -14,12 +14,19 @@ public class AbandonedShipJSON extends ActionJSON {
      * Default constructor
      * */
     public AbandonedShipJSON() {
+        // TODO: This can break the card since there's no GUI-side check to see whether the player
+        //       answered either T or F (in the case it's set to null as default).
+        //       .
+        //       (if you want in "YOUR ACTIONS" to see T/F iff the player actually chose something, then it
+        //        needs to be set to null as default value, but then a null-check is needed GUI-side)
+        //       (TUI-side null-check is already implemented in the generatePlayerActionsWidget method)
         this.wantToVisitShip = false;
+
         this.lifeformsToBeRemoved = new ArrayList<>();
     }
 
     public AbandonedShipJSON(@JsonProperty("playerNickname") String playerNickname,
-                             @JsonProperty("wantToVisitShip") boolean wantToVisitShip,
+                             @JsonProperty("wantToVisitShip") Boolean wantToVisitShip,
                              @JsonProperty("lifeformsToBeRemoved") List<ComponentHelper<LifeformType>> lifeformsToBeRemoved) {
         super(playerNickname);
         this.wantToVisitShip = wantToVisitShip;

@@ -692,7 +692,7 @@ public class CardRoundController extends GUIController {
                 }
         );
         itemColorButton.getStyleClass().add("button");
-        itemColorButton.setStyle("-fx-background-color: " + itemColor.toString().toLowerCase());
+        itemColorButton.setStyle("-fx-background-color: " + itemColor.toString().toLowerCase() + "; -fx-text-fill: black");
         itemColorButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
         itemColorButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         itemColorButton.setAlignment(Pos.CENTER);
