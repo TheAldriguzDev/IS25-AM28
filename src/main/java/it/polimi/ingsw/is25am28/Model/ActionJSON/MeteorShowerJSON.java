@@ -11,14 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MeteorShowerJSON extends ActionJSON {
-    private int currMeteorIndex;
-    private int diceThrowResult;
+    private Integer currMeteorIndex;
+    private Integer diceThrowResult;
     private List<Pair<CoordinatePair, CoordinatePair>> shieldsCoordinates;
     private List<Pair<CoordinatePair, CoordinatePair>> cannonsCoordinates;
 
+    @JsonCreator
     public MeteorShowerJSON() {
-        this.currMeteorIndex = 0;
-        this.diceThrowResult = 0;
+        this.currMeteorIndex = null;
+        this.diceThrowResult = null;
         this.shieldsCoordinates = new ArrayList<>();
         this.cannonsCoordinates = new ArrayList<>();
     }
@@ -26,8 +27,8 @@ public class MeteorShowerJSON extends ActionJSON {
     @JsonCreator
     public MeteorShowerJSON(
             @JsonProperty("playerNickname") String playerNickname,
-            @JsonProperty("currMeteorIndex") int currMeteorIndex, // FIXME: Remove this field
-            @JsonProperty("diceThrowResult") int diceThrowResult, // FIXME: REMOVE this field
+            @JsonProperty("currMeteorIndex") Integer currMeteorIndex,
+            @JsonProperty("diceThrowResult") Integer diceThrowResult,
             @JsonProperty("shieldsCoordinates") List<Pair<CoordinatePair, CoordinatePair>> shieldsCoordinates,
             @JsonProperty("cannonsCoordinates") List<Pair<CoordinatePair, CoordinatePair>> cannonsCoordinates
     ) {

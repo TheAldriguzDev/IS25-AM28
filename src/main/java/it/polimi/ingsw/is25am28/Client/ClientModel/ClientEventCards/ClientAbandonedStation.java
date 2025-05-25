@@ -98,7 +98,7 @@ public class ClientAbandonedStation extends ClientEventCard {
 
     @Override
     public String getAdditionalCardInfo() {
-        return "[CURRENT STATION RESOURCES]\n" + this.redItems + "🟥 " + this.yellowItems + "🟨 " + this.greenItems + "🟩 " + this.blueItems + "🟦 ";
+        return "[STATION RESOURCES]\n" + this.redItems + "🟥 " + this.yellowItems + "🟨 " + this.greenItems + "🟩 " + this.blueItems + "🟦 ";
     }
 
     @Override

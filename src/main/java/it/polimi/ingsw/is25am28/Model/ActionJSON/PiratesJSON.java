@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PiratesJSON extends ActionJSON {
-    private boolean takeCredits;
+    private Boolean takeCredits;
     private List<Pair<CoordinatePair, CoordinatePair>> shieldsActivatedCoordinates;
     private List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates;
 
@@ -22,7 +22,7 @@ public class PiratesJSON extends ActionJSON {
 
     public PiratesJSON(
             @JsonProperty("PlayerNickname") String playerNickname,
-            @JsonProperty("takeCredits") boolean takeCredits,
+            @JsonProperty("takeCredits") Boolean takeCredits,
             @JsonProperty("shieldsActivatedCoordinates") List<Pair<CoordinatePair, CoordinatePair>> shieldsActivatedCoordinates,
             @JsonProperty("doubleCannonsToActivateCoordinates") List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates
     ) {

@@ -65,7 +65,7 @@
                               <Label text="0 🟥 0🟨 0🟩 0🟦" />
                            </children>
                         </VBox>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleViewGameBoard" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="boardImageView" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleViewGameBoard" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../imgs/cardboard/board_level_2.png" />
                            </image>
@@ -172,7 +172,10 @@
                               <Label text="Label" />
                            </children>
                         </VBox>
-                        <ScrollPane fx:id="playerActionsScrollPane" maxHeight="182.0" maxWidth="206.0" style="-fx-border-width: 2px;" VBox.vgrow="ALWAYS" />
+                        <ScrollPane fx:id="playerActionsScrollPane" maxHeight="182.0" maxWidth="206.0" style="-fx-border-width: 2px;" VBox.vgrow="ALWAYS">
+                           <padding>
+                              <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                           </padding></ScrollPane>
                      </children>
                   </VBox>
                </children>

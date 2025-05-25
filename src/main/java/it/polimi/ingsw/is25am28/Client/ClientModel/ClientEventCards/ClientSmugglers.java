@@ -89,7 +89,7 @@ public class ClientSmugglers extends ClientEventCard {
             return "Choose the items to give up!";
         } else {
             if (this.smugglersJSON.getTakeLoot()) {
-                return "[SMUGGLERS STATION RESOURCES]\n" + this.redItems + "🟥 " + this.yellowItems + "🟨 " + this.greenItems + "🟩 " + this.blueItems + "🟦 ";
+                return "[SMUGGLERS RESOURCES]\n" + this.redItems + "🟥 " + this.yellowItems + "🟨 " + this.greenItems + "🟩 " + this.blueItems + "🟦 ";
             } else {
                 return "Choose how to deal with the smugglers!";
             }

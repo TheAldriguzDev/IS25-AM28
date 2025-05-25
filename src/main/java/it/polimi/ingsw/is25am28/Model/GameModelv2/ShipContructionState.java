@@ -317,7 +317,7 @@ public final class ShipContructionState extends State implements TimerObserver {
                 p.getShip().generateComponentSubLists();
 
                 // Check if the player has an invalid ship
-                System.out.println(p.getNickname());
+//                System.out.println(p.getNickname());
                 if (!p.getShip().validateShip()) {
                     playersWithInvalidShip.add(p.getNickname());
                 }

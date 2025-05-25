@@ -67,6 +67,7 @@ public class CardRoundController extends GUIController {
     @FXML private VBox viewGameBoardContainer;
     @FXML private Pane viewGameBoardStackPaneLevel0;
     @FXML private Pane viewGameBoardStackPaneLevel2;
+    @FXML private ImageView boardImageView;
     @FXML private Button goBackToCardRoundButtonFromViewBoard;
 
     private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
@@ -138,7 +139,7 @@ public class CardRoundController extends GUIController {
 
     public void init(CardRoundDTO state) {
 
-        this.clientModel = GUIHandler.getInstance().getClientModel();
+        this.clientModel = GUIHandler.getClientModel();
         this.guiUtils = new GUIUtils(this.clientModel);
 
         this.cards = this.clientModel.getClientEventCards();
@@ -191,7 +192,18 @@ public class CardRoundController extends GUIController {
         this.initAdditionalInfoBox();
 
         // Initializes the board image to display on a view board request
-        this.initViewGameBoard();
+        this.guiUtils.initViewGameBoard(
+                this.viewGameBoardStackPaneLevel0,
+                this.viewGameBoardStackPaneLevel2,
+                this.boardImageView,
+                this.playersRocketBoard
+        );
+
+        this.guiUtils.initPlayersOnGameBoard(
+                this.viewGameBoardStackPaneLevel0,
+                this.viewGameBoardStackPaneLevel2,
+                this.playersRocketBoard
+        );
 
         this.initResourceBankBox();
 
@@ -228,39 +240,6 @@ public class CardRoundController extends GUIController {
                 this.handleBatteriesToBeStolen(row, col);
             }
         });
-    }
-
-    /**
-     * Sets the correct game board image based
-     * on the current difficulty level.
-     */
-    private void initViewGameBoard() {
-        if (this.clientModel.getDifficultyLevel() == 2) {
-            this.setVisibility(this.viewGameBoardStackPaneLevel2, true);
-
-            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
-                this.guiUtils.placePlayerInBoard(
-                        playerNickname,
-                        2,
-                        24,
-                        this.viewGameBoardStackPaneLevel2,
-                        this.playersRocketBoard
-                );
-            }
-        }
-        else {
-            this.setVisibility(this.viewGameBoardStackPaneLevel0, true);
-
-            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
-                this.guiUtils.placePlayerInBoard(
-                        playerNickname,
-                        0,
-                        18,
-                        this.viewGameBoardStackPaneLevel2,
-                        this.playersRocketBoard
-                );
-            }
-        }
     }
 
     private void initRegionMap(Map<String, Region> componentsRegions, List<ClientComponent> components, BiConsumer<Integer, Integer> onClick) {
@@ -338,11 +317,21 @@ public class CardRoundController extends GUIController {
             if (newToggle == null) {
                 // Go back to view the client's own ship
                 this.setShipGrid(this.clientModel.getNickname());
+                // Enables the commands
+                this.initCommandBox();
             } else {
 
                 // Exit the board visualization if the toggle
                 // is pressed during that phase
                 this.handleGoBackToCardRoundButton(new ActionEvent());
+
+                // Disable the commands
+                if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
+                    for (Toggle toggleButtonCommand : this.commandsToggleGroup.getToggles()) {
+                        ((ToggleButton) toggleButtonCommand).setDisable(true);
+                    }
+                }
+                this.commandsToggleGroup.selectToggle(null);
 
                 ToggleButton selected = (ToggleButton) newToggle;
                 this.setShipGrid(selected.getText());
@@ -539,7 +528,7 @@ public class CardRoundController extends GUIController {
         }
 
         // Adding the listener
-        commandsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+        this.commandsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
 
             if (newToggle == null) {
 
@@ -558,22 +547,24 @@ public class CardRoundController extends GUIController {
 
                 disableRegion(this.currentRegions);
 
+                this.initCommandDescriptionBox("Chose an action!");
+
             } else {
 
                 ToggleButton selected = (ToggleButton) newToggle;
 
                 switch (selected.getId()) {
                     case "playCard" -> {this.playCard(); this.commandsToggleGroup.selectToggle(null);}
-                    case "setCrewToRemove" -> {this.enableRegion(this.cabinsRegions);}
-                    case "setItemsToBeRemoved" -> {this.enableRegion(this.storagesToEmptyRegions);}
-                    case "setItemsToBeTaken" -> {this.enableRegion(this.storagesToFillRegions);}
-                    case "setTakeReward" -> {this.handleTakeReward();} // TODO: add dynamic selection buttons
-                    case "setChosenPlanetIndex" -> {this.handleChosenPlanetIndex();} // TODO: NEEDS dynamic selection buttons
-                    case "setWantsToVisit" -> {this.handleWantsToVisit();} // TODO: add dynamic selection buttons
-                    case "setShieldsToActivate" -> {this.enableRegion(this.shieldsRegions);}
-                    case "setDoubleCannonsToActivate" -> {this.enableRegion(this.doubleCannonsRegions);}
-                    case "setDoubleEnginesToActivate" -> {this.enableRegion(this.doubleEnginesRegions);}
-                    case "batteriesToBeStolen" -> {this.enableRegion(this.batteriesRegions);}
+                    case "setCrewToRemove" -> {this.enableRegion(this.cabinsRegions); if (this.cabinsRegions.isEmpty()) initCommandDescriptionBox("There are no available\ncabins to remove crew from!");}
+                    case "setItemsToBeRemoved" -> {this.enableRegion(this.storagesToEmptyRegions); if (this.storagesToEmptyRegions.isEmpty()) initCommandDescriptionBox("There are available storages\n to remove items from!");}
+                    case "setItemsToBeTaken" -> {this.enableRegion(this.storagesToFillRegions); if (this.storagesToFillRegions.isEmpty()) initCommandDescriptionBox("There are no available storages\n to place items in!");}
+                    case "setTakeReward" -> {this.handleTakeReward();}
+                    case "setChosenPlanetIndex" -> {this.handleChosenPlanetIndex();}
+                    case "setWantsToVisit" -> {this.handleWantsToVisit();}
+                    case "setShieldsToActivate" -> {this.enableRegion(this.shieldsRegions); if (this.shieldsRegions.isEmpty()) initCommandDescriptionBox("There are no available\nshields to activate!");}
+                    case "setDoubleCannonsToActivate" -> {this.enableRegion(this.doubleCannonsRegions); if (this.doubleCannonsRegions.isEmpty()) initCommandDescriptionBox("There are no available\ndouble cannons to activate!");}
+                    case "setDoubleEnginesToActivate" -> {this.enableRegion(this.doubleEnginesRegions); if (this.doubleEnginesRegions.isEmpty()) initCommandDescriptionBox("There are no available\ndouble engines to activate!");}
+                    case "batteriesToBeStolen" -> {this.enableRegion(this.batteriesRegions); if (this.batteriesRegions.isEmpty()) initCommandDescriptionBox("There are no available\nbatteries give up!");} // TODO: coverage in handleMandatory may be missing
                 }
             }
         });
@@ -585,6 +576,7 @@ public class CardRoundController extends GUIController {
         this.commandDescriptionBox.getChildren().clear();
         Label commandDescriptionLabel = new Label();
         commandDescriptionLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+        commandDescriptionLabel.setTextAlignment(TextAlignment.CENTER);
 
         commandDescriptionLabel.setText(text);
         this.commandDescriptionBox.getChildren().add(commandDescriptionLabel);
@@ -631,7 +623,7 @@ public class CardRoundController extends GUIController {
         ClientStorage storage = (ClientStorage) this.mainShip.getComponent(row, col);
         this.commandsGrid.getChildren().clear();
         List<ItemColor> cardItemColors = this.currEventCard.getAvailableItemColors();
-        if (!cardItemColors.isEmpty()) {
+        if (!cardItemColors.isEmpty()) { //TODO: caso solo rossi su storage non rosso
             this.initCommandDescriptionBox("Choose an itemColor to add!");
         } else {
             this.initCommandDescriptionBox("There are no available\nitem colors in the card!");
@@ -676,7 +668,7 @@ public class CardRoundController extends GUIController {
                 }
         );
         itemColorButton.getStyleClass().add("button");
-        itemColorButton.setStyle("-fx-background-color: " + itemColor.toString().toLowerCase());
+        itemColorButton.setStyle("-fx-background-color: " + itemColor.toString().toLowerCase() + "; -fx-text-fill: black");
         itemColorButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
         itemColorButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         itemColorButton.setAlignment(Pos.CENTER);
@@ -730,12 +722,12 @@ public class CardRoundController extends GUIController {
             }
         }
 
+        this.commandsToggleGroup.selectToggle(null);
+        this.viewOtherShipsToggleGroup.selectToggle(null);
+
         // Disable all the previous containers
         this.setVisibility(this.shipImageView, false);
         this.setVisibility(this.shipGrid, false);
-
-        this.commandsToggleGroup.selectToggle(null);
-        this.viewOtherShipsToggleGroup.selectToggle(null);
 
         // Enable the board container
         this.setVisibility(this.viewGameBoardContainer, true);
@@ -1926,7 +1918,12 @@ public class CardRoundController extends GUIController {
 
             this.initTurnBox();
 
-            this.initViewGameBoard();
+            this.guiUtils.initViewGameBoard(
+                    this.viewGameBoardStackPaneLevel0,
+                    this.viewGameBoardStackPaneLevel2,
+                    this.boardImageView,
+                    this.playersRocketBoard
+            );
 
             this.initResourceBankBox();
 

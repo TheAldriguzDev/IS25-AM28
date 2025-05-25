@@ -22,7 +22,7 @@
          <children>
             <VBox alignment="CENTER" spacing="15.0">
                <children>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleViewGameBoard" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="boardImageView" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleViewGameBoard" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../imgs/cardboard/board_level_2.png" />
                      </image>
@@ -70,7 +70,7 @@
                               <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
                            </columnConstraints>
                         </GridPane>
-                        <VBox fx:id="viewGameBoardContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" managed="false" visible="false">
+                        <VBox fx:id="viewGameBoardContainer" managed="false" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="20.0" visible="false">
                            <children>
                               <VBox alignment="TOP_CENTER" spacing="30.0">
                                  <children>

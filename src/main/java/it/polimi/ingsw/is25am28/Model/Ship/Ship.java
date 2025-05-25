@@ -715,7 +715,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
             }
         );
 
-        System.out.println("Step 1: " + isShipValid.get());
+        // System.out.println("Step 1: " + isShipValid.get());
 
         if (isShipValid.get()) {
             for (int i = 0; i < grid_rows; i++) {
@@ -729,8 +729,8 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
             }
         }
 
-        System.out.println("Step 2: " + isShipValid.get());
-        System.out.println(foundComponents.get() + " components found, " + placedComponents + " placed");
+        // System.out.println("Step 2: " + isShipValid.get());
+        // System.out.println(foundComponents.get() + " components found, " + placedComponents + " placed");
 
         return isShipValid.get();
     }

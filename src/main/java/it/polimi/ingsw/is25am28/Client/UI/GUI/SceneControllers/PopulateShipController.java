@@ -56,6 +56,7 @@ public class PopulateShipController extends GUIController {
     @FXML private ToggleButton whiteToggle;
 
     // Board visualization
+    @FXML private ImageView boardImageView;
     @FXML private VBox viewGameBoardContainer;
     @FXML private Pane viewGameBoardStackPaneLevel0;
     @FXML private Pane viewGameBoardStackPaneLevel2;
@@ -99,8 +100,19 @@ public class PopulateShipController extends GUIController {
         // Setting the buttons to view other ships
         this.initViewOtherShipsGrid();
 
-        // Initializing the game board
-        this.initViewGameBoard();
+        // Initializes the board
+        this.guiUtils.initViewGameBoard(
+                this.viewGameBoardStackPaneLevel0,
+                this.viewGameBoardStackPaneLevel2,
+                this.boardImageView,
+                this.playersRocketBoard
+        );
+
+        this.guiUtils.initPlayersOnGameBoard(
+                this.viewGameBoardStackPaneLevel0,
+                this.viewGameBoardStackPaneLevel2,
+                this.playersRocketBoard
+        );
 
         // Setting the correct background
         this.guiUtils.setShipGridBackground(this.shipImageView);
@@ -480,38 +492,5 @@ public class PopulateShipController extends GUIController {
 
         // Enable the board container
         this.setVisibility(this.viewGameBoardContainer, true);
-    }
-
-    /**
-     * Sets the correct game board image based
-     * on the current difficulty level.
-     */
-    private void initViewGameBoard() {
-        if (this.clientModel.getDifficultyLevel() == 2) {
-            this.setVisibility(this.viewGameBoardStackPaneLevel2, true);
-
-            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
-                this.guiUtils.placePlayerInBoard(
-                        playerNickname,
-                        2,
-                        24,
-                        this.viewGameBoardStackPaneLevel2,
-                        this.playersRocketBoard
-                );
-            }
-        }
-        else {
-            this.setVisibility(this.viewGameBoardStackPaneLevel0, true);
-
-            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
-                this.guiUtils.placePlayerInBoard(
-                        playerNickname,
-                        0,
-                        18,
-                        this.viewGameBoardStackPaneLevel2,
-                        this.playersRocketBoard
-                );
-            }
-        }
     }
 }
