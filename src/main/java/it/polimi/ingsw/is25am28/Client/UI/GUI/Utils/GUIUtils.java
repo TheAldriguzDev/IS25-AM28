@@ -471,6 +471,25 @@ public class GUIUtils {
         if (this.clientModel.getDifficultyLevel() == 2) {
             viewGameBoardStackPaneLevel2.setVisible(true);
             viewGameBoardStackPaneLevel2.setManaged(true);
+        }
+        else {
+            viewGameBoardStackPaneLevel0.setVisible(true);
+            viewGameBoardStackPaneLevel0.setManaged(true);
+        }
+    }
+
+    /**
+     * Sets the player rockets on an initialized
+     * board based on the difficulty level
+     */
+    public void initPlayersOnGameBoard(
+            Pane viewGameBoardStackPaneLevel0,
+            Pane viewGameBoardStackPaneLevel2,
+            Map<String, ImageView> playersRocketBoard
+    ) {
+        if (this.clientModel.getDifficultyLevel() == 2) {
+            viewGameBoardStackPaneLevel2.setVisible(true);
+            viewGameBoardStackPaneLevel2.setManaged(true);
 
             for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
                 this.placePlayerInBoard(
@@ -491,12 +510,13 @@ public class GUIUtils {
                         playerNickname,
                         0,
                         18,
-                        viewGameBoardStackPaneLevel2,
+                        viewGameBoardStackPaneLevel0,
                         playersRocketBoard
                 );
             }
         }
     }
+
 
 
 //    public void updateBatteryIcon(String playerNickname, GridPane shipGrid, Map<String, HBox> batteriesMap, int row, int col) {

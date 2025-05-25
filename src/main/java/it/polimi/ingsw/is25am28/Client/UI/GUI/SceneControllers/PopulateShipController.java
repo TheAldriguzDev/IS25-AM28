@@ -108,6 +108,12 @@ public class PopulateShipController extends GUIController {
                 this.playersRocketBoard
         );
 
+        this.guiUtils.initPlayersOnGameBoard(
+                this.viewGameBoardStackPaneLevel0,
+                this.viewGameBoardStackPaneLevel2,
+                this.playersRocketBoard
+        );
+
         // Setting the correct background
         this.guiUtils.setShipGridBackground(this.shipImageView);
 

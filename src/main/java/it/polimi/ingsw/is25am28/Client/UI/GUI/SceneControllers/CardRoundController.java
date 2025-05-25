@@ -199,6 +199,12 @@ public class CardRoundController extends GUIController {
                 this.playersRocketBoard
         );
 
+        this.guiUtils.initPlayersOnGameBoard(
+                this.viewGameBoardStackPaneLevel0,
+                this.viewGameBoardStackPaneLevel2,
+                this.playersRocketBoard
+        );
+
         this.initResourceBankBox();
 
         List<ClientStorage> storages = this.mainShip.getStorageList();
