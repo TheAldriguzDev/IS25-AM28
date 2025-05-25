@@ -114,12 +114,12 @@ public class CardStateJSON extends ActionJSON {
     // ======== VisitPlanets Card State Attributes ======== //
 
     private Map<Integer, Map<ItemColor, Integer>> availablePlanets;
-    private Integer chosenPlanetIndex;
+    private int chosenPlanetIndex;
 
     // ======== MeteorShower Card State Attributes ======== //
 
-    private Integer currMeteorIndex;
-    private Integer diceThrowResult;
+    private int currMeteorIndex;
+    private int diceThrowResult;
     private Map<String, Integer> currMeteorDescriptor;
     private Map<String, List<Map<String, Object>>> previousPlayerRemovedComponents;
 

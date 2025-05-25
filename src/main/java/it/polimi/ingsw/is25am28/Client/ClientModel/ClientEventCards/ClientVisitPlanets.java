@@ -101,7 +101,7 @@ public class ClientVisitPlanets extends ClientEventCard {
             Map<ItemColor, Integer> availableResources = availablePlanets.get(this.visitPlanetsJSON.getChosenPlanetIndex());
             return "[AVAILABLE RESOURCES]\n" + availableResources.get(ItemColor.RED) + "🟥 " + availableResources.get(ItemColor.YELLOW) + "🟨 " + availableResources.get(ItemColor.GREEN) + "🟩 " + availableResources.get(ItemColor.BLUE) + "🟦 ";
         }
-    };
+    }
 
     @Override
     public void clearJSON() {

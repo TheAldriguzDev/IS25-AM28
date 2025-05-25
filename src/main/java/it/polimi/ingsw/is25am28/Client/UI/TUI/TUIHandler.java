@@ -64,11 +64,17 @@ public class TUIHandler implements ClientUI {
 
             if (operatingSystem.contains("win")) {
                 // For Windows
-                new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                ProcessBuilder pb = new ProcessBuilder("cmd", "/c", "cls");
+                pb.inheritIO();
+                pb.environment().put("TERM", "xterm");
+                pb.start().waitFor();
             }
             else if (operatingSystem.contains("mac") || operatingSystem.contains("nix") || operatingSystem.contains("nux")) {
                 // For macOS and Linux
-                new ProcessBuilder("clear").inheritIO().start().waitFor();
+                ProcessBuilder pb = new ProcessBuilder("clear");
+                pb.inheritIO();
+                pb.environment().put("TERM", "xterm");
+                pb.start().waitFor();
             }
             else {
                 // For other platforms, you can print a message or handle it as needed
