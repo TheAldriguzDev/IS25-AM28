@@ -87,23 +87,80 @@ public class ClientWarZone extends ClientEventCard {
     }
 
     @Override
+    public String getAdditionalCardInfo() {
+        String tmpAction = getCurrAction();
+        String tmpConsequence = getCurrConsequence();
+
+        if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+            return tmpAction + " --> " + tmpConsequence;
+        }
+
+        switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
+            case "RequiredCrew" -> {
+                return "Choose the crew members to give up";
+            }
+            case "ShootingSequence" -> {
+                return "h";
+            }
+            case "LossItems" -> {
+                return "Choose the items to give up!";
+            }
+            default -> {
+                return "[CURRENT PLASMASHOT INFO]\nComing from: "
+                        + switch (this.currentPlasmaShot.get("shotDirection")) {
+                    case 0 -> "ABOVE";
+                    case 1 -> "RIGHT";
+                    case 2 -> ": BELOW";
+                    case 3 -> ": LEFT";
+                    default -> "";
+                }
+                        + ", Size: "
+                        + switch (this.currentPlasmaShot.get("shotSize")) {
+                    case 1 -> "SMALL";
+                    case 2 -> "BIG";
+                    default -> "";
+                } + "\nDice Throw Result: " + this.diceThrowResult;
+            }
+        }
+    }
+
+    private String getCurrAction() {
+        return switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
+            case "Humans" -> "Crew";
+            case "Enginepower" -> "EnginePower";
+            case "Firepower" -> "FirePower";
+            default -> "";
+        };
+    }
+
+    private String getCurrConsequence() {
+        return switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
+            case "RequiredCrew" -> "Taken Crew";
+            case "MovementSteps" -> "Days";
+            case "ShootingSequence" -> "PlasmaShots";
+            case "LossItems" -> "Taken Items";
+            default -> "";
+        };
+    }
+
+    @Override
     public WidgetTUI generateWidget() {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();
 
-        String tmpAction = null;
-        String tmpConsequence = null;
-        switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
-            case "Humans" -> tmpAction = "Crew";
-            case "Enginepower" -> tmpAction = "EnginePower";
-            case "Firepower" -> tmpAction = "FirePower";
-        }
-        switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
-            case "RequiredCrew" -> tmpConsequence = "Taken Crew";
-            case "MovementSteps" -> tmpConsequence = "Days";
-            case "ShootingSequence" -> tmpConsequence = "PlasmaShots";
-            case "LossItems" -> tmpConsequence = "Taken Items";
-        }
+        String tmpAction = getCurrAction();
+        String tmpConsequence = getCurrConsequence();
+//        switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
+//            case "Humans" -> tmpAction = "Crew";
+//            case "Enginepower" -> tmpAction = "EnginePower";
+//            case "Firepower" -> tmpAction = "FirePower";
+//        }
+//        switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
+//            case "RequiredCrew" -> tmpConsequence = "Taken Crew";
+//            case "MovementSteps" -> tmpConsequence = "Days";
+//            case "ShootingSequence" -> tmpConsequence = "PlasmaShots";
+//            case "LossItems" -> tmpConsequence = "Taken Items";
+//        }
 
         cardWidget.appendString("[" + this.cardName.toUpperCase() + " - LVL: " + this.cardLevel + "]");
 

@@ -102,6 +102,15 @@ public class ClientSlavers extends ClientEventCard {
     }
 
     @Override
+    public String getAdditionalCardInfo() {
+        if (this.isPlayerDefeated) {
+            return "Choose the crew members to give up!";
+        } else {
+            return "Choose how to deal with the slavers!";
+        }
+    }
+
+    @Override
     public void clearJSON() {
         this.slaversJSON = new SlaversJSON();
     }

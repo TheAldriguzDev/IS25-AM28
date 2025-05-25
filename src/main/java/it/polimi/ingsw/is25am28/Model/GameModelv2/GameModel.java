@@ -266,11 +266,11 @@ public class GameModel {
         List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
         List<EventCard> fakeDeck = new ArrayList<>();
 
-        fakeDeck.add(AllCards.get(0)); // AbandonedShip
+//        fakeDeck.add(AllCards.get(0)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(1)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(2)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(3)); // AbandonedShip
-        fakeDeck.add(AllCards.get(4)); // AbandonedStation
+//        fakeDeck.add(AllCards.get(4)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(5)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(6)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(7)); // AbandonedStation

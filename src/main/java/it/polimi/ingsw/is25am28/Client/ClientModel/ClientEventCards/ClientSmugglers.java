@@ -84,6 +84,19 @@ public class ClientSmugglers extends ClientEventCard {
     }
 
     @Override
+    public String getAdditionalCardInfo() {
+        if (this.isPlayerDefeated) {
+            return "Choose the items to give up!";
+        } else {
+            if (this.smugglersJSON.getTakeLoot()) {
+                return "[SMUGGLERS STATION RESOURCES]\n" + this.redItems + "🟥 " + this.yellowItems + "🟨 " + this.greenItems + "🟩 " + this.blueItems + "🟦 ";
+            } else {
+                return "Choose how to deal with the smugglers!";
+            }
+        }
+    }
+
+    @Override
     public WidgetTUI generateWidget() {
         WidgetTUI cardWidget = new WidgetTUI();
         WidgetTUI cardInfoWidget = new WidgetTUI();

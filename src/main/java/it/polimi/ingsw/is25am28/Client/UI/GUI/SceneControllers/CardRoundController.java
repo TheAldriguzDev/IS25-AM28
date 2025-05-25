@@ -457,7 +457,7 @@ public class CardRoundController extends GUIController {
 
     private void initResourceBankBox() {
         this.resourceBankBox.getChildren().clear();
-        Label resourceBankLabel = new Label();
+        Label resourceBankLabel = new Label("Resource Bank");
         resourceBankLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
         this.resourceBankBox.getChildren().add(resourceBankLabel);
         Map<ItemColor, Integer> resources = this.clientModel.getResourceBank().getResources();
@@ -590,49 +590,6 @@ public class CardRoundController extends GUIController {
         this.commandDescriptionBox.getChildren().add(commandDescriptionLabel);
     }
 
-    private void initAvailableItemColors(int ofsRow, int ofsCol) {
-
-        // TODO: color selected region red
-
-        ClientStorage storage = (ClientStorage) this.mainShip.getComponent(ofsRow + this.shipOffsets.getKey(), ofsCol + this.shipOffsets.getValue());
-
-        this.commandsGrid.getChildren().clear();
-
-        // Create choseColorCommandDescritpion
-        this.initCommandDescriptionBox("Choose an available itemColor!");
-
-        this.chosenItemColor = null;
-
-        // TODO: go back button
-
-        int commandCol = 0;
-        Label colorLabel = new Label();
-        for (Item item : storage.getStoredItems()) {
-            ItemColor itemColor = item.getColor();
-            Button itemColorButton = new Button();
-
-            colorLabel = new Label();
-            colorLabel.setTextAlignment(TextAlignment.CENTER);
-            colorLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
-
-            itemColorButton.setText(itemColor.toString());
-            itemColorButton.getStyleClass().add("button");
-            itemColorButton.setOnAction(event -> {
-                this.chosenItemColor = itemColor;
-                if (this.isTakeAction) {
-                    this.handleItemToTake(ofsRow, ofsCol);
-                } else {
-                    this.handleItemToRemove(ofsRow, ofsCol);
-                }
-            });
-
-            // Overriding the color of the button
-            itemColorButton.setStyle("-fx-background-color: " + itemColor.toString().toLowerCase());
-
-            this.commandsGrid.add(itemColorButton, commandCol, 0);
-        }
-    }
-
     private void initRemoveColorCommands(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
@@ -673,7 +630,13 @@ public class CardRoundController extends GUIController {
 
         ClientStorage storage = (ClientStorage) this.mainShip.getComponent(row, col);
         this.commandsGrid.getChildren().clear();
-        this.initCommandDescriptionBox("Choose an itemColor to add!");
+        List<ItemColor> cardItemColors = this.currEventCard.getAvailableItemColors();
+        if (!cardItemColors.isEmpty()) {
+            this.initCommandDescriptionBox("Choose an itemColor to add!");
+        } else {
+            this.initCommandDescriptionBox("There are no available\nitem colors in the card!");
+        }
+
 
         this.chosenItemColor = null;
         this.disableRegion(this.storagesToFillRegions);
@@ -688,7 +651,7 @@ public class CardRoundController extends GUIController {
         this.commandsGrid.add(goBackButton, 0, 0);
 
         int commandCol = 1;
-        for(ItemColor itemColor : this.currEventCard.getAvailableItemColors()) {
+        for(ItemColor itemColor : cardItemColors) {
             if (!(itemColor.equals(ItemColor.RED) && !storage.isSpecialStorage())) {
                 Button itemColorButton = this.createColorButton(itemColor);
                 itemColorButton.setOnAction(event -> {
@@ -703,7 +666,7 @@ public class CardRoundController extends GUIController {
     }
 
     private Button createColorButton(ItemColor itemColor) {
-        Button itemColorButton = new Button();
+        Button itemColorButton = new Button();// TODO: general switch
         itemColorButton.setText(
                 switch (itemColor) {
                     case RED -> "Red";
@@ -730,8 +693,6 @@ public class CardRoundController extends GUIController {
         goBackButton.setAlignment(Pos.CENTER);
         return goBackButton;
     }
-
-    // TODO: variabile di commandsGridSwap, utile per boardView e altri
 
     /**
      * Sets disabled(true) for all the regions in the given map
@@ -805,6 +766,9 @@ public class CardRoundController extends GUIController {
         Label label;
 
         this.playerActionsScrollPane.setContent(null);
+
+        // Actions recap not necessary if it's not the player's turn
+        if (!this.clientModel.getNickname().equals(this.currEventCard.getPlayerNickname())) return;
 
         scrollPaneContent = new VBox();
         scrollPaneContent.setAlignment(Pos.TOP_CENTER);
@@ -1224,6 +1188,7 @@ public class CardRoundController extends GUIController {
 //            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO:remove in ONSuccess
         }
 
+        this.initStatsBox();
         this.commandsToggleGroup.selectToggle(null);
     }
 
@@ -1263,6 +1228,8 @@ public class CardRoundController extends GUIController {
 //            this.storagesToEmptyRegions.remove(guiUtils.keyFromCoords(row, col)); //TODO: OnSuccess
         }
 
+        this.initStatsBox();
+        this.initAdditionalInfoBox();
         this.initResourceBankBox();
         this.initCommandBox();
     }
@@ -1292,6 +1259,8 @@ public class CardRoundController extends GUIController {
             this.storagesToFillRegions.remove(guiUtils.keyFromCoords(row, col));
         }
 
+        this.initStatsBox();
+        this.initAdditionalInfoBox();
         this.initResourceBankBox();
         this.initCommandBox();
     }
@@ -1339,6 +1308,7 @@ public class CardRoundController extends GUIController {
                 this.availableCommands.remove("setChosenPlanetIndex");
                 this.availableCommands.add("setItemsToBeRemoved");
                 this.availableCommands.add("setItemsToBeTaken");
+                this.initAdditionalInfoBox();
                 this.initCommandBox();
             });
 
@@ -1477,7 +1447,7 @@ public class CardRoundController extends GUIController {
         }
 
 
-
+        this.initStatsBox();
         this.currEnergyConsumer = null;
         this.commandsToggleGroup.selectToggle(null);
     }
