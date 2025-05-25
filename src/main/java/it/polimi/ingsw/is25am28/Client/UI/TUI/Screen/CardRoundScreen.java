@@ -2155,6 +2155,10 @@ public class CardRoundScreen extends Screen {
                             storage.storeItem(new Item(ic));
                         }
                     }
+
+                }
+
+                if (this.indexedCardInputMethods.get("batteriesToBeStolen").getKey() && this.currEventCard.getBatteriesToBeStolen() != null && !this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
                     // Revert the changes to the batteries
                     if (!this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
                         for (CoordinatePair bch : this.currEventCard.getBatteriesToBeStolen()) {

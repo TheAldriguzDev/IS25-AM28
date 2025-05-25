@@ -31,10 +31,6 @@ public class ClientPirates extends ClientEventCard {
         this.movementSteps = cardState.getMovementSteps();
         this.defeatedPlayers = new ArrayList<>();
         this.piratesJSON = new PiratesJSON();
-
-//        enabledCommands.add("setDoubleCannonsToActivate");
-//        enabledCommands.add("setShieldsToActivate");
-//        enabledCommands.add("setTakeReward");
     }
 
     @Override
@@ -126,6 +122,28 @@ public class ClientPirates extends ClientEventCard {
         }
 
         return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+    }
+
+    @Override
+    public String getAdditionalCardInfo() {
+        if (this.firstRound) {
+            return "[CURRENT PLASMASHOT INFO]\nComing from: "
+                    + switch (this.currentPlasmaShot.get("shotDirection")) {
+                case 0 -> "ABOVE";
+                case 1 -> "RIGHT";
+                case 2 -> ": BELOW";
+                case 3 -> ": LEFT";
+                default -> "";
+            }
+                    + ", Size: "
+                    + switch (this.currentPlasmaShot.get("shotSize")) {
+                case 1 -> "SMALL";
+                case 2 -> "BIG";
+                default -> "";
+            } + "\nDice Throw Result: " + this.diceThrowResult;
+        } else {
+            return "No plasmaShots headed\ntowards the ship";
+        }
     }
 
     @Override

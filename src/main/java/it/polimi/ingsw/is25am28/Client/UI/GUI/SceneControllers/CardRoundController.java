@@ -317,11 +317,22 @@ public class CardRoundController extends GUIController {
             if (newToggle == null) {
                 // Go back to view the client's own ship
                 this.setShipGrid(this.clientModel.getNickname());
+                // Enables the commands
+                this.initCommandBox();
             } else {
+
+                this.commandsToggleGroup.selectToggle(null);
 
                 // Exit the board visualization if the toggle
                 // is pressed during that phase
                 this.handleGoBackToCardRoundButton(new ActionEvent());
+
+                // Disable the commands
+                if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
+                    for (Toggle toggleButtonCommand : this.commandsToggleGroup.getToggles()) {
+                        ((ToggleButton) toggleButtonCommand).setDisable(true);
+                    }
+                }
 
                 ToggleButton selected = (ToggleButton) newToggle;
                 this.setShipGrid(selected.getText());
@@ -436,7 +447,7 @@ public class CardRoundController extends GUIController {
 
     private void initResourceBankBox() {
         this.resourceBankBox.getChildren().clear();
-        Label resourceBankLabel = new Label();
+        Label resourceBankLabel = new Label("Resource Bank");
         resourceBankLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
         this.resourceBankBox.getChildren().add(resourceBankLabel);
         Map<ItemColor, Integer> resources = this.clientModel.getResourceBank().getResources();
@@ -518,7 +529,7 @@ public class CardRoundController extends GUIController {
         }
 
         // Adding the listener
-        commandsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
+        this.commandsToggleGroup.selectedToggleProperty().addListener((obs, oldToggle, newToggle) -> {
 
             if (newToggle == null) {
 
@@ -537,22 +548,24 @@ public class CardRoundController extends GUIController {
 
                 disableRegion(this.currentRegions);
 
+                this.initCommandDescriptionBox("Chose an action!");
+
             } else {
 
                 ToggleButton selected = (ToggleButton) newToggle;
 
                 switch (selected.getId()) {
                     case "playCard" -> {this.playCard(); this.commandsToggleGroup.selectToggle(null);}
-                    case "setCrewToRemove" -> {this.enableRegion(this.cabinsRegions);}
-                    case "setItemsToBeRemoved" -> {this.enableRegion(this.storagesToEmptyRegions);}
-                    case "setItemsToBeTaken" -> {this.enableRegion(this.storagesToFillRegions);}
-                    case "setTakeReward" -> {this.handleTakeReward();} // TODO: add dynamic selection buttons
-                    case "setChosenPlanetIndex" -> {this.handleChosenPlanetIndex();} // TODO: NEEDS dynamic selection buttons
-                    case "setWantsToVisit" -> {this.handleWantsToVisit();} // TODO: add dynamic selection buttons
-                    case "setShieldsToActivate" -> {this.enableRegion(this.shieldsRegions);}
-                    case "setDoubleCannonsToActivate" -> {this.enableRegion(this.doubleCannonsRegions);}
-                    case "setDoubleEnginesToActivate" -> {this.enableRegion(this.doubleEnginesRegions);}
-                    case "batteriesToBeStolen" -> {this.enableRegion(this.batteriesRegions);}
+                    case "setCrewToRemove" -> {this.enableRegion(this.cabinsRegions); if (this.cabinsRegions.isEmpty()) initCommandDescriptionBox("There are no available\ncabins to remove crew from!");}
+                    case "setItemsToBeRemoved" -> {this.enableRegion(this.storagesToEmptyRegions); if (this.storagesToEmptyRegions.isEmpty()) initCommandDescriptionBox("There are available storages\n to remove items from!");}
+                    case "setItemsToBeTaken" -> {this.enableRegion(this.storagesToFillRegions); if (this.storagesToFillRegions.isEmpty()) initCommandDescriptionBox("There are no available storages\n to place items in!");}
+                    case "setTakeReward" -> {this.handleTakeReward();}
+                    case "setChosenPlanetIndex" -> {this.handleChosenPlanetIndex();}
+                    case "setWantsToVisit" -> {this.handleWantsToVisit();}
+                    case "setShieldsToActivate" -> {this.enableRegion(this.shieldsRegions); if (this.shieldsRegions.isEmpty()) initCommandDescriptionBox("There are no available\nshields to activate!");}
+                    case "setDoubleCannonsToActivate" -> {this.enableRegion(this.doubleCannonsRegions); if (this.doubleCannonsRegions.isEmpty()) initCommandDescriptionBox("There are no available\ndouble cannons to activate!");}
+                    case "setDoubleEnginesToActivate" -> {this.enableRegion(this.doubleEnginesRegions); if (this.doubleEnginesRegions.isEmpty()) initCommandDescriptionBox("There are no available\ndouble engines to activate!");}
+                    case "batteriesToBeStolen" -> {this.enableRegion(this.batteriesRegions); if (this.batteriesRegions.isEmpty()) initCommandDescriptionBox("There are no available\nbatteries give up!");} // TODO: coverage in handleMandatory may be missing
                 }
             }
         });
@@ -564,52 +577,10 @@ public class CardRoundController extends GUIController {
         this.commandDescriptionBox.getChildren().clear();
         Label commandDescriptionLabel = new Label();
         commandDescriptionLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
+        commandDescriptionLabel.setTextAlignment(TextAlignment.CENTER);
 
         commandDescriptionLabel.setText(text);
         this.commandDescriptionBox.getChildren().add(commandDescriptionLabel);
-    }
-
-    private void initAvailableItemColors(int ofsRow, int ofsCol) {
-
-        // TODO: color selected region red
-
-        ClientStorage storage = (ClientStorage) this.mainShip.getComponent(ofsRow + this.shipOffsets.getKey(), ofsCol + this.shipOffsets.getValue());
-
-        this.commandsGrid.getChildren().clear();
-
-        // Create choseColorCommandDescritpion
-        this.initCommandDescriptionBox("Choose an available itemColor!");
-
-        this.chosenItemColor = null;
-
-        // TODO: go back button
-
-        int commandCol = 0;
-        Label colorLabel = new Label();
-        for (Item item : storage.getStoredItems()) {
-            ItemColor itemColor = item.getColor();
-            Button itemColorButton = new Button();
-
-            colorLabel = new Label();
-            colorLabel.setTextAlignment(TextAlignment.CENTER);
-            colorLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
-
-            itemColorButton.setText(itemColor.toString());
-            itemColorButton.getStyleClass().add("button");
-            itemColorButton.setOnAction(event -> {
-                this.chosenItemColor = itemColor;
-                if (this.isTakeAction) {
-                    this.handleItemToTake(ofsRow, ofsCol);
-                } else {
-                    this.handleItemToRemove(ofsRow, ofsCol);
-                }
-            });
-
-            // Overriding the color of the button
-            itemColorButton.setStyle("-fx-background-color: " + itemColor.toString().toLowerCase());
-
-            this.commandsGrid.add(itemColorButton, commandCol, 0);
-        }
     }
 
     private void initRemoveColorCommands(int ofsRow, int ofsCol) {
@@ -652,7 +623,13 @@ public class CardRoundController extends GUIController {
 
         ClientStorage storage = (ClientStorage) this.mainShip.getComponent(row, col);
         this.commandsGrid.getChildren().clear();
-        this.initCommandDescriptionBox("Choose an itemColor to add!");
+        List<ItemColor> cardItemColors = this.currEventCard.getAvailableItemColors();
+        if (!cardItemColors.isEmpty()) { //TODO: caso solo rossi su storage non rosso
+            this.initCommandDescriptionBox("Choose an itemColor to add!");
+        } else {
+            this.initCommandDescriptionBox("There are no available\nitem colors in the card!");
+        }
+
 
         this.chosenItemColor = null;
         this.disableRegion(this.storagesToFillRegions);
@@ -667,7 +644,7 @@ public class CardRoundController extends GUIController {
         this.commandsGrid.add(goBackButton, 0, 0);
 
         int commandCol = 1;
-        for(ItemColor itemColor : this.currEventCard.getAvailableItemColors()) {
+        for(ItemColor itemColor : cardItemColors) {
             if (!(itemColor.equals(ItemColor.RED) && !storage.isSpecialStorage())) {
                 Button itemColorButton = this.createColorButton(itemColor);
                 itemColorButton.setOnAction(event -> {
@@ -682,7 +659,7 @@ public class CardRoundController extends GUIController {
     }
 
     private Button createColorButton(ItemColor itemColor) {
-        Button itemColorButton = new Button();
+        Button itemColorButton = new Button();// TODO: general switch
         itemColorButton.setText(
                 switch (itemColor) {
                     case RED -> "Red";
@@ -709,8 +686,6 @@ public class CardRoundController extends GUIController {
         goBackButton.setAlignment(Pos.CENTER);
         return goBackButton;
     }
-
-    // TODO: variabile di commandsGridSwap, utile per boardView e altri
 
     /**
      * Sets disabled(true) for all the regions in the given map
@@ -741,6 +716,9 @@ public class CardRoundController extends GUIController {
     @FXML
     private void handleViewGameBoard() {
 
+        this.commandsToggleGroup.selectToggle(null);
+        this.viewOtherShipsToggleGroup.selectToggle(null);
+
         // Disable the commands
         if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
             for (Toggle toggleButtonCommand : this.commandsToggleGroup.getToggles()) {
@@ -751,9 +729,6 @@ public class CardRoundController extends GUIController {
         // Disable all the previous containers
         this.setVisibility(this.shipImageView, false);
         this.setVisibility(this.shipGrid, false);
-
-        this.commandsToggleGroup.selectToggle(null);
-        this.viewOtherShipsToggleGroup.selectToggle(null);
 
         // Enable the board container
         this.setVisibility(this.viewGameBoardContainer, true);
@@ -784,6 +759,9 @@ public class CardRoundController extends GUIController {
         Label label;
 
         this.playerActionsScrollPane.setContent(null);
+
+        // Actions recap not necessary if it's not the player's turn
+        if (!this.clientModel.getNickname().equals(this.currEventCard.getPlayerNickname())) return;
 
         scrollPaneContent = new VBox();
         scrollPaneContent.setAlignment(Pos.TOP_CENTER);
@@ -1128,7 +1106,9 @@ public class CardRoundController extends GUIController {
                                             this.storagesToFillRegions.remove(guiUtils.keyFromCoords(storage.getI(), storage.getJ()));
                                         }
                                     }
+                                }
 
+                                if (this.availableCommands.contains("batteriesToBeStolen") && this.currEventCard.getBatteriesToBeStolen() != null && !this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
                                     // Revert the changes to the batteries
                                     if (!this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
                                         for (CoordinatePair bch : this.currEventCard.getBatteriesToBeStolen()) {
@@ -1142,6 +1122,7 @@ public class CardRoundController extends GUIController {
 
                                 this.availableCommands = new ArrayList<>(this.currEventCard.getAvailableCommands());
                                 this.currEventCard.clearJSON();
+                                this.initStatsBox();
                                 this.initCommandBox();
                                 this.visualizePlayerActions();
 
@@ -1203,6 +1184,7 @@ public class CardRoundController extends GUIController {
 //            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO:remove in ONSuccess
         }
 
+        this.initStatsBox();
         this.commandsToggleGroup.selectToggle(null);
     }
 
@@ -1242,6 +1224,8 @@ public class CardRoundController extends GUIController {
 //            this.storagesToEmptyRegions.remove(guiUtils.keyFromCoords(row, col)); //TODO: OnSuccess
         }
 
+        this.initStatsBox();
+        this.initAdditionalInfoBox();
         this.initResourceBankBox();
         this.initCommandBox();
     }
@@ -1271,6 +1255,8 @@ public class CardRoundController extends GUIController {
             this.storagesToFillRegions.remove(guiUtils.keyFromCoords(row, col));
         }
 
+        this.initStatsBox();
+        this.initAdditionalInfoBox();
         this.initResourceBankBox();
         this.initCommandBox();
     }
@@ -1318,6 +1304,7 @@ public class CardRoundController extends GUIController {
                 this.availableCommands.remove("setChosenPlanetIndex");
                 this.availableCommands.add("setItemsToBeRemoved");
                 this.availableCommands.add("setItemsToBeTaken");
+                this.initAdditionalInfoBox();
                 this.initCommandBox();
             });
 
@@ -1404,6 +1391,7 @@ public class CardRoundController extends GUIController {
 //            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO:remove in ONSuccess
         }
 
+        this.initStatsBox();
         this.commandsToggleGroup.selectToggle(null);
     }
 
@@ -1456,7 +1444,7 @@ public class CardRoundController extends GUIController {
         }
 
 
-
+        this.initStatsBox();
         this.currEnergyConsumer = null;
         this.commandsToggleGroup.selectToggle(null);
     }

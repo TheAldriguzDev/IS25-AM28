@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
@@ -37,7 +38,8 @@ public class ClientVisitPlanets extends ClientEventCard {
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
         // If a valid planet has been chosen by a player, the corresponding planed will be removed form the avaiable planets
-        if (cardState.getChosenPlanetIndex() != -1) {
+        this.chosenPlanetIndex = cardState.getChosenPlanetIndex();
+        if (chosenPlanetIndex != -1) {
             availablePlanets.remove(cardState.getChosenPlanetIndex());
         }
     }
@@ -92,6 +94,16 @@ public class ClientVisitPlanets extends ClientEventCard {
     }
 
     @Override
+    public String getAdditionalCardInfo() {
+        if (this.chosenPlanetIndex == -1) {
+            return "No planet is currently selected";
+        } else {
+            Map<ItemColor, Integer> availableResources = availablePlanets.get(this.visitPlanetsJSON.getChosenPlanetIndex());
+            return "[AVAILABLE RESOURCES]\n" + availableResources.get(ItemColor.RED) + "🟥 " + availableResources.get(ItemColor.YELLOW) + "🟨 " + availableResources.get(ItemColor.GREEN) + "🟩 " + availableResources.get(ItemColor.BLUE) + "🟦 ";
+        }
+    };
+
+    @Override
     public void clearJSON() {
         this.visitPlanetsJSON = new VisitPlanetsJSON();
     }
@@ -128,8 +140,6 @@ public class ClientVisitPlanets extends ClientEventCard {
     public Integer getChosenPlanetIndex() throws UnsupportedOperationException {
         return this.visitPlanetsJSON.getChosenPlanetIndex();
     }
-
-    //
 
     public Map<Integer, Map<ItemColor, Integer>> getAvailablePlanets() {
         return this.availablePlanets;
