@@ -68,7 +68,10 @@ public class TUIHandler implements ClientUI {
             }
             else if (operatingSystem.contains("mac") || operatingSystem.contains("nix") || operatingSystem.contains("nux")) {
                 // For macOS and Linux
-                new ProcessBuilder("clear").inheritIO().start().waitFor();
+                ProcessBuilder pb = new ProcessBuilder("clear");
+                pb.inheritIO();
+                pb.environment().put("TERM", "xterm");
+                pb.start().waitFor();
             }
             else {
                 // For other platforms, you can print a message or handle it as needed
