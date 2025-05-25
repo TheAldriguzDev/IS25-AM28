@@ -459,6 +459,7 @@ public class CardRoundController extends GUIController {
 
         this.commandsToggleGroup = new ToggleGroup();
 
+        System.out.println(PrintUtils.addColor("(1)", ANSIColors.CYAN));
         try {
             ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
             if (ship == null) {
@@ -466,9 +467,9 @@ public class CardRoundController extends GUIController {
                 return;
             }
             ship.generateComponentSubLists();
-
+            System.out.println(PrintUtils.addColor("(2)", ANSIColors.CYAN));
             if(ship.getFirePower(null) > this.currEventCard.getFirepower()) {
-
+                System.out.println(PrintUtils.addColor("(3)", ANSIColors.CYAN));
                 // Enables the "setTakeReward" command if the baseline firepower is enough
                 this.availableCommands.add("setTakeReward");
             }
@@ -1126,10 +1127,10 @@ public class CardRoundController extends GUIController {
                                 this.initCommandBox();
                                 this.visualizePlayerActions();
 
-                                this.showToast(
-                                        "[ERROR] There was an error while playing the card. Please try again.",
-                                        ToastType.ERROR
-                                );
+//                                this.showToast(
+//                                        "[ERROR] There was an error while playing the card. Please try again.",
+//                                        ToastType.ERROR
+//                                );
 
                                 GUIHandler.setCommandCTX(null);
                             }
@@ -1413,6 +1414,13 @@ public class CardRoundController extends GUIController {
                 energyConsumerRegion = this.doubleCannonsRegions.get(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
                 this.doubleCannonsRegions.remove(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
                 this.addDoubleCannonToActivate(this.currEnergyConsumer.getValue(), batteryCoords);
+                try { // Necessary to check if the firepower threshold has been reached if a double cannon has been activated
+                    if (mainShip.getFirePower(this.currEventCard.getDoubleCannonsToActivate().stream().map(Pair::getKey).toList()) > this.currEventCard.getFirepower()) {
+                        this.availableCommands.add("setTakeReward");
+                    }
+                } catch (UnsupportedOperationException e) {
+                    // Do nothing
+                }
             }
             case ENGINE -> {
                 energyConsumerRegion = this.doubleEnginesRegions.get(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
@@ -1447,6 +1455,8 @@ public class CardRoundController extends GUIController {
         this.initStatsBox();
         this.currEnergyConsumer = null;
         this.commandsToggleGroup.selectToggle(null);
+        this.initStatsBox();
+        this.initCommandBox();
     }
 
     private void handleEnergyConsumers(int ofsRow, int ofsCol) {
