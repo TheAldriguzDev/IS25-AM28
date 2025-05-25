@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStorage
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
+import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
@@ -18,9 +19,11 @@ import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
+import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -448,8 +451,52 @@ public class GUIUtils {
         emptiedRegions.clear();
     }
 
+    /**
+     * Sets the correct game board image based
+     * on the current difficulty level.
+     */
+    public void initViewGameBoard(
+            Pane viewGameBoardStackPaneLevel0,
+            Pane viewGameBoardStackPaneLevel2,
+            ImageView boardImageView,
+            Map<String, ImageView> playersRocketBoard
+    ) {
+        String boardPath = "/imgs/cardboard/board_level_" + this.clientModel.getDifficultyLevel() + ".png";
+        URL boardResource = Objects.requireNonNull(getClass().getResource(boardPath));
 
+        boardImageView.setImage(new Image(boardResource.toExternalForm()));
+        boardImageView.setFitWidth(816.0);
+        boardImageView.setPreserveRatio(true);
 
+        if (this.clientModel.getDifficultyLevel() == 2) {
+            viewGameBoardStackPaneLevel2.setVisible(true);
+            viewGameBoardStackPaneLevel2.setManaged(true);
+
+            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+                this.placePlayerInBoard(
+                        playerNickname,
+                        2,
+                        24,
+                        viewGameBoardStackPaneLevel2,
+                        playersRocketBoard
+                );
+            }
+        }
+        else {
+            viewGameBoardStackPaneLevel0.setVisible(true);
+            viewGameBoardStackPaneLevel0.setManaged(true);
+
+            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+                this.placePlayerInBoard(
+                        playerNickname,
+                        0,
+                        18,
+                        viewGameBoardStackPaneLevel2,
+                        playersRocketBoard
+                );
+            }
+        }
+    }
 
 
 //    public void updateBatteryIcon(String playerNickname, GridPane shipGrid, Map<String, HBox> batteriesMap, int row, int col) {

@@ -67,6 +67,7 @@ public class CardRoundController extends GUIController {
     @FXML private VBox viewGameBoardContainer;
     @FXML private Pane viewGameBoardStackPaneLevel0;
     @FXML private Pane viewGameBoardStackPaneLevel2;
+    @FXML private ImageView boardImageView;
     @FXML private Button goBackToCardRoundButtonFromViewBoard;
 
     private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
@@ -138,7 +139,7 @@ public class CardRoundController extends GUIController {
 
     public void init(CardRoundDTO state) {
 
-        this.clientModel = GUIHandler.getInstance().getClientModel();
+        this.clientModel = GUIHandler.getClientModel();
         this.guiUtils = new GUIUtils(this.clientModel);
 
         this.cards = this.clientModel.getClientEventCards();
@@ -191,7 +192,12 @@ public class CardRoundController extends GUIController {
         this.initAdditionalInfoBox();
 
         // Initializes the board image to display on a view board request
-        this.initViewGameBoard();
+        this.guiUtils.initViewGameBoard(
+                this.viewGameBoardStackPaneLevel0,
+                this.viewGameBoardStackPaneLevel2,
+                this.boardImageView,
+                this.playersRocketBoard
+        );
 
         this.initResourceBankBox();
 
@@ -228,39 +234,6 @@ public class CardRoundController extends GUIController {
                 this.handleBatteriesToBeStolen(row, col);
             }
         });
-    }
-
-    /**
-     * Sets the correct game board image based
-     * on the current difficulty level.
-     */
-    private void initViewGameBoard() {
-        if (this.clientModel.getDifficultyLevel() == 2) {
-            this.setVisibility(this.viewGameBoardStackPaneLevel2, true);
-
-            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
-                this.guiUtils.placePlayerInBoard(
-                        playerNickname,
-                        2,
-                        24,
-                        this.viewGameBoardStackPaneLevel2,
-                        this.playersRocketBoard
-                );
-            }
-        }
-        else {
-            this.setVisibility(this.viewGameBoardStackPaneLevel0, true);
-
-            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
-                this.guiUtils.placePlayerInBoard(
-                        playerNickname,
-                        0,
-                        18,
-                        this.viewGameBoardStackPaneLevel2,
-                        this.playersRocketBoard
-                );
-            }
-        }
     }
 
     private void initRegionMap(Map<String, Region> componentsRegions, List<ClientComponent> components, BiConsumer<Integer, Integer> onClick) {
@@ -1956,7 +1929,12 @@ public class CardRoundController extends GUIController {
 
             this.initTurnBox();
 
-            this.initViewGameBoard();
+            this.guiUtils.initViewGameBoard(
+                    this.viewGameBoardStackPaneLevel0,
+                    this.viewGameBoardStackPaneLevel2,
+                    this.boardImageView,
+                    this.playersRocketBoard
+            );
 
             this.initResourceBankBox();
 

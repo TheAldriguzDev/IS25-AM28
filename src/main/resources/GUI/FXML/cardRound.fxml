@@ -65,7 +65,7 @@
                               <Label text="0 🟥 0🟨 0🟩 0🟦" />
                            </children>
                         </VBox>
-                        <ImageView fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleViewGameBoard" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="boardImageView" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleViewGameBoard" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="@../../imgs/cardboard/board_level_2.png" />
                            </image>

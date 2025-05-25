@@ -126,12 +126,13 @@ public class ShipConstructionController extends GUIController {
         // Init each subdeck
         this.initSubdecks();
 
-        // Set the board that will be visible in the main content
-        if (this.clientModel.getDifficultyLevel() == 2) {
-            this.setVisibility(this.viewGameBoardStackPaneLevel2, true);
-        } else {
-            this.setVisibility(this.viewGameBoardStackPaneLevel0, true);
-        }
+        // Init the board
+        this.guiUtils.initViewGameBoard(
+            this.viewGameBoardStackPaneLevel0,
+            this.viewGameBoardStackPaneLevel2,
+            this.boardImageView,
+            this.playersRocketBoard
+        );
     }
 
     private void initComponents() {
@@ -229,9 +230,6 @@ public class ShipConstructionController extends GUIController {
         String shipPath = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
         URL shipResource = Objects.requireNonNull(getClass().getResource(shipPath));
 
-        String boardPath = "/imgs/cardboard/board_level_" + this.clientModel.getDifficultyLevel() + ".png";
-        URL boardResource = Objects.requireNonNull(getClass().getResource(boardPath));
-
         // Set the image of the current level Ship
         this.shipImageView.setImage(new Image(shipResource.toExternalForm()));
         this.shipImageView.setFitWidth(816.0);
@@ -240,10 +238,6 @@ public class ShipConstructionController extends GUIController {
         this.viewOtherShipImage.setImage(new Image(shipResource.toExternalForm()));
         this.viewOtherShipImage.setFitWidth(816.0);
         this.viewOtherShipImage.setPreserveRatio(true);
-
-        this.boardImageView.setImage(new Image(boardResource.toExternalForm()));
-        this.boardImageView.setFitWidth(816.0);
-        this.boardImageView.setPreserveRatio(true);
 
 
         Pair<Integer, Integer> shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
