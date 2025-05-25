@@ -306,6 +306,10 @@ public class ViewUpdater implements StateVisitor {
     public void updateCardResult(CardRoundDTO state) throws Exception {
         try {
             this.update(state);
+            // Update the component in the GUI
+            if (this.ui instanceof GUIHandler) {
+                ((GUIHandler) this.ui).updateVisuals(state);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -332,11 +336,6 @@ public class ViewUpdater implements StateVisitor {
             // Updates the ClientPlayers' info if necessary (Credits)
             if(state.getCardInfo().getNeedsPlayerUpdate()) {
                 this.model.updatePlayers(state.getCardInfo());
-            }
-
-            // Update the component in the GUI
-            if (this.ui instanceof GUIHandler) {
-                ((GUIHandler) this.ui).updateVisuals(state);
             }
         }
     }

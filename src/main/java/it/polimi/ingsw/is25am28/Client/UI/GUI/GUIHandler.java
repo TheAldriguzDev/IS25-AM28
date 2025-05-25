@@ -298,7 +298,7 @@ public class GUIHandler extends Application implements ClientUI {
     public void updateVisuals(CardRoundDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.CARD_ROUND_SCENE)) {
             CardRoundController controller = (CardRoundController) this.controllers.get(GuiScenes.CARD_ROUND_SCENE);
-            controller.updateCardRound(data.getCardInfo());
+            controller.updateVisuals(data.getCardInfo());
         }
     }
 
@@ -390,7 +390,8 @@ public class GUIHandler extends Application implements ClientUI {
         Platform.runLater(() -> {
             // Check if the CARD_ROUND_SCENE is already loaded
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.CARD_ROUND_SCENE)) {
-
+                CardRoundController controller = (CardRoundController) this.controllers.get(GuiScenes.CARD_ROUND_SCENE);
+                controller.updateVisuals(cardRound.getCardInfo());
                 return;
             }
 

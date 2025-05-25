@@ -1944,6 +1944,30 @@ public class CardRoundController extends GUIController {
 
         Platform.runLater(() -> {
 
+            // TODO: do a separate method to only update within the same round, for now is setting the card again
+
+            this.updateVisuals(cardStateJSON);
+
+            this.setCurrentEventCard(cardStateJSON);
+
+            this.initTurnBox();
+
+            this.initViewGameBoard();
+
+            this.initResourceBankBox();
+
+            this.visualizePlayerActions();
+
+            this.initCommandBox();
+
+            this.initAdditionalInfoBox();
+
+        });
+    }
+
+    public void updateVisuals(CardStateJSON cardStateJSON) {
+
+        Platform.runLater(() -> {
             // Updating other ship's visuals
             for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
 
@@ -2006,9 +2030,9 @@ public class CardRoundController extends GUIController {
                         int ofsRow = row - this.shipOffsets.getKey();
                         int ofsCol = col - this.shipOffsets.getValue();
 
-                        shipGrid.getChildren().removeIf(cell ->
+                        playerShipGrid.getChildren().removeIf(cell ->
                                 GridPane.getRowIndex(cell) == ofsRow &&
-                                GridPane.getColumnIndex(cell) == ofsCol
+                                        GridPane.getColumnIndex(cell) == ofsCol
                         );
 
                         // Removing the components from the componentMaps
@@ -2019,23 +2043,7 @@ public class CardRoundController extends GUIController {
                     }
                 }
             }
-
-            // TODO: do a separate method to only update within the same round, for now is setting the card again
-
-            this.setCurrentEventCard(cardStateJSON);
-
-            this.initTurnBox();
-
-            this.initViewGameBoard();
-
-            this.initResourceBankBox();
-
-            this.visualizePlayerActions();
-
-            this.initCommandBox();
-
-            this.initAdditionalInfoBox();
-
         });
+
     }
 }
