@@ -266,7 +266,7 @@ public class GameModel {
         List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
         List<EventCard> fakeDeck = new ArrayList<>();
 
-//        fakeDeck.add(AllCards.get(0)); // AbandonedShip
+        fakeDeck.add(AllCards.get(0)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(1)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(2)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(3)); // AbandonedShip
@@ -274,7 +274,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(5)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(6)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(7)); // AbandonedStation
-//        fakeDeck.add(AllCards.get(8)); // MeteorShower
+        fakeDeck.add(AllCards.get(8)); // MeteorShower
 //        fakeDeck.add(AllCards.get(9)); // MeteorShower
 //        fakeDeck.add(AllCards.get(10)); // MeteorShower
 //        fakeDeck.add(AllCards.get(11)); // MeteorShower
@@ -282,7 +282,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(13)); // MeteorShower
 //        fakeDeck.add(AllCards.get(14)); // Pirates
 //        fakeDeck.add(AllCards.get(15)); // Pirates
-//        fakeDeck.add(AllCards.get(16)); // VisitPlanets
+        fakeDeck.add(AllCards.get(16)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(17)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(18)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(19)); // VisitPlanets
@@ -290,21 +290,21 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(21)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(22)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(23)); // VisitPlanets
-//        fakeDeck.add(AllCards.get(24)); // OpenSpace
+        fakeDeck.add(AllCards.get(24)); // OpenSpace
 //        fakeDeck.add(AllCards.get(25)); // OpenSpace
 //        fakeDeck.add(AllCards.get(26)); // OpenSpace
 //        fakeDeck.add(AllCards.get(27)); // OpenSpace
 //        fakeDeck.add(AllCards.get(28)); // OpenSpace
 //        fakeDeck.add(AllCards.get(29)); // OpenSpace
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
-//        fakeDeck.add(AllCards.get(31)); // Epidemy
+        fakeDeck.add(AllCards.get(31)); // Epidemy
 //        fakeDeck.add(AllCards.get(32)); // Smugglers
-        fakeDeck.add(AllCards.get(33)); // Smugglers
+//        fakeDeck.add(AllCards.get(33)); // Smugglers
 //        fakeDeck.add(AllCards.get(34)); // Slavers
 //        fakeDeck.add(AllCards.get(35)); // Slavers
-//        fakeDeck.add(AllCards.get(36)); // Stardust
+        fakeDeck.add(AllCards.get(36)); // Stardust
 //        fakeDeck.add(AllCards.get(37)); // Stardust
-//        fakeDeck.add(AllCards.get(38)); // Warzone
+        fakeDeck.add(AllCards.get(38)); // Warzone
 //        fakeDeck.add(AllCards.get(39)); // Warzone
 //        fakeDeck.add(AllCards.get(36)); // Stardust
 //        fakeDeck.add(AllCards.get(37)); // Stardust

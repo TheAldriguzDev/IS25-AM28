@@ -1952,7 +1952,13 @@ public class CardRoundController extends GUIController {
 
                 // TODO: can be shortened by improving the init methods and invoking them if something changes
 
-                if (!playerNickname.equals(this.clientModel.getNickname())) {
+                if (
+                        (cardStateJSON.getPrevPlayerNickname() == null)
+                        || (
+                            !playerNickname.equals(cardStateJSON.getPrevPlayerNickname())
+                            && this.clientModel.getNickname().equals(cardStateJSON.getPrevPlayerNickname())
+                        )
+                ) {
 
 
                     // Getting the player's ship
