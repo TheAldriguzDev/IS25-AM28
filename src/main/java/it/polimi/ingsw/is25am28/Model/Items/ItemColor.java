@@ -39,10 +39,10 @@ public enum ItemColor {
 
     public String getImagePath() {
         return switch (this) {
-            case RED -> "/imgs/icons/items/red_item/red_item.png";
-            case YELLOW ->  "/imgs/icons/items/yellow_item/yellow_item.png";
-            case GREEN -> "/imgs/icons/items/green_item/green_item.png";
-            case BLUE -> "/imgs/icons/items/blue_item/blue_item.png";
+            case RED -> "/imgs/icons/items/item_red.png";
+            case YELLOW ->  "/imgs/icons/items/item_yellow.png";
+            case GREEN -> "/imgs/icons/items/item_green.png";
+            case BLUE -> "/imgs/icons/items/item_blue.png";
         };
     }
 }

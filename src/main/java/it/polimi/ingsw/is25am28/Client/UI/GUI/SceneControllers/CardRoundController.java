@@ -1087,7 +1087,6 @@ public class CardRoundController extends GUIController {
                     this.emptiedItemsMap.clear();
                     this.emptiedStoragesRegions.clear();
                     Platform.runLater(this::visualizePlayerActions);
-                    System.out.println();
                     this.currEventCard.clearJSON();
                 },
                 () -> {
