@@ -140,7 +140,7 @@ public class ShipConstructionController extends GUIController {
         );
 
         // The player has already sent his ship --> We need to modify the view
-        if (data.getPlayerFinished().contains(this.clientModel.getNickname())) {
+        if (data.getPlayerFinished() != null && data.getPlayerFinished().contains(this.clientModel.getNickname())) {
             this.hasFinishedShip = true;
             this.showEndedShipConstruction();
         }

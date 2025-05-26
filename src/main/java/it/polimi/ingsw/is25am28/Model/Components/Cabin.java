@@ -81,6 +81,7 @@ public final class Cabin extends Component {
         Map<String,Object> map = super.toMap();
 
         map.put("inhabitants", inhabitants.stream().map(Lifeform::getLifeformType).toList());
+        map.put("isCore", isCore);
 
         return map;
     }

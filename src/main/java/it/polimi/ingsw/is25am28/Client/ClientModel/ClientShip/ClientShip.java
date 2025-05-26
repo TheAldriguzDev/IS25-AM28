@@ -30,7 +30,7 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
     private ClientComponent[][] components;
-    private final ClientCabin core;
+    private ClientCabin core;
     private ClientCabin purpleAlienPosition;
     private ClientCabin brownAlienPosition;
 
@@ -140,12 +140,18 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 }
                 // Cabin
                 case 1 -> {
+                    boolean isCore = (boolean) map.get("isCore");
                     List<LifeformType> lifeform = (List<LifeformType>) map.get("inhabitants");
-                    System.out.println(lifeform);
-                    ClientCabin component = new ClientCabin(id, connectorOrdinals, false, path);
 
-                    for (LifeformType lifeformType : lifeform) {
-                        component.addInhabitant(new Lifeform(lifeformType));
+                    ClientCabin component = new ClientCabin(id, connectorOrdinals, isCore, path);
+                    if (isCore) {
+                        this.core = component;
+                    }
+
+                    if (!isCore) {
+                        for (LifeformType lifeformType : lifeform) {
+                            component.addInhabitant(new Lifeform(lifeformType));
+                        }
                     }
                     component.setRotation(direction);
 
@@ -222,7 +228,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
             }
         }
 
-        this.core = (ClientCabin) this.getComponent(grid_rows/2, grid_cols/2);
+
         this.generateComponentSubLists();
     }
 

@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Network.RMI.Client;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -196,8 +197,9 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
             try {
                 runnable.run();
             } catch (Exception e) {
-                System.err.println("Server unavailable: " + e.getMessage());
-                throw new RuntimeException(e);
+                System.out.println(ANSIColors.YELLOW + "[Server offline] The connection with the server has been lost" + ANSIColors.RESET);
+
+                System.exit(1);
             }
         });
     }
