@@ -241,7 +241,7 @@ public class PopulateShipController extends GUIController {
 
                 Region region = this.cabinRegions.get(this.guiUtils.keyFromCoords(row, col));
 
-                // Remove the clickable region from the 3 maps, and set the color to red (to signal that it is now occupied) // TODO: little icons would be far better, or simply do not highlight anymore
+                // Remove the clickable region from the 3 maps and add the icons
                 this.cabinRegions.remove(this.guiUtils.keyFromCoords(row, col));
                 // If it's not present in these maps, nothing happens
                 this.purpleAlienCabinRegion.remove(this.guiUtils.keyFromCoords(row, col));
@@ -259,12 +259,16 @@ public class PopulateShipController extends GUIController {
                 region.setDisable(true);
                 region.setPickOnBounds(false);
                 region.setCursor(Cursor.DEFAULT);
-//                region.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);"); // TODO: replace with icons
+                region.setStyle("-fx-background-color: transparent;");
                 // Updating the icons
                 ClientCabin cabin = (ClientCabin) this.mainShip.getComponent(row, col);
                 guiUtils.initCabinLifeFormIcons(cabin, this.lifeFormsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col)));
 
-
+                // If there are no cabins left, we disable the Astronaut toggle
+                if (this.cabinRegions.isEmpty()) {
+                    this.whiteToggle.setDisable(true);
+                    this.currentSelectableLifeForm = null;
+                }
 
                 // TODO: if someone has finished the colored regions will disappear, will be resolved with the addition of custom pawns
                 // TODO: revise this part
