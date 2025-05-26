@@ -63,6 +63,8 @@ public class FixShipScreen extends Screen {
 
         coordinates = this.getComponentCoordinates();
 
+        if (coordinates == null) return;
+
         this.ctx = new CommandCTX(
         "fixShip",
             () -> {
@@ -115,7 +117,7 @@ public class FixShipScreen extends Screen {
 
                 if (line == null) {
                     // A force interrupt arrived
-                    break;
+                    return null;
                 }
 
                 i = Integer.parseInt(line);
@@ -131,7 +133,7 @@ public class FixShipScreen extends Screen {
             }
             catch (InterruptedException e) {
                 // A force interrupt arrived
-                break;
+                return null;
             }
         }
         while (!validCoordinate);
@@ -144,7 +146,7 @@ public class FixShipScreen extends Screen {
 
                 if (line == null) {
                     // A force interrupt arrived
-                    break;
+                    return null;
                 }
 
                 j = Integer.parseInt(line);
@@ -160,7 +162,7 @@ public class FixShipScreen extends Screen {
             }
             catch (InterruptedException e) {
                 // A force interrupt arrived
-                break;
+                return null;
             }
         }
         while (!validCoordinate);
