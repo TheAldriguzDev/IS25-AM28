@@ -285,7 +285,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(16)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(17)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(18)); // VisitPlanets
-//        fakeDeck.add(AllCards.get(19)); // VisitPlanets
+        fakeDeck.add(AllCards.get(19)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(20)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(21)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(22)); // VisitPlanets
@@ -300,7 +300,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(31)); // Epidemy
 //        fakeDeck.add(AllCards.get(32)); // Smugglers
 //        fakeDeck.add(AllCards.get(33)); // Smugglers
-//        fakeDeck.add(AllCards.get(34)); // Slavers
+        fakeDeck.add(AllCards.get(34)); // Slavers
 //        fakeDeck.add(AllCards.get(35)); // Slavers
 //        fakeDeck.add(AllCards.get(36)); // Stardust
 //        fakeDeck.add(AllCards.get(37)); // Stardust
@@ -309,8 +309,8 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(36)); // Stardust
 //        fakeDeck.add(AllCards.get(37)); // Stardust
 
-//          this.deck.clear();
-//          this.deck.addAll(fakeDeck);
+          this.deck.clear();
+          this.deck.addAll(fakeDeck);
     }
 
     /**

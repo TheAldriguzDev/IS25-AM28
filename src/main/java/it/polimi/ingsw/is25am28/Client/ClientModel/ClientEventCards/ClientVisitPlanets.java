@@ -95,7 +95,7 @@ public class ClientVisitPlanets extends ClientEventCard {
 
     @Override
     public String getAdditionalCardInfo() {
-        if (this.chosenPlanetIndex == -1) {
+        if (this.visitPlanetsJSON.getChosenPlanetIndex() == -1) {
             return "No planet is currently selected";
         } else {
             Map<ItemColor, Integer> availableResources = availablePlanets.get(this.visitPlanetsJSON.getChosenPlanetIndex());

@@ -191,6 +191,8 @@ public class CardRoundController extends GUIController {
 
         this.initAdditionalInfoBox();
 
+        this.visualizePlayerActions();
+
         // Initializes the board image to display on a view board request
         this.guiUtils.initViewGameBoard(
                 this.viewGameBoardStackPaneLevel0,
@@ -319,6 +321,8 @@ public class CardRoundController extends GUIController {
                 this.setShipGrid(this.clientModel.getNickname());
                 // Enables the commands
                 this.initCommandBox();
+
+
             } else {
 
                 this.commandsToggleGroup.selectToggle(null);
@@ -335,6 +339,9 @@ public class CardRoundController extends GUIController {
                 }
 
                 ToggleButton selected = (ToggleButton) newToggle;
+
+                this.initCommandDescriptionBox("You are currently viewing\n" + selected.getText() + "'s ship");
+
                 this.setShipGrid(selected.getText());
             }
         });
@@ -463,7 +470,6 @@ public class CardRoundController extends GUIController {
         this.resourceBankBox.getChildren().add(new Label(resources.get(ItemColor.RED) + "🟥 " + resources.get(ItemColor.YELLOW) + "🟨 " + resources.get(ItemColor.GREEN) + "🟩 " + resources.get(ItemColor.BLUE) + "🟦 "));
     }
 
-    // Todo: handle commands availability based also un card resources amount (and ship) / or display error in the command description
     private void initCommandBox() {
 
         this.commandsToggleGroup = new ToggleGroup();
@@ -725,6 +731,7 @@ public class CardRoundController extends GUIController {
 
         this.commandsToggleGroup.selectToggle(null);
         this.viewOtherShipsToggleGroup.selectToggle(null);
+        this.initCommandDescriptionBox("You are currently viewing\nthe game board");
 
         // Disable the commands
         if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
@@ -876,7 +883,7 @@ public class CardRoundController extends GUIController {
         try {
             Integer chosenPlanetIndex = this.currEventCard.getChosenPlanetIndex();
 
-            if (chosenPlanetIndex != null) {
+            if (chosenPlanetIndex != null && chosenPlanetIndex != -1) {
                 label = new Label();
                 label.setText("Chosen planet index: " + chosenPlanetIndex);
                 actionsContainer.getChildren().add(label);
@@ -1939,18 +1946,18 @@ public class CardRoundController extends GUIController {
 
             this.initTurnBox();
 
-            this.guiUtils.initViewGameBoard(
-                    this.viewGameBoardStackPaneLevel0,
-                    this.viewGameBoardStackPaneLevel2,
-                    this.boardImageView,
-                    this.playersRocketBoard
-            );
-
-            this.guiUtils.initPlayersOnGameBoard(
-                    this.viewGameBoardStackPaneLevel0,
-                    this.viewGameBoardStackPaneLevel2,
-                    this.playersRocketBoard
-            );
+//            this.guiUtils.initViewGameBoard(
+//                    this.viewGameBoardStackPaneLevel0,
+//                    this.viewGameBoardStackPaneLevel2,
+//                    this.boardImageView,
+//                    this.playersRocketBoard
+//            );
+//
+//            this.guiUtils.initPlayersOnGameBoard(
+//                    this.viewGameBoardStackPaneLevel0,
+//                    this.viewGameBoardStackPaneLevel2,
+//                    this.playersRocketBoard
+//            );
 
             this.initStatsBox();
 
@@ -1961,6 +1968,21 @@ public class CardRoundController extends GUIController {
             this.initCommandBox();
 
             this.initAdditionalInfoBox();
+
+            if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
+                if (this.viewGameBoardContainer.isVisible()) {
+                    for (Toggle toggleButtonCommand : this.commandsToggleGroup.getToggles()) {
+                        ((ToggleButton) toggleButtonCommand).setDisable(true);
+                    }
+                    this.initCommandDescriptionBox("You are currently viewing\nthe game board");
+                } else if (this.viewOtherShipsToggleGroup.getSelectedToggle() != null) {
+                    for (Toggle toggleButtonCommand : this.commandsToggleGroup.getToggles()) {
+                        ((ToggleButton) toggleButtonCommand).setDisable(true);
+                    }
+                    this.initCommandDescriptionBox("You are currently viewing\n" + ((ToggleButton) this.viewOtherShipsToggleGroup.getSelectedToggle()).getText() + "'s ship");
+                }
+            }
+
 
         });
     }
