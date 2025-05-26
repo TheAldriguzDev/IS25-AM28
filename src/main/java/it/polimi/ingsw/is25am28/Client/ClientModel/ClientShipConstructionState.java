@@ -50,6 +50,16 @@ public class ClientShipConstructionState extends ClientState {
         // Initialize all client components
         this.generateClientComponents(shipConstructionDTO.getAllComponents(), shipConstructionDTO.getFlippedComponents(), shipConstructionDTO.getSelectedComponents());
 
+        // Updates the players that already sent their ships
+        if (shipConstructionDTO.getPlayerFinished() != null) {
+            for (String playerThatFinished : shipConstructionDTO.getPlayerFinished()) {
+                this.setPlayerFinishedBuildingShip(
+                        playerThatFinished,
+                        this.model.getAllClientPlayers().get(playerThatFinished).getCursor()
+                );
+            }
+        }
+
         // Initialize all client cards
         this.model.generateClientEventCards(shipConstructionDTO.getCards());
     }

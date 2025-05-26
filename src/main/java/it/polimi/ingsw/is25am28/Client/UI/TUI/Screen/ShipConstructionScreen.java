@@ -447,8 +447,20 @@ public class ShipConstructionScreen extends Screen {
 
         clearTerminal();
 
-        // Show all the available commands
-        this.composeComponentSelectionWidgets().printWidget();
+        if (this.model.getState().getPlayerFinishedBuildingShip(this.model.getNickname())) {
+            this.generateComponentSelectionCommands();
+
+            new WidgetTUI()
+                    .appendString(COMPUTER_MSG_TAG + "Your ship was sent!")
+                    .appendString(COMPUTER_MSG_TAG + "Wait until either all other players have finished or the timer runs out!")
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
+        }
+        else {
+            // Show all the available commands
+            this.composeComponentSelectionWidgets().printWidget();
+        }
 
         // If it's not null, it means that it's available to be flipped
         if (this.model.getTimerDTO() != null) {
@@ -1366,19 +1378,9 @@ public class ShipConstructionScreen extends Screen {
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
         clearTerminal();
 
-        if (this.model.getState().getPlayerFinishedBuildingShip(this.model.getNickname())) {
-            new WidgetTUI()
-                    .appendString(COMPUTER_MSG_TAG + "Your ship was sent!")
-                    .appendString(COMPUTER_MSG_TAG + "Wait until either all other players have finished or the timer runs out!")
-                    .addPadding(0, 1, 0, 1)
-                    .wrapWidgetWithBorder()
-                    .printWidget();
-        }
-        else {
-            // Show all selectable components grid as well as the reserved
-            // components to display any components that the player might
-            // choose to reserve during this phase
-            this.getComponentSelectionCommand();
-        }
+        // Show all selectable components grid as well as the reserved
+        // components to display any components that the player might
+        // choose to reserve during this phase
+        this.getComponentSelectionCommand();
     }
 }
