@@ -423,7 +423,16 @@ public class CardRoundController extends GUIController {
         Label turnLabel = new Label();
         turnLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
         this.turnBox.getChildren().clear();
-        if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
+
+        List<String> eliminatedPlayersNicknames = this.clientModel.getClientBoard().getEliminatedPlayers().stream()
+                .map(ClientPlayer::getNickname)
+                .toList();
+
+        if (eliminatedPlayersNicknames.contains(this.clientModel.getNickname())) {
+            turnLabel.setText("You have been ELIMINATED!!!");
+
+            this.showToast("You have been eliminated!", ToastType.INFO);
+        } else if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
             turnLabel.setText("It's YOUR turn!!!");
 
             this.showToast("It's your turn!", ToastType.SUCCESS);
