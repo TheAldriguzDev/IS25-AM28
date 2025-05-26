@@ -43,26 +43,26 @@ public class UpdateHandler {
 
         // Handle the first state (current state or updates)
         switch (state) {
-            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, PopulateShipComponentDTO _, ConstructionDeckDTO _ -> {
+            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, FixedComponentDTO _, PopulateShipComponentDTO _, ConstructionDeckDTO _ -> {
                 future = this.acceptState(future, state, this.updateThread, "Error while executing the " + state.getStateName() + " update");
                 future = this.commitCmd(future, nickname, this.inputThread);
             }
             case PlayerEndedShipDTO _ -> {
-                future = this.acceptState(future, state, this.updateThread, "Error while executing the " + state.getStateName() + " update");
+                future = this.acceptState(future, state, updateThread, "Error while executing the " + state.getStateName() + " update");
                 if (nextState == null) {
-                    future = this.commitCmd(future, nickname, this.inputThread);
+                    future = this.commitCmd(future, nickname, inputThread);
                 }
             }
             case DisconnectedPlayerDTO _ -> {
-                future = acceptState(future, state, this.updateThread, "Error while executing the " + state.getStateName() + " update");
+                future = acceptState(future, state, updateThread, "Error while executing the " + state.getStateName() + " update");
             }
             case ReconnectDTO data -> {
-                future = acceptState(future, state, this.updateThread, "Error while executing the " + state.getStateName() + " update");
+                future = acceptState(future, data, updateThread, "Error while executing the " + state.getStateName() + " update");
 
                 // If the player is the one that reconnects to the game, or we were in the insufficient player state, we need to update the screen
                 if (data.getWasInsufficientState() || data.getTargetNickname().equals(this.model.getNickname())) {
-
-                    future = acceptState(future, nextState, this.inputThread, "Error while executing the " + state.getStateName() + " update");
+                    future = this.interruptScreen(future);
+                    future = acceptState(future, nextState, inputThread, "Error while executing the " + state.getStateName() + " update");
                 }
 
                 nextState = null;
