@@ -20,6 +20,7 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
@@ -36,6 +37,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Stack;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -260,8 +262,8 @@ public class GUIUtils {
      * Adds the lifeForm icons to the shipGrid in input
      * @return A map containing the panes containing the icons
      */
-    public Map<String, HBox> initShipLifeFormIcons(String playerNickname, GridPane shipGrid) {
-        Map<String, HBox> lifeFormsMap = new HashMap<>();
+    public Map<String, FlowPane> initShipLifeFormIcons(String playerNickname, GridPane shipGrid) {
+        Map<String, FlowPane> lifeFormsMap = new HashMap<>();
 
         // Getting the player's ship
         ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
@@ -273,7 +275,7 @@ public class GUIUtils {
         ship.generateComponentSubLists();
 
         for(ClientCabin cabin : ship.getCabinList()) {
-            HBox cabinBox = new HBox();
+            FlowPane cabinBox = new FlowPane();
             cabinBox.setAlignment(Pos.CENTER);
             initCabinLifeFormIcons(cabin, cabinBox);
 
@@ -294,7 +296,7 @@ public class GUIUtils {
     /**
      * @return A HBox containing the cabin's lifeForms icons
      */
-    public void initCabinLifeFormIcons(ClientCabin cabin, HBox cabinBox) {
+    public void initCabinLifeFormIcons(ClientCabin cabin, FlowPane cabinBox) {
         cabinBox.getChildren().clear();
         URL resource;
 
@@ -311,8 +313,8 @@ public class GUIUtils {
      * Adds the item icons to the shipGrid in input
      * @return A map containing the HBoxes containing the icons
      */
-    public Map<String, HBox> initShipItemIcons(String playerNickname, GridPane shipGrid) {
-        Map<String, HBox> itemsMap = new HashMap<>();
+    public Map<String, FlowPane> initShipItemIcons(String playerNickname, GridPane shipGrid) {
+        Map<String, FlowPane> itemsMap = new HashMap<>();
 
         // Getting the player's ship
         ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
@@ -324,7 +326,7 @@ public class GUIUtils {
         ship.generateComponentSubLists();
 
         for (ClientStorage storage : ship.getStorageList()) {
-            HBox storageBox = new HBox();
+            FlowPane storageBox = new FlowPane();
             storageBox.setAlignment(Pos.CENTER);
             initStorageItemIcons(storage, storageBox);
 
@@ -345,8 +347,13 @@ public class GUIUtils {
     /**
      * @return A HBox containing the storage's items icons
      */
-    public void initStorageItemIcons(ClientStorage storage, HBox storageBox) {
+    public void initStorageItemIcons(ClientStorage storage, FlowPane storageBox) {
         storageBox.getChildren().clear();
+        if (storage.getCapacity() == 3) {
+            storageBox.setAlignment(Pos.TOP_CENTER);
+//            storageBox.setPadding(new Insets(15, 0, 0, 0));
+        }
+        storageBox.setRotate(storage.getDirection() * 90 + 90);
         URL resource;
         if (!storage.getStoredItems().isEmpty()) {
             for (Item item : storage.getStoredItems()) {
@@ -357,8 +364,8 @@ public class GUIUtils {
         }
     }
 
-    public Map<String, HBox> initShipBatteryIcons(String playerNickname, GridPane shipGrid) {
-        Map<String, HBox> batteryMap = new HashMap<>();
+    public Map<String, FlowPane> initShipBatteryIcons(String playerNickname, GridPane shipGrid) {
+        Map<String, FlowPane> batteryMap = new HashMap<>();
 
         // Getting the player's ship
         ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
@@ -370,7 +377,7 @@ public class GUIUtils {
         ship.generateComponentSubLists();
 
         for(ClientBattery battery : ship.getBatteryList()) {
-            HBox batteryBox = new HBox();
+            FlowPane batteryBox = new FlowPane();
             batteryBox.setAlignment(Pos.CENTER);
             initBatteryIcons(battery, batteryBox);
 
@@ -388,7 +395,7 @@ public class GUIUtils {
         return batteryMap;
     }
 
-    public void initBatteryIcons(ClientBattery battery, HBox batteryBox) {
+    public void initBatteryIcons(ClientBattery battery, FlowPane batteryBox) {
         batteryBox.getChildren().clear();
         URL resource;
 
@@ -418,7 +425,7 @@ public class GUIUtils {
 
     // TODO: have the main player ship and grid reference
 
-    public <T> void revertVisuals(GridPane shipGrid, Map<String, HBox> emptiedIcons, Map<String, Region> emptiedRegions, Class<T> castType, BiConsumer<T, HBox> initIcons) {
+    public <T> void revertVisuals(GridPane shipGrid, Map<String, FlowPane> emptiedIcons, Map<String, Region> emptiedRegions, Class<T> castType, BiConsumer<T, FlowPane> initIcons) {
         // Getting the player's ship
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
         if (ship == null) {
@@ -426,14 +433,14 @@ public class GUIUtils {
             return;
         }
 
-        for (Map.Entry<String, HBox> entry : emptiedIcons.entrySet()) {
+        for (Map.Entry<String, FlowPane> entry : emptiedIcons.entrySet()) {
 
             Pair<Integer, Integer> boxCoords = this.coordsFromKey(entry.getKey());
             int row = boxCoords.getKey();
             int col = boxCoords.getValue();
 
             String restoreKey = entry.getKey();
-            HBox boxToRestore = emptiedIcons.get(restoreKey);
+            FlowPane boxToRestore = emptiedIcons.get(restoreKey);
 
             T componentToRestore = castType.cast(ship.getComponent(row, col));
             initIcons.accept(componentToRestore, boxToRestore);

@@ -66,7 +66,7 @@ public class PopulateShipController extends GUIController {
 
     private boolean isShipFull;
     private ClientShip mainShip;
-    private final Map<String, Map<String, HBox>> lifeFormsMap = new HashMap<>();
+    private final Map<String, Map<String, FlowPane>> lifeFormsMap = new HashMap<>();
 
     ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 

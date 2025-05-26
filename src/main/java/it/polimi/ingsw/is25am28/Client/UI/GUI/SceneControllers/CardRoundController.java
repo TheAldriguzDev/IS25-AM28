@@ -7,7 +7,6 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
@@ -18,7 +17,6 @@ import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -31,8 +29,6 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.TextAlignment;
@@ -73,14 +69,14 @@ public class CardRoundController extends GUIController {
     private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
 
     // Icons maps and interactable regions
-    private final Map<String, Map<String, HBox>> lifeFormsMap = new HashMap<>();
-    private final Map<String, Map<String, HBox>> itemsMap = new HashMap<>();
-    private final Map<String, Map<String, HBox>> batteriesMap = new HashMap<>();
+    private final Map<String, Map<String, FlowPane>> lifeFormsMap = new HashMap<>();
+    private final Map<String, Map<String, FlowPane>> itemsMap = new HashMap<>();
+    private final Map<String, Map<String, FlowPane>> batteriesMap = new HashMap<>();
 
     // Temp icons maps for revert purposes
-    private final Map<String, HBox> emptiedLifeforms = new HashMap<>();
-    private final Map<String, HBox> emptiedItemsMap = new HashMap<>();
-    private final Map<String, HBox> emptiedBatteriesMap = new HashMap<>();
+    private final Map<String, FlowPane> emptiedLifeforms = new HashMap<>();
+    private final Map<String, FlowPane> emptiedItemsMap = new HashMap<>();
+    private final Map<String, FlowPane> emptiedBatteriesMap = new HashMap<>();
 
     // Region maps
     private final Map<String, Region> doubleCannonsRegions = new HashMap<>();
@@ -1177,7 +1173,7 @@ public class CardRoundController extends GUIController {
         this.addCrewToRemove(row, col, selectedLifeForm);
 
         // Updating the HBox containing the icons
-        HBox boxToUpdate = this.lifeFormsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
+        FlowPane boxToUpdate = this.lifeFormsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
         guiUtils.initCabinLifeFormIcons(selectedCabin, boxToUpdate);
 
 
@@ -1210,7 +1206,7 @@ public class CardRoundController extends GUIController {
         this.addItemToRemove(row, col, this.chosenItemColor);
 
         // Updating the HBox containing the icons
-        HBox boxToUpdate = this.itemsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
+        FlowPane boxToUpdate = this.itemsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
         guiUtils.initStorageItemIcons(selectedStorage, boxToUpdate);
 
 
@@ -1252,7 +1248,7 @@ public class CardRoundController extends GUIController {
         this.addItemToTake(row, col, this.chosenItemColor);
 
         // Updating the HBox containing the icons
-        HBox boxToUpdate = this.itemsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
+        FlowPane boxToUpdate = this.itemsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
         guiUtils.initStorageItemIcons(selectedStorage, boxToUpdate);
 
         // We add the component to the storagesToEmptyRegions (only if the region is not present)
@@ -1384,7 +1380,7 @@ public class CardRoundController extends GUIController {
         this.addBatteryToBeStolen(new CoordinatePair(row, col));
 
         // Updating the HBox containing the icons
-        HBox boxToUpdate = this.batteriesMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
+        FlowPane boxToUpdate = this.batteriesMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col));
         guiUtils.initBatteryIcons(selectedBattery, boxToUpdate);
 
 
@@ -1453,7 +1449,7 @@ public class CardRoundController extends GUIController {
 
         // Updating the HBox containing the icons
         ClientBattery batteryToUpdate = (ClientBattery) this.mainShip.getComponent(batteryRow, batteryCol);
-        HBox boxToUpdate = this.batteriesMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(batteryRow, batteryCol));
+        FlowPane boxToUpdate = this.batteriesMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(batteryRow, batteryCol));
         guiUtils.initBatteryIcons(batteryToUpdate, boxToUpdate);
 
         // If the battery has no more charges, we remove the region
