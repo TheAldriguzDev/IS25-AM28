@@ -447,8 +447,9 @@ public class ShipConstructionScreen extends Screen {
 
         clearTerminal();
 
-        // Show all the available commands
         if (this.model.getState().getPlayerFinishedBuildingShip(this.model.getNickname())) {
+            this.generateComponentSelectionCommands();
+
             new WidgetTUI()
                     .appendString(COMPUTER_MSG_TAG + "Your ship was sent!")
                     .appendString(COMPUTER_MSG_TAG + "Wait until either all other players have finished or the timer runs out!")
@@ -457,6 +458,7 @@ public class ShipConstructionScreen extends Screen {
                     .printWidget();
         }
         else {
+            // Show all the available commands
             this.composeComponentSelectionWidgets().printWidget();
         }
 

@@ -1946,19 +1946,6 @@ public class CardRoundController extends GUIController {
 
             this.initTurnBox();
 
-//            this.guiUtils.initViewGameBoard(
-//                    this.viewGameBoardStackPaneLevel0,
-//                    this.viewGameBoardStackPaneLevel2,
-//                    this.boardImageView,
-//                    this.playersRocketBoard
-//            );
-//
-//            this.guiUtils.initPlayersOnGameBoard(
-//                    this.viewGameBoardStackPaneLevel0,
-//                    this.viewGameBoardStackPaneLevel2,
-//                    this.playersRocketBoard
-//            );
-
             this.initStatsBox();
 
             this.initResourceBankBox();

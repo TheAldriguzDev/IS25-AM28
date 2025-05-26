@@ -75,33 +75,37 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(ReconnectDTO state) throws Exception {
         try {
-            if (this.model.getNickname().equals(state.getTargetNickname())) {
+            synchronized (this.model) {
+                if (this.model.getNickname().equals(state.getTargetNickname())) {
 
-                this.model.setNickname(state.getTargetNickname());
-                this.model.setDifficultyLevel(state.getGameLevel());
+                    this.model.setNickname(state.getTargetNickname());
+                    this.model.setDifficultyLevel(state.getGameLevel());
 
-                // 1. Create the players --> and set their ship
-                List<PlayerJSON> players = state.getPlayers();
-                for (PlayerJSON player : players) {
-                    this.model.addNewPlayer(player.getNickname(), PlayerColor.valueOf(player.getColor()), player.getCredits(), player.getLostPieces(), player.getShip());
+                    // 1. Create the players --> and set their ship
+                    List<PlayerJSON> players = state.getPlayers();
+                    for (PlayerJSON player : players) {
+                        this.model.addNewPlayer(player.getNickname(), PlayerColor.valueOf(player.getColor()), player.getCredits(), player.getLostPieces(), player.getShip());
+                    }
+
+                    // 2. Create the board
+                    BoardJSON board = state.getBoard();
+                    this.model.setClientBoard(new ClientBoard(board, this.model));
+
+                    // 3. Reset the resourceBank to the correct amount of resources
+                    this.model.getResourceBank().resetResourcesQuantity(state.getResourceBank());
+
+                    // 4. cards
+                    this.model.generateClientEventCards(state.getCards());
+
+                    System.out.println("Ended reconnecting to the game.");
+                } else {
+                    System.out.println();
+                    new WidgetTUI()
+                            .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getTargetNickname() + " reconnected to the game.", ANSIColors.BRIGHT_MAGENTA))
+                            .addPadding(0, 1, 0, 1)
+                            .wrapWidgetWithBorder()
+                            .printWidget();
                 }
-
-                // 2. Create the board
-                BoardJSON board = state.getBoard();
-                this.model.setClientBoard(new ClientBoard(board, this.model));
-
-                // 3. Reset the resourceBank to the correct amount of resources
-                this.model.getResourceBank().resetResourcesQuantity(state.getResourceBank());
-
-                // 4. cards
-                this.model.generateClientEventCards(state.getCards());
-            } else {
-                System.out.println();
-                new WidgetTUI()
-                        .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getTargetNickname() + " reconnected to the game.", ANSIColors.BRIGHT_MAGENTA))
-                        .addPadding(0, 1, 0, 1)
-                        .wrapWidgetWithBorder()
-                        .printWidget();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -164,8 +168,6 @@ public class ViewUpdater implements StateVisitor {
                         ship.removeComponent(state.getI(), state.getJ());
                     }
             );
-
-            this.ui.showShipFixing(this.model.getState().getFixShipDTO());
 
             if (this.ui instanceof GUIHandler) {
                 ((GUIHandler) this.ui).updateShipRemovedComponent(state);
@@ -270,12 +272,16 @@ public class ViewUpdater implements StateVisitor {
 
     @Override
     public void visit(FixShipDTO state) throws Exception {
-        // Set the model state to the ClientFixShipState
-        synchronized (this.model) {
-            this.model.setState(new ClientFixShipState(this.model, state));
-        }
+        try {
+            // Set the model state to the ClientFixShipState
+            synchronized (this.model) {
+                this.model.setState(new ClientFixShipState(this.model, state));
+            }
 
-        this.ui.showShipFixing(state);
+            this.ui.showShipFixing(state);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

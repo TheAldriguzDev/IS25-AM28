@@ -68,10 +68,12 @@ public class FixShipScreen extends Screen {
         this.ctx = new CommandCTX(
         "fixShip",
             () -> {
-                this.currPlayerShip.removeComponent(
-                    coordinates.getKey(),
-                    coordinates.getValue()
-                );
+                try {
+                    this.showShipFixing(null);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
             },
             () -> {
                 try {
@@ -185,22 +187,25 @@ public class FixShipScreen extends Screen {
         String playerColorString = this.model.getAllClientPlayers().get(this.model.getNickname()).getColor().getColorString();
 
         new WidgetTUI()
-            .appendString(PrintUtils.addColor(COMPUTER_MSG_TAG, ANSIColors.BRIGHT_CYAN) + "Viewing your ship")
-            .appendString("Player: " + PrintUtils.addColor(playerNickname, playerColorString))
-            .centerWidgetScreen()
-            .addPadding(0, 1, 0, 1)
-            .wrapWidgetWithBorder()
-            .printWidget();
+                .appendString(PrintUtils.addColor(COMPUTER_MSG_TAG, ANSIColors.BRIGHT_CYAN) + "Viewing your ship")
+                .appendString("Player: " + PrintUtils.addColor(playerNickname, playerColorString))
+                .centerWidgetScreen()
+                .addPadding(0, 1, 0, 1)
+                .wrapWidgetWithBorder()
+                .printWidget();
 
         this.currPlayerShip.getShipGridWidget().printWidget();
+
+        if (fixShip == null) {
+            fixShip = this.model.getState().getFixShipDTO();
+        }
 
         if (fixShip.getPlayerWithInvalidShip().contains(playerNickname)) {
             // This player's ship was deemed as invalid, therefore he must
             // fix it before the game can move on
             this.printShipFixStatusWidget(false);
             this.removeComponent();
-        }
-        else {
+        } else {
             // If this player's ship, when validated, results as correct, then
             // he must wait for all other players (if there are any in the first place)
             // to finish fixing their own ship
