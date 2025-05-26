@@ -2043,6 +2043,34 @@ public class CardRoundController extends GUIController {
                     }
                 }
             }
+
+            // Updating the position of all players
+            if (cardStateJSON.getNeedsBoardUpdate()) {
+                if (cardStateJSON.getNeedsUpdatedPositions()) {
+                    if (this.clientModel.getDifficultyLevel() == 2) {
+                        for (Map.Entry<String, Integer> entry : cardStateJSON.getUpdatedPositions().entrySet()) {
+                            this.guiUtils.placePlayerInBoard(
+                                    entry.getKey(),
+                                    2,
+                                    24,
+                                    viewGameBoardStackPaneLevel2,
+                                    playersRocketBoard
+                            );
+                        }
+                    }
+                    else {
+                        for (Map.Entry<String, Integer> entry : cardStateJSON.getUpdatedPositions().entrySet()) {
+                            this.guiUtils.placePlayerInBoard(
+                                    entry.getKey(),
+                                    2,
+                                    18,
+                                    viewGameBoardStackPaneLevel0,
+                                    playersRocketBoard
+                            );
+                        }
+                    }
+                }
+            }
         });
 
     }
