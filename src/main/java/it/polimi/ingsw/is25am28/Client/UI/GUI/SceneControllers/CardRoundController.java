@@ -1937,6 +1937,14 @@ public class CardRoundController extends GUIController {
                     this.playersRocketBoard
             );
 
+            this.guiUtils.initPlayersOnGameBoard(
+                    this.viewGameBoardStackPaneLevel0,
+                    this.viewGameBoardStackPaneLevel2,
+                    this.playersRocketBoard
+            );
+
+            this.initStatsBox();
+
             this.initResourceBankBox();
 
             this.visualizePlayerActions();
@@ -1957,17 +1965,12 @@ public class CardRoundController extends GUIController {
                 String playerNickname = entry.getKey();
                 GridPane shipGrid = entry.getValue();
 
-                // TODO: can be shortened by improving the init methods and invoking them if something changes
-
                 if (
                         (cardStateJSON.getPrevPlayerNickname() == null)
                         || (
-                            !playerNickname.equals(cardStateJSON.getPrevPlayerNickname())
-                            && this.clientModel.getNickname().equals(cardStateJSON.getPrevPlayerNickname())
+                                !(playerNickname.equals(cardStateJSON.getPrevPlayerNickname()) && this.clientModel.getNickname().equals(playerNickname))
                         )
                 ) {
-
-
                     // Getting the player's ship
                     ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
                     if (ship == null) {
@@ -2028,7 +2031,6 @@ public class CardRoundController extends GUIController {
                         this.batteriesMap.get(playerNickname).remove(guiUtils.keyFromCoords(row, col));
                         this.lifeFormsMap.get(playerNickname).remove(guiUtils.keyFromCoords(row, col));
                         this.itemsMap.get(playerNickname).remove(guiUtils.keyFromCoords(row, col));
-
                     }
                 }
             }

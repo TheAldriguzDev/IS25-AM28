@@ -104,7 +104,7 @@ public class ClientMeteorShower extends ClientEventCard {
                     case 3 -> ": LEFT";
                     default -> "";
                 }
-                + ", Size: "
+                + "\nSize: "
                 + switch (this.currMeteorDescriptor.get("meteorSize")) {
                     case 1 -> "SMALL";
                     case 2 -> "BIG";

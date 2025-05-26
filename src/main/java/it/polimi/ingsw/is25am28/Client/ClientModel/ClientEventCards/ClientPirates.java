@@ -135,7 +135,7 @@ public class ClientPirates extends ClientEventCard {
                 case 3 -> ": LEFT";
                 default -> "";
             }
-                    + ", Size: "
+                    + "\nSize: "
                     + switch (this.currentPlasmaShot.get("shotSize")) {
                 case 1 -> "SMALL";
                 case 2 -> "BIG";
