@@ -137,7 +137,7 @@ public class PopulateShipController extends GUIController {
         ship.generateComponentSubLists();
         List<ClientCabin> cabins = ship.getCabinList();
         // Removing the core from the list, since it's automatically filled with astronauts
-        cabins.removeIf(ClientCabin::isCore);
+        cabins.removeIf(ClientCabin::isCore); // TODO: On reconnect seems that the core is not set
 
         // Create the 3 clickable regions maps
         // After placing an alien disable the toggle

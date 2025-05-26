@@ -9,7 +9,6 @@ import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
-import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
@@ -28,7 +27,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.util.Duration;
-import org.controlsfx.control.spreadsheet.Grid;
 
 import java.net.URL;
 import java.util.*;
@@ -270,7 +268,7 @@ public class ShipConstructionController extends GUIController {
             GridPane playerGrid = this.playersShipGridPane.get(playerNickname);
 
             // Create, for each player, the graphic ship
-            this.guiUtils.createShipVisuals(playerNickname, this.playersShipGridPane.get(playerNickname));
+            this.guiUtils.createShipVisuals(playerNickname, playerGrid);
         }
     }
 
@@ -619,6 +617,11 @@ public class ShipConstructionController extends GUIController {
                         this.setVisibility(this.viewGameBoardContainer, false);
                         this.setVisibility(this.subdeckViewerContainer, false);
 
+                        this.selectedComponentImage.setRotate(0.0);
+                        this.selectedComponent.setRotation(0);
+                        this.selectedComponent = null;
+                        this.selectedComponentImage.setImage(null);
+
                         // Before displaying the dynamic page --> set the tile info etc
                         this.setVisibility(this.tileScrollPane, true);
                     });
@@ -689,7 +692,10 @@ public class ShipConstructionController extends GUIController {
                         this.setVisibility(this.viewGameBoardContainer, false);
                         this.setVisibility(this.subdeckViewerContainer, false);
 
+                        // Reset the rotations
                         this.selectedComponentImage.setRotate(0.0);
+                        this.selectedComponent = null;
+                        this.selectedComponentImage.setImage(null);
 
                         // Before displaying the dynamic page --> set the tile info etc
                         this.setVisibility(this.tileScrollPane, true);

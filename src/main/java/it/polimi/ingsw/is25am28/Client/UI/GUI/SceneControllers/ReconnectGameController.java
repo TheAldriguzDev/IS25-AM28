@@ -14,6 +14,7 @@ public class ReconnectGameController extends GUIController {
     @FXML private Button submitReconnectGameButton;
 
     public void onSubmitReconnectGameButtonClick(ActionEvent actionEvent) {
+        System.out.println("Clicked");
         String nickname = this.nicknameTextField.getText() == null ? "" : this.nicknameTextField.getText().trim().strip();
 
         Platform.runLater(() -> {
@@ -23,7 +24,7 @@ public class ReconnectGameController extends GUIController {
                 return;
             }
 
-            GUIHandler.getInstance().getClientModel().setNickname(nickname);
+            GUIHandler.getClientModel().setNickname(nickname);
 
             try {
                 GUIHandler.getVirtualClient().reconnectClient(
@@ -31,6 +32,7 @@ public class ReconnectGameController extends GUIController {
                 );
             }
             catch (Exception e) {
+                e.printStackTrace();
                 throw new RuntimeException(e);
             }
         });

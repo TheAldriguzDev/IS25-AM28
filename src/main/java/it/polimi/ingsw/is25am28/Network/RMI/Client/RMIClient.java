@@ -188,7 +188,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
 
     @Override
     public void reconnectClient(String nickname) throws Exception {
-
+        this.enqueueCommunication(() -> server.reconnectClient(nickname, this.uuid));
     }
 
     private void enqueueCommunication(ThrowingRunnable runnable) {
