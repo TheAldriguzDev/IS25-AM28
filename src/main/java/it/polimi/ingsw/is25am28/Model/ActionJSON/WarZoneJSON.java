@@ -28,6 +28,7 @@ public class WarZoneJSON extends ActionJSON {
         this.shieldList = new ArrayList<>();
         this.cannonList = new ArrayList<>();
         this.engineList = new ArrayList<>();
+        this.batteriesToBeStolen = new ArrayList<>();
     }
 
     public WarZoneJSON(

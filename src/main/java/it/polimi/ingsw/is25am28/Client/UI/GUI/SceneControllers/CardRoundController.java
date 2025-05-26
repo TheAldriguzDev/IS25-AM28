@@ -459,7 +459,6 @@ public class CardRoundController extends GUIController {
 
         this.commandsToggleGroup = new ToggleGroup();
 
-        System.out.println(PrintUtils.addColor("(1)", ANSIColors.CYAN));
         try {
             ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
             if (ship == null) {
@@ -467,9 +466,7 @@ public class CardRoundController extends GUIController {
                 return;
             }
             ship.generateComponentSubLists();
-            System.out.println(PrintUtils.addColor("(2)", ANSIColors.CYAN));
             if(ship.getFirePower(null) > this.currEventCard.getFirepower()) {
-                System.out.println(PrintUtils.addColor("(3)", ANSIColors.CYAN));
                 // Enables the "setTakeReward" command if the baseline firepower is enough
                 this.availableCommands.add("setTakeReward");
             }

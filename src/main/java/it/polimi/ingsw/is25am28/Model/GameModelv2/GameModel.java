@@ -263,8 +263,8 @@ public class GameModel {
 
         Collections.shuffle(this.deck);
 
-//        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
-//        List<EventCard> fakeDeck = new ArrayList<>();
+        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
+        List<EventCard> fakeDeck = new ArrayList<>();
 
 //        fakeDeck.add(AllCards.get(0)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(1)); // AbandonedShip
@@ -298,19 +298,19 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(29)); // OpenSpace
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
 //        fakeDeck.add(AllCards.get(31)); // Epidemy
-//        fakeDeck.add(AllCards.get(32)); // Smugglers
+        fakeDeck.add(AllCards.get(32)); // Smugglers
 //        fakeDeck.add(AllCards.get(33)); // Smugglers
 //        fakeDeck.add(AllCards.get(34)); // Slavers
 //        fakeDeck.add(AllCards.get(35)); // Slavers
 //        fakeDeck.add(AllCards.get(36)); // Stardust
 //        fakeDeck.add(AllCards.get(37)); // Stardust
 //        fakeDeck.add(AllCards.get(38)); // Warzone
-//        fakeDeck.add(AllCards.get(39)); // Warzone
+        fakeDeck.add(AllCards.get(39)); // Warzone
 //        fakeDeck.add(AllCards.get(36)); // Stardust
 //        fakeDeck.add(AllCards.get(37)); // Stardust
 //
-//          this.deck.clear();
-//          this.deck.addAll(fakeDeck);
+          this.deck.clear();
+          this.deck.addAll(fakeDeck);
     }
 
     /**

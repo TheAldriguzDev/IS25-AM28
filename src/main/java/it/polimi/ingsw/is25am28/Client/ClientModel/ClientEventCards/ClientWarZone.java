@@ -80,6 +80,7 @@ public class ClientWarZone extends ClientEventCard {
                 }
                 case "LossItems" -> {
                     enabledCommands.add("setItemsToBeRemoved");
+                    enabledCommands.add("batteriesToBeStolen");
                 }
                 default -> {} // MovementSteps does not need user input
             }
@@ -91,7 +92,7 @@ public class ClientWarZone extends ClientEventCard {
         String tmpAction = getCurrAction();
         String tmpConsequence = getCurrConsequence();
 
-        if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+        if(!(this.affectedPlayer != null && !this.affectedPlayer.isEmpty())) {
             return tmpAction + " --> " + tmpConsequence;
         }
 
@@ -100,12 +101,6 @@ public class ClientWarZone extends ClientEventCard {
                 return "Choose the crew members to give up";
             }
             case "ShootingSequence" -> {
-                return "h";
-            }
-            case "LossItems" -> {
-                return "Choose the items to give up!";
-            }
-            default -> {
                 return "[CURRENT PLASMASHOT INFO]\nComing from: "
                         + switch (this.currentPlasmaShot.get("shotDirection")) {
                     case 0 -> "ABOVE";
@@ -120,6 +115,12 @@ public class ClientWarZone extends ClientEventCard {
                     case 2 -> "BIG";
                     default -> "";
                 } + "\nDice Throw Result: " + this.diceThrowResult;
+            }
+            case "LossItems" -> {
+                return "Choose the items to give up!";
+            }
+            default -> {
+                return "";
             }
         }
     }
