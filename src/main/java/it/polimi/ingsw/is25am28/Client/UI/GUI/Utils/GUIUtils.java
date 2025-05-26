@@ -351,7 +351,7 @@ public class GUIUtils {
         storageBox.getChildren().clear();
         if (storage.getCapacity() == 3) {
             storageBox.setAlignment(Pos.TOP_CENTER);
-//            storageBox.setPadding(new Insets(15, 0, 0, 0));
+            storageBox.setPadding(new Insets(10, 0, 0, 0));
         }
         storageBox.setRotate(storage.getDirection() * 90 + 90);
         URL resource;
@@ -359,6 +359,7 @@ public class GUIUtils {
             for (Item item : storage.getStoredItems()) {
                 resource = Objects.requireNonNull(getClass().getResource(item.getColor().getImagePath()));
                 ImageView icon = new ImageView(new Image(resource.toExternalForm(), 40, 40, true, true));
+                icon.setRotate(storage.getDirection() * -90 - 90);
                 storageBox.getChildren().add(icon);
             }
         }
@@ -398,11 +399,12 @@ public class GUIUtils {
     public void initBatteryIcons(ClientBattery battery, FlowPane batteryBox) {
         batteryBox.getChildren().clear();
         URL resource;
-
+        batteryBox.setRotate(battery.getDirection() * 90);
         if (battery.getAvailability() > 0) {
             for (int i = 0; i < battery.getAvailability(); i++) {
                 resource = Objects.requireNonNull(getClass().getResource("/imgs/icons/batteries/Battery.png"));
                 ImageView icon = new ImageView(new Image(resource.toExternalForm(), 40, 40, true, true));
+                icon.setRotate(((i + 1) % 2) * 180);
                 batteryBox.getChildren().add(icon);
             }
         }

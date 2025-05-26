@@ -669,6 +669,14 @@ public class CardRoundController extends GUIController {
 
     private Button createColorButton(ItemColor itemColor) {
         Button itemColorButton = new Button();// TODO: general switch
+
+        String colorHex = switch (itemColor) {
+            case BLUE -> "#1E88E5";
+            case RED -> "#E53935";
+            case GREEN -> "#43A047";
+            case YELLOW -> "#FBC02D";
+        };
+
         itemColorButton.setText(
                 switch (itemColor) {
                     case RED -> "Red";
@@ -677,8 +685,9 @@ public class CardRoundController extends GUIController {
                     case GREEN -> "Green";
                 }
         );
+
         itemColorButton.getStyleClass().add("button");
-        itemColorButton.setStyle("-fx-background-color: " + itemColor.toString().toLowerCase() + "; -fx-text-fill: black");
+        itemColorButton.setStyle("-fx-background-color: " + colorHex + "; -fx-text-fill: white;");
         itemColorButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
         itemColorButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
         itemColorButton.setAlignment(Pos.CENTER);
@@ -1074,7 +1083,6 @@ public class CardRoundController extends GUIController {
                     this.emptiedItemsMap.clear();
                     this.emptiedStoragesRegions.clear();
                     Platform.runLater(this::visualizePlayerActions);
-                    System.out.println();
                     this.currEventCard.clearJSON();
                 },
                 () -> {
