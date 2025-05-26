@@ -221,7 +221,7 @@ public class GUIHandler extends Application implements ClientUI {
         // Check if the SHIP_CONSTRUCTION_SCENE is already loaded
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
-            Platform.runLater(controller::initShipConstruction);
+            Platform.runLater(() -> controller.initShipConstruction(shipConstruction));
             return;
         }
 
@@ -240,7 +240,7 @@ public class GUIHandler extends Application implements ClientUI {
             // Store the root and the controller
             this.saveRootAndController(GuiScenes.SHIP_CONSTRUCTION_SCENE, root, controller);
 
-            controller.initShipConstruction();
+            controller.initShipConstruction(shipConstruction);
 
             Platform.runLater(() -> {
                 Scene newScene = new Scene(root);
