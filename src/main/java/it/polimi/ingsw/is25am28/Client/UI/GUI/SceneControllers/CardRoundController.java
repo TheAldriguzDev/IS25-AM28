@@ -814,7 +814,20 @@ public class CardRoundController extends GUIController {
             // Nothing is added
         }
 
-        // (3) - Crew to remove
+        // (3) - Chosen planet index
+        try {
+            Integer chosenPlanetIndex = this.currEventCard.getChosenPlanetIndex();
+
+            if (chosenPlanetIndex != null && chosenPlanetIndex != -1) {
+                label = new Label();
+                label.setText("Chosen planet index: " + chosenPlanetIndex);
+                actionsContainer.getChildren().add(label);
+            }
+        } catch (UnsupportedOperationException e) {
+            // Nothing is added
+        }
+
+        // (4) - Crew to remove
         try {
             List<ComponentHelper<LifeformType>> crewToRemove = this.currEventCard.getCrewToRemove();
 
@@ -838,7 +851,7 @@ public class CardRoundController extends GUIController {
             // Nothing is added
         }
 
-        // (4) - Items to remove
+        // (5) - Items to remove
         try {
             List<ComponentHelper<ItemColor>> itemsToRemove = this.currEventCard.getItemsToBeRemoved();
 
@@ -861,7 +874,7 @@ public class CardRoundController extends GUIController {
             // Nothing is added
         }
 
-        // (5) - Items to take
+        // (6) - Items to take
         try {
             List<ComponentHelper<ItemColor>> itemsToTake = this.currEventCard.getItemsToBeTaken();
 
@@ -879,19 +892,6 @@ public class CardRoundController extends GUIController {
                         }
                     );
                 }
-            }
-        } catch (UnsupportedOperationException e) {
-            // Nothing is added
-        }
-
-        // (6) - Chosen planet index
-        try {
-            Integer chosenPlanetIndex = this.currEventCard.getChosenPlanetIndex();
-
-            if (chosenPlanetIndex != null && chosenPlanetIndex != -1) {
-                label = new Label();
-                label.setText("Chosen planet index: " + chosenPlanetIndex);
-                actionsContainer.getChildren().add(label);
             }
         } catch (UnsupportedOperationException e) {
             // Nothing is added

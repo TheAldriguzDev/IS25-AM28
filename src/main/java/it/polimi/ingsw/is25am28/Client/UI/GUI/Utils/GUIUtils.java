@@ -404,7 +404,14 @@ public class GUIUtils {
             for (int i = 0; i < battery.getAvailability(); i++) {
                 resource = Objects.requireNonNull(getClass().getResource("/imgs/icons/batteries/Battery.png"));
                 ImageView icon = new ImageView(new Image(resource.toExternalForm(), 40, 40, true, true));
-                icon.setRotate(((i + 1) % 2) * 180);
+                if (((i + 1) % 2) == 0) {
+                    icon.setRotate(0);
+                    icon.setTranslateY(-3);
+                } else {
+                    icon.setRotate(180);
+                    icon.setTranslateY(3);
+
+                }
                 batteryBox.getChildren().add(icon);
             }
         }
