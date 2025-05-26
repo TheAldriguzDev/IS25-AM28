@@ -65,6 +65,8 @@ public class PopulateShipController extends GUIController {
     private final Map<String, ImageView> playersRocketBoard = new HashMap<>();
 
     private boolean isShipFull;
+    private ClientShip mainShip;
+    private final Map<String, Map<String, HBox>> lifeFormsMap = new HashMap<>();
 
     ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 
@@ -91,8 +93,8 @@ public class PopulateShipController extends GUIController {
         this.initLifeFormsToggles();
 
         this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
-        ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
-        if (ship == null) {
+        this.mainShip = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
+        if (this.mainShip == null) {
             System.out.println(PrintUtils.addColor("[ERROR] [FixShipController] ClientShip is null", ANSIColors.RED));
             return;
         }
@@ -124,6 +126,8 @@ public class PopulateShipController extends GUIController {
             this.componentsImagesMap.put(player.getNickname(), this.guiUtils.createShipVisuals(player.getNickname(), shipGrid));
             // Adding the shipGrid to the map
             this.playersShipGridPane.put(player.getNickname(), shipGrid);
+            // Adding the lifeForm Icons
+            this.lifeFormsMap.put(player.getNickname(), this.guiUtils.initShipLifeFormIcons(player.getNickname(), shipGrid));
         }
 
         // Setting the current shipGrid to this client's ship
@@ -134,8 +138,8 @@ public class PopulateShipController extends GUIController {
         // Sets the populateShipLabel and the isShipFull flag
         this.setShipLabelText(state.getPlayersReady().contains(this.clientModel.getNickname()));
 
-        ship.generateComponentSubLists();
-        List<ClientCabin> cabins = ship.getCabinList();
+        this.mainShip.generateComponentSubLists();
+        List<ClientCabin> cabins = mainShip.getCabinList();
         // Removing the core from the list, since it's automatically filled with astronauts
         cabins.removeIf(ClientCabin::isCore); // TODO: On reconnect seems that the core is not set
 
@@ -158,7 +162,7 @@ public class PopulateShipController extends GUIController {
                 cell.setPickOnBounds(false);
                 this.cabinRegions.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
 
-                for(ClientComponent component : ship.getNearestReachableComponents(cabin)) {
+                for(ClientComponent component : this.mainShip.getNearestReachableComponents(cabin)) {
                     if (component != null && component.getClass().equals(ClientVital.class)) {
                         ClientVital vital = (ClientVital) component;
                         if (vital.getVitalType().equals(VitalType.PURPLE_VITAL)) {
@@ -187,12 +191,11 @@ public class PopulateShipController extends GUIController {
         if (this.currentSelectableLifeForm == null) { return; }
 
         GUIHandler.setCommandCTX(new CommandCTX(
-                "addLifeform",
+                "addLifeForm",
                 () -> {},
                 () -> {}
         ));
 
-        // TODO: can be simplified
         try {
 
             ComponentHelper<LifeformType> lifeFormToAdd = new ComponentHelper<>(row + shipOffsets.getKey(), col + shipOffsets.getValue());
@@ -252,11 +255,16 @@ public class PopulateShipController extends GUIController {
                     this.brownToggle.setDisable(true);
                 }
 
-                // Deactivating the region and setting its background color
+                // Deactivating the region and setting the icons
                 region.setDisable(true);
                 region.setPickOnBounds(false);
                 region.setCursor(Cursor.DEFAULT);
-                region.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+//                region.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);"); // TODO: replace with icons
+                // Updating the icons
+                ClientCabin cabin = (ClientCabin) this.mainShip.getComponent(row, col);
+                guiUtils.initCabinLifeFormIcons(cabin, this.lifeFormsMap.get(this.clientModel.getNickname()).get(guiUtils.keyFromCoords(row, col)));
+
+
 
                 // TODO: if someone has finished the colored regions will disappear, will be resolved with the addition of custom pawns
                 // TODO: revise this part
@@ -279,10 +287,20 @@ public class PopulateShipController extends GUIController {
                 int ofsRow = row - shipOffsets.getKey();
                 int ofsCol = col - shipOffsets.getValue();
 
-                Region cell = new Region();
-                cell.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+                ClientShip targetShip = this.clientModel.getShipOfPlayer(targetPlayer).orElse(null);
+                if (targetShip == null) {
+                    System.out.println(PrintUtils.addColor("[ERROR] [FixShipController] ClientShip is null", ANSIColors.RED));
+                    return;
+                }
 
-                this.playersShipGridPane.get(targetPlayer).add(cell, ofsCol, ofsRow);
+                // Updating the icons
+                ClientCabin cabin = (ClientCabin) targetShip.getComponent(row, col);
+                guiUtils.initCabinLifeFormIcons(cabin, this.lifeFormsMap.get(targetPlayer).get(guiUtils.keyFromCoords(row, col)));
+
+//                Region cell = new Region();
+//                cell.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
+//
+//                this.playersShipGridPane.get(targetPlayer).add(cell, ofsCol, ofsRow);
             }
 
 
