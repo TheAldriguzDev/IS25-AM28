@@ -11,13 +11,12 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 import java.util.List;
 import java.util.Map;
 
-
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ShipConstructionDTO extends StateDTO {
     private List<Map<String, Object>> all_components;
     private List<Integer> flipped_components;
     private List<Integer> selected_components;
+    private List<String> playerFinished;
 
     // Card list that contains the information about the deck in the game
     private List<CardStateJSON> cards;
@@ -28,7 +27,9 @@ public final class ShipConstructionDTO extends StateDTO {
             @JsonProperty("all_components") List<Map<String, Object>> all_components,
             @JsonProperty("flipped_components") List<Integer> flipped_components,
             @JsonProperty("selected_components") List<Integer> selected_components,
-            @JsonProperty("cards") List<CardStateJSON> cards) {
+            @JsonProperty("cards") List<CardStateJSON> cards,
+            @JsonProperty("playerFinished") List<String> playerFinished
+    ) {
         this.all_components = all_components;
         this.flipped_components = flipped_components;
         this.selected_components = selected_components;
@@ -48,7 +49,7 @@ public final class ShipConstructionDTO extends StateDTO {
 
     @JsonGetter("flipped_components")
     public List<Integer> getFlippedComponents() {
-        return selected_components;
+        return flipped_components;
     }
 
     @JsonSetter("flipped_components")
@@ -76,6 +77,17 @@ public final class ShipConstructionDTO extends StateDTO {
     @JsonSetter("cards")
     public ShipConstructionDTO setCards(List<CardStateJSON> cards) {
         this.cards = cards;
+        return this;
+    }
+
+    @JsonGetter("playerFinished")
+    public List<String> getPlayerFinished() {
+        return this.playerFinished;
+    }
+
+    @JsonSetter("playerFinished")
+    public ShipConstructionDTO setPlayerFinished(List<String> playerFinished) {
+        this.playerFinished = playerFinished;
         return this;
     }
 

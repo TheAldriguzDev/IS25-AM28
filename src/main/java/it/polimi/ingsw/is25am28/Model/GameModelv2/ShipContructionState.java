@@ -376,7 +376,8 @@ public final class ShipContructionState extends State implements TimerObserver {
                 .setAllComponents(this.all_components.stream().map(Component::toMap).toList())
                 .setCards(cardsState)
                 .setFlippedComponents(this.flipped.stream().toList())
-                .setSelectedComponents(this.selected.stream().toList());
+                .setSelectedComponents(this.selected.stream().toList())
+                .setPlayerFinished(this.players_done.stream().toList());
 
         state.setStateName(this.toString());
 
