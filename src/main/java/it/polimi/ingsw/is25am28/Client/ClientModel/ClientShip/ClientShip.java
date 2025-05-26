@@ -116,6 +116,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
             Object connectorsObj = map.get("connectors");
             String path = (String) map.get("path");
+            int direction = (int ) map.get("direction");
             List<Integer> connectorOrdinals = null;
 
             if (connectorsObj != null) {
@@ -133,17 +134,20 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                     int force = (int) map.get("force");
 
                     ClientCannon component = new ClientCannon(id, connectorOrdinals, force, path);
+                    component.setRotation(direction);
 
                     this.addComponent(component, i, j);
                 }
                 // Cabin
                 case 1 -> {
                     List<LifeformType> lifeform = (List<LifeformType>) map.get("inhabitants");
+                    System.out.println(lifeform);
                     ClientCabin component = new ClientCabin(id, connectorOrdinals, false, path);
 
                     for (LifeformType lifeformType : lifeform) {
                         component.addInhabitant(new Lifeform(lifeformType));
                     }
+                    component.setRotation(direction);
 
                     this.addComponent(component, i, j);
                 }
@@ -154,6 +158,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
                     List<Integer> storedItems = (List<Integer>) map.get("storedItems");
                     ClientStorage component = new ClientStorage(id, connectorOrdinals, capacity, isSpecial, path);
+                    component.setRotation(direction);
 
                     for (Integer storedItem : storedItems) {
                         switch (storedItem) {
@@ -177,12 +182,16 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 // Vital
                 case 3 -> {
                     int type = (int) map.get("type");
-                    this.addComponent(new ClientVital(id, connectorOrdinals, type, path), i, j);
+                    ClientVital component = new ClientVital(id, connectorOrdinals, type, path);
+                    component.setRotation(direction);
+                    this.addComponent(component, i, j);
                 }
                 // Engine
                 case 4 -> {
                     int speed = (int) map.get("speed");
-                    this.addComponent(new ClientEngine(id, connectorOrdinals, speed, path), i, j);
+                    ClientEngine component = new ClientEngine(id, connectorOrdinals, speed, path);
+                    component.setRotation(direction);
+                    this.addComponent(component, i, j);
                 }
                 // Battery
                 case 5 -> {
@@ -191,16 +200,21 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
                     ClientBattery component = new ClientBattery(id, connectorOrdinals, capacity, path);
                     component.setAvailability(available);
+                    component.setRotation(direction);
 
                     this.addComponent(component, i, j);
                 }
                 // Shield
                 case 6 -> {
-                    this.addComponent(new ClientShield(id, connectorOrdinals, path), i, j);
+                    ClientShield component = new ClientShield(id, connectorOrdinals, path);
+                    component.setRotation(direction);
+                    this.addComponent(component, i, j);
                 }
                 // Structural
                 case 7 -> {
-                    this.addComponent(new ClientStructural(id, connectorOrdinals, path), i, j);
+                    ClientStructural component = new ClientStructural(id, connectorOrdinals, path);
+                    component.setRotation(direction);
+                    this.addComponent(component, i, j);
                 }
                 default -> {
                     throw new RuntimeException("The given component is not recognised.");

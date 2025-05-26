@@ -206,6 +206,7 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
         map.put("path", path);
         map.put("row", row);
         map.put("col", col);
+        map.put("direction", this.getDirection());
 
         return map;
     }
