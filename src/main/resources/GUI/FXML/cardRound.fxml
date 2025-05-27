@@ -120,11 +120,6 @@
                                  <children>
                                     <VBox alignment="TOP_CENTER" spacing="30.0">
                                        <children>
-                                          <Label text="You are now viewing the game board" wrapText="true">
-                                             <font>
-                                                <Font size="32.0" />
-                                             </font>
-                                          </Label>
                                           <Button fx:id="goBackToCardRoundButtonFromViewBoard" mnemonicParsing="false" onAction="#handleGoBackToCardRoundButton" text="Resume Card Round" wrapText="true" />
                                        </children>
                                     </VBox>

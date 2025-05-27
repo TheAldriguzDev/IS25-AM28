@@ -154,34 +154,36 @@ public class PopulateShipController extends GUIController {
 
             for(ClientCabin cabin : cabins) {
 
-                // Create a clickable region for every cabin, with clicks disabled, then put it in the general cabinRegions map
-                Region cell = new Region();
-                cell.setPrefSize(100, 100);
-                cell.setStyle("-fx-background-color: transparent;");
-                cell.setCursor(Cursor.DEFAULT);
-                cell.setPickOnBounds(false);
-                this.cabinRegions.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                if (cabin.getInhabitants().isEmpty()) {
+                    // Create a clickable region for every cabin, with clicks disabled, then put it in the general cabinRegions map
+                    Region cell = new Region();
+                    cell.setPrefSize(100, 100);
+                    cell.setStyle("-fx-background-color: transparent;");
+                    cell.setCursor(Cursor.DEFAULT);
+                    cell.setPickOnBounds(false);
+                    this.cabinRegions.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
 
-                for(ClientComponent component : this.mainShip.getNearestReachableComponents(cabin)) {
-                    if (component != null && component.getClass().equals(ClientVital.class)) {
-                        ClientVital vital = (ClientVital) component;
-                        if (vital.getVitalType().equals(VitalType.PURPLE_VITAL)) {
-                            this.purpleToggle.setDisable(false);
-                            // Add the cabin to the purpleAlienRegion
-                            this.purpleAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
-                        } else { // Purple vital
-                            this.brownToggle.setDisable(false);
-                            // Add the cabin to the brownAlienRegion
-                            this.brownAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                    for(ClientComponent component : this.mainShip.getNearestReachableComponents(cabin)) {
+                        if (component != null && component.getClass().equals(ClientVital.class)) {
+                            ClientVital vital = (ClientVital) component;
+                            if (vital.getVitalType().equals(VitalType.PURPLE_VITAL)) {
+                                this.purpleToggle.setDisable(false);
+                                // Add the cabin to the purpleAlienRegion
+                                this.purpleAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                            } else { // Purple vital
+                                this.brownToggle.setDisable(false);
+                                // Add the cabin to the brownAlienRegion
+                                this.brownAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                            }
                         }
                     }
-                }
 
-                // Places the regions on the shipGrid
-                int ofsRow = cabin.getI() - shipOffsets.getKey();
-                int ofsCol = cabin.getJ() - shipOffsets.getValue();
-                this.shipGrid.add(cell, ofsCol, ofsRow);
-                cell.setOnMouseClicked(_ -> handlePlacedLifeform(ofsRow, ofsCol));
+                    // Places the regions on the shipGrid
+                    int ofsRow = cabin.getI() - shipOffsets.getKey();
+                    int ofsCol = cabin.getJ() - shipOffsets.getValue();
+                    this.shipGrid.add(cell, ofsCol, ofsRow);
+                    cell.setOnMouseClicked(_ -> handlePlacedLifeform(ofsRow, ofsCol));
+                }
             }
         }
     }
