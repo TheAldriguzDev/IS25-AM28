@@ -42,8 +42,8 @@ public class ClientBoard {
         this.level = BoardJSON.getLevel();
         this.players = new HashMap<>(clientModel.getAllClientPlayers());
         // Setting the starting players' positions
-        for (String playerNickName : BoardJSON.getStartingPlayerPositions().keySet()) {
-            this.players.get(playerNickName).setCursor(BoardJSON.getStartingPlayerPositions().get(playerNickName));
+        for (String playerNickName : BoardJSON.getstartingPlayersPositions().keySet()) {
+            this.players.get(playerNickName).setCursor(BoardJSON.getstartingPlayersPositions().get(playerNickName));
         }
         this.eliminatedPlayers = new ArrayList<>();
         for (String playerNickName : BoardJSON.getEliminatedPlayersNickname()) {

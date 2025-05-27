@@ -20,7 +20,7 @@ public class BoardJSON implements Serializable {
     private List<String> playersNickname;
     private List<String> eliminatedPlayersNickname;
     private Map<Integer, String> boardCells;
-    private Map<String, Integer> startingPlayerPositions = new HashMap<>();
+    private Map<String, Integer> startingPlayersPositions = new HashMap<>();
 
     /**
      * Default constructor used client side
@@ -35,12 +35,12 @@ public class BoardJSON implements Serializable {
     public BoardJSON(
             @JsonProperty("size") int size,
             @JsonProperty("level") int level,
-            @JsonProperty("startingPlayerPositions") Map<String, Integer> startingPlayerPositions,
+            @JsonProperty("startingPlayersPositions") Map<String, Integer> startingPlayersPositions,
             @JsonProperty("EliminatedPlayers") List<String> eliminatedPlayersNickname
     ) {
         this.size = size;
         this.level = level;
-        this.startingPlayerPositions = startingPlayerPositions;
+        this.startingPlayersPositions = startingPlayersPositions;
         this.eliminatedPlayersNickname = eliminatedPlayersNickname;
     }
 
@@ -95,8 +95,8 @@ public class BoardJSON implements Serializable {
         return boardHead;
     }
 
-    @JsonGetter("startingPlayerPositions")
-    public Map<String, Integer> getStartingPlayerPositions() {
-        return startingPlayerPositions;
+    @JsonGetter("startingPlayersPositions")
+    public Map<String, Integer> getstartingPlayersPositions() {
+        return startingPlayersPositions;
     }
 }
