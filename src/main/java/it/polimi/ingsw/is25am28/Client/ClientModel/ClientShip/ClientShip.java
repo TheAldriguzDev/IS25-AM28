@@ -141,7 +141,12 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 // Cabin
                 case 1 -> {
                     boolean isCore = (boolean) map.get("isCore");
-                    List<LifeformType> lifeform = (List<LifeformType>) map.get("inhabitants");
+
+                    // @SuppressWarnings("unchecked")
+                    List<String> inhabitantStrings = (List<String>) map.get("inhabitants");
+                    List<LifeformType> lifeform = inhabitantStrings.stream()
+                            .map(str -> LifeformType.fromString(str.toUpperCase()))
+                            .toList();
 
                     ClientCabin component = new ClientCabin(id, connectorOrdinals, isCore, path);
                     if (isCore) {
@@ -153,8 +158,8 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                             component.addInhabitant(new Lifeform(lifeformType));
                         }
                     }
-                    component.setRotation(direction);
 
+                    component.setRotation(direction);
                     this.addComponent(component, i, j);
                 }
                 // Storage

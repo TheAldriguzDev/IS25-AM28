@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Network.Messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -9,6 +10,7 @@ import java.util.List;
 public final class Reconnect implements Message {
     private String nickname;
 
+    @JsonCreator
     public Reconnect(@JsonProperty("nickname") String nickname) {
         this.nickname = nickname;
     }
