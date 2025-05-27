@@ -1243,7 +1243,7 @@ public class CardRoundController extends GUIController {
             this.emptiedStoragesRegions.put(guiUtils.keyFromCoords(row, col), this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
 
             this.shipGrid.getChildren().remove(this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
-//            this.storagesToEmptyRegions.remove(guiUtils.keyFromCoords(row, col)); //TODO: OnSuccess // TODO BUG: if not commented introduces a bug, if commented another bug (one on removanl and one on revert)
+            this.storagesToEmptyRegions.remove(guiUtils.keyFromCoords(row, col)); //TODO: OnSuccess // TODO BUG: if not commented introduces a bug, if commented another bug (one on removanl and one on revert)
 //            this.itemsMap.remove(guiUtils.keyFromCoords(row, col));
         }
 
