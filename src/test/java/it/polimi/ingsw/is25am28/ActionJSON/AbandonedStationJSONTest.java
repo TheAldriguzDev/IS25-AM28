@@ -46,9 +46,9 @@ public class AbandonedStationJSONTest {
     @Test
     public void testDeserialization() throws Exception {
         // JSON input String to test the deserialization
-        String json = "{\"playerNickname\":\"Player1\",\"wantToVisitStation\":false," +
-                "\"itemsToBeRemoved\":[{\"i\":1,\"j\":1,\"helper\":\"YELLOW\"}]," +
-                "\"itemsToBeTaken\":[{\"i\":2,\"j\":2,\"helper\":\"GREEN\"}]}";
+        String json = "{\"type\":\"AbandonedStationJSON\",\"playerNickname\":\"Player1\",\"wantToVisitStation\":false," +
+                "\"itemsToBeRemoved\":[{\"i\":1,\"j\":1,\"item\":\"YELLOW\"}]," +
+                "\"itemsToBeTaken\":[{\"i\":2,\"j\":2,\"item\":\"GREEN\"}]}";
 
         // ObjectMapper is needed for the deserialization
         ObjectMapper mapper = new ObjectMapper();

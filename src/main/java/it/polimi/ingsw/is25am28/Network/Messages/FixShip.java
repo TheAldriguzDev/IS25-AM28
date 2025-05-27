@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Network.Messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -14,6 +15,7 @@ public final class FixShip implements Message {
     private int i;
     private int j;;
 
+    @JsonCreator
     public FixShip(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("i") int i,

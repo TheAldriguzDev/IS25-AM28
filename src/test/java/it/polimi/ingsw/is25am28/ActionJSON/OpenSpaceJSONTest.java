@@ -65,7 +65,7 @@ public class OpenSpaceJSONTest {
     @Test
     void test_deserialization() throws JsonProcessingException {
         // From a given string we try to get the JSON object
-        String json = "{\"playerNickname\":\"TestPlayer\",\"doubleEnginesToActivate\":[{\"key\":{\"i\":7,\"j\":5},\"value\":{\"i\":7,\"j\":8}}]}";
+        String json = "{\"type\":\"OpenSpaceJSON\",\"playerNickname\":\"TestPlayer\",\"doubleEnginesToActivate\":[{\"key\":{\"i\":7,\"j\":5},\"value\":{\"i\":7,\"j\":8}}]}";
 
         // Deserialize the JSON string
         OpenSpaceJSON openSpace = objectMapper.readValue(json, OpenSpaceJSON.class);

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.Lifeform;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public enum LifeformType {
     ASTRONAUT(1, 0, 0),
     PURPLE_ALIEN(2, 2, 0),
@@ -42,5 +44,10 @@ public enum LifeformType {
             case PURPLE_ALIEN -> "/imgs/icons/lifeforms/purple_alien/PurpleAlien.png";
             case BROWN_ALIEN -> "/imgs/icons/lifeforms/brown_alien/BrownAlien.png";
         };
+    }
+
+    @JsonCreator
+    public static LifeformType fromString(String value) {
+        return LifeformType.valueOf(value.toUpperCase());
     }
 }

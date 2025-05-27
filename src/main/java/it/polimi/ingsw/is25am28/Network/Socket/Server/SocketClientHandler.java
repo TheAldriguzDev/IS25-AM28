@@ -1,7 +1,9 @@
 package it.polimi.ingsw.is25am28.Network.Socket.Server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
@@ -44,6 +46,8 @@ public class SocketClientHandler implements VirtualViewSocket {
         this.output = output;
 
         this.mapper = new ObjectMapper();
+        this.mapper.registerModule(new Jdk8Module());
+        this.mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
 
         try {
             this.onClientConnection();

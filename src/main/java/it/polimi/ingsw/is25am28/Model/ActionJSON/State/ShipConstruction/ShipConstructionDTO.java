@@ -34,6 +34,7 @@ public final class ShipConstructionDTO extends StateDTO {
         this.flipped_components = flipped_components;
         this.selected_components = selected_components;
         this.cards = cards;
+        this.playerFinished = playerFinished;
     }
 
     @JsonGetter("all_components")

@@ -10,11 +10,6 @@ import it.polimi.ingsw.is25am28.Model.GameModelv2.InsufficientPlayerState;
 import java.io.Serial;
 import java.io.Serializable;
 
-
-
-
-
-
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = StateDTO.class, name = "StateDTO"),

@@ -113,7 +113,7 @@ public class ShipConstructionController extends GUIController {
     private ClientComponent selectedComponent;
 
     // Method used to initialize the page information that needs to be displayed
-    public void initShipConstruction(ShipConstructionDTO data) {
+    public void initShipConstruction() {
         // TODO: Init the players ships --> Useful to update the specific client ship in real time
         this.clientModel = GUIHandler.getClientModel();
 
@@ -140,7 +140,7 @@ public class ShipConstructionController extends GUIController {
         );
 
         // The player has already sent his ship --> We need to modify the view
-        if (data.getPlayerFinished() != null && data.getPlayerFinished().contains(this.clientModel.getNickname())) {
+        if (this.clientModel.getState().getPlayerFinishedBuildingShip(this.clientModel.getNickname())) {
             this.hasFinishedShip = true;
             this.showEndedShipConstruction();
         }

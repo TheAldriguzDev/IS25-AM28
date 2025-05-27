@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.UUID;
 
 public final class Ping implements Message {
+    public Ping() {}
+
     @Override
     public boolean validate() {
         return true;

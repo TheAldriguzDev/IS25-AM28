@@ -84,7 +84,12 @@ public class TCPClient implements VirtualViewSocket {
             try {
                 this.runVirtualServer();
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                if (e.getMessage().toLowerCase().contains("connection reset")) {
+                    System.out.println(ANSIColors.YELLOW + "[Server offline] The connection with the server has been lost" + ANSIColors.RESET);
+                    System.exit(1);
+                } else {
+                    throw new RuntimeException(e);
+                }
             }
         }).start();
     }
@@ -160,7 +165,11 @@ public class TCPClient implements VirtualViewSocket {
 
     @Override
     public void flipTimer(String playerNickname) throws Exception {
-        this.sendMessage(new FlipTimer(playerNickname));
+        try {
+            this.sendMessage(new FlipTimer(playerNickname));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -200,6 +209,10 @@ public class TCPClient implements VirtualViewSocket {
 
     // This method will be used to communicate the server socket
     private void sendMessage(Message message) throws Exception {
-        this.output.sendMessage(message); // This will invoke the SocketServerHandler
+        try {
+            this.output.sendMessage(message); // This will invoke the SocketServerHandler
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
