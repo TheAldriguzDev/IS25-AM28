@@ -266,7 +266,7 @@ public class GameModel {
         List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
         List<EventCard> fakeDeck = new ArrayList<>();
 
-//        fakeDeck.add(AllCards.get(0)); // AbandonedShip OK
+        fakeDeck.add(AllCards.get(0)); // AbandonedShip OK
 //        fakeDeck.add(AllCards.get(1)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(2)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(3)); // AbandonedShip
@@ -298,7 +298,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(29)); // OpenSpace
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
 //        fakeDeck.add(AllCards.get(31)); // Epidemy OK
-//        fakeDeck.add(AllCards.get(32)); // Smugglers OK
+        fakeDeck.add(AllCards.get(32)); // Smugglers OK
 //        fakeDeck.add(AllCards.get(33)); // Smugglers
 //        fakeDeck.add(AllCards.get(34)); // Slavers OK
 //        fakeDeck.add(AllCards.get(35)); // Slavers

@@ -566,7 +566,7 @@ public class CardRoundController extends GUIController {
                 switch (selected.getId()) {
                     case "playCard" -> {this.playCard(); this.commandsToggleGroup.selectToggle(null);}
                     case "setCrewToRemove" -> {this.enableRegion(this.cabinsRegions); if (this.cabinsRegions.isEmpty()) initCommandDescriptionBox("There are no available\ncabins to remove crew from!");}
-                    case "setItemsToBeRemoved" -> {this.enableRegion(this.storagesToEmptyRegions); if (this.storagesToEmptyRegions.isEmpty()) initCommandDescriptionBox("There are available storages\n to remove items from!");}
+                    case "setItemsToBeRemoved" -> {this.enableRegion(this.storagesToEmptyRegions); if (this.storagesToEmptyRegions.isEmpty()) initCommandDescriptionBox("There are no available storages\n to remove items from!");}
                     case "setItemsToBeTaken" -> {this.enableRegion(this.storagesToFillRegions); if (this.storagesToFillRegions.isEmpty()) initCommandDescriptionBox("There are no available storages\n to place items in!");}
                     case "setTakeReward" -> {this.handleTakeReward();}
                     case "setChosenPlanetIndex" -> {this.handleChosenPlanetIndex();}
@@ -630,8 +630,6 @@ public class CardRoundController extends GUIController {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
 
-        System.out.println("OFS: " + ofsRow + ", " + ofsCol);
-        System.out.println("ACTUAL: " + row + ", " + col);
         ClientStorage storage = (ClientStorage) this.mainShip.getComponent(row, col);
         this.commandsGrid.getChildren().clear();
         List<ItemColor> cardItemColors = this.currEventCard.getAvailableItemColors();
@@ -822,7 +820,7 @@ public class CardRoundController extends GUIController {
 
             if (chosenPlanetIndex != null && chosenPlanetIndex != -1) {
                 label = new Label();
-                label.setText("Chosen planet index: " + chosenPlanetIndex);
+                label.setText("Chosen planet: " + (chosenPlanetIndex + 1));
                 actionsContainer.getChildren().add(label);
             }
         } catch (UnsupportedOperationException e) {
@@ -1084,6 +1082,8 @@ public class CardRoundController extends GUIController {
                     this.emptiedCabinsRegions.clear();
                     this.emptiedItemsMap.clear();
                     this.emptiedStoragesRegions.clear();
+                    this.emptiedBatteriesRegions.clear();
+                    this.emptiedBatteriesMap.clear();
                     Platform.runLater(this::visualizePlayerActions);
                     this.currEventCard.clearJSON();
                 },
@@ -1201,7 +1201,7 @@ public class CardRoundController extends GUIController {
 
             this.shipGrid.getChildren().remove(this.cabinsRegions.get(guiUtils.keyFromCoords(row, col)));
 //            this.shipGrid.getChildren().remove(boxToUpdate); // TODO: remove in ONSuccess
-//            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO:remove in ONSuccess
+            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col));
         }
 
         this.initStatsBox();
@@ -1225,6 +1225,7 @@ public class CardRoundController extends GUIController {
 
         // We add the component to the storagesToFillRegions (only if the region is not present)
         if(this.storagesToFillRegions.get(guiUtils.keyFromCoords(row, col)) == null) {
+//            System.out.println(PrintUtils.addColor("AGGIUNTO STORAGE DA RIEMPIRE ALLE REGIONI", ANSIColors.MAGENTA));
             Region newRegion = guiUtils.generateDisabledRegion();
             newRegion.setOnMouseClicked(e -> this.initAddColorCommands(ofsRow, ofsCol));
             this.storagesToFillRegions.put(guiUtils.keyFromCoords(row, col), newRegion);
@@ -1238,10 +1239,12 @@ public class CardRoundController extends GUIController {
 
         // If the storage is empty, we remove it from the storagesToEmptyRegions
         if (selectedStorage.getStoredItems().isEmpty()) {
+//            System.out.println(PrintUtils.addColor("RIMOSSO STORAGE DA SVUOTARE DALLE REGIONI", ANSIColors.MAGENTA));
             this.emptiedStoragesRegions.put(guiUtils.keyFromCoords(row, col), this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
 
             this.shipGrid.getChildren().remove(this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
-//            this.storagesToEmptyRegions.remove(guiUtils.keyFromCoords(row, col)); //TODO: OnSuccess
+//            this.storagesToEmptyRegions.remove(guiUtils.keyFromCoords(row, col)); //TODO: OnSuccess // TODO BUG: if not commented introduces a bug, if commented another bug (one on removanl and one on revert)
+//            this.itemsMap.remove(guiUtils.keyFromCoords(row, col));
         }
 
         this.initStatsBox();
@@ -1263,6 +1266,7 @@ public class CardRoundController extends GUIController {
 
         // We add the component to the storagesToEmptyRegions (only if the region is not present)
         if(this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)) == null) {
+//            System.out.println(PrintUtils.addColor("AGGIUNTO STORAGE DA SVUOTARE ALLE REGIONI", ANSIColors.CYAN));
             Region newRegion = guiUtils.generateDisabledRegion();
             newRegion.setOnMouseClicked(e -> this.initRemoveColorCommands(ofsRow, ofsCol));
             this.storagesToEmptyRegions.put(guiUtils.keyFromCoords(row, col), newRegion);
@@ -1271,6 +1275,7 @@ public class CardRoundController extends GUIController {
 
         // If the storage is full, we remove it from the storagesToFillRegions
         if (selectedStorage.getStoredItems().size() == selectedStorage.getCapacity()) {
+//            System.out.println(PrintUtils.addColor("RIMOSSO STORAGE DA RIEMPIRE DALLE REGIONI", ANSIColors.CYAN));
             this.shipGrid.getChildren().remove(this.storagesToFillRegions.get(guiUtils.keyFromCoords(row, col)));
             this.storagesToFillRegions.remove(guiUtils.keyFromCoords(row, col));
         }
@@ -1316,7 +1321,7 @@ public class CardRoundController extends GUIController {
             planetButton.setPrefSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
             planetButton.setMaxSize(Double.MAX_VALUE, Double.MAX_VALUE);
             planetButton.setAlignment(Pos.CENTER);
-            Label planetButtonLabel = new Label(index.toString());
+            Label planetButtonLabel = new Label((index + 1) + "");
             planetButtonLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
             planetButton.setGraphic(planetButtonLabel);
             planetButton.setOnAction(event -> {
