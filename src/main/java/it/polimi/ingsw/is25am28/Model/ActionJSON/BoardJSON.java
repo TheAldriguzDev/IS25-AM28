@@ -43,6 +43,7 @@ public class BoardJSON implements Serializable {
         this.size = size;
         this.level = level;
         this.startingPlayersPositions = startingPlayersPositions != null ? startingPlayersPositions : new HashMap<>();
+        this.playersNickname = playersNickname;
         this.eliminatedPlayersNickname = eliminatedPlayersNickname;
     }
 

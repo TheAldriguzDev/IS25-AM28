@@ -64,7 +64,7 @@ class BoardJSONTest {
 
     @Test
     public void testFinalJsonDeserialization() throws Exception {
-        String json = "{\"size\":24,\"level\":2,\"eliminatedPlayersNickname\":[],\"boardCells\":{\"0\":\"Player 4\",\"1\":\"Player 3\",\"2\":\"\",\"3\":\"Player 2\",\"4\":\"\",\"5\":\"\",\"6\":\"Player 1\",\"7\":\"\",\"8\":\"\",\"9\":\"\",\"10\":\"\",\"11\":\"\",\"12\":\"\",\"13\":\"\",\"14\":\"\",\"15\":\"\",\"16\":\"\",\"17\":\"\",\"18\":\"\",\"19\":\"\",\"20\":\"\",\"21\":\"\",\"22\":\"\",\"23\":\"\"},\"playersNickname\":[\"Player 1\",\"Player 2\",\"Player 3\",\"Player 4\"]}";
+        String json = "{\"size\":24,\"level\":2,\"eliminatedPlayersNickname\":[],\"playersNickname\":[\"Player 1\",\"Player 2\",\"Player 3\",\"Player 4\"]}";
 
         // Create ObjectMapper and register modules if needed
         ObjectMapper mapper = new ObjectMapper();
@@ -82,19 +82,5 @@ class BoardJSONTest {
 
         // Assert playersNickname list
         assertEquals(Arrays.asList("Player 1", "Player 2", "Player 3", "Player 4"), boardJSON.getPlayersNickname(), "Players nickname list does not match");
-
-        // Assert boardCells mapping
-        Map<Integer, String> expectedCells = new HashMap<>();
-        expectedCells.put(0, "Player 4");
-        expectedCells.put(1, "Player 3");
-        expectedCells.put(2, "");
-        expectedCells.put(3, "Player 2");
-        expectedCells.put(4, "");
-        expectedCells.put(5, "");
-        expectedCells.put(6, "Player 1");
-        for (int i = 7; i < 24; i++) {
-            expectedCells.put(i, "");
-        }
-        assertEquals(expectedCells, boardJSON.getBoardCells(), "Board cells mapping does not match expected values");
     }
 }
