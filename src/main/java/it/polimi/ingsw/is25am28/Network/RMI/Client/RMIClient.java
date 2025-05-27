@@ -2,27 +2,19 @@ package it.polimi.ingsw.is25am28.Network.RMI.Client;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.ViewUpdater;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
-import it.polimi.ingsw.is25am28.Network.Messages.Message;
-import it.polimi.ingsw.is25am28.Network.Messages.Ping;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 import it.polimi.ingsw.is25am28.Network.RMI.ThrowingRunnable;
 import it.polimi.ingsw.is25am28.Network.UpdateHandler.UpdateHandler;
 
-import javax.smartcardio.Card;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;

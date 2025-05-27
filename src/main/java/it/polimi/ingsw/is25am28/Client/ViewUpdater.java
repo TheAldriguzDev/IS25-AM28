@@ -355,7 +355,6 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(DisconnectedPlayerDTO state) {
         System.out.println();
-        clearTerminal();
 
         new WidgetTUI()
                 .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getNickname() + " disconnected from the game.", ANSIColors.BRIGHT_MAGENTA))

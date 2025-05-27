@@ -44,29 +44,6 @@ public class BoardJSON implements Serializable {
         this.eliminatedPlayersNickname = eliminatedPlayersNickname;
     }
 
-//    public static BoardJSON fromBoard(Board board) {
-//        List<String> playerNickname = board.getPlayers().stream().map(Player::getNickname).toList();
-//        List<String> eliminatedPlayersNickname = board.getEliminatedPlayers().stream().map(Player::getNickname).toList();
-//
-//        Map<Integer, String> boardCells = new HashMap<Integer, String>();
-//        Cell head = board.getHead();
-//        Cell curr = board.getHead();
-//        do {
-//            // If the player is present set the nickname to the player in the board otherwise sets ""
-//            boardCells.put( curr.getIdx(), curr.getPlayer().map(Player::getNickname).orElse("") );
-//            curr = curr.getNextCell();
-//        } while (curr != head);
-//
-//        return new BoardJSON(
-//                board.getSize(),
-//                board.getLevel(),
-//                //playerNickname,
-//                eliminatedPlayersNickname,
-//                boardCells
-//                //head
-//        );
-//    }
-
     public static BoardJSON fromBoard(Board board) {
         Map<String, Integer> currPlayerPositions = new HashMap<>();
         List<String> eliminatedPlayersNickname = board.getEliminatedPlayers().stream().map(Player::getNickname).toList();
@@ -118,7 +95,7 @@ public class BoardJSON implements Serializable {
         return boardHead;
     }
 
-    @JsonGetter("startingPlayersPositions")
+    @JsonGetter("startingPlayerPositions")
     public Map<String, Integer> getStartingPlayerPositions() {
         return startingPlayerPositions;
     }
