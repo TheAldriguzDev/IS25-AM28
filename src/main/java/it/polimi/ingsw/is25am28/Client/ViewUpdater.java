@@ -148,10 +148,7 @@ public class ViewUpdater implements StateVisitor {
                             }
                         );
 
-                // Update the component in the GUI
-                if (this.ui instanceof GUIHandler) {
-                    ((GUIHandler) this.ui).updateShipConstructionComponent(state);
-                }
+                this.ui.updateShipConstructionComponent(state);
             }
         }
     }
@@ -169,9 +166,7 @@ public class ViewUpdater implements StateVisitor {
                     }
             );
 
-            if (this.ui instanceof GUIHandler) {
-                ((GUIHandler) this.ui).updateShipRemovedComponent(state);
-            }
+            this.ui.updateShipRemovedComponent(state);
         }
     }
 
@@ -206,9 +201,7 @@ public class ViewUpdater implements StateVisitor {
             );
 
 
-            if (this.ui instanceof GUIHandler) {
-                ((GUIHandler) this.ui).updateShipPlacedLifeForm(state);
-            }
+            this.ui.updateShipPlacedLifeForm(state);
 
             if (state.isShipPopulated()) {
                 this.model.getState().addPlayerToPopulateList(state.getPlayerNickname());
@@ -232,10 +225,7 @@ public class ViewUpdater implements StateVisitor {
                 Optional<ClientShip> optionalShip = this.model.getShipOfPlayer(state.getPlayerNickname());
                 optionalShip.ifPresent(ship -> ship.addComponent(comp, state.getI(), state.getJ()));
 
-                // Update the player ship in the GUI
-                if (this.ui instanceof GUIHandler) {
-                    ((GUIHandler) this.ui).updateShipPlacedComponent(state);
-                }
+                this.ui.updateShipPlacedComponent(state);
             }
         }
     }
@@ -249,9 +239,7 @@ public class ViewUpdater implements StateVisitor {
                 this.model.getState().setPlayerFinishedBuildingShip(state.getPlayerNickname(), state.getPlayerCursors());
 
                 // Update the game board
-                if (this.ui instanceof GUIHandler) {
-                    ((GUIHandler) this.ui).placePlayerInTheBoard(state);
-                }
+                this.ui.placePlayerInTheBoard(state);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -313,9 +301,7 @@ public class ViewUpdater implements StateVisitor {
         try {
             this.update(state);
             // Update the component in the GUI
-            if (this.ui instanceof GUIHandler) {
-                ((GUIHandler) this.ui).updateVisuals(state);
-            }
+            this.ui.updateVisuals(state);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -383,8 +369,6 @@ public class ViewUpdater implements StateVisitor {
     }
 
     public void interruptCurrScreen() {
-        if (this.ui instanceof TUIHandler) {
-            ((TUIHandler) this.ui).interruptCurrScreen();
-        }
+        this.ui.interruptCurrScreen();
     }
 }

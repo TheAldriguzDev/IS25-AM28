@@ -6,8 +6,7 @@ import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
@@ -111,6 +110,41 @@ public class Screen implements ClientUI {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public void updateShipConstructionComponent(ConstructionComponentDTO component) {
+        // Empty because in the TUI will not be used, only the model will be updated
+    }
+
+    @Override
+    public void updateShipPlacedComponent(PlacedComponentDTO data) {
+        // Empty because in the TUI will not be used, only the model will be updated
+    }
+
+    @Override
+    public void placePlayerInTheBoard(PlayerEndedShipDTO data) {
+        // Empty because in the TUI will not be used, only the model will be updated
+    }
+
+    @Override
+    public void updateShipRemovedComponent(FixedComponentDTO data) {
+        // Empty because in the TUI will not be used, only the model will be updated
+    }
+
+    @Override
+    public void updateShipPlacedLifeForm(PopulateShipComponentDTO data) {
+        // Empty because in the TUI will not be used, only the model will be updated
+    }
+
+    @Override
+    public void updateVisuals(CardRoundDTO data) {
+        // Empty because in the TUI will not be used, only the model will be updated
+    }
+
+    @Override
+    public void interruptCurrScreen() {
+        // Empty since it's not needed to invoke the method here, but instead it invoke the input thread class
     }
 
     /**

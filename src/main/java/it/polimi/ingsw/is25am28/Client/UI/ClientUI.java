@@ -2,8 +2,7 @@ package it.polimi.ingsw.is25am28.Client.UI;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
@@ -26,4 +25,15 @@ public interface ClientUI {
     void showError(ErrorAnswer error);
 
     boolean isCTXAvailable();
+
+    // Update methods, used only in the GUI
+    void updateShipConstructionComponent(ConstructionComponentDTO component);
+    void updateShipPlacedComponent(PlacedComponentDTO data);
+    void placePlayerInTheBoard(PlayerEndedShipDTO data);
+    void updateShipRemovedComponent(FixedComponentDTO data);
+    void updateShipPlacedLifeForm(PopulateShipComponentDTO data);
+    void updateVisuals(CardRoundDTO data);
+
+    // Interrupt screen, used only be the TUI
+    void interruptCurrScreen();
 }

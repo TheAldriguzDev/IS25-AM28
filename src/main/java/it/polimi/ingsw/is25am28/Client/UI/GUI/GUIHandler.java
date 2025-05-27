@@ -257,7 +257,7 @@ public class GUIHandler extends Application implements ClientUI {
         }
     }
 
-    // TODO: Understand if we need to create an interface for the GUI that is more specific than the TUI
+    @Override
     public void updateShipConstructionComponent(ConstructionComponentDTO component) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
@@ -265,7 +265,7 @@ public class GUIHandler extends Application implements ClientUI {
         }
     }
 
-    // TODO: Understand if we need to create an interface for the GUI that is more specific than the TUI
+    @Override
     public void updateShipPlacedComponent(PlacedComponentDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
@@ -273,7 +273,7 @@ public class GUIHandler extends Application implements ClientUI {
         }
     }
 
-    // TODO: Make a public interface shared between the TUI and GUI (UI) that implements this methods --> in the TUI this methods will be empty
+    @Override
     public void placePlayerInTheBoard(PlayerEndedShipDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
@@ -281,6 +281,7 @@ public class GUIHandler extends Application implements ClientUI {
         }
     }
 
+    @Override
     public void updateShipRemovedComponent(FixedComponentDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.FIX_SHIP_SCENE)) {
             FixShipController controller = (FixShipController) this.controllers.get(GuiScenes.FIX_SHIP_SCENE);
@@ -288,6 +289,7 @@ public class GUIHandler extends Application implements ClientUI {
         }
     }
 
+    @Override
     public void updateShipPlacedLifeForm(PopulateShipComponentDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.POPULATE_SHIP_SCENE)) {
             PopulateShipController controller = (PopulateShipController) this.controllers.get(GuiScenes.POPULATE_SHIP_SCENE);
@@ -295,11 +297,17 @@ public class GUIHandler extends Application implements ClientUI {
         }
     }
 
+    @Override
     public void updateVisuals(CardRoundDTO data) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.CARD_ROUND_SCENE)) {
             CardRoundController controller = (CardRoundController) this.controllers.get(GuiScenes.CARD_ROUND_SCENE);
             controller.updateVisuals(data.getCardInfo());
         }
+    }
+
+    @Override
+    public void interruptCurrScreen() {
+        // Empty because this method is used only in the TUI to force quit the screen
     }
 
     @Override

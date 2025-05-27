@@ -37,7 +37,7 @@ public class WarZoneJSON extends ActionJSON {
             @JsonProperty("itemsToBeRemoved") List<ComponentHelper<ItemColor>> itemsToBeRemoved,
             @JsonProperty("shieldList") List<Pair<CoordinatePair, CoordinatePair>> shieldList,
             @JsonProperty("cannonList") List<Pair<CoordinatePair, CoordinatePair>> cannonList,
-            @JsonProperty("cannonList") List<Pair<CoordinatePair, CoordinatePair>> engineList,
+            @JsonProperty("engineList") List<Pair<CoordinatePair, CoordinatePair>> engineList,
             @JsonProperty("batteriesToBeStolen") List<CoordinatePair> batteriesToBeStolen
     ) {
         this.playerNickname = playerNickname;
