@@ -1103,7 +1103,7 @@ public class CardRoundController extends GUIController {
                                         }
                                     }
                                     // Visual revert
-                                    guiUtils.revertVisuals(this.shipGrid, this.emptiedLifeforms, this.emptiedCabinsRegions, ClientCabin.class, guiUtils::initCabinLifeFormIcons);
+                                    guiUtils.revertVisuals(this.shipGrid, this.emptiedLifeforms, this.emptiedCabinsRegions, this.cabinsRegions, ClientCabin.class, guiUtils::initCabinLifeFormIcons);
                                 }
 
                                 if (this.availableCommands.contains("setItemsToBeRemoved") && this.currEventCard.getItemsToBeRemoved() != null && !this.currEventCard.getItemsToBeRemoved().isEmpty()) {
@@ -1117,7 +1117,7 @@ public class CardRoundController extends GUIController {
                                     }
                                     // Visual revert
                                     // Reverts the storagesToEmptyRegions/icons
-                                    guiUtils.revertVisuals(this.shipGrid, this.emptiedItemsMap, this.emptiedStoragesRegions, ClientStorage.class, guiUtils::initStorageItemIcons);
+                                    guiUtils.revertVisuals(this.shipGrid, this.emptiedItemsMap, this.emptiedStoragesRegions, this.storagesToEmptyRegions,ClientStorage.class, guiUtils::initStorageItemIcons);
                                     // Reverts the storagesToFillRegions (in the removeItem the storagesToFillRegions can only increase, so a simple check on the available capacity of the storages is enough, since we do not have to create new regions but only to remove some)
                                     this.mainShip.generateComponentSubLists();
                                     for (ClientStorage storage : this.mainShip.getStorageList()) {
@@ -1137,7 +1137,7 @@ public class CardRoundController extends GUIController {
                                         }
                                     }
                                     // Visual revert
-                                    guiUtils.revertVisuals(this.shipGrid, this.emptiedBatteriesMap, this.emptiedBatteriesRegions, ClientBattery.class, guiUtils::initBatteryIcons);
+                                    guiUtils.revertVisuals(this.shipGrid, this.emptiedBatteriesMap, this.emptiedBatteriesRegions, this.batteriesRegions, ClientBattery.class, guiUtils::initBatteryIcons);
                                 }
 
                                 this.availableCommands = new ArrayList<>(this.currEventCard.getAvailableCommands());
@@ -1197,11 +1197,16 @@ public class CardRoundController extends GUIController {
 
         // If the cabin has no more inhabitants, we remove the region
         if (selectedCabin.getInhabitants().isEmpty()) {
-            this.emptiedCabinsRegions.put(guiUtils.keyFromCoords(row, col), this.cabinsRegions.get(guiUtils.keyFromCoords(row, col)));
+            Region regionToRemove = this.cabinsRegions.get(guiUtils.keyFromCoords(row, col));
+            regionToRemove.setDisable(true);
+            regionToRemove.setStyle("-fx-background-color: transparent;");
 
-            this.shipGrid.getChildren().remove(this.cabinsRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.emptiedCabinsRegions.put(guiUtils.keyFromCoords(row, col), regionToRemove);
+
+            this.shipGrid.getChildren().remove(regionToRemove);
 //            this.shipGrid.getChildren().remove(boxToUpdate); // TODO: remove in ONSuccess
-            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col));
+            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO remove?
+            this.cabinsRegions.remove(regionToRemove);
         }
 
         this.initStatsBox();
@@ -1239,11 +1244,15 @@ public class CardRoundController extends GUIController {
 
         // If the storage is empty, we remove it from the storagesToEmptyRegions
         if (selectedStorage.getStoredItems().isEmpty()) {
+            Region regionToRemove = this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col));
+            regionToRemove.setDisable(true);
+            regionToRemove.setStyle("-fx-background-color: transparent;");
+
 //            System.out.println(PrintUtils.addColor("RIMOSSO STORAGE DA SVUOTARE DALLE REGIONI", ANSIColors.MAGENTA));
             this.emptiedStoragesRegions.put(guiUtils.keyFromCoords(row, col), this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
 
-            this.shipGrid.getChildren().remove(this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
-            this.storagesToEmptyRegions.remove(guiUtils.keyFromCoords(row, col)); //TODO: OnSuccess // TODO BUG: if not commented introduces a bug, if commented another bug (one on removanl and one on revert)
+            this.shipGrid.getChildren().remove(regionToRemove);
+            this.storagesToEmptyRegions.remove(regionToRemove); //TODO: OnSuccess // TODO BUG: if not commented introduces a bug, if commented another bug (one on removal(2) and one on revert(1))
 //            this.itemsMap.remove(guiUtils.keyFromCoords(row, col));
         }
 
@@ -1409,11 +1418,16 @@ public class CardRoundController extends GUIController {
 
         // If the battery has no more charges, we remove the region
         if (selectedBattery.getAvailability() <= 0) {
+            Region regionToRemove = this.batteriesRegions.get(guiUtils.keyFromCoords(row, col));
+            regionToRemove.setDisable(true);
+            regionToRemove.setStyle("-fx-background-color: transparent;");
+
             this.emptiedBatteriesRegions.put(guiUtils.keyFromCoords(row, col), this.batteriesRegions.get(guiUtils.keyFromCoords(row, col)));
 
-            this.shipGrid.getChildren().remove(this.batteriesRegions.get(guiUtils.keyFromCoords(row, col)));
+            this.shipGrid.getChildren().remove(regionToRemove);
 //            this.shipGrid.getChildren().remove(boxToUpdate); // TODO: remove in ONSuccess
 //            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO:remove in ONSuccess
+            this.batteriesRegions.remove(regionToRemove);
         }
 
         this.initStatsBox();

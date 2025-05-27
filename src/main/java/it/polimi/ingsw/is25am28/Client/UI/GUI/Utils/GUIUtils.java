@@ -434,7 +434,7 @@ public class GUIUtils {
 
     // TODO: have the main player ship and grid reference
 
-    public <T> void revertVisuals(GridPane shipGrid, Map<String, FlowPane> emptiedIcons, Map<String, Region> emptiedRegions, Class<T> castType, BiConsumer<T, FlowPane> initIcons) {
+    public <T> void revertVisuals(GridPane shipGrid, Map<String, FlowPane> emptiedIcons, Map<String, Region> emptiedRegions, Map<String, Region> currentRegions,  Class<T> castType, BiConsumer<T, FlowPane> initIcons) {
         // Getting the player's ship
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
         if (ship == null) {
@@ -455,6 +455,16 @@ public class GUIUtils {
             initIcons.accept(componentToRestore, boxToRestore);
 
             Region regionToRestore = emptiedRegions.get(restoreKey);
+            System.out.println(PrintUtils.addColor("(1) : " + currentRegions, ANSIColors.RED));
+            System.out.println(PrintUtils.addColor("(emptiedRegions) : " + regionToRestore, ANSIColors.MAGENTA));
+            System.out.println(PrintUtils.addColor("(restoreKey) " + restoreKey, ANSIColors.YELLOW));
+            System.out.println(PrintUtils.addColor("(toRestore) : " + regionToRestore, ANSIColors.GREEN));
+            if (regionToRestore != null) {
+                currentRegions.put(restoreKey, regionToRestore);
+            }
+            System.out.println(PrintUtils.addColor("(2) : " + currentRegions, ANSIColors.CYAN));
+
+            // TODO: add the region to the corresponding map (get it with the arguments)
             if (regionToRestore != null) {
 
                 int ofsRow = row - this.shipOffsets.getKey();
