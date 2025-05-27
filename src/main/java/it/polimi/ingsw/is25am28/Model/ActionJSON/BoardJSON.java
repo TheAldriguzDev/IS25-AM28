@@ -96,7 +96,7 @@ public class BoardJSON implements Serializable {
     }
 
     @JsonGetter("startingPlayersPositions")
-    public Map<String, Integer> getstartingPlayersPositions() {
+    public Map<String, Integer> getStartingPlayersPositions() {
         return startingPlayersPositions;
     }
 }
