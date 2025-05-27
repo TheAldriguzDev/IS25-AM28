@@ -31,7 +31,7 @@ public class EndGameController extends GUIController {
                 .stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .map(Map.Entry::getKey)
-                .toList();
+                .toList().reversed();
 
         List<String> placements = Arrays.asList("1st", "2nd", "3rd", "4th");
 

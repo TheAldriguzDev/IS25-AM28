@@ -280,7 +280,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(11)); // MeteorShower
 //        fakeDeck.add(AllCards.get(12)); // MeteorShower
 //        fakeDeck.add(AllCards.get(13)); // MeteorShower
-         fakeDeck.add(AllCards.get(14)); // Pirates // TODO VERIFY
+//         fakeDeck.add(AllCards.get(14)); // Pirates OK
 //        fakeDeck.add(AllCards.get(15)); // Pirates
         fakeDeck.add(AllCards.get(16)); // VisitPlanets OK
 //        fakeDeck.add(AllCards.get(17)); // VisitPlanets
@@ -300,7 +300,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(31)); // Epidemy OK
 //        fakeDeck.add(AllCards.get(32)); // Smugglers OK
 //        fakeDeck.add(AllCards.get(33)); // Smugglers
-        fakeDeck.add(AllCards.get(34)); // Slavers TODO
+//        fakeDeck.add(AllCards.get(34)); // Slavers OK
 //        fakeDeck.add(AllCards.get(35)); // Slavers
 //        fakeDeck.add(AllCards.get(36)); // Stardust
 //        fakeDeck.add(AllCards.get(37)); // Stardust

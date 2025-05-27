@@ -630,6 +630,8 @@ public class CardRoundController extends GUIController {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
 
+        System.out.println("OFS: " + ofsRow + ", " + ofsCol);
+        System.out.println("ACTUAL: " + row + ", " + col);
         ClientStorage storage = (ClientStorage) this.mainShip.getComponent(row, col);
         this.commandsGrid.getChildren().clear();
         List<ItemColor> cardItemColors = this.currEventCard.getAvailableItemColors();
@@ -1224,7 +1226,7 @@ public class CardRoundController extends GUIController {
         // We add the component to the storagesToFillRegions (only if the region is not present)
         if(this.storagesToFillRegions.get(guiUtils.keyFromCoords(row, col)) == null) {
             Region newRegion = guiUtils.generateDisabledRegion();
-            newRegion.setOnMouseClicked(e -> this.initAddColorCommands(row, col));
+            newRegion.setOnMouseClicked(e -> this.initAddColorCommands(ofsRow, ofsCol));
             this.storagesToFillRegions.put(guiUtils.keyFromCoords(row, col), newRegion);
             this.shipGrid.add(newRegion, ofsCol, ofsRow);
         }
