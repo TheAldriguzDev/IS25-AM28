@@ -17,6 +17,7 @@ public final class ShipConstructionDTO extends StateDTO {
     private List<Integer> flipped_components;
     private List<Integer> selected_components;
     private List<String> playerFinished;
+    private TimerDTO timerDTO;
 
     // Card list that contains the information about the deck in the game
     private List<CardStateJSON> cards;
@@ -28,13 +29,15 @@ public final class ShipConstructionDTO extends StateDTO {
             @JsonProperty("flipped_components") List<Integer> flipped_components,
             @JsonProperty("selected_components") List<Integer> selected_components,
             @JsonProperty("cards") List<CardStateJSON> cards,
-            @JsonProperty("playerFinished") List<String> playerFinished
+            @JsonProperty("playerFinished") List<String> playerFinished,
+            @JsonProperty("timerDTO") TimerDTO timerDTO
     ) {
         this.all_components = all_components;
         this.flipped_components = flipped_components;
         this.selected_components = selected_components;
         this.cards = cards;
         this.playerFinished = playerFinished;
+        this.timerDTO = timerDTO;
     }
 
     @JsonGetter("all_components")
@@ -89,6 +92,17 @@ public final class ShipConstructionDTO extends StateDTO {
     @JsonSetter("playerFinished")
     public ShipConstructionDTO setPlayerFinished(List<String> playerFinished) {
         this.playerFinished = playerFinished;
+        return this;
+    }
+
+    @JsonGetter("timerDTO")
+    public TimerDTO getTimerDTO() {
+        return this.timerDTO;
+    }
+
+    @JsonSetter("timerDTO")
+    public ShipConstructionDTO setTimerDTO(TimerDTO timerDTO) {
+        this.timerDTO = timerDTO;
         return this;
     }
 

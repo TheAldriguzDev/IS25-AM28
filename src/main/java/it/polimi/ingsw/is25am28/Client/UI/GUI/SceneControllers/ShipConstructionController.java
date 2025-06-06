@@ -51,7 +51,7 @@ public class ShipConstructionController extends GUIController {
     private final Map<String, GridPane> playersShipGridPane = new HashMap<>();
 
     // Attributes to handle the timer
-    @FXML private Label timerLabel;
+    // @FXML private Label timerLabel;
     @FXML private Button flipTimerButton;
     @FXML private HBox timerContainer;
     private Timeline timer;
@@ -119,6 +119,10 @@ public class ShipConstructionController extends GUIController {
 
         this.guiUtils = new GUIUtils(this.clientModel);
 
+        if (this.clientModel.getTimerDTO() == null) {
+            this.disableTimerButton();
+        }
+
         // INIT THE NAVBAR
         this.initSidePanel();
 
@@ -177,7 +181,7 @@ public class ShipConstructionController extends GUIController {
         // Display and start the timer container only if the game level is != 0
         if (this.clientModel.getDifficultyLevel() != 0) {
             this.timerContainer.setVisible(true);
-            this.startCountDownTimer();
+            // this.startCountDownTimer();
         }
         else {
             this.timerContainer.setVisible(false);
@@ -209,41 +213,41 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
-    public void startCountDownTimer() {
-        AtomicInteger countdown = new AtomicInteger(TIMER_DURATION);
-
-        // Check if there is already an active timer
-        if (this.timer != null) {
-            this.timer.stop();
-        }
-
-        // Update the text every second
-        this.timer = new Timeline(
-            new KeyFrame(
-                Duration.seconds(1),
-                _ -> {
-                    if (countdown.get() <= 0) {
-                        this.timer.stop();
-                        return;
-                    }
-
-                    int minutes = countdown.get() / 60;
-                    int seconds = countdown.get() % 60;
-
-                    String timeFormatted = String.format("Flip available in %02d:%02d", minutes, seconds);
-                    this.timerLabel.setText(timeFormatted);
-
-                    countdown.getAndDecrement();
-                }
-            )
-        );
-
-        this.flipTimerButton.setDisable(true);
-        this.timerLabel.setWrapText(true);
-
-        this.timer.setCycleCount(Timeline.INDEFINITE);
-        this.timer.play();
-    }
+//    public void startCountDownTimer() {
+//        AtomicInteger countdown = new AtomicInteger(TIMER_DURATION);
+//
+//        // Check if there is already an active timer
+//        if (this.timer != null) {
+//            this.timer.stop();
+//        }
+//
+//        // Update the text every second
+//        this.timer = new Timeline(
+//            new KeyFrame(
+//                Duration.seconds(1),
+//                _ -> {
+//                    if (countdown.get() <= 0) {
+//                        this.timer.stop();
+//                        return;
+//                    }
+//
+//                    int minutes = countdown.get() / 60;
+//                    int seconds = countdown.get() % 60;
+//
+//                    String timeFormatted = String.format("Flip available in %02d:%02d", minutes, seconds);
+//                    this.timerLabel.setText(timeFormatted);
+//
+//                    countdown.getAndDecrement();
+//                }
+//            )
+//        );
+//
+//        this.flipTimerButton.setDisable(true);
+//        this.timerLabel.setWrapText(true);
+//
+//        this.timer.setCycleCount(Timeline.INDEFINITE);
+//        this.timer.play();
+//    }
 
     private void initShipPage() {
         String shipPath = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
@@ -422,10 +426,17 @@ public class ShipConstructionController extends GUIController {
     @FXML
     private void handleFlipTimer() {
         GUIHandler.setCommandCTX(
+//            new CommandCTX(
+//                "flipTimer",
+//                this::startCountDownTimer,
+//                () -> {}
+//            )
             new CommandCTX(
                 "flipTimer",
-                this::startCountDownTimer,
-                () -> {}
+                this::disableTimerButton,
+                () -> {
+
+                }
             )
         );
 
@@ -947,6 +958,12 @@ public class ShipConstructionController extends GUIController {
             Platform.runLater(() -> {
                 playerGrid.add(imgView, data.getJ() - this.shipOffsets.getValue(), data.getI() - shipOffsets.getKey());
             });
+        });
+    }
+
+    public void disableTimerButton() {
+        Platform.runLater(() -> {
+            this.flipTimerButton.setDisable(true);
         });
     }
 

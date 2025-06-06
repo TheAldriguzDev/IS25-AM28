@@ -292,6 +292,7 @@ public class CardRoundScreen extends Screen {
                     this.getCrewToRemove();
 
                     // Go back to the card round available commands
+                    clearTerminal();
                     this.getCardRoundCommand();
                 }
         );
@@ -305,6 +306,7 @@ public class CardRoundScreen extends Screen {
                     this.getItemToBeRemoved();
 
                     // Go back to the card round available commands
+                    clearTerminal();
                     this.getCardRoundCommand();
                 }
         );
@@ -318,6 +320,7 @@ public class CardRoundScreen extends Screen {
                     this.getItemToBeTaken();
 
                     // Go back to the card round available commands
+                    clearTerminal();
                     this.getCardRoundCommand();
                 }
         );
@@ -331,6 +334,7 @@ public class CardRoundScreen extends Screen {
                     this.getTakeReward();
 
                     // Go back to the card round available commands
+                    clearTerminal();
                     this.getCardRoundCommand();
                 }
         );
@@ -344,6 +348,7 @@ public class CardRoundScreen extends Screen {
                     this.getChosenPlanetIndex();
 
                     // Go back to the card round available commands
+                    clearTerminal();
                     this.getCardRoundCommand();
                 }
         );
@@ -357,6 +362,7 @@ public class CardRoundScreen extends Screen {
                     this.getWantsToVisit();
 
                     // Go back to the card round available commands
+                    clearTerminal();
                     this.getCardRoundCommand();
                 }
         );
@@ -370,6 +376,7 @@ public class CardRoundScreen extends Screen {
                     this.getShieldToActivate();
 
                     // Go back to the card round available commands
+                    clearTerminal();
                     this.getCardRoundCommand();
                 }
         );
@@ -383,6 +390,7 @@ public class CardRoundScreen extends Screen {
                     this.getDoubleCannonToActivate();
 
                     // Go back to the card round available commands
+                    clearTerminal();
                     this.getCardRoundCommand();
                 }
         );
@@ -396,6 +404,7 @@ public class CardRoundScreen extends Screen {
                     this.getDoubleEngineToActivate();
 
                     // Go back to the card round available commands
+                    clearTerminal();
                     this.getCardRoundCommand();
                 }
         );
@@ -422,6 +431,7 @@ public class CardRoundScreen extends Screen {
                     }
 
                     // Go back to the card round available commands
+                    clearTerminal();
                     this.getCardRoundCommand();
                 }
         );
@@ -1800,6 +1810,7 @@ public class CardRoundScreen extends Screen {
                         }
 
                         // Go back to the card round available commands
+                        clearTerminal();
                         this.getCardRoundCommand();
                     }
             );
@@ -1823,7 +1834,10 @@ public class CardRoundScreen extends Screen {
         // (-1) - Go back
         command = new CommandWidgetTUI(
                 "-1",
-                this::getCardRoundCommand
+                () -> {
+                    clearTerminal();
+                    this.getCardRoundCommand();
+                }
         );
         command.appendString("Go back");
         this.otherPlayerShipCommandsWidget.addCommand(command);
@@ -1951,7 +1965,7 @@ public class CardRoundScreen extends Screen {
         boolean commandSelected;
 
         System.out.println();
-        clearTerminal();
+        // clearTerminal();
 
         do {
             // Printing the entire card round TUI
@@ -1965,6 +1979,7 @@ public class CardRoundScreen extends Screen {
                 commandSelected = this.cardRoundCommandsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
 
                 if (!commandSelected) {
+                    clearTerminal();
                     System.out.println(UNKNOWN_COMMAND_ERROR);
                 }
             } catch (InterruptedException e) {
@@ -2055,13 +2070,13 @@ public class CardRoundScreen extends Screen {
         // any take/remove operations that target the same storage (only if taken and removed in 1 turn from one card)
         // and the same item color
         try {
-            List<ComponentHelper<ItemColor>>[][] matrix = new List[ClientShip.grid_rows][ClientShip.grid_cols];
-
             List<ComponentHelper<ItemColor>> itemsToTake = this.currEventCard.getItemsToBeTaken();
             List<ComponentHelper<ItemColor>> itemsToRemove = this.currEventCard.getItemsToBeRemoved();
 
             List<ComponentHelper<ItemColor>> itemsToTakeFinal = new ArrayList<>();
             List<ComponentHelper<ItemColor>> itemsToRemoveFinal = new ArrayList<>();
+
+            List<ComponentHelper<ItemColor>>[][] matrix = new List[ClientShip.grid_rows][ClientShip.grid_cols];
 
             for (int i = 0; i < ClientShip.grid_rows; i++) {
                 for (int j = 0; j < ClientShip.grid_cols; j++) {
@@ -2168,10 +2183,11 @@ public class CardRoundScreen extends Screen {
                     }
                 }
 
-
                 System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
                 this.ctx = null;
                 this.currEventCard.clearJSON();
+
+                clearTerminal();
                 this.getCardRoundCommand();
             }
         );

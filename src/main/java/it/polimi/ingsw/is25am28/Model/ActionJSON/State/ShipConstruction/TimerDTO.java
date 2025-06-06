@@ -18,16 +18,20 @@ public final class TimerDTO extends ShipConstructionEventDTO {
     // otherwise the response is from an executed command by a player
     private boolean isServerAction;
 
+    private boolean isTimeFlowing;
+
     public TimerDTO() {}
 
     public TimerDTO(
             @JsonProperty("canBeFlipped") boolean canBeFlipped,
             @JsonProperty("hasEnded") boolean hasEnded,
-            @JsonProperty("isServerAction") boolean isServerAction
+            @JsonProperty("isServerAction") boolean isServerAction,
+            @JsonProperty("isTimeFlowing") boolean isTimeFlowing
     ) {
         this.canBeFlipped = canBeFlipped;
         this.hasEnded = hasEnded;
         this.isServerAction = isServerAction;
+        this.isTimeFlowing = isTimeFlowing;
     }
 
     @JsonGetter("canBeFlipped")
@@ -60,6 +64,17 @@ public final class TimerDTO extends ShipConstructionEventDTO {
     @JsonSetter("isServerAction")
     public TimerDTO setIsServerAction(boolean isServerAction) {
         this.isServerAction = isServerAction;
+        return this;
+    }
+
+    @JsonGetter("isTimeFlowing")
+    public boolean isTimeFlowing() {
+        return this.isTimeFlowing;
+    }
+
+    @JsonSetter("isTimeFlowing")
+    public TimerDTO setIsTimeFlowing(boolean isTimeFlowing) {
+        this.isTimeFlowing = isTimeFlowing;
         return this;
     }
 

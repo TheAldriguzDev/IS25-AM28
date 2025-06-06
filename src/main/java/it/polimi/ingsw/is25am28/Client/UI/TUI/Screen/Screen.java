@@ -13,6 +13,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
+import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public class Screen implements ClientUI {
@@ -90,11 +91,13 @@ public class Screen implements ClientUI {
 
     @Override
     public void showError(ErrorAnswer error) {
+        System.out.println();
+        clearTerminal();
+
         if (this.ctx != null) {
             this.ctx.handleError(error.getError());
             // this.ctx = null;
         } else {
-            System.out.println();
             new WidgetTUI()
                     .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(error.getError(), ANSIColors.RED))
                     .addPadding(0, 1, 0, 1)

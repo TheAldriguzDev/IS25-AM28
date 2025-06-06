@@ -69,7 +69,7 @@ public final class ShipContructionState extends State implements TimerObserver {
             // TODO (NOTE: Add this if you want to run the "test_game_model_hourglass" in GameModelTest.java)
             //      (It only reduces the time to wait when running said test) or just test the game
 //            this.hourGlass.setDurationInMillis(3000);   // 3s
-//            this.hourGlass.setDurationInMillis(10000);  // 10s
+            this.hourGlass.setDurationInMillis(10000);  // 10s
 
             this.hourGlass.flip();
         }
@@ -346,7 +346,9 @@ public final class ShipContructionState extends State implements TimerObserver {
             TimerDTO state = new TimerDTO()
                     .setIsServerAction(true)
                     .setHasEnded(this.hourGlass.getRemainingFlips() == 0)
-                    .setCanBeFlipped(this.hourGlass.getRemainingFlips() > 0);
+                    .setCanBeFlipped(this.hourGlass.getRemainingFlips() > 0)
+                    .setIsTimeFlowing(false);
+
             state.setStateName(this.toString());
             state.setEventType(ShipConstructionType.TIMER_EVENT.toString());
 
@@ -378,6 +380,23 @@ public final class ShipContructionState extends State implements TimerObserver {
                 .setFlippedComponents(this.flipped.stream().toList())
                 .setSelectedComponents(this.selected.stream().toList())
                 .setPlayerFinished(this.players_done.stream().toList());
+
+        if (this.hourGlass != null) {
+            if (this.hourGlass.isTimeFlowing()) {
+                // A null TimerDTO means that the client will wait
+                // for the onTimerEnd before receiving one
+                state.setTimerDTO(null);
+            }
+            else {
+                state.setTimerDTO(
+                    new TimerDTO()
+                        .setIsServerAction(true)
+                        .setHasEnded(this.hourGlass.getRemainingFlips() == 0)
+                        .setCanBeFlipped(this.hourGlass.getRemainingFlips() > 0)
+                        .setIsTimeFlowing(false)
+                );
+            }
+        }
 
         state.setStateName(this.toString());
 

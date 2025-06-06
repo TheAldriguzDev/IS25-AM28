@@ -282,7 +282,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(13)); // MeteorShower
 //         fakeDeck.add(AllCards.get(14)); // Pirates OK
 //        fakeDeck.add(AllCards.get(15)); // Pirates
-        fakeDeck.add(AllCards.get(16)); // VisitPlanets OK
+//        fakeDeck.add(AllCards.get(16)); // VisitPlanets OK
 //        fakeDeck.add(AllCards.get(17)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(18)); // VisitPlanet
 //        fakeDeck.add(AllCards.get(19)); // VisitPlanets
@@ -298,7 +298,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(29)); // OpenSpace
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
 //        fakeDeck.add(AllCards.get(31)); // Epidemy OK
-        fakeDeck.add(AllCards.get(32)); // Smugglers OK
+//        fakeDeck.add(AllCards.get(32)); // Smugglers OK
 //        fakeDeck.add(AllCards.get(33)); // Smugglers
 //        fakeDeck.add(AllCards.get(34)); // Slavers OK
 //        fakeDeck.add(AllCards.get(35)); // Slavers
@@ -339,7 +339,7 @@ public class GameModel {
             case 0 -> this.board = new BoardTestFlight();
             case 2 -> this.board = new BoardLevel2();
             default -> throw new IllegalStateException("The given game level (" + this.level + ") is not supported");
-        };
+        }
 
         this.board.buildBoard();
     }

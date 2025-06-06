@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Timer;
 
 import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObservable;
+import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
 import javax.management.timer.Timer;
 
@@ -12,6 +13,7 @@ public class HourGlass extends TimerObservable {
     private long remainingFlips;
     private long durationInMillis;
     private long remainingDurationInMillis;
+    private boolean isTimeFlowing;
     private Thread timerThread;
 
     // Constructor to create a custom duration hourglass
@@ -19,6 +21,7 @@ public class HourGlass extends TimerObservable {
         // super initializes the list of subscribers
         super();
 
+        this.isTimeFlowing = false;
         this.setRemainingFlips(remainingFlips);
         this.setDurationInMillis(durationInMillis);
         this.initTimerThread();
@@ -38,6 +41,7 @@ public class HourGlass extends TimerObservable {
             this.remainingFlips = Long.MAX_VALUE;
         }
 
+        this.isTimeFlowing = false;
         this.setDurationInMillis(HourGlass.DEFAULT_DURATION_IN_MILLIS);
         this.initTimerThread();
     }
@@ -92,6 +96,7 @@ public class HourGlass extends TimerObservable {
                         Thread.sleep(this.remainingDurationInMillis);
 
                         // When the timer ends, notify all subscribers about the timer end event
+                        this.isTimeFlowing = false;
                         this.onTimerEnd();
                     }
                 }
@@ -116,6 +121,14 @@ public class HourGlass extends TimerObservable {
     }
 
     /**
+     * @return TRUE if the hourglass's sand is currently flowing,
+     *         FALSE otherwise.
+     */
+    public boolean isTimeFlowing() {
+        return this.isTimeFlowing;
+    }
+
+    /**
      * Flips the hourglass to restart the timer if it can still be flipped
      * and only if the previous time has already passed
      *
@@ -124,6 +137,7 @@ public class HourGlass extends TimerObservable {
     public boolean flip() {
         if (this.remainingFlips > 0) {
             if (this.timerThread != null && !this.timerThread.isAlive()) {
+                this.isTimeFlowing = true;
                 this.remainingFlips--;
                 this.initTimerThread();
                 this.timerThread.start();
