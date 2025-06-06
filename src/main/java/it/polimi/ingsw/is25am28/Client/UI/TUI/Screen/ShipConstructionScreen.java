@@ -59,6 +59,7 @@ public class ShipConstructionScreen extends Screen {
 
         // Other initializations
         this.selectedComponent = null;
+        this.selectedComponentWidget = null;
         this.isSelectedTileReserved = false;
 
         // Creating the covered and empty component widgets
@@ -526,8 +527,8 @@ public class ShipConstructionScreen extends Screen {
                         clearTerminal();
 
                         new WidgetTUI()
-                                .appendString(COMPUTER_MSG_TAG)
-                                .appendString(e.getMessage())
+                                .appendString(COMPUTER_MSG_TAG + e.getMessage())
+                                .wrapWidgetWithBorder()
                                 .printWidget();
 
                         this.getComponentSelectionCommand();
@@ -683,13 +684,14 @@ public class ShipConstructionScreen extends Screen {
                     clearTerminal();
 
                     new WidgetTUI()
-                            .appendString(COMPUTER_MSG_TAG)
                             .appendString(
+                                COMPUTER_MSG_TAG +
                                 PrintUtils.addColor(
                                         "ERROR: You already have 2 (max) reserved tiles! Use them before storing others!",
                                         ANSIColors.RED
                                 )
                             )
+                            .wrapWidgetWithBorder()
                             .printWidget();
                     this.getShipConstructionCommand();
                 }
@@ -734,7 +736,7 @@ public class ShipConstructionScreen extends Screen {
         }
 
         // Resetting the selected component reserved status
-        this.isSelectedTileReserved = false;
+        // this.isSelectedTileReserved = false;
     }
 
     /**
@@ -1061,6 +1063,7 @@ public class ShipConstructionScreen extends Screen {
                 try {
                     this.selectedComponent = null;
                     this.selectedComponentWidget = null;
+                    this.isSelectedTileReserved = false;
 
                     this.composeComponentSelectionWidgets().printWidget();
                     this.selectTile();
@@ -1086,6 +1089,8 @@ public class ShipConstructionScreen extends Screen {
                 // Once we have deselected the tile we can return to
                 // the component selection menu
                 this.selectedComponent = null;
+                this.selectedComponentWidget = null;
+                this.isSelectedTileReserved = false;
 
                 // At the end, it goes back to asking again a new
                 // component selection command
@@ -1104,6 +1109,7 @@ public class ShipConstructionScreen extends Screen {
             // since the user decided to reserve it for the future
             this.selectedComponent = null;
             this.selectedComponentWidget = null;
+            this.isSelectedTileReserved = false;
 
             // At the end, it goes back to asking again a new
             // component selection command
@@ -1219,6 +1225,7 @@ public class ShipConstructionScreen extends Screen {
 
                     // Removing the component from the selected slot, since it was placed on the ship
                     this.selectedComponent = null;
+                    this.selectedComponentWidget = null;
 
                     // Updating the ship widget
                     Optional<ClientShip> optionalShip = this.model.getShipOfPlayer(this.model.getNickname());

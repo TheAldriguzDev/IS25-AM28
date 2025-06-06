@@ -107,6 +107,7 @@ public class ShipConstructionController extends GUIController {
 
     // Store the selected component to dynamically display the view
     private ClientComponent selectedComponent;
+    private boolean isSelectedTileReserved;
 
     // Method used to initialize the page information that needs to be displayed
     public void initShipConstruction() {
@@ -114,6 +115,9 @@ public class ShipConstructionController extends GUIController {
         this.clientModel = GUIHandler.getClientModel();
 
         this.guiUtils = new GUIUtils(this.clientModel);
+
+        this.selectedComponent = null;
+        this.isSelectedTileReserved = false;
 
         if (this.clientModel.getTimerDTO() == null) {
             this.disableTimerButton();
@@ -343,6 +347,7 @@ public class ShipConstructionController extends GUIController {
                 this.selectedComponentImage.setRotate(0.0);
                 this.selectedComponent.setRotation(0);
                 this.selectedComponent = null;
+                this.isSelectedTileReserved = false;
                 this.selectedComponentImage.setImage(null);
 
                 this.handleViewShipRequest(requestedPlayerShip);
@@ -485,6 +490,7 @@ public class ShipConstructionController extends GUIController {
                 this.selectedComponentImage.setRotate(0.0);
                 this.selectedComponent.setRotation(0);
                 this.selectedComponent = null;
+                this.isSelectedTileReserved = false;
                 this.selectedComponentImage.setImage(null);
 
                 this.handleViewSubDeck(event);
@@ -656,6 +662,7 @@ public class ShipConstructionController extends GUIController {
             this.selectedComponentImage.setRotate(0.0);
             this.selectedComponent.setRotation(0);
             this.selectedComponent = null;
+            this.isSelectedTileReserved = false;
             this.selectedComponentImage.setImage(null);
 
             // Before displaying the dynamic page --> set the tile info etc
@@ -664,19 +671,26 @@ public class ShipConstructionController extends GUIController {
     }
 
     private void deselectTileCommand(Runnable task) {
-        GUIHandler.setCommandCTX(new CommandCTX(
+        GUIHandler.setCommandCTX(
+            new CommandCTX(
                 "deselectTile",
                 () -> {
                     Platform.runLater(task);
                 },
                 () -> {}
-        ));
+            )
+        );
 
         try {
-            GUIHandler.getVirtualClient().deselectTile(
-                    this.clientModel.getNickname(),
-                    this.selectedComponent.getID()
-            );
+            if (this.isSelectedTileReserved) {
+                task.run();
+            }
+            else {
+                GUIHandler.getVirtualClient().deselectTile(
+                        this.clientModel.getNickname(),
+                        this.selectedComponent.getID()
+                );
+            }
         } catch (Exception e) {
             this.showToast(e.getMessage(), ToastType.ERROR);
         }
@@ -697,6 +711,8 @@ public class ShipConstructionController extends GUIController {
             this.setVisibility(this.viewGameBoardContainer, false);
             this.setVisibility(this.subdeckViewerContainer, false);
 
+            this.isSelectedTileReserved = true;
+
             // update the reserved visual elements
             this.updateReservedComponents();
             this.setVisibility(this.tileVBOX, true);
@@ -706,6 +722,7 @@ public class ShipConstructionController extends GUIController {
             Platform.runLater(task);
             return;
         }
+
         GUIHandler.setCommandCTX(new CommandCTX(
                 "reserveTile",
                 () -> {
@@ -755,6 +772,7 @@ public class ShipConstructionController extends GUIController {
                         // Reset the rotations
                         this.selectedComponentImage.setRotate(0.0);
                         this.selectedComponent = null;
+                        this.isSelectedTileReserved = false;
                         this.selectedComponentImage.setImage(null);
 
                         // Before displaying the dynamic page --> set the tile info for both the normal and the reserved ones
@@ -817,6 +835,7 @@ public class ShipConstructionController extends GUIController {
                 this.selectedComponentImage.setRotate(0.0);
                 this.selectedComponent.setRotation(0);
                 this.selectedComponent = null;
+                this.isSelectedTileReserved = false;
                 this.selectedComponentImage.setImage(null);
 
                 this.handleViewGameBoard();
