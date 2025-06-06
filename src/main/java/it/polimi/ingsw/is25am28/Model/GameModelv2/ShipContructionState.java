@@ -41,7 +41,6 @@ public final class ShipContructionState extends State implements TimerObserver {
 
     private boolean shipConfigEnded;
 
-
     public ShipContructionState(GameModel model) {
         super(model);
 
@@ -400,5 +399,14 @@ public final class ShipContructionState extends State implements TimerObserver {
         state.setStateName(this.toString());
 
         return state;
+    }
+
+    @Override
+    public void handlePlayerDisconnection(String player) {
+        for (Map.Entry<Integer, String> entry : this.selectedSubDecks.entrySet()) {
+            if (entry.getValue().equals(player)) {
+                this.selectedSubDecks.remove(entry.getKey());
+            }
+        }
     }
 }

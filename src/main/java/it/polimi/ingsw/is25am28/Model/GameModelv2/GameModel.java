@@ -88,6 +88,8 @@ public class GameModel {
         List<StateDTO> states = new ArrayList<>();
         states.add(new DisconnectedPlayerDTO().setNickname(nickname));
 
+        this.currentState.handlePlayerDisconnection(nickname);
+
         List<Player> connectedPlayers = this.players.values().stream().filter(Player::isConnected).toList();
         if (connectedPlayers.size() == 1) {
             this.setCurrentState(new InsufficientPlayerState(this, this.currentState));
