@@ -6,10 +6,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -141,6 +138,16 @@ public class GameInstance {
 
     public void deselectTile(String playerNickname, int id) throws Exception {
         ConstructionComponentDTO state = this.controller.deselectTile(playerNickname, id);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(playerNickname)
+                .setState(state);
+
+        this.broadCastUpdate(answer);
+    }
+
+    public void reserveTile(String playerNickname, int id) throws Exception {
+        ReservedComponentDTO state = this.controller.reserveTile(playerNickname, id);
 
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)

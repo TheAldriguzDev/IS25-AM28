@@ -25,27 +25,31 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
         throw new IllegalStateException("The 'addNewPlayer' command is not allowed in the " + this + " state");
     }
 
-    public synchronized ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws IllegalStateException {
+    public ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws IllegalStateException {
         throw new IllegalStateException("The 'selectDeselectSubdeck' command is not allowed in the " + this + " state");
     }
 
-    public synchronized ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalStateException, IllegalArgumentException {
+    public ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The 'selectTile' command is not allowed in the " + this + " state");
     }
 
-    public synchronized ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalStateException, IllegalArgumentException {
+    public ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The 'deselectTile' command is not allowed in the " + this + " state");
     }
 
-    public synchronized PlacedComponentDTO placeTile(String player, Integer componentID, Integer i, Integer j, Integer rotation) {
+    public ReservedComponentDTO reserveTile(String player, Integer id) throws IllegalStateException, IllegalArgumentException {
+        throw new IllegalStateException("The 'reserveTile' command is not allowed in the " + this + " state");
+    }
+
+    public PlacedComponentDTO placeTile(String player, Integer componentID, Integer i, Integer j, Integer rotation) {
         throw new IllegalStateException("The 'placeTile' command is not allowed in the " + this + " state");
     }
 
-    public synchronized PlayerEndedShipDTO playerEndedSendShip(String player, int reservedTiles) throws IllegalStateException {
+    public PlayerEndedShipDTO playerEndedSendShip(String player, int reservedTiles) throws IllegalStateException {
         throw new IllegalStateException("The 'playerEndedSendShip' command is not allowed in the " + this + " state");
     }
 
-    public synchronized TimerDTO flipTimer(String player) throws IllegalStateException {
+    public TimerDTO flipTimer(String player) throws IllegalStateException {
         throw new IllegalStateException("The 'flipTimer' command is not allowed in the " + this + " state");
     }
 

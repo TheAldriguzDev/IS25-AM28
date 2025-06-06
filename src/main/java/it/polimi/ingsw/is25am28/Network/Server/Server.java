@@ -239,6 +239,17 @@ public class Server {
         }
     }
 
+    public void reserveTile(String playerNickname, int id) throws Exception {
+        synchronized (this.gameInstances) {
+            // Get the game where the player is playing
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.reserveTile(playerNickname, id);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " reserved the tile with ID=" + id);
+        }
+    }
+
     public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
         synchronized (this.gameInstances) {
             // Get the game where the player is playing

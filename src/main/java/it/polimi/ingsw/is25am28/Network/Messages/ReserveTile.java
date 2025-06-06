@@ -1,0 +1,53 @@
+package it.polimi.ingsw.is25am28.Network.Messages;
+
+import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
+import java.util.List;
+
+public final class ReserveTile implements Message {
+    private String playerNickname;
+    private Integer id;
+
+    public ReserveTile() {}
+
+    public ReserveTile(
+            @JsonProperty("playerNickname") String playerNickname,
+            @JsonProperty("id") Integer id
+    ) {
+        this.playerNickname = playerNickname;
+        this.id = id;
+    }
+
+
+    @JsonGetter("playerNickname")
+    public String getPlayerNickname() {
+        return playerNickname;
+    }
+
+    @JsonSetter("playerNickname")
+    public void setPlayerNickname(String playerNickname) {
+        this.playerNickname = playerNickname;
+    }
+
+    @JsonGetter("id")
+    public int getId() {
+        return this.id;
+    }
+
+    @JsonSetter("id")
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    @Override
+    public boolean validate() {
+        return false;
+    }
+
+    @Override
+    public List<String> getErrors() {
+        return List.of();
+    }
+}

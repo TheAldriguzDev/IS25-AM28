@@ -18,6 +18,7 @@ public final class ShipConstructionDTO extends StateDTO {
     private List<Integer> selected_components;
     private List<String> playerFinished;
     private TimerDTO timerDTO;
+    private Map<String, List<Integer>> reservedComponents;
 
     // Card list that contains the information about the deck in the game
     private List<CardStateJSON> cards;
@@ -30,7 +31,8 @@ public final class ShipConstructionDTO extends StateDTO {
             @JsonProperty("selected_components") List<Integer> selected_components,
             @JsonProperty("cards") List<CardStateJSON> cards,
             @JsonProperty("playerFinished") List<String> playerFinished,
-            @JsonProperty("timerDTO") TimerDTO timerDTO
+            @JsonProperty("timerDTO") TimerDTO timerDTO,
+            @JsonProperty("reservedComponents") Map<String, List<Integer>> reservedComponents
     ) {
         this.all_components = all_components;
         this.flipped_components = flipped_components;
@@ -38,6 +40,7 @@ public final class ShipConstructionDTO extends StateDTO {
         this.cards = cards;
         this.playerFinished = playerFinished;
         this.timerDTO = timerDTO;
+        this.reservedComponents = reservedComponents;
     }
 
     @JsonGetter("all_components")
@@ -103,6 +106,17 @@ public final class ShipConstructionDTO extends StateDTO {
     @JsonSetter("timerDTO")
     public ShipConstructionDTO setTimerDTO(TimerDTO timerDTO) {
         this.timerDTO = timerDTO;
+        return this;
+    }
+
+    @JsonGetter("reservedComponents")
+    public Map<String, List<Integer>> getReservedComponents() {
+        return this.reservedComponents;
+    }
+
+    @JsonSetter("reservedComponents")
+    public ShipConstructionDTO setReservedComponents(Map<String, List<Integer>> reservedComponents) {
+        this.reservedComponents = reservedComponents;
         return this;
     }
 

@@ -17,6 +17,7 @@ public interface StateVisitor {
     // ===== SHIP CONSTRUCTION - FIX - POPULATE  ===== //
     void visit (ShipConstructionDTO state) throws Exception;
     void visit (ConstructionComponentDTO state) throws Exception;
+    void visit (ReservedComponentDTO state) throws Exception;
     void visit (PlacedComponentDTO state) throws Exception;
     void visit (FixedComponentDTO state) throws Exception;
     void visit (PopulateShipComponentDTO state) throws Exception;

@@ -392,6 +392,15 @@ public class GameModel {
     }
 
     /**
+     * Execute the command to reserve a tile
+     * @return the ReservedComponentDTO that represent the reserved tile. The behavior of the communication sendTo / sendToAll
+     * is left to the controller
+     * */
+    public ReservedComponentDTO reserveTile(String playerNickname, int id) {
+        return currentState.reserveTile(playerNickname, id);
+    }
+
+    /**
      * Execute the command to place a tile
      * @return PlacedComponentDTO that contains the information about the placed component of the player
      * */

@@ -68,6 +68,15 @@ public class ClientShipConstructionState extends ClientState {
 
         // Initialize all client cards
         this.model.generateClientEventCards(shipConstructionDTO.getCards());
+
+        // Reset the client reserved component
+        List<Integer> reservedComponents = shipConstructionDTO.getReservedComponents().get(this.model.getNickname());
+        if (reservedComponents != null) {
+            this.reservedComponents.clear();
+            for (Integer id : reservedComponents) {
+                this.reservedComponents.add(this.components.get(id));
+            }
+        }
     }
 
     /**

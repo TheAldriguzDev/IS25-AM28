@@ -145,6 +145,8 @@ public class ShipConstructionController extends GUIController {
             this.showEndedShipConstruction();
         }
 
+        this.updateReservedComponents(); // Will init the reserved component in case of reconnection
+
         // Check if we need to display the reserved components container
         this.setVisibility(this.reservedVBOX, !this.clientModel.getState().getReservedComponents().isEmpty());
     }
@@ -208,42 +210,6 @@ public class ShipConstructionController extends GUIController {
             this.viewOtherShipsGrid.add(playerButton, col, row);
         }
     }
-
-//    public void startCountDownTimer() {
-//        AtomicInteger countdown = new AtomicInteger(TIMER_DURATION);
-//
-//        // Check if there is already an active timer
-//        if (this.timer != null) {
-//            this.timer.stop();
-//        }
-//
-//        // Update the text every second
-//        this.timer = new Timeline(
-//            new KeyFrame(
-//                Duration.seconds(1),
-//                _ -> {
-//                    if (countdown.get() <= 0) {
-//                        this.timer.stop();
-//                        return;
-//                    }
-//
-//                    int minutes = countdown.get() / 60;
-//                    int seconds = countdown.get() % 60;
-//
-//                    String timeFormatted = String.format("Flip available in %02d:%02d", minutes, seconds);
-//                    this.timerLabel.setText(timeFormatted);
-//
-//                    countdown.getAndDecrement();
-//                }
-//            )
-//        );
-//
-//        this.flipTimerButton.setDisable(true);
-//        this.timerLabel.setWrapText(true);
-//
-//        this.timer.setCycleCount(Timeline.INDEFINITE);
-//        this.timer.play();
-//    }
 
     private void initShipPage() {
         String shipPath = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
@@ -724,20 +690,32 @@ public class ShipConstructionController extends GUIController {
             return;
         }
 
-        // Reserve the tile
-        if (!this.clientModel.getState().getReservedComponents().contains(this.selectedComponent)) {
-            this.clientModel.getState().reserveTile(this.selectedComponent);
+        GUIHandler.setCommandCTX(new CommandCTX(
+                "reserveTile",
+                () -> {
+                    Platform.runLater(() -> {
+                        // Hide all the other containers
+                        this.setVisibility(this.shipContainer, false);
+                        this.setVisibility(this.viewShipContainer, false);
+                        this.setVisibility(this.viewGameBoardContainer, false);
+                        this.setVisibility(this.subdeckViewerContainer, false);
+
+                        // update the reserved visual elements
+                        this.updateReservedComponents();
+                        this.setVisibility(this.tileVBOX, true);
+                    });
+                },
+                () -> {}
+        ));
+
+        try {
+            GUIHandler.getVirtualClient().reserveTile(
+                    this.clientModel.getNickname(),
+                    this.selectedComponent.getID()
+            );
+        } catch (Exception e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
         }
-
-        // Hide all the other containers
-        this.setVisibility(this.shipContainer, false);
-        this.setVisibility(this.viewShipContainer, false);
-        this.setVisibility(this.viewGameBoardContainer, false);
-        this.setVisibility(this.subdeckViewerContainer, false);
-
-        // update the reserved visual elements
-        this.updateReservedComponents();
-        this.setVisibility(this.tileVBOX, true);
     }
 
     @FXML

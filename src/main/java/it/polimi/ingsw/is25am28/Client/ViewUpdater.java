@@ -154,6 +154,17 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
+    /**
+     * This method reserve the component for the target player
+     * */
+    @Override
+    public void visit(ReservedComponentDTO state) throws Exception {
+        if (state.getPlayerNickname().equals(this.model.getNickname())) {
+            ClientComponent comp = this.model.getState().getConstructionShipComponents().get(state.getId());
+            this.model.getState().reserveTile(comp);
+        }
+    }
+
     @Override
     public void visit(FixedComponentDTO state) throws Exception {
         synchronized (this.model) {

@@ -135,6 +135,11 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
     }
 
     @Override
+    public void reserveTile(String playerNickname, int id) throws Exception {
+        this.enqueueCommunication(() -> server.reserveTile(playerNickname, id, this.uuid));
+    }
+
+    @Override
     public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
         this.enqueueCommunication(() -> server.placeTile(playerNickname, componentID, i, j, rotation, this.uuid));
     }

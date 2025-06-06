@@ -669,18 +669,13 @@ public class ShipConstructionScreen extends Screen {
                 // Puts the selected component in the reserved tiles
                 // If it can't, then it'll ask the user to do something else
                 if (reservedComponents.size() < 2) {
-                    // Adding the currently selected component to the reserved component list
-                    this.model.getState().reserveTile(this.selectedComponent);
-
-                    // Removing the selected tile from the selected component slot
-                    // since the user decided to reserve it for the future
-                    this.selectedComponent = null;
-                    this.selectedComponentWidget = null;
-
-                    // At the end, it goes back to asking again a new
-                    // component selection command
-                    clearTerminal();
-                    this.getComponentSelectionCommand();
+                    try {
+                        // Reserve the component that is currently taken by this user
+                        this.reserveTile();
+                    }
+                    catch (Exception e) {
+                        System.out.println(PrintUtils.addColor("ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.", ANSIColors.RED));
+                    }
                 }
                 else {
                     // Otherwise, it means that the user already has 2 reserved tiles,
@@ -1101,6 +1096,43 @@ public class ShipConstructionScreen extends Screen {
         );
 
         this.client.deselectTile(this.model.getNickname(), this.selectedComponent.getID());
+    }
+
+    private void reserveTile() throws Exception {
+        Runnable task = () -> {
+            // Removing the selected tile from the selected component slot
+            // since the user decided to reserve it for the future
+            this.selectedComponent = null;
+            this.selectedComponentWidget = null;
+
+            // At the end, it goes back to asking again a new
+            // component selection command
+            clearTerminal();
+            this.getComponentSelectionCommand();
+        };
+
+        System.out.println(this.model.getState().getReservedComponents().contains(this.selectedComponent));
+
+        if (this.model.getState().getReservedComponents().contains(this.selectedComponent)) {
+            task.run();
+            return;
+        }
+
+        // If an error occurred we go back to the
+        // ship construction menu
+        this.ctx = new CommandCTX(
+                "reserveTile",
+                task,
+                () -> {
+                    try {
+                        this.getShipConstructionCommand();
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+        );
+
+        this.client.reserveTile(this.model.getNickname(), this.selectedComponent.getID());
     }
 
     /**
