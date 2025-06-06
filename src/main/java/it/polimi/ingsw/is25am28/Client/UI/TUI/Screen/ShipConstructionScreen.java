@@ -1427,7 +1427,7 @@ public class ShipConstructionScreen extends Screen {
     public void receiveTimerDTO(TimerDTO timerDTO) {
         this.model.setTimerDTO(timerDTO);
 
-        if (timerDTO.getHasEnded()) {
+        if (timerDTO != null && timerDTO.getHasEnded()) {
             try {
                 new WidgetTUI()
                         .appendString(COMPUTER_MSG_TAG + "Time's up! All ships will now be sent.")
