@@ -181,6 +181,7 @@ public class ClientModel {
         }
 
         List<ClientEventCard> eventCards = this.getClientEventCards();
+        eventCards.clear();
         for (CardStateJSON cardState : cards) {
             switch (cardState.getCardTypeId()) {
                 case 0 -> eventCards.add(new ClientAbandonedShip(cardState));
