@@ -375,6 +375,21 @@ public class ShipConstructionController extends GUIController {
 
     @FXML
     private void handleViewShipRequest(String requestedPlayerShip) {
+        // If we have a selected component, we need to deselect it first
+        if (this.selectedComponent != null) {
+            this.deselectTileCommand(() -> {
+                this.selectedComponentImage.setRotate(0.0);
+                this.selectedComponent.setRotation(0);
+                this.selectedComponent = null;
+                this.selectedComponentImage.setImage(null);
+
+                this.handleViewShipRequest(requestedPlayerShip);
+            });
+
+            return;
+        }
+
+
         // Remove from the screen the main content and display the request ship
         this.setVisibility(this.shipContainer, false);
         this.setVisibility(this.tileVBOX, false);
@@ -502,6 +517,21 @@ public class ShipConstructionController extends GUIController {
 
     @FXML
     private void handleViewSubDeck(MouseEvent event) {
+        // If we have a selected component, we need to deselect it first
+        if (this.selectedComponent != null) {
+            this.deselectTileCommand(() -> {
+                this.selectedComponentImage.setRotate(0.0);
+                this.selectedComponent.setRotation(0);
+                this.selectedComponent = null;
+                this.selectedComponentImage.setImage(null);
+
+                this.handleViewSubDeck(event);
+            });
+
+            return;
+        }
+
+
         ImageView clickedSubdeck;
         int subdeckIndex;
 
@@ -654,33 +684,36 @@ public class ShipConstructionController extends GUIController {
             return;
         }
 
-        // TODO: Send the message to the server and return to the other page of the screen
+        this.deselectTileCommand(() -> {
+            // Before displaying the dynamic page --> set the tile info etc
+            this.setVisibility(this.shipContainer, false);
+            this.setVisibility(this.viewShipContainer, false);
+            this.setVisibility(this.viewGameBoardContainer, false);
+            this.setVisibility(this.subdeckViewerContainer, false);
+
+            this.selectedComponentImage.setRotate(0.0);
+            this.selectedComponent.setRotation(0);
+            this.selectedComponent = null;
+            this.selectedComponentImage.setImage(null);
+
+            // Before displaying the dynamic page --> set the tile info etc
+            this.setVisibility(this.tileVBOX, true);
+        });
+    }
+
+    private void deselectTileCommand(Runnable task) {
         GUIHandler.setCommandCTX(new CommandCTX(
                 "deselectTile",
                 () -> {
-                    Platform.runLater(() -> {
-                        // Before displaying the dynamic page --> set the tile info etc
-                        this.setVisibility(this.shipContainer, false);
-                        this.setVisibility(this.viewShipContainer, false);
-                        this.setVisibility(this.viewGameBoardContainer, false);
-                        this.setVisibility(this.subdeckViewerContainer, false);
-
-                        this.selectedComponentImage.setRotate(0.0);
-                        this.selectedComponent.setRotation(0);
-                        this.selectedComponent = null;
-                        this.selectedComponentImage.setImage(null);
-
-                        // Before displaying the dynamic page --> set the tile info etc
-                        this.setVisibility(this.tileVBOX, true);
-                    });
+                    Platform.runLater(task);
                 },
                 () -> {}
         ));
 
         try {
             GUIHandler.getVirtualClient().deselectTile(
-                this.clientModel.getNickname(),
-                this.selectedComponent.getID()
+                    this.clientModel.getNickname(),
+                    this.selectedComponent.getID()
             );
         } catch (Exception e) {
             this.showToast(e.getMessage(), ToastType.ERROR);
@@ -798,6 +831,20 @@ public class ShipConstructionController extends GUIController {
     @FXML
     // Method used to display the current game board
     private void handleViewGameBoard() {
+        // If we have a selected component, we need to deselect it first
+        if (this.selectedComponent != null) {
+            this.deselectTileCommand(() -> {
+                this.selectedComponentImage.setRotate(0.0);
+                this.selectedComponent.setRotation(0);
+                this.selectedComponent = null;
+                this.selectedComponentImage.setImage(null);
+
+                this.handleViewGameBoard();
+            });
+
+            return;
+        }
+
         // Disable all the previous containers
         this.setVisibility(this.tileVBOX, false);
         this.setVisibility(this.viewShipContainer, false);
