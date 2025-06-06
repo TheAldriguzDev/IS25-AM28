@@ -185,7 +185,12 @@ public final class ShipContructionState extends State implements TimerObserver {
         }
 
         if (!selected_components.contains(id)) {
-            throw new IllegalArgumentException("The player: " + player + " cannot select the tile since it has already been selected_components by someone else");
+            throw new IllegalArgumentException("The player: " + player + " cannot deselect the tile since it's not a selected one");
+        }
+
+        List<Integer> reservedIDs = this.reservedComponents.values().stream().flatMap(Collection::stream).toList();
+        if (reservedIDs.contains(id)) {
+            throw new IllegalArgumentException("You cannot deselect a reserved tile");
         }
 
         selected_components.remove(id);

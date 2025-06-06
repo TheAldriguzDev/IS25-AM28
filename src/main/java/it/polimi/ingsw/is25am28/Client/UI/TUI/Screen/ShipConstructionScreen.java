@@ -1111,8 +1111,6 @@ public class ShipConstructionScreen extends Screen {
             this.getComponentSelectionCommand();
         };
 
-        System.out.println(this.model.getState().getReservedComponents().contains(this.selectedComponent));
-
         if (this.model.getState().getReservedComponents().contains(this.selectedComponent)) {
             task.run();
             return;
@@ -1172,7 +1170,7 @@ public class ShipConstructionScreen extends Screen {
 
                 // Then removing it from the reserved component list
                 // (to avoid duplicate widgets, which could confuse the player)
-                this.model.getState().getReservedComponents().remove(this.selectedComponent);
+                // this.model.getState().getReservedComponents().remove(this.selectedComponent);
 
                 this.isSelectedTileReserved = true;
                 componentRetrieved = true;

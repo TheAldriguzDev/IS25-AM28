@@ -690,20 +690,26 @@ public class ShipConstructionController extends GUIController {
             return;
         }
 
+        Runnable task = () -> {
+            // Hide all the other containers
+            this.setVisibility(this.shipContainer, false);
+            this.setVisibility(this.viewShipContainer, false);
+            this.setVisibility(this.viewGameBoardContainer, false);
+            this.setVisibility(this.subdeckViewerContainer, false);
+
+            // update the reserved visual elements
+            this.updateReservedComponents();
+            this.setVisibility(this.tileVBOX, true);
+        };
+
+        if (this.clientModel.getState().getReservedComponents().contains(this.selectedComponent)) {
+            Platform.runLater(task);
+            return;
+        }
         GUIHandler.setCommandCTX(new CommandCTX(
                 "reserveTile",
                 () -> {
-                    Platform.runLater(() -> {
-                        // Hide all the other containers
-                        this.setVisibility(this.shipContainer, false);
-                        this.setVisibility(this.viewShipContainer, false);
-                        this.setVisibility(this.viewGameBoardContainer, false);
-                        this.setVisibility(this.subdeckViewerContainer, false);
-
-                        // update the reserved visual elements
-                        this.updateReservedComponents();
-                        this.setVisibility(this.tileVBOX, true);
-                    });
+                    Platform.runLater(task);
                 },
                 () -> {}
         ));
