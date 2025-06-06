@@ -452,23 +452,25 @@ public class ShipConstructionController extends GUIController {
 
     // Send the player ship to the server
     @FXML public void handleConfirmShip() {
-        GUIHandler.setCommandCTX(new CommandCTX(
-                "sendShip",
-                () -> {
-                    this.hasFinishedShip = true;
+        if (!this.clientModel.getState().getPlayerFinishedBuildingShip(this.clientModel.getNickname())) {
+            GUIHandler.setCommandCTX(new CommandCTX(
+                    "sendShip",
+                    () -> {
+                        this.hasFinishedShip = true;
 
-                    Platform.runLater(this::showEndedShipConstruction);
-                },
-                () -> {}
-        ));
+                        Platform.runLater(this::showEndedShipConstruction);
+                    },
+                    () -> {}
+            ));
 
-        try {
-            GUIHandler.getVirtualClient().sendShipConfirmation(
-                this.clientModel.getNickname(),
-                this.clientModel.getState().getReservedComponents().size()
-            );
-        } catch (Exception e) {
-            this.showToast(e.getMessage(), ToastType.ERROR);
+            try {
+                GUIHandler.getVirtualClient().sendShipConfirmation(
+                        this.clientModel.getNickname(),
+                        this.clientModel.getState().getReservedComponents().size()
+                );
+            } catch (Exception e) {
+                this.showToast(e.getMessage(), ToastType.ERROR);
+            }
         }
     }
 

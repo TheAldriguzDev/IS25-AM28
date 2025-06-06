@@ -1364,7 +1364,7 @@ public class ShipConstructionScreen extends Screen {
      */
     private void sendShipOnTimerEnd() throws Exception {
         // Force-send the ship iff the current player hasn't done it already
-        if (this.model.getState().getPlayerFinishedBuildingShip(this.model.getNickname())) {
+        if (!this.model.getState().getPlayerFinishedBuildingShip(this.model.getNickname())) {
             this.ctx = new CommandCTX(
                     "sendShipOnTimerEnd",
                     () -> {

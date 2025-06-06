@@ -69,7 +69,7 @@ public final class ShipContructionState extends State implements TimerObserver {
             // TODO (NOTE: Add this if you want to run the "test_game_model_hourglass" in GameModelTest.java)
             //      (It only reduces the time to wait when running said test) or just test the game
 //            this.hourGlass.setDurationInMillis(3000);   // 3s
-//            this.hourGlass.setDurationInMillis(10000);  // 10s
+            this.hourGlass.setDurationInMillis(10000);  // 10s
 
             this.hourGlass.flip();
         }
@@ -296,7 +296,6 @@ public final class ShipContructionState extends State implements TimerObserver {
         return state;
     }
 
-    // TODO: Make the state transition
     @Override
     public void onComplete() {
         if (players_done.size() == model.getNumPlayers()) {

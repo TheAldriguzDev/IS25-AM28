@@ -191,7 +191,7 @@ public class TUIHandler implements ClientUI {
 
     @Override
     public void receiveTimerDTO(TimerDTO timerDTO) {
-        this.model.setTimerDTO(timerDTO);
+        this.screen.receiveTimerDTO(timerDTO);
     }
 
     @Override
