@@ -43,7 +43,7 @@ public class UpdateHandler {
 
         // Handle the first state (current state or updates)
         switch (state) {
-            case ConstructionComponentDTO _, PlacedComponentDTO _, TimerDTO _, FixedComponentDTO _, PopulateShipComponentDTO _, ConstructionDeckDTO _ -> {
+            case ConstructionComponentDTO _, ReservedComponentDTO _, PlacedComponentDTO _, TimerDTO _, FixedComponentDTO _, PopulateShipComponentDTO _, ConstructionDeckDTO _ -> {
                 future = this.acceptState(future, state, this.updateThread, "Error while executing the " + state.getStateName() + " update");
                 future = this.commitCmd(future, nickname, this.inputThread);
             }

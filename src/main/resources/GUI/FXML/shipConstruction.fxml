@@ -20,31 +20,29 @@
 
 <StackPane fx:id="rootPane" prefHeight="939.0" prefWidth="1130.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.ShipConstructionController">
     <HBox spacing="20.0">
-        <StackPane fx:id="contentContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308"
-                   prefHeight="1018.0" prefWidth="818.0" HBox.hgrow="ALWAYS">
+        <StackPane fx:id="contentContainer" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="1018.0" prefWidth="818.0" HBox.hgrow="ALWAYS">
             <VBox fx:id="tileVBOX" prefHeight="200.0" prefWidth="100.0">
                 <VBox fx:id="reservedVBOX">
                     <Label text="Reserved components">
                         <font>
-                            <Font name="System Bold" size="18.0"/>
+                            <Font name="System Bold" size="18.0" />
                         </font>
                     </Label>
                     <FlowPane fx:id="reservedTileFlow" hgap="5" prefHeight="85.0" prefWrapLength="800" vgap="5">
                         <padding>
-                            <Insets bottom="10" left="10" right="10" top="10"/>
+                            <Insets bottom="10" left="10" right="10" top="10" />
                         </padding>
                     </FlowPane>
                 </VBox>
                 <Label text="Available components">
                    <font>
-                       <Font name="System Bold" size="18.0"/>
+                       <Font name="System Bold" size="18.0" />
                    </font>
                 </Label>
-                <ScrollPane fx:id="tilesScrollPane" fitToHeight="true" fitToWidth="true" prefWidth="820.0"
-                            VBox.vgrow="ALWAYS">
+                <ScrollPane fx:id="tilesScrollPane" fitToHeight="true" fitToWidth="true" prefWidth="820.0" VBox.vgrow="ALWAYS">
                     <FlowPane fx:id="tileFlow" hgap="5" prefWrapLength="800" vgap="5">
                         <padding>
-                            <Insets bottom="10" left="10" right="10" top="10"/>
+                            <Insets bottom="10" left="10" right="10" top="10" />
                         </padding>
                     </FlowPane>
                 </ScrollPane>
@@ -53,77 +51,71 @@
             <!-- shipContainer used to display the selected tile commands -->
             <VBox fx:id="shipContainer" managed="false" prefHeight="200.0" prefWidth="100.0" visible="false">
                 <HBox alignment="CENTER" spacing="30.0" VBox.vgrow="ALWAYS">
-                    <Button mnemonicParsing="false" onAction="#handleDeselectTile"
-                            text="Deselect"/>
-                    <Region HBox.hgrow="ALWAYS"/>
+                    <Button mnemonicParsing="false" onAction="#handleDeselectTile" text="Deselect" />
+                    <Region HBox.hgrow="ALWAYS" />
                     <Button mnemonicParsing="false" onAction="#handleRotateRight">
                         <graphic>
                             <ImageView fitHeight="31.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true">
-                                <Image url="@../../imgs/rotate.png"/>
+                                <Image url="@../../imgs/rotate.png" />
                             </ImageView>
                         </graphic>
                     </Button>
-                    <ImageView fx:id="selectedComponentImage" fitHeight="150.0" fitWidth="105.0" pickOnBounds="true"
-                               preserveRatio="true">
-                        <Image url="@../../imgs/tiles/cannon/GT-new_tiles_16_for%20web103.jpg"/>
+                    <ImageView fx:id="selectedComponentImage" fitHeight="150.0" fitWidth="105.0" pickOnBounds="true" preserveRatio="true">
+                        <Image url="@../../imgs/tiles/cannon/GT-new_tiles_16_for%20web103.jpg" />
                     </ImageView>
                     <Button mnemonicParsing="false" onAction="#handleRotateLeft">
                         <graphic>
-                            <ImageView fitHeight="31.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true"
-                                       scaleX="-1.0">
-                                <Image url="@../../imgs/rotate.png"/>
+                            <ImageView fitHeight="31.0" fitWidth="41.0" pickOnBounds="true" preserveRatio="true" scaleX="-1.0">
+                                <Image url="@../../imgs/rotate.png" />
                             </ImageView>
                         </graphic>
                     </Button>
-                    <Region HBox.hgrow="ALWAYS"/>
-                    <Button mnemonicParsing="false" onAction="#handleReserveTile"
-                            text="Reserve"/>
+                    <Region HBox.hgrow="ALWAYS" />
+                    <Button mnemonicParsing="false" onAction="#handleReserveTile" text="Reserve" />
                 </HBox>
-                <Region VBox.vgrow="ALWAYS"/>
+                <Region VBox.vgrow="ALWAYS" />
 
                 <StackPane maxHeight="-Infinity" maxWidth="-Infinity">
                     <!-- Immagine della nave -->
                     <ImageView fx:id="shipImageView" fitWidth="816.0" preserveRatio="true">
                         <image>
-                            <Image url="@../../imgs/cardboard/level_2.jpg"/>
+                            <Image url="@../../imgs/cardboard/level_2.jpg" />
                         </image>
                     </ImageView>
-                    <GridPane fx:id="reservedComponentGrid" alignment="TOP_RIGHT" hgap="3.0" layoutX="584.0"
-                              layoutY="20.0" prefHeight="105.0" prefWidth="210.0" vgap="2.0">
+                    <GridPane fx:id="reservedComponentGrid" alignment="TOP_RIGHT" hgap="3.0" layoutX="584.0" layoutY="20.0" prefHeight="105.0" prefWidth="210.0" vgap="2.0">
                         <columnConstraints>
-                            <ColumnConstraints prefWidth="105.0"/>
-                            <ColumnConstraints prefWidth="105.0"/>
+                            <ColumnConstraints prefWidth="105.0" />
+                            <ColumnConstraints prefWidth="105.0" />
                         </columnConstraints>
                         <rowConstraints>
-                            <RowConstraints prefHeight="105.0"/>
+                            <RowConstraints prefHeight="105.0" />
                         </rowConstraints>
                         <StackPane.margin>
-                            <Insets right="19.0" top="20.0"/>
+                            <Insets right="19.0" top="20.0" />
                         </StackPane.margin>
                     </GridPane>
 
                     <!-- Griglia sopra l'immagine -->
-                    <GridPane fx:id="shipGrid" alignment="CENTER" hgap="2.5" prefHeight="459.0" prefWidth="659.0"
-                              vgap="2.5">
+                    <GridPane fx:id="shipGrid" alignment="CENTER" hgap="2.5" prefHeight="459.0" prefWidth="659.0" vgap="2.5">
                         <rowConstraints>
-                            <RowConstraints minHeight="105.0" prefHeight="105.0"/>
-                            <RowConstraints minHeight="105.0" prefHeight="105.0"/>
-                            <RowConstraints minHeight="105.0" prefHeight="105.0"/>
-                            <RowConstraints minHeight="105.0" prefHeight="105.0"/>
-                            <RowConstraints minHeight="105.0" prefHeight="105.0"/>
+                            <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                            <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                            <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                            <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                            <RowConstraints minHeight="105.0" prefHeight="105.0" />
                         </rowConstraints>
                         <columnConstraints>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
                         </columnConstraints>
                     </GridPane>
                 </StackPane>
-                <Region VBox.vgrow="ALWAYS"/>
+                <Region VBox.vgrow="ALWAYS" />
             </VBox>
 
             <!-- viewShipContainer used to see the selected player ship -->
@@ -131,37 +123,36 @@
                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
                     <Label fx:id="viewPlayerShipLabel" text="You are now viewing Player 1's ship">
                         <font>
-                            <Font size="32.0"/>
+                            <Font size="32.0" />
                         </font>
                     </Label>
-                    <Button fx:id="goBackToConstructionButton" mnemonicParsing="false"
-                            onAction="#handleGoBackToConstructionButton" text="Resume Ship Construction"/>
+                    <Button fx:id="goBackToConstructionButton" mnemonicParsing="false" onAction="#handleGoBackToConstructionButton" text="Resume Ship Construction" />
                 </VBox>
-                <Region VBox.vgrow="ALWAYS"/>
+                <Region VBox.vgrow="ALWAYS" />
                 <StackPane fx:id="viewOtherShipStackPane" maxHeight="-Infinity" maxWidth="-Infinity">
                     <ImageView fx:id="viewOtherShipImage" fitWidth="816.0" preserveRatio="true">
-                        <Image url="@../../imgs/cardboard/level_2.jpg"/>
+                        <Image url="@../../imgs/cardboard/level_2.jpg" />
                     </ImageView>
                     <GridPane alignment="CENTER" hgap="2.5" prefHeight="459.0" prefWidth="659.0" vgap="2.5">
                         <rowConstraints>
-                            <RowConstraints minHeight="105.0" prefHeight="105.0"/>
-                            <RowConstraints minHeight="105.0" prefHeight="105.0"/>
-                            <RowConstraints minHeight="105.0" prefHeight="105.0"/>
-                            <RowConstraints minHeight="105.0" prefHeight="105.0"/>
-                            <RowConstraints minHeight="105.0" prefHeight="105.0"/>
+                            <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                            <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                            <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                            <RowConstraints minHeight="105.0" prefHeight="105.0" />
+                            <RowConstraints minHeight="105.0" prefHeight="105.0" />
                         </rowConstraints>
                         <columnConstraints>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
-                            <ColumnConstraints minWidth="105.0" prefWidth="105.0"/>
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
+                            <ColumnConstraints minWidth="105.0" prefWidth="105.0" />
                         </columnConstraints>
                     </GridPane>
                 </StackPane>
-                <Region VBox.vgrow="ALWAYS"/>
+                <Region VBox.vgrow="ALWAYS" />
             </VBox>
 
             <!-- viewGameBoardContainer used to display the currentBoard state -->
@@ -169,44 +160,37 @@
                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0">
                     <Label text="You are now viewing the game board">
                         <font>
-                            <Font size="32.0"/>
+                            <Font size="32.0" />
                         </font>
                     </Label>
-                    <Button fx:id="goBackToConstructionButtonFromViewBoard" mnemonicParsing="false"
-                            onAction="#handleGoBackToConstructionButton" text="Resume Ship Construction"/>
+                    <Button fx:id="goBackToConstructionButtonFromViewBoard" mnemonicParsing="false" onAction="#handleGoBackToConstructionButton" text="Resume Ship Construction" />
                 </VBox>
-                <Region VBox.vgrow="ALWAYS"/>
-                <Pane fx:id="viewGameBoardStackPaneLevel2" managed="false" maxHeight="-Infinity" maxWidth="-Infinity"
-                      visible="false">
+                <Region VBox.vgrow="ALWAYS" />
+                <Pane fx:id="viewGameBoardStackPaneLevel2" managed="false" maxHeight="-Infinity" maxWidth="-Infinity" visible="false">
                     <ImageView fitWidth="816.0" layoutY="1.0" preserveRatio="true">
-                        <Image url="@../../imgs/cardboard/board_level_2.png"/>
+                        <Image url="@../../imgs/cardboard/board_level_2.png" />
                     </ImageView>
                 </Pane>
 
-                <Pane fx:id="viewGameBoardStackPaneLevel0" managed="false" maxHeight="-Infinity" maxWidth="-Infinity"
-                      visible="false">
+                <Pane fx:id="viewGameBoardStackPaneLevel0" managed="false" maxHeight="-Infinity" maxWidth="-Infinity" visible="false">
                     <ImageView fitWidth="816.0" layoutY="1.0" preserveRatio="true">
-                        <Image url="@../../imgs/cardboard/board_level_0.png"/>
+                        <Image url="@../../imgs/cardboard/board_level_0.png" />
                     </ImageView>
                 </Pane>
-                <Region VBox.vgrow="ALWAYS"/>
+                <Region VBox.vgrow="ALWAYS" />
             </VBox>
 
-            <VBox fx:id="subdeckViewerContainer" alignment="CENTER" managed="false" prefHeight="200.0" prefWidth="100.0"
-                  spacing="20.0">
+            <VBox fx:id="subdeckViewerContainer" alignment="CENTER" managed="false" prefHeight="200.0" prefWidth="100.0" spacing="20.0">
                 <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" spacing="10.0">
-                    <Label fx:id="deselectSubdeckLabel" alignment="CENTER" contentDisplay="CENTER"
-                           text="You are now viewing subdeck #" visible="false">
+                    <Label fx:id="deselectSubdeckLabel" alignment="CENTER" contentDisplay="CENTER" text="You are now viewing subdeck #" visible="false">
                         <font>
-                            <Font size="32.0"/>
+                            <Font size="32.0" />
                         </font>
                     </Label>
-                    <Button fx:id="deselectSubdeckButton" mnemonicParsing="false"
-                            onAction="#handleGoBackToConstructionButton" text="Deselect Subdeck" visible="false"/>
+                    <Button fx:id="deselectSubdeckButton" mnemonicParsing="false" onAction="#handleGoBackToConstructionButton" text="Deselect Subdeck" visible="false" />
                 </VBox>
-                <Region prefHeight="100.0"/>
-                <HBox fx:id="allSubdeckCardsContainer" alignment="CENTER" managed="false" prefHeight="200.0"
-                      prefWidth="100.0" spacing="30.0"/>
+                <Region prefHeight="100.0" />
+                <HBox fx:id="allSubdeckCardsContainer" alignment="CENTER" managed="false" prefHeight="200.0" prefWidth="100.0" spacing="30.0" />
             </VBox>
         </StackPane>
 
@@ -214,8 +198,6 @@
         <VBox alignment="TOP_CENTER" maxWidth="450.0" spacing="20.0" HBox.hgrow="ALWAYS">
             <!-- Timer -->
             <HBox fx:id="timerContainer" alignment="CENTER" spacing="10.0">
-                <Label fx:id="timerLabel" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: white;" text="55 sec" wrapText="true" />
-            <Region prefHeight="36.0" prefWidth="46.0" HBox.hgrow="ALWAYS" />
                 <Button fx:id="flipTimerButton" onAction="#handleFlipTimer" style="-fx-background-color: orange; -fx-font-weight: bold;" text="Flip Timer" wrapText="true" />
             </HBox>
 

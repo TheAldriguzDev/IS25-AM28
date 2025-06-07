@@ -121,6 +121,17 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     }
 
     @Override
+    public void reserveTile(String playerNickname, int id, UUID uuid) throws Exception {
+        VirtualView client = this.clients.get(uuid);
+
+        try {
+            this.controller.reserveTile(playerNickname, id);
+        } catch (Exception e) {
+            this.reportError(client, new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    @Override
     public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation, UUID uuid) throws Exception {
         VirtualView client = this.clients.get(uuid);
 

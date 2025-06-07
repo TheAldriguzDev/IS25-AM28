@@ -83,6 +83,9 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case DeselectTile data -> {
                     this.deselectTile(data.getPlayerNickname(), data.getId());
                 }
+                case ReserveTile data -> {
+                    this.reserveTile(data.getPlayerNickname(), data.getId());
+                }
                 case Ping ignored -> {
                     this.ping();
                 }
@@ -164,6 +167,15 @@ public class SocketClientHandler implements VirtualViewSocket {
     public void deselectTile(String playerNickname, int id) throws Exception {
         try {
             this.controller.deselectTile(playerNickname, id);
+        } catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    @Override
+    public void reserveTile(String playerNickname, int id) throws Exception {
+        try {
+            this.controller.reserveTile(playerNickname, id);
         } catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }

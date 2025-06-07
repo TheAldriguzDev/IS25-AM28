@@ -13,6 +13,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
+import it.polimi.ingsw.is25am28.Model.GameModelv2.ShipContructionState;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -150,6 +151,17 @@ public class ViewUpdater implements StateVisitor {
 
                 this.ui.updateShipConstructionComponent(state);
             }
+        }
+    }
+
+    /**
+     * This method reserve the component for the target player
+     * */
+    @Override
+    public void visit(ReservedComponentDTO state) throws Exception {
+        if (state.getPlayerNickname().equals(this.model.getNickname())) {
+            ClientComponent comp = this.model.getState().getConstructionShipComponents().get(state.getId());
+            this.model.getState().reserveTile(comp);
         }
     }
 

@@ -29,8 +29,6 @@ public class SocketServerHandler implements VirtualServerSocket {
         this.mapper.enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS);
     }
 
-    // TODO: Complete those messages
-
     @Override
     public void sendMessage(Message message) throws Exception {
         String json = mapper.writeValueAsString(message);

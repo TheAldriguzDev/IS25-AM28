@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 
 import java.util.*;
 
@@ -23,6 +24,8 @@ public class ClientShipConstructionState extends ClientState {
     // List containing the components inside the current player's ship
     private List<ClientComponent> currentShip;
 
+    private ShipConstructionDTO shipConstructionDTO;
+
     // (NOT HERE --> IN THE CORRECT STATES
     // TODO: Add the list for the removedComponents to support the FIX SHIP PHASE
     // TODO: Add the list for the populateShipComponent to support the POPULATE SHIP PHASE
@@ -32,6 +35,9 @@ public class ClientShipConstructionState extends ClientState {
      * */
     public ClientShipConstructionState(ClientModel model, ShipConstructionDTO shipConstructionDTO) {
         super(model);
+
+        this.model.setTimerDTO(shipConstructionDTO.getTimerDTO());
+        this.shipConstructionDTO = shipConstructionDTO;
 
         // Initializations
         this.components = new ArrayList<>();
@@ -62,6 +68,15 @@ public class ClientShipConstructionState extends ClientState {
 
         // Initialize all client cards
         this.model.generateClientEventCards(shipConstructionDTO.getCards());
+
+        // Reset the client reserved component
+        List<Integer> reservedComponents = shipConstructionDTO.getReservedComponents().get(this.model.getNickname());
+        if (reservedComponents != null) {
+            this.reservedComponents.clear();
+            for (Integer id : reservedComponents) {
+                this.reservedComponents.add(this.components.get(id));
+            }
+        }
     }
 
     /**
@@ -92,6 +107,10 @@ public class ClientShipConstructionState extends ClientState {
      */
     public void setSubdeckStatus(Integer subdeckIndex, boolean selected) {
         this.currentlySelectedSubdecks.put(subdeckIndex, selected);
+    }
+
+    public ShipConstructionDTO getShipConstructionDTO() {
+        return this.shipConstructionDTO;
     }
 
     /**

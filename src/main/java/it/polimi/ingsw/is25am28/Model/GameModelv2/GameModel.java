@@ -88,6 +88,8 @@ public class GameModel {
         List<StateDTO> states = new ArrayList<>();
         states.add(new DisconnectedPlayerDTO().setNickname(nickname));
 
+        this.currentState.handlePlayerDisconnection(nickname);
+
         List<Player> connectedPlayers = this.players.values().stream().filter(Player::isConnected).toList();
         if (connectedPlayers.size() == 1) {
             this.setCurrentState(new InsufficientPlayerState(this, this.currentState));
@@ -263,8 +265,8 @@ public class GameModel {
 
         Collections.shuffle(this.deck);
 
-        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
-        List<EventCard> fakeDeck = new ArrayList<>();
+//        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
+//        List<EventCard> fakeDeck = new ArrayList<>();
 
 //        fakeDeck.add(AllCards.get(0)); // AbandonedShip OK
 //        fakeDeck.add(AllCards.get(1)); // AbandonedShip
@@ -280,7 +282,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(11)); // MeteorShower
 //        fakeDeck.add(AllCards.get(12)); // MeteorShower
 //        fakeDeck.add(AllCards.get(13)); // MeteorShower
-//        fakeDeck.add(AllCards.get(14)); // Pirates OK
+//         fakeDeck.add(AllCards.get(14)); // Pirates OK
 //        fakeDeck.add(AllCards.get(15)); // Pirates
 //        fakeDeck.add(AllCards.get(16)); // VisitPlanets OK
 //        fakeDeck.add(AllCards.get(17)); // VisitPlanets
@@ -297,7 +299,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(28)); // OpenSpace
 //        fakeDeck.add(AllCards.get(29)); // OpenSpace
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
-        fakeDeck.add(AllCards.get(31)); // Epidemy OK
+//        fakeDeck.add(AllCards.get(31)); // Epidemy OK
 //        fakeDeck.add(AllCards.get(32)); // Smugglers OK
 //        fakeDeck.add(AllCards.get(33)); // Smugglers
 //        fakeDeck.add(AllCards.get(34)); // Slavers OK
@@ -307,10 +309,10 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(38)); // Warzone OK
 //        fakeDeck.add(AllCards.get(39)); // Warzone
 //        fakeDeck.add(AllCards.get(36)); // Stardust OK
-        fakeDeck.add(AllCards.get(37)); // Stardust
+//        fakeDeck.add(AllCards.get(37)); // Stardust
 
-          this.deck.clear();
-          this.deck.addAll(fakeDeck);
+//          this.deck.clear();
+//          this.deck.addAll(fakeDeck);
     }
 
     /**
@@ -339,7 +341,7 @@ public class GameModel {
             case 0 -> this.board = new BoardTestFlight();
             case 2 -> this.board = new BoardLevel2();
             default -> throw new IllegalStateException("The given game level (" + this.level + ") is not supported");
-        };
+        }
 
         this.board.buildBoard();
     }
@@ -387,6 +389,15 @@ public class GameModel {
      * */
     public ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalArgumentException {
         return currentState.deselectTile(player, id);
+    }
+
+    /**
+     * Execute the command to reserve a tile
+     * @return the ReservedComponentDTO that represent the reserved tile. The behavior of the communication sendTo / sendToAll
+     * is left to the controller
+     * */
+    public ReservedComponentDTO reserveTile(String playerNickname, int id) {
+        return currentState.reserveTile(playerNickname, id);
     }
 
     /**

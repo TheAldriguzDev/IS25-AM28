@@ -509,8 +509,15 @@ public class GUIHandler extends Application implements ClientUI {
                 controller.handleConfirmShip();
             }
             else {
+//                if (!timerDTO.getIsServerAction()) {
+//                    controller.startCountDownTimer();
+//                }
+//                else {
+//                    controller.resetTimer();
+//                }
+
                 if (!timerDTO.getIsServerAction()) {
-                    controller.startCountDownTimer();
+                    controller.disableTimerButton();
                 }
                 else {
                     controller.resetTimer();

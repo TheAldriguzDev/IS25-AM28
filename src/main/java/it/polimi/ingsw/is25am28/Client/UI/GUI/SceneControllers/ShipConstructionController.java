@@ -2,18 +2,15 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.animation.Interpolator;
-import javafx.animation.KeyFrame;
 import javafx.animation.RotateTransition;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -33,7 +30,6 @@ import javafx.util.Duration;
 import java.net.URL;
 import java.util.*;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class ShipConstructionController extends GUIController {
     private static final int VIEWABLE_SUBDECK_AMOUNT = 3;
@@ -51,7 +47,7 @@ public class ShipConstructionController extends GUIController {
     private final Map<String, GridPane> playersShipGridPane = new HashMap<>();
 
     // Attributes to handle the timer
-    @FXML private Label timerLabel;
+    // @FXML private Label timerLabel;
     @FXML private Button flipTimerButton;
     @FXML private HBox timerContainer;
     private Timeline timer;
@@ -111,6 +107,7 @@ public class ShipConstructionController extends GUIController {
 
     // Store the selected component to dynamically display the view
     private ClientComponent selectedComponent;
+    private boolean isSelectedTileReserved;
 
     // Method used to initialize the page information that needs to be displayed
     public void initShipConstruction() {
@@ -118,6 +115,13 @@ public class ShipConstructionController extends GUIController {
         this.clientModel = GUIHandler.getClientModel();
 
         this.guiUtils = new GUIUtils(this.clientModel);
+
+        this.selectedComponent = null;
+        this.isSelectedTileReserved = false;
+
+        if (this.clientModel.getTimerDTO() == null) {
+            this.disableTimerButton();
+        }
 
         // INIT THE NAVBAR
         this.initSidePanel();
@@ -144,6 +148,8 @@ public class ShipConstructionController extends GUIController {
             this.hasFinishedShip = true;
             this.showEndedShipConstruction();
         }
+
+        this.updateReservedComponents(); // Will init the reserved component in case of reconnection
 
         // Check if we need to display the reserved components container
         this.setVisibility(this.reservedVBOX, !this.clientModel.getState().getReservedComponents().isEmpty());
@@ -177,7 +183,7 @@ public class ShipConstructionController extends GUIController {
         // Display and start the timer container only if the game level is != 0
         if (this.clientModel.getDifficultyLevel() != 0) {
             this.timerContainer.setVisible(true);
-            this.startCountDownTimer();
+            // this.startCountDownTimer();
         }
         else {
             this.timerContainer.setVisible(false);
@@ -207,42 +213,6 @@ public class ShipConstructionController extends GUIController {
 
             this.viewOtherShipsGrid.add(playerButton, col, row);
         }
-    }
-
-    public void startCountDownTimer() {
-        AtomicInteger countdown = new AtomicInteger(TIMER_DURATION);
-
-        // Check if there is already an active timer
-        if (this.timer != null) {
-            this.timer.stop();
-        }
-
-        // Update the text every second
-        this.timer = new Timeline(
-            new KeyFrame(
-                Duration.seconds(1),
-                _ -> {
-                    if (countdown.get() <= 0) {
-                        this.timer.stop();
-                        return;
-                    }
-
-                    int minutes = countdown.get() / 60;
-                    int seconds = countdown.get() % 60;
-
-                    String timeFormatted = String.format("Flip available in %02d:%02d", minutes, seconds);
-                    this.timerLabel.setText(timeFormatted);
-
-                    countdown.getAndDecrement();
-                }
-            )
-        );
-
-        this.flipTimerButton.setDisable(true);
-        this.timerLabel.setWrapText(true);
-
-        this.timer.setCycleCount(Timeline.INDEFINITE);
-        this.timer.play();
     }
 
     private void initShipPage() {
@@ -371,6 +341,22 @@ public class ShipConstructionController extends GUIController {
 
     @FXML
     private void handleViewShipRequest(String requestedPlayerShip) {
+        // If we have a selected component, we need to deselect it first
+        if (this.selectedComponent != null) {
+            this.deselectTileCommand(() -> {
+                this.selectedComponentImage.setRotate(0.0);
+                this.selectedComponent.setRotation(0);
+                this.selectedComponent = null;
+                this.isSelectedTileReserved = false;
+                this.selectedComponentImage.setImage(null);
+
+                this.handleViewShipRequest(requestedPlayerShip);
+            });
+
+            return;
+        }
+
+
         // Remove from the screen the main content and display the request ship
         this.setVisibility(this.shipContainer, false);
         this.setVisibility(this.tileVBOX, false);
@@ -422,10 +408,17 @@ public class ShipConstructionController extends GUIController {
     @FXML
     private void handleFlipTimer() {
         GUIHandler.setCommandCTX(
+//            new CommandCTX(
+//                "flipTimer",
+//                this::startCountDownTimer,
+//                () -> {}
+//            )
             new CommandCTX(
                 "flipTimer",
-                this::startCountDownTimer,
-                () -> {}
+                this::disableTimerButton,
+                () -> {
+
+                }
             )
         );
 
@@ -441,23 +434,25 @@ public class ShipConstructionController extends GUIController {
 
     // Send the player ship to the server
     @FXML public void handleConfirmShip() {
-        GUIHandler.setCommandCTX(new CommandCTX(
-                "sendShip",
-                () -> {
-                    this.hasFinishedShip = true;
+        if (!this.clientModel.getState().getPlayerFinishedBuildingShip(this.clientModel.getNickname())) {
+            GUIHandler.setCommandCTX(new CommandCTX(
+                    "sendShip",
+                    () -> {
+                        this.hasFinishedShip = true;
 
-                    Platform.runLater(this::showEndedShipConstruction);
-                },
-                () -> {}
-        ));
+                        Platform.runLater(this::showEndedShipConstruction);
+                    },
+                    () -> {}
+            ));
 
-        try {
-            GUIHandler.getVirtualClient().sendShipConfirmation(
-                this.clientModel.getNickname(),
-                this.clientModel.getState().getReservedComponents().size()
-            );
-        } catch (Exception e) {
-            this.showToast(e.getMessage(), ToastType.ERROR);
+            try {
+                GUIHandler.getVirtualClient().sendShipConfirmation(
+                        this.clientModel.getNickname(),
+                        this.clientModel.getState().getReservedComponents().size()
+                );
+            } catch (Exception e) {
+                this.showToast(e.getMessage(), ToastType.ERROR);
+            }
         }
     }
 
@@ -489,6 +484,22 @@ public class ShipConstructionController extends GUIController {
 
     @FXML
     private void handleViewSubDeck(MouseEvent event) {
+        // If we have a selected component, we need to deselect it first
+        if (this.selectedComponent != null) {
+            this.deselectTileCommand(() -> {
+                this.selectedComponentImage.setRotate(0.0);
+                this.selectedComponent.setRotation(0);
+                this.selectedComponent = null;
+                this.isSelectedTileReserved = false;
+                this.selectedComponentImage.setImage(null);
+
+                this.handleViewSubDeck(event);
+            });
+
+            return;
+        }
+
+
         ImageView clickedSubdeck;
         int subdeckIndex;
 
@@ -641,34 +652,45 @@ public class ShipConstructionController extends GUIController {
             return;
         }
 
-        // TODO: Send the message to the server and return to the other page of the screen
-        GUIHandler.setCommandCTX(new CommandCTX(
+        this.deselectTileCommand(() -> {
+            // Before displaying the dynamic page --> set the tile info etc
+            this.setVisibility(this.shipContainer, false);
+            this.setVisibility(this.viewShipContainer, false);
+            this.setVisibility(this.viewGameBoardContainer, false);
+            this.setVisibility(this.subdeckViewerContainer, false);
+
+            this.selectedComponentImage.setRotate(0.0);
+            this.selectedComponent.setRotation(0);
+            this.selectedComponent = null;
+            this.isSelectedTileReserved = false;
+            this.selectedComponentImage.setImage(null);
+
+            // Before displaying the dynamic page --> set the tile info etc
+            this.setVisibility(this.tileVBOX, true);
+        });
+    }
+
+    private void deselectTileCommand(Runnable task) {
+        GUIHandler.setCommandCTX(
+            new CommandCTX(
                 "deselectTile",
                 () -> {
-                    Platform.runLater(() -> {
-                        // Before displaying the dynamic page --> set the tile info etc
-                        this.setVisibility(this.shipContainer, false);
-                        this.setVisibility(this.viewShipContainer, false);
-                        this.setVisibility(this.viewGameBoardContainer, false);
-                        this.setVisibility(this.subdeckViewerContainer, false);
-
-                        this.selectedComponentImage.setRotate(0.0);
-                        this.selectedComponent.setRotation(0);
-                        this.selectedComponent = null;
-                        this.selectedComponentImage.setImage(null);
-
-                        // Before displaying the dynamic page --> set the tile info etc
-                        this.setVisibility(this.tileVBOX, true);
-                    });
+                    Platform.runLater(task);
                 },
                 () -> {}
-        ));
+            )
+        );
 
         try {
-            GUIHandler.getVirtualClient().deselectTile(
-                this.clientModel.getNickname(),
-                this.selectedComponent.getID()
-            );
+            if (this.isSelectedTileReserved) {
+                task.run();
+            }
+            else {
+                GUIHandler.getVirtualClient().deselectTile(
+                        this.clientModel.getNickname(),
+                        this.selectedComponent.getID()
+                );
+            }
         } catch (Exception e) {
             this.showToast(e.getMessage(), ToastType.ERROR);
         }
@@ -682,20 +704,41 @@ public class ShipConstructionController extends GUIController {
             return;
         }
 
-        // Reserve the tile
-        if (!this.clientModel.getState().getReservedComponents().contains(this.selectedComponent)) {
-            this.clientModel.getState().reserveTile(this.selectedComponent);
+        Runnable task = () -> {
+            // Hide all the other containers
+            this.setVisibility(this.shipContainer, false);
+            this.setVisibility(this.viewShipContainer, false);
+            this.setVisibility(this.viewGameBoardContainer, false);
+            this.setVisibility(this.subdeckViewerContainer, false);
+
+            this.isSelectedTileReserved = true;
+
+            // update the reserved visual elements
+            this.updateReservedComponents();
+            this.setVisibility(this.tileVBOX, true);
+        };
+
+        if (this.clientModel.getState().getReservedComponents().contains(this.selectedComponent)) {
+            Platform.runLater(task);
+            return;
         }
 
-        // Hide all the other containers
-        this.setVisibility(this.shipContainer, false);
-        this.setVisibility(this.viewShipContainer, false);
-        this.setVisibility(this.viewGameBoardContainer, false);
-        this.setVisibility(this.subdeckViewerContainer, false);
+        GUIHandler.setCommandCTX(new CommandCTX(
+                "reserveTile",
+                () -> {
+                    Platform.runLater(task);
+                },
+                () -> {}
+        ));
 
-        // update the reserved visual elements
-        this.updateReservedComponents();
-        this.setVisibility(this.tileVBOX, true);
+        try {
+            GUIHandler.getVirtualClient().reserveTile(
+                    this.clientModel.getNickname(),
+                    this.selectedComponent.getID()
+            );
+        } catch (Exception e) {
+            this.showToast(e.getMessage(), ToastType.ERROR);
+        }
     }
 
     @FXML
@@ -729,6 +772,7 @@ public class ShipConstructionController extends GUIController {
                         // Reset the rotations
                         this.selectedComponentImage.setRotate(0.0);
                         this.selectedComponent = null;
+                        this.isSelectedTileReserved = false;
                         this.selectedComponentImage.setImage(null);
 
                         // Before displaying the dynamic page --> set the tile info for both the normal and the reserved ones
@@ -785,6 +829,21 @@ public class ShipConstructionController extends GUIController {
     @FXML
     // Method used to display the current game board
     private void handleViewGameBoard() {
+        // If we have a selected component, we need to deselect it first
+        if (this.selectedComponent != null) {
+            this.deselectTileCommand(() -> {
+                this.selectedComponentImage.setRotate(0.0);
+                this.selectedComponent.setRotation(0);
+                this.selectedComponent = null;
+                this.isSelectedTileReserved = false;
+                this.selectedComponentImage.setImage(null);
+
+                this.handleViewGameBoard();
+            });
+
+            return;
+        }
+
         // Disable all the previous containers
         this.setVisibility(this.tileVBOX, false);
         this.setVisibility(this.viewShipContainer, false);
@@ -947,6 +1006,12 @@ public class ShipConstructionController extends GUIController {
             Platform.runLater(() -> {
                 playerGrid.add(imgView, data.getJ() - this.shipOffsets.getValue(), data.getI() - shipOffsets.getKey());
             });
+        });
+    }
+
+    public void disableTimerButton() {
+        Platform.runLater(() -> {
+            this.flipTimerButton.setDisable(true);
         });
     }
 
