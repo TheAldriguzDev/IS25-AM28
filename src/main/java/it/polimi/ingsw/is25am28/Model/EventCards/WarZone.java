@@ -498,9 +498,11 @@ public class WarZone extends EventCard {
             this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
             throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
         }
-        else if ((stolenBatteries.size() != this.requiredItems - resourcesToDrop.size()) && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {
+        else if ((stolenBatteries.size() != batteriesToTake) && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {
             // This exception is triggered only if a wrong number of batteries is sent, the case in which the player cannot select the required number of batteries is checked
             throw new IllegalArgumentException("The given up batteries are not enough!");
+        } else if (stolenBatteries.size() > batteriesToTake) {
+            throw new IllegalArgumentException("You didn't remove the right amount of batteries, please try again");
         }
 
         // This check cannot be made, if the list sent by the player is smaller than requiredItems, the player's batteries must be taken instead
@@ -573,6 +575,8 @@ public class WarZone extends EventCard {
         List<ComponentHelper<LifeformType>> lifeFormToBeRemoved = new ArrayList<>(warZoneJSON.getLifeformsToBeRemoved());
 
         if (lifeFormToBeRemoved.size() != this.requiredCrew && lifeFormToBeRemoved.size() != player.getShip().getAllLifeforms().size()) {
+            throw new IllegalArgumentException("The removed crew members are not enough!");
+        } else if (lifeFormToBeRemoved.size() > this.requiredCrew) {
             throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
         }
 

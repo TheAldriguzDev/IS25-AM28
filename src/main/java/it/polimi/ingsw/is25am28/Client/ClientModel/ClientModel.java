@@ -242,7 +242,7 @@ public class ClientModel {
         if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
             Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms = cardStateJSON.getRemovedLifeforms();
             for (String playerNickname : removedLifeforms.keySet()) {
-                if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
+                if (cardStateJSON.getPrevPlayerNickname() == null || !this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
                     for (ComponentHelper<LifeformType> lifeFormToRemove : removedLifeforms.get(playerNickname)) {
                         this.getShipOfPlayer(playerNickname).ifPresent(
                             (ship) -> {
@@ -257,7 +257,7 @@ public class ClientModel {
         // Removes the specified resources from the specified ships
         if (cardStateJSON.getNeedsUpdatedDroppedResources()) {
             for (String playerNickname : cardStateJSON.getDroppedResources().keySet()) {
-                if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
+                if (cardStateJSON.getPrevPlayerNickname() == null || !this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
                     for (ComponentHelper<ItemColor> itemToDrop : cardStateJSON.getDroppedResources().get(playerNickname)) {
                         this.getShipOfPlayer(playerNickname).ifPresent(
                             (ship) -> {
@@ -279,7 +279,7 @@ public class ClientModel {
         // Adds the specified resources to the specified ships
         if (cardStateJSON.getNeedsUpdatedTakenResources()) {
             for (String playerNickname : cardStateJSON.getTakenResources().keySet()) {
-                if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
+                if (cardStateJSON.getPrevPlayerNickname() == null || !this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
                     for(ComponentHelper<ItemColor> itemToTake : cardStateJSON.getTakenResources().get(playerNickname)) {
                         this.getShipOfPlayer(playerNickname).ifPresent(
                             (ship) -> {
@@ -298,7 +298,7 @@ public class ClientModel {
         // Removes the specified amount of batteries from the specified ships
         if (cardStateJSON.getNeedsUpdatedBatteries()) {
             for (String playerNickname : cardStateJSON.getRemovedBatteries().keySet()) {
-                if (!this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
+                if (cardStateJSON.getPrevPlayerNickname() == null || !this.nickname.equals(cardStateJSON.getPrevPlayerNickname())) {
                     this.getShipOfPlayer(playerNickname).ifPresent(
                         (ship) -> {
                             ship.consumeEnergy(

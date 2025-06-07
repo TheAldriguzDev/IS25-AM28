@@ -2153,6 +2153,7 @@ public class CardRoundScreen extends Screen {
                         if (ic != null) {
                             ClientStorage storage = (ClientStorage) ship.getComponent(icch.getI(), icch.getJ());
                             storage.storeItem(new Item(ic));
+                            this.model.getResourceBank().removeResourceFromBank(ic);
                         }
                     }
 

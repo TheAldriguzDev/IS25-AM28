@@ -455,14 +455,14 @@ public class GUIUtils {
             initIcons.accept(componentToRestore, boxToRestore);
 
             Region regionToRestore = emptiedRegions.get(restoreKey);
-            System.out.println(PrintUtils.addColor("(1) : " + currentRegions, ANSIColors.RED));
-            System.out.println(PrintUtils.addColor("(emptiedRegions) : " + regionToRestore, ANSIColors.MAGENTA));
-            System.out.println(PrintUtils.addColor("(restoreKey) " + restoreKey, ANSIColors.YELLOW));
-            System.out.println(PrintUtils.addColor("(toRestore) : " + regionToRestore, ANSIColors.GREEN));
+//            System.out.println(PrintUtils.addColor("(1) : " + currentRegions, ANSIColors.RED));
+//            System.out.println(PrintUtils.addColor("(emptiedRegions) : " + regionToRestore, ANSIColors.MAGENTA));
+//            System.out.println(PrintUtils.addColor("(restoreKey) " + restoreKey, ANSIColors.YELLOW));
+//            System.out.println(PrintUtils.addColor("(toRestore) : " + regionToRestore, ANSIColors.GREEN));
             if (regionToRestore != null) {
                 currentRegions.put(restoreKey, regionToRestore);
             }
-            System.out.println(PrintUtils.addColor("(2) : " + currentRegions, ANSIColors.CYAN));
+//            System.out.println(PrintUtils.addColor("(2) : " + currentRegions, ANSIColors.CYAN));
 
             // TODO: add the region to the corresponding map (get it with the arguments)
             if (regionToRestore != null) {

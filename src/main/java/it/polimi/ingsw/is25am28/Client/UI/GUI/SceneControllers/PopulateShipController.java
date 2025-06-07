@@ -163,17 +163,19 @@ public class PopulateShipController extends GUIController {
                     cell.setPickOnBounds(false);
                     this.cabinRegions.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
 
-                    for(ClientComponent component : this.mainShip.getNearestReachableComponents(cabin)) {
-                        if (component != null && component.getClass().equals(ClientVital.class)) {
-                            ClientVital vital = (ClientVital) component;
-                            if (vital.getVitalType().equals(VitalType.PURPLE_VITAL)) {
-                                this.purpleToggle.setDisable(false);
-                                // Add the cabin to the purpleAlienRegion
-                                this.purpleAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
-                            } else { // Purple vital
-                                this.brownToggle.setDisable(false);
-                                // Add the cabin to the brownAlienRegion
-                                this.brownAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                    if (this.clientModel.getDifficultyLevel() != 0) {
+                        for(ClientComponent component : this.mainShip.getNearestReachableComponents(cabin)) {
+                            if (component != null && component.getClass().equals(ClientVital.class)) {
+                                ClientVital vital = (ClientVital) component;
+                                if (vital.getVitalType().equals(VitalType.PURPLE_VITAL)) {
+                                    this.purpleToggle.setDisable(false);
+                                    // Add the cabin to the purpleAlienRegion
+                                    this.purpleAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                                } else { // Purple vital
+                                    this.brownToggle.setDisable(false);
+                                    // Add the cabin to the brownAlienRegion
+                                    this.brownAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                                }
                             }
                         }
                     }

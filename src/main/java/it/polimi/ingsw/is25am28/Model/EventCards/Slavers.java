@@ -177,6 +177,8 @@ public class Slavers extends EventCard {
         playerOptional.ifPresent(
                 (Player player) -> {
                     if (slaversData.getCrewToRemove().size() != this.takenCrew && slaversData.getCrewToRemove().size() != player.getShip().getAllLifeforms().size()) {
+                        throw new IllegalArgumentException("The removed crew members are not enough!");
+                    } else if (slaversData.getCrewToRemove().size() > this.takenCrew) {
                         throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
                     }
 

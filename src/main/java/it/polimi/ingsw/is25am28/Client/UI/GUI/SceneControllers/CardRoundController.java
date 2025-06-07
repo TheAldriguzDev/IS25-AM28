@@ -1113,6 +1113,7 @@ public class CardRoundController extends GUIController {
                                         if (ic != null) {
                                             ClientStorage storage = (ClientStorage) mainShip.getComponent(icch.getI(), icch.getJ());
                                             storage.storeItem(new Item(ic));
+                                            this.clientModel.getResourceBank().removeResourceFromBank(ic);
                                         }
                                     }
                                     // Visual revert
@@ -1145,6 +1146,7 @@ public class CardRoundController extends GUIController {
                                 this.initStatsBox();
                                 this.initCommandBox();
                                 this.visualizePlayerActions();
+                                this.initResourceBankBox();
 
 //                                this.showToast(
 //                                        "[ERROR] There was an error while playing the card. Please try again.",
@@ -1206,7 +1208,8 @@ public class CardRoundController extends GUIController {
             this.shipGrid.getChildren().remove(regionToRemove);
 //            this.shipGrid.getChildren().remove(boxToUpdate); // TODO: remove in ONSuccess
             this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO remove?
-            this.cabinsRegions.remove(regionToRemove);
+//            this.cabinsRegions.remove(regionToRemove);
+            this.cabinsRegions.remove(this.guiUtils.keyFromCoords(row, col));
         }
 
         this.initStatsBox();
@@ -1252,7 +1255,11 @@ public class CardRoundController extends GUIController {
             this.emptiedStoragesRegions.put(guiUtils.keyFromCoords(row, col), this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
 
             this.shipGrid.getChildren().remove(regionToRemove);
-            this.storagesToEmptyRegions.remove(regionToRemove); //TODO: OnSuccess // TODO BUG: if not commented introduces a bug, if commented another bug (one on removal(2) and one on revert(1))
+//            System.out.println("LISTA STORAGES DA SVUOTARE DISPONIBILI (PRIMA): " + this.storagesToEmptyRegions);
+//            this.storagesToEmptyRegions.remove(regionToRemove); //TODO: OnSuccess // TODO BUG: if not commented introduces a bug, if commented another bug (one on removal(2) and one on revert(1))
+            this.storagesToEmptyRegions.remove(this.guiUtils.keyFromCoords(row, col)); //TODO: OnSuccess // TODO BUG: if not commented introduces a bug, if commented another bug (one on removal(2) and one on revert(1))
+//            System.out.println("Regione rimossa: " + regionToRemove);
+//            System.out.println("LISTA STORAGES DA SVUOTARE DISPONIBILI (DOPO): " + this.storagesToEmptyRegions);
 //            this.itemsMap.remove(guiUtils.keyFromCoords(row, col));
         }
 
@@ -1427,7 +1434,8 @@ public class CardRoundController extends GUIController {
             this.shipGrid.getChildren().remove(regionToRemove);
 //            this.shipGrid.getChildren().remove(boxToUpdate); // TODO: remove in ONSuccess
 //            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO:remove in ONSuccess
-            this.batteriesRegions.remove(regionToRemove);
+//            this.batteriesRegions.remove(regionToRemove);
+            this.batteriesRegions.remove(this.guiUtils.keyFromCoords(row, col));
         }
 
         this.initStatsBox();
