@@ -56,7 +56,7 @@ public class PopulateShipScreen extends Screen {
         CommandWidgetTUI command;
 
         if (chosenLifeform == null) {
-            throw new RuntimeException("ERROR: Given atomic reference \"chosenLifeform\" cannot be null (cannot store the player's result)");
+            throw new RuntimeException("ERROR: Given atomic reference \"chosenLifeform\" cannot be null (cannot store the player's choice)");
         }
 
         this.availableLifeformsWidget = new InputWidgetTUI(this.inputThread);
@@ -97,7 +97,7 @@ public class PopulateShipScreen extends Screen {
         int i, len;
 
         if (chosenCabin == null) {
-            throw new RuntimeException("ERROR: Given atomic reference \"chosenCabin\" cannot be null (cannot store the player's result)");
+            throw new RuntimeException("ERROR: Given atomic reference \"chosenCabin\" cannot be null (cannot store the player's choice)");
         }
 
         this.availableCabinsWidget = new InputWidgetTUI(this.inputThread);
