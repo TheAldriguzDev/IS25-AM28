@@ -156,6 +156,11 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                     if (!isCore) {
                         for (LifeformType lifeformType : lifeform) {
                             component.addInhabitant(new Lifeform(lifeformType));
+                            if (lifeformType.equals(LifeformType.BROWN_ALIEN)) {
+                                this.brownAlienPosition = component;
+                            } else if (lifeformType.equals(LifeformType.PURPLE_ALIEN)) {
+                                this.purpleAlienPosition = component;
+                            }
                         }
                     }
 
