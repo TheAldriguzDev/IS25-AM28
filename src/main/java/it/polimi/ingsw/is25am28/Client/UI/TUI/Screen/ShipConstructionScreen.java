@@ -8,6 +8,8 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.CommandWidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
@@ -93,6 +95,87 @@ public class ShipConstructionScreen extends Screen {
 
         this.componentSelectionCommandsWidget.addPadding(0, 1, 0, 1);
         this.componentSelectionCommandsWidget.wrapWidgetWithBorder();
+
+        // TODO: Implement commands with InputWidgetTUI
+//        CommandWidgetTUI command;
+//
+//        this.componentSelectionCommandsWidget = new InputWidgetTUI(this.inputThread);
+//
+//        if (!this.model.getState().getPlayerFinishedBuildingShip(this.model.getNickname())) {
+//            // (1) - Select Tile
+//            command = new CommandWidgetTUI(
+//                    "1",
+//                    () -> {
+//
+//                    }
+//            );
+//            command.appendString("Select Tile");
+//            this.componentSelectionCommandsWidget.addCommand(command);
+//
+//            // (2) - Select Reserved Tile
+//            command = new CommandWidgetTUI(
+//                    "2",
+//                    () -> {
+//
+//                    }
+//            );
+//            command.appendString("Select Reserved Tile");
+//            this.componentSelectionCommandsWidget.addCommand(command);
+//
+//            // (3) - Finish Ship
+//            command = new CommandWidgetTUI(
+//                    "3",
+//                    () -> {
+//
+//                    }
+//            );
+//            command.appendString("Finish Ship");
+//            this.componentSelectionCommandsWidget.addCommand(command);
+//
+//            // (4) - Fast Build
+//            command = new CommandWidgetTUI(
+//                    "4",
+//                    () -> {
+//
+//                    }
+//            );
+//            command.appendString("Fast Build");
+//            this.componentSelectionCommandsWidget.addCommand(command);
+//        }
+//
+//        // (5) - Flip Timer
+//        command = new CommandWidgetTUI(
+//                "5",
+//                () -> {
+//
+//                }
+//        );
+//        command.appendString("Flip Timer");
+//        this.componentSelectionCommandsWidget.addCommand(command);
+//
+//        // (6) - Visualize Subdeck
+//        command = new CommandWidgetTUI(
+//                "6",
+//                () -> {
+//
+//                }
+//        );
+//        command.appendString("Visualize Subdeck");
+//        this.componentSelectionCommandsWidget.addCommand(command);
+//
+//        // (7) - Visualize Ships
+//        command = new CommandWidgetTUI(
+//                "7",
+//                () -> {
+//
+//                }
+//        );
+//        command.appendString("Visualize Ships");
+//        this.componentSelectionCommandsWidget.addCommand(command);
+//
+//        this.componentSelectionCommandsWidget.setColumnGroupingAmount(
+//            this.componentSelectionCommandsWidget.getCommandMap().size()
+//        );
     }
 
     /**
@@ -130,6 +213,67 @@ public class ShipConstructionScreen extends Screen {
         this.shipConstructionCommandsWidget = leftWidget;
         this.shipConstructionCommandsWidget.addPadding(0, 0, 0, 1);
         this.shipConstructionCommandsWidget.wrapWidgetWithBorder();
+
+        // TODO: Implement commands with InputWidgetTUI
+//        CommandWidgetTUI command;
+//
+//        this.shipConstructionCommandsWidget = new InputWidgetTUI(this.inputThread);
+//
+//        if (!this.isSelectedTileReserved) {
+//            // (1) - Deselect Tile
+//            command = new CommandWidgetTUI(
+//                    "1",
+//                    () -> {
+//
+//                    }
+//            );
+//            command.appendString("Deselect Tile");
+//            this.shipConstructionCommandsWidget.addCommand(command);
+//        }
+//
+//        // (2) - Reserve Tile
+//        command = new CommandWidgetTUI(
+//                "2",
+//                () -> {
+//
+//                }
+//        );
+//        command.appendString("Reserve Tile");
+//        this.shipConstructionCommandsWidget.addCommand(command);
+//
+//        // (3) - Place Selected Tile
+//        command = new CommandWidgetTUI(
+//                "3",
+//                () -> {
+//
+//                }
+//        );
+//        command.appendString("Place Selected Tile");
+//        this.shipConstructionCommandsWidget.addCommand(command);
+//
+//        // (4) - Rotate Right
+//        command = new CommandWidgetTUI(
+//                "4",
+//                () -> {
+//
+//                }
+//        );
+//        command.appendString("Rotate Right");
+//        this.shipConstructionCommandsWidget.addCommand(command);
+//
+//        // (5) - Rotate Left
+//        command = new CommandWidgetTUI(
+//                "5",
+//                () -> {
+//
+//                }
+//        );
+//        command.appendString("Rotate Left");
+//        this.shipConstructionCommandsWidget.addCommand(command);
+//
+//        this.shipConstructionCommandsWidget.setColumnGroupingAmount(
+//            this.shipConstructionCommandsWidget.getCommandMap().size()
+//        );
     }
 
     /**
