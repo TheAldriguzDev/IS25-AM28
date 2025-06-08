@@ -265,10 +265,10 @@ public class GameModel {
 
         Collections.shuffle(this.deck);
 
-        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
-        List<EventCard> fakeDeck = new ArrayList<>();
+//        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
+//        List<EventCard> fakeDeck = new ArrayList<>();
 
-        fakeDeck.add(AllCards.get(0)); // AbandonedShip OK
+//        fakeDeck.add(AllCards.get(0)); // AbandonedShip OK
 //        fakeDeck.add(AllCards.get(1)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(2)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(3)); // AbandonedShip
@@ -308,11 +308,11 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(37)); // Stardust
 //        fakeDeck.add(AllCards.get(38)); // Warzone OK
 //        fakeDeck.add(AllCards.get(39)); // Warzone
-        fakeDeck.add(AllCards.get(36)); // Stardust OK
+//        fakeDeck.add(AllCards.get(36)); // Stardust OK
 //        fakeDeck.add(AllCards.get(37)); // Stardust
 
-          this.deck.clear();
-          this.deck.addAll(fakeDeck);
+//          this.deck.clear();
+//          this.deck.addAll(fakeDeck);
     }
 
     /**

@@ -1,30 +1,36 @@
 package it.polimi.ingsw.is25am28.Client.UI.TUI.Screen;
 
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCabin;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.CommandWidgetTUI;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.InputWidgetTUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfShipException;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Network.Messages.PopulateShip;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
-import static it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType.*;
 
 public class PopulateShipScreen extends Screen {
     private ClientShip currPlayerShip;
-    private WidgetTUI availableLifeformsWidget;
+
+    private InputWidgetTUI availableLifeformsWidget;
+    private InputWidgetTUI availableCabinsWidget;
+
     private WidgetTUI playerNameWidget;
+
+    private final AtomicReference<ClientCabin> chosenCabin;
+    private final AtomicReference<LifeformType> chosenLifeform;
 
     // Constructor
     public PopulateShipScreen(ClientModel model, InputThread inputThread) {
@@ -35,21 +41,91 @@ public class PopulateShipScreen extends Screen {
             (ClientShip ship) -> { this.currPlayerShip = ship; }
         );
 
-        this.generateAvailableLifeformsWidget();
+        this.chosenCabin = new AtomicReference<>(null);
+        this.chosenLifeform = new AtomicReference<>(null);
+
+        this.generateAvailableLifeformsWidget(this.chosenLifeform);
         this.generatePlayerNameWidget();
     }
 
     /**
-     * Generates the available lifeforms widget to show the
-     * player the available lifeforms
+     * Generates an input widget containing all the available
+     * lifeforms that the player can select.
      */
-    private void generateAvailableLifeformsWidget() {
-        this.availableLifeformsWidget = new WidgetTUI()
-            .appendString("(" + ASTRONAUT.ordinal() + ") Astronaut")
-            .appendString("(" + PURPLE_ALIEN.ordinal() + ") Purple Alien")
-            .appendString("(" + BROWN_ALIEN.ordinal() + ") Brown Alien")
-            .addPadding(0, 1, 0, 1)
-            .wrapWidgetWithBorder();
+    private void generateAvailableLifeformsWidget(AtomicReference<LifeformType> chosenLifeform) {
+        CommandWidgetTUI command;
+
+        if (chosenLifeform == null) {
+            throw new RuntimeException("ERROR: Given atomic reference \"chosenLifeform\" cannot be null (cannot store the player's result)");
+        }
+
+        this.availableLifeformsWidget = new InputWidgetTUI(this.inputThread);
+
+        for (LifeformType lfType : LifeformType.values()) {
+            command = new CommandWidgetTUI(
+                Integer.toString(lfType.ordinal()),
+                () -> {
+                    chosenLifeform.set(lfType);
+                }
+            );
+            command.appendString(lfType.toString());
+            this.availableLifeformsWidget.addCommand(command);
+        }
+
+        // (-1) - Go back
+        command = new CommandWidgetTUI(
+            "-1",
+            () -> {
+                chosenLifeform.set(null);
+            }
+        );
+        command.appendString("Go back");
+        this.availableLifeformsWidget.addCommand(command);
+
+        this.availableLifeformsWidget.setColumnGroupingAmount(
+            this.availableLifeformsWidget.getCommandMap().size()
+        );
+    }
+
+    /**
+     * Generates an input widget containing all the cabins
+     * that the player can populate
+     */
+    private void generateAvailableCabinsWidget(AtomicReference<ClientCabin> chosenCabin) {
+        CommandWidgetTUI command;
+        List<ClientCabin> cabinList;
+        int i, len;
+
+        if (chosenCabin == null) {
+            throw new RuntimeException("ERROR: Given atomic reference \"chosenCabin\" cannot be null (cannot store the player's result)");
+        }
+
+        this.availableCabinsWidget = new InputWidgetTUI(this.inputThread);
+        cabinList = this.currPlayerShip.getCabinList();
+
+        cabinList = cabinList.stream()
+                .filter(c -> c.getAvailableSpace() > 0)
+                .toList();
+
+        len = cabinList.size();
+
+        // (n) - All Selectable Cabins
+        for (i = 0; i < len; i++) {
+            ClientCabin cabin = cabinList.get(i);
+
+            command = new CommandWidgetTUI(
+                Integer.toString(i),
+                () -> {
+                    chosenCabin.set(cabin);
+                }
+            );
+            command.appendString("Cabin @ (row=" + (cabin.getI() + 1) + ", col=" + (cabin.getJ() + 1) + ")");
+            this.availableCabinsWidget.addCommand(command);
+        }
+
+        this.availableCabinsWidget.setColumnGroupingAmount(
+            this.availableCabinsWidget.getCommandMap().size()
+        );
     }
 
     /**
@@ -93,133 +169,45 @@ public class PopulateShipScreen extends Screen {
     }
 
     /**
-     * @return A pair of integers that represents the (row, col) indexes
-     *         of the component the player wants to populate
+     *  Keeps asking the player to select a cabin
+     *  among the ones that can still be populated.
      */
-    private Map.Entry<Integer, Integer> getComponentCoordinates() {
-        Map<Integer, Integer> coordinates = new HashMap<>();
-        boolean validCoordinate;
-        String line;
+    private void getAvailableCabinsCommand() throws InterruptedException {
+        boolean commandExecuted;
 
-        int i = 0;
-        int j = 0;
-
-        int minRowValue = ClientShip.shipOffsets.get(this.model.getDifficultyLevel()).getKey();
-        int maxRowValue = ClientShip.shipDimensions.get(this.model.getDifficultyLevel()).getKey() + minRowValue + 1;
-
-        int minColValue = ClientShip.shipOffsets.get(this.model.getDifficultyLevel()).getValue();
-        int maxColValue = ClientShip.shipDimensions.get(this.model.getDifficultyLevel()).getValue() + minColValue + 1;
-
-        // Getting the row --> i
-        do {
-            System.out.print("Insert row of the cabin to populate: ");
-            try {
-                line = this.inputThread.waitForInput();
-
-                if (line == null) {
-                    // A force interrupt arrived
-                    break;
-                }
-
-                i = Integer.parseInt(line);
-                validCoordinate = (i > minRowValue && i < maxRowValue);
-
-                if (!validCoordinate) {
-                    System.out.println(PrintUtils.addColor("ERROR: Given row is out of the ship boundaries (range is [" + (minRowValue + 1) + ", " + (maxRowValue - 1) + "])", ANSIColors.RED));
-                }
-            }
-            catch (NumberFormatException e) {
-                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
-                validCoordinate = false;
-            }
-            catch (InterruptedException e) {
-                // A force interrupt arrived
-                break;
-            }
-        }
-        while (!validCoordinate);
-
-        // Getting the col --> j
-        do {
-            System.out.print("Insert column of the cabin to populate: ");
-            try {
-                line = this.inputThread.waitForInput();
-
-                if (line == null) {
-                    // A force interrupt arrived
-                    break;
-                }
-
-                j = Integer.parseInt(line);
-                validCoordinate = (j > minColValue && j < maxColValue);
-
-                if (!validCoordinate) {
-                    System.out.println(PrintUtils.addColor("ERROR: Given column is out of the ship boundaries (range is [" + (minRowValue + 1) + ", " + (maxColValue - 1) + "])", ANSIColors.RED));
-                }
-            }
-            catch (NumberFormatException e) {
-                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
-                validCoordinate = false;
-            }
-            catch (InterruptedException e) {
-                // A force interrupt arrived
-                break;
-            }
-        }
-        while (!validCoordinate);
-
-        // Reducing both by 1 since they will then be used as
-        // indexes inside the client ship component matrix
-        coordinates.put(--i, --j);
-        return coordinates.entrySet().stream().toList().getFirst();
-    }
-
-    /**
-     * @return The player's chosen lifeform type to add to his ship
-     */
-    private LifeformType getLifeformType() {
-        LifeformType lifeformToAdd;
-        boolean lifeformChosen;
-        String line;
-        int index;
-
-        lifeformChosen = false;
-        lifeformToAdd = null;
+        this.generateAvailableCabinsWidget(this.chosenCabin);
 
         do {
-            try {
-                System.out.println();
-                System.out.println("Available lifeforms to add:");
-                this.availableLifeformsWidget.printWidget();
+            System.out.println();
+            System.out.println("Available cabins to populate:");
 
-                System.out.print("Insert lifeform to add: ");
-                line = this.inputThread.waitForInput();
+            commandExecuted = this.availableCabinsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
 
-                if (line == null) {
-                    // A forced interrupt arrived
-                    return null;
-                }
-
-                index = Integer.parseInt(line);
-                lifeformToAdd = Arrays.stream(values()).toList().get(index);
-                lifeformChosen = true;
-            }
-            catch (NumberFormatException e) {
-                // Ask again for a correct value
-                System.out.println(PrintUtils.addColor("[ERROR] [Invalid input] Please insert a number.", ANSIColors.RED));
-            }
-            catch (InterruptedException e) {
-                // A forced interrupt arrived
-                return null;
-            }
-            catch (IndexOutOfBoundsException e) {
-                // Ask again for a correct value
+            if (!commandExecuted) {
                 System.out.println(UNKNOWN_COMMAND_ERROR);
             }
         }
-        while (!lifeformChosen);
+        while (!commandExecuted);
+    }
 
-        return lifeformToAdd;
+    /**
+     *  Keeps asking the player to select a lifeform
+     *  among the available ones.
+     */
+    private void getAvailableLifeformsCommand() throws InterruptedException {
+        boolean commandExecuted;
+
+        do {
+            System.out.println();
+            System.out.println("Available lifeforms to add:");
+
+            commandExecuted = this.availableLifeformsWidget.selectCommand(DEFAULT_COMMAND_PREFIX);
+
+            if (!commandExecuted) {
+                System.out.println(UNKNOWN_COMMAND_ERROR);
+            }
+        }
+        while (!commandExecuted);
     }
 
     /**
@@ -229,48 +217,87 @@ public class PopulateShipScreen extends Screen {
      */
     private void populateShip() throws Exception {
         ComponentHelper<LifeformType> lifeformToAdd;
-        Map.Entry<Integer, Integer> coordinates;
-        LifeformType lifeformType;
         boolean isActionValid;
 
-        do {
-            coordinates = this.getComponentCoordinates();
-            lifeformType = this.getLifeformType();
+        isActionValid = false;
 
-            if (lifeformType == null) {
+        System.out.println();
+        clearTerminal();
+
+        do {
+            this.playerNameWidget.printWidget();
+            this.currPlayerShip.getShipGridWidget().printWidget();
+            this.printShipPopulateStatusWidget();
+
+            try {
+                this.getAvailableCabinsCommand();
+                this.getAvailableLifeformsCommand();
+            }
+            catch (InterruptedException e) {
+                // A forced interrupt arrived
                 return;
+            }
+
+            // Player chose "Go back" command to select another cabin
+            // to populate instead of the one he's currently selected.
+            if (this.chosenLifeform.get() == null) {
+                System.out.println();
+                clearTerminal();
+
+                continue;
             }
 
             try {
                 isActionValid = this.currPlayerShip.addLifeformVerifier(
-                        coordinates.getKey(),
-                        coordinates.getValue(),
-                        lifeformType
+                    this.chosenCabin.get().getI(),
+                    this.chosenCabin.get().getJ(),
+                    this.chosenLifeform.get()
                 );
             }
             catch (IllegalArgumentException | OutOfGridException | OutOfShipException e) {
-                isActionValid = false;
+                // isActionValid = false (default value)
             }
 
             if (!isActionValid) {
-                System.out.println(PrintUtils.addColor("[ERROR] " + lifeformType + " cannot be added at (" + (coordinates.getKey() + 1)+ ", " + (coordinates.getValue() + 1) + ")." , ANSIColors.RED));
+                System.out.println();
+                clearTerminal();
+
+                new WidgetTUI()
+                    .appendString(
+                        COMPUTER_MSG_TAG
+                        + PrintUtils.addColor(
+                                "[ERROR] " + this.chosenLifeform.get().toString() + " cannot be added at (" + (this.chosenCabin.get().getI() + 1) + ", " + (this.chosenCabin.get().getJ() + 1) + ").",
+                                ANSIColors.RED
+                        )
+                    )
+                    .addPadding(0, 1, 0, 1)
+                    .wrapWidgetWithBorder()
+                    .printWidget();
             }
         }
         while (!isActionValid);
 
+        // Creating the component helper of the lifeform to add
+        // where (I, J) of the former point to the cabin where
+        // the latter will be placed.
         lifeformToAdd = new ComponentHelper<LifeformType>(
-            coordinates.getKey(), coordinates.getValue()
-        ).addItem(lifeformType);
+                this.chosenCabin.get().getI(),
+                this.chosenCabin.get().getJ()
+        ).addItem(this.chosenLifeform.get());
 
         // Command context
         this.ctx = new CommandCTX(
             "populateShip",
             () -> {
-                this.playerNameWidget.printWidget();
-                this.currPlayerShip.getShipGridWidget().printWidget();
-                this.printShipPopulateStatusWidget();
+                if (this.model.getState().getPopulateShipDTO().getPlayersReady().contains(this.model.getNickname())) {
+                    System.out.println();
+                    clearTerminal();
 
-                if (!this.model.getState().getPopulateShipDTO().getPlayersReady().contains(this.model.getNickname())) {
+                    this.playerNameWidget.printWidget();
+                    this.currPlayerShip.getShipGridWidget().printWidget();
+                    this.printShipPopulateStatusWidget();
+                }
+                else {
                     try {
                         this.populateShip();
                     }
@@ -280,10 +307,14 @@ public class PopulateShipScreen extends Screen {
                 }
             },
             () -> {
+                System.out.println();
+                clearTerminal();
+
+                this.playerNameWidget.printWidget();
+                this.currPlayerShip.getShipGridWidget().printWidget();
+                this.printShipPopulateStatusWidget();
+
                 try {
-                    this.playerNameWidget.printWidget();
-                    this.currPlayerShip.getShipGridWidget().printWidget();
-                    this.printShipPopulateStatusWidget();
                     this.populateShip();
                 }
                 catch (Exception e) {
@@ -304,14 +335,15 @@ public class PopulateShipScreen extends Screen {
      */
     @Override
     public void showShipPopulate(PopulateShipDTO populateShip) throws Exception {
-        System.out.println();
-        clearTerminal();
+        if (populateShip.getPlayersReady().contains(this.model.getNickname())) {
+            System.out.println();
+            clearTerminal();
 
-        this.playerNameWidget.printWidget();
-        this.currPlayerShip.getShipGridWidget().printWidget();
-        this.printShipPopulateStatusWidget();
-
-        if (!populateShip.getPlayersReady().contains(this.model.getNickname())) {
+            this.playerNameWidget.printWidget();
+            this.currPlayerShip.getShipGridWidget().printWidget();
+            this.printShipPopulateStatusWidget();
+        }
+        else {
             this.populateShip();
         }
     }
