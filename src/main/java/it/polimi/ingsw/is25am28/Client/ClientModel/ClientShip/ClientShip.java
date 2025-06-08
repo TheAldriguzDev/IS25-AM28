@@ -107,7 +107,16 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
         this.storageList = new ArrayList<ClientStorage>();
         this.vitalList = new ArrayList<ClientVital>();
 
-        for (Map<String, Object> map : initialShip) {
+        this.createComponentsFromData(initialShip);
+        this.generateComponentSubLists();
+    }
+
+    /**
+     * Instantiates the client ship from the passed data
+     * about all components present onboard.
+     */
+    private void createComponentsFromData(List<Map<String, Object>> shipData) {
+        for (Map<String, Object> map : shipData) {
             int id = (int) map.get("id");
             int typeId = (int) map.get("tid");
 
@@ -237,9 +246,22 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                 }
             }
         }
+    }
 
+    /**
+     * Given a premade ship configuration, it clears the previous ship
+     * and re-instantiates it with the given data.
+     */
+    public void substituteShipWithPremadeConfiguration(List<Map<String, Object>> shipData) {
+        int i, j;
 
-        this.generateComponentSubLists();
+        for (i = 0; i < grid_rows; i++) {
+            for (j = 0; j < grid_cols; j++) {
+                this.components[i][j] = null;
+            }
+        }
+
+        this.createComponentsFromData(shipData);
     }
 
     /**

@@ -165,6 +165,25 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
+    /**
+     * Given the FastShipDTO, it overwrites the target player's client ship
+     * with the one described in the former, allowing the target player to
+     * skip the ship building phase altogether.
+     * <br>
+     * NOTE: This method is meant to be used only for demonstration purposes only.
+     * NOTE: This method overwrites the target player's ship.
+     */
+    @Override
+    public void visit(FastShipDTO state) throws Exception {
+        synchronized (this.model) {
+            this.model.getShipOfPlayer(state.getTargetNickname()).ifPresent(
+                (ClientShip ship) -> {
+                    ship.substituteShipWithPremadeConfiguration(state.getShip());
+                }
+            );
+        }
+    }
+
     @Override
     public void visit(FixedComponentDTO state) throws Exception {
         synchronized (this.model) {

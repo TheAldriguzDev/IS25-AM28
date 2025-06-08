@@ -178,23 +178,16 @@ public class ShipConstructionScreen extends Screen {
             command = new CommandWidgetTUI(
                     "4",
                     () -> {
-                        // TODO: Implement new feature
+                        try {
+                            // Receiving the custom ship from the server
+                            this.requestPremadeShip();
 
-
-                        clearTerminal();
-
-                        new WidgetTUI()
-                                .appendString(
-                                    PrintUtils.addColor(
-                                        "WIP",
-                                        ANSIColors.BRIGHT_CYAN
-                                    )
-                                )
-                                .addPadding(1, 8, 1, 8)
-                                .wrapWidgetWithBorder()
-                                .printWidget();
-
-                        this.getComponentSelectionCommand();
+                            // Sending the custom ship to the server
+                            this.sendFinishedShip();
+                        }
+                        catch (Exception e) {
+                            System.out.println(PrintUtils.addColor("ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.", ANSIColors.RED));
+                        }
                     }
             );
             command.appendString("Fast build");
@@ -1098,6 +1091,33 @@ public class ShipConstructionScreen extends Screen {
     }
 
     /**
+     * Enables a player to skip the ship building phase and instead
+     * let the server assign a premade ship to him.
+     * <br>
+     * NOTE: This method is meant to be used only for demonstration purposes only.
+     * NOTE: This method overwrites the asking player's ship, so use caution when playing!
+     */
+    private void requestPremadeShip() {
+        this.ctx = new CommandCTX(
+            "fastShipBuild",
+            () -> {
+                // TODO: Find another way to avoid "ping-pong" of the received premade ship
+                try {
+                    // Sending the premade ship to the server
+                    this.sendFinishedShip();
+                }
+                catch (Exception e) {
+                    System.out.println(PrintUtils.addColor("ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.", ANSIColors.RED));
+                }
+            },
+            this::getShipConstructionCommand
+        );
+
+        // TODO: Add the method that sends the request to the server
+        // this.client.requestPremadeShip(this.model.getNickname());
+    }
+
+    /**
      * @return The current player's chosen tile index
      */
     private int getTileIndex() throws InterruptedException {
@@ -1525,25 +1545,9 @@ public class ShipConstructionScreen extends Screen {
 
                 // Go back to the component selection command menu where the only available
                 // commands will be: 1) Show other ship, 2) Flip timer, 3) Show card deck
-                try {
-                    this.getComponentSelectionCommand();
-                }
-                catch (Exception e) {
-                    System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" was thrown when calling 'getComponentSelectionCommand' method", ANSIColors.RED));
-                }
+                this.getComponentSelectionCommand();
             },
-            () -> {
-                // Otherwise, if the command fails, then the player goes back to the
-                // component selection commands menu
-
-                // NOTE: Error is communicated to the player through the showError() method
-                try {
-                    this.getComponentSelectionCommand();
-                }
-                catch (Exception e) {
-                    System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" was thrown when calling 'getComponentSelectionCommand' method", ANSIColors.RED));
-                }
-            }
+            this::getComponentSelectionCommand
         );
 
         // Sends the current player's ship when he
