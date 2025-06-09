@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Model.GameModelv2;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FastShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
@@ -40,6 +41,10 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
     public ReservedComponentDTO reserveTile(String player, Integer id) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The 'reserveTile' command is not allowed in the " + this + " state");
     }
+
+    public FastShipDTO fastShip(String playerNickname) throws IllegalStateException, IllegalArgumentException {
+        throw new IllegalStateException("The 'reserveTile' command is not allowed in the " + this + " state");
+    };
 
     public PlacedComponentDTO placeTile(String player, Integer componentID, Integer i, Integer j, Integer rotation) {
         throw new IllegalStateException("The 'placeTile' command is not allowed in the " + this + " state");

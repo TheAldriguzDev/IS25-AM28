@@ -7,6 +7,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FastShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
@@ -398,6 +399,10 @@ public class GameModel {
      * */
     public ReservedComponentDTO reserveTile(String playerNickname, int id) {
         return currentState.reserveTile(playerNickname, id);
+    }
+
+    public FastShipDTO fastShip(String playerNickname) {
+        return currentState.fastShip(playerNickname);
     }
 
     /**

@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
 import it.polimi.ingsw.is25am28.Loader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FastShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
@@ -239,6 +240,17 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         return state;
     }
+
+    @Override
+    public FastShipDTO fastShip(String playerNickname) throws IllegalStateException, IllegalArgumentException {
+        // TODO: Filippo
+        //  1. Creare la nave per il player dato. Aggiungi un indice che segna quanti player hanno richiesto la nave prefatta.
+        //   in questo modo assegni ad ogni player la build corretta (1, 2, 3, 4)
+        //  2. Dopo che hai creato la nave aggiungi il giocatore in quelli che hanno finito
+        //  3. Crei e ritorni il FastShipDTO
+
+        return null;
+    };
 
     /**
      * Command executed by the client to place a component in his ship:
