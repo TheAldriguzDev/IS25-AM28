@@ -40,22 +40,22 @@ public class MeteorShowerJSON extends ActionJSON {
     }
 
     @JsonGetter("currMeteorIndex")
-    public int getCurrMeteorIndex() {
+    public Integer getCurrMeteorIndex() {
         return this.currMeteorIndex;
     }
 
     @JsonSetter("currMeteorIndex")
-    public void setCurrMeteorIndex(int currMeteorIndex) {
+    public void setCurrMeteorIndex(Integer currMeteorIndex) {
         this.currMeteorIndex = currMeteorIndex;
     }
 
     @JsonGetter("diceThrowResult")
-    public int getDiceThrowResult() {
+    public Integer getDiceThrowResult() {
         return this.diceThrowResult;
     }
 
     @JsonSetter("diceThrowResult")
-    public void setDiceThrowResult(int diceThrowResult) {
+    public void setDiceThrowResult(Integer diceThrowResult) {
         this.diceThrowResult = diceThrowResult;
     }
 
