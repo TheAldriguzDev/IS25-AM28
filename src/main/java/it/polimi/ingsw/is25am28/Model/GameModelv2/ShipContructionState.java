@@ -7,12 +7,14 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
+import it.polimi.ingsw.is25am28.Loader.FastShipLoader;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Timer.HourGlass;
 import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
+import java.io.IOException;
 import java.util.*;
 
 public final class ShipContructionState extends State implements TimerObserver {
@@ -52,7 +54,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         // Load the tiles
         this.components = loader.getTiles();
-//        Collections.shuffle(this.components);
+//        Collections.shuffle(this.components); // TODO uncomment in the final version of the game
         this.selected_components = new HashSet<>();
         this.flipped_components = new HashSet<>();
 
@@ -243,13 +245,26 @@ public final class ShipContructionState extends State implements TimerObserver {
 
     @Override
     public FastShipDTO fastShip(String playerNickname) throws IllegalStateException, IllegalArgumentException {
-        // TODO: Filippo
-        //  1. Creare la nave per il player dato. Aggiungi un indice che segna quanti player hanno richiesto la nave prefatta.
-        //   in questo modo assegni ad ogni player la build corretta (1, 2, 3, 4)
-        //  2. Dopo che hai creato la nave aggiungi il giocatore in quelli che hanno finito
-        //  3. Crei e ritorni il FastShipDTO
+        // Creating the ship from the JSON
+        Player targetPlayer = this.model.getPlayers().get(playerNickname);
+        Ship targetShip = targetPlayer.getShip();
+        try {
+            FastShipLoader fastShipLoader = new FastShipLoader();
+            fastShipLoader.loadShipFromJSON(targetShip);
+        } catch (IOException e) {
+            throw new RuntimeException("An error occurred while reading the json file: " + e);
+        }
 
-        return null;
+        // Adding the player to the ones that have finished
+        this.model.playerEndedSendShip(playerNickname, 0);
+
+
+        // Creating the FastShipDTO
+        FastShipDTO state = new FastShipDTO();
+        state.setShip(targetShip.generateState());
+        state.setTargetNickname(playerNickname);
+
+        return state;
     };
 
     /**
@@ -334,6 +349,19 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         state.setStateName(this.toString());
         state.setEventType(ShipConstructionType.SHIP_EVENT.toString());
+
+        // TODO remove when finished testing
+        Ship tmpShipToPrint = this.model.getPlayers().get(player).getShip();
+
+//        FastShipLoader.dumpShipJSON(tmpShipToPrint);
+
+//        try {
+//            FastShipLoader fastShipLoader = new FastShipLoader();
+//            fastShipLoader.loadShipFromJSON(tmpShipToPrint);
+//        } catch (IOException e) {
+//            throw new RuntimeException("An error occurred while reading the json file: " + e);
+//        }
+
 
         return state;
     }

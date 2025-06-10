@@ -52,7 +52,7 @@ public class MeteorShower extends EventCard {
         this.random = new Random();
         this.currMeteorIndex = 0;
         this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
-        this.diceThrowResult = 7; // TODO remove after testing
+//        this.diceThrowResult = 7; // TODO remove after testing
         this.prevPlayerRemovedComponents = new ArrayList<>();
         this.prevPlayer = null;
         this.removedComponents = new HashMap<>();

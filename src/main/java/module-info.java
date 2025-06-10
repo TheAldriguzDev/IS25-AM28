@@ -72,4 +72,8 @@ module it.polimi.ingsw.is25am {
     opens it.polimi.ingsw.is25am28.Client.UI.GUI to javafx.fxml;
 
     exports it.polimi.ingsw.is25am28.Network.Queue;
+    exports it.polimi.ingsw.is25am28.Loader.FastShipTiles;
+    opens it.polimi.ingsw.is25am28.Loader.FastShipTiles to javafx.fxml;
+    exports it.polimi.ingsw.is25am28.Loader;
+    opens it.polimi.ingsw.is25am28.Loader to javafx.fxml;
 }
