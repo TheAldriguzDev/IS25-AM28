@@ -40,14 +40,4 @@ public final class ReserveTile implements Message {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    @Override
-    public boolean validate() {
-        return false;
-    }
-
-    @Override
-    public List<String> getErrors() {
-        return List.of();
-    }
 }

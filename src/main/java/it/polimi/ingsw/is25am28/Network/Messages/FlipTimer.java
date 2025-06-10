@@ -21,19 +21,4 @@ public final class FlipTimer implements Message {
     public void setPlayerNickname(String playerNickname) {
         this.playerNickname = playerNickname;
     }
-
-    @Override
-    public boolean validate() {
-        return playerNickname != null && !playerNickname.isEmpty();
-    }
-
-    @Override
-    public List<String> getErrors() {
-        List<String> errors = new ArrayList<>();
-        if (playerNickname == null || playerNickname.isEmpty()) {
-            errors.add("playerNickname cannot be null or empty");
-        }
-
-        return errors;
-    }
 }

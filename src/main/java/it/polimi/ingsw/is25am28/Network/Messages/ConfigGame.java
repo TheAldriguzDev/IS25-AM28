@@ -43,35 +43,4 @@ public final class ConfigGame implements Message {
     public int getTotalPlayers() {
         return totalPlayers;
     }
-
-    @Override
-    public boolean validate() {
-        return playerNickname != null && !playerNickname.isEmpty()
-                && playerColor != null
-                && (gameLevel == 0 || gameLevel == 2)
-                && (totalPlayers >= 2 && totalPlayers <= 4);
-    }
-
-    @Override
-    public List<String> getErrors() {
-        List<String> errors = new ArrayList<>();
-
-        if (playerNickname == null || playerNickname.isEmpty()) {
-            errors.add("Your name cannot be null or empty");
-        }
-
-        if (playerColor == null) {
-            errors.add("Your color cannot be null");
-        }
-
-        if (gameLevel != 0 && gameLevel != 2) {
-            errors.add("Game level must be 0 or 2");
-        }
-
-        if (totalPlayers < 2 || totalPlayers > 4) {
-            errors.add("Total number of players must be between 2 and 4");
-        }
-
-        return errors;
-    }
 }

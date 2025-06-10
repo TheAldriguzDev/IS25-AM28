@@ -24,14 +24,4 @@ public final class Reconnect implements Message {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-
-    @Override
-    public boolean validate() {
-        return true;
-    }
-
-    @Override
-    public List<String> getErrors() {
-        return List.of();
-    }
 }

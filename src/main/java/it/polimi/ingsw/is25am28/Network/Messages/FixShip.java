@@ -58,20 +58,4 @@ public final class FixShip implements Message {
         this.j = j;
         return this;
     }
-
-    @Override
-    public boolean validate() {
-        return (this.playerNickname != null && !this.playerNickname.isEmpty());
-    }
-
-    @Override
-    public List<String> getErrors() {
-        List<String> errors = new ArrayList<>();
-
-        if (this.playerNickname == null || this.playerNickname.isEmpty()) {
-            errors.add("The 'playerNickname' field cannot be empty nor null.");
-        }
-
-        return errors;
-    }
 }

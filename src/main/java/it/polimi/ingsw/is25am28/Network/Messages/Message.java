@@ -6,6 +6,12 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * The Message interface represents a socket message sent from a client to the server.
+ * It serves as the base type for all client-to-server communication over sockets.
+ */
+
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = ConfigGame.class, name = "ConfigGame"),
@@ -28,13 +34,4 @@ import java.util.List;
 
 public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FastShip, FixShip, FlipTimer, NewPlayer, Ping, PlaceTile, PlayCard, PopulateShip, Reconnect, RefreshGames, ReserveTile, SelectDeselectSubdeck, SelectTile, SendShipConfirmation {
 
-    /**
-     * @return true if the message it's correct, otherwise it will return false
-     * */
-    public boolean validate();
-
-    /**
-     * @return a list of strings that will indicate the errors in the message
-     * */
-    public List<String> getErrors();
 }

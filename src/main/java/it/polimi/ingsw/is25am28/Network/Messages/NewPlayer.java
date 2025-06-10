@@ -36,25 +36,4 @@ public final class NewPlayer implements Message {
     public int getGameID() {
         return gameID;
     }
-
-    @Override
-    public boolean validate() {
-        return playerNickname != null && !playerNickname.isEmpty()
-                && playerColor != null;
-    }
-
-    @Override
-    public List<String> getErrors() {
-        List<String> errors = new ArrayList<>();
-
-        if (playerNickname == null || playerNickname.isEmpty()) {
-            errors.add("Your name cannot be null or empty");
-        }
-
-        if (playerColor == null) {
-            errors.add("Your color cannot be null");
-        }
-
-        return errors;
-    }
 }

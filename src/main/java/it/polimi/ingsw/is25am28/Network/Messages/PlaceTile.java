@@ -78,44 +78,4 @@ public final class PlaceTile implements Message {
     public void setRotation(Integer rotation) {
         this.rotation = rotation;
     }
-
-    @Override
-    public boolean validate() {
-        return nickname != null &&
-                componentID != null &&
-                i != null &&
-                j != null &&
-                rotation != null &&
-                rotation >= 0 &&
-                rotation <= 3;
-    }
-
-    @Override
-    public List<String> getErrors() {
-        List<String> errors = new ArrayList<>();
-        if (nickname == null) {
-            errors.add("The 'nickname' cannot be null.");
-        }
-
-        if (componentID == null) {
-            errors.add("The 'componentID' cannot be null.");
-        }
-
-        if (i == null) {
-            errors.add("The 'i' cannot be null.");
-        }
-
-        if (j == null) {
-            errors.add("The 'j' cannot be null.");
-        }
-
-        if (rotation == null) {
-            errors.add("The 'rotation' cannot be null.");
-        } else {
-            if (rotation < 0 || rotation > 3) {
-                errors.add("The 'rotation' must be between 0 and 3.");
-            }
-        }
-        return errors;
-    }
 }

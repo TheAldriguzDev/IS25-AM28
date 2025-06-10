@@ -31,26 +31,4 @@ public final class SendShipConfirmation implements Message {
     public Integer getReservedTiles() {
         return this.reservedTiles;
     }
-
-    @Override
-    public boolean validate() {
-        return this.playerNickname != null
-                && !this.playerNickname.isEmpty()
-                && this.reservedTiles != null;
-    }
-
-    @Override
-    public List<String> getErrors() {
-        List<String> errors = new ArrayList<>();
-
-        if (playerNickname == null || playerNickname.isEmpty()) {
-            errors.add("ERROR: The 'playerNickname' field cannot be null or empty.");
-        }
-
-        if (this.reservedTiles == null) {
-            errors.add("ERROR: The 'reservedTiles' field cannot be null.");
-        }
-
-        return errors;
-    }
 }

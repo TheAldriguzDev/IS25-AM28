@@ -40,14 +40,4 @@ public final class PlayCard implements Message {
     public void setActionJSON(ActionJSON actionJSON) {
         this.actionJSON = actionJSON;
     }
-
-    @Override
-    public boolean validate() {
-        return false;
-    }
-
-    @Override
-    public List<String> getErrors() {
-        return List.of();
-    }
 }
