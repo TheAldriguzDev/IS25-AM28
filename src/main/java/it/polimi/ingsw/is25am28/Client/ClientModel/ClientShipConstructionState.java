@@ -24,7 +24,7 @@ public class ClientShipConstructionState extends ClientState {
     // List containing the components inside the current player's ship
     private List<ClientComponent> currentShip;
 
-    private ShipConstructionDTO shipConstructionDTO;
+    private final ShipConstructionDTO shipConstructionDTO;
 
     // (NOT HERE --> IN THE CORRECT STATES
     // TODO: Add the list for the removedComponents to support the FIX SHIP PHASE

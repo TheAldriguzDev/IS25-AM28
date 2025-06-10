@@ -8,6 +8,7 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class FastShipDTO extends StateDTO {
     private String targetNickname;
+    private Integer playerCursor;
     private List<Map<String, Object>> ship;
 
     @JsonCreator
@@ -16,9 +17,11 @@ public final class FastShipDTO extends StateDTO {
     @JsonCreator
     public FastShipDTO(
         @JsonProperty("targetNickname") String targetNickname,
+        @JsonProperty("playerCursor") Integer playerCursor,
         @JsonProperty("ship") List<Map<String, Object>> ship
     ) {
         this.targetNickname = targetNickname;
+        this.playerCursor = playerCursor;
         this.ship = ship;
     }
     
@@ -30,6 +33,17 @@ public final class FastShipDTO extends StateDTO {
     @JsonSetter("targetNickname")
     public FastShipDTO setTargetNickname(String targetNickname) {
         this.targetNickname = targetNickname;
+        return this;
+    }
+
+    @JsonGetter("playerCursor")
+    public Integer getPlayerCursor() {
+        return this.playerCursor;
+    }
+
+    @JsonSetter("playerCursor")
+    public FastShipDTO setPlayerCursor(Integer playerCursor) {
+        this.playerCursor = playerCursor;
         return this;
     }
 

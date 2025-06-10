@@ -178,14 +178,19 @@ public class ViewUpdater implements StateVisitor {
         try {
             synchronized (this.model) {
                 this.model.getShipOfPlayer(state.getTargetNickname()).ifPresent(
-                        (ClientShip ship) -> {
+                    (ClientShip ship) -> {
+                        ship.substituteShipWithPremadeConfiguration(state.getShip(), this.model.getState().getConstructionShipComponents());
 
-                            ship.substituteShipWithPremadeConfiguration(state.getShip(), this.model.getState().getConstructionShipComponents());
+                        // After a fast build request, the player is automatically
+                        // considered as if he's also already sent his ship.
+                        this.model.getState().setPlayerFinishedBuildingShip(
+                            state.getTargetNickname(),
+                            state.getPlayerCursor()
+                        );
 
-
-                            this.ui.handlePlayerFastShip(state.getTargetNickname());
-                            this.ui.placePlayerInTheBoard(state.getTargetNickname());
-                        }
+                        this.ui.handlePlayerFastShip(state.getTargetNickname());
+                        this.ui.placePlayerInTheBoard(state.getTargetNickname());
+                    }
                 );
             }
         } catch (Exception e) {

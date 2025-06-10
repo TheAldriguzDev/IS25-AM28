@@ -181,9 +181,6 @@ public class ShipConstructionScreen extends Screen {
                         try {
                             // Receiving the custom ship from the server
                             this.requestPremadeShip();
-
-                            // Sending the custom ship to the server
-                            this.sendFinishedShip();
                         }
                         catch (Exception e) {
                             System.out.println(PrintUtils.addColor("ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.", ANSIColors.RED));
@@ -1101,14 +1098,14 @@ public class ShipConstructionScreen extends Screen {
         this.ctx = new CommandCTX(
             "fastShipBuild",
             () -> {
-                // TODO: Find another way to avoid "ping-pong" of the received premade ship
-                try {
-                    // Sending the premade ship to the server
-                    this.sendFinishedShip();
-                }
-                catch (Exception e) {
-                    System.out.println(PrintUtils.addColor("ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.", ANSIColors.RED));
-                }
+                // Update the component selection commands
+                // with the only commands available for his state
+                clearTerminal();
+                this.generateComponentSelectionCommands();
+
+                // Go back to the component selection command menu where the only available
+                // commands will be: 1) Show other ship, 2) Flip timer, 3) Show card deck
+                this.getComponentSelectionCommand();
             },
             this::getShipConstructionCommand
         );

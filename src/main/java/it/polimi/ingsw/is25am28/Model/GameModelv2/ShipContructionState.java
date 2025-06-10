@@ -260,8 +260,10 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         // Creating the FastShipDTO
         FastShipDTO state = new FastShipDTO();
-        state.setShip(targetShip.generateState());
+
         state.setTargetNickname(playerNickname);
+        state.setPlayerCursor(targetPlayer.getCursor());
+        state.setShip(targetShip.generateState());
 
         return state;
     };
