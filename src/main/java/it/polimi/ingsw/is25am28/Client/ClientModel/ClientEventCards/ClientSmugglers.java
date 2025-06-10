@@ -193,6 +193,7 @@ public class ClientSmugglers extends ClientEventCard {
         this.smugglersJSON.setBatteriesToBeStolen(batteriesToBeStolen);
     }
 
+    @Override
     public List<CoordinatePair> getBatteriesToBeStolen() throws UnsupportedOperationException {
         return this.smugglersJSON.getBatteriesToBeStolen();
     }

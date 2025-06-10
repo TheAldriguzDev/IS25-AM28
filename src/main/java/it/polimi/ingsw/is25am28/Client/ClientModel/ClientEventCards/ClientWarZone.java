@@ -400,4 +400,9 @@ public class ClientWarZone extends ClientEventCard {
     public List<ComponentHelper<LifeformType>> getCrewToRemove() throws UnsupportedOperationException {
         return this.warZoneJSON.getLifeformsToBeRemoved();
     }
+
+    @Override
+    public List<CoordinatePair> getBatteriesToBeStolen() throws UnsupportedOperationException {
+        return this.warZoneJSON.getBatteriesToBeStolen();
+    }
 }

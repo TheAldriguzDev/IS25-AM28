@@ -266,8 +266,8 @@ public class GameModel {
 
         Collections.shuffle(this.deck);
 
-//        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
-//        List<EventCard> fakeDeck = new ArrayList<>();
+        List<EventCard> AllCards = cardLoader.getCards(getBoard(), new ResourceBank(getGameLevel()), getGameLevel());
+        List<EventCard> fakeDeck = new ArrayList<>();
 
 //        fakeDeck.add(AllCards.get(0)); // AbandonedShip OK
 //        fakeDeck.add(AllCards.get(1)); // AbandonedShip
@@ -285,8 +285,8 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(13)); // MeteorShower
 //         fakeDeck.add(AllCards.get(14)); // Pirates OK
 //        fakeDeck.add(AllCards.get(15)); // Pirates
-//        fakeDeck.add(AllCards.get(16)); // VisitPlanets OK
-//        fakeDeck.add(AllCards.get(17)); // VisitPlanets
+        fakeDeck.add(AllCards.get(16)); // VisitPlanets OK
+        fakeDeck.add(AllCards.get(17)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(18)); // VisitPlanet
 //        fakeDeck.add(AllCards.get(19)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(20)); // VisitPlanets
@@ -307,13 +307,13 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(35)); // Slavers
 //        fakeDeck.add(AllCards.get(36)); // Stardust
 //        fakeDeck.add(AllCards.get(37)); // Stardust
-//        fakeDeck.add(AllCards.get(38)); // Warzone OK
-//        fakeDeck.add(AllCards.get(39)); // Warzone
+        // fakeDeck.add(AllCards.get(38)); // Warzone OK
+        fakeDeck.add(AllCards.get(39)); // Warzone
 //        fakeDeck.add(AllCards.get(36)); // Stardust OK
 //        fakeDeck.add(AllCards.get(37)); // Stardust
 
-//          this.deck.clear();
-//          this.deck.addAll(fakeDeck);
+          this.deck.clear();
+          this.deck.addAll(fakeDeck);
     }
 
     /**
