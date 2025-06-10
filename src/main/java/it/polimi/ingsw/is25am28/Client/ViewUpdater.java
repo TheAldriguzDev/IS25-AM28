@@ -179,6 +179,7 @@ public class ViewUpdater implements StateVisitor {
             this.model.getShipOfPlayer(state.getTargetNickname()).ifPresent(
                 (ClientShip ship) -> {
                     ship.substituteShipWithPremadeConfiguration(state.getShip());
+                    this.ui.handlePlayerFastShip(state.getTargetNickname());
                 }
             );
         }
