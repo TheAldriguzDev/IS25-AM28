@@ -175,13 +175,17 @@ public class ViewUpdater implements StateVisitor {
      */
     @Override
     public void visit(FastShipDTO state) throws Exception {
-        synchronized (this.model) {
-            this.model.getShipOfPlayer(state.getTargetNickname()).ifPresent(
-                (ClientShip ship) -> {
-                    ship.substituteShipWithPremadeConfiguration(state.getShip());
-                    this.ui.handlePlayerFastShip(state.getTargetNickname());
-                }
-            );
+        try {
+            synchronized (this.model) {
+                this.model.getShipOfPlayer(state.getTargetNickname()).ifPresent(
+                        (ClientShip ship) -> {
+                            ship.substituteShipWithPremadeConfiguration(state.getShip());
+                            this.ui.handlePlayerFastShip(state.getTargetNickname());
+                        }
+                );
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

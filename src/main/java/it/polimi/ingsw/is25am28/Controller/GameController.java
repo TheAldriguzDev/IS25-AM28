@@ -98,7 +98,7 @@ public class GameController {
         }
     }
 
-    public FastShipDTO fastShip(String playerNickname) {
+    public List<StateDTO> fastShip(String playerNickname) {
         synchronized (this.model) {
             return this.model.fastShip(playerNickname);
         }

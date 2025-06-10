@@ -158,11 +158,15 @@ public class GameInstance {
     }
 
     public void fastShip(String playerNickname) throws Exception {
-        FastShipDTO state = this.controller.fastShip(playerNickname);
+        List<StateDTO> states = this.controller.fastShip(playerNickname);
 
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)
-                .setState(state);
+                .setState(states.getFirst());
+
+        if (states.size() > 1) {
+            answer.setNextState(states.get(1));
+        }
 
         this.broadCastUpdate(answer);
     }

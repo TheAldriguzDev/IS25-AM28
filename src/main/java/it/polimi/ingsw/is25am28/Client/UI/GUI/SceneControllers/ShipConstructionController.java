@@ -1046,10 +1046,10 @@ public class ShipConstructionController extends GUIController {
             return;
         }
 
-        playerGrid.getChildren().clear();
-
-        this.guiUtils.createShipVisuals(playerNickname, playerGrid);
-
+        Platform.runLater(() -> {
+            playerGrid.getChildren().clear();
+            this.guiUtils.createShipVisuals(playerNickname, playerGrid);
+        });
     }
 
     public void disableTimerButton() {

@@ -401,8 +401,24 @@ public class GameModel {
         return currentState.reserveTile(playerNickname, id);
     }
 
-    public FastShipDTO fastShip(String playerNickname) {
-        return currentState.fastShip(playerNickname);
+    public List<StateDTO> fastShip(String playerNickname) {
+        List<StateDTO> states = new ArrayList<>();
+
+        // Execute the command
+        StateDTO tmpState = this.currentState.fastShip(playerNickname);
+        if (tmpState != null) {
+            states.add(tmpState);
+        }
+
+        State prev = this.currentState;
+        this.currentState.onComplete();
+        if (!this.currentState.equals(prev)) {
+            states.add(this.currentState.generateState());
+        }
+
+        System.out.println(states.size());
+
+        return states;
     }
 
     /**

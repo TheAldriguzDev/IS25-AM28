@@ -256,8 +256,7 @@ public final class ShipContructionState extends State implements TimerObserver {
         }
 
         // Adding the player to the ones that have finished
-        this.model.playerEndedSendShip(playerNickname, 0);
-
+        this.playerEndedSendShip(playerNickname, 0);
 
         // Creating the FastShipDTO
         FastShipDTO state = new FastShipDTO();
@@ -349,19 +348,6 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         state.setStateName(this.toString());
         state.setEventType(ShipConstructionType.SHIP_EVENT.toString());
-
-        // TODO remove when finished testing
-        Ship tmpShipToPrint = this.model.getPlayers().get(player).getShip();
-
-//        FastShipLoader.dumpShipJSON(tmpShipToPrint);
-
-//        try {
-//            FastShipLoader fastShipLoader = new FastShipLoader();
-//            fastShipLoader.loadShipFromJSON(tmpShipToPrint);
-//        } catch (IOException e) {
-//            throw new RuntimeException("An error occurred while reading the json file: " + e);
-//        }
-
 
         return state;
     }
