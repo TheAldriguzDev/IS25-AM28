@@ -220,7 +220,7 @@ public class TUIHandler implements ClientUI {
     }
 
     @Override
-    public void placePlayerInTheBoard(PlayerEndedShipDTO data) {
+    public void placePlayerInTheBoard(String playerNickname) {
         // Empty because in the TUI will not be used, only the model will be updated
     }
 

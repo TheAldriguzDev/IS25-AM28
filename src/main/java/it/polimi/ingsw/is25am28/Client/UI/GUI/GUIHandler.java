@@ -274,10 +274,10 @@ public class GUIHandler extends Application implements ClientUI {
     }
 
     @Override
-    public void placePlayerInTheBoard(PlayerEndedShipDTO data) {
+    public void placePlayerInTheBoard(String playerNickname) {
         if (this.currentScene != null && this.currentScene.equals(GuiScenes.SHIP_CONSTRUCTION_SCENE)) {
             ShipConstructionController controller = (ShipConstructionController) this.controllers.get(GuiScenes.SHIP_CONSTRUCTION_SCENE);
-            controller.placePlayerInTheBoard(data);
+            controller.placePlayerInTheBoard(playerNickname);
         }
     }
 

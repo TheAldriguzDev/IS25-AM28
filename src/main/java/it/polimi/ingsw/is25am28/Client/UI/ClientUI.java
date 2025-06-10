@@ -29,7 +29,7 @@ public interface ClientUI {
     // Update methods, used only in the GUI
     void updateShipConstructionComponent(ConstructionComponentDTO component);
     void updateShipPlacedComponent(PlacedComponentDTO data);
-    void placePlayerInTheBoard(PlayerEndedShipDTO data);
+    void placePlayerInTheBoard(String playerNickname);
     void updateShipRemovedComponent(FixedComponentDTO data);
     void updateShipPlacedLifeForm(PopulateShipComponentDTO data);
     void updateVisuals(CardRoundDTO data);

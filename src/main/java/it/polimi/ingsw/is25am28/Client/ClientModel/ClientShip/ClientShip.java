@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip;
 
+import it.polimi.ingsw.is25am28.Client.Client;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException;
@@ -12,6 +13,7 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
@@ -45,7 +47,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
     private final List<ClientVital> vitalList;
 
     // Constructor
-    public ClientShip(int difficultyLevel) {
+    public ClientShip(int difficultyLevel, PlayerColor color) {
         this.difficultyLevel = difficultyLevel;
         this.components = initGrid();
 
@@ -56,7 +58,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
         }
 
         // Creating the ship's core cabin
-        this.core = new ClientCabin(1, coreConnectors,true, "");
+        this.core = new ClientCabin(1, coreConnectors,true, "/imgs/tiles/core_" + color.getPlayerColorString() + ".jpg");
 
         // No aliens are present at the beginning
         this.purpleAlienPosition = null;
@@ -79,7 +81,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
      * Constructor used when a player reconnect to the game --> in this way we will be able to re-create the client
      * ship
      * */
-    public ClientShip(int difficultyLevel, List<Map<String, Object>> initialShip) {
+    public ClientShip(int difficultyLevel, List<Map<String, Object>> initialShip, PlayerColor color) {
         this.difficultyLevel = difficultyLevel;
         this.components = initGrid();
 
@@ -107,7 +109,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
         this.storageList = new ArrayList<ClientStorage>();
         this.vitalList = new ArrayList<ClientVital>();
 
-        this.createComponentsFromData(initialShip);
+        this.createComponentsFromData(initialShip, color);
         this.generateComponentSubLists();
     }
 
@@ -115,7 +117,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
      * Instantiates the client ship from the passed data
      * about all components present onboard.
      */
-    private void createComponentsFromData(List<Map<String, Object>> shipData) {
+    private void createComponentsFromData(List<Map<String, Object>> shipData, PlayerColor color) {
         for (Map<String, Object> map : shipData) {
             int id = (int) map.get("id");
             int typeId = (int) map.get("tid");
@@ -157,7 +159,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                             .map(str -> LifeformType.fromString(str.toUpperCase()))
                             .toList();
 
-                    ClientCabin component = new ClientCabin(id, connectorOrdinals, isCore, path);
+                    ClientCabin component = new ClientCabin(id, connectorOrdinals, isCore, isCore ? "/imgs/tiles/core_" + color.getPlayerColorString() + ".jpg" : path);
                     if (isCore) {
                         this.core = component;
                     }
@@ -252,16 +254,40 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
      * Given a premade ship configuration, it clears the previous ship
      * and re-instantiates it with the given data.
      */
-    public void substituteShipWithPremadeConfiguration(List<Map<String, Object>> shipData) {
+    public void substituteShipWithPremadeConfiguration(List<Map<String, Object>> shipData, List<ClientComponent> components) {
         int i, j;
+        Map<Integer, ClientComponent> componentMap = new HashMap<>();
 
+        ClientComponent core = this.components[6][6];
         for (i = 0; i < grid_rows; i++) {
             for (j = 0; j < grid_cols; j++) {
                 this.components[i][j] = null;
             }
         }
+        this.components[6][6] = core;
 
-        this.createComponentsFromData(shipData);
+        for (ClientComponent component : components) {
+            componentMap.put(component.getID(), component);
+        }
+
+        for (Map<String, Object> map : shipData) {
+            int id = (int) map.get("id");
+
+            int comp_i = (int) map.get("row");
+            int comp_j = (int ) map.get("col");
+            if (comp_i == 6 && comp_j == 6) {
+                continue;
+            }
+
+            int direction = (int ) map.get("direction");
+
+            ClientComponent comp = componentMap.get(id);
+            if (comp != null) {
+                comp.setRotation(direction);
+                comp.setIsVisible(false);
+                this.addComponent(comp, comp_i, comp_j);
+            }
+        }
     }
 
     /**

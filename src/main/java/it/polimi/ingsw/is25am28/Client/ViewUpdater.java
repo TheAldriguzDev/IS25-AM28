@@ -179,8 +179,12 @@ public class ViewUpdater implements StateVisitor {
             synchronized (this.model) {
                 this.model.getShipOfPlayer(state.getTargetNickname()).ifPresent(
                         (ClientShip ship) -> {
-                            ship.substituteShipWithPremadeConfiguration(state.getShip());
+
+                            ship.substituteShipWithPremadeConfiguration(state.getShip(), this.model.getState().getConstructionShipComponents());
+
+
                             this.ui.handlePlayerFastShip(state.getTargetNickname());
+                            this.ui.placePlayerInTheBoard(state.getTargetNickname());
                         }
                 );
             }
@@ -275,7 +279,7 @@ public class ViewUpdater implements StateVisitor {
                 this.model.getState().setPlayerFinishedBuildingShip(state.getPlayerNickname(), state.getPlayerCursors());
 
                 // Update the game board
-                this.ui.placePlayerInTheBoard(state);
+                this.ui.placePlayerInTheBoard(state.getPlayerNickname());
             } catch (Exception e) {
                 e.printStackTrace();
             }

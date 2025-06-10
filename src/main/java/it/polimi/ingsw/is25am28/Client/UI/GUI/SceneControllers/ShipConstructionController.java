@@ -58,6 +58,7 @@ public class ShipConstructionController extends GUIController {
     @FXML private GridPane shipGrid;
     @FXML private GridPane reservedComponentGrid;
     @FXML private Button confirmShipButton;
+    @FXML private Button fastShipButton;
 
     @FXML private FlowPane tileFlow;
 
@@ -471,6 +472,7 @@ public class ShipConstructionController extends GUIController {
         this.viewPlayerShipLabel.setText("You have finished building your ship");
         this.goBackToConstructionButton.setVisible(false);
         this.confirmShipButton.setVisible(false);
+        this.fastShipButton.setVisible(false);
 
         // Remove the current grid
         this.viewOtherShipStackPane.getChildren().removeIf(node -> node instanceof GridPane);
@@ -1049,6 +1051,15 @@ public class ShipConstructionController extends GUIController {
         Platform.runLater(() -> {
             playerGrid.getChildren().clear();
             this.guiUtils.createShipVisuals(playerNickname, playerGrid);
+            
+            // Disable all the components used from the given player
+            this.clientModel.getShipOfPlayer(playerNickname).ifPresent((ship) -> {
+                ship.traverse((comp) -> {
+                    ImageView imgView = this.components.get(comp.getID());
+                    imgView.setOpacity(0.0);
+                    imgView.setOnMouseClicked(null);
+                });
+            });
         });
     }
 
@@ -1064,14 +1075,14 @@ public class ShipConstructionController extends GUIController {
         });
     }
 
-    public void placePlayerInTheBoard(PlayerEndedShipDTO data) {
-        this.showToast(data.getPlayerNickname() + " has finished building his ship", ToastType.INFO);
+    public void placePlayerInTheBoard(String playerNickname) {
+        this.showToast(playerNickname + " has finished building his ship", ToastType.INFO);
 
         if (this.clientModel.getDifficultyLevel() == 2) {
-            this.guiUtils.placePlayerInBoard(data.getPlayerNickname(), 2, 24, this.viewGameBoardStackPaneLevel2, this.playersRocketBoard);
+            this.guiUtils.placePlayerInBoard(playerNickname, 2, 24, this.viewGameBoardStackPaneLevel2, this.playersRocketBoard);
         }
         else {
-            this.guiUtils.placePlayerInBoard(data.getPlayerNickname(), 0, 18, this.viewGameBoardStackPaneLevel0, this.playersRocketBoard);
+            this.guiUtils.placePlayerInBoard(playerNickname, 0, 18, this.viewGameBoardStackPaneLevel0, this.playersRocketBoard);
         }
     }
 }

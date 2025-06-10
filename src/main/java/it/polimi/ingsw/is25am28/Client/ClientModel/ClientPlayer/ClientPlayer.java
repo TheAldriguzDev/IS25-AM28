@@ -22,7 +22,7 @@ public class ClientPlayer {
         this.lostComponents = 0;
         this.cursor = 0;
 
-        this.ship = new ClientShip(level);
+        this.ship = new ClientShip(level, color);
     }
 
     public ClientPlayer(String nickname, PlayerColor color, int level, int credits, int lostPieces, List<Map<String, Object>> ship) {
@@ -32,7 +32,7 @@ public class ClientPlayer {
             this.lostComponents = lostPieces;
             this.cursor = 0;
 
-            this.ship = new ClientShip(level, ship);
+            this.ship = new ClientShip(level, ship, color);
     }
 
     /**
