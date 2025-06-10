@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
+import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
@@ -741,6 +742,32 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+    /**
+     * This method is used to request a fast ship configuration.
+     * The successCallback will mark the player as finished and will display the ended configuration screen
+     * */
+    @FXML void requestFastShip() {
+        if (!this.clientModel.getState().getPlayerFinishedBuildingShip(this.clientModel.getNickname())) {
+            GUIHandler.setCommandCTX(new CommandCTX(
+                    "sendShip",
+                    () -> {
+                        this.hasFinishedShip = true;
+
+                        Platform.runLater(this::showEndedShipConstruction);
+                    },
+                    () -> {}
+            ));
+
+            try {
+                GUIHandler.getVirtualClient().fastShip(
+                        this.clientModel.getNickname()
+                );
+            } catch (Exception e) {
+                this.showToast(e.getMessage(), ToastType.ERROR);
+            }
+        }
+    }
+
     @FXML
     private void handlePlaceTile(int i, int j) {
         URL resource = getClass().getResource(this.selectedComponent.getPath());
@@ -1007,6 +1034,22 @@ public class ShipConstructionController extends GUIController {
                 playerGrid.add(imgView, data.getJ() - this.shipOffsets.getValue(), data.getI() - shipOffsets.getKey());
             });
         });
+    }
+
+    /**
+     * This method will be used to re-create the player ship visual when a fast ship is requested
+     * */
+    public void handlePlayerFastShip(String playerNickname) {
+        GridPane playerGrid = this.playersShipGridPane.get(playerNickname);
+        if (playerGrid == null) {
+            this.showToast("No gridPane has been found for the given player", ToastType.ERROR);
+            return;
+        }
+
+        playerGrid.getChildren().clear();
+
+        this.guiUtils.createShipVisuals(playerNickname, playerGrid);
+
     }
 
     public void disableTimerButton() {

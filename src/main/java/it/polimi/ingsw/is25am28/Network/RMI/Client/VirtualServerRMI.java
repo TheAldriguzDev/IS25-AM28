@@ -31,6 +31,8 @@ public interface VirtualServerRMI extends Remote, VirtualServer {
 
     void reserveTile(String playerNickname, int id, UUID uuid) throws Exception;
 
+    void fastShip(String playerNickname, UUID uuid) throws Exception;
+
     void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation, UUID uuid) throws Exception;
 
     void sendShipConfirmation(String playerNickname, int reservedTiles, UUID uuid) throws Exception;

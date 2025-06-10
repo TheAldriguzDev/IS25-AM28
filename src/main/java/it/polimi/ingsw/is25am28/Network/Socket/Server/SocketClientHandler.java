@@ -95,6 +95,9 @@ public class SocketClientHandler implements VirtualViewSocket {
                 case RefreshGames ignored -> {
                     this.refreshGames();
                 }
+                case FastShip data -> {
+                    this.fastShip(data.getPlayerNickname());
+                }
                 case PlaceTile data -> {
                     this.placeTile(data.getNickname(), data.getComponentID(), data.getI(), data.getJ(), data.getRotation());
                 }
@@ -176,6 +179,15 @@ public class SocketClientHandler implements VirtualViewSocket {
     public void reserveTile(String playerNickname, int id) throws Exception {
         try {
             this.controller.reserveTile(playerNickname, id);
+        } catch (Exception e) {
+            this.reportError(new ErrorAnswer(e.getMessage()));
+        }
+    }
+
+    @Override
+    public void fastShip(String playerNickname) throws Exception {
+        try {
+            this.controller.fastShip(playerNickname);
         } catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }

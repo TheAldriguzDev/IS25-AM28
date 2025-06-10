@@ -250,6 +250,17 @@ public class Server {
         }
     }
 
+    public void fastShip(String playerNickname) throws Exception {
+        synchronized (this.gameInstances) {
+            // Get the game where the player is playing
+            int gameID = this.clientToGame.get(playerNickname);
+            GameInstance game = this.gameInstances.get(gameID);
+
+            game.fastShip(playerNickname);
+            ServerLogger.info("ROUTER", String.valueOf(gameID), playerNickname + " requested a fast ship configuration");
+        }
+    }
+
     public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
         synchronized (this.gameInstances) {
             // Get the game where the player is playing

@@ -33,6 +33,7 @@ public interface ClientUI {
     void updateShipRemovedComponent(FixedComponentDTO data);
     void updateShipPlacedLifeForm(PopulateShipComponentDTO data);
     void updateVisuals(CardRoundDTO data);
+    void handlePlayerFastShip(String playerNickname);
 
     // Interrupt screen, used only be the TUI
     void interruptCurrScreen();

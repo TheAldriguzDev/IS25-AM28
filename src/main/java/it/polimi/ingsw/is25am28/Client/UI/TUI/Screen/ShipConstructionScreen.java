@@ -1097,7 +1097,7 @@ public class ShipConstructionScreen extends Screen {
      * NOTE: This method is meant to be used only for demonstration purposes only.
      * NOTE: This method overwrites the asking player's ship, so use caution when playing!
      */
-    private void requestPremadeShip() {
+    private void requestPremadeShip() throws Exception {
         this.ctx = new CommandCTX(
             "fastShipBuild",
             () -> {
@@ -1113,8 +1113,7 @@ public class ShipConstructionScreen extends Screen {
             this::getShipConstructionCommand
         );
 
-        // TODO: Add the method that sends the request to the server
-        // this.client.requestPremadeShip(this.model.getNickname());
+        this.client.fastShip(this.model.getNickname());
     }
 
     /**

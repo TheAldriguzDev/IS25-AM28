@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Controller;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FastShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
@@ -94,6 +95,12 @@ public class GameController {
     public ReservedComponentDTO reserveTile(String playerNickname, int id) {
         synchronized (this.model) {
             return this.model.reserveTile(playerNickname, id);
+        }
+    }
+
+    public FastShipDTO fastShip(String playerNickname) {
+        synchronized (this.model) {
+            return this.model.fastShip(playerNickname);
         }
     }
 

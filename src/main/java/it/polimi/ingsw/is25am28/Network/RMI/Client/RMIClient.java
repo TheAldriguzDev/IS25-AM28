@@ -140,6 +140,11 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
     }
 
     @Override
+    public void fastShip(String playerNickname) throws Exception {
+        this.enqueueCommunication(() -> server.fastShip(playerNickname, this.uuid));
+    }
+
+    @Override
     public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
         this.enqueueCommunication(() -> server.placeTile(playerNickname, componentID, i, j, rotation, this.uuid));
     }

@@ -17,6 +17,7 @@ import java.util.List;
         @JsonSubTypes.Type(value = Ping.class, name = "Ping"),
         @JsonSubTypes.Type(value = RefreshGames.class, name = "RefreshGames"),
         @JsonSubTypes.Type(value = Reconnect.class, name = "Reconnect"),
+        @JsonSubTypes.Type(value = FastShip.class, name = "FastShip"),
         @JsonSubTypes.Type(value = PlaceTile.class, name = "PlaceTile"),
         @JsonSubTypes.Type(value = SendShipConfirmation.class, name = "SendShipConfirmation"),
         @JsonSubTypes.Type(value = FlipTimer.class, name = "FlipTimer"),
@@ -25,7 +26,7 @@ import java.util.List;
         @JsonSubTypes.Type(value = PlayCard.class, name = "PlayCard")
 })
 
-public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FixShip, FlipTimer, NewPlayer, Ping, PlaceTile, PlayCard, PopulateShip, Reconnect, RefreshGames, ReserveTile, SelectDeselectSubdeck, SelectTile, SendShipConfirmation {
+public sealed interface Message extends Serializable permits ConfigGame, DeselectTile, FastShip, FixShip, FlipTimer, NewPlayer, Ping, PlaceTile, PlayCard, PopulateShip, Reconnect, RefreshGames, ReserveTile, SelectDeselectSubdeck, SelectTile, SendShipConfirmation {
 
     /**
      * @return true if the message it's correct, otherwise it will return false

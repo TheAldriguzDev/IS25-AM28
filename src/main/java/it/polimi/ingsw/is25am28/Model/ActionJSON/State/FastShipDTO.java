@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FastShipDTO {
+public final class FastShipDTO extends StateDTO {
     private String targetNickname;
     private List<Map<String, Object>> ship;
 
@@ -42,5 +42,10 @@ public class FastShipDTO {
     public FastShipDTO setShip(List<Map<String, Object>> ship) {
         this.ship = ship;
         return this;
+    }
+
+    @Override
+    public void accept(StateVisitor visitor) throws Exception {
+        visitor.visit(this);
     }
 }

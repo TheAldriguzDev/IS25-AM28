@@ -146,6 +146,11 @@ public class Screen implements ClientUI {
     }
 
     @Override
+    public void handlePlayerFastShip(String playerNickname) {
+        // Empty because in the TUI will not be used, only the model will be updated
+    }
+
+    @Override
     public void interruptCurrScreen() {
         // Empty since it's not needed to invoke the method here, but instead it invoke the input thread class
     }

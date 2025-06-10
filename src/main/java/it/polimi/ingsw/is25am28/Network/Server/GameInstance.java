@@ -5,6 +5,7 @@ import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FastShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
@@ -148,6 +149,16 @@ public class GameInstance {
 
     public void reserveTile(String playerNickname, int id) throws Exception {
         ReservedComponentDTO state = this.controller.reserveTile(playerNickname, id);
+
+        Answer answer = new Answer()
+                .setPlayerNickname(playerNickname)
+                .setState(state);
+
+        this.broadCastUpdate(answer);
+    }
+
+    public void fastShip(String playerNickname) throws Exception {
+        FastShipDTO state = this.controller.fastShip(playerNickname);
 
         Answer answer = new Answer()
                 .setPlayerNickname(playerNickname)

@@ -239,6 +239,11 @@ public class TUIHandler implements ClientUI {
         // Empty because in the TUI will not be used, only the model will be updated
     }
 
+    @Override
+    public void handlePlayerFastShip(String playerNickname) {
+        // Empty because in the TUI will not be used, only the model will be updated
+    }
+
     /**
      * Forces an interrupt of this input thread
      */

@@ -159,6 +159,11 @@ public class TCPClient implements VirtualViewSocket {
     }
 
     @Override
+    public void fastShip(String playerNickname) throws Exception {
+        this.sendMessage(new FastShip(playerNickname));
+    }
+
+    @Override
     public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
         this.sendMessage(new PlaceTile(playerNickname, componentID, i, j, rotation));
     }

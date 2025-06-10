@@ -30,6 +30,8 @@ public interface VirtualView {
 
     void reserveTile(String playerNickname, int id) throws Exception;
 
+    void fastShip(String playerNickname) throws Exception;
+
     void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception;
 
     void sendShipConfirmation(String playerNickname, int reservedTiles) throws Exception;
