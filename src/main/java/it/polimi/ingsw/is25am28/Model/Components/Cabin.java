@@ -95,7 +95,6 @@ public final class Cabin extends Component {
         List<String> tmpScreen = new ArrayList<String>();
         String coreLabel = "(*)";
 
-        // TODO: Understand better these indexes
         int scale = 3;
         int height = scale;
         int width = 3 * height + 2;

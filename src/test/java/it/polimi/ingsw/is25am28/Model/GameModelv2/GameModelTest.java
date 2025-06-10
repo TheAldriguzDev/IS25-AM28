@@ -192,8 +192,6 @@ class GameModelTest {
         assertEquals(tileState.getPlayerNickname(), "Player 2");
         assertTrue(tileState.isSelected());
 
-        // TODO: Test flip timer
-
         // Create the ship for each player:
         // Player 1: Valid ship
         // Player 2: Valid ship

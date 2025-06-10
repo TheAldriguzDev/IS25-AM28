@@ -107,8 +107,6 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         }, 5000, 5000, TimeUnit.MILLISECONDS);
     }
 
-    // TODO: Maybe is better to put the interrupting events on a separate thread, so in every moment that they arrive, we can switch without any issue
-
     @Override
     public void refreshGames() throws Exception {
         this.enqueueCommunication(() -> server.refreshGames(this.uuid));

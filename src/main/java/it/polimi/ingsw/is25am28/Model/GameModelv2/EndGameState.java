@@ -106,6 +106,6 @@ public final class EndGameState extends State {
 
     @Override
     public void onComplete() {
-        // TODO: Generate the state that is needed to notify the client about who won the game and the general results
+        // Empty because there aren't any more states
     }
 }

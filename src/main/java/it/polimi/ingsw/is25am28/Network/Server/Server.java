@@ -142,8 +142,6 @@ public class Server {
         clientVirtualView.updateState(answer);
     }
 
-    // TODO: Method to refresh the available games
-
     /**
      * @return the filtered Map with the games that can be joined from the players
      * */
@@ -344,11 +342,6 @@ public class Server {
         }
     }
 
-    // TODO: For all the interaction with the user we need to pass his nickname to get the associated game and then route the
-    //  request
-
-    // TODO: Implements the ping utility methods --> we will only have one thread pinging the clients
-    //  and one thread checking the ping data results
     // ========== PING METHOD ========== //
 
     /**
@@ -393,7 +386,7 @@ public class Server {
                         pingHelper.incrementPing();
 
                         // Check if the client is disconnected
-                        if (pingHelper.getFailedPings() > 2) { // TODO: adjust right pings number
+                        if (pingHelper.getFailedPings() > 3) {
                             // Get the game id
                             int gameID;
                             synchronized (this.clientToGame) {

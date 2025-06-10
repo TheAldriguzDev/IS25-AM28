@@ -113,8 +113,6 @@ public class ResourceBank {
         }
         */
 
-        // TODO: This modification was done in accordance with Matteo
-        //       (TIMESTAMP: 27-03-2025, 09:22 @ GMT+2)
         // If the given storage component has enough space, then insert the given item
         if (storage.availableSpace() > 0) {
             // Check if the given storage component can store the given resource

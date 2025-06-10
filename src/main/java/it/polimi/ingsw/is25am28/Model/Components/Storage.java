@@ -89,7 +89,6 @@ public final class Storage extends Component {
 
     @Override
     public List<String> getComponentScreen() {
-        // TODO: Understand better these indexes
         int scale = 3;
         int height = scale;
         int width = 3 * height + 2;
