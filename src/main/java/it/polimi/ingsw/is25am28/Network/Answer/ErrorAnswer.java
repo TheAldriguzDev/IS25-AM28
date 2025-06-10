@@ -6,6 +6,11 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.io.Serializable;
 
+/**
+ * ErrorAnswer is a subclass of Answer that allows the server to target a specific client
+ * in order to notify them about an error that has occurred.
+ */
+
 public final class ErrorAnswer extends Answer implements Serializable {
     private String error;
 

@@ -6,6 +6,11 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipCons
 
 import java.io.Serializable;
 
+/**
+ * The Answer represent the message that is sent from the Server to the Clients
+ * in order to update the clients model and refresh the UI visual.
+ * */
+
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Answer.class, name = "Answer"),
