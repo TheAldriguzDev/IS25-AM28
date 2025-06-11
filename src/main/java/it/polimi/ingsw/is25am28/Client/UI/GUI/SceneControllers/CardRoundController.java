@@ -29,9 +29,8 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
+import javafx.scene.paint.Color;
+import javafx.scene.text.*;
 
 import java.net.URL;
 import java.util.*;
@@ -450,11 +449,29 @@ public class CardRoundController extends GUIController {
     private void initAdditionalInfoBox() {
         this.additionalInfoBox.getChildren().clear();
 
-        Label infoLabel = new Label(this.currEventCard.getAdditionalCardInfo());
-        infoLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
-        infoLabel.setTextAlignment(TextAlignment.CENTER);
+        String infoString = this.currEventCard.getAdditionalCardInfo();
 
-        this.additionalInfoBox.getChildren().add(infoLabel);
+        TextFlow infoText = new TextFlow();
+        infoText.setTextAlignment(TextAlignment.CENTER);
+
+        String[] splitText = infoString.split("\n");
+
+        for(int i = 0; i < splitText.length - 1; i++) {
+            Text textLine = new Text(splitText[i]);
+            textLine.setFont(Font.font("System", FontWeight.BOLD, 13));
+            textLine.setTextAlignment(TextAlignment.CENTER);
+            textLine.setFill(Color.WHITE);
+            infoText.getChildren().add(textLine);
+            infoText.getChildren().add(new Text("\n"));
+        }
+
+        Text textLine = new Text(splitText[splitText.length - 1]);
+        textLine.setFont(Font.font("System", FontWeight.BOLD, 13));
+        textLine.setTextAlignment(TextAlignment.CENTER);
+        textLine.setFill(Color.WHITE);
+        infoText.getChildren().add(textLine);
+
+        this.additionalInfoBox.getChildren().add(infoText);
     }
 
     private void initResourceBankBox() {

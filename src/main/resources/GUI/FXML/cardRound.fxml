@@ -167,7 +167,7 @@
                               <Label text="Label" />
                            </children>
                         </VBox>
-                        <ScrollPane fx:id="playerActionsScrollPane" fitToHeight="true" fitToWidth="true" maxHeight="182.0" maxWidth="206.0" style="-fx-border-width: 2px;" VBox.vgrow="ALWAYS">
+                        <ScrollPane fx:id="playerActionsScrollPane" fitToHeight="true" fitToWidth="true" style="-fx-border-width: 2px;" VBox.vgrow="ALWAYS">
                            <padding>
                               <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                            </padding></ScrollPane>
