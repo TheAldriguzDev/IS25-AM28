@@ -232,11 +232,13 @@ public class PopulateShipController extends GUIController {
                 if (lf != null) {
                     if (lf.equals(LifeformType.PURPLE_ALIEN)) {
                         // Added purple alien
+                        this.lifeFormsToggles.selectToggle(null);
                         this.purpleToggle.setDisable(true);
                         this.currentSelectableLifeForm = null;
                         this.disableRegion();
                     } else if (lf.equals(LifeformType.BROWN_ALIEN)) {
                         // Added brown alien
+                        this.lifeFormsToggles.selectToggle(null);
                         this.brownToggle.setDisable(true);
                         this.currentSelectableLifeForm = null;
                         this.disableRegion();
@@ -270,6 +272,7 @@ public class PopulateShipController extends GUIController {
 
                 // If there are no cabins left, we disable the Astronaut toggle
                 if (this.cabinRegions.isEmpty()) {
+                    this.lifeFormsToggles.selectToggle(null);
                     this.whiteToggle.setDisable(true);
                     this.currentSelectableLifeForm = null;
                 }

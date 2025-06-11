@@ -142,7 +142,7 @@ public class ClientPirates extends ClientEventCard {
                 default -> "";
             } + "\nDice Throw Result: " + this.diceThrowResult;
         } else {
-            return "No plasmaShots headed\ntowards the ship";
+            return "Choose how to deal\nwith the slavers!";
         }
     }
 

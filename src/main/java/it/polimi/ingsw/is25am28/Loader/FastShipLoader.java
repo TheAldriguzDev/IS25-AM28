@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Loader;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.is25am28.Loader.FastShipTiles.FastShipTiles;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
@@ -12,18 +11,26 @@ import java.util.List;
 import java.util.Map;
 
 public class FastShipLoader extends Loader<FastShipTiles> {
-    private static int shipID = 0;
-    private static int shipToLoad = 0;
+    private int shipToDump = 0;
+    private int shipToLoad = 0;
+    List<Component> components;
 
     public FastShipLoader() throws IOException {
         super(FastShipLoader.class.getResourceAsStream("/json/fastShip.json"), FastShipTiles.class);
+
+        try {
+            TileLoader tileLoader = new TileLoader();
+            this.components = tileLoader.getTiles();
+        } catch (Exception e) {
+            throw new RuntimeException("An error occurred while reading the json file: " + e);
+        }
     }
 
     /**
      * @param ship
      * This method creates a JSON that can be used to recreate the given ship
      */
-    public static void dumpShipJSON(Ship ship) {
+    public void dumpShipJSON(Ship ship) {
 
 
         if (ship == null) {
@@ -38,7 +45,7 @@ public class FastShipLoader extends Loader<FastShipTiles> {
         int endingRow = startRow + shipDim.getKey();
         int endingCol = startCol + shipDim.getValue();
 
-        System.out.println("\"" + shipID + "\": [");
+        System.out.println("\"" + this.shipToDump + "\": [");
         for (int i = startRow; i < endingRow; i++) {
 
             for (int j = startCol; j < endingCol; j++) {
@@ -59,7 +66,7 @@ public class FastShipLoader extends Loader<FastShipTiles> {
             }
         }
         System.out.println("],");
-        shipID++;
+        this.shipToDump++;
     }
 
     /**
@@ -67,14 +74,6 @@ public class FastShipLoader extends Loader<FastShipTiles> {
      * This method modifies the given ship to a pre-made one
      */
     public void loadShipFromJSON(Ship ship) {
-        TileLoader loader;
-        try {
-            loader = new TileLoader();
-        } catch (Exception e) {
-            throw new RuntimeException("An error occurred while reading the json file: " + e);
-        }
-
-        List<Component> components = loader.getTiles();
 
         FastShipTiles fastShipTilesData = this.getReadJSON();
 

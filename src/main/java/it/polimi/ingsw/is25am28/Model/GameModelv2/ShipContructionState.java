@@ -40,6 +40,8 @@ public final class ShipContructionState extends State implements TimerObserver {
 
     private boolean shipConfigEnded;
 
+    private FastShipLoader fastShipLoader = null;
+
     public ShipContructionState(GameModel model) {
         super(model);
 
@@ -248,12 +250,15 @@ public final class ShipContructionState extends State implements TimerObserver {
         // Creating the ship from the JSON
         Player targetPlayer = this.model.getPlayers().get(playerNickname);
         Ship targetShip = targetPlayer.getShip();
-        try {
-            FastShipLoader fastShipLoader = new FastShipLoader();
-            fastShipLoader.loadShipFromJSON(targetShip);
-        } catch (IOException e) {
-            throw new RuntimeException("An error occurred while reading the json file: " + e);
+
+        if (fastShipLoader == null) {
+            try {
+                this.fastShipLoader = new FastShipLoader();
+            } catch (IOException e) {
+                throw new RuntimeException("An error occurred while reading the json file: " + e);
+            }
         }
+        this.fastShipLoader.loadShipFromJSON(targetShip);
 
         // Adding the player to the ones that have finished
         this.playerEndedSendShip(playerNickname, 0);
@@ -266,7 +271,7 @@ public final class ShipContructionState extends State implements TimerObserver {
         state.setShip(targetShip.generateState());
 
         return state;
-    };
+    }
 
     /**
      * Command executed by the client to place a component in his ship:

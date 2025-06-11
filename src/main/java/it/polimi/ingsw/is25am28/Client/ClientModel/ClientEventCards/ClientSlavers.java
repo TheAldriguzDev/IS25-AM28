@@ -104,9 +104,9 @@ public class ClientSlavers extends ClientEventCard {
     @Override
     public String getAdditionalCardInfo() {
         if (this.isPlayerDefeated) {
-            return "Choose the crew members to give up!";
+            return "Choose the crew members\nto give up!";
         } else {
-            return "Choose how to deal with the slavers!";
+            return "Choose how to deal\nwith the slavers!";
         }
     }
 
