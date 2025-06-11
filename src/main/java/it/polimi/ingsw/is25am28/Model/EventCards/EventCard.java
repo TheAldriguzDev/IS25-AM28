@@ -249,8 +249,6 @@ public abstract class EventCard {
         cardState.setNeedsUpdatedCredits(false);
     }
 
-    // TODO: IMPORTANT: Instead of new HashMap there should be clear(), but this empties the data set
-    //                  in the state, a copy of the data is needed, the states are currently not usable
     /**
      * If the map of updatedPositions is not empty, it means that there is something
      * to send to the clients, so we set the field in the cardState.
@@ -389,10 +387,6 @@ public abstract class EventCard {
         }
     }
 
-    // TODO: The name should be UpdatedBatteries since it contains the new batteries
-    //       count, but i will be changed in the future to contain the coordinates of the
-    //       actual components from which to remove the batteries, so in theory a name
-    //       change is not necessary.
     /**
      * If the map of removedBatteries is not empty, it means that there is something to send
      * to the clients, so we set the field in the cardState.
@@ -412,7 +406,6 @@ public abstract class EventCard {
         }
     }
 
-    // TODO: Add JavaDoc just like the other methods above
     protected void setUpdatedLostPiecesIfNecessary(
             CardStateJSON cardState,
             Map<String, Integer> lostPieces
@@ -425,7 +418,6 @@ public abstract class EventCard {
         }
     }
 
-    // TODO: eventCards should also set the lapped eliminated players
+    // TODO: eventCards should also set the lapped eliminated players -> modify validatePlayersPositions
 
-    // TODO: method: unlock additional commands
 }

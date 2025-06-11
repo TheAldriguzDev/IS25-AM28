@@ -124,8 +124,6 @@ class WarZoneTest {
     @Test
     public void test_against_WarZoneCard_1() {
 
-        // TODO: fix last shootibg sequence generate state (2 times same meteor)
-
         // WarZone card 1 initialization
         List<PlasmaShot> shootingSequence = new ArrayList<>();
         shootingSequence.add(new PlasmaShot(1, 2)); // dal basso, piccolo
@@ -335,7 +333,7 @@ class WarZoneTest {
     * The lowest enginePower player should lose 3 items (starting from the most valuable ones) (ship 4)
     * The lowest crewCount player should be exposed to 4 plasmaShots (ship 2)*/
     @Test
-    public void test_against_WarZoneCard_2() { // TODO: Test the generateState here
+    public void test_against_WarZoneCard_2() {
         // WarZone card 2 initialization
         List<PlasmaShot> shootingSequence = new ArrayList<>();
         shootingSequence.add(new PlasmaShot(1, 0)); // dall'alto, piccolo
@@ -422,7 +420,7 @@ class WarZoneTest {
                         new CoordinatePair(6, 5)
                 )
         );
-        actionJSON = new WarZoneJSON("Player 1", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, doubleEnginesToActivate, new ArrayList<>()); // TODO: 1 engine to activate
+        actionJSON = new WarZoneJSON("Player 1", lifeformsToRemove_empty, new ArrayList<>(), new ArrayList<>(), doubleCannons_empty, doubleEnginesToActivate, new ArrayList<>());
         warzone.useCard(actionJSON);
         assertFalse(warzone.hasFinished());
 

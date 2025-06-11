@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientVisitPlanets extends ClientEventCard {
-    private Map<Integer, Map<ItemColor, Integer>> availablePlanets; // TODO: a list would serve this role better since the generateWidget needs order
+    private final Map<Integer, Map<ItemColor, Integer>> availablePlanets;
     private int chosenPlanetIndex;
     private int movementSteps;
 

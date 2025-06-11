@@ -35,7 +35,7 @@ public class Pirates extends EventCard {
     private final Map<String, Integer> updatedPositions;
     private final Map<String, Integer> updatedCredits;
     private final Map<String, List<Map<String, Object>>> removedComponents;
-    private final Map<String, List<CoordinatePair>> removedBatteries; // TODO: Implement in the state (both firepower and shields)
+    private final Map<String, List<CoordinatePair>> removedBatteries;
     private final Map<String, Integer> lostPieces;
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private String prevPlayerNickname;
@@ -443,7 +443,7 @@ public class Pirates extends EventCard {
                 for (Player player : playersToHit) {
                     defeatedPlayers.add(player.getNickname());
                 }
-                piratesStateJSON.setDefeatedPlayers(defeatedPlayers);  // TODO: Need more thinking on this
+                piratesStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO can probably be eliminated
 
                 piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
                 piratesStateJSON.setDiceThrowResult(this.diceThrowResult);

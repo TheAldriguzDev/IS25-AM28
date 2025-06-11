@@ -46,7 +46,6 @@ public class ClientAbandonedShip extends ClientEventCard {
         }
     }
 
-    // TODO: Remake the widget into something that makes sense
     @Override
     public WidgetTUI generateWidget() {
         WidgetTUI cardWidget = new WidgetTUI();

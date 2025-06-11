@@ -69,17 +69,6 @@ public class ClientSmugglers extends ClientEventCard {
         }
         else {
             enabledCommands.add("setDoubleCannonsToActivate");
-            // TODO: also do this for ClientSlavers and ClientPirates
-//            ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
-//            if (ship == null) {
-//                System.out.println(PrintUtils.addColor("[ERROR] [getDoubleCannonToActivate()] ClientShip is null", ANSIColors.RED));
-//                return;
-//            }
-//            if(ship.getFirePower(null) > this.requiredFirepower) {
-//                enabledCommands.add("setTakeReward");
-//            }
-
-//            if (this.model.getShipOfPlayer(this.model.getNickname()))
         }
     }
 

@@ -461,7 +461,6 @@ public class CardRoundController extends GUIController {
     }
 
     private void initTurnBox() {
-        // TODO: Improve the text
         Label turnLabel = new Label();
         turnLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
         this.turnBox.getChildren().clear();
@@ -640,7 +639,6 @@ public class CardRoundController extends GUIController {
         });
     }
 
-    // TODO: change the string to a text flow (only if it's worth it)
     private void initCommandDescriptionBox(String text) {
         // Adding the description to the commandDescriptionBox
         this.commandDescriptionBox.getChildren().clear();
@@ -728,23 +726,35 @@ public class CardRoundController extends GUIController {
     }
 
     private Button createColorButton(ItemColor itemColor) {
-        Button itemColorButton = new Button();// TODO: general switch
+        Button itemColorButton = new Button();
 
-        String colorHex = switch (itemColor) {
-            case BLUE -> "#1E88E5";
-            case RED -> "#E53935";
-            case GREEN -> "#43A047";
-            case YELLOW -> "#FBC02D";
-        };
+        String colorHex;
+        String labelText;
 
-        itemColorButton.setText(
-                switch (itemColor) {
-                    case RED -> "Red";
-                    case YELLOW -> "Yellow";
-                    case BLUE -> "Blue";
-                    case GREEN -> "Green";
-                }
-        );
+        switch (itemColor) {
+            case BLUE -> {
+                colorHex = "#1E88E5";
+                labelText = "Blue";
+            }
+            case RED -> {
+                colorHex = "#E53935";
+                labelText = "Red";
+            }
+            case GREEN -> {
+                colorHex = "#43A047";
+                labelText = "Green";
+            }
+            case YELLOW -> {
+                colorHex = "#FBC02D";
+                labelText = "Yellow";
+            }
+            default -> {
+                colorHex = "#FFFFFF";
+                labelText = "Black";
+            }
+        }
+
+        itemColorButton.setText(labelText);
 
         itemColorButton.getStyleClass().add("button");
         itemColorButton.setStyle("-fx-background-color: " + colorHex + "; -fx-text-fill: white;");
@@ -1266,9 +1276,7 @@ public class CardRoundController extends GUIController {
             this.emptiedCabinsRegions.put(guiUtils.keyFromCoords(row, col), regionToRemove);
 
             this.shipGrid.getChildren().remove(regionToRemove);
-//            this.shipGrid.getChildren().remove(boxToUpdate); // TODO: remove in ONSuccess
-            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO remove?
-//            this.cabinsRegions.remove(regionToRemove);
+            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col));
             this.cabinsRegions.remove(this.guiUtils.keyFromCoords(row, col));
         }
 
@@ -1373,7 +1381,6 @@ public class CardRoundController extends GUIController {
             this.availableCommands.add("setItemsToBeRemoved");
 
         }
-// TODO: make this check also for the cannon selection
         this.initCommandBox();
     }
 
@@ -1460,7 +1467,6 @@ public class CardRoundController extends GUIController {
         this.currEnergyConsumer = new Pair<>(EnergyConsumers.ENGINE, new CoordinatePair(row, col));
         this.handleEnergyConsumers(ofsRow, ofsCol);
 
-        // TODO: removal also from grid? // better off to just disable it (easier revert on error)
     }
 
     private void handleBatteriesToBeStolen(int ofsRow, int ofsCol) {
@@ -1492,9 +1498,6 @@ public class CardRoundController extends GUIController {
             this.emptiedBatteriesRegions.put(guiUtils.keyFromCoords(row, col), this.batteriesRegions.get(guiUtils.keyFromCoords(row, col)));
 
             this.shipGrid.getChildren().remove(regionToRemove);
-//            this.shipGrid.getChildren().remove(boxToUpdate); // TODO: remove in ONSuccess
-//            this.lifeFormsMap.remove(guiUtils.keyFromCoords(row, col)); // TODO:remove in ONSuccess
-//            this.batteriesRegions.remove(regionToRemove);
             this.batteriesRegions.remove(this.guiUtils.keyFromCoords(row, col));
         }
 
@@ -1513,7 +1516,6 @@ public class CardRoundController extends GUIController {
 
         Region energyConsumerRegion = null;
 
-        // TODO: could add cool effects to high light the already selected components instead of simply removing them form the regions
         // Updating the visuals
         switch (this.currEnergyConsumer.getKey()) {
             case CANNON -> {
@@ -1566,14 +1568,11 @@ public class CardRoundController extends GUIController {
     }
 
     private void handleEnergyConsumers(int ofsRow, int ofsCol) {
-        // TODO: see if it is possible to collapse the 3 energy the handles tha require energy here -> by setting the enum in the body and calling all this same function
 
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
 
         // Get the current region, then enable the battery regions
-//        System.out.println("CURRENT REGION: " + this.currentRegions.toString());
-//        System.out.println("KEY USED TO GET THE SELECTD REGIO: " + row + ", " + col);
         Region selectedRegion = this.currentRegions.get(guiUtils.keyFromCoords(row, col));
         this.enableRegion(this.batteriesRegions);
         // Coloring the region red to highlight the selectedRegion

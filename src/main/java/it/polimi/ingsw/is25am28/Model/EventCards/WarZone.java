@@ -50,9 +50,6 @@ public class WarZone extends EventCard {
     private Map<String, Integer> lostPieces;
     private String targetPlayer;
 
-
-
-    // TODO: prev Player Nickname
     private String prevPlayerNickname;
 
     /**
@@ -441,7 +438,6 @@ public class WarZone extends EventCard {
                 this.getBoard().movePlayerBackwards(player, this.movementSteps);
 
                 this.updatedPositions.put(player.getNickname(), player.getCursor());
-                // TODO: fix warzone states
 
                 // Invoke the getNextPlayer with the currentPlayer as the last one to skip to the next action or to mark the card as used
                 this.affectedPlayer = Optional.empty();
@@ -493,7 +489,6 @@ public class WarZone extends EventCard {
         // This covers also the case in which there are not enough resources on board
         if (resourcesToDrop.size() != mostValuableItems.size()) {
             throw new IllegalArgumentException("The dropped items are not enough");
-//            this.targetPlayer = this.affectedPlayer.orElse(null).getNickname(); // TODO: ???
         } else if (this.countOccurrencies(mostValuableItems).equals(colorsToDrop)) {
             this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
             throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
@@ -831,42 +826,6 @@ public class WarZone extends EventCard {
                 setUpdatedRemovedComponentsIfNecessary(cardState, this.removedComponents);
                 setUpdatedLostPiecesIfNecessary(cardState, this.lostPieces);
 
-
-//                cardState.setAffectedPlayer(this.targetPlayer);
-
-//                cardState.setAffectedPlayer(this.affectedPlayer.orElse(null).getNickname());
-//                this.targetPlayer = null;
-
-//                switch (this.cardActions.get(current_action - 1).getConsequence()) {
-//                    case REQUIREDCREW -> {
-//                        setUpdatedRemovedLifeformsIfNecessary(cardState, removedLifeforms);
-//                        setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
-//                    }
-//                    case MOVEMENTSTEPS -> {
-//                        setUpdatedPositionsIfNecessary(cardState, updatedPositions);
-//                    }
-//                    case SHOOTINGSEQUENCE -> {
-//                        cardState.setPreviousPlayerRemovedComponents(Map.of(this.prevPlayer, this.previousPlayerRemovedComponents.stream().map(Component::toMap).toList()));
-//                        setUpdatedRemovedComponentsIfNecessary(cardState, this.removedComponents);
-//                        setUpdatedLostPiecesIfNecessary(cardState, this.lostPieces);
-//
-//                        setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
-//
-//
-//                        if (current_plasmaShot < this.shootingSequence.size()) {
-//                            PlasmaShot currPlasmaShot = this.shootingSequence.get(this.current_plasmaShot);
-//                            cardState.setCurrPlasmaShotDescriptor(Map.of("shotSize", currPlasmaShot.getSize(), "shotDirection", currPlasmaShot.getOrientation()));
-//                        }
-//                        cardState.setDiceThrowResult(this.diceResult);
-//                        setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
-//
-//                    }
-//                    case LOSSITEMS -> {
-//                        setUpdatedDroppedResourcesIfNecessary(cardState, this.droppedResources);
-//                        setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
-//                    }
-                //}
-                // TODO: a variable for the actual affected player that dictates if checking the actionIndex or the actionIndex-1 may be the answer
             } else {
                 setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
             }

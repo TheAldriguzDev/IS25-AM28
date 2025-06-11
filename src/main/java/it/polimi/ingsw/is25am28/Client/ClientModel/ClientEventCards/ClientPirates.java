@@ -83,7 +83,6 @@ public class ClientPirates extends ClientEventCard {
 
             cardInfoWidget.appendString("Given credits: " + this.givenCredits);
             cardInfoWidget.appendString("Days: " + this.movementSteps);
-            // TODO : does the shootingSequence need to be shown to the clients as a whole?
             cardInfoWidget.appendString("Required Firepower: " + this.requiredFirepower);
             if (this.playerNickname != null) {
                 cardInfoWidget.appendString("Current Player: " + this.playerNickname);

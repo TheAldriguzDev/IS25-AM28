@@ -304,7 +304,7 @@ public class Smugglers extends EventCard {
 //                    defeatedPlayers.add(player.getNickname());
 //                }
 
-            smugglersStateJSON.setIsPlayerDefeated(this.isPlayerDefeated); // TODO: think about separating the setters in case of defeat
+            smugglersStateJSON.setIsPlayerDefeated(this.isPlayerDefeated);
 
                 // This field is necessary to the clients to know if they need to send additional info
                 smugglersStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO: Need more thinking on this

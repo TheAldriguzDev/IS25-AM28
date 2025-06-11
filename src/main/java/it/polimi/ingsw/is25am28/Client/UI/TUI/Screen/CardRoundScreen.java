@@ -1124,10 +1124,6 @@ public class CardRoundScreen extends Screen {
                 this.indexedCardInputMethods.replace("setCrewToRemove", new Pair<>(true, command));
             }
 
-            // TODO: think about implementing a method specific to the unlocking of additional commands
-
-
-
             // Generates the updated command widget
             this.generateCardRoundCommandsWidget();
         }

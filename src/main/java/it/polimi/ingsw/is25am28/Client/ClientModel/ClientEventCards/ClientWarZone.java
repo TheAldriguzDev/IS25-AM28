@@ -228,8 +228,6 @@ public class ClientWarZone extends ClientEventCard {
                         cardInfoWidget.appendString("Dice Throw Result: " + this.diceThrowResult);
                     } else {
                         cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
-                        // TODO: INCLUDE SEQUENCE ONY WHEN THE AFFECTED PLAYER HAS NOT BEEN DETERMINED YET
-
                     }
                     cardInfoWidget.appendString("───────────────────────────────");
                 }

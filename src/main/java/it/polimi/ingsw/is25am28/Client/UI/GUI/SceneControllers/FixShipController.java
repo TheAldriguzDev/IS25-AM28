@@ -149,7 +149,6 @@ public class FixShipController extends GUIController {
                 () -> {}
         ));
 
-        // TODO: can be simplified
         try {
 
             GUIHandler.getVirtualClient().fixShip(

@@ -39,8 +39,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-//TODO: for now use colors to indicate full cabins
-
 public class PopulateShipController extends GUIController {
 
     @FXML private ImageView shipImageView;
@@ -141,7 +139,7 @@ public class PopulateShipController extends GUIController {
         this.mainShip.generateComponentSubLists();
         List<ClientCabin> cabins = mainShip.getCabinList();
         // Removing the core from the list, since it's automatically filled with astronauts
-        cabins.removeIf(ClientCabin::isCore); // TODO: On reconnect seems that the core is not set
+        cabins.removeIf(ClientCabin::isCore);
 
         // Create the 3 clickable regions maps
         // After placing an alien disable the toggle
@@ -277,8 +275,6 @@ public class PopulateShipController extends GUIController {
                     this.currentSelectableLifeForm = null;
                 }
 
-                // TODO: if someone has finished the colored regions will disappear, will be resolved with the addition of custom pawns
-                // TODO: revise this part
                 // Setting the shipLabelText
                 this.setShipLabelText(data.isShipPopulated());
                 if (this.isShipFull) {
@@ -462,11 +458,6 @@ public class PopulateShipController extends GUIController {
                 ToggleButton selected = (ToggleButton) newToggle;
                 this.setShipGrid(selected.getText());
             }
-
-
-
-            // Todo: change method, this is the populateships version, could also do half method in upper class and override invoking super, adding this part
-
         });
     }
 

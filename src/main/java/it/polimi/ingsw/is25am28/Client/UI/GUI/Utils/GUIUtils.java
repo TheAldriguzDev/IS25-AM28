@@ -464,7 +464,6 @@ public class GUIUtils {
             }
 //            System.out.println(PrintUtils.addColor("(2) : " + currentRegions, ANSIColors.CYAN));
 
-            // TODO: add the region to the corresponding map (get it with the arguments)
             if (regionToRestore != null) {
 
                 int ofsRow = row - this.shipOffsets.getKey();

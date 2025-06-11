@@ -33,7 +33,6 @@ public class ClientModel {
     private ClientBoard board;
     private ResourceBank resourceBank;
 
-    // TODO: ClientBoard - ClientShip - ClientComponent --> For ships and playerColor i would store them inside Maps to identify each user data
 
     public ClientModel() {
         this.players = new HashMap<>();

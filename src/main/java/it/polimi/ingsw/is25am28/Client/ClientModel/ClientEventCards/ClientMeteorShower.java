@@ -84,7 +84,6 @@ public class ClientMeteorShower extends ClientEventCard {
 
             meteorShowerInfo.appendString("Target: " + this.playerNickname);
         }
-        // TODO : does the shootingSequence need to be shown to the clients as a whole?
         meteorShowerFinal = WidgetTUI.composeTwoWidgetsVertically(
                 WidgetTUI.composeTwoWidgetsVertically(meteorShowerTitle, meteorShower),
                 meteorShowerInfo

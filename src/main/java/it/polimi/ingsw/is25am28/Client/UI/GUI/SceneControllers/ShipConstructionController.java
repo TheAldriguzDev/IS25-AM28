@@ -113,7 +113,6 @@ public class ShipConstructionController extends GUIController {
 
     // Method used to initialize the page information that needs to be displayed
     public void initShipConstruction() {
-        // TODO: Init the players ships --> Useful to update the specific client ship in real time
         this.clientModel = GUIHandler.getClientModel();
 
         this.guiUtils = new GUIUtils(this.clientModel);
@@ -889,7 +888,6 @@ public class ShipConstructionController extends GUIController {
 
     // ========== UTILS METHODS ========== //
 
-    // TODO: Understand if we need to move these methods to the GUIController class to share them
     private Image getImageFromPath(String path, int width, int height) {
         URL resource = Objects.requireNonNull(getClass().getResource(path));
         return new Image(resource.toExternalForm(), width, height, true, true);
