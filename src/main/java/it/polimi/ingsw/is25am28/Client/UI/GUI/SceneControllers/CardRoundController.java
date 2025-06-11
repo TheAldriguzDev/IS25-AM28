@@ -530,16 +530,17 @@ public class CardRoundController extends GUIController {
         this.commandsToggleGroup = new ToggleGroup();
 
         try {
-            ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
-            if (ship == null) {
-                System.out.println(PrintUtils.addColor("[ERROR] [CardRoundScene] ClientShip is null", ANSIColors.RED));
-                return;
-            }
-            ship.generateComponentSubLists();
-            if(ship.getFirePower(null) > this.currEventCard.getFirepower()) {
-                // Enables the "setTakeReward" command if the baseline firepower is enough
+
+            this.mainShip.generateComponentSubLists();
+            List<CoordinatePair> activatedCannonsCoords = this.currEventCard.getDoubleCannonsToActivate().stream()
+                    .map(Pair::getKey)
+                    .toList();
+
+            if(this.mainShip.getFirePower(activatedCannonsCoords) > this.currEventCard.getFirepower() && !this.currEventCard.getTakeReward()) {
+                // Enables the "setTakeReward" command if the baseline firepower is enough (only if not already used)
                 this.availableCommands.add("setTakeReward");
             }
+
         } catch (UnsupportedOperationException e) {
             // Do nothing, the command will not be added
         }
