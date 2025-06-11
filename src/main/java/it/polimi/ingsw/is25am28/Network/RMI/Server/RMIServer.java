@@ -20,7 +20,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * RMIServer implements the VirtualViewRMI interface
+ * This class defined the server side RMI protocol to handle the clients' communication.
  * */
 
 public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
@@ -31,11 +31,18 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     final Map<UUID, VirtualViewRMI> clients;
 
     /**
-     * Constructor used to create a new RMI Server
-     * */
+     * Constructs an instance of the RMIServer, initializing its data structures,
+     * starting the RMI registry, binding the server, and starting a queue handler for
+     * managing client communications.
+     *
+     * @param serverName the name to bind the RMIServer in the registry
+     * @param serverPort the port number where the RMIServer will be listening
+     * @param controller the Server controller managing the game logic and interactions
+     * @throws RemoteException if there is an error creating the RMI registry or binding the server
+     */
     public RMIServer(String serverName, int serverPort, Server controller) throws RemoteException {
         super();
-        this.clients = new HashMap<UUID, VirtualViewRMI>();
+        this.clients = new HashMap<>();
         this.controller = controller;
 
         // Create and start the actual server
@@ -50,9 +57,13 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     }
 
     /**
-     * This method will be used to connect a client to the server --> it will be added since we need
-     * to have a reference to send message back to the client
-     * */
+     * Connects a new client to the RMI server. This method registers the client instance and its unique
+     * identifier in the server's client registry and notifies the server controller about the new connection.
+     *
+     * @param client      the {@link VirtualViewRMI} instance representing the client connection
+     * @param clientUUID  the {@link UUID} uniquely identifying the connecting client
+     * @throws Exception  if an error occurs during the client connection process
+     */
     @Override
     public void connectClient(VirtualViewRMI client, UUID clientUUID) throws Exception {
         ServerLogger.info("RMI SERVER", "New client connected");
@@ -247,6 +258,16 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
         }
     }
 
+    /**
+     * Sends an error notification to the specified client. The error is encapsulated in an {@link ErrorAnswer}
+     * and sent asynchronously through the queue handler. In case of failure while sending the error message,
+     * it logs the failure and rethrows the exception wrapped in a {@link RuntimeException}.
+     *
+     * The method is used when a controller invocation has thrown an Exception to notify the target client.
+     *
+     * @param client the {@link VirtualView} instance representing the targeted client
+     * @param answer the {@link ErrorAnswer} object containing details about the error to be sent
+     */
     private void reportError(VirtualView client, ErrorAnswer answer) {
         this.queueHandler.enqueue(() -> {
             try {
