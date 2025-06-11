@@ -92,7 +92,6 @@ public class CardRoundController extends GUIController {
     private final Map<String, Region> emptiedBatteriesRegions = new HashMap<>();
 
     private Map<String, Region> currentRegions = null;
-    private boolean isTakeAction = false;
     private Pair<EnergyConsumers, CoordinatePair> currEnergyConsumer = null;
 
     private final List<Map<String, Region>> allComponentMaps = List.of(
@@ -105,7 +104,6 @@ public class CardRoundController extends GUIController {
             this.batteriesRegions
     );
 
-    private final ToggleGroup availableItemColorsToggleGroup = new ToggleGroup();
     private ToggleGroup commandsToggleGroup;
     private final ToggleGroup viewOtherShipsToggleGroup = new ToggleGroup();
 
@@ -222,12 +220,51 @@ public class CardRoundController extends GUIController {
                 .filter(battery -> battery.getAvailability() > 0)
                 .toList();
 
+        List<ClientCannon> nonActivatedCannons = this.mainShip.getDoubleCannons();
+        try {
+            nonActivatedCannons.removeAll(this.currEventCard.getDoubleCannonsToActivate().stream()
+                    .map(pair -> {
+                        CoordinatePair cannonCoords = pair.getKey();
+                        return (ClientCannon) this.mainShip.getComponent(cannonCoords.getI(), cannonCoords.getJ());
+                    })
+                    .toList());
+        } catch (UnsupportedOperationException e) {
+            // Do nothing
+        }
+
+        List<ClientShield> nonActivatedShields = this.mainShip.getShieldList();
+        try {
+            nonActivatedShields.removeAll(this.currEventCard.getShieldsToActivate().stream()
+                    .map(pair -> {
+                        CoordinatePair shieldCoords = pair.getKey();
+                        return (ClientShield) this.mainShip.getComponent(shieldCoords.getI(), shieldCoords.getJ());
+                    })
+                    .toList());
+        } catch (UnsupportedOperationException e) {
+            // Do nothing
+        }
+
+        List<ClientEngine> nonActivatedEngines = this.mainShip.getEngineList();
+        try {
+            nonActivatedEngines.removeAll(this.currEventCard.getDoubleEnginesToActivate().stream()
+                    .map(pair -> {
+                        CoordinatePair engineCoords = pair.getKey();
+                        return (ClientEngine) this.mainShip.getComponent(engineCoords.getI(), engineCoords.getJ());
+                    })
+                    .toList());
+        } catch (UnsupportedOperationException e) {
+            // Do nothing
+        }
+
+
         // Setting all the regions with the corresponding listeners
-        this.initRegionMap(this.doubleCannonsRegions, new ArrayList<>(this.mainShip.getDoubleCannons()), this::handleDoubleCannonToActivate);
-        this.initRegionMap(this.doubleEnginesRegions, new ArrayList<>(this.mainShip.getDoubleEngines()), this::handleDoubleEnginesToActivate);
-        this.initRegionMap(this.shieldsRegions, new ArrayList<>(this.mainShip.getShieldList()), this::handleShieldsToActivate);
+//        this.initRegionMap(this.doubleCannonsRegions, new ArrayList<>(this.mainShip.getDoubleCannons()), this::handleDoubleCannonToActivate);
+        this.initRegionMap(this.doubleCannonsRegions, new ArrayList<>(nonActivatedCannons), this::handleDoubleCannonToActivate);
+//        this.initRegionMap(this.doubleEnginesRegions, new ArrayList<>(this.mainShip.getDoubleEngines()), this::handleDoubleEnginesToActivate);
+        this.initRegionMap(this.doubleEnginesRegions, new ArrayList<>(nonActivatedEngines), this::handleDoubleEnginesToActivate);
+//        this.initRegionMap(this.shieldsRegions, new ArrayList<>(this.mainShip.getShieldList()), this::handleShieldsToActivate);
+        this.initRegionMap(this.shieldsRegions, new ArrayList<>(nonActivatedShields), this::handleShieldsToActivate);
         this.initRegionMap(this.cabinsRegions, new ArrayList<>(nonEmptyCabins), this::handleCrewToRemove);
-//        this.initRegionMap(this.storagesRegions, new ArrayList<>(mainShip.getStorageList()), this::initAvailableItemColors);
         this.initRegionMap(this.storagesToFillRegions, new ArrayList<>(nonFullStorages), this::initAddColorCommands);
         this.initRegionMap(this.storagesToEmptyRegions, new ArrayList<>(nonEmptyStorages), this::initRemoveColorCommands);
         this.initRegionMap(this.batteriesRegions, new ArrayList<>(nonEmptyBatteries), (row, col) -> {
@@ -354,6 +391,9 @@ public class CardRoundController extends GUIController {
         this.imagePane.getChildren().add(this.shipGrid);
     }
 
+    /**
+     * Creates the statsBox
+     */
     private void initStatsBox() {
         // Getting the ship
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);
@@ -431,16 +471,18 @@ public class CardRoundController extends GUIController {
                 .toList();
 
         if (eliminatedPlayersNicknames.contains(this.clientModel.getNickname())) {
+            turnLabel.setStyle("-fx-text-fill: red;");
             turnLabel.setText("You have been ELIMINATED!!!");
 
             this.showToast("You have been eliminated!", ToastType.INFO);
         } else if (this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
+            turnLabel.setStyle("-fx-text-fill: #49d049;");
             turnLabel.setText("It's YOUR turn!!!");
 
             this.showToast("It's your turn!", ToastType.SUCCESS);
         } else {
             turnLabel.setText("It's NOT YOUR turn!!!");
-
+            turnLabel.setStyle("-fx-text-fill: yellow;");
             this.showToast("It's not your turn!", ToastType.INFO);
         }
         this.turnBox.getChildren().add(turnLabel);
@@ -546,7 +588,7 @@ public class CardRoundController extends GUIController {
 
         // Disables the toggles if it's not this player's turn (Also sets the command's description)
         if (!this.currEventCard.getPlayerNickname().equals(this.clientModel.getNickname())) {
-            this.initCommandDescriptionBox("No actions available, it's NOT YOUR turn!");
+            this.initCommandDescriptionBox("No actions available\nit's NOT YOUR turn!");
             for (Toggle toggleButtonCommand : this.commandsToggleGroup.getToggles()) {
                 ((ToggleButton) toggleButtonCommand).setDisable(true);
             }

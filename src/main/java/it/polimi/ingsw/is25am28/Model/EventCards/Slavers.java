@@ -16,15 +16,11 @@ public class Slavers extends EventCard {
     private final int movementSteps;
     private final int givenCredits;
     private final int takenCrew;
-    //private boolean hasBeenDefeated;
-    //ArrayList<String> defeatedPlayers;
-    //private boolean firstRound;
-    private ArrayList<Player> playersToTakeCrewFrom;
     private List<String> eliminatedPlayers;
-    private Map<String, Integer> updatedPositions;
-    private Map<String, Integer> updatedCredits;
-    private Map<String, List<CoordinatePair>> removedBatteries;
-    private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
+    private final Map<String, Integer> updatedPositions;
+    private final Map<String, Integer> updatedCredits;
+    private final Map<String, List<CoordinatePair>> removedBatteries;
+    private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private boolean isPlayerDefeated;
 
     private String prevPlayerNickname;
@@ -35,10 +31,6 @@ public class Slavers extends EventCard {
         this.movementSteps = movementSteps;
         this.givenCredits = givenCredits;
         this.takenCrew = takenCrew;
-        // this.hasBeenDefeated = false;
-        // this.defeatedPlayers = new ArrayList<>();
-        // this.firstRound = true;
-        this.playersToTakeCrewFrom = new ArrayList<>();
         this.updatedPositions = new HashMap<>();
         this.updatedCredits = new HashMap<>();
         this.removedBatteries = new HashMap<>();
@@ -46,23 +38,6 @@ public class Slavers extends EventCard {
         this.removedLifeforms = new HashMap<>();
         this.isPlayerDefeated = false;
     }
-
-//    @Override
-//    public void initCardPlayers() throws IllegalArgumentException {
-//        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
-//            throw new IllegalArgumentException("The player list is null or contains less than two player");
-//        } else {
-//            if (firstRound) {
-//                this.players = new ArrayList<>(this.getBoard().getPlayers());
-//            } else {
-//                if (!playersToTakeCrewFrom.isEmpty()) {
-//                    this.players = new ArrayList<>(this.playersToTakeCrewFrom);
-//                }
-//            }
-//            currentPlayer = Optional.of(players.getFirst());
-//        }
-//        activateCard();
-//    }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         SlaversJSON slaversData;
@@ -157,17 +132,6 @@ public class Slavers extends EventCard {
         );
     }
 
-    /*
-     * La lista crewToRemove indica le cabine dalle quali verrà rimosso il primo elemento
-     * dell'equipaggio, nel caso il giocatore abbia scelto di rimovere 2 esseri umani da una cabina,
-     * la cabina dovrà essere presente 2 volte nella lista
-     * */
-
-    /*
-     * Il metodo parte client che il player utilizzerà scegliere chi rimuovere si assicurerà che la lista non abbia
-     * configurazioni non valide (vuota, equipaggio rimosso non sufficiente, 3 volte la stessa cabina...)
-     * */
-
     @Override
     protected void malusEffect(ActionJSON data) {
         Optional<Player> playerOptional = getCurrentPlayer();
@@ -176,28 +140,34 @@ public class Slavers extends EventCard {
 
         playerOptional.ifPresent(
                 (Player player) -> {
-                    if (slaversData.getCrewToRemove().size() != this.takenCrew && slaversData.getCrewToRemove().size() != player.getShip().getAllLifeforms().size()) {
-                        throw new IllegalArgumentException("The removed crew members are not enough!");
-                    } else if (slaversData.getCrewToRemove().size() > this.takenCrew) {
+
+                    int numOfCrewToRemove = slaversData.getCrewToRemove().size();
+                    int numOfTotalCrew = player.getShip().getAllLifeforms().size();
+
+                    if (
+                            (numOfCrewToRemove != this.takenCrew && numOfCrewToRemove != numOfTotalCrew) ||
+                            numOfCrewToRemove > this.takenCrew
+                    ) {
+                        // Exception thrown if the removed crew members are too few or too much
                         throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
                     }
 
                     // Remove the crew members from the given cabins
-                    for (ComponentHelper<LifeformType> lifeform : slaversData.getCrewToRemove()) {
+                    for (ComponentHelper<LifeformType> lifeForm : slaversData.getCrewToRemove()) {
                         Cabin tmpCabin;
 
                         try {
-                            tmpCabin = (Cabin) player.getShip().getComponent(lifeform.getI(), lifeform.getJ());
+                            tmpCabin = (Cabin) player.getShip().getComponent(lifeForm.getI(), lifeForm.getJ());
                         } catch (Exception e) {
                             throw new IllegalStateException("The given component is not a valid cabin");
                         }
 
-                        lifeform.getItem().ifPresent( l -> {
+                        lifeForm.getItem().ifPresent(l -> {
 
                             Lifeform tmpLifeFormToBeRemoved = tmpCabin.getInhabitants().stream()
                                     .filter( i -> i.getLifeformType().equals(l))
                                     .findFirst()
-                                    .orElseThrow( () -> new NoSuchElementException("The requested lifeform has not been found in the given cabin"));
+                                    .orElseThrow( () -> new NoSuchElementException("The requested lifeForm has not been found in the given cabin"));
 
                             tmpCabin.removeInhabitant(tmpLifeFormToBeRemoved);
                         });
@@ -216,12 +186,12 @@ public class Slavers extends EventCard {
 
     @Override
     public CardStateJSON generateState() {
-        Optional<Player> playerOptional = getCurrentPlayer();
-        CardStateJSON slaversStateJSON = new CardStateJSON();
-
-        slaversStateJSON.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
+            Optional<Player> playerOptional = getCurrentPlayer();
+            CardStateJSON slaversStateJSON = new CardStateJSON();
+            slaversStateJSON.setUniqueCardId(this.uniqueCardId);
+
             // Initializing the state flags
             initStateFlags(slaversStateJSON);
 
@@ -229,42 +199,26 @@ public class Slavers extends EventCard {
             playerOptional.ifPresent(player -> slaversStateJSON.setPlayerNickname(player.getNickname()));
             slaversStateJSON.setPrevPlayerNickname(this.prevPlayerNickname);
 
-            // If the first round is finished, send the dynamic info to the players
+            slaversStateJSON.setIsPlayerDefeated(this.isPlayerDefeated);
 
-//                ArrayList<String> defeatedPlayers = new ArrayList<>();
-//                for (Player player : playersToTakeCrewFrom) {
-//                    defeatedPlayers.add(player.getNickname());
-//                }
-//                slaversStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO: Need more thinking on this
+            // Setting the removed lifeForms
+            setUpdatedRemovedLifeformsIfNecessary(slaversStateJSON, removedLifeforms);
+            // Setting the eliminated players
+            setUpdatedEliminatedPlayersIfNecessary(slaversStateJSON, eliminatedPlayers);
+            // Setting the consumed batteries
+            setUpdatedRemovedBatteriesIfNecessary(slaversStateJSON, removedBatteries);
+            // Setting the Updated positions
+            setUpdatedPositionsIfNecessary(slaversStateJSON, updatedPositions);
+            // Setting the updated credits
+            setUpdatedCreditsIfNecessary(slaversStateJSON, updatedCredits);
 
-                slaversStateJSON.setIsPlayerDefeated(this.isPlayerDefeated);
-
-                setUpdatedRemovedLifeformsIfNecessary(slaversStateJSON, removedLifeforms);
-                setUpdatedEliminatedPlayersIfNecessary(slaversStateJSON, eliminatedPlayers);
-
-                // Batteries consumed due to the double cannons
-                setUpdatedRemovedBatteriesIfNecessary(slaversStateJSON, removedBatteries);
-
-            // if the smugglers have been defeated we need to set the rewards (if taken)
-
-                setUpdatedPositionsIfNecessary(slaversStateJSON, updatedPositions);
-                setUpdatedCreditsIfNecessary(slaversStateJSON, updatedCredits);
+            slaversStateJSON.setCardEnded(this.hasFinished());
+            return slaversStateJSON;
 
         } else {
-            // Static info about the card
-            slaversStateJSON.setCardTypeId(this.cardTypeId);
-            slaversStateJSON.setCardName(this.getCardName());
-            slaversStateJSON.setImagePath(this.path);
-            slaversStateJSON.setCardLevel(this.getCardLevel());
-            slaversStateJSON.setRequiredFirepower(requiredFirepower);
-            slaversStateJSON.setGivenCredits(this.givenCredits);
-            slaversStateJSON.setMovementSteps(this.movementSteps);
-            slaversStateJSON.setTakenCrew(this.takenCrew);
+            // Setting the static info about the card
+            return this.generateStaticState();
         }
-
-        slaversStateJSON.setCardEnded(this.hasFinished());
-
-        return slaversStateJSON;
     }
 
     @Override

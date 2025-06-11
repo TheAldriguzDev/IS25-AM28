@@ -9,8 +9,8 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import java.util.*;
 
 public class Stardust extends EventCard {
-    private Map<String, Integer> updatedPositions;
-    private List<String> eliminatedPlayers;
+    private final Map<String, Integer> updatedPositions;
+    private final List<String> eliminatedPlayers;
 
     public Stardust(String name, int cardLevel, Board board, int uniqueCardId, String path) {
         super(name, cardLevel, board, uniqueCardId, path);
@@ -91,8 +91,10 @@ public class Stardust extends EventCard {
             // Sets the updatedPositions (if there are any)
             setUpdatedPositionsIfNecessary(stardustStateJSON, updatedPositions);
 
-            // Sets the eliminatedPlayer (if there are any)
-            setUpdatedEliminatedPlayersIfNecessary(stardustStateJSON, this.eliminatedPlayers);
+            if (this.hasFinished()) {
+                // Sets the eliminatedPlayer (if there are any)
+                setUpdatedEliminatedPlayersIfNecessary(stardustStateJSON, this.eliminatedPlayers);
+            }
         } else {
             stardustStateJSON.setCardTypeId(this.cardTypeId);
             stardustStateJSON.setCardName(getCardName());
