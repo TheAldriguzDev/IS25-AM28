@@ -40,8 +40,6 @@ public class ViewUpdater implements StateVisitor {
 
     private boolean isFirstAccess = true;
 
-    // TODO: In this class we need to update the model before invoking the ui show methods
-
     public ViewUpdater(ClientUI ui, ClientModel model) {
         this.ui = ui;
         this.model = model;
@@ -382,7 +380,6 @@ public class ViewUpdater implements StateVisitor {
         this.ui.showEndGame(state);
     }
 
-    // TODO: mark the given player as disconnected
     @Override
     public void visit(DisconnectedPlayerDTO state) {
         System.out.println();
@@ -394,13 +391,11 @@ public class ViewUpdater implements StateVisitor {
                 .printWidget();
     }
 
-    // TODO: Make the transition to the page where no players are connected --> we are waiting for reconnection
     @Override
     public void visit(InsufficientPlayerDTO state) {
         this.ui.showInsufficientPlayer(state);
     }
 
-    // TODO Change from String message to ErrorDTO
     public void reportError(String message) {
         this.ui.showError(new ErrorAnswer(message));
     }

@@ -1,13 +1,14 @@
 package it.polimi.ingsw.is25am28.Timer;
 
 import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObservable;
-import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
 import javax.management.timer.Timer;
 
 public class HourGlass extends TimerObservable {
-    // A user timed the hourglass duration to yield an exact value (1m 37.5s)
-    // (Source: https://boardgamegeek.com/thread/1023566/timer-length)
+    /**
+     * A user timed the hourglass duration to yield an exact value (1m 37.5s)
+     * (Source: <a href="https://boardgamegeek.com/thread/1023566/timer-length">link to webpage</a>)
+     */
     public static long DEFAULT_DURATION_IN_MILLIS = Timer.ONE_MINUTE + (37L * Timer.ONE_SECOND) + 500L;
 
     private long remainingFlips;

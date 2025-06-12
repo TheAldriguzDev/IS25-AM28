@@ -21,36 +21,11 @@ public class TUIHandler implements ClientUI {
     private final Object ioLock;
     private VirtualView virtualClient;
 
-    @Deprecated
-    public TUIHandler(ClientModel model) {
-        this.model = model;
-        this.inputThread = new InputThread();
-        this.inputThread.setDaemon(true); // set the thread as daemon = true to avoid his termination
-        this.inputThread.start();
-        this.ioLock = new Object();
-    }
-
     public TUIHandler(ClientModel model, InputThread inputThread) {
         this.model = model;
         this.inputThread = inputThread;
         this.ioLock = new Object();
     }
-
-//    /**
-//     * Clears the terminal from previous input.
-//     * <p>
-//     *     <b>NOTE on its functionality:</b>
-//     *     <ul>
-//     *         <li>This <b>will</b> work on terminals that support ANSI escape codes</li>
-//     *         <li>It <b>will NOT</b> work on Windows' CMD</li>
-//     *         <li>It <b>will NOT</b> work in the IDE's terminal</li>
-//     *     </ul>
-//     * </p>
-//     */
-//    public static void clearTerminal() {
-//        System.out.flush();
-//        System.out.print("\033[H\033[2J");
-//    }
 
     /**
      * Runs the "clear" command on Unix-like systems or the
@@ -82,11 +57,15 @@ public class TUIHandler implements ClientUI {
                         .addPadding(0, 1, 0, 1)
                         .wrapWidgetWithBorder();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+    /**
+     * Sets the current screen to the given one.
+     */
     private void setScreen(Screen screen) {
         this.screen = screen;
         this.screen.setVirtualClient(this.virtualClient);

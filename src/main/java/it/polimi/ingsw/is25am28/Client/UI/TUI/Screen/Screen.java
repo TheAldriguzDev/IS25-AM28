@@ -85,7 +85,6 @@ public class Screen implements ClientUI {
     public void commitCommand(String playerNickname) {
         if (this.ctx != null && playerNickname.equals(this.model.getNickname())) {
             this.ctx.handleSuccess();
-            // this.ctx = null;
         }
     }
 
@@ -96,8 +95,8 @@ public class Screen implements ClientUI {
 
         if (this.ctx != null) {
             this.ctx.handleError(error.getError());
-            // this.ctx = null;
-        } else {
+        }
+        else {
             new WidgetTUI()
                     .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(error.getError(), ANSIColors.RED))
                     .addPadding(0, 1, 0, 1)
@@ -110,7 +109,8 @@ public class Screen implements ClientUI {
     public boolean isCTXAvailable() {
         if (this.ctx != null) {
             return this.ctx.isUsable();
-        } else {
+        }
+        else {
             return false;
         }
     }
@@ -157,7 +157,7 @@ public class Screen implements ClientUI {
 
     /**
      * This method will be used to stop the input thread
-     * */
+     */
     public void forceStopScreen() {
         this.inputThread.interruptInputReader();
     }

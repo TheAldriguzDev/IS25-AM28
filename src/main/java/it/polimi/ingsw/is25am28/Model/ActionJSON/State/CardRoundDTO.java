@@ -18,8 +18,6 @@ public final class CardRoundDTO extends StateDTO {
     private CardStateJSON cardInfo;
     private boolean isCardNew;
 
-    // TODO: Understand if other attributes are needed
-
     public CardRoundDTO() {}
 
     public CardRoundDTO(

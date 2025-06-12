@@ -5,13 +5,10 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
-import it.polimi.ingsw.is25am28.Network.Messages.FixShip;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
-
-import java.util.HashMap;
-import java.util.Map;
+import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 
@@ -59,25 +56,32 @@ public class FixShipScreen extends Screen {
      * and then sends the latter to the server for validation
      */
     private void removeComponent() throws Exception {
-        Map.Entry<Integer, Integer> coordinates;
+        CoordinatePair coordinates;
 
-        coordinates = this.getComponentCoordinates();
-
-        if (coordinates == null) return;
+        try {
+            coordinates = this.getComponentCoordinates();
+        }
+        catch (InterruptedException e) {
+            // A forced interrupt arrived
+            return;
+        }
 
         this.ctx = new CommandCTX(
         "fixShip",
             () -> {
                 try {
                     this.showShipFixing(null);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                }
+                catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             },
             () -> {
                 try {
                     this.removeComponent();
+                }
+                catch (InterruptedException e) {
+                    // A forced interrupt arrived
                 }
                 catch (Exception e) {
                     System.out.println(PrintUtils.addColor("[ERROR] \"" + e.getClass().getSimpleName() + "\" was thrown inside 'removeComponent", ANSIColors.RED));
@@ -87,8 +91,8 @@ public class FixShipScreen extends Screen {
 
         this.client.fixShip(
             this.model.getNickname(),
-            coordinates.getKey(),
-            coordinates.getValue()
+            coordinates.getI(),
+            coordinates.getJ()
         );
     }
 
@@ -97,8 +101,8 @@ public class FixShipScreen extends Screen {
      *         of the component the player wants to remove in an attempt
      *         to fix his ship
      */
-    private Map.Entry<Integer, Integer> getComponentCoordinates() {
-        Map<Integer, Integer> coordinates = new HashMap<>();
+    private CoordinatePair getComponentCoordinates() throws InterruptedException {
+        CoordinatePair coordinates = new CoordinatePair();
         boolean validCoordinate;
         String line;
 
@@ -113,13 +117,13 @@ public class FixShipScreen extends Screen {
 
         // Getting the row --> i
         do {
-            System.out.print("Insert row of the component to remove: ");
+            System.out.print("Insert row where to put the selected component: ");
             try {
                 line = this.inputThread.waitForInput();
 
                 if (line == null) {
                     // A force interrupt arrived
-                    return null;
+                    throw new InterruptedException();
                 }
 
                 i = Integer.parseInt(line);
@@ -133,22 +137,18 @@ public class FixShipScreen extends Screen {
                 System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please insert a number.", ANSIColors.RED));
                 validCoordinate = false;
             }
-            catch (InterruptedException e) {
-                // A force interrupt arrived
-                return null;
-            }
         }
         while (!validCoordinate);
 
         // Getting the col --> j
         do {
-            System.out.print("Insert column of the component to remove: ");
+            System.out.print("Insert column where to put the selected component: ");
             try {
                 line = this.inputThread.waitForInput();
 
                 if (line == null) {
                     // A force interrupt arrived
-                    return null;
+                    throw new InterruptedException();
                 }
 
                 j = Integer.parseInt(line);
@@ -162,22 +162,17 @@ public class FixShipScreen extends Screen {
                 System.out.println(PrintUtils.addColor("ERROR: Invalid input. Please insert a number.", ANSIColors.RED));
                 validCoordinate = false;
             }
-            catch (InterruptedException e) {
-                // A force interrupt arrived
-                return null;
-            }
         }
         while (!validCoordinate);
 
         // Reducing both by 1 since they will then be used as
         // indexes inside the client ship component matrix
-        coordinates.put(--i, --j);
-        return coordinates.entrySet().stream().toList().getFirst();
+        coordinates.setI(--i);
+        coordinates.setJ(--j);
+
+        return coordinates;
     }
 
-    /**
-     * TUI screen entry point for the ship fix phase
-     */
     @Override
     public void showShipFixing(FixShipDTO fixShip) throws Exception {
         System.out.println();
@@ -205,7 +200,8 @@ public class FixShipScreen extends Screen {
             // fix it before the game can move on
             this.printShipFixStatusWidget(false);
             this.removeComponent();
-        } else {
+        }
+        else {
             // If this player's ship, when validated, results as correct, then
             // he must wait for all other players (if there are any in the first place)
             // to finish fixing their own ship

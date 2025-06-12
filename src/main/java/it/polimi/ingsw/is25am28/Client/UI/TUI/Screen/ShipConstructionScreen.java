@@ -1208,7 +1208,6 @@ public class ShipConstructionScreen extends Screen {
                 // the component selection menu
                 this.selectedComponent = null;
                 this.selectedComponentWidget = null;
-                // this.isSelectedTileReserved = false;
 
                 // At the end, it goes back to asking again a new
                 // component selection command
@@ -1585,21 +1584,19 @@ public class ShipConstructionScreen extends Screen {
         // Force-send the ship iff the current player hasn't done it already
         if (!this.model.getState().getPlayerFinishedBuildingShip(this.model.getNickname())) {
             this.ctx = new CommandCTX(
-                    "sendShipOnTimerEnd",
-                    () -> {
-                        // Nothing
-                    },
-                    () -> {
-                        // Retrying to send the ship if it fails
-                        // TODO: Implement, if needed, a "max retry"
-                        //       functionality to avoid infinite loop
-                        try {
-                            this.sendShipOnTimerEnd();
-                        }
-                        catch (Exception e) {
-                            System.out.println(PrintUtils.addColor(e.getMessage(), ANSIColors.RED));
-                        }
+                "sendShipOnTimerEnd",
+                () -> {
+                    // Nothing
+                },
+                () -> {
+                    // Retrying to send the ship if it fails
+                    try {
+                        this.sendShipOnTimerEnd();
                     }
+                    catch (Exception e) {
+                        System.out.println(PrintUtils.addColor(e.getMessage(), ANSIColors.RED));
+                    }
+                }
             );
 
             // Sends the current player's ship when
@@ -1608,10 +1605,6 @@ public class ShipConstructionScreen extends Screen {
         }
     }
 
-    /**
-     * @param timerDTO The updated timerDTO generated when
-     *                 the server-side timer ends
-     */
     @Override
     public void receiveTimerDTO(TimerDTO timerDTO) {
         this.model.setTimerDTO(timerDTO);
@@ -1631,9 +1624,6 @@ public class ShipConstructionScreen extends Screen {
         }
     }
 
-    /**
-     * TUI screen entry point for the ship construction phase
-     */
     @Override
     public void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception {
         clearTerminal();

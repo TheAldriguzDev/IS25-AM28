@@ -72,7 +72,7 @@ public class InputThread extends Thread {
     /**
      * @return a String that contains the input inputted by the client.
      * The string will be null if the screen was forced to quit
-     *
+     * <br>
      * IMPORTANT --> IF NULL IN THE CHECK WE NEED TO RETURN THE METHOD IN THE SCREEN --> WILL END THE VISUALIZATION
      * */
     public String waitForInput() throws InterruptedException {

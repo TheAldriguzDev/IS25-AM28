@@ -95,16 +95,6 @@ public class ConsoleWidgetTUI extends WidgetTUI {
             // Appending the line start symbol to the message
             string = LINE_START_SYMBOL + string;
 
-//            // Partitioning the string into substrings of length maxWidth to
-//            // make them fit into the console widget
-//            int numOfLineBreaks = (PrintUtils.removeUnicodeFromString(string).length() / this.maxWidth) + 1;
-//
-//            for (int i = 0; i < numOfLineBreaks; i++) {
-//                String partitionedString = string.substring((i) * this.maxWidth, Math.min(string.length(), (i + 1) * this.maxWidth));
-//                this.screen.add(partitionedString);
-//                this.height++;
-//            }
-
             // NOTE: The string got all UNICODE characters removed before
             String wordSeparator = PrintUtils.SPACE;
             List<String> words = Arrays.stream(string.split(wordSeparator)).toList();
@@ -146,39 +136,6 @@ public class ConsoleWidgetTUI extends WidgetTUI {
                 this.screen.add(partitionedMessage.toString());
                 this.height++;
             }
-
-//            // Splitting the string into words separated by spaces
-//            String wordSeparator = " ";
-//            String[] words = string.split(wordSeparator);
-//            StringBuilder partitionedMessage = new StringBuilder();
-//
-//            for (String word : words) {
-//                // If a single word is still longer than the width, then it will
-//                // be forcefully split to make it fit on multiple lines
-//                int numOfLineBreaks = (PrintUtils.removeUnicodeFromString(word).length() / this.maxWidth) + 1;
-//                String[] wordLines = new String[numOfLineBreaks];
-//
-//                for (int i = 0; i < numOfLineBreaks; i++) {
-//                    wordLines[i] = word.substring((i) * this.maxWidth, Math.min(word.length(), (i + 1) * this.maxWidth));
-//                }
-//
-//                for (String line : wordLines) {
-//                    if (PrintUtils.removeUnicodeFromString(partitionedMessage.toString()).length() + PrintUtils.removeUnicodeFromString(line).length() < this.maxWidth) {
-//                        partitionedMessage.append(line).append(wordSeparator);
-//                    }
-//                    else {
-//                        this.screen.add(partitionedMessage.toString());
-//                        this.height++;
-//                        partitionedMessage = new StringBuilder();
-//                        partitionedMessage.append(line).append(wordSeparator);
-//                    }
-//                }
-//            }
-//
-//            if (!partitionedMessage.isEmpty()) {
-//                this.screen.add(partitionedMessage.toString());
-//                this.height++;
-//            }
 
             // Removing any excess lines that are "pushed" outside the set console height
             // (i.e.: old messages, which are at the top, are deleted)

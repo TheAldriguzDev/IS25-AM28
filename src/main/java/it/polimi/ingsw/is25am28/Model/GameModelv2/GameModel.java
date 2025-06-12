@@ -305,7 +305,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(33)); // Smugglers
 //        fakeDeck.add(AllCards.get(34)); // Slavers OK
 //        fakeDeck.add(AllCards.get(35)); // Slavers
-//         fakeDeck.add(AllCards.get(38)); // Warzone OK
+//        fakeDeck.add(AllCards.get(38)); // Warzone OK
 //        fakeDeck.add(AllCards.get(39)); // Warzone
 //        fakeDeck.add(AllCards.get(36)); // Stardust OK
 //        fakeDeck.add(AllCards.get(37)); // Stardust

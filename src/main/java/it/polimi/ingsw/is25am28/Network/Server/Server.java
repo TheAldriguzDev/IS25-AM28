@@ -26,20 +26,16 @@ import java.util.stream.Collectors;
 
 
 /**
- * This class initially spawns the networks server to listen for client requests.
- * Then it will be used to route the clients requests to the game they are playing.
- * */
+ * This class is responsible for starting the network server and listening for incoming client requests.
+ * It manages multiple concurrent games and routes each client request to the correct game instance
+ * based on the client's name. It ensures that actions are executed within the appropriate game context.
+ */
 
 public class Server {
-
     // Server constants
     public static final String RMIServerName = "GameRMIServer";
     public static final int RMIServerPort = 7777;
     public static final int TCPServerPort = 8888;
-
-    private final RMIServer rmiServer;
-    private final TCPServer tcpServer;
-
 
     // This map stores the id of the game with its instance
     private final Map<Integer, GameInstance> gameInstances;
@@ -56,6 +52,16 @@ public class Server {
     // Ping scheduler thread that will check for client disconnections
     private final ScheduledExecutorService pingScheduler;
 
+    /**
+     * Initializes a new instance of the Server class.
+     * This constructor sets up the server by prompting the user to input a valid IPv4 address,
+     * initializes the TCP and RMI servers, and prepares various data structures
+     * required for managing game instances, connected clients, and scheduling tasks.
+     *
+     * The constructor also initiates a periodic check to monitor client connectivity by collecting pings.
+     *
+     * @throws Exception if an error occurs during the server setup or initialization process
+     */
     public Server() throws Exception {
         // Create the RMIServer and the TCPServer
         Scanner scanner = new Scanner(System.in);
@@ -89,8 +95,8 @@ public class Server {
             }
         }
 
-        this.tcpServer = new TCPServer(ipAddress, Server.TCPServerPort, this);
-        this.rmiServer = new RMIServer(Server.RMIServerName, Server.RMIServerPort, this);
+        new TCPServer(ipAddress, Server.TCPServerPort, this);
+        new RMIServer(Server.RMIServerName, Server.RMIServerPort, this);
 
         this.gameInstances = new HashMap<>();
         this.connectedClients = new HashMap<>();
@@ -103,16 +109,21 @@ public class Server {
     }
 
     public static void main(String[] args) throws Exception {
-        Server server = new Server();
+        new Server();
     }
 
     /**
-     * The serve handles the client connection. First of all it retrieves all the games that has been configured.
-     * Then it will update the client with this information in order to let him decide if he wants to:
-     * 1. Join an active Game
-     * 2. Create a new Game
-     * 3. Reconnect to a Game (by sending the nickname)
-     * */
+     * Handles a new client connection by retrieving all currently configured games and sending this information
+     * to the client. This allows the client to choose one of the following actions:
+     * <ul>
+     *     <li>Join an existing game</li>
+     *     <li>Create a new game</li>
+     *     <li>Reconnect to a previous game using a nickname</li>
+     * </ul>
+     *
+     * @param clientVirtualView the virtual view associated with the connected client
+     * @throws Exception if an error occurs while retrieving or sending game information
+     */
     public void onClientConnection(VirtualView clientVirtualView) throws Exception {
         // Retrieve the list of available games
         Map<Integer, GameInstance> availableGames = this.searchForGames();
@@ -143,8 +154,12 @@ public class Server {
     }
 
     /**
-     * @return the filtered Map with the games that can be joined from the players
-     * */
+     * Filters and retrieves a map of game instances that are available to be joined by players.
+     * The method ensures thread safety by synchronizing on the gameInstances collection.
+     *
+     * @return a map where the key is the game ID (Integer) and the value is the game instance (GameInstance)
+     *         of all currently available games that can be joined.
+     */
     private Map<Integer, GameInstance> searchForGames() {
         synchronized (this.gameInstances) {
             return this.gameInstances.entrySet()
@@ -158,9 +173,17 @@ public class Server {
     }
 
     /**
-     * This method will be used to create a new game when a Player request it.
-     * It also the playerNickname and information to the
-     * */
+     * Creates a new game and initializes its configuration, adding the specified player
+     * to the game and mapping relevant client information to manage the game instance.
+     * This method ensures thread safety for the involved data structures.
+     *
+     * @param playerNickname the nickname of the player creating the game
+     * @param playerColor the color chosen by the player
+     * @param gameLevel the difficulty level of the game
+     * @param totalPlayers the total number of players for the game
+     * @param clientView the virtual view associated with the client creating the game
+     * @throws Exception if the specified nickname is already being used or if an error occurs during game creation
+     */
     public void createNewGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers, VirtualView clientView) throws Exception {
         synchronized (this.gameInstances) {
             if (this.connectedClients.containsKey(playerNickname)) {
@@ -189,8 +212,16 @@ public class Server {
     }
 
     /**
-     * This method will be used to let a player join the given game by its ID
-     * */
+     * Allows a player to join an existing game instance. This method manages the addition of a new player
+     * to the specified game, ensuring thread-safe operations for handling connected clients, game instances,
+     * and ping utilities associated with the client.
+     *
+     * @param playerNickname the nickname of the player attempting to join the game
+     * @param playerColor the color chosen by the player
+     * @param gameID the unique identifier of the game the player intends to join
+     * @param clientView the virtual view associated with the client
+     * @throws Exception if the player's nickname is already in use or if an error occurs while adding the player to the game
+     */
     public void joinGame(String playerNickname, PlayerColor playerColor, int gameID, VirtualView clientView) throws Exception {
         synchronized (this.gameInstances) {
             if (this.connectedClients.containsKey(playerNickname)) {
@@ -215,6 +246,15 @@ public class Server {
         }
     }
 
+    /**
+     * Processes the selection of a tile by a player.
+     * This method ensures thread safety while retrieving the game instance associated
+     * with the specified player and updating the game state based on the tile selection.
+     *
+     * @param playerNickname the nickname of the player selecting the tile
+     * @param id the unique identifier of the tile being selected
+     * @throws Exception if an error occurs during the tile selection process
+     */
     public void selectTile(String playerNickname, int id) throws Exception {
         synchronized (this.gameInstances) {
             // Get the game where the player is playing
@@ -226,6 +266,15 @@ public class Server {
         }
     }
 
+    /**
+     * Processes the deselection of a tile by a player.
+     * This method ensures thread safety while retrieving the game instance associated
+     * with the specified player and updating the game state based on the tile deselection.
+     *
+     * @param playerNickname the nickname of the player deselecting the tile
+     * @param id the unique identifier of the tile being deselected
+     * @throws Exception if an error occurs during the tile deselection process
+     */
     public void deselectTile(String playerNickname, int id) throws Exception {
         synchronized (this.gameInstances) {
             // Get the game where the player is playing
@@ -237,6 +286,15 @@ public class Server {
         }
     }
 
+    /**
+     * Processes the reservation of a tile by a player.
+     * This method ensures thread safety while retrieving the game instance associated
+     * with the specified player and updating the game state based on the tile reservation.
+     *
+     * @param playerNickname the nickname of the player reserving the tile
+     * @param id the unique identifier of the tile being reserved
+     * @throws Exception if an error occurs during the tile reservation process
+     */
     public void reserveTile(String playerNickname, int id) throws Exception {
         synchronized (this.gameInstances) {
             // Get the game where the player is playing
@@ -248,6 +306,13 @@ public class Server {
         }
     }
 
+    /**
+     * Configures a fast ship for a player in the game they are currently participating in.
+     * This method ensures thread safety while accessing the game instance associated with the player.
+     *
+     * @param playerNickname the nickname of the player requesting a fast ship configuration
+     * @throws Exception if the game instance cannot be found or if an error occurs during the operation
+     */
     public void fastShip(String playerNickname) throws Exception {
         synchronized (this.gameInstances) {
             // Get the game where the player is playing
@@ -259,6 +324,18 @@ public class Server {
         }
     }
 
+    /**
+     * Places a tile on the game board for a specified player. This method ensures thread safety
+     * while accessing the game instance associated with the player, updating the game state
+     * accordingly. The placement includes the tile's position (row and column) and orientation.
+     *
+     * @param playerNickname the nickname of the player placing the tile
+     * @param componentID the unique identifier of the tile being placed
+     * @param i the row index where the tile is placed
+     * @param j the column index where the tile is placed
+     * @param rotation the rotation applied to the tile during placement
+     * @throws Exception if an error occurs during the tile placement process
+     */
     public void placeTile(String playerNickname, Integer componentID, Integer i, Integer j, Integer rotation) throws Exception {
         synchronized (this.gameInstances) {
             // Get the game where the player is playing
@@ -270,6 +347,14 @@ public class Server {
         }
     }
 
+    /**
+     * Notifies the server that a player has ended their ship creation process and indicates the number of reserved tiles.
+     * This method ensures thread safety while accessing game instances and updates the game's state accordingly.
+     *
+     * @param playerNickname the nickname of the player signaling the end of their ship creation
+     * @param reservedTiles the number of tiles reserved and not used by the player during ship creation
+     * @throws Exception if an error occurs while processing the player's action or accessing the game data structures
+     */
     public void playerEndedSendShip(String playerNickname, int reservedTiles) throws Exception {
         synchronized (this.gameInstances) {
             // Get the game where the player is playing
@@ -281,6 +366,13 @@ public class Server {
         }
     }
 
+    /**
+     * Flips the timer during the ship construction process.
+     *
+     * @param playerNickname the nickname of the player requesting to flip the timer
+     * @throws Exception if the game instance cannot be found, the player is not mapped
+     *                   to a game, or an error occurs during the timer flip operation
+     */
     public void flipTimer(String playerNickname) throws Exception {
         synchronized (this.gameInstances) {
             int gameID = this.clientToGame.get(playerNickname);
@@ -291,6 +383,19 @@ public class Server {
         }
     }
 
+    /**
+     * Handles the selection or deselection of a specific subdeck for a player.
+     * This method retrieves the game instance associated with the player's nickname
+     * and updates the game state based on the action (select or deselect).
+     * Thread safety is ensured by synchronizing access to the game instances data structure.
+     *
+     * @param playerNickname the nickname of the player performing the action
+     * @param subdeck the identifier of the subdeck being selected or deselected
+     * @param isSelectAction a boolean value indicating the action to be performed;
+     *                       true for selecting the subdeck, false for deselecting it
+     * @throws Exception if an error occurs during the process, such as the inability to
+     *                   retrieve the game instance or invalid player actions
+     */
     public void selectDeselectSubdeck(String playerNickname, int subdeck, boolean isSelectAction) throws Exception {
         synchronized (this.gameInstances) {
             int gameID = this.clientToGame.get(playerNickname);
@@ -307,6 +412,15 @@ public class Server {
         }
     }
 
+    /**
+     * Removes a specified ship component for a player in the game instance
+     * associated with the given player's nickname.
+     *
+     * @param playerNickname the nickname of the player requesting to fix their ship
+     * @param i the row index of the ship component to be fixed or removed
+     * @param j the column index of the ship component to be fixed or removed
+     * @throws Exception if there is an issue retrieving the game instance or performing the operation
+     */
     public void fixShip(String playerNickname, Integer i, Integer j) throws Exception {
         synchronized (this.gameInstances) {
             int gameID = this.clientToGame.get(playerNickname);
@@ -317,6 +431,18 @@ public class Server {
         }
     }
 
+    /**
+     * Populates a player's ship with a specified lifeform component in the game instance
+     * associated with the player.
+     *
+     * @param playerNickname The nickname of the player who is populating their ship.
+     * @param lifeFormToAdd  The component of the ship to be populated, represented as
+     *                       an instance of ComponentHelper containing the lifeform type and
+     *                       position.
+     * @throws Exception if an error occurs during the process of populating the ship
+     *                   in the game instance or if the provided player nickname is not
+     *                   associated with any active game instance.
+     */
     public void populateShip(String playerNickname, ComponentHelper<LifeformType> lifeFormToAdd) throws Exception {
         synchronized (this.gameInstances) {
             int gameID = this.clientToGame.get(playerNickname);
@@ -327,6 +453,13 @@ public class Server {
         }
     }
 
+    /**
+     * Executes the playCard action for a specific player within the game instance they belong to.
+     *
+     * @param playerNickname the nickname of the player performing the action
+     * @param action the action details represented in an ActionJSON object
+     * @throws Exception if any error occurs during the playCard execution
+     */
     public void playCard(String playerNickname, ActionJSON action) throws Exception {
         synchronized (this.gameInstances) {
             int gameID = this.clientToGame.get(playerNickname);
@@ -345,10 +478,12 @@ public class Server {
     // ========== PING METHOD ========== //
 
     /**
-     * @return the list of offline clients from all the games
-     * */
+     * Retrieves a list of offline client identifiers from all game instances.
+     *
+     * @return a list of strings representing the identifiers of offline clients
+     */
     private List<String> getOfflineClients() {
-        List<String> offlineClients = new ArrayList<>();
+        List<String> offlineClients;
         synchronized (this.gameInstances) {
             offlineClients = this.gameInstances.values()
                     .stream()
@@ -360,8 +495,12 @@ public class Server {
     }
 
     /**
-     * Method invoked by the client when they send a successful ping to the server
-     * */
+     * Handles the ping operation for the provided client.
+     * It resets the ping counter for the given client if a corresponding PingHelper exists.
+     *
+     * @param clientView the VirtualView instance representing the client's view to be pinged
+     * @throws Exception if an error occurs during the operation
+     */
     public void clientPing(VirtualView clientView) throws Exception {
         synchronized (this.viewToPingHelper) {
             PingHelper pingHelper = viewToPingHelper.get(clientView);
@@ -372,9 +511,9 @@ public class Server {
     }
 
     /**
-     * This method will check every 5 seconds if the clients are still connected. Otherwise, it will disconnect them from
-     * the game where they are playing.
-     * */
+     * Periodically checks the connection status of all connected clients every 5 seconds.
+     * If a client is found to be disconnected, it is marked as disconnected in the game it was participating in.
+     */
     private void checkClientsConnection() {
         this.pingScheduler.scheduleAtFixedRate(() -> {
             synchronized (this.viewToPingHelper) {
@@ -417,15 +556,19 @@ public class Server {
     }
 
     /**
-     * This method is used to reconnect the given client to his game. It will also modify all the needed values to continue the game
-     * */
+     * Reconnects a client to an ongoing game, notifying the clients connected to the game and updating the data structures.
+     *
+     * @param nickname the nickname of the client to reconnect
+     * @param clientView the new VirtualView instance for the client
+     * @throws Exception if an error occurs while processing the reconnection
+     */
     public void reconnectClient(String nickname, VirtualView clientView) throws Exception {
         if (!this.getOfflineClients().contains(nickname)) {
             clientView.reportError(new ErrorAnswer("The given nickname does not appear in the disconnected clients list"));
             return;
         }
 
-        int gameID = -1;
+        int gameID;
         synchronized (this.clientToGame) {
             gameID = this.clientToGame.get(nickname);
         }
@@ -448,7 +591,7 @@ public class Server {
         game.reconnectClient(nickname, clientView);
 
         // Get the old VirtualView to update the values
-        VirtualView oldView = null;
+        VirtualView oldView;
 
         // Update the connectedClient virtualView
         synchronized (this.connectedClients) {

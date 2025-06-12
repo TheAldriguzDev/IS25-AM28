@@ -299,13 +299,11 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
         switch (component) {
             case Cabin cabin -> {
                 switch (lifeformType) {
-                    // LifeformType.ASTRONAUT.ordinal() == 0
                     case ASTRONAUT -> {
                         while (cabin.getAvailableSpace() > 0) {
                             cabin.addInhabitant(new Lifeform(LifeformType.ASTRONAUT));
                         }
                     }
-                    // LifeformType.PURPLE_ALIEN.ordinal() == 1
                     case PURPLE_ALIEN -> {
                         // Aliens can be added only for ships with difficulty levels greater than 1
                         if (this.difficultyLevel > 1) {
@@ -345,7 +343,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                             throw new TooLowDifficultyLevelException("ERROR: Cannot add alien lifeforms for ships of difficulty level below 2");
                         }
                     }
-                    // LifeformType.BROWN_ALIEN.ordinal() == 2
                     case BROWN_ALIEN -> {
                         // Aliens can be added only for ships with difficulty levels greater than 1
                         if (this.difficultyLevel > 1) {
@@ -715,8 +712,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
             }
         );
 
-        // System.out.println("Step 1: " + isShipValid.get());
-
         if (isShipValid.get()) {
             for (int i = 0; i < grid_rows; i++) {
                 for (int j = 0; j < grid_cols; j++) {
@@ -728,9 +723,6 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                 isShipValid.set(false);
             }
         }
-
-        // System.out.println("Step 2: " + isShipValid.get());
-        // System.out.println(foundComponents.get() + " components found, " + placedComponents + " placed");
 
         return isShipValid.get();
     }

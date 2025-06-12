@@ -325,8 +325,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -384,8 +382,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P2 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -457,8 +453,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -515,8 +509,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P2 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -594,8 +586,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -671,8 +661,6 @@ class MeteorShowerTest {
         );
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -749,8 +737,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -822,8 +808,6 @@ class MeteorShowerTest {
         );
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -893,8 +877,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -948,8 +930,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P2 no cannons activated
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1022,8 +1002,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1077,8 +1055,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P2 no cannons activated
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1155,8 +1131,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1218,8 +1192,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P2 no cannons activated
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1295,8 +1267,6 @@ class MeteorShowerTest {
         );
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1362,8 +1332,6 @@ class MeteorShowerTest {
         );
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1433,8 +1401,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1488,8 +1454,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P2 no cannons activated
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1622,8 +1586,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1670,8 +1632,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P2 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1724,8 +1684,6 @@ class MeteorShowerTest {
 //        cannonsCoordinates.add(null);     // P3 does nothing
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(2).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1790,8 +1748,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P1 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(0).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
@@ -1836,8 +1792,6 @@ class MeteorShowerTest {
         cannonsCoordinates.add(null);   // P2 no cannons selected
         meteorShowerJSON = new MeteorShowerJSON(
                 playerList.get(1).getNickname(),
-                meteorShowerStateJSON.getCurrMeteorIndex(),
-                meteorShowerStateJSON.getDiceThrowResult(),
                 shieldsCoordinates,
                 cannonsCoordinates
         );
