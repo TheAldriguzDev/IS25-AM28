@@ -88,9 +88,6 @@ public class Epidemy extends EventCard {
         return this;
     }
 
-    /**
-     * @return The card's current state
-     */
     @Override
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();

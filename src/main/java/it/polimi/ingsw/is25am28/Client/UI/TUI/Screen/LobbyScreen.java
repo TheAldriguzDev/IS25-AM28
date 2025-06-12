@@ -7,10 +7,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
-import it.polimi.ingsw.is25am28.Network.Messages.NewPlayer;
-import it.polimi.ingsw.is25am28.Network.Messages.Reconnect;
-import it.polimi.ingsw.is25am28.Network.Messages.RefreshGames;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.CommandWidgetTUI;
@@ -59,8 +55,6 @@ public class LobbyScreen extends Screen {
         command = new CommandWidgetTUI(
                 "0",
                 () -> {
-                    // (0) - Quit game
-                    // Return nothing and the program stops
                     System.out.println();
 
                     new WidgetTUI()
@@ -452,9 +446,6 @@ public class LobbyScreen extends Screen {
         while (!commandExecuted);
     }
 
-    /**
-     * TUI screen entry point for the game menu
-     */
     @Override
     public void showLobbies(AvailableGamesDTO state, boolean isFirstAccess) throws Exception {
         if (isFirstAccess) {
@@ -466,11 +457,6 @@ public class LobbyScreen extends Screen {
         this.getLobbyCommand();
     }
 
-    /**
-     * Puts the current player's client into the waiting state
-     * and shows how many players are currently connected and
-     * also how many are left before the game starts
-     */
     @Override
     public void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers) {
         WidgetTUI waitingForPlayersWidget = new WidgetTUI();

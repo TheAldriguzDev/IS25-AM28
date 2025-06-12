@@ -14,9 +14,6 @@ public class InsufficientPlayerScreen extends Screen {
         super(model, inputThread);
     }
 
-    /**
-     * TUI screen entry point for the insufficient players condition
-     */
     @Override
     public void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer) {
         WidgetTUI waitingForPlayersWidget = new WidgetTUI();

@@ -15,7 +15,6 @@ import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Network.Messages.PlayCard;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
@@ -39,20 +38,16 @@ public class CardRoundScreen extends Screen {
     private WidgetTUI currEventCardWidget;
     private WidgetTUI shipGridWidget;
     private WidgetTUI shipStatsWidget;
-    private WidgetTUI statsWidget;
     private WidgetTUI playerNameWidget;
     private WidgetTUI playerTurnWidget;
     private WidgetTUI resourceBankWidget;
-
-    private InputWidgetTUI availableLifeforms;
-    private InputWidgetTUI availableItemColors;
-
-    private WidgetTUI otherPlayerShipWidget;
-    private InputWidgetTUI otherPlayerShipCommandsWidget;
-
     private WidgetTUI playerActionsRecapWidget;
+    private WidgetTUI otherPlayerShipWidget;
 
     private InputWidgetTUI cardRoundCommandsWidget;
+    private InputWidgetTUI otherPlayerShipCommandsWidget;
+    private InputWidgetTUI availableLifeforms;
+    private InputWidgetTUI availableItemColors;
 
     private ClientEventCard currEventCard;
     private CardStateJSON currEventCardState;
@@ -443,7 +438,10 @@ public class CardRoundScreen extends Screen {
      * Generates the available lifeforms widget with the relative
      * value the player needs to insert to select it
      */
-    private void generateAvailableLifeformsWidget(List<LifeformType> availableLifeforms, AtomicReference<LifeformType> selectedLifeform) {
+    private void generateAvailableLifeformsWidget(
+            List<LifeformType> availableLifeforms,
+            AtomicReference<LifeformType> selectedLifeform
+    ) {
         CommandWidgetTUI command;
         int index;
 
@@ -481,7 +479,10 @@ public class CardRoundScreen extends Screen {
      * Generates the available item colors widget with the relative
      * value the player needs to insert to select it
      */
-    private void generateAvailableItemColorsWidget(List<ItemColor> availableItemColors, AtomicReference<ItemColor> selectedColor) {
+    private void generateAvailableItemColorsWidget(
+            List<ItemColor> availableItemColors,
+            AtomicReference<ItemColor> selectedColor
+    ) {
         CommandWidgetTUI command;
         int index;
 
@@ -1017,6 +1018,7 @@ public class CardRoundScreen extends Screen {
                 command = this.indexedCardInputMethods.get("setItemsToBeRemoved").getValue();
                 this.indexedCardInputMethods.replace("setItemsToBeRemoved", new Pair<>(true, command));
             }
+
             // Generates the updated command widget
             this.generateCardRoundCommandsWidget();
         }
@@ -1118,7 +1120,8 @@ public class CardRoundScreen extends Screen {
                 command = this.indexedCardInputMethods.get("setItemsToBeRemoved").getValue();
                 this.indexedCardInputMethods.replace("setItemsToBeRemoved", new Pair<>(true, command));
 
-            } else if (this.currEventCard.getClass().equals(ClientAbandonedShip.class)) {
+            }
+            else if (this.currEventCard.getClass().equals(ClientAbandonedShip.class)) {
                 // Enables the "setCrewToRemove" command
                 command = this.indexedCardInputMethods.get("setCrewToRemove").getValue();
                 this.indexedCardInputMethods.replace("setCrewToRemove", new Pair<>(true, command));
@@ -1593,13 +1596,12 @@ public class CardRoundScreen extends Screen {
      */
     private void generateShipWidgets() {
         this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(
-                (ClientShip ship) -> {
-                    // Ensuring all components are present
-                    ship.generateComponentSubLists();
+            (ClientShip ship) -> {
+                // Ensuring all components are present
+                ship.generateComponentSubLists();
 
-                    //this.shipStatsWidget = ship.getShipStatsWidget();
-                    this.shipGridWidget = ship.getShipGridWidget();
-                }
+                this.shipGridWidget = ship.getShipGridWidget();
+            }
         );
     }
 
@@ -1611,8 +1613,14 @@ public class CardRoundScreen extends Screen {
         List<String> statsScreen = new ArrayList<String>();
 
         ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+
         if (ship == null) {
-            System.out.println(PrintUtils.addColor("[ERROR] [generateShipStatsWidget] ClientShip is null", ANSIColors.RED));
+            System.out.println(
+                PrintUtils.addColor(
+                    "[ERROR] [generateShipStatsWidget] ClientShip is null",
+                    ANSIColors.RED
+                )
+            );
             return;
         }
 
@@ -1632,16 +1640,24 @@ public class CardRoundScreen extends Screen {
 
         try {
             // Gets the doubleCannons/doubleEngines activated in the card's ActionJSON
-            activatedDoubleCannons = this.currEventCard.getDoubleCannonsToActivate().stream().map(Pair::getKey).toList();
-        } catch (UnsupportedOperationException e) {
-            // If the card does not support the operation the lists is set to null, so that the getFirepower() computes the baselinePower (since it cannot be activated in the card)
+            activatedDoubleCannons = this.currEventCard.getDoubleCannonsToActivate().stream()
+                    .map(Pair::getKey)
+                    .toList();
+        }
+        catch (UnsupportedOperationException e) {
+            // If the card does not support the operation the lists is set to null, so that the
+            // getFirepower() computes the baselinePower (since it cannot be activated in the card)
         }
 
         try {
             // Gets the doubleCannons/doubleEngines activated in the card's ActionJSON
-            activatedDoubleEngines = this.currEventCard.getDoubleEnginesToActivate().stream().map(Pair::getKey).toList();
-        } catch (UnsupportedOperationException e) {
-            // If the card does not support the operation the lists is set to null, so that the getEnginePower computes the baselinePower (since it cannot be activated in the card)
+            activatedDoubleEngines = this.currEventCard.getDoubleEnginesToActivate().stream()
+                    .map(Pair::getKey)
+                    .toList();
+        }
+        catch (UnsupportedOperationException e) {
+            // If the card does not support the operation the lists is set to null, so that the
+            // getEnginePower computes the baselinePower (since it cannot be activated in the card)
         }
 
         float currentFirePower = ship.getFirePower(activatedDoubleCannons);
@@ -1650,11 +1666,12 @@ public class CardRoundScreen extends Screen {
         List<CoordinatePair> allDoubleCannons = ship.getDoubleCannons().stream()
                 .map(cannon -> new CoordinatePair(cannon.getI(), cannon.getJ()))
                 .toList();
-        float maxFirePower = ship.getFirePower(allDoubleCannons);
 
         List<CoordinatePair> allDoubleEngines = ship.getDoubleEngines().stream()
                 .map(engine -> new CoordinatePair(engine.getI(), engine.getJ()))
                 .toList();
+
+        float maxFirePower = ship.getFirePower(allDoubleCannons);
         int maxEnginePower = ship.getEnginePower(allDoubleEngines);
 
         ClientPlayer player = this.model.getAllClientPlayers().get(this.model.getNickname());
@@ -1674,13 +1691,12 @@ public class CardRoundScreen extends Screen {
         statsWidget
                 .setWidth(tmp.getWidth())
                 .appendString("[STATS]")
-//                .addPadding(0, 0, 1, 0)
                 .centerWidgetScreen()
                 .appendScreen(tmp.getScreen())
                 .addPadding(0, 1, 0, 1)
                 .wrapWidgetWithBorder();
 
-        this.statsWidget = statsWidget;
+        this.shipStatsWidget = statsWidget;
     }
 
     /**
@@ -1775,9 +1791,9 @@ public class CardRoundScreen extends Screen {
                         // Obtaining the chosen ship (if present)
                         this.model.getShipOfPlayer(this.model.getAllPlayersNicknames().get(finalI))
                                 .ifPresent(
-                                        (ClientShip ship) -> {
-                                            this.otherPlayerShipWidget = ship.getShipGridWidget();
-                                        }
+                                    (ClientShip ship) -> {
+                                        this.otherPlayerShipWidget = ship.getShipGridWidget();
+                                    }
                                 );
 
                         // Printing the player's chosen ship (if present)
@@ -1797,7 +1813,8 @@ public class CardRoundScreen extends Screen {
 
                                 // A forced interrupt arrived
                                 if (line == null) return;
-                            } catch (InterruptedException e) {
+                            }
+                            catch (InterruptedException e) {
                                 // A forced interrupt arrived
                                 return;
                             }
@@ -1939,7 +1956,7 @@ public class CardRoundScreen extends Screen {
                 WidgetTUI.fillScreenWithSpaces(
                         WidgetTUI.composeTwoWidgetsVertically(
                                 this.boardWidget,
-                                this.statsWidget
+                                this.shipStatsWidget
                         )
                         .centerWidgetScreen()
                         .addPadding(0, 1, 0, 0)
@@ -1961,7 +1978,6 @@ public class CardRoundScreen extends Screen {
         boolean commandSelected;
 
         System.out.println();
-        // clearTerminal();
 
         do {
             // Printing the entire card round TUI
@@ -2131,13 +2147,8 @@ public class CardRoundScreen extends Screen {
         this.ctx = new CommandCTX(
             "playCard",
             () -> {
-                // System.out.println("onSuccess");
-                try {
-                    this.ctx = null;
-                    this.currEventCard.clearJSON();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                this.ctx = null;
+                this.currEventCard.clearJSON();
             },
             () -> {
                 ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
@@ -2192,9 +2203,6 @@ public class CardRoundScreen extends Screen {
         this.client.playCard(this.model.getNickname(), response);
     }
 
-    /**
-     * TUI screen entry point for the card round game phase
-     */
     @Override
     public void showCardRound(CardRoundDTO cardRound) throws Exception {
         this.forceStopScreen();
@@ -2216,13 +2224,14 @@ public class CardRoundScreen extends Screen {
 
         this.generateIndexedCardInputMethodsMap();
 
-        // TODO: figure a way to move this piece of code to a more adequate location
         try {
             ClientShip ship = this.model.getShipOfPlayer(this.model.getNickname()).orElse(null);
+
             if (ship == null) {
                 System.out.println(PrintUtils.addColor("[ERROR] [getDoubleCannonToActivate()] ClientShip is null", ANSIColors.RED));
                 return;
             }
+
             if(ship.getFirePower(null) > this.currEventCard.getFirepower()) {
                 CommandWidgetTUI command;
 

@@ -20,9 +20,6 @@ public class EndGameScreen extends Screen {
         super(model, inputThread);
     }
 
-    /**
-     * TUI screen entry point for the end game phase
-     */
     @Override
     public void showEndGame(EndGameDTO endGame) {
         WidgetTUI endGameWidget = new WidgetTUI();

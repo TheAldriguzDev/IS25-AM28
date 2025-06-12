@@ -1,11 +1,8 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.*;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO;
 
 import java.util.*;
 
@@ -25,10 +22,6 @@ public class ClientShipConstructionState extends ClientState {
     private List<ClientComponent> currentShip;
 
     private final ShipConstructionDTO shipConstructionDTO;
-
-    // (NOT HERE --> IN THE CORRECT STATES
-    // TODO: Add the list for the removedComponents to support the FIX SHIP PHASE
-    // TODO: Add the list for the populateShipComponent to support the POPULATE SHIP PHASE
 
     /**
      * The constructor will set the model and then create all the components needed to build the player ship
@@ -109,6 +102,9 @@ public class ClientShipConstructionState extends ClientState {
         this.currentlySelectedSubdecks.put(subdeckIndex, selected);
     }
 
+    /**
+     * @return The current ShipConstructionDTO.
+     */
     public ShipConstructionDTO getShipConstructionDTO() {
         return this.shipConstructionDTO;
     }

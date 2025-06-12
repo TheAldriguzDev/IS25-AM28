@@ -16,21 +16,22 @@ import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 import java.util.*;
 
 public class VisitPlanets extends EventCard {
-    private final int movementSteps;
+    private final ResourceBank resourceBank;
+    private final Map<String, Integer> updatedPositions;
+    private final Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
+    private final Map<String, List<ComponentHelper<ItemColor>>> takenResources;
+    private final List<String> eliminatedPlayers;
     private final Map<Integer, Map<ItemColor, Integer>> itemsPerPlanet;
     private final Map<Integer, Player> playersChosenPlanet;
-    private final ResourceBank resourceBank;
-    private int playerUseCount;
+
     private List<ComponentHelper<ItemColor>> itemsToDrop;
     private List<ComponentHelper<ItemColor>> itemsToTake;
-    private Map<String, Integer> updatedPositions;
-    private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
-    private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
-    private int chosenPlanetIndex;
-    private List<String> eliminatedPlayers;
 
+    private final int movementSteps;
+    private int chosenPlanetIndex;
     private String prevPlayerNickname;
 
+    // Constructor
     public VisitPlanets(
             @JsonProperty("cardName") String cardName,
             @JsonProperty("cardLevel") int cardLevel,
@@ -43,19 +44,20 @@ public class VisitPlanets extends EventCard {
     ) {
         super(cardName, cardLevel, board, uniqueCardId, path);
 
-        updatedPositions = new HashMap<>();
-
-        this.movementSteps = movementSteps;
-        this.itemsPerPlanet = new HashMap<>();
         this.resourceBank = resourceBank;
-        this.itemsToDrop = new ArrayList<>();
-        this.itemsToTake = new ArrayList<>();
+        this.updatedPositions = new HashMap<>();
         this.droppedResources = new HashMap<>();
         this.takenResources = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
 
-        int planetIndex = 0;
+        this.itemsToDrop = new ArrayList<>();
+        this.itemsToTake = new ArrayList<>();
+
+        this.movementSteps = movementSteps;
         this.chosenPlanetIndex = -1;
+        this.itemsPerPlanet = new HashMap<>();
+
+        int planetIndex = 0;
 
         for (Map<String, Integer> planetDescriptor : itemsPerPlanet) {
             Map<ItemColor, Integer> formattedPlanetDescriptor = new HashMap<>();
@@ -92,7 +94,6 @@ public class VisitPlanets extends EventCard {
         // Map containing each player and its chosen planet to land on. If a player
         // is not present in this map, then it means that he didn't choose a planet to land on
         this.playersChosenPlanet = new HashMap<Integer, Player>();
-        this.playerUseCount = 0;
     }
 
     @Override
@@ -184,9 +185,11 @@ public class VisitPlanets extends EventCard {
             if (this.currentPlayer.isEmpty()) {
                 throw new IllegalArgumentException("[VisitPlanet::useCard] ERROR: No player is currently playing (Optional contains null)");
             }
+
             if ( !this.currentPlayer.get().getNickname().equals(visitPlanetsJSON.getPlayerNickname())) {
                 throw new IllegalArgumentException("ERROR: Current player and player in visitPlanetJSON do not match (wrong arguments)");
             }
+
             this.prevPlayerNickname = visitPlanetsJSON.getPlayerNickname();
 
             // Extracting the player's chosen planet
@@ -240,6 +243,7 @@ public class VisitPlanets extends EventCard {
                             }
                         }
                     }
+
                     if (!this.itemsToDrop.isEmpty()) {
                         this.droppedResources.put(this.getCurrentPlayer().get().getNickname(), this.itemsToDrop);
                     }
@@ -286,12 +290,6 @@ public class VisitPlanets extends EventCard {
                         chosenPlanetIndex,
                         this.currentPlayer.get()
                     );
-
-
-
-                    // Incrementing the use counter for each player that
-                    // actually used the card
-                    this.playerUseCount++;
                 }
                 else {
                     throw new IllegalArgumentException("ERROR: Chosen planet index was already chosen by someone else");
@@ -319,7 +317,6 @@ public class VisitPlanets extends EventCard {
 
         Map<Integer, Map<ItemColor, Integer>> availablePlanets;
 
-
         if (hasBeenActivated()) {
             initStateFlags(cardState);
 
@@ -335,12 +332,14 @@ public class VisitPlanets extends EventCard {
 
                 setUpdatedDroppedResourcesIfNecessary(cardState, this.droppedResources);
                 setUpdatedTakenResourcesIfNecessary(cardState, this.takenResources);
-            } else {
+            }
+            else {
                 cardState.setChosenPlanetIndex(-1);
             }
 
             setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
-        } else {
+        }
+        else {
             cardState.setCardTypeId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
