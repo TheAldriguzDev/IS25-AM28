@@ -111,7 +111,6 @@ public class VisitPlanets extends EventCard {
                     }
                 );
             }
-
             // (2) - Add the resources from the bank to the player
             for (ComponentHelper<ItemColor> itemToTake : this.itemsToTake) {
                 itemToTake.getItem().ifPresent(

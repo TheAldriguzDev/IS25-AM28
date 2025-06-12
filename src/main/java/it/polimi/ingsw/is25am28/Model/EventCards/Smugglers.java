@@ -282,11 +282,12 @@ public class Smugglers extends EventCard {
 
     @Override
     public CardStateJSON generateState() {
-        Optional<Player> playerOptional = getCurrentPlayer();
-        CardStateJSON smugglersStateJSON = new CardStateJSON();
-        smugglersStateJSON.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
+            Optional<Player> playerOptional = getCurrentPlayer();
+            CardStateJSON smugglersStateJSON = new CardStateJSON();
+            smugglersStateJSON.setUniqueCardId(this.uniqueCardId);
+
             // Initializing the state flags
             initStateFlags(smugglersStateJSON);
 
@@ -294,48 +295,31 @@ public class Smugglers extends EventCard {
             playerOptional.ifPresent(player -> smugglersStateJSON.setPlayerNickname(player.getNickname()));
             smugglersStateJSON.setPrevPlayerNickname(this.prevPlayerNickname);
 
-            // The clients need to know when to update the right parameters
-//            smugglersStateJSON.setFirstRound(this.firstRound);
-
-            // If the first round is finished, send the dynamic info to the players
-//            if (!firstRound) {
-//                ArrayList<String> defeatedPlayers = new ArrayList<>();
-//                for (Player player : playersToTakeItemsFrom) {
-//                    defeatedPlayers.add(player.getNickname());
-//                }
-
             smugglersStateJSON.setIsPlayerDefeated(this.isPlayerDefeated);
 
-                // This field is necessary to the clients to know if they need to send additional info
-                smugglersStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO: Need more thinking on this
-
-                // Sets the dropped resources (if there are any) // this works both in case of defeat or victory
+            // Sets the dropped resources (if there are any) // this works both in case of defeat or victory
             setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, this.droppedResources);
 
             // Sets the removed batteries (if there are any), due to the smugglers
             setUpdatedRemovedBatteriesIfNecessary(smugglersStateJSON, this.removedBatteries);
+
             setUpdatedPositionsIfNecessary(smugglersStateJSON, this.updatedPositions);
+
             setUpdatedTakenResourcesIfNecessary(smugglersStateJSON, this.takenResources);
+
             setUpdatedEliminatedPlayersIfNecessary(smugglersStateJSON, this.eliminatedPlayers);
 
+            smugglersStateJSON.setCardEnded(this.hasFinished());
+            return smugglersStateJSON;
+
         } else {
-            // Setting the card's static data
-            smugglersStateJSON.setCardTypeId(this.cardTypeId);
-            smugglersStateJSON.setCardName(this.getCardName());
-            smugglersStateJSON.setImagePath(this.path);
-            smugglersStateJSON.setCardLevel(this.getCardLevel());
-            smugglersStateJSON.setRequiredFirepower(requiredFirepower);
-            smugglersStateJSON.setMovementSteps(movementSteps);
-            smugglersStateJSON.setTakenItems(takenItems);
-            smugglersStateJSON.setRedItems(redItems);
-            smugglersStateJSON.setYellowItems(yellowItems);
-            smugglersStateJSON.setBlueItems(blueItems);
-            smugglersStateJSON.setGreenItems(greenItems);
+            // Setting the static info about the card
+            return this.generateStaticState();
         }
 
-        smugglersStateJSON.setCardEnded(this.hasFinished());
 
-        return smugglersStateJSON;
+
+
     }
 
     @Override
@@ -353,7 +337,6 @@ public class Smugglers extends EventCard {
         cardState.setYellowItems(yellowItems);
         cardState.setBlueItems(blueItems);
         cardState.setGreenItems(greenItems);
-        cardState.setImagePath(this.path);
 
         return cardState;
     }
