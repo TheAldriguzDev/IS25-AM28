@@ -1,11 +1,9 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 
 import com.fasterxml.jackson.annotation.*;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.CardRoundScreen;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
-import it.polimi.ingsw.is25am28.Model.GameModelv2.InsufficientPlayerState;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -18,7 +16,6 @@ import java.io.Serializable;
         @JsonSubTypes.Type(value = WaitPlayersStateDTO.class, name = "WaitPlayersStateDTO"),
         @JsonSubTypes.Type(value = ReconnectDTO.class, name = "ReconnectDTO"),
         @JsonSubTypes.Type(value = TimerDTO.class, name = "TimerDTO"),
-        @JsonSubTypes.Type(value = WaitingForGameConfigurationDTO.class, name = "WaitingForGameConfigurationDTO"),
         @JsonSubTypes.Type(value = ShipConstructionDTO.class, name = "ShipConstructionDTO"),
         @JsonSubTypes.Type(value = ShipConstructionEventDTO.class, name = "ShipConstructionEventDTO"),
         @JsonSubTypes.Type(value = ConstructionComponentDTO.class, name = "ConstructionComponentDTO"),
@@ -38,7 +35,7 @@ import java.io.Serializable;
 })
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public sealed class StateDTO implements Serializable permits AvailableGamesDTO, CardRoundDTO, CreateGameStateDTO, EndGameDTO, FastShipDTO, FixShipDTO, DisconnectedPlayerDTO, InsufficientPlayerDTO, PopulateShipDTO, ReconnectDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateDTO, WaitingForGameConfigurationDTO {
+public sealed class StateDTO implements Serializable permits AvailableGamesDTO, CardRoundDTO, CreateGameStateDTO, EndGameDTO, FastShipDTO, FixShipDTO, DisconnectedPlayerDTO, InsufficientPlayerDTO, PopulateShipDTO, ReconnectDTO, ShipConstructionDTO, ShipConstructionEventDTO, WaitPlayersStateDTO {
     @Serial
     private static final long serialVersionUID = 1L;
 
