@@ -92,7 +92,7 @@ public class GameModel {
         this.currentState.handlePlayerDisconnection(nickname);
 
         List<Player> connectedPlayers = this.players.values().stream().filter(Player::isConnected).toList();
-        if (connectedPlayers.size() == 1) {
+        if (connectedPlayers.size() <= 1) {
             this.setCurrentState(new InsufficientPlayerState(this, this.currentState));
             states.add(this.currentState.generateState());
         }
