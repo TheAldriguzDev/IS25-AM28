@@ -1,18 +1,21 @@
 package it.polimi.ingsw.is25am28.Network.Socket.Server;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
 import it.polimi.ingsw.is25am28.Network.Server.ServerLogger;
-
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TCPServer {
+/**
+ * The TCPServer class creates a TCP socket server to manage client connections and communications.
+ * It listens for incoming client connections, handles them via individual threads, and allows communication
+ * between clients by maintaining a list of connected clients.
+ */
 
+public class TCPServer {
     // Socket that waits for clients connections
     final ServerSocket listenSocket;
 
@@ -23,16 +26,22 @@ public class TCPServer {
     final List<SocketClientHandler> clients;
 
     /**
-     * Constructor used to create a new Socket Server
-     * */
+     * Constructs a TCPServer instance that listens for client connections and manages their communication.
+     * This class initializes a server socket, starts a thread to handle client connections,
+     * and allows interaction with the provided controller.
+     *
+     * @param ipAddress The IP address to bind to.
+     * @param port The port number on which the server will accept client connections.
+     * @param controller The instance of Server that handles interactions with the game model and logic.
+     * @throws IOException If an I/O error occurs when opening the server socket.
+     */
     public TCPServer(String ipAddress, int port, Server controller) throws IOException {
-        this.listenSocket = new ServerSocket(port);
+        this.listenSocket = new ServerSocket(port, 100, InetAddress.getByName(ipAddress));
 
         this.gameController = controller;
         this.clients = new ArrayList<>();
 
         ServerLogger.info("SERVER SOCKET", "Server socket listening on port: " + port);
-        //System.out.println("Server socket listening on port: " + port);
 
         new Thread(() -> {
             try {
@@ -44,10 +53,14 @@ public class TCPServer {
     }
 
     /**
-     * Method used to listen for new client connections
-     * */
+     * The runServer method starts the server's main loop to listen for incoming client connections
+     * and manages those connections by creating and running client handler threads. Each accepted
+     * client socket is processed in a separate thread to enable concurrent handling of multiple clients.
+     *
+     * @throws IOException if an I/O error occurs when waiting for or handling client connections
+     */
     private void runServer() throws IOException {
-        Socket clientSocket = null;
+        Socket clientSocket;
         while ((clientSocket = listenSocket.accept()) != null) {
             ServerLogger.info("SERVER SOCKET", "New client connected");
 
@@ -56,7 +69,6 @@ public class TCPServer {
 
             SocketClientHandler clientHandler = new SocketClientHandler(
                     this.gameController,
-                    this,
                     new BufferedReader(socketInputReader),
                     new PrintWriter(socketOutputWriter)
             );

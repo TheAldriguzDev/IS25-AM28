@@ -33,7 +33,7 @@ public final class WaitPlayersState extends State {
         Map<String, PlayerColor> nicknamesAndColors = new HashMap<>();
         Map<String, Player> players = model.getPlayers();
         for (Player player : players.values()) {
-            nicknamesAndColors.put(player.getNickname(), player.getPlayerColor());
+            nicknamesAndColors.put(player.getNickname(), player.getColor());
         }
 
         // Set the information needed for the state

@@ -73,7 +73,7 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
     // This method is used exclusively in the ShipConstructionState to handle disconnection to free the locked resources by a player
     // If a player has selected a subdeck, it must be deselected to allow other players to use it.
     public void handlePlayerDisconnection(String player) {
-
+        // TODO
     }
 
     public abstract void onComplete();

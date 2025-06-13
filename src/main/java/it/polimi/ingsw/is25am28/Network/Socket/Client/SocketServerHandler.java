@@ -18,9 +18,15 @@ import java.util.UUID;
 
 public class SocketServerHandler implements VirtualServerSocket {
     private final ObjectMapper mapper;
-
     private final PrintWriter output;
 
+    /**
+     * Creates a new instance of SocketServerHandler with the specified output stream.
+     * The handler is responsible for serializing messages into JSON format and sending
+     * them through the provided output stream.
+     *
+     * @param output the {@code BufferedWriter} used to send serialized data to the server
+     */
     public SocketServerHandler(BufferedWriter output) {
         this.output = new PrintWriter(output);
 

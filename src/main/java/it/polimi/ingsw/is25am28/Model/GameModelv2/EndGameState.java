@@ -92,6 +92,11 @@ public final class EndGameState extends State {
     }
 
     @Override
+    public void onComplete() {
+        // Empty because there aren't any more states
+    }
+
+    @Override
     public StateDTO generateState() {
         EndGameDTO state =  new EndGameDTO()
                 .setPlayersCredits(this.playersResult)
@@ -102,10 +107,5 @@ public final class EndGameState extends State {
         }
 
         return state;
-    }
-
-    @Override
-    public void onComplete() {
-        // Empty because there aren't any more states
     }
 }

@@ -42,10 +42,6 @@ public class Player {
             return this;
       }
 
-      public PlayerColor getPlayerColor(){
-            return color;
-      }
-
       /**
        * @return number of credits. it already includes the lost pieces penalty
        */
