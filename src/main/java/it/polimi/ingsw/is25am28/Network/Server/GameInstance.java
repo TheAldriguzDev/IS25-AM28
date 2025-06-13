@@ -85,7 +85,7 @@ public class GameInstance {
      * @return true if the game instance is available for players to join, false otherwise
      */
     public boolean canBeJoined() {
-        return this.canBeJoined;
+        return this.canBeJoined && !this.connectedClients.isEmpty();
     }
 
     /**
@@ -465,6 +465,7 @@ public class GameInstance {
 
         synchronized (this.virtualClientLock) {
             this.disconnectedClients.add(this.connectedClients.get(playerNickname));
+            this.connectedClients.remove(playerNickname);
         }
 
         this.broadCastUpdate(answer);
