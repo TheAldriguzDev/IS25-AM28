@@ -3,8 +3,8 @@ package it.polimi.ingsw.is25am28.Network.Server;
 import it.polimi.ingsw.is25am28.Controller.GameController;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
@@ -13,6 +13,7 @@ import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents an instance of a game, managing player connections, game state, and interactions
@@ -85,7 +86,18 @@ public class GameInstance {
      * @return true if the game instance is available for players to join, false otherwise
      */
     public boolean canBeJoined() {
-        return this.canBeJoined && !this.connectedClients.isEmpty();
+        boolean correctState;
+        switch (this.controller.getCurrentState()) {
+            case CreateGameStateDTO _, AvailableGamesDTO _, WaitPlayersStateDTO _ -> {
+                correctState = true;
+            }
+            default -> correctState = false;
+        }
+        
+        return
+                this.canBeJoined &&
+                !this.connectedClients.isEmpty()
+                && correctState;
     }
 
     /**
@@ -425,7 +437,7 @@ public class GameInstance {
                 view.updateState(answer);
             } catch (Exception e) {
                 if (currentAttempt + 1 < maxRetries) {
-                    CompletableFuture.delayedExecutor(delay, java.util.concurrent.TimeUnit.MILLISECONDS)
+                    CompletableFuture.delayedExecutor(delay, TimeUnit.MILLISECONDS)
                             .execute(() -> sendUpdateWithRetries(view, answer, queueHandler, currentAttempt + 1, maxRetries, delay));
                 } else {
                     ServerLogger.error("NETWORK", "Failed to send the message after " + maxRetries + " attempts");
