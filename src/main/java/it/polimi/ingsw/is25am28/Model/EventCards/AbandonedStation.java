@@ -17,7 +17,6 @@ public class AbandonedStation extends EventCard {
 
     private List<ComponentHelper<ItemColor>> resourceToDropOff;
     private List<ComponentHelper<ItemColor>> resourceToTake;
-    private boolean hasBeenUsedByPlayer;
 
     private List<String> playersThatCanUseTheCard;
 
@@ -94,7 +93,6 @@ public class AbandonedStation extends EventCard {
                 // Retrieve the resources needed for the computation
                 this.resourceToDropOff = abandonedStation.getItemsToBeRemoved();
                 this.resourceToTake = abandonedStation.getItemsToBeTaken();
-                this.hasBeenUsedByPlayer = true;
 
                 this.bonusEffect();
                 this.malusEffect();

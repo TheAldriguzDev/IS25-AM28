@@ -5,7 +5,7 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 public enum ItemColor {
     RED(4), YELLOW(3), GREEN(2), BLUE(1);
 
-    private int value;
+    private final int value;
 
     ItemColor(int value) {
         this.value = value;

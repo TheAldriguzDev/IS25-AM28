@@ -16,9 +16,9 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.addColor;
 
 public final class Storage extends Component {
     public static final String alias = "STORAGE";
-    final int capacity;
-    final boolean isSpecialStorage;
-    final List<Item> storedItems;
+    private final int capacity;
+    private final boolean isSpecialStorage;
+    private final List<Item> storedItems;
 
     public Storage(List<Integer> connectors, int capacity, boolean isSpecialStorage, String path) {
         super(connectors, path);

@@ -22,11 +22,8 @@ public class Smugglers extends EventCard {
     private final int greenItems;
     private final ResourceBank resourceBank;
     private final int takenItems;
-    //private boolean hasBeenDefeated;
     private ArrayList<String> defeatedPlayers;
-    //private boolean firstRound;
     private boolean isPlayerDefeated;
-    private ArrayList<Player> playersToTakeItemsFrom;
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
     private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
@@ -45,39 +42,14 @@ public class Smugglers extends EventCard {
         this.greenItems = greenItems;
         this.resourceBank = resourceBank;
         this.takenItems = takenItems;
-        //this.hasBeenDefeated = false;
         this.defeatedPlayers = new ArrayList<>();
-        //this.firstRound = true;
         this.isPlayerDefeated = false;
-        this.playersToTakeItemsFrom = new ArrayList<>();
         this.updatedPositions = new HashMap<>();
         this.droppedResources = new HashMap<>();
         this.takenResources = new HashMap<>();
         this.removedBatteries = new HashMap<>();
         this.eliminatedPlayers = new ArrayList<>();
     }
-
-    /*
-     * Se il tipo di response non è corretto la classe
-     * lancia un'eccezione di tipo ClassCastException
-     * */
-
-//    @Override
-//    public void initCardPlayers() throws IllegalArgumentException {
-//        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
-//            throw new IllegalArgumentException("The player list is null or contains less than two player");
-//        } else {
-//            if (firstRound) {
-//                this.players = new ArrayList<>(this.getBoard().getPlayers());
-//            } else {
-//                if (!playersToTakeItemsFrom.isEmpty()) {
-//                    this.players = new ArrayList<>(this.playersToTakeItemsFrom);
-//                }
-//            }
-//            currentPlayer = Optional.of(players.getFirst());
-//        }
-//        activateCard();
-//    }
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         SmugglersJSON smugglersData;
