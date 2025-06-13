@@ -1,13 +1,10 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Loader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FastShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
@@ -395,7 +392,7 @@ public class GameModel {
      * @return the ReservedComponentDTO that represent the reserved tile. The behavior of the communication sendTo / sendToAll
      * is left to the controller
      * */
-    public ReservedComponentDTO reserveTile(String playerNickname, int id) {
+    public ReservedComponentDTO reserveTile(String playerNickname, Integer id) {
         return currentState.reserveTile(playerNickname, id);
     }
 
@@ -434,7 +431,7 @@ public class GameModel {
      * 2. If all the players has sent the ship it will return the new state. This could be: FixShip if some player has an
      * invalid ship or populateShip if all the players have a valid ship
      * */
-    public List<StateDTO> playerEndedSendShip(String player, int reservedTiles) {
+    public List<StateDTO> playerEndedSendShip(String player, Integer reservedTiles) {
         List<StateDTO> states = new ArrayList<>();
 
         // Execute the command
@@ -594,9 +591,8 @@ public class GameModel {
 
     /**
      * If the given nickname is available the player will be created and added to the game
-     * @return if the game has the required numbers of players in the lobby
-    */
-    boolean addPlayer(String nickName, PlayerColor playerColor) throws IllegalArgumentException {
+     */
+    void addPlayer(String nickName, PlayerColor playerColor) throws IllegalArgumentException {
         if (nickName == null || playerColor == null || nickName.isEmpty()) {
             throw new IllegalArgumentException("Nickname cannot be null or empty");
         }
@@ -612,7 +608,6 @@ public class GameModel {
         Player p = new Player(nickName, playerColor, this.level);
         this.players.put(nickName, p);
 
-        return this.players.size() == this.numPlayers;
     }
 
     void addPlayerToBoard(String player) throws IllegalArgumentException {
@@ -622,14 +617,6 @@ public class GameModel {
 
     Board getBoard() {
         return this.board;
-    }
-
-    /**
-     * @return a map that associate each player with his VirtualView --> this is needed to update the clients
-     * when some events occurred on the server (e.g. onTimerEnd)
-     * */
-    Map<String, VirtualView> getVirtualViews() {
-        return new HashMap<>(this.playerVirtualViews);
     }
 
     /**
