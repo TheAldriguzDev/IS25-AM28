@@ -14,6 +14,14 @@ import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
+/**
+ * Abstract base class for board management, including board creation,
+ * player movement, validation, and elimination.
+ *
+ * Subclasses provide implementations for building specific board types
+ * based on the current game level.
+ */
+
 public abstract class Board implements WidgetTUIGenerator {
     private static final Map<Integer, Pair<Integer, Integer>> boardDimensions;
 
@@ -40,45 +48,77 @@ public abstract class Board implements WidgetTUIGenerator {
         this.eliminatedPlayer = new ArrayList<>();
     }
 
+    /**
+     * @return the size of the board
+     */
     public int getSize() { return size; }
 
+    /**
+     * Sets the size of the board.
+     *
+     * @param size the size to be set for the board
+     */
     public void setSize(int size) { this.size = size; }
 
+    /**
+     * @return the head of the board
+     */
     public Cell getHead() { return head; }
 
     /**
-     * Returns the initials cells of the game where the players will be set when they finish their ship
+     * @return the ArrayList of the initials cells of the board where the players will be set when they finish their ship
      * */
     protected ArrayList<Cell> getInitialCells() {
         return initialCells;
     }
 
+    /**
+     * Sets the initial cells of the board. This method clears the current list of initial cells
+     * and replaces it with the provided list of cells.
+     *
+     * @param initialCells the list of cells to be set as the initial cells of the board
+     */
     protected void setInitialCells(ArrayList<Cell> initialCells) {
         this.initialCells.clear();
         this.initialCells.addAll(initialCells);
     }
 
     /**
-     * Returns the current playing players without exposing the ref
-     * */
+     * Retrieves the list of all players currently on the board (not eliminated).
+     *
+     * @return a new list containing all players on the board
+     */
     public List<Player> getPlayers() {
         return new ArrayList<>(players);
     }
 
     /**
-     * Returns the eliminated players without exposing the ref
-     * */
+     * Retrieves the list of all eliminated players.
+     *
+     * @return a new list containing all the eliminated players
+     */
     public List<Player> getEliminatedPlayers() {
         return new ArrayList<>(eliminatedPlayer);
     }
 
+    /**
+     * @return the level of the board
+     */
     public int getLevel() { return level; }
 
+    /**
+     * Sets the level of the board.
+     *
+     * @param level the level of the game, used to create the correct board
+     */
     protected void setLevel(int level) { this.level = level; }
 
     /**
-     * Add a new player in the game if the nickname and the color is unique in the session
-     * */
+     * Adds a new player to the board if they are not already present in the list of players.
+     *
+     * @param player the player to be added to the board
+     * @return the current board instance after adding the player
+     */
     public Board newPlayer(Player player) {
         if( !players.contains(player) )
             players.add(player);
@@ -86,8 +126,13 @@ public abstract class Board implements WidgetTUIGenerator {
     }
 
     /**
-     * Eliminates the given player from the game for some other reason that ARE NOT being doubled
-     * */
+     * Eliminates a player from the board. If the player is present in the list of active players,
+     * they are removed, marked as eliminated, and added to the list of eliminated players.
+     *
+     * @param player the player to be eliminated
+     * @return the current board instance after the player has been eliminated
+     * @throws IllegalArgumentException if the specified player is not in the list of active players
+     */
     public Board eliminatePlayer(Player player) throws IllegalArgumentException {
         if (players.remove(player)) {
             player.eliminate();
@@ -100,8 +145,13 @@ public abstract class Board implements WidgetTUIGenerator {
     }
 
     /**
-     * Utility method to add Cells to the Board
-     * */
+     * Adds a new cell at the specified index and links it into the circular doubly-linked list
+     * of existing cells. If the list is empty, the new cell becomes the head.
+     * New cells are always appended at the end of the current list.
+     *
+     * @param idx the index to assign to the newly added cell
+     * @return the newly created cell
+     */
     protected Cell addCell(int idx) {
         Cell newCell = new Cell(idx);
 
@@ -121,14 +171,19 @@ public abstract class Board implements WidgetTUIGenerator {
     }
 
     /**
-     * This method will be implemented in each specific implementation of the board to realize the specific board for each level
-     * */
+     * Abstract method responsible for constructing the board.
+     * It builds the complete board structure, including its size and initial cells,
+     * based on the specific type of board required for the current game level.
+     */
     public abstract void buildBoard();
 
     /**
-     * Add the given player to the board in the first initial cell that is currently empty.
-     * It is synchronized since multiple clients can request to be added to the board in the same time
-     * */
+     * Adds the given player to the first available initial cell on the board.
+     * This method is synchronized to ensure thread safety when multiple clients
+     * attempt to join the board simultaneously.
+     *
+     * @param player the player to be added to the board
+     */
     public synchronized void addPlayerToBoard(Player player) {
 
         for (Cell cell : initialCells) {
@@ -148,8 +203,12 @@ public abstract class Board implements WidgetTUIGenerator {
     }
 
     /**
-     * Move the given player from its cell of the given steps
-     * */
+     * Moves the given player forward by the specified number of steps from their current cell.
+     * Occupied cells encountered along the movement are skipped.
+     *
+     * @param player the player to be moved
+     * @param steps the number of steps to move the player forward
+     */
     public void movePlayerForward(Player player, int steps) {
         Cell tmpCell = player.getCurrentCell();
 
@@ -172,7 +231,14 @@ public abstract class Board implements WidgetTUIGenerator {
         }
     }
 
-    public void movePlayerBackwards(Player player, int steps) {
+    /**
+     * Moves the given player backward by the specified number of steps from their current cell.
+     * Occupied cells encountered along the movement are skipped.
+     *
+     * @param player the player to be moved
+     * @param steps the number of steps to move the player forward
+     */
+    public void movePlayerBackward(Player player, int steps) {
         Cell tmpCell = player.getCurrentCell();
 
         while (steps > 0) {
@@ -195,9 +261,9 @@ public abstract class Board implements WidgetTUIGenerator {
     }
 
     /**
-     * Method that check the players cursor to identify eventual doubled players and eliminate them.
-     * It also reset the player list to maintain a correct order
-     * */
+     * Checks the players' cursors to identify any doubled players and eliminate them.
+     * Also resets the player list to maintain the correct turn order.
+     */
     public synchronized void validatePlayersPosition() {
         int maxCursor = players.stream()
                 .mapToInt(Player::getCursor)
@@ -224,6 +290,12 @@ public abstract class Board implements WidgetTUIGenerator {
         players.sort((p1, p2) -> Integer.compare(p2.getCursor(), p1.getCursor()));
     }
 
+    /**
+     * Generates a BoardJSON representation of the current state of the board.
+     *
+     * @return a {@link BoardJSON} object containing details about the board's size, level,
+     *         players, eliminated players, and their positions on the board.
+     */
     public BoardJSON generateState(){
         return BoardJSON.fromBoard(this);
     }

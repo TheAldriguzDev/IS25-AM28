@@ -435,7 +435,7 @@ public class WarZone extends EventCard {
                 this.getNextPlayer();
             }
             case MOVEMENTSTEPS -> {
-                this.getBoard().movePlayerBackwards(player, this.movementSteps);
+                this.getBoard().movePlayerBackward(player, this.movementSteps);
 
                 this.updatedPositions.put(player.getNickname(), player.getCursor());
 

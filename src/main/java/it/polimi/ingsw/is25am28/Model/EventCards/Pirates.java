@@ -155,7 +155,7 @@ public class Pirates extends EventCard {
                             // Pirates defeated, even if the player who defeated them does not take the credits, the card won't be used by other players
                             if (piratesData.getTakeCredits()) {
                                 bonusEffect();
-                                getBoard().movePlayerBackwards(player, movementSteps);
+                                getBoard().movePlayerBackward(player, movementSteps);
                                 this.updatedPositions.put(playerNickname, player.getCursor());
                                 int tmp = getBoard().getEliminatedPlayers().size();
                                 this.getBoard().validatePlayersPosition();

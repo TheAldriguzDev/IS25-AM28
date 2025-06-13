@@ -38,6 +38,11 @@ public class ValidateIPTest {
     }
 
     @Test
+    void testInvalidIPAddressBecauseMissingOneOctet() {
+        assertFalse(ValidateIP.validateIPAddress("192.168.1"));
+    }
+
+    @Test
     void testInvalidIPAddressBecauseOfNull() {
         assertFalse(ValidateIP.validateIPAddress(null));
     }

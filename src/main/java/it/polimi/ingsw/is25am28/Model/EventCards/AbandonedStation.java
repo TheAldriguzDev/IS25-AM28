@@ -145,7 +145,7 @@ public class AbandonedStation extends EventCard {
     protected void malusEffect() {
         if (this.getCurrentPlayer().isPresent()) {
             // Move the player of the given steps and re-validate the positions
-            this.getBoard().movePlayerBackwards(this.getCurrentPlayer().get(), this.movementStep);
+            this.getBoard().movePlayerBackward(this.getCurrentPlayer().get(), this.movementStep);
             this.updatedPositions.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getCursor());
             int tmp = getBoard().getEliminatedPlayers().size();
             this.getBoard().validatePlayersPosition();

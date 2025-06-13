@@ -35,7 +35,7 @@ public class Stardust extends EventCard {
 
                     int movementSteps = player.getShip().getExposedConnectorAmount();
 
-                    getBoard().movePlayerBackwards(player, movementSteps);
+                    getBoard().movePlayerBackward(player, movementSteps);
                     if (movementSteps != 0) {
                         this.updatedPositions.put(player.getNickname(), player.getCursor());
                     }

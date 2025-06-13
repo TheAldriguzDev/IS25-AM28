@@ -94,7 +94,7 @@ public class Smugglers extends EventCard {
                             cardUsed();
                             if (smugglersData.getTakeLoot()) {
                                 bonusEffect(data);
-                                getBoard().movePlayerBackwards(player, movementSteps);
+                                getBoard().movePlayerBackward(player, movementSteps);
 
                                 this.updatedPositions.put(playerNickname, player.getCursor());
                                 int tmp = getBoard().getEliminatedPlayers().size();

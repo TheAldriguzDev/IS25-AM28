@@ -77,7 +77,7 @@ class BoardLevel2Test {
             board.addPlayerToBoard(player);
         }
 
-        board.movePlayerBackwards(board.getPlayers().getFirst(), 3);
+        board.movePlayerBackward(board.getPlayers().getFirst(), 3);
 
         // Check if the player has been moved of 4 cells and if the cursor has been correctly updated
         // 4 cells because the third cell is occupied by the second player

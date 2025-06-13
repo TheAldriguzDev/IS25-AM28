@@ -137,7 +137,7 @@ public class AbandonedShip extends EventCard {
             this.cardUsed();
 
             // Move the player and re-validate the positions
-            this.getBoard().movePlayerBackwards(this.getCurrentPlayer().get(), this.movementStep);
+            this.getBoard().movePlayerBackward(this.getCurrentPlayer().get(), this.movementStep);
             this.updatedPositions.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getCursor());
             int tmp = getBoard().getEliminatedPlayers().size();
             this.getBoard().validatePlayersPosition();

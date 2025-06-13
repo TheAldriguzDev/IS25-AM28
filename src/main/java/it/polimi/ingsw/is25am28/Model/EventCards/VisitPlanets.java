@@ -141,7 +141,7 @@ public class VisitPlanets extends EventCard {
         for (i = activePlayers.size() - 1; i >= 0; i--) {
             for (Player player : this.playersChosenPlanet.values()) {
                 if (player.equals(activePlayers.get(i))) {
-                    this.getBoard().movePlayerBackwards(
+                    this.getBoard().movePlayerBackward(
                         player,
                         this.movementSteps
                     );

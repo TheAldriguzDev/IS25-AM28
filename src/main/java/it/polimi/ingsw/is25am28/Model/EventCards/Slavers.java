@@ -86,7 +86,7 @@ public class Slavers extends EventCard {
                             cardUsed();
                             if (slaversData.getTakeCredits()) {
                                 bonusEffect();
-                                getBoard().movePlayerBackwards(player, movementSteps);
+                                getBoard().movePlayerBackward(player, movementSteps);
                                 this.updatedPositions.put(playerNickname, player.getCursor());
                                 int tmp = getBoard().getEliminatedPlayers().size();
                                 this.getBoard().validatePlayersPosition();
