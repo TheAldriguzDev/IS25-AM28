@@ -465,6 +465,7 @@ public class GameInstance {
 
         synchronized (this.virtualClientLock) {
             this.disconnectedClients.add(this.connectedClients.get(playerNickname));
+            this.connectedClients.remove(playerNickname);
         }
 
         this.broadCastUpdate(answer);
