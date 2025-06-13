@@ -420,4 +420,8 @@ public abstract class EventCard {
 
     // TODO: eventCards should also set the lapped eliminated players -> modify validatePlayersPositions
 
+    // Initializing the skipUpdate flags, these flags will be set to true
+    // by the card if the current player needs to skip a particular update
+    // (like in the case the update in question is already done locally)
+
 }

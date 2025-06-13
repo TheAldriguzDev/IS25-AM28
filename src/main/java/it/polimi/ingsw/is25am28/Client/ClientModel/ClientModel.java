@@ -223,9 +223,9 @@ public class ClientModel {
             }
         }
     }
-
+    // new flag system
     public void updateShips(CardStateJSON cardStateJSON) {
-        // Removes the destroyed components from the specified ship
+        // Removes the destroyed components from the specified ship // TODO test this both in meteor shower, pirates, and smugglers
         if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
             for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
                 for (Map<String, Object> componentToRemove : cardStateJSON.getRemovedComponents().get(playerNickname)) {

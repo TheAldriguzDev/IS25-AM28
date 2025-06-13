@@ -860,8 +860,6 @@ public class CardRoundScreen extends Screen {
                     .printWidget();
         }
 
-        // TODO: ResourceBankCheck
-
         this.generateAvailableItemColorsWidget(
                 availableItemsToTake,
                 selectedItem

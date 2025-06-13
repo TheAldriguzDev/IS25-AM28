@@ -231,7 +231,7 @@ public class CardRoundController extends GUIController {
         } catch (UnsupportedOperationException e) {
             // Do nothing
         }
-
+        // TODO TEST
         List<ClientShield> nonActivatedShields = this.mainShip.getShieldList();
         try {
             nonActivatedShields.removeAll(this.currEventCard.getShieldsToActivate().stream()
@@ -243,7 +243,7 @@ public class CardRoundController extends GUIController {
         } catch (UnsupportedOperationException e) {
             // Do nothing
         }
-
+        // TODO TEST
         List<ClientEngine> nonActivatedEngines = this.mainShip.getEngineList();
         try {
             nonActivatedEngines.removeAll(this.currEventCard.getDoubleEnginesToActivate().stream()
@@ -278,6 +278,7 @@ public class CardRoundController extends GUIController {
 
     private void initRegionMap(Map<String, Region> componentsRegions, List<ClientComponent> components, BiConsumer<Integer, Integer> onClick) {
         // Sets all the regions of all the componentsRegions maps
+        componentsRegions.clear();
 
         // setting the components maps
         for (ClientComponent component : components) {
@@ -874,7 +875,7 @@ public class CardRoundController extends GUIController {
         // (2) - Take reward?
         try {
             Boolean takeReward = this.currEventCard.getTakeReward();
-
+            // TODO add condition based on the defeated player in the JSON
             if (takeReward != null) {
                 label = new Label();
                 label.setText("Take reward?: " + (takeReward ? "Yes" : "No"));
@@ -1154,7 +1155,18 @@ public class CardRoundController extends GUIController {
                     this.emptiedStoragesRegions.clear();
                     this.emptiedBatteriesRegions.clear();
                     this.emptiedBatteriesMap.clear();
-                    Platform.runLater(this::visualizePlayerActions);
+
+                    this.mainShip.generateComponentSubLists();
+                    Platform.runLater(
+                            () -> {
+                                this.initRegionMap(this.doubleCannonsRegions, new ArrayList<>(this.mainShip.getDoubleCannons()), this::handleDoubleCannonToActivate);
+                                this.initRegionMap(this.doubleEnginesRegions, new ArrayList<>(this.mainShip.getDoubleEngines()), this::handleDoubleEnginesToActivate);
+                                this.initRegionMap(this.shieldsRegions, new ArrayList<>(this.mainShip.getShieldList()), this::handleShieldsToActivate);
+
+                                this.visualizePlayerActions();
+                            }
+                    );
+
                     this.currEventCard.clearJSON();
                 },
                 () -> {

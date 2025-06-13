@@ -36,7 +36,7 @@ public class MeteorShower extends EventCard {
     private final List<String> eliminatedPlayers;
     private final Map<String, Integer> lostPieces;
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
-//    private String prevPlayerNickname;
+    private String prevPlayerNickname;
 
     public MeteorShower(
             String cardName,
@@ -149,7 +149,7 @@ public class MeteorShower extends EventCard {
             throw new IllegalArgumentException("[MeteorShower::useCard] " + e.getMessage());
         }
 
-//        this.prevPlayerNickname = meteorShowerJSON.getPlayerNickname();
+        this.prevPlayerNickname = meteorShowerJSON.getPlayerNickname();
 
         // Skips any player marked as disconnected during their turn
         if (this.currentPlayer.get().isConnected()) {
@@ -465,7 +465,7 @@ public class MeteorShower extends EventCard {
 
             // If the current player is present, then add it to the card state
             this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
-//            cardState.setPrevPlayerNickname(this.prevPlayerNickname);
+            cardState.setPrevPlayerNickname(this.prevPlayerNickname);
 
             cardState.setCurrMeteorIndex(this.currMeteorIndex);
             cardState.setDiceThrowResult(this.diceThrowResult);

@@ -33,11 +33,11 @@ public class CardStateJSON extends ActionJSON {
     private boolean cardEnded; // WHEN THIS FLAG IS SET TO TRUE THE CURRENT CLIENT CARD MUST NOT BE UPDATED, NOR PRINTED, ONLY THE GENERATE STATE (TO UPDATE THE LAST DATA SENT) IS NECESSARY
 
     // ==== CLIENT PLAYER FLAGS/INFORMATION ==== //
-    private boolean needsPlayerUpdate;
-    private boolean needsUpdatedCredits;
-    private boolean needsUpdatedLostPieces;
-    private Map<String, Integer> updatedCredits;
-    private Map<String, Integer> updatedLostPieces;
+        private boolean needsPlayerUpdate;
+        private boolean needsUpdatedCredits;
+        private boolean needsUpdatedLostPieces;
+        private Map<String, Integer> updatedCredits;
+        private Map<String, Integer> updatedLostPieces;
     // ========================================= //
 
     // ======== CLIENT BOARD FLAGS/INFORMATION ======== //
@@ -48,8 +48,14 @@ public class CardStateJSON extends ActionJSON {
         private List<String> eliminatedPlayers;
     // =================================================//
 
+    // ==== FLAGS TO SKIP UPDATES (For local updates) ==== //
+        private Map<String, Boolean> skipBatteriesUpdate;
+        private Map<String, Boolean> skipComponentsUpdate;
+        private Map<String, Boolean> skipCrewUpdate;
+        private Map<String, Boolean> skipStorageUpdate;
+    // =================================================== //
+
     // ======= CLIENT SHIP FLAGS/INFORMATION ======== //
-        // TODO: revise the maps with isEmpty check, there is the possibility they're not emptied after use, so once used they'll always be set // can just reset them after setting the state
         private boolean needsShipUpdate;
         private boolean needsUpdatedDroppedResources;
         private boolean needsUpdatedTakenResources;
@@ -700,6 +706,35 @@ public class CardStateJSON extends ActionJSON {
         }
 
     // ==================================================  //
+
+    // ==== FLAGS TO SKIP UPDATES GETTERS/SETTERS ==== //
+        @JsonGetter("skipBatteriesUpdate")
+        public Map<String, Boolean> getSkipBatteriesUpdate() {
+            return this.skipBatteriesUpdate;
+        }
+        @JsonSetter("skipBatteriesUpdate")
+        public void setSkipBatteriesUpdate(Map<String, Boolean> skipBatteriesUpdate) {
+            this.skipBatteriesUpdate = skipBatteriesUpdate;
+        }
+
+        @JsonGetter("skipCrewUpdate")
+        public Map<String, Boolean> getSkipCrewUpdate() {
+            return this.skipCrewUpdate;
+        }
+        @JsonSetter("skipCrewUpdate")
+        public void setSkipCrewUpdate(Map<String, Boolean> skipCrewUpdate) {
+            this.skipCrewUpdate = skipCrewUpdate;
+        }
+
+        @JsonGetter("skipStorageUpdate")
+        public Map<String, Boolean> getSkipStorageUpdate() {
+            return this.skipStorageUpdate;
+        }
+        @JsonSetter("skipStorageUpdate")
+        public void setSkipStorageUpdate(Map<String, Boolean> skipStorageUpdate) {
+            this.skipStorageUpdate = skipStorageUpdate;
+        }
+    // =============================================== //
 
     // ======== WarZone Card State Getters/Setters ======== //
 
