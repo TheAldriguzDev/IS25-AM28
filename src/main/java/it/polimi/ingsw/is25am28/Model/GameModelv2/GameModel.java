@@ -673,20 +673,22 @@ public class GameModel {
      * @return a list of strings representing available colors
      */
     public List<String> getAvailableColors() {
-        Set<PlayerColor> used = players.values().stream()
-                .map(Player::getColor)
-                .collect(Collectors.toSet());
-
-        List<PlayerColor> available = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            available.add(PlayerColor.fromInteger(i));
+        // Creates a set of already chosen colors
+        Set<PlayerColor> assignedColors = new HashSet<>();
+        for (Player player : players.values()) {
+            assignedColors.add(player.getColor());
         }
 
-        available.removeIf(used::contains);
+        // List with all the possible colors
+        List<String> result = new ArrayList<>();
+        for (int idx = 0; idx < 4; idx++) {
+            PlayerColor candidate = PlayerColor.fromInteger(idx);
+            if (!assignedColors.contains(candidate)) {
+                result.add(candidate.toString());
+            }
+        }
 
-        return available.stream()
-                .map(PlayerColor::toString)
-                .collect(Collectors.toList());
+        return result;
     }
 
     /**
