@@ -13,6 +13,11 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 
+/**
+ * Controller for managing the TUI logic.
+ * Provides methods to handle {@link Screen} interactions with the client.
+ * Implements the {@code ClientUI} interface to satisfy the structural and functional requirements of the client application.
+ */
 public class TUIHandler implements ClientUI {
     private final ClientModel model;
     private Screen screen;
@@ -64,7 +69,9 @@ public class TUIHandler implements ClientUI {
     }
 
     /**
-     * Sets the current screen to the given one.
+     * Sets the current screen to the provided screen instance and associates the virtual client with it.
+     *
+     * @param screen the new screen instance to be set as the current screen
      */
     private void setScreen(Screen screen) {
         this.screen = screen;
@@ -224,7 +231,7 @@ public class TUIHandler implements ClientUI {
     }
 
     /**
-     * Forces an interrupt of this input thread
+     * Interrupts the current screen's input request process.
      */
     public void interruptCurrScreen() {
         this.inputThread.interruptInputReader();
