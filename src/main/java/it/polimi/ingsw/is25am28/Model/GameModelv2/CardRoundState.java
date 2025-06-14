@@ -11,10 +11,7 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public final class CardRoundState extends State {
     // round indicates the current round number, and it's used to draw a card from the deck
@@ -29,6 +26,7 @@ public final class CardRoundState extends State {
 
         this.round = 0;
         this.deck = this.model.getGameDeck();
+        this.shuffleDeck();
 
         this.board = this.model.getBoard();
         this.isFirstState = true;
@@ -36,6 +34,16 @@ public final class CardRoundState extends State {
         // Initialize the first card players
         this.deck.getFirst().initCardPlayers();
         this.refreshPlayersShip();
+    }
+
+    /**
+     * Shuffles the deck of cards until the first card in the deck matches the current game level.
+     * This method ensures that the deck starts with a card of the required level.
+     */
+    private void shuffleDeck() {
+        do {
+            Collections.shuffle(this.deck);
+        } while (this.deck.getFirst().getCardLevel() != this.model.getGameLevel());
     }
 
     /**

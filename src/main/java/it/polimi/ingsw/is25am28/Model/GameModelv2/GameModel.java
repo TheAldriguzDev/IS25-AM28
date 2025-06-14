@@ -39,6 +39,20 @@ public class GameModel {
 
     private final Random random = new Random();
 
+    /**
+     * Constructor for the GameModel class.
+     * <p>
+     * Initializes the state and data structures of the game model.
+     * Specifically:
+     * - Initializes the game deck as an empty collection.
+     * - Initializes the players map to store player data.
+     * - Sets the default number of players to 2.
+     * - Sets the initial state as an instance of CreateGameState.
+     * - Initializes the mapping for player virtual views.
+     * - Sets up the queue handler for managing game events and starts its execution in a separate thread.
+     * This constructor is the starting point for creating a new GameModel instance
+     * and establishing the game's initial state and logic pipeline.
+     */
     public GameModel() {
         this.deck = new ArrayList<>();
         this.players = new HashMap<>();
@@ -51,29 +65,46 @@ public class GameModel {
     }
 
     /**
-     * @return the currentState of the game
-     * */
+     * Retrieves the current state of the game.
+     *
+     * @return the current state of the game represented as a {@code State} object.
+     */
     public State getCurrentState() {
         return this.currentState;
     }
 
     /**
-     * Set the currentState of the game, needed to make the state transition
-     * */
+     * Sets the current state of the game in order to make a state transition (state pattern).
+     *
+     * @param currentState the state to be set as the current state. It represents the
+     *                     ongoing phase or scenario of the game and must be a valid
+     *                     {@code State} object.
+     */
     public void setCurrentState(State currentState) {
         this.currentState = currentState;
     }
 
+    /**
+     * Generates a JSON object representing the current phase of the game by invoking
+     * the {@code generateState()} method of the current state.
+     *
+     * @return a {@code StateDTO} object encapsulating the current game state
+     */
     public StateDTO generateState() {
         return this.currentState.generateState();
     }
 
     /**
-     * @return a list of StateDTO where:
-     * 1. The first state represent the response to the client disconnection, so it will be a DisconnectedPlayerDTO
-     * 2. If there is only one player left, then the game will be in the InsufficientPlayerState, so we add this state
-     *     to the response
-     * */
+     * Disconnects a client from the game based on their nickname. Updates the player's
+     * connection status and modifies the current game state if necessary.
+     *
+     * @param nickname the nickname of the player to disconnect. Must match the name of
+     *                 an existing player in the game.
+     * @return a list of {@code StateDTO} objects representing the game's updated state,
+     *         including the player's disconnection and potential state transitions to {@link InsufficientPlayerState} caused
+     *         by an insufficient number of players.
+     * @throws IllegalArgumentException if the given player does not exist in the game.
+     */
     public List<StateDTO> disconnectClient(String nickname) throws IllegalArgumentException{
         Player p = this.players.get(nickname);
         if (p == null) {
@@ -98,8 +129,10 @@ public class GameModel {
     }
 
     /**
-     * @return the list of disconnected players. It
-     * */
+     * Retrieves a list of nicknames for all players who are currently disconnected from the game.
+     *
+     * @return a list of nicknames of disconnected players. If no players are disconnected, this list will be empty.
+     */
     public List<String> getDisconnectedPlayers() {
         return this.players.values()
                 .stream()
@@ -108,11 +141,16 @@ public class GameModel {
     }
 
     /**
-     * @return a list of DTO containing useful information about:
-     * 1. The response to a client reconnection --> will be used from the reconnected player to resume the game
-     *     and from other players to set the player as connected
-     * 2. If we had a state transition from InsufficientPlayerState to any other state, the new state will be added to the response
-     * */
+     * Handles the reconnection of a disconnected client to the server. This method verifies if the provided
+     * nickname belongs to a disconnected player, updates the player's connected status, assigns the new client
+     * view, and returns a list of game states required to synchronize the client with the current game phase.
+     *
+     * @param nickname the nickname of the player attempting to reconnect
+     * @param clientView the instance of the VirtualView corresponding to the reconnecting client
+     * @return a list of StateDTO objects representing the current state of the game, including any reconnect-specific information
+     * @throws IllegalArgumentException if the provided nickname does not exist in the disconnected players list or the game
+     * @throws Exception if an unexpected error occurs during the reconnection process
+     */
     public List<StateDTO> reconnectClient(String nickname, VirtualView clientView) throws Exception {
         if (!this.getDisconnectedPlayers().contains(nickname)) {
             throw new IllegalArgumentException("The given nickname does not exist in the disconnected players");
@@ -151,14 +189,65 @@ public class GameModel {
     }
 
     /**
-     * generateDeck() set the game deck by extracting the correct amount of cards. For each level the deck will be of:
-     * Test flight --> The 8 cards that are used for every test flight
-     * Level 1 --> 8 level 1 cards
-     * Level 2 --> 4 sub-decks of two lvl 2 card and one lvl 1 card
-     * Level 3 --> 4 sub-decks of two lvl 3 card, one lvl 2 card and one lvl 1 card
+     * Configures the game with the provided parameters and sets the initial game state.
      *
-     * The deck is not sorted
+     * @param nickname the nickname of the leader player
+     * @param playerColor the selected color by the leader player
+     * @param level the game level
+     * @param numPlayers the number of players participating in the game
+     * @param clientView the virtual view associated with the leader player
+     * @return the generated state containing the updated game configuration
+     * @throws IllegalStateException if the current state does not allow game configuration
+     * @throws IllegalArgumentException if any of the provided parameters are invalid
+     */
+    public StateDTO gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, VirtualView clientView) throws IllegalStateException, IllegalArgumentException {
+        // Set the game configuration sent by the leader
+        this.currentState.gameConfig(nickname, playerColor, level, numPlayers);
+
+        this.resourceBank = new ResourceBank(level);
+        this.createBoard();
+
+        // Generate the deck after the bank and the board since these values are needed in the loader
+        this.generateDeck();
+
+        this.playerVirtualViews.put(nickname, clientView);
+
+        // If all the previous operations are validated we can make the state transition
+        this.currentState.onComplete();
+        return this.currentState.generateState();
+    }
+
+    /**
+     * Creates the concrete {@link Board} object based on the game level
      * */
+    private void createBoard() {
+        switch (this.level) {
+            case 0 -> this.board = new BoardTestFlight();
+            case 2 -> this.board = new BoardLevel2();
+            default -> throw new IllegalStateException("The given game level (" + this.level + ") is not supported");
+        }
+
+        this.board.buildBoard();
+    }
+
+    /**
+     * Constructs and initializes the deck of cards based on the current game level.
+     *
+     * This method loads event cards from an external source using {@code CardLoader}. The cards are
+     * filtered and categorized into different levels based on their data. Depending on the
+     * game level, specific subsets of cards are added to create the deck:
+     *
+     * - Level 0: All available cards are added to the deck.
+     * - Level 1: The deck is divided into 4 sub-decks, each containing two level 1 cards.
+     * - Level 2: The deck is divided into 4 sub-decks, each containing two level 2 cards and one level 1 card.
+     * - Level 3: The deck is divided into 4 sub-decks, each containing two level 3 cards, one level 2 card, and one level 1 card.
+     *
+     * If the specified game level is invalid, an {@code IllegalStateException} is thrown. After the deck
+     * is constructed, it is randomized using {@code Collections.shuffle()}.
+     *
+     * @throws IllegalStateException if the specified game level is not valid.
+     * @throws RuntimeException if an error occurs while reading the JSON file used for loading the cards.
+     */
     private void generateDeck() throws IllegalStateException {
         // If the level is equal to 0, then we have loaded all the cards for the test flight
         // Otherwise we need to get the right amount of card for the selected flight level
@@ -258,42 +347,18 @@ public class GameModel {
     }
 
     /**
-     * Initializes the game configuration as defined by the leader.
-     * Sets the game level, number of players, and creates the leader as the first player.
+     * Adds a new player to the current game state with the specified nickname and color,
+     * and associates the player with a corresponding virtual view (network protocol).
+     *
+     * @param nickname the unique nickname of the player to be added
+     * @param playerColor the color representing the player in the game
+     * @param clientView the virtual view object associated with the player
+     * @return a list of state representations ({@code StateDTO}) showing the changes made to the game state:
+     *          the first element is always the response to the command,
+     *          the second element, if present, is the transition to the next state ({@link ShipConstructionDTO})
+     * @throws IllegalStateException if the current game state does not allow adding a new player
+     * @throws IllegalArgumentException if the provided arguments are invalid or violate game rules
      */
-    public StateDTO gameConfig(String nickname, PlayerColor playerColor, int level, int numPlayers, VirtualView clientView) throws IllegalStateException, IllegalArgumentException {
-        // Set the game configuration sent by the leader
-        this.currentState.gameConfig(nickname, playerColor, level, numPlayers);
-
-        this.resourceBank = new ResourceBank(level);
-        this.createBoard();
-
-        // Generate the deck after the bank and the board since these values are needed in the loader
-        this.generateDeck();
-
-        this.playerVirtualViews.put(nickname, clientView);
-
-        // If all the previous operations are validated we can make the state transition
-        this.currentState.onComplete();
-        return this.currentState.generateState();
-    }
-
-    private void createBoard() {
-        switch (this.level) {
-            case 0 -> this.board = new BoardTestFlight();
-            case 2 -> this.board = new BoardLevel2();
-            default -> throw new IllegalStateException("The given game level (" + this.level + ") is not supported");
-        }
-
-        this.board.buildBoard();
-    }
-
-    /**
-     * Add a new player to the game.
-     * @return a List of states that represent:
-     * 1. The response of the action of the command
-     * 2. If all the players have joined it will also include the nextState information
-     * */
     public List<StateDTO> addNewPlayer(String nickname, PlayerColor playerColor, VirtualView clientView) throws IllegalStateException, IllegalArgumentException {
         List<StateDTO> states = new ArrayList<>();
 
@@ -311,37 +376,66 @@ public class GameModel {
         return states;
     }
 
+    /**
+     * Selects or deselects a subdeck for a given player based on the provided parameters.
+     *
+     * @param player the identifier of the player performing the action
+     * @param selectedDeck the identifier of the subdeck to be selected or deselected
+     * @param isSelectAction a boolean indicating whether to select (true) or deselect (false) the subdeck
+     * @return a ConstructionDeckDTO representing the updated state after the action
+     * @throws IllegalStateException if the action is not allowed in the current state
+     */
     public ConstructionDeckDTO selectDeselectSubdeck(String player, Integer selectedDeck, Boolean isSelectAction) throws IllegalStateException {
         return this.currentState.selectDeselectSubdeck(player, selectedDeck, isSelectAction);
     }
 
     /**
-     * Execute the command to select a tile
-     * @return the ConstructionComponentDTO that represent the selectedTile. The behavior of the communication sendTo / sendToAll
-     * is left to the controller
-     * */
+     * Selects a tile based on the specified player and tile ID.
+     *
+     * @param player the identifier of the player selecting the tile
+     * @param id the ID of the tile to be selected
+     * @return a ConstructionComponentDTO representing the selected tile and its associated data
+     * @throws IllegalArgumentException if the provided arguments are invalid
+     */
     public ConstructionComponentDTO selectTile(String player, Integer id) throws IllegalArgumentException {
         return currentState.selectTile(player, id);
     }
 
     /**
-     * Execute the command to deselect a tile
-     * @return the ConstructionComponentDTO that represent the selectedTile. The behavior of the communication sendTo / sendToAll
-     * is left to the controller
-     * */
+     * Deselects a tile based on the specified player and tile ID.
+     *
+     * @param player the identifier of the player deselecting the tile
+     * @param id the ID of the tile to be deselected
+     * @return a ConstructionComponentDTO representing the deselected tile and its associated data
+     * @throws IllegalArgumentException if the provided arguments are invalid
+     */
     public ConstructionComponentDTO deselectTile(String player, Integer id) throws IllegalArgumentException {
         return currentState.deselectTile(player, id);
     }
 
     /**
-     * Execute the command to reserve a tile
-     * @return the ReservedComponentDTO that represent the reserved tile. The behavior of the communication sendTo / sendToAll
-     * is left to the controller
-     * */
+     * Reserve a tile based on the specified player and tile ID.
+     *
+     * @param playerNickname the identifier of the player reserving the tile
+     * @param id the ID of the tile to be reserved
+     * @return a ReservedComponentDTO representing the reserved tile and its associated data
+     * @throws IllegalArgumentException if the provided arguments are invalid
+     */
     public ReservedComponentDTO reserveTile(String playerNickname, Integer id) {
         return currentState.reserveTile(playerNickname, id);
     }
 
+    /**
+     * Executes the fast shipping operation for the given player and updates the game state accordingly.
+     *
+     * @param playerNickname the nickname of the player performing the fast shipping action
+     * @return a list of {@link StateDTO} objects representing the states generated by the action execution:
+     *          the first element is always the response to the command;
+     *          the second element, if present, can be:
+     *          {@code FixShipDTO} if a player's ship is invalid,
+     *          {@code PopulateShipDTO} if all ships are valid but some are missing lifeforms,
+     *          or {@code CardRoundDTO} otherwise
+     */
     public List<StateDTO> fastShip(String playerNickname) {
         List<StateDTO> states = new ArrayList<>();
 
@@ -363,20 +457,32 @@ public class GameModel {
     }
 
     /**
-     * Execute the command to place a tile
-     * @return PlacedComponentDTO that contains the information about the placed component of the player
-     * */
+     * Places a tile in the game at the specified location and orientation.
+     *
+     * @param player the identifier of the player placing the tile
+     * @param componentID the unique identifier of the tile being placed
+     * @param i the row index where the tile will be placed
+     * @param j the column index where the tile will be placed
+     * @param rotation the rotation of the tile to be placed
+     * @return a PlacedComponentDTO object representing the details of the placed tile
+     */
     public PlacedComponentDTO placeTile(String player, Integer componentID, Integer i, Integer j, Integer rotation) {
         return currentState.placeTile(player, componentID, i, j, rotation);
     }
 
     /**
-     * Command used when a player finish his ship or the time has ended to send the created ship
-     * @return the list of states that are required to update the client:
-     * 1. The result of the command executed by the client
-     * 2. If all the players has sent the ship it will return the new state. This could be: FixShip if some player has an
-     * invalid ship or populateShip if all the players have a valid ship
-     * */
+     * Handles the player's action of ending the ship construction phase
+     * and returns the new states resulting from the action.
+     *
+     * @param player the identifier of the player who has ended the ship sending phase
+     * @param reservedTiles the number of tiles reserved during the action
+     * @return a list of {@link StateDTO} objects representing the states generated by the action execution:
+     *            the first element is always the response to the command;
+     *            the second element, if present, can be:
+     *            {@code FixShipDTO} if a player's ship is invalid,
+     *            {@code PopulateShipDTO} if all ships are valid but some are missing lifeforms,
+     *            or {@code CardRoundDTO} otherwise
+     */
     public List<StateDTO> playerEndedSendShip(String player, Integer reservedTiles) {
         List<StateDTO> states = new ArrayList<>();
 
@@ -406,11 +512,19 @@ public class GameModel {
     }
 
     /**
-     * Command executed by the client to fix his ship
-     * @return a list of state that are required to update the client:
-     * 1. Contains the response of the executed command
-     * 2. If all the players have fixed their ship, it contains the PopulateShipState information
-     * */
+     * Removes a ship component for the specified player at the given coordinates, updates the game state,
+     * and returns a list of resulting state representations.
+     *
+     * @param player the identifier of the player whose ship is being fixed
+     * @param i the 'i' of the component to be removed
+     * @param j the 'j' of the component to be removed
+     * @return a list of {@link StateDTO} objects representing the states generated by the action execution:
+     *             the first element is always the response to the command;
+     *             the second element, if present, can be:
+     *             {@code PopulateShipDTO} if all ships are valid but some are missing lifeforms,
+     *             or {@code CardRoundDTO} otherwise
+     * @throws IllegalArgumentException if the input arguments are invalid
+     */
     public List<StateDTO> fixShip(String player, Integer i, Integer j) throws IllegalArgumentException {
         List<StateDTO> states = new ArrayList<>();
 
@@ -429,11 +543,15 @@ public class GameModel {
     }
 
     /**
-     * Command executed by the client to populate his ship
-     * @return a list of state that are required to update the client:
-     * 1. Contains the response of the executed command
-     * 2. If all the players has populated their ship, it contains the CardRoundState information
-     * */
+     * Populates a ship with a specific lifeform and updates the states accordingly.
+     *
+     * @param player The name or identifier of the player performing the action.
+     * @param lifeformToAdd The lifeform component to be added to the ship.
+     * @return a list of updated state objects:
+     *          the first element is always the response to the command,
+     *          the second element, if present, is a {@code CardRoundDTO}
+     * @throws IllegalArgumentException if the provided inputs are invalid or cause an error during execution.
+     */
     public List<StateDTO> populateShip(String player, ComponentHelper<LifeformType> lifeformToAdd) throws IllegalArgumentException {
         List<StateDTO> states = new ArrayList<>();
 
@@ -452,11 +570,15 @@ public class GameModel {
     }
 
     /**
-     * Command executed by the clients to play a card
-     * @return a list of StateJSON:
-     * 1. Contains the response of the command
-     * 2. If all the cards are finished it will also include the nextState or rather EndGameState
-     * */
+     * Processes the action of playing a card in the current game state.
+     * Updates the current state and returns a list of state data transfer objects.
+     *
+     * @param action the action object that contains the details of the card being played
+     * @return a list of {@code StateDTO} objects representing the updated states after the operation has been executed:
+     *          the first element is always the response to the command,
+     *          the second element, if present, is an {@code EndGameDTO}
+     * @throws IllegalArgumentException if the provided action is invalid
+     */
     public List<StateDTO> playCard(ActionJSON action) throws IllegalArgumentException {
         List<StateDTO> states = new ArrayList<>();
 
@@ -476,29 +598,53 @@ public class GameModel {
 
 
     // ========================================
-    // PACKAGE PRIVATE METHODS --> used by the states
+    // PACKAGE PRIVATE METHODS --> used by the concrete states
     // ========================================
 
     // Getters
+    /**
+     * Retrieves the current game level.
+     *
+     * @return the current level of the game as an integer
+     */
     int getGameLevel() {
         return this.level;
     }
 
+    /**
+     * Retrieves the game deck, which is a collection of EventCard objects.
+     *
+     * @return a List containing the EventCard objects representing the game deck.
+     */
     List<EventCard> getGameDeck() {
         return this.deck;
     }
 
+    /**
+     * Retrieves the number of players currently in the game.
+     *
+     * @return the number of players
+     */
     int getNumPlayers() {
         return this.numPlayers;
     }
 
+    /**
+     * Retrieves a map of players where the key is a string identifier
+     * and the value is the corresponding Player object.
+     *
+     * @return a map containing player identifiers as keys and Player objects as values
+     */
     Map<String, Player> getPlayers() {
         return this.players;
     }
 
     /**
-     * Set the game level
-     * */
+     * Sets the game level to the specified value.
+     *
+     * @param level the game level to set, must be between 0 and 3 inclusive
+     * @throws IllegalArgumentException if the specified level is outside the valid range (0-3)
+     */
     void setGameLevel(int level) throws IllegalArgumentException {
         if (level < 0 || level > 3) {
             throw new IllegalArgumentException("Level must be between 0 and 3");
@@ -508,8 +654,11 @@ public class GameModel {
     }
 
     /**
-     * Set the numbers of players that the game will have
-     * */
+     * Sets the number of players for the game.
+     *
+     * @param numPlayers the number of players to set, must be between 2 and 4 inclusive
+     * @throws IllegalArgumentException if the number of players is less than 2 or greater than 4
+     */
     void setGamePlayersNumber(int numPlayers) throws IllegalArgumentException {
         if (numPlayers < 2 || numPlayers > 4) {
             throw new IllegalArgumentException("Number of players must be between 2 and 4");
@@ -518,6 +667,11 @@ public class GameModel {
         this.numPlayers = numPlayers;
     }
 
+    /**
+     * Retrieves a list of available colors that are not currently in use by players.
+     *
+     * @return a list of strings representing available colors
+     */
     public List<String> getAvailableColors() {
         Set<PlayerColor> used = players.values().stream()
                 .map(Player::getColor)
@@ -536,7 +690,14 @@ public class GameModel {
     }
 
     /**
-     * If the given nickname is available the player will be created and added to the game
+     * Adds a new player to the game with the specified nickname and color.
+     * Validates that the nickname is not null, not empty, and not already in use,
+     * and that the color is not already assigned to another player.
+     *
+     * @param nickName the nickname of the player to be added
+     * @param playerColor the color assigned to the player
+     * @throws IllegalArgumentException if the nickname is null, empty, already in use,
+     *                                  or if the specified color is already assigned to another player
      */
     void addPlayer(String nickName, PlayerColor playerColor) throws IllegalArgumentException {
         if (nickName == null || playerColor == null || nickName.isEmpty()) {
@@ -556,18 +717,38 @@ public class GameModel {
 
     }
 
+    /**
+     * Adds a player to the game board.
+     *
+     * @param player The nickname of the player that needs to be added on the board
+     * @throws IllegalArgumentException If the player does not exist or
+     *                                  cannot be added to the board.
+     */
     void addPlayerToBoard(String player) throws IllegalArgumentException {
-        this.board.newPlayer(this.players.get(player));
-        this.board.addPlayerToBoard(this.players.get(player));
+        Player p = this.players.get(player);
+
+        this.board.newPlayer(p);
+        this.board.addPlayerToBoard(p);
     }
 
+    /**
+     * Retrieves the current board.
+     *
+     * @return the current instance of the Board object
+     */
     Board getBoard() {
         return this.board;
     }
 
     /**
-     * Method used by the states to update the clients on certain events
-     * */
+     * Broadcasts an update to all connected players by sending the provided answer information
+     * to their respective virtual views.
+     *
+     * Useful for messages generated by the server (e.g., timer events) that are not
+     * related to actions from the clients.
+     *
+     * @param answer the data to broadcast to all connected players
+     */
     void broadCastUpdate(Answer answer) {
         for (Map.Entry<String, VirtualView> entry : this.playerVirtualViews.entrySet()) {
             if (this.players.get(entry.getKey()).isConnected()) {
@@ -576,6 +757,13 @@ public class GameModel {
         }
     }
 
+    /**
+     * Sends an update to the specified virtual view with the provided answer and will retry
+     * the operation a limited number of times if it fails.
+     *
+     * @param view   the VirtualView instance to which the update is being sent
+     * @param answer the Answer object containing the details of the update to be sent
+     */
     private void sendUpdateWithRetries(VirtualView view, Answer answer) {
         GameInstance.sendUpdateWithRetries(view, answer, queueHandler, 0, 3, 2500);
     }
