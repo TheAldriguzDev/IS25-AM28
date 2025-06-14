@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.*;
 
 import java.util.List;
 
+/**
+ * Defines the JSON structure used to parse and load saved tiles into the game.
+ */
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "cannon",
