@@ -30,10 +30,11 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType.ASTRONAUT;
 
 /**
- * This class use the VisitorPattern to save useful information of each state and then show this information in
- * the given UI
- * */
-
+ * Uses the Visitor Pattern to update the {@link ClientModel} based on updates received from the server,
+ * and optionally triggers a UI render.
+ *
+ * Each method is invoked by a concrete implementation of {@link StateDTO} to activate the appropriate handlers.
+ */
 public class ViewUpdater implements StateVisitor {
     private final ClientUI ui;
     private final ClientModel model;
@@ -396,18 +397,41 @@ public class ViewUpdater implements StateVisitor {
         this.ui.showInsufficientPlayer(state);
     }
 
+    /**
+     * Reports an error by displaying the provided error message to the user interface.
+     * The method wraps the message inside an {@code ErrorAnswer} object and delegates
+     * to the user interface to handle its display.
+     *
+     * @param message the error message to be displayed to the user
+     */
     public void reportError(String message) {
         this.ui.showError(new ErrorAnswer(message));
     }
 
+    /**
+     * Determines whether the command context for invoking network callbacks is set.
+     *
+     * @return {@code true} if the client has an active command context; {@code false} otherwise
+     */
     public boolean isCTXAvailable() {
         return this.ui.isCTXAvailable();
     }
 
+    /**
+     * Executes the command submission for the specified player. This method triggers
+     * the associated onSuccess task in the active command context for the provided player nickname.
+     *
+     * @param playerNickname The nickname of the player whose onSuccess task needs to be executed.
+     */
     public void commitCommand(String playerNickname) {
         this.ui.commitCommand(playerNickname);
     }
 
+    /**
+     * Interrupts the current screen by delegating the action to the user interface.
+     * Typically used when waiting for user input, this method cancels the input request,
+     * allowing the application to transition to the next state.
+     */
     public void interruptCurrScreen() {
         this.ui.interruptCurrScreen();
     }
