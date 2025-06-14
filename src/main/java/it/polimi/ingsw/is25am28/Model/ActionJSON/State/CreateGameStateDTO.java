@@ -14,6 +14,13 @@ public final class CreateGameStateDTO extends StateDTO {
 
     public CreateGameStateDTO() {}
 
+    public CreateGameStateDTO(
+            @JsonProperty("availableColors") List<String> availableColors,
+            @JsonProperty("usedNicknames") List<String> usedNicknames) {
+        this.availableColors = availableColors;
+        this.usedNicknames = usedNicknames;
+    }
+
     @JsonGetter("availableColors")
     public List<String> getAvailableColors() {
         return this.availableColors;
