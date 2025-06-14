@@ -5,6 +5,11 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.Discon
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 
+/**
+ * Defines the visitor interface for handling state updates received from the server.
+ * The methods implemented in {@code ViewUpdater} contain the specific logic for processing
+ * each concrete implementation of the {@code StateDTO}.
+ */
 public interface StateVisitor {
     // ===== GENERAL STATE ===== //
     void visit(StateDTO state);
