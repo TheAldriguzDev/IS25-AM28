@@ -13,8 +13,10 @@ public final class Cannon extends Component {
     public static final String alias = "CANNON";
     private final int force;
 
+    // Constructor
     public Cannon(List<Integer> connectors, int force, String path) {
         super(connectors, path);
+
         this.force = force;
     }
 

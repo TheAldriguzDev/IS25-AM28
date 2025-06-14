@@ -9,11 +9,17 @@ public class PlasmaShot {
         this.orientation = orientation;
     }
 
+    /**
+     * @return This plasma shot's size
+     */
     public int getSize() {
-        return size;
+        return this.size;
     }
 
+    /**
+     * @return This plasma shot's orientation
+     */
     public int getOrientation() {
-        return orientation;
+        return this.orientation;
     }
 }

@@ -11,20 +11,30 @@ public enum LifeformType {
     private final int attackBoost;
     private final int powerBoost;
 
+    // Private Constructor
     LifeformType(int requiredSpace, int attackBoost, int powerBoost) {
         this.requiredSpace = requiredSpace;
         this.attackBoost = attackBoost;
         this.powerBoost = powerBoost;
     }
 
+    /**
+     * @return The cabin space occupied by this lifeform type.
+     */
     public int getRequiredSpace() {
         return requiredSpace;
     }
 
+    /**
+     * @return The firepower boost granted when this lifeform type is onboard a ship.
+     */
     public int getAttackBoost() {
         return attackBoost;
     }
 
+    /**
+     * @return The engine power boost granted when this lifeform type is onboard a ship.
+     */
     public int getPowerBoost() {
         return powerBoost;
     }
@@ -38,6 +48,9 @@ public enum LifeformType {
         };
     }
 
+    /**
+     * @return The image of this lifeform type to display in the GUI
+     */
     public String getImagePath() {
         return switch(this) {
             case ASTRONAUT -> "/imgs/icons/lifeforms/astronaut/astronaut.png";
@@ -46,6 +59,10 @@ public enum LifeformType {
         };
     }
 
+    /**
+     * @param value The name of the requested LifeformType instance.
+     * @return The LifeformType enum instance whose name matches the given one.
+     */
     @JsonCreator
     public static LifeformType fromString(String value) {
         return LifeformType.valueOf(value.toUpperCase());

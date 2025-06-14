@@ -25,8 +25,20 @@ public class Slavers extends EventCard {
 
     private String prevPlayerNickname;
 
-    public Slavers(String name, int cardLevel, int requiredFirepower, int movementSteps, int givenCredits, int takenCrew, Board board, int uniqueCardId, String path) {
+    // Constructor
+    public Slavers(
+            String name,
+            int cardLevel,
+            int requiredFirepower,
+            int movementSteps,
+            int givenCredits,
+            int takenCrew,
+            Board board,
+            int uniqueCardId,
+            String path
+    ) {
         super(name, cardLevel, board, uniqueCardId, path);
+
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.givenCredits = givenCredits;
@@ -118,6 +130,7 @@ public class Slavers extends EventCard {
                     throw new IllegalArgumentException("There is no player playing in this moment");
                 }
         );
+
         return this;
     }
 
@@ -136,17 +149,17 @@ public class Slavers extends EventCard {
     protected void malusEffect(ActionJSON data) {
         Optional<Player> playerOptional = getCurrentPlayer();
         SlaversJSON slaversData = (SlaversJSON) data;
+
         this.eliminatedPlayers = new ArrayList<>();
 
         playerOptional.ifPresent(
                 (Player player) -> {
-
                     int numOfCrewToRemove = slaversData.getCrewToRemove().size();
                     int numOfTotalCrew = player.getShip().getAllLifeforms().size();
 
                     if (
-                            (numOfCrewToRemove != this.takenCrew && numOfCrewToRemove != numOfTotalCrew) ||
-                            numOfCrewToRemove > this.takenCrew
+                           (numOfCrewToRemove != this.takenCrew && numOfCrewToRemove != numOfTotalCrew)
+                        || (numOfCrewToRemove > this.takenCrew)
                     ) {
                         // Exception thrown if the removed crew members are too few or too much
                         throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
@@ -158,7 +171,8 @@ public class Slavers extends EventCard {
 
                         try {
                             tmpCabin = (Cabin) player.getShip().getComponent(lifeForm.getI(), lifeForm.getJ());
-                        } catch (Exception e) {
+                        }
+                        catch (Exception e) {
                             throw new IllegalStateException("The given component is not a valid cabin");
                         }
 
@@ -186,10 +200,10 @@ public class Slavers extends EventCard {
 
     @Override
     public CardStateJSON generateState() {
-
         if (hasBeenActivated()) {
             Optional<Player> playerOptional = getCurrentPlayer();
             CardStateJSON slaversStateJSON = new CardStateJSON();
+
             slaversStateJSON.setUniqueCardId(this.uniqueCardId);
 
             // Initializing the state flags
@@ -213,9 +227,10 @@ public class Slavers extends EventCard {
             setUpdatedCreditsIfNecessary(slaversStateJSON, updatedCredits);
 
             slaversStateJSON.setCardEnded(this.hasFinished());
-            return slaversStateJSON;
 
-        } else {
+            return slaversStateJSON;
+        }
+        else {
             // Setting the static info about the card
             return this.generateStaticState();
         }
@@ -224,6 +239,7 @@ public class Slavers extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setCardTypeId(this.cardTypeId);
         cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());

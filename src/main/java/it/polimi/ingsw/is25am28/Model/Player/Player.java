@@ -6,103 +6,169 @@ import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 public class Player {
       private final PlayerColor color;
       private final String nickname;
-      private Ship ship;
-      private int cursor = 0;
-      private int credits = 0;
-      private int lostPieces = 0;
+      private final Ship ship;
       private Cell cell;
-      private boolean connected = true;
+      private int cursor;
+      private int credits;
+      private int lostPieces;
+      private boolean connected;
+      private boolean eliminated;
 
-      private boolean lost = false;
-
-      public Player( String nickname, PlayerColor color, int level ){
+      // Constructor
+      public Player(String nickname, PlayerColor color, int level) {
             this.color = color;
             this.nickname = nickname;
-            ship = new Ship(level);
+            this.ship = new Ship(level);
+            this.cell = null;
+            this.cursor = 0;
+            this.credits = 0;
+            this.lostPieces = 0;
+            this.connected = true;
+            this.eliminated = false;
       }
 
+      /**
+       * @return This player's nickname
+       */
       public String getNickname(){
-            return nickname;
+            return this.nickname;
       }
 
+      /**
+       * @return This player's nickname
+       */
       public String getColorToString() {
-            return color.toString();
+            return this.color.toString();
       }
 
+      /**
+       * @return This player's PlayerColor instance.
+       */
       public PlayerColor getColor() {
             return this.color;
       }
 
+      /**
+       * @return This player's board cursor.
+       */
       public int getCursor(){
-            return cursor;
+            return this.cursor;
       }
 
-      public Player setCursor( int cursor ){
+      /**
+       * @param cursor The board cursor to set to this player
+       */
+      public Player setCursor(int cursor) {
             this.cursor = cursor;
             return this;
       }
 
       /**
-       * @return number of credits. it already includes the lost pieces penalty
+       * @return The actual number of credits of this player, given
+       *         that each lost piece costs 1 credit.
        */
-      public int getCredits(){
-            return credits - lostPieces;
+      public int getCredits() {
+            return this.credits - this.lostPieces;
       }
 
-      public Player setCredits( int credits ){
+      /**
+       * @param credits The amount of credits to set as the
+       *                total credits of this player.
+       */
+      public Player setCredits(int credits) {
             this.credits = credits;
             return this;
       }
 
-      public Player addCredits( int credits ){
+      /**
+       * @param credits The amount of credits to add to the
+       *                total credits counter of this player.
+       */
+      public Player addCredits(int credits) {
             this.credits += credits;
             return this;
       }
 
-      public Ship getShip(){
-            return ship;
+      /**
+       * @return This player's ship reference.
+       */
+      public Ship getShip() {
+            return this.ship;
       }
 
-      public Cell getCurrentCell(){
-            return cell;
+      /**
+       * @return The cell where this player is currently placed.
+       *         If it's null, then the player is not on the board.
+       */
+      public Cell getCurrentCell() {
+            return this.cell;
       }
 
-      public Player setCurrentCell( Cell cell ){
+      /**
+       * @param cell The cell where this player will be placed.
+       */
+      public Player setCurrentCell(Cell cell) {
             this.cell = cell;
             return this;
       }
 
-      public int getLostPieces(){
-            return lostPieces;
+      /**
+       * @return This player's total amount of lost pieces.
+       */
+      public int getLostPieces() {
+            return this.lostPieces;
       }
 
-      public Player setLostPieces( int lost ){
-            this.lostPieces = lost;
+      /**
+       * @param lostPieces The amount of lost pieces to set as the
+       *                   total lost pieces of this player.
+       */
+      public Player setLostPieces(int lostPieces) {
+            this.lostPieces = lostPieces;
             return this;
       }
 
-      public Player addLostPieces( int lost ){
-            this.lostPieces += lost;
+      /**
+       * @param lostPieces The amount of lost pieces to add to the
+       *                   total lost pieces of this player.
+       */
+      public Player addLostPieces(int lostPieces) {
+            this.lostPieces += lostPieces;
             return this;
       }
 
-      public Player eliminate(){
-            this.lost = true;
-            this.getCurrentCell().setPlayer(null);
-            this.setCurrentCell(null);
+      /**
+       * Marks this player as eliminated and removes it
+       * from the board cell that contains it.
+       */
+      public Player eliminate() {
+            this.eliminated = true;
+            this.cell.setPlayer(null);
+            this.cell = null;
 
             return this;
       }
 
-      public boolean isEliminated(){
-            return lost;
+      /**
+       * @return TRUE if this player is eliminated,
+       *         FALSE otherwise.
+       */
+      public boolean isEliminated() {
+            return this.eliminated;
       }
 
-      public boolean isConnected(){
+      /**
+       * @return TRUE if this player is connected,
+       *         FALSE otherwise.
+       */
+      public boolean isConnected() {
             return connected;
       }
 
-      public Player setConnected( boolean connectionStatus ){
+      /**
+       * @param connectionStatus The player's new connection status to set to the player.
+       */
+      public Player setConnected(boolean connectionStatus) {
             connected = connectionStatus;
             return this;
       }

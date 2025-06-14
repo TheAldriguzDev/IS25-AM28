@@ -312,9 +312,9 @@ public class VisitPlanets extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
-        cardState.setUniqueCardId(this.uniqueCardId);
-
         Map<Integer, Map<ItemColor, Integer>> availablePlanets;
+
+        cardState.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
             initStateFlags(cardState);
@@ -358,6 +358,7 @@ public class VisitPlanets extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setCardTypeId(this.cardTypeId);
         cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());

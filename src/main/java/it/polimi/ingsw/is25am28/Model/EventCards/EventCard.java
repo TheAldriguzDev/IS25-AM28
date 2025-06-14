@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -29,7 +28,7 @@ public abstract class EventCard {
     protected boolean hasBeenActivated;
 
     /**
-     * General constructor shared between the classes
+     * Generic constructor shared between the classes
      */
     protected EventCard(String cardName, int cardLevel, Board board, int uniqueCardId, String path) {
         this.cardName = cardName;
@@ -263,12 +262,14 @@ public abstract class EventCard {
         if (!updatedPositions.isEmpty()) {
             cardState.setNeedsBoardUpdate(true);
             cardState.setNeedsUpdatedPositions(true);
+
             cardState.setUpdatedPositions(
                 new HashMap<>(
                     updatedPositions.entrySet().stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() % getBoard().getSize()))
                 )
             );
+
             updatedPositions.clear();
         }
     }

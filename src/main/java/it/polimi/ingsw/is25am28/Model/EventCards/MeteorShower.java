@@ -38,6 +38,7 @@ public class MeteorShower extends EventCard {
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 //    private String prevPlayerNickname;
 
+    // Constructor
     public MeteorShower(
             String cardName,
             int cardLevel,
@@ -52,7 +53,6 @@ public class MeteorShower extends EventCard {
         this.random = new Random();
         this.currMeteorIndex = 0;
         this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
-//        this.diceThrowResult = 7; // TODO remove after testing
         this.prevPlayerRemovedComponents = new ArrayList<>();
         this.prevPlayer = null;
         this.removedComponents = new HashMap<>();
@@ -458,6 +458,7 @@ public class MeteorShower extends EventCard {
     @Override
     public CardStateJSON generateState() {
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
@@ -489,7 +490,8 @@ public class MeteorShower extends EventCard {
             setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
 
             setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
-        } else {
+        }
+        else {
             cardState.setCardTypeId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
             cardState.setImagePath(this.path);
@@ -504,6 +506,7 @@ public class MeteorShower extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setCardTypeId(this.cardTypeId);
         cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());
@@ -514,7 +517,16 @@ public class MeteorShower extends EventCard {
         return cardState;
     }
 
-    // Only for testing
+    /**
+     * Forces the dice throw to ignore the internal RNG.
+     * <br>
+     * NOTE: This method is used only when testing the card.
+     * <br>
+     * NOTE: This method must be invoked before an useCard() method
+     *       when the dice throw result needs to be manipulated.
+     *
+     * @param diceThrowResult The artificial dice throw result to set the card to.
+     */
     void setDiceThrowResult(int diceThrowResult) {
         this.diceThrowResult = diceThrowResult;
     }

@@ -11,6 +11,7 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 public final class Structural extends Component {
       public static final String alias = "STRUCT";
 
+      // Constructor
       public Structural(List<Integer> connectors, String path) {
             super(connectors, path);
       }

@@ -20,6 +20,7 @@ public class OpenSpace extends EventCard {
     private final Map<String, List<CoordinatePair>> removedBatteries;
     private String prevPlayerNickname;
 
+    // Constructor
     public OpenSpace(String name, int level, Board board, int uniqueCardId, String path) {
         super(name, level, board, uniqueCardId, path);
 
@@ -134,6 +135,7 @@ public class OpenSpace extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
@@ -161,6 +163,7 @@ public class OpenSpace extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setCardTypeId(this.cardTypeId);
         cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());

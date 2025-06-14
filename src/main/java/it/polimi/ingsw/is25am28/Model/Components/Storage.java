@@ -20,23 +20,35 @@ public final class Storage extends Component {
     private final boolean isSpecialStorage;
     private final List<Item> storedItems;
 
+    // Constructor
     public Storage(List<Integer> connectors, int capacity, boolean isSpecialStorage, String path) {
         super(connectors, path);
+
         this.capacity = capacity;
         this.isSpecialStorage = isSpecialStorage;
-        storedItems = new ArrayList<>();
+        this.storedItems = new ArrayList<>();
     }
 
+    /**
+     * @return This storage's maximum capacity.
+     */
     public int getCapacity() {
-        return capacity;
+        return this.capacity;
     }
 
+    /**
+     * @return TRUE if this storage is special (i.e.: can store RED items),
+     *         FALSE otherwise.
+     */
     public boolean isSpecialStorage() {
-        return isSpecialStorage;
+        return this.isSpecialStorage;
     }
 
+    /**
+     * @return A list of all the items contained in this storage.
+     */
     public List<Item> getStoredItems() {
-        return storedItems;
+        return this.storedItems;
     }
 
     /**

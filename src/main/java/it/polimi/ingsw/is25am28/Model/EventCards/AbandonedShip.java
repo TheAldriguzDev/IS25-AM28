@@ -26,8 +26,19 @@ public class AbandonedShip extends EventCard {
 
     private List<String> playersThatCanUseTheCard;
 
-    public AbandonedShip(String name, int cardLevel, int requireCrew, int movementStep, int givenCredits, Board board, int uniqueCardId, String path) {
+    // Constructor
+    public AbandonedShip(
+            String name,
+            int cardLevel,
+            int requireCrew,
+            int movementStep,
+            int givenCredits,
+            Board board,
+            int uniqueCardId,
+            String path
+    ) {
         super(name, cardLevel, board, uniqueCardId, path);
+
         this.requiredCrew = requireCrew;
         this.movementStep = movementStep;
         this.givenCredits = givenCredits;
@@ -45,17 +56,19 @@ public class AbandonedShip extends EventCard {
      * */
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
-        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
+        if (this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
-        } else {
+        }
+        else {
             this.playersThatCanUseTheCard = this.getBoard().getPlayers().stream()
                     .filter( p -> p.getShip().getAllLifeforms().size() >= this.requiredCrew )
                     .map(Player::getNickname)
                     .toList();
 
             this.players = new ArrayList<>(this.getBoard().getPlayers());
-            currentPlayer = Optional.of(players.getFirst());
+            this.currentPlayer = Optional.of(this.players.getFirst());
         }
+
         activateCard();
     }
 
@@ -73,7 +86,8 @@ public class AbandonedShip extends EventCard {
 
         try {
             abandonedShip = (AbandonedShipJSON) data;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new IllegalArgumentException("The given JSON data is not a valid abandonedShip JSON");
         }
 
@@ -84,9 +98,11 @@ public class AbandonedShip extends EventCard {
 
         // Check if:
         // 1. The player match with the current one
-        if ( playerNickname != null &&
-                !playerNickname.isEmpty() &&
-                playerNickname.equals( this.getCurrentPlayer().get().getNickname()) ) {
+        if (
+                (playerNickname != null) &&
+                (!playerNickname.isEmpty()) &&
+                (playerNickname.equals(this.getCurrentPlayer().get().getNickname()))
+        ) {
 
             // If the player wants to use the card --> perform the action
             // otherwise get the next player
@@ -94,10 +110,9 @@ public class AbandonedShip extends EventCard {
                 this.lifeformsToBeRemoved = abandonedShip.getLifeformsToBeRemoved();
 
                 if (lifeformsToBeRemoved.size() != this.requiredCrew) {
-
                     throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
-
-                } else {
+                }
+                else {
                     this.removedLifeforms.put(playerNickname, this.lifeformsToBeRemoved);
                     // Apply the bonus effects --> give the credits
                     this.bonusEffect();
@@ -106,11 +121,12 @@ public class AbandonedShip extends EventCard {
                     // Apply the malus effects --> move the player and remove the required crew members
                     this.malusEffect();
                 }
-
-            } else {
+            }
+            else {
                 this.getNextPlayer();
             }
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("The given player does not match with the current one!");
         }
 
@@ -141,6 +157,7 @@ public class AbandonedShip extends EventCard {
             this.updatedPositions.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getCursor());
             int tmp = getBoard().getEliminatedPlayers().size();
             this.getBoard().validatePlayersPosition();
+
             for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
                 this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
             }
@@ -149,27 +166,33 @@ public class AbandonedShip extends EventCard {
 
             // Remove the crew members from the given cabins
             for (ComponentHelper<LifeformType> lifeform : this.lifeformsToBeRemoved) {
-
                 Cabin tmpCabin;
+
                 try {
                     tmpCabin = (Cabin) ship.getComponent(lifeform.getI(), lifeform.getJ());
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     throw new IllegalStateException("The given component is not a valid cabin");
                 }
 
-                lifeform.getItem().ifPresent( l -> {
+                lifeform.getItem().ifPresent(
+                    (LifeformType lfType) -> {
+                        Lifeform tmpLifeFormToBeRemoved = tmpCabin.getInhabitants().stream()
+                                .filter(i -> i.getLifeformType().equals(lfType))
+                                .findFirst()
+                                .orElseThrow(() -> new NoSuchElementException("The requested lifeform has not been found in the given cabin"));
 
-                    Lifeform tmpLifeFormToBeRemoved = tmpCabin.getInhabitants().stream()
-                            .filter( i -> i.getLifeformType().equals(l))
-                            .findFirst()
-                            .orElseThrow( () -> new NoSuchElementException("The requested lifeform has not been found in the given cabin"));
-
-                    tmpCabin.removeInhabitant(tmpLifeFormToBeRemoved);
-                });
+                        tmpCabin.removeInhabitant(tmpLifeFormToBeRemoved);
+                    }
+                );
             }
 
             // Check if the player has finished all of its astronauts --> if yes it needs to be eliminated from the game
-            if (ship.getCabinList().stream().flatMap(c -> c.getInhabitants().stream()).noneMatch(i -> i.getLifeformType().equals(LifeformType.ASTRONAUT))) {
+            if (
+                    ship.getCabinList().stream()
+                            .flatMap(c -> c.getInhabitants().stream())
+                            .noneMatch(i -> i.getLifeformType().equals(LifeformType.ASTRONAUT))
+            ) {
                 this.eliminatedPlayers.add(this.getCurrentPlayer().get().getNickname());
                 this.getBoard().eliminatePlayer(this.getCurrentPlayer().get());
             }
@@ -180,6 +203,7 @@ public class AbandonedShip extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
@@ -190,13 +214,15 @@ public class AbandonedShip extends EventCard {
             cardState.setPrevPlayerNickname(this.prevPlayerNickname);
 
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
+
             if (this.hasBeenUsedByPlayer) {
                 setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
                 setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
                 setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
                 setUpdatedCreditsIfNecessary(cardState, this.updatedCredits);
             }
-        } else {
+        }
+        else {
             // Set the card information that are needed to play the game
             cardState.setCardTypeId(this.cardTypeId);
             cardState.setUniqueCardId(this.uniqueCardId);
@@ -216,6 +242,7 @@ public class AbandonedShip extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setCardTypeId(this.cardTypeId);
         cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());

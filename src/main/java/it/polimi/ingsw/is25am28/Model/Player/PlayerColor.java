@@ -10,12 +10,18 @@ public enum PlayerColor {
     YELLOW(ANSIColors.YELLOW);
 
     // Each player color contains the corresponding ANSI color string
-    private String colorString;
+    private final String colorString;
 
+    // Private Constructor
     PlayerColor(String colorString) {
         this.colorString = colorString;
     }
 
+    /**
+     * @param color The ordinal of the PlayerColor instance to retrieve.
+     *
+     * @return The requested PlayerColor instance.
+     */
     public static PlayerColor fromInteger(int color) {
         if (color == GREEN.ordinal()) {
             return GREEN;
@@ -30,6 +36,11 @@ public enum PlayerColor {
         return YELLOW;
     }
 
+    /**
+     * @param colorName The name of the PlayerColor instance to retrieve.
+     *
+     * @return The requested PlayerColor instance.
+     */
     public static PlayerColor fromString(String colorName) {
         if (colorName != null && !colorName.isEmpty()) {
             colorName = colorName.toUpperCase();
@@ -48,22 +59,16 @@ public enum PlayerColor {
         return this.name();
     }
 
-    public String formatColor(String text) {
-        return switch (this) {
-            case RED -> PrintUtils.addColor(text, ANSIColors.RED);
-            case GREEN -> PrintUtils.addColor(text, ANSIColors.GREEN);
-            case BLUE -> PrintUtils.addColor(text, ANSIColors.BLUE);
-            case YELLOW -> PrintUtils.addColor(text, ANSIColors.YELLOW);
-        };
-    }
-
     /**
-     * @return The corresponding ANSI color string of this player color
+     * @return The corresponding ANSI color string of this player color.
      */
     public String getColorString() {
         return this.colorString;
     }
 
+    /**
+     * @return This instance of PlayerColor's name.
+     */
     public String getPlayerColorString() {
         return switch (this) {
             case RED -> "RED";

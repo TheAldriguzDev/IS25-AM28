@@ -13,22 +13,24 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.addColor;
 public final class Shield extends Component {
     public static final String alias = "SHIELD";
 
+    // Constructor
     public Shield(List<Integer> connectors, String path) {
         super(connectors, path);
     }
+
     /**
-     * return the two sides that are covered by the
-     * shield. they are returned with the usual standard,
-     * 0: top
-     * 1: right
-     * 2: bottom
-     * 3: left
+     * @return The two sides that are covered by the shield
+     *         with the following format:
+     *         - 0=Top
+     *         - 1=Right
+     *         - 2=Bottom
+     *         - 3=Left
      */
     public int[] getCoveredSide() {
         int[] covered = new int[2];
 
         for (int i = 0; i < 2; i++) {
-            covered[i] = (direction + i) % 4;
+            covered[i] = (this.direction + i) % 4;
         }
 
         return covered;
