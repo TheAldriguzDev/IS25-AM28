@@ -2,6 +2,14 @@ package it.polimi.ingsw.is25am28.Client.UI.TUI.Input;
 
 import java.io.IOException;
 
+/**
+ * A specialized thread for handling user input from {@code System.in}.
+ * Reads input character by character, capturing complete input strings when a newline is encountered.
+ *
+ * Provides thread-safe methods to control input behavior, allowing input interruption or waiting for user input.
+ * Particularly useful for force-quitting the input screen to display new game states,
+ * even when the thread is waiting for user input.
+ */
 public class InputThread extends Thread {
     private final Object inputLock;
     private final StringBuilder buffer;
@@ -28,7 +36,7 @@ public class InputThread extends Thread {
                         break;
                     }
 
-                    // If there was ha force request we need to stop to read from the input
+                    // If there was a force request we need to stop to read from the input
                     if (this.hasBeenForced) {
                         this.line = null;
                         this.buffer.setLength(0);
@@ -59,8 +67,9 @@ public class InputThread extends Thread {
     }
 
     /**
-     * Will set the hasBeenForce flag to true in order to interrupt the current reading request
-     * */
+     * Forces the interruption of the current input reading request.
+     * Sets the internal flag to stop reading and notifies all waiting threads.
+     */
     public void interruptInputReader() {
         synchronized (this.inputLock) {
             this.hasBeenForced = true;
@@ -70,11 +79,12 @@ public class InputThread extends Thread {
     }
 
     /**
-     * @return a String that contains the input inputted by the client.
-     * The string will be null if the screen was forced to quit
-     * <br>
-     * IMPORTANT --> IF NULL IN THE CHECK WE NEED TO RETURN THE METHOD IN THE SCREEN --> WILL END THE VISUALIZATION
-     * */
+     * Requests user input from another thread. If input is not yet available, the calling thread
+     * waits to be notified by the {@code InputThread}. Returns the input once available,
+     * or {@code null} if the request was interrupted.
+     *
+     * @return the user input string, or {@code null} if interrupted
+     */
     public String waitForInput() throws InterruptedException {
         synchronized (this.inputLock) {
             // Attributes reset to handle a new input request
