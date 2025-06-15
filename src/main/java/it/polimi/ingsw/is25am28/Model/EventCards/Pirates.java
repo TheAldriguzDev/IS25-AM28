@@ -432,19 +432,14 @@ public class Pirates extends EventCard {
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> piratesStateJSON.setPlayerNickname(player.getNickname()));
             piratesStateJSON.setPrevPlayerNickname(this.prevPlayerNickname);
+            // The prevPlayer's batteries are always updated locally in this card
+            piratesStateJSON.setSkipBatteriesUpdate(true);
 
             // The clients need to know when to update the right parameters
             piratesStateJSON.setFirstRound(this.firstRound);
 
             // If the first round is finished, send the dynamic info to the players
             if (!firstRound) {
-                // Send information on the players that are going to be hit, along with the plasmaShot's data and the dice result
-                ArrayList<String> defeatedPlayers = new ArrayList<>();
-                for (Player player : playersToHit) {
-                    defeatedPlayers.add(player.getNickname());
-                }
-                piratesStateJSON.setDefeatedPlayers(defeatedPlayers); // TODO can probably be eliminated
-
                 piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
                 piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
 

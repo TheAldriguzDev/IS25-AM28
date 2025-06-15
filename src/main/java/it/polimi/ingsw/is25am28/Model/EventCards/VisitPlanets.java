@@ -322,6 +322,8 @@ public class VisitPlanets extends EventCard {
             // Setting the playerNickname (if present)
             this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
             cardState.setPrevPlayerNickname(this.prevPlayerNickname);
+            // The prevPlayer's storages are always updated locally in this card
+            cardState.setSkipStoragesUpdate(true);
 
             if (itemsPerPlanet.containsKey(chosenPlanetIndex)) {
                 cardState.setChosenPlanetIndex(chosenPlanetIndex);

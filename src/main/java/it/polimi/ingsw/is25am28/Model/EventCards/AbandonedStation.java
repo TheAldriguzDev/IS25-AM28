@@ -169,6 +169,8 @@ public class AbandonedStation extends EventCard {
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
             cardState.setPrevPlayerNickname(this.prevPlayerNickname);
+            // The prevPlayer's storages are always updated locally in this card
+            cardState.setSkipStoragesUpdate(true);
 
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             setUpdatedDroppedResourcesIfNecessary(cardState, droppedResources);

@@ -188,6 +188,8 @@ public class AbandonedShip extends EventCard {
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
             cardState.setPrevPlayerNickname(this.prevPlayerNickname);
+            // The prevPlayer's crew is always updated locally in this card
+            cardState.setSkipCrewUpdate(true);
 
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
             if (this.hasBeenUsedByPlayer) {

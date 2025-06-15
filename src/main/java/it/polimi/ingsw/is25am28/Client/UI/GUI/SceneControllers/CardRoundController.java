@@ -35,6 +35,7 @@ import javafx.scene.text.*;
 import java.net.URL;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.stream.Stream;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.TAB;
 
@@ -130,6 +131,11 @@ public class CardRoundController extends GUIController {
 
     private ClientShip mainShip;
 
+    /**
+     * Initializes all the clickable regions (and other attributes)
+     * necessary for the interaction with the GUI, and other GUI elements
+     * @param state
+     */
     public void init(CardRoundDTO state) {
 
         this.clientModel = GUIHandler.getClientModel();
@@ -276,6 +282,13 @@ public class CardRoundController extends GUIController {
         });
     }
 
+    /**
+     *
+     * @param componentsRegions Map to populate with the clickable regions
+     * @param components List of components to determine which regions to create
+     * @param onClick Function to apply on region click
+     *
+     */
     private void initRegionMap(Map<String, Region> componentsRegions, List<ClientComponent> components, BiConsumer<Integer, Integer> onClick) {
         // Sets all the regions of all the componentsRegions maps
         componentsRegions.clear();
@@ -393,7 +406,7 @@ public class CardRoundController extends GUIController {
     }
 
     /**
-     * Creates the statsBox
+     * Creates/updates the statsBox
      */
     private void initStatsBox() {
         // Getting the ship
@@ -461,6 +474,9 @@ public class CardRoundController extends GUIController {
         this.statsBox.getChildren().add(new Label("Lost Components: " + player.getLostComponents()));
     }
 
+    /**
+     * Creates/updates the turnBox
+     */
     private void initTurnBox() {
         Label turnLabel = new Label();
         turnLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
@@ -488,6 +504,9 @@ public class CardRoundController extends GUIController {
         this.turnBox.getChildren().add(turnLabel);
     }
 
+    /**
+     * Creates/updates the additionalInfoBox
+     */
     private void initAdditionalInfoBox() {
         this.additionalInfoBox.getChildren().clear();
 
@@ -516,6 +535,9 @@ public class CardRoundController extends GUIController {
         this.additionalInfoBox.getChildren().add(infoText);
     }
 
+    /**
+     * Creates/updates the resourceBankBox
+     */
     private void initResourceBankBox() {
         this.resourceBankBox.getChildren().clear();
         Label resourceBankLabel = new Label("Resource Bank");
@@ -525,6 +547,9 @@ public class CardRoundController extends GUIController {
         this.resourceBankBox.getChildren().add(new Label(resources.get(ItemColor.RED) + "🟥 " + resources.get(ItemColor.YELLOW) + "🟨 " + resources.get(ItemColor.GREEN) + "🟩 " + resources.get(ItemColor.BLUE) + "🟦 "));
     }
 
+    /**
+     * Creates/updates the commandBox
+     */
     private void initCommandBox() {
 
         this.commandsToggleGroup = new ToggleGroup();
@@ -640,6 +665,9 @@ public class CardRoundController extends GUIController {
         });
     }
 
+    /**
+     * Creates/updates the commandDescriptionBox
+     */
     private void initCommandDescriptionBox(String text) {
         // Adding the description to the commandDescriptionBox
         this.commandDescriptionBox.getChildren().clear();
@@ -651,6 +679,9 @@ public class CardRoundController extends GUIController {
         this.commandDescriptionBox.getChildren().add(commandDescriptionLabel);
     }
 
+    /**
+     * Substitutes the buttons in the commandBox with the ones relative to the itemColors to remove
+     */
     private void initRemoveColorCommands(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
@@ -685,6 +716,9 @@ public class CardRoundController extends GUIController {
         }
     }
 
+    /**
+     * Substitutes the buttons in the commandBox with the ones relative to the itemColors to add
+     */
     private void initAddColorCommands(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
@@ -726,6 +760,9 @@ public class CardRoundController extends GUIController {
         }
     }
 
+    /**
+     * @return a button the same color as the passed itemColor (function added in other method)
+     */
     private Button createColorButton(ItemColor itemColor) {
         Button itemColorButton = new Button();
 
@@ -766,6 +803,9 @@ public class CardRoundController extends GUIController {
         return itemColorButton;
     }
 
+    /**
+     * @return a goBack button (function added in other method)
+     */
     private Button createBackToCommandsButton() {
         Button goBackButton = new Button();
         goBackButton.setText("Go Back");
@@ -802,6 +842,9 @@ public class CardRoundController extends GUIController {
         this.currentRegions = regionMap;
     }
 
+    /**
+     * Handles the click on the board's image
+     */
     @FXML
     private void handleViewGameBoard() {
 
@@ -824,6 +867,9 @@ public class CardRoundController extends GUIController {
         this.setVisibility(this.viewGameBoardContainer, true);
     }
 
+    /**
+     * Handles the click of the goBack button
+     */
     @FXML
     private void handleGoBackToCardRoundButton(ActionEvent actionEvent) {
 
@@ -1074,6 +1120,10 @@ public class CardRoundController extends GUIController {
         this.playerActionsScrollPane.setContent(scrollPaneContent);
     }
 
+    /**
+     * Invokes the virtualView's playCard(...) method with the ActionJSON constructed by the player through GUI interaction
+     * Also handles onError() (or onSuccess()) operations to revert local changes in the case of an error (or to prepare the client for the next interaction)
+     */
     public void playCard() {
 
         ActionJSON response = this.currEventCard.useCard();
@@ -1230,11 +1280,6 @@ public class CardRoundController extends GUIController {
                                 this.visualizePlayerActions();
                                 this.initResourceBankBox();
 
-//                                this.showToast(
-//                                        "[ERROR] There was an error while playing the card. Please try again.",
-//                                        ToastType.ERROR
-//                                );
-
                                 GUIHandler.setCommandCTX(null);
                             }
                     );
@@ -1258,6 +1303,12 @@ public class CardRoundController extends GUIController {
 
     // Methods to select the components to execute a command on (+ Visual Updates)
     // ofsRow, ofsCol relative to the gridPane
+
+    /**
+     * Updates the icons of the clicked cabin, disabling the region in case it is emptied
+     * @param ofsRow row of the component (with offset)
+     * @param ofsCol col of the component (with offset)
+     */
     private void handleCrewToRemove(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
@@ -1296,6 +1347,11 @@ public class CardRoundController extends GUIController {
         this.commandsToggleGroup.selectToggle(null);
     }
 
+    /**
+     * Updates the icons of the clicked storage, disabling the region in case it is emptied
+     * @param ofsRow row of the component (with offset)
+     * @param ofsCol col of the component (with offset)
+     */
     private void handleItemToRemove(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
@@ -1349,6 +1405,11 @@ public class CardRoundController extends GUIController {
         this.initCommandBox();
     }
 
+    /**
+     * Updates the icons of the clicked storage, disabling the region in case it is filled
+     * @param ofsRow row of the component (with offset)
+     * @param ofsCol col of the component (with offset)
+     */
     private void handleItemToTake(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
@@ -1382,6 +1443,9 @@ public class CardRoundController extends GUIController {
         this.initCommandBox();
     }
 
+    /**
+     * Sets the current eventCard's JSON field relative to the player's decision on taking the reward to true, subsequently disabling the command (and enabling others if needed)
+     */
     private void handleTakeReward() {
         this.addTakeReward(true);
 
@@ -1435,6 +1499,9 @@ public class CardRoundController extends GUIController {
 
     }
 
+    /**
+     * Sets the current eventCard's JSON field relative to the player's decision on visiting the POI the to true, subsequently disabling the command (and enabling others if needed)
+     */
     private void handleWantsToVisit() {
         this.addWantsToVisit(true);
 
@@ -1453,6 +1520,11 @@ public class CardRoundController extends GUIController {
         this.initCommandBox();
     }
 
+    /**
+     * Highlights the clicked region a different color and enables the region relative to the batteries to chose from (needed to power the selected shield)
+     * @param ofsRow row of the component (with offset)
+     * @param ofsCol col of the component (with offset)
+     */
     private void handleShieldsToActivate(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
@@ -1462,6 +1534,11 @@ public class CardRoundController extends GUIController {
         this.handleEnergyConsumers(ofsRow, ofsCol);
     }
 
+    /**
+     * Highlights the clicked region a different color and enables the region relative to the batteries to chose from (needed to power the selected doubleCannon)
+     * @param ofsRow row of the component (with offset)
+     * @param ofsCol col of the component (with offset)
+     */
     private void handleDoubleCannonToActivate(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
@@ -1471,6 +1548,11 @@ public class CardRoundController extends GUIController {
         this.handleEnergyConsumers(ofsRow, ofsCol);
     }
 
+    /**
+     * Highlights the clicked region a different color and enables the region relative to the batteries to chose from (needed to power the selected doubleEngine)
+     * @param ofsRow row of the component (with offset)
+     * @param ofsCol col of the component (with offset)
+     */
     private void handleDoubleEnginesToActivate(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
@@ -1481,6 +1563,11 @@ public class CardRoundController extends GUIController {
 
     }
 
+    /**
+     * Updates the icons of the clicked battery, disabling the region in case it is emptied
+     * @param ofsRow row of the component (with offset)
+     * @param ofsCol col of the component (with offset)
+     */
     private void handleBatteriesToBeStolen(int ofsRow, int ofsCol) {
         int row = ofsRow + this.shipOffsets.getKey();
         int col = ofsCol + this.shipOffsets.getValue();
@@ -1517,6 +1604,11 @@ public class CardRoundController extends GUIController {
         this.commandsToggleGroup.selectToggle(null);
     }
 
+    /**
+     * Updates the icons of the clicked battery, disabling the region in case it is emptied
+     * @param ofsRow row of the component (with offset)
+     * @param ofsCol col of the component (with offset)
+     */
     private void handleMandatoryBatteryCoords(int ofsRow, int ofsCol) {
         int batteryRow = ofsRow + this.shipOffsets.getKey();
         int batteryCol = ofsCol + this.shipOffsets.getValue();
@@ -1579,6 +1671,12 @@ public class CardRoundController extends GUIController {
         this.initCommandBox();
     }
 
+    /**
+     * Disables the selected component's region and changes the color to highlight the selection
+     * It then enables the battery regions
+     * @param ofsRow row of the component (with offset)
+     * @param ofsCol col of the component (with offset)
+     */
     private void handleEnergyConsumers(int ofsRow, int ofsCol) {
 
         int row = ofsRow + this.shipOffsets.getKey();
@@ -1593,6 +1691,13 @@ public class CardRoundController extends GUIController {
 
     // Methods to modify the JSON (+ Local Updates)
     // row, col relative to the shipGrid
+
+    /**
+     * Adds the LifeForm's type to remove to the current eventCard's JSON (along with the coordinates of the corresponding cabin)
+     * @param row row of the component
+     * @param col col of the component
+     * @param lifeformType type of the lifeForm to remove (Astronaut, Purple or Brown Alien)
+     */
     private void addCrewToRemove(int row, int col, LifeformType lifeformType) {
         ComponentHelper<LifeformType> componentHelper;
         ClientShip ship;
@@ -1624,6 +1729,12 @@ public class CardRoundController extends GUIController {
         }
     }
 
+    /**
+     * Adds the itemColor to remove to the current eventCard's JSON (along with the coordinates of the corresponding storage)
+     * @param row row of the component
+     * @param col col of the component
+     * @param itemColor color of the item to remove (Red, Yellow, Green, Blue)
+     */
     private void addItemToRemove(int row, int col, ItemColor itemColor) {
         ComponentHelper<ItemColor> componentHelper;
         ClientComponent component;
@@ -1687,6 +1798,12 @@ public class CardRoundController extends GUIController {
         }
     }
 
+    /**
+     * Adds the itemColor to take to the current eventCard's JSON (along with the coordinates of the corresponding storage)
+     * @param row row of the component
+     * @param col col of the component
+     * @param itemColor color of the item to remove (Red, Yellow, Green, Blue)
+     */
     private void addItemToTake(int row, int col, ItemColor itemColor) {
         ComponentHelper<ItemColor> componentHelper;
         ClientComponent component;
@@ -1746,6 +1863,9 @@ public class CardRoundController extends GUIController {
         }
     }
 
+    /**
+     * @param choice Value that will be set in the JSON's field relative to the player's decision on taking the card's reward
+     */
     private void addTakeReward(boolean choice) {
         try {
             this.currEventCard.setTakeReward(choice);
@@ -1756,6 +1876,9 @@ public class CardRoundController extends GUIController {
         }
     }
 
+    /**
+     * @param chosenPlanetIndex Value that will be set in the JSON's field relative to the player's decision on which planet to visit
+     */
     private void addChosenPlanetIndex(int chosenPlanetIndex) {
         try {
             this.currEventCard.setChosenPlanetIndex(chosenPlanetIndex);
@@ -1766,6 +1889,9 @@ public class CardRoundController extends GUIController {
         }
     }
 
+    /**
+     * @param choice Value that will be set in the JSON's field relative to the player's decision on visiting the POI
+     */
     private void addWantsToVisit(boolean choice) {
         try {
             this.currEventCard.setWantsToVisit(choice);
@@ -1776,6 +1902,11 @@ public class CardRoundController extends GUIController {
         }
     }
 
+    /**
+     * Adds to the JSON's field the pair of coordinates relative to the shield to activate, and the battery to power it
+     * @param shieldToActivate Coordinates of the shield to activate
+     * @param batteryToConsume Coordinates of the battery to consume
+     */
     private void addShieldToActivate(CoordinatePair shieldToActivate, CoordinatePair batteryToConsume) {
         ClientComponent possibleShield, possibleBattery;
         ClientShip ship;
@@ -1842,6 +1973,11 @@ public class CardRoundController extends GUIController {
         ship.consumeEnergy(List.of(batteryToConsume));
     }
 
+    /**
+     * Adds to the JSON's field  the pair of coordinates relative to the doubleCannon to activate, and the battery to power it
+     * @param doubleCannonToActivate Coordinates of the doubleCannon to activate
+     * @param batteryToConsume Coordinates of the battery to consume
+     */
     private void addDoubleCannonToActivate(CoordinatePair doubleCannonToActivate, CoordinatePair batteryToConsume) {
         ClientComponent possibleDoubleCannon, possibleBattery;
         ClientShip ship;
@@ -1916,6 +2052,11 @@ public class CardRoundController extends GUIController {
         ship.consumeEnergy(List.of(batteryToConsume));
     }
 
+    /**
+     * Adds to the JSON's field  the pair of coordinates relative to the doubleEngine to activate, and the battery to power it
+     * @param doubleEngineToActivate Coordinates of the doubleCannon to activate
+     * @param batteryToConsume Coordinates of the battery to consume
+     */
     private void addDoubleEngineToActivate(CoordinatePair doubleEngineToActivate, CoordinatePair batteryToConsume) {
         ClientComponent possibleDoubleEngine, possibleBattery;
         ClientShip ship;
@@ -1990,6 +2131,10 @@ public class CardRoundController extends GUIController {
         ship.consumeEnergy(List.of(batteryToConsume));
     }
 
+    /**
+     * Adds to the JSON's field the coordinates relative to the battery to be stolen
+     * @param batteryToBeStolen Coordinates of the battery to consume
+     */
     private void addBatteryToBeStolen(CoordinatePair batteryToBeStolen) {
         ClientComponent possibleBattery;
         ClientShip ship;
@@ -2038,6 +2183,10 @@ public class CardRoundController extends GUIController {
         ship.consumeEnergy(List.of(batteryToBeStolen));
     }
 
+    /**
+     * Updates all the GUI elements
+     * @param cardStateJSON - data used to update the GUI
+     */
     public void updateCardRound(CardStateJSON cardStateJSON) {
 
         Platform.runLater(() -> {
@@ -2078,53 +2227,104 @@ public class CardRoundController extends GUIController {
         });
     }
 
+    /**
+     * Updates the GUI visuals relative to the ships
+     * @param cardStateJSON data to used to update the visuals
+     */
     public void updateVisuals(CardStateJSON cardStateJSON) {
 
         Platform.runLater(() -> {
             // Updating other ship's visuals
-            for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
+//            for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
+//
+//                String playerNickname = entry.getKey();
+//                GridPane shipGrid = entry.getValue();
+//
+//                if (
+//                        (cardStateJSON.getPrevPlayerNickname() == null)
+//                        || (
+//                                !(playerNickname.equals(cardStateJSON.getPrevPlayerNickname()) && this.clientModel.getNickname().equals(playerNickname))
+//                        )
+//                ) {
+//                    // Getting the player's ship
+//                    ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
+//                    if (ship == null) {
+//                        System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
+//                        return;
+//                    }
+//
+//                    ship.generateComponentSubLists();
+//
+//                    // Updating batteries icons
+//                    if (cardStateJSON.getNeedsUpdatedBatteries()) {
+//                        for (ClientBattery battery : ship.getBatteryList()) {
+//                            guiUtils.initBatteryIcons(battery, this.batteriesMap.get(playerNickname).get(guiUtils.keyFromCoords(battery.getI(), battery.getJ())));
+//                        }
+//                    }
+//
+//                    // Updating the lifeForms icons
+//                    if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
+//                        for (ClientCabin cabin : ship.getCabinList()) {
+//                            guiUtils.initCabinLifeFormIcons(cabin, this.lifeFormsMap.get(playerNickname).get(guiUtils.keyFromCoords(cabin.getI(), cabin.getJ())));
+//                        }
+//                    }
+//
+//                    // Updating the storages icon
+//                    if (cardStateJSON.getNeedsUpdatedDroppedResources() || cardStateJSON.getNeedsUpdatedTakenResources()) {
+//                        for (ClientStorage storage : ship.getStorageList()) {
+//                            guiUtils.initStorageItemIcons(storage, this.itemsMap.get(playerNickname).get(guiUtils.keyFromCoords(storage.getI(), storage.getJ())));
+//                        }
+//                    }
+//                }
+//            }
 
-                String playerNickname = entry.getKey();
-                GridPane shipGrid = entry.getValue();
 
-                if (
-                        (cardStateJSON.getPrevPlayerNickname() == null)
-                        || (
-                                !(playerNickname.equals(cardStateJSON.getPrevPlayerNickname()) && this.clientModel.getNickname().equals(playerNickname))
-                        )
-                ) {
-                    // Getting the player's ship
-                    ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
-                    if (ship == null) {
-                        System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
-                        return;
-                    }
-
-                    ship.generateComponentSubLists();
-
-                    // Updating batteries icons
-                    if (cardStateJSON.getNeedsUpdatedBatteries()) {
-                        for (ClientBattery battery : ship.getBatteryList()) {
-                            guiUtils.initBatteryIcons(battery, this.batteriesMap.get(playerNickname).get(guiUtils.keyFromCoords(battery.getI(), battery.getJ())));
-                        }
-                    }
-
-                    // Updating the lifeForms icons
-                    if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
-                        for (ClientCabin cabin : ship.getCabinList()) {
-                            guiUtils.initCabinLifeFormIcons(cabin, this.lifeFormsMap.get(playerNickname).get(guiUtils.keyFromCoords(cabin.getI(), cabin.getJ())));
-                        }
-                    }
-
-                    // Updating the storages icon
-                    if (cardStateJSON.getNeedsUpdatedDroppedResources() || cardStateJSON.getNeedsUpdatedTakenResources()) {
-                        for (ClientStorage storage : ship.getStorageList()) {
-                            guiUtils.initStorageItemIcons(storage, this.itemsMap.get(playerNickname).get(guiUtils.keyFromCoords(storage.getI(), storage.getJ())));
-                        }
+            // Updating the lifeForms icons
+            if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
+                for (String playerNickname : cardStateJSON.getRemovedLifeforms().keySet()) {
+                    if (!(this.clientModel.getNickname() != null && this.clientModel.getNickname().equals(cardStateJSON.getPrevPlayerNickname()) && cardStateJSON.getSkipCrewUpdate())) {
+                        this.clientModel.getShipOfPlayer(playerNickname).ifPresent(
+                                (ship) -> {
+                                    for (ClientCabin cabin : ship.getCabinList()) {
+                                        guiUtils.initCabinLifeFormIcons(cabin, this.lifeFormsMap.get(playerNickname).get(guiUtils.keyFromCoords(cabin.getI(), cabin.getJ())));
+                                    }
+                                }
+                        );
                     }
                 }
             }
 
+            // Updating the storages icons
+            if (cardStateJSON.getNeedsUpdatedDroppedResources() || cardStateJSON.getNeedsUpdatedTakenResources()) {
+                for (String playerNickname : Stream.concat(cardStateJSON.getDroppedResources().keySet().stream(), cardStateJSON.getTakenResources().keySet().stream()).distinct().toList()) {
+                    if (!(this.clientModel.getNickname() != null && this.clientModel.getNickname().equals(cardStateJSON.getPrevPlayerNickname()) && cardStateJSON.getSkipStoragesUpdate())) {
+                        this.clientModel.getShipOfPlayer(playerNickname).ifPresent(
+                                (ship) -> {
+                                    for (ClientStorage storage : ship.getStorageList()) {
+                                        guiUtils.initStorageItemIcons(storage, this.itemsMap.get(playerNickname).get(guiUtils.keyFromCoords(storage.getI(), storage.getJ())));
+                                    }
+                                }
+                        );
+                    }
+                }
+            }
+
+            // Updating the batteries icons
+            if (cardStateJSON.getNeedsUpdatedBatteries()) {
+                for (String playerNickname : cardStateJSON.getRemovedBatteries().keySet()) {
+                    if (!(this.clientModel.getNickname() != null && this.clientModel.getNickname().equals(cardStateJSON.getPrevPlayerNickname()) && cardStateJSON.getSkipBatteriesUpdate())) {
+                        this.clientModel.getShipOfPlayer(playerNickname).ifPresent(
+                                (ship) -> {
+                                    for (ClientBattery battery : ship.getBatteryList()) {
+                                        guiUtils.initBatteryIcons(battery, this.batteriesMap.get(playerNickname).get(guiUtils.keyFromCoords(battery.getI(), battery.getJ())));
+                                    }
+                                }
+                        );
+                    }
+                }
+            }
+
+            // Removing the destroyed components from the grid
             if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
                 for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
                     for (Map<String, Object> componentToRemove : cardStateJSON.getRemovedComponents().get(playerNickname)) {

@@ -142,6 +142,10 @@ public class OpenSpace extends EventCard {
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
             cardState.setPrevPlayerNickname(this.prevPlayerNickname);
+            // The prevPlayer's batteries are always updated locally in this card
+            cardState.setSkipBatteriesUpdate(true);
+
+
             setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
             setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
             setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);

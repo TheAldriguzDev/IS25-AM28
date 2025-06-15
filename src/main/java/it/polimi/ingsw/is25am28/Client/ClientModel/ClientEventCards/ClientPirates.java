@@ -19,7 +19,6 @@ public class ClientPirates extends ClientEventCard {
     private final int givenCredits;
     private final int movementSteps;
     Map<String, Integer> currentPlasmaShot;
-    private List<String> defeatedPlayers;
 
     private PiratesJSON piratesJSON;
 
@@ -29,7 +28,6 @@ public class ClientPirates extends ClientEventCard {
         this.requiredFirepower = cardState.getRequiredFirepower();
         this.givenCredits = cardState.getGivenCredits();
         this.movementSteps = cardState.getMovementSteps();
-        this.defeatedPlayers = new ArrayList<>();
         this.piratesJSON = new PiratesJSON();
     }
 
@@ -49,7 +47,6 @@ public class ClientPirates extends ClientEventCard {
         if (!this.firstRound) {
             this.diceThrowResult = piratesState.getDiceThrowResult();
             this.currentPlasmaShot = piratesState.getCurrPlasmaShotDescriptor();
-            this.defeatedPlayers = piratesState.getDefeatedPlayers();
 
             enabledCommands.add("setShieldsToActivate");
         } else {

@@ -49,6 +49,7 @@ public class Player {
       /**
        * @return number of credits. it already includes the lost pieces penalty
        */
+      // TODO remove - lost pieces, change end game accordingly
       public int getCredits(){
             return credits - lostPieces;
       }

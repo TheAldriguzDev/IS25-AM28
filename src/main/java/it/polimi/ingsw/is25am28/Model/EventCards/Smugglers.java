@@ -294,6 +294,10 @@ public class Smugglers extends EventCard {
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> smugglersStateJSON.setPlayerNickname(player.getNickname()));
             smugglersStateJSON.setPrevPlayerNickname(this.prevPlayerNickname);
+            // The prevPlayer's batteries are always updated locally in this card
+            smugglersStateJSON.setSkipBatteriesUpdate(true);
+            // The prevPlayer's storages are always updated locally in this card
+            smugglersStateJSON.setSkipStoragesUpdate(true);
 
             smugglersStateJSON.setIsPlayerDefeated(this.isPlayerDefeated);
 

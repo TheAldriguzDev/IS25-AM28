@@ -80,6 +80,9 @@ public class PopulateShipController extends GUIController {
     // Handle the players ship
 //    private Map<String, GridPane> playersShipGridPane;
 
+    /**
+     * Initializes the clickable regions (on all cabins except for the core) and other GUI elements
+     */
     public void init(PopulateShipDTO state) {
 
         this.clientModel = GUIHandler.getClientModel();
@@ -188,6 +191,9 @@ public class PopulateShipController extends GUIController {
         }
     }
 
+    /**
+     * Sends the message to add the selected lifeForm to the clicked cabin
+     */
     public void handlePlacedLifeform(int row, int col) {
 
         if (this.currentSelectableLifeForm == null) { return; }
@@ -212,6 +218,10 @@ public class PopulateShipController extends GUIController {
         }
     }
 
+    /**
+     * Visually adds the lifeForm icon/icons to the specified cabin, subsequently disabling the region and/or the button relative to the added lifeForm if necessary
+     * @param data Contains the info about the cabin and the icon/icons to add
+     */
     public void placeLifeform(PopulateShipComponentDTO data) {
 //        System.out.println("INFO: {isShipFull: " + data.isShipPopulated() + "}, {Coordinates: (" + data.getComponent().getI() + "," + data.getComponent().getJ() + ")}, {LF: " + data.getComponent().getItem().orElse(null) + "}");
 
@@ -314,6 +324,9 @@ public class PopulateShipController extends GUIController {
         });
     }
 
+    /**
+     * Sets the text on top of the ship's representation, indicating if the ship is full
+     */
     private void setShipLabelText(boolean isShipFull) {
         String validityLabel;
         this.populateShipLabel.getChildren().clear();
@@ -344,6 +357,9 @@ public class PopulateShipController extends GUIController {
         }
     }
 
+    /**
+     * Inits the toggles used to select the lifeForm to add to the clicked cabins
+     */
     private void initLifeFormsToggles() {
 
         //Will be reactivated only if the ship is not full
@@ -473,6 +489,9 @@ public class PopulateShipController extends GUIController {
         this.imagePane.getChildren().add(this.shipGrid);
     }
 
+    /**
+     * Handles the click of the goBack button
+     */
     @FXML
     public void handleGoBackToPopulateButton(ActionEvent actionEvent) {
         this.setVisibility(this.viewGameBoardContainer, false);
@@ -488,6 +507,9 @@ public class PopulateShipController extends GUIController {
         actionEvent.consume();
     }
 
+    /**
+     * Handles the click on the board's image
+     */
     @FXML
     private void handleViewGameBoard() {
         // Disable all the previous containers

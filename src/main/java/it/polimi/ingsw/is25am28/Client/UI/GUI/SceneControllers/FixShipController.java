@@ -58,6 +58,9 @@ public class FixShipController extends GUIController {
     // Handle the players ship
 //    private Map<String, GridPane> playersShipGridPane;
 
+    /**
+     * Initializes the clickable regions (on all components) and other GUI elements
+     */
     public void init(FixShipDTO state) {
 
         this.clientModel = GUIHandler.getInstance().getClientModel();
@@ -140,7 +143,7 @@ public class FixShipController extends GUIController {
     }
 
     /**
-     * Removes the selected component
+     * Sends the message to remove the component
      */
     public void handleRemoveComponent(int row, int col) {
         GUIHandler.setCommandCTX(new CommandCTX(
@@ -164,6 +167,10 @@ public class FixShipController extends GUIController {
 
     // ===== METHOD USED BY THE VIEW UPDATER TO UPDATE THE VIEW IN REAL TIME ===== //
 
+    /**
+     * Operates the graphical removal of the specified component, subsequently disabling the region
+     * @param data Contains the info about the component to remove
+     */
     public void removeComponent(FixedComponentDTO data) {
 
         int row = data.getI();
@@ -200,6 +207,9 @@ public class FixShipController extends GUIController {
         });
     }
 
+    /**
+     * Sets the text on top of the ship's representation, indicating if the ship is valid
+     */
     private void setShipLabelText(boolean isShipValid) {
         String validityLabel;
         this.fixShipLabel.getChildren().clear();
@@ -289,6 +299,9 @@ public class FixShipController extends GUIController {
         this.imagePane.getChildren().add(this.shipGrid);
     }
 
+    /**
+     * Handles the click of the goBack button
+     */
     @FXML
     public void handleGoBackToFixButton(ActionEvent actionEvent) {
         this.setVisibility(this.viewGameBoardContainer, false);
@@ -297,6 +310,9 @@ public class FixShipController extends GUIController {
         actionEvent.consume();
     }
 
+    /**
+     * Handles the click on the board's image
+     */
     @FXML
     // Method used to display the current game board
     private void handleViewGameBoard() {

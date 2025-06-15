@@ -51,6 +51,7 @@ public class WarZone extends EventCard {
     private String targetPlayer;
 
     private String prevPlayerNickname;
+    private boolean skipCrewUpdate;
 
     /**
      * WarZone constructor that sets:
@@ -97,6 +98,7 @@ public class WarZone extends EventCard {
         this.previousPlayerRemovedComponents = new ArrayList<>();
         this.droppedResources = new HashMap<>();
         this.removedComponents = new HashMap<>();
+        this.skipCrewUpdate = true;
     }
 
     /**
@@ -760,6 +762,7 @@ public class WarZone extends EventCard {
                 }
                 if (!removedAliensList.isEmpty()) {
                     this.removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), removedAliensList);
+                    this.skipCrewUpdate = false;
                 }
 
                 this.prevPlayer = player.getNickname();
@@ -800,6 +803,14 @@ public class WarZone extends EventCard {
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
             cardState.setPrevPlayerNickname(this.prevPlayerNickname);
+            // The prevPlayer's batteries are always updated locally in this card
+            cardState.setSkipBatteriesUpdate(true);
+            // The prevPlayer's storages are always updated locally in this card
+            cardState.setSkipStoragesUpdate(true);
+            // The prevPlayer's storages are always updated locally,
+            // except for when an alien is eliminated following the destruction of the corresponding vital
+            cardState.setSkipCrewUpdate(this.skipCrewUpdate);
+            this.skipCrewUpdate = true;
 
             cardState.setCurrActionIndex(this.current_action); // Need a way to set this only when necessary, but it might not be worth it // should now be obsolete since there are flags
             // If present set the current player (the one that needs to play the game)
@@ -855,7 +866,7 @@ public class WarZone extends EventCard {
         }
 
 
-
+    // TODO this should be useless
         Map<String, Float> playersFirePowerMap = this.playersFirePower.entrySet().stream()
                 .collect(Collectors.toMap(
                         entry -> entry.getKey().getNickname(),

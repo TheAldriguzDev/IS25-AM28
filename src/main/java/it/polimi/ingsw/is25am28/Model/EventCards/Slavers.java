@@ -198,6 +198,8 @@ public class Slavers extends EventCard {
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> slaversStateJSON.setPlayerNickname(player.getNickname()));
             slaversStateJSON.setPrevPlayerNickname(this.prevPlayerNickname);
+            // The prevPlayer's crew is always updated locally in this card
+            slaversStateJSON.setSkipCrewUpdate(true);
 
             slaversStateJSON.setIsPlayerDefeated(this.isPlayerDefeated);
 

@@ -36,6 +36,7 @@ public class MeteorShower extends EventCard {
     private final List<String> eliminatedPlayers;
     private final Map<String, Integer> lostPieces;
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
+
     private String prevPlayerNickname;
 
     public MeteorShower(
@@ -466,6 +467,8 @@ public class MeteorShower extends EventCard {
             // If the current player is present, then add it to the card state
             this.currentPlayer.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
             cardState.setPrevPlayerNickname(this.prevPlayerNickname);
+            // The prevPlayer's batteries are always updated locally in this card
+            cardState.setSkipBatteriesUpdate(true);
 
             cardState.setCurrMeteorIndex(this.currMeteorIndex);
             cardState.setDiceThrowResult(this.diceThrowResult);
@@ -488,6 +491,7 @@ public class MeteorShower extends EventCard {
             // Setting the batteries consumed by the shields and the doubleCannons
             setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
 
+            // Setting the lifeForms (only aliens) removed by the destruction of a necessary vital
             setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
         } else {
             cardState.setCardTypeId(this.cardTypeId);

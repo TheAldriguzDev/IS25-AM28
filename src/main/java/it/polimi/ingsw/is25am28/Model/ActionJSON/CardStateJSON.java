@@ -28,7 +28,6 @@ public class CardStateJSON extends ActionJSON {
     private boolean isCardUsable;
     private boolean hasBeenActivated;
     private boolean isPlayerDefeated;
-    private String prevPlayerNickname;
 
     private boolean cardEnded; // WHEN THIS FLAG IS SET TO TRUE THE CURRENT CLIENT CARD MUST NOT BE UPDATED, NOR PRINTED, ONLY THE GENERATE STATE (TO UPDATE THE LAST DATA SENT) IS NECESSARY
 
@@ -48,12 +47,12 @@ public class CardStateJSON extends ActionJSON {
         private List<String> eliminatedPlayers;
     // =================================================//
 
-    // ==== FLAGS TO SKIP UPDATES (For local updates) ==== //
-        private Map<String, Boolean> skipBatteriesUpdate;
-        private Map<String, Boolean> skipComponentsUpdate;
-        private Map<String, Boolean> skipCrewUpdate;
-        private Map<String, Boolean> skipStorageUpdate;
-    // =================================================== //
+    // ==== ATTRIBUTES TO SKIP UPDATES (For local updates) ==== //
+        private String prevPlayerNickname;
+        private boolean skipBatteriesUpdate;
+        private boolean skipCrewUpdate;
+        private boolean skipStoragesUpdate;
+    // ======================================================== //
 
     // ======= CLIENT SHIP FLAGS/INFORMATION ======== //
         private boolean needsShipUpdate;
@@ -99,7 +98,6 @@ public class CardStateJSON extends ActionJSON {
     private int yellowItems;
     private int blueItems;
     private int greenItems;
-    private ArrayList<String> defeatedPlayers;
 
     private ArrayList<ArrayList<Integer>> shootingSequence;
     private int requiredCrewMembers;
@@ -218,16 +216,6 @@ public class CardStateJSON extends ActionJSON {
     @JsonGetter("requiredFirepower")
     public int getRequiredFirepower() {
         return Math.max(requiredFirepower, 0);
-    }
-
-    @JsonSetter("defeatedPlayers")
-    public void setDefeatedPlayers(List<String> defeatedPlayers) {
-        this.defeatedPlayers = new ArrayList<>();
-    }
-
-    @JsonGetter("defeatedPlayers")
-    public List<String> getDefeatedPlayers() {
-        return defeatedPlayers;
     }
 
 
@@ -709,30 +697,30 @@ public class CardStateJSON extends ActionJSON {
 
     // ==== FLAGS TO SKIP UPDATES GETTERS/SETTERS ==== //
         @JsonGetter("skipBatteriesUpdate")
-        public Map<String, Boolean> getSkipBatteriesUpdate() {
+        public boolean getSkipBatteriesUpdate() {
             return this.skipBatteriesUpdate;
         }
         @JsonSetter("skipBatteriesUpdate")
-        public void setSkipBatteriesUpdate(Map<String, Boolean> skipBatteriesUpdate) {
+        public void setSkipBatteriesUpdate(boolean skipBatteriesUpdate) {
             this.skipBatteriesUpdate = skipBatteriesUpdate;
         }
 
         @JsonGetter("skipCrewUpdate")
-        public Map<String, Boolean> getSkipCrewUpdate() {
+        public boolean getSkipCrewUpdate() {
             return this.skipCrewUpdate;
         }
         @JsonSetter("skipCrewUpdate")
-        public void setSkipCrewUpdate(Map<String, Boolean> skipCrewUpdate) {
+        public void setSkipCrewUpdate(boolean skipCrewUpdate) {
             this.skipCrewUpdate = skipCrewUpdate;
         }
 
         @JsonGetter("skipStorageUpdate")
-        public Map<String, Boolean> getSkipStorageUpdate() {
-            return this.skipStorageUpdate;
+        public boolean getSkipStoragesUpdate() {
+            return this.skipStoragesUpdate;
         }
         @JsonSetter("skipStorageUpdate")
-        public void setSkipStorageUpdate(Map<String, Boolean> skipStorageUpdate) {
-            this.skipStorageUpdate = skipStorageUpdate;
+        public void setSkipStoragesUpdate(boolean skipStoragesUpdate) {
+            this.skipStoragesUpdate = skipStoragesUpdate;
         }
     // =============================================== //
 

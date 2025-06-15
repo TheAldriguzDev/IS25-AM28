@@ -233,6 +233,13 @@ public abstract class EventCard {
         cardState.setNeedsPlayerUpdate(false);
         cardState.setNeedsBoardUpdate(false);
 
+        // Initializing the skipUpdate flags, these flags will be set to true
+        // by the card if the current player ( = prevPlayerNickname) needs to skip a particular update
+        // (like in the case the update in question is already done locally)
+        cardState.setSkipStoragesUpdate(false);
+        cardState.setSkipCrewUpdate(false);
+        cardState.setSkipBatteriesUpdate(false);
+
         // Also initializing lesser flags (to avoid NullPointerExceptions when these are checked)
         // (1) - Lesser flags relative to updateShip (clientSide)
         cardState.setNeedsUpdatedDroppedResources(false);
@@ -326,6 +333,7 @@ public abstract class EventCard {
             cardState.setNeedsShipUpdate(true);
             cardState.setNeedsUpdatedDroppedResources(true);
             cardState.setDroppedResources(new HashMap<>(droppedResources));
+            cardState.setSkipStoragesUpdate(true);
             droppedResources.clear();
         }
     }
@@ -419,9 +427,4 @@ public abstract class EventCard {
     }
 
     // TODO: eventCards should also set the lapped eliminated players -> modify validatePlayersPositions
-
-    // Initializing the skipUpdate flags, these flags will be set to true
-    // by the card if the current player needs to skip a particular update
-    // (like in the case the update in question is already done locally)
-
 }

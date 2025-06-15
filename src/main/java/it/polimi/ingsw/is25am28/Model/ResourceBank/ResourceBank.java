@@ -31,16 +31,6 @@ public class ResourceBank {
         }
     }
 
-//    /**
-//     * This method is used to reset the current quantity of the resources when a player reconnects to the game and needs to rebuild the model information
-//     * */
-//    public void resetResourcesQuantity(int red, int yellow, int green, int blue) {
-//        this.resources.put(ItemColor.RED, red);
-//        this.resources.put(ItemColor.YELLOW, yellow);
-//        this.resources.put(ItemColor.GREEN, green);
-//        this.resources.put(ItemColor.BLUE, blue);
-//    }
-
     /**
      * This method is used to reset the current quantity of the resources when a player reconnects to the game and needs to rebuild the model information
      * */
@@ -92,26 +82,6 @@ public class ResourceBank {
         } catch (Exception e) {
             throw new IllegalStateException("The given component i: " + i + " j: " + j + " is not a valid Storage component");
         }
-
-        /*
-        // Check if the given storage component has enough space
-        if (storage.availableSpace() <= 0) {
-            throw new IllegalStateException("The given storage component i: " + i + " j: " + j + " has no more space");
-        }
-
-        // Check if the given storage component can store the given resource
-        if (color.equals(ItemColor.RED) && !storage.isSpecialStorage()) {
-            throw new IllegalStateException("The given storage component i: " + i + " j: " + j + " cannot store RED resources");
-        }
-
-        // Apply the action if the player is not eliminated and the bank has at least one resource of the required type
-        if ( !player.isEliminated() &&
-                this.resources.get(color) > 0) {
-
-            storage.storeItem( new Item(color) );
-            this.removeResourceFromBank(color);
-        }
-        */
 
         // If the given storage component has enough space, then insert the given item
         if (storage.availableSpace() > 0) {
