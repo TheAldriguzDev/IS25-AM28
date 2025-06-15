@@ -13,8 +13,8 @@ import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 public interface VirtualViewSocket extends VirtualView {
     @Override
-    public void updateState(Answer answer) throws JsonProcessingException;
+    void updateState(Answer answer) throws JsonProcessingException;
 
     @Override
-    public void reportError(ErrorAnswer error) throws JsonProcessingException;
+    void reportError(ErrorAnswer error) throws JsonProcessingException;
 }

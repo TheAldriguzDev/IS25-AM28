@@ -44,8 +44,17 @@ public class TCPClient implements VirtualViewSocket {
     private final ScheduledExecutorService pingScheduler;
 
     /**
-     * Constructor used to create the TCPClient and starts it
-     * */
+     * Constructs a new TCPClient instance that establishes a connection to a server
+     * using the specified IP address and port. It sets up input and output streams for
+     * communication, initializes handlers, and starts the communication.
+     *
+     * @param ipAddress the IP address of the server to connect to
+     * @param port the port number of the server, must be in the range (0, 65535]
+     * @param ui the ClientUI object responsible for managing user interface updates (TUI / GUI)
+     * @param model the ClientModel object handling the client-side application logic
+     * @throws IllegalArgumentException if the provided IP address is null or empty, or if the port is out of range
+     * @throws IOException if an error occurs while establishing the server connection
+     */
     public TCPClient(String ipAddress, int port, ClientUI ui, ClientModel model) throws IOException {
         // Args validation
         if (ipAddress == null || ipAddress.isEmpty()) {
@@ -77,8 +86,9 @@ public class TCPClient implements VirtualViewSocket {
     }
 
     /**
-     * Run the TCPClient in a new Thread. In this new thread we will listen the server messages
-     * */
+     * Runs the TCPClient in a separate thread to listen for messages from the server.
+     * If an exception is caught, it checks whether the server is offline and terminates accordingly.
+     */
     private void run() {
         new Thread(() -> {
             try {
@@ -95,8 +105,9 @@ public class TCPClient implements VirtualViewSocket {
     }
 
     /**
-     * This method will listen for server messages to the client
-     * */
+     * Listens for incoming messages from the server and dispatches them to the appropriate
+     * handlers based on whether the response represents an error or a state update.
+     */
     private void runVirtualServer() throws IOException {
         String line;
 
@@ -116,8 +127,11 @@ public class TCPClient implements VirtualViewSocket {
     }
 
     /**
-     * This method will ping every 5 seconds the server
-     * */
+     * Initiates a periodic task to send a heartbeat (ping) to the server.
+     * This method schedules a fixed-rate executor that periodically sends a ping message to the server.
+     *
+     * The ping task runs at a fixed interval of 5000 milliseconds.
+     */
     private void pingServer() {
         this.pingScheduler.scheduleAtFixedRate(() -> {
             try {
@@ -217,8 +231,13 @@ public class TCPClient implements VirtualViewSocket {
         this.updateHandler.reportErrorUpdate(error);
     }
 
-    // This method will be used to communicate the server socket
-    private void sendMessage(Message message) throws Exception {
+    /**
+     * Sends a message to the server.
+     *
+     * @param message the {@code Message} object to be sent to the server, representing
+     *                client-to-server communication data
+     */
+    private void sendMessage(Message message) {
         try {
             this.output.sendMessage(message); // This will invoke the SocketServerHandler
         } catch (Exception e) {

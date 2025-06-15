@@ -13,18 +13,23 @@ public final class Engine extends Component {
     public static final String alias = "ENGINE";
     private final int speed;
 
+    // Constructor
     public Engine(List<Integer> connectors, int speed, String path) {
         super(connectors, path);
+
         this.speed = speed;
     }
 
+    /**
+     * @return This engine's speed.
+     */
     public int getSpeed() {
-        return speed;
+        return this.speed;
     }
 
     @Override
     public boolean requiresEnergy() {
-        return (speed > 1);
+        return (this.speed > 1);
     }
 
     @Override

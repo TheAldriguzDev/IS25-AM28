@@ -16,8 +16,10 @@ public final class Battery extends Component {
     private final int maxAvailability;
     private int available;
 
+    // Constructor
     public Battery(List<Integer> connectors, int maxAvailability, String path) {
         super(connectors, path);
+
         this.maxAvailability = maxAvailability;
         available = maxAvailability;
     }

@@ -40,8 +40,20 @@ public class Pirates extends EventCard {
     private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
     private String prevPlayerNickname;
 
-    public Pirates(String name, int cardLevel, int requiredFirepower, int givenCredits, int movementSteps, List<List<Integer>> shootingSequence, Board board, int uniqueCardId, String path) {
+    // Constructor
+    public Pirates(
+            String name,
+            int cardLevel,
+            int requiredFirepower,
+            int givenCredits,
+            int movementSteps,
+            List<List<Integer>> shootingSequence,
+            Board board,
+            int uniqueCardId,
+            String path
+    ) {
         super(name, cardLevel, board, uniqueCardId, path);
+
         this.requiredFirepower = requiredFirepower;
         this.givenCredits = givenCredits;
         this.movementSteps = movementSteps;
@@ -65,17 +77,20 @@ public class Pirates extends EventCard {
 
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
-        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
+        if (this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
-        } else {
+        }
+        else {
             if (firstRound) {
                 this.players = new ArrayList<>(this.getBoard().getPlayers());
-            } else {
+            }
+            else {
                 if (!playersToHit.isEmpty()) {
                     this.players = new ArrayList<>(this.playersToHit);
                 }
             }
-            currentPlayer = Optional.of(players.getFirst());
+
+            this.currentPlayer = Optional.of(this.players.getFirst());
         }
         activateCard();
     }
@@ -89,9 +104,11 @@ public class Pirates extends EventCard {
 
         if (currentPlayer.isPresent()) {
             int currentIndex = players.indexOf(currentPlayer.get());
+
             if (currentIndex == players.size() - 1) {
                 return Optional.empty();
-            } else {
+            }
+            else {
                 Player nextPlayer = players.get(currentIndex + 1);
                 currentPlayer = Optional.of(nextPlayer);
 
@@ -102,7 +119,8 @@ public class Pirates extends EventCard {
 
                 return currentPlayer;
             }
-        } else {
+        }
+        else {
             currentPlayer = Optional.of(players.getFirst());
 
             // If the first player is disconnected, then get the next one in line
@@ -117,20 +135,25 @@ public class Pirates extends EventCard {
     // TODO: need rework on when the card ends
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         PiratesJSON piratesData;
+
         try {
             piratesData = (PiratesJSON) data;
-        } catch (ClassCastException e) {
+        }
+        catch (ClassCastException e) {
             throw new ClassCastException("Card data type in invalid");
         }
 
         Optional<Player> playerOptional = getCurrentPlayer();
+
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
                     String playerNickname = piratesData.getPlayerNickname();
                     this.prevPlayerNickname = playerNickname;
+
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
+
                     // if the first round of meteors has passed, this block won't be executed, assuring that no players will get the same reward twice (or activate the cannons twice)
                     if (firstRound) {
                         List<Pair<CoordinatePair, CoordinatePair>> activatedDoubleCannonsCoordinates
@@ -155,10 +178,12 @@ public class Pirates extends EventCard {
                             // Pirates defeated, even if the player who defeated them does not take the credits, the card won't be used by other players
                             if (piratesData.getTakeCredits()) {
                                 bonusEffect();
-                                getBoard().movePlayerBackwards(player, movementSteps);
+                                getBoard().movePlayerBackward(player, movementSteps);
                                 this.updatedPositions.put(playerNickname, player.getCursor());
+
                                 int tmp = getBoard().getEliminatedPlayers().size();
                                 this.getBoard().validatePlayersPosition();
+
                                 for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
                                     this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
                                 }
@@ -166,7 +191,8 @@ public class Pirates extends EventCard {
 
                             player = this.players.getLast(); // We set the current player as the last one to end the first round, since the pirates have been defeated
 
-                        } else if (playerFirepower < requiredFirepower) {
+                        }
+                        else if (playerFirepower < requiredFirepower) {
                             playersToHit.add(player);
                         }
                     }
@@ -179,7 +205,6 @@ public class Pirates extends EventCard {
                     }
 
                     if (player.equals(this.players.getLast())) {
-
                         if (firstRound) {
                             firstRound = false;
 
@@ -192,22 +217,26 @@ public class Pirates extends EventCard {
                             if (playersToHit.isEmpty()) {
                                 cardUsed();
                             }
-                        } else {
+                        }
+                        else {
                             this.plasmaShotIndex++;
+
                             // In the case the index advances, we need to set the new info about the plasmaShot, but only if there is at least one left
                             if (this.plasmaShotIndex < shootingSequence.size()) {
                                 shotSize = shootingSequence.get(plasmaShotIndex).getFirst();  // 1 -> small, 2 -> big
                                 shotDirection = shootingSequence.get(plasmaShotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
                                 currentPlasmaShot = Map.of("shotSize", shotSize, "shotDirection", shotDirection);
                             }
+
                             this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
                         }
 
                         this.initCardPlayers();
-
-                    } else {
+                    }
+                    else {
                         this.getNextPlayer();
                     }
+
                     // When there are players to hit, the card is marked as used only when all plasmaShot have been dealt with (or when all the players to hit are eliminated)
                     if (this.plasmaShotIndex == shootingSequence.size()) {
                         this.cardUsed();
@@ -223,6 +252,7 @@ public class Pirates extends EventCard {
     @Override
     protected void bonusEffect() {
         Optional<Player> playerOptional = getCurrentPlayer();
+
         playerOptional.ifPresent(
             (Player player) -> {
                 player.setCredits(player.getCredits() + this.givenCredits);
@@ -235,8 +265,10 @@ public class Pirates extends EventCard {
     protected void malusEffect(ActionJSON data) throws ClassCastException {
         Optional<Player> playerOptional = getCurrentPlayer();
         PiratesJSON piratesData = (PiratesJSON) data;
+
         previousPlayerRemovedComponents = new ArrayList<>();
         eliminatedPlayers = new ArrayList<>();
+
         playerOptional.ifPresent(
                 (Player player) -> {
                     Boolean[] shieldedSides = new Boolean[] {false, false, false, false};
@@ -294,7 +326,6 @@ public class Pirates extends EventCard {
                     );
 
                     if ((shotSize == 1 && !shieldedSides[shotDirection]) || shotSize == 2) {
-
                         Cabin tmpPurpleAlienPos = player.getShip().getPurpleAlienPosition();
                         Cabin tmpBrownAlienPos = player.getShip().getBrownAlienPosition();
 
@@ -308,10 +339,12 @@ public class Pirates extends EventCard {
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
-                                        } catch (CoreDeletionAttemptException e) {
+                                        }
+                                        catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
+
                                             if (playersToHit.isEmpty()) {
                                                 cardUsed();
                                             }
@@ -330,10 +363,12 @@ public class Pirates extends EventCard {
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
-                                        } catch (CoreDeletionAttemptException e) {
+                                        }
+                                        catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
+
                                             if (playersToHit.isEmpty()) {
                                                 cardUsed();
                                             }
@@ -352,10 +387,12 @@ public class Pirates extends EventCard {
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
-                                        } catch (CoreDeletionAttemptException e) {
+                                        }
+                                        catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
+
                                             if (playersToHit.isEmpty()) {
                                                 cardUsed();
                                             }
@@ -374,10 +411,12 @@ public class Pirates extends EventCard {
                                             this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
                                             this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
-                                        } catch (CoreDeletionAttemptException e) {
+                                        }
+                                        catch (CoreDeletionAttemptException e) {
                                             eliminatedPlayers.add(player.getNickname());
                                             getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
                                             playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
+
                                             if (playersToHit.isEmpty()) {
                                                 cardUsed();
                                             }
@@ -391,21 +430,24 @@ public class Pirates extends EventCard {
 
                         // If there were any aliens that have been removed, add them to the removed lifeForms
                         List<ComponentHelper<LifeformType>> removedAliensList = new ArrayList<>();
+
                         if (tmpPurpleAlienPos != null && player.getShip().getPurpleAlienPosition() == null) {
                             ComponentHelper<LifeformType> purpleAlienCH = new ComponentHelper<>(tmpPurpleAlienPos.getPosition()[0], tmpPurpleAlienPos.getPosition()[1]);
                             purpleAlienCH.addItem(LifeformType.PURPLE_ALIEN);
                             removedAliensList.add(purpleAlienCH);
                         }
+
                         if (tmpBrownAlienPos != null && player.getShip().getBrownAlienPosition() == null) {
                             ComponentHelper<LifeformType> brownAlienCH = new ComponentHelper<>(tmpBrownAlienPos.getPosition()[0], tmpBrownAlienPos.getPosition()[1]);
                             brownAlienCH.addItem(LifeformType.BROWN_ALIEN);
                             removedAliensList.add(brownAlienCH);
                         }
+
                         if (!removedAliensList.isEmpty()) {
                             this.removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), removedAliensList);
                         }
-
                     }
+
                     shotSize = shootingSequence.get(plasmaShotIndex).getFirst();  // 1 -> small, 2 -> big
                     shotDirection = shootingSequence.get(plasmaShotIndex).getLast();  // 0 -> up, 1 -> right, 2 -> bottom, 3 -> left
                     currentPlasmaShot = Map.of("shotSize", shotSize, "shotDirection", shotDirection);
@@ -417,6 +459,7 @@ public class Pirates extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON piratesStateJSON = new CardStateJSON();
+
         piratesStateJSON.setUniqueCardId(this.uniqueCardId);
 
         // The dice throw is performed by generateState only at the beginning
@@ -451,16 +494,16 @@ public class Pirates extends EventCard {
                 setUpdatedRemovedBatteriesIfNecessary(piratesStateJSON, removedBatteries);
 
                 setUpdatedRemovedLifeformsIfNecessary(piratesStateJSON, removedLifeforms);
-
-            } else {
+            }
+            else {
                 // Batteries consumed due to activation of the double cannons
                 setUpdatedRemovedBatteriesIfNecessary(piratesStateJSON, removedBatteries);
             }
 
             setUpdatedPositionsIfNecessary(piratesStateJSON, this.updatedPositions);
             setUpdatedCreditsIfNecessary(piratesStateJSON, this.updatedCredits);
-
-        } else {
+        }
+        else {
             // This static info will be sent to the clients only when the card has not been activated yet
             piratesStateJSON.setCardTypeId(this.cardTypeId);
             piratesStateJSON.setCardName(getCardName());
@@ -479,6 +522,7 @@ public class Pirates extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setCardTypeId(this.cardTypeId);
         cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(getCardName());
@@ -491,7 +535,16 @@ public class Pirates extends EventCard {
         return cardState;
     }
 
-    // Only for testing
+    /**
+     * Forces the dice throw to ignore the internal RNG.
+     * <br>
+     * NOTE: This method is used only when testing the card.
+     * <br>
+     * NOTE: This method must be invoked before an useCard() method
+     *       when the dice throw result needs to be manipulated.
+     *
+     * @param diceThrowResult The artificial dice throw result to set the card to.
+     */
     void setDiceThrowResult(int diceThrowResult) {
         this.diceThrowResult = diceThrowResult;
     }

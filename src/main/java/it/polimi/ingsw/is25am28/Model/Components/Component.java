@@ -46,6 +46,7 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
         }
     }
 
+    // Constructor
     public Component(List<Integer> connectors, String path) {
         sides = new Connector[4];
 
@@ -56,6 +57,10 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
         this.path = path;
     }
 
+    /**
+     * @return TRUE if this component requires energy to be activated,
+     *         FALSE otherwise.
+     */
     public boolean requiresEnergy() {
         return false;
     }
@@ -133,40 +138,63 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
         this.col = col;
     }
 
+    /**
+     * @param rotation The rotation value to set this component to
+     */
     public Component setRotation(int rotation) {
         direction = rotation % 4;
         return this;
     }
 
+    /**
+     * Rotates this component to the left
+     * (CCW, counter-clockwise rotation)
+     */
     public Component rotateLeft() {
         direction--;
         if (direction < 0) { direction = 3; }
         return this;
     }
 
+    /**
+     * Rotates this component to the right
+     * (CW, clockwise rotation)
+     */
     public Component rotateRight() {
         direction++;
         if (direction > 3) { direction = 0; }
         return this;
     }
 
+    /**
+     * @return This component's left connector
+     */
     public Connector getLeftSide() {
         int normalizedPos = 3 - direction;
         if (normalizedPos < 0) normalizedPos += 4;
         return sides[normalizedPos % 4];
     }
 
+    /**
+     * @return This component's right connector
+     */
     public Connector getRightSide() {
         int normalizedPos = 1 - direction;
         if (normalizedPos < 0) normalizedPos += 4;
         return sides[normalizedPos % 4];
     }
 
+    /**
+     * @return This component's top connector
+     */
     public Connector getTopSide() {
         int normalizedPos = 4 - direction;
         return sides[normalizedPos % 4];
     }
 
+    /**
+     * @return This component's bottom connector
+     */
     public Connector getBottomSide() {
         int normalizedPos = 2 - direction;
         if (normalizedPos < 0) normalizedPos += 4;
@@ -222,26 +250,6 @@ public abstract sealed class Component implements WidgetTUIGenerator permits Can
      */
     public WidgetTUI generateWidget() {
         WidgetTUI componentWidget = new WidgetTUI();
-        List<String> customBorderScheme = new ArrayList<String>();
-
-
-//            int scale = 3;
-//            int height = scale;
-//            int width = 3 * height + 2;
-//
-//            componentWidget.setHeight(height);
-//            componentWidget.setWidth(width);
-
-//        // Creating the custom border character list that will be
-//        // used by the wrapper to create the border
-//        for (int i = 0; i < 8; i++) {
-//            customBorderScheme.add(WidgetTUI.defaultBorderCharacters.get(i));
-//        }
-//
-//        // Adding this component's connectors as the center side symbols in the border schema
-//        for (Connector connector : this.sides) {
-//            customBorderScheme.add("" + connector.ordinal());
-//        }
 
         // Finally, setting the screen of this component
         componentWidget.setScreen(this.getComponentScreen());

@@ -563,7 +563,7 @@ public class GUIHandler extends Application implements ClientUI {
 
     @Override
     public boolean isCTXAvailable() {
-        return (ctx != null);
+        return ctx != null && ctx.isUsable();
     }
 
     @Override

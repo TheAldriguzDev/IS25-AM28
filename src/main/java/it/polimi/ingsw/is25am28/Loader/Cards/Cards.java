@@ -4,6 +4,10 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.*;
 
+/**
+ * Defines the JSON structure used to parse and load saved cards into the game.
+ */
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "abandonedShip",

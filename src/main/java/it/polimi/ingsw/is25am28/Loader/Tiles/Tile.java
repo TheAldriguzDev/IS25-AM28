@@ -4,6 +4,11 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.*;
 
+/**
+ * Defines the abstract JSON structure for parsing tile configurations saved in a JSON file.
+ * Each concrete implementation of this {@code Tile} class provides methods to retrieve tile-specific parameters.
+ */
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "connectors",

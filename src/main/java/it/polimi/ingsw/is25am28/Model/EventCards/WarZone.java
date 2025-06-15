@@ -73,6 +73,7 @@ public class WarZone extends EventCard {
             String path
     ) {
         super(name, level, board, uniqueCardId, path);
+
         this.resourceBank = resourceBank;
         this.movementSteps = movementSteps;
         this.requiredCrew = requiredCrew;
@@ -120,13 +121,16 @@ public class WarZone extends EventCard {
                 if (current_action == cardActions.size() - 1) {
                     this.cardUsed();
                     return Optional.empty();
-                } else {
+                }
+                else {
                     // Revalidate the board position
                     int tmp = getBoard().getEliminatedPlayers().size();
                     this.getBoard().validatePlayersPosition();
+
                     for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
                         this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
                     }
+
                     // Clear the current players and reset them and set the currentPlayer to the first one
                     this.initCardPlayers();
                     // Go to the next action
@@ -139,7 +143,8 @@ public class WarZone extends EventCard {
 
                     return this.currentPlayer;
                 }
-            } else {
+            }
+            else {
                 Player nextPlayer = players.get(currentIndex + 1);
                 this.currentPlayer = Optional.of(nextPlayer);
 
@@ -150,7 +155,8 @@ public class WarZone extends EventCard {
 
                 return currentPlayer;
             }
-        } else {
+        }
+        else {
             this.currentPlayer = Optional.of(players.getFirst());
 
             // If the new player is not connected we skip it to grab the next one
@@ -176,7 +182,8 @@ public class WarZone extends EventCard {
 
         try {
             warZoneJSON = (WarZoneJSON) data;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new IllegalArgumentException("The given JSON data is not a valid warZoneJSON");
         }
 
@@ -223,7 +230,8 @@ public class WarZone extends EventCard {
         // If the affected player is present we can execute the effect
         if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
             this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
-        } else {
+        }
+        else {
             // If we do not have the affected player yet, it means that we need to store the given inputs
 
             if (this.getCurrentPlayer().isPresent()) {
@@ -256,14 +264,17 @@ public class WarZone extends EventCard {
                         if (entry.getValue() < minValue) {
                             tmpPlayer = entry.getKey();
                             minValue = entry.getValue();
-                        } else if (tmpPlayer != null && entry.getValue() == minValue && tmpPlayer.getCursor() < entry.getKey().getCursor()) {
+                        }
+                        else if (tmpPlayer != null && entry.getValue() == minValue && tmpPlayer.getCursor() < entry.getKey().getCursor()) {
                             tmpPlayer = entry.getKey();
                         }
                     }
+
                     if (tmpPlayer != null) {
                         this.affectedPlayer = Optional.of(tmpPlayer);
 //                        this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
                         this.currentPlayer = Optional.of(tmpPlayer);
+
                         // If the consequence is MOVEMENTSTEPS --> We can apply them immediately,
                         // for the others we need to wait for user inputs
                         switch (warZoneAction.getConsequence()) {
@@ -273,7 +284,8 @@ public class WarZone extends EventCard {
                             }
                             case null, default -> { }
                         }
-                    } else {
+                    }
+                    else {
                         this.affectedPlayer = Optional.empty();
                     }
                 }
@@ -297,9 +309,9 @@ public class WarZone extends EventCard {
         // If the affected player is present we can execute the effect (Will be used when the consequence are the plasma shots)
         if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
             this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
-        } else {
+        }
+        else {
             // If we do not have the affected player yet, it means that we need to store the given inputs
-
             if (this.getCurrentPlayer().isPresent()) {
                 Player p = this.getCurrentPlayer().get();
 
@@ -332,7 +344,8 @@ public class WarZone extends EventCard {
                         if (entry.getValue() < minValue) {
                             tmpPlayer = entry.getKey();
                             minValue = entry.getValue();
-                        } else if (tmpPlayer != null && entry.getValue() == minValue && tmpPlayer.getCursor() < entry.getKey().getCursor()) {
+                        }
+                        else if (tmpPlayer != null && entry.getValue() == minValue && tmpPlayer.getCursor() < entry.getKey().getCursor()) {
                             tmpPlayer = entry.getKey();
                         }
                     }
@@ -341,6 +354,7 @@ public class WarZone extends EventCard {
                         this.affectedPlayer = Optional.of(tmpPlayer);
 //                        this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
                         this.currentPlayer = Optional.of(tmpPlayer);
+
                         // If the consequence is MOVEMENTSTEPS --> We can apply them immediately,
                         // for the others we need to wait for user inputs
                         switch (warZoneAction.getConsequence()) {
@@ -350,7 +364,8 @@ public class WarZone extends EventCard {
                             }
                             case null, default -> { }
                         }
-                    } else {
+                    }
+                    else {
                         this.affectedPlayer = Optional.empty();
                     }
                 }
@@ -372,7 +387,8 @@ public class WarZone extends EventCard {
         // If the affected player is present we can execute the effect (Will be used when the consequence are the plasma shots)
         if (this.affectedPlayer != null && this.affectedPlayer.isPresent()) {
             this.applyConsequence(this.affectedPlayer.get(), warZoneJSON);
-        } else {
+        }
+        else {
             // Get the min lifeform available in the players
             int minLifeForm = this.players.stream()
                     .mapToInt(p -> p.getShip().getAllLifeforms().size())
@@ -397,7 +413,8 @@ public class WarZone extends EventCard {
                     }
                     case null, default -> { }
                 }
-            } else {
+            }
+            else {
                 this.affectedPlayer = Optional.empty();
             }
 
@@ -437,7 +454,7 @@ public class WarZone extends EventCard {
                 this.getNextPlayer();
             }
             case MOVEMENTSTEPS -> {
-                this.getBoard().movePlayerBackwards(player, this.movementSteps);
+                this.getBoard().movePlayerBackward(player, this.movementSteps);
 
                 this.updatedPositions.put(player.getNickname(), player.getCursor());
 
@@ -491,14 +508,16 @@ public class WarZone extends EventCard {
         // This covers also the case in which there are not enough resources on board
         if (resourcesToDrop.size() != mostValuableItems.size()) {
             throw new IllegalArgumentException("The dropped items are not enough");
-        } else if (this.countOccurrencies(mostValuableItems).equals(colorsToDrop)) {
+        }
+        else if (this.countOccurrencies(mostValuableItems).equals(colorsToDrop)) {
             this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
             throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
         }
         else if ((stolenBatteries.size() != batteriesToTake) && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {
             // This exception is triggered only if a wrong number of batteries is sent, the case in which the player cannot select the required number of batteries is checked
             throw new IllegalArgumentException("The given up batteries are not enough!");
-        } else if (stolenBatteries.size() > batteriesToTake) {
+        }
+        else if (stolenBatteries.size() > batteriesToTake) {
             throw new IllegalArgumentException("You didn't remove the right amount of batteries, please try again");
         }
 
@@ -506,7 +525,6 @@ public class WarZone extends EventCard {
 //        if (itemsToBeRemoved.size() != this.requiredItems) {
 //            throw new IllegalArgumentException("The itemsToBeRemoved size does not match with the card requirements!");
 //        }
-
 
         if (!itemsToBeRemoved.isEmpty()) {
             this.droppedResources.put(player.getNickname(), itemsToBeRemoved);
@@ -557,9 +575,11 @@ public class WarZone extends EventCard {
 
     private Map<ItemColor, Integer> countOccurrencies(List<ItemColor> colors) {
         Map<ItemColor, Integer> occurrencies = new HashMap<>();
+
         for(ItemColor itemColor : colors) {
             occurrencies.put(itemColor, occurrencies.getOrDefault(itemColor, 0) + 1);
         }
+
         return occurrencies;
     }
 
@@ -755,11 +775,13 @@ public class WarZone extends EventCard {
                     purpleAlienCH.addItem(LifeformType.PURPLE_ALIEN);
                     removedAliensList.add(purpleAlienCH);
                 }
+
                 if (tmpBrownAlienPos != null && shipPtr.getBrownAlienPosition() == null) {
                     ComponentHelper<LifeformType> brownAlienCH = new ComponentHelper<>(tmpBrownAlienPos.getPosition()[0], tmpBrownAlienPos.getPosition()[1]);
                     brownAlienCH.addItem(LifeformType.BROWN_ALIEN);
                     removedAliensList.add(brownAlienCH);
                 }
+
                 if (!removedAliensList.isEmpty()) {
                     this.removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), removedAliensList);
                     this.skipCrewUpdate = false;
@@ -780,11 +802,11 @@ public class WarZone extends EventCard {
     }
 
     /**
-     * Generate the dice result
-     * */
+     * @return A number between [2, 12] representing the result
+     *         of throwing two D6 (D6 = 6-faced dice)
+     */
     private int generateDiceResult() {
         return (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
-        //return 7; // Column 6
     }
 
     /**
@@ -795,6 +817,7 @@ public class WarZone extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setUniqueCardId(this.uniqueCardId);
 
         if (this.hasBeenActivated()) {
@@ -826,7 +849,6 @@ public class WarZone extends EventCard {
             }
 
             if (this.targetPlayer != null && !this.targetPlayer.isEmpty()) {
-
                 this.targetPlayer = null;
 
                 setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
@@ -836,16 +858,14 @@ public class WarZone extends EventCard {
                 setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
                 setUpdatedRemovedComponentsIfNecessary(cardState, this.removedComponents);
                 setUpdatedLostPiecesIfNecessary(cardState, this.lostPieces);
-
-            } else {
+            }
+            else {
                 setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
             }
-
-        } else {
+        }
+        else {
             cardState.setCardTypeId(this.cardTypeId);
-            // Set the card name
             cardState.setCardName(this.getCardName());
-            // Set the card level
             cardState.setCardLevel(this.cardLevel);
             cardState.setImagePath(this.path);
 
@@ -890,18 +910,19 @@ public class WarZone extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setCardTypeId(this.cardTypeId);
         cardState.setUniqueCardId(this.uniqueCardId);
-        // Set the card name
         cardState.setCardName(this.getCardName());
-        // Set the card level
         cardState.setCardLevel(this.cardLevel);
         cardState.setImagePath(this.path);
 
         List<List<String>> actionsAndConsequences = new ArrayList<>();
+
         for (WarZoneActionConsequencePair pair : this.cardActions) {
             actionsAndConsequences.add(Arrays.asList(pair.getAction().toString(), pair.getConsequence().toString()));
         }
+
         cardState.setActionsAndConsequences(actionsAndConsequences);
         cardState.setRequiredCrewMembers(this.requiredCrew);
         cardState.setMovementSteps(this.movementSteps);

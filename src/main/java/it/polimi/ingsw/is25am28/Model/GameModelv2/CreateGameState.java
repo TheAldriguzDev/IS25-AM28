@@ -43,7 +43,7 @@ public final class CreateGameState extends State {
 
         state.setStateName(this.toString());
         state.setAvailableColors(model.getAvailableColors());
-        state.setUsedNicknames(new ArrayList<String>());
+        state.setUsedNicknames(new ArrayList<>());
 
         return state;
     }

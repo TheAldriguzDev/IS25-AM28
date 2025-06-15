@@ -107,12 +107,7 @@ public class Screen implements ClientUI {
 
     @Override
     public boolean isCTXAvailable() {
-        if (this.ctx != null) {
-            return this.ctx.isUsable();
-        }
-        else {
-            return false;
-        }
+        return ctx != null && ctx.isUsable();
     }
 
     @Override

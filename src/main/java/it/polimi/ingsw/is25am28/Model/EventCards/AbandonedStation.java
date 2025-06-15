@@ -17,7 +17,6 @@ public class AbandonedStation extends EventCard {
 
     private List<ComponentHelper<ItemColor>> resourceToDropOff;
     private List<ComponentHelper<ItemColor>> resourceToTake;
-    private boolean hasBeenUsedByPlayer;
 
     private List<String> playersThatCanUseTheCard;
 
@@ -28,8 +27,20 @@ public class AbandonedStation extends EventCard {
 
     private String prevPlayerNickname;
 
-    public AbandonedStation(String name, int cardLevel, int requiredCrew, int movementStep, ArrayList<Item> givenItems, Board board, ResourceBank resourceBank, int uniqueCardId, String path) {
+    // Constructor
+    public AbandonedStation(
+            String name,
+            int cardLevel,
+            int requiredCrew,
+            int movementStep,
+            ArrayList<Item> givenItems,
+            Board board,
+            ResourceBank resourceBank,
+            int uniqueCardId,
+            String path
+    ) {
         super(name, cardLevel, board, uniqueCardId, path);
+
         this.requiredCrew = requiredCrew;
         this.movementStep = movementStep;
         this.givenItems = givenItems;
@@ -45,18 +56,20 @@ public class AbandonedStation extends EventCard {
      * */
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
-        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
+        if (this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
-        } else {
+        }
+        else {
             // Set the players that can use the card
             this.playersThatCanUseTheCard = this.getBoard().getPlayers().stream()
-                    .filter( p -> p.getShip().getAllLifeforms().size() >= this.requiredCrew )
+                    .filter(p -> p.getShip().getAllLifeforms().size() >= this.requiredCrew)
                     .map(Player::getNickname)
                     .toList();
 
             this.players = new ArrayList<>(this.getBoard().getPlayers());
-            currentPlayer = Optional.of(players.getFirst());
+            this.currentPlayer = Optional.of(this.players.getFirst());
         }
+
         activateCard();
     }
 
@@ -71,7 +84,8 @@ public class AbandonedStation extends EventCard {
 
         try {
             abandonedStation = (AbandonedStationJSON) data;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new IllegalArgumentException("The given JSON data is not a valid abandonedStation JSON");
         }
 
@@ -82,10 +96,11 @@ public class AbandonedStation extends EventCard {
 
         // Check if:
         // 1. The player match with the current one
-        if ( playerNickname != null &&
-                !playerNickname.isEmpty() &&
-                playerNickname.equals( this.getCurrentPlayer().get().getNickname()) ) {
-
+        if (
+                (playerNickname != null) &&
+                (!playerNickname.isEmpty()) &&
+                (playerNickname.equals( this.getCurrentPlayer().get().getNickname()))
+        ) {
             // When a player decide to visit the ship we need to mark the card as used. Then
             // 1. get the list of the resource he wants to drop off --> and drop them
             // 2. get the list of the resources he wants to take
@@ -94,14 +109,15 @@ public class AbandonedStation extends EventCard {
                 // Retrieve the resources needed for the computation
                 this.resourceToDropOff = abandonedStation.getItemsToBeRemoved();
                 this.resourceToTake = abandonedStation.getItemsToBeTaken();
-                this.hasBeenUsedByPlayer = true;
 
                 this.bonusEffect();
                 this.malusEffect();
-            } else {
+            }
+            else {
                 this.getNextPlayer();
             }
-        } else {
+        }
+        else {
             throw new IllegalArgumentException("The given player does not match with the current one!");
         }
 
@@ -118,13 +134,15 @@ public class AbandonedStation extends EventCard {
             }
 
             // Add the resources from the player to the bank
-            for ( ComponentHelper<ItemColor> resourceDrop : this.resourceToDropOff ) {
+            for (ComponentHelper<ItemColor> resourceDrop : this.resourceToDropOff) {
                 resourceDrop.getItem().ifPresent( i ->
-                        this.resourceBank.addResourceToBankFromPlayer(
-                                this.getCurrentPlayer().get(),
-                                i,
-                                resourceDrop.getI(),
-                                resourceDrop.getJ()));
+                    this.resourceBank.addResourceToBankFromPlayer(
+                        this.getCurrentPlayer().get(),
+                        i,
+                        resourceDrop.getI(),
+                        resourceDrop.getJ()
+                    )
+                );
             }
 
             if (!this.resourceToTake.isEmpty()) {
@@ -134,11 +152,13 @@ public class AbandonedStation extends EventCard {
             // Add the resources from the bank to the player
             for ( ComponentHelper<ItemColor> resourceTake : this.resourceToTake ) {
                 resourceTake.getItem().ifPresent( i ->
-                        this.resourceBank.addResourceToPlayerFromBank(
-                                this.getCurrentPlayer().get(),
-                                i,
-                                resourceTake.getI(),
-                                resourceTake.getJ()));
+                    this.resourceBank.addResourceToPlayerFromBank(
+                        this.getCurrentPlayer().get(),
+                        i,
+                        resourceTake.getI(),
+                        resourceTake.getJ()
+                    )
+                );
             }
         }
     }
@@ -147,10 +167,12 @@ public class AbandonedStation extends EventCard {
     protected void malusEffect() {
         if (this.getCurrentPlayer().isPresent()) {
             // Move the player of the given steps and re-validate the positions
-            this.getBoard().movePlayerBackwards(this.getCurrentPlayer().get(), this.movementStep);
+            this.getBoard().movePlayerBackward(this.getCurrentPlayer().get(), this.movementStep);
             this.updatedPositions.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getCursor());
+
             int tmp = getBoard().getEliminatedPlayers().size();
             this.getBoard().validatePlayersPosition();
+
             for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
                 this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
             }
@@ -161,6 +183,7 @@ public class AbandonedStation extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
@@ -176,7 +199,8 @@ public class AbandonedStation extends EventCard {
             setUpdatedDroppedResourcesIfNecessary(cardState, droppedResources);
             setUpdatedTakenResourcesIfNecessary(cardState, takenResources);
             setUpdatedPositionsIfNecessary(cardState, updatedPositions);
-        } else {
+        }
+        else {
             // Card information that are needed to play
             cardState.setCardTypeId(this.cardTypeId);
             cardState.setCardName(this.getCardName());
@@ -195,6 +219,7 @@ public class AbandonedStation extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
+
         cardState.setCardTypeId(this.cardTypeId);
         cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(this.getCardName());

@@ -6,28 +6,23 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
-import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.UUID;
 
 /**
- * SocketClientHandler is needed to handle correctly each client socket to execute the command with the Controller
- * */
+ * Handles client socket connections and provides the needed methods for the communication between the server
+ * and a specific client.
+ */
 
 public class SocketClientHandler implements VirtualViewSocket {
     private final Server controller;
-    private final TCPServer tcpServer;
 
     // Channel used to read from the socket
     private final BufferedReader input;
@@ -37,11 +32,8 @@ public class SocketClientHandler implements VirtualViewSocket {
     // Mapper used to serialize and deserialize JSON used in the communication
     private final ObjectMapper mapper;
 
-    private String playerNickname;
-
-    public SocketClientHandler(Server gameController, TCPServer tcpServer, BufferedReader input, PrintWriter output) throws JsonProcessingException {
+    public SocketClientHandler(Server gameController, BufferedReader input, PrintWriter output) {
         this.controller = gameController;
-        this.tcpServer = tcpServer;
         this.input = input;
         this.output = output;
 
@@ -56,16 +48,23 @@ public class SocketClientHandler implements VirtualViewSocket {
         }
     }
 
+    /**
+     * Manages the initial connection of a client by invoking the controller to retrieve the AvailableGamesDTO.
+     *
+     * @throws Exception if an error occurs during client connection handling
+     */
     private void onClientConnection() throws Exception {
         this.controller.onClientConnection(this);
     }
 
     /**
-     * This method will listen for Serialized Messages from the client
+     * Continuously processes incoming messages from a client through the provided input stream.
+     * Messages are deserialized to specific message types and handled by invoking appropriate methods.
      *
-     * We need to implement the deserialization protocol
-     * */
-    public void run() throws IOException, Exception {
+     * @throws Exception if any error occurs during message processing or if an unsupported
+     *                   message type is received.
+     */
+    public void run() throws Exception {
         String line;
 
         while ((line = input.readLine()) != null) {
@@ -137,8 +136,6 @@ public class SocketClientHandler implements VirtualViewSocket {
 
     @Override
     public void createNewGame(String playerNickname, PlayerColor playerColor, int gameLevel, int totalPlayers) throws Exception {
-        this.playerNickname = playerNickname;
-
         try {
             this.controller.createNewGame(playerNickname, playerColor, gameLevel, totalPlayers, this);
         } catch (Exception e) {
@@ -148,8 +145,6 @@ public class SocketClientHandler implements VirtualViewSocket {
 
     @Override
     public void joinGame(String playerNickname, PlayerColor playerColor, int gameID) throws Exception {
-        this.playerNickname = playerNickname;
-
         try {
             this.controller.joinGame(playerNickname, playerColor, gameID, this);
         } catch (Exception e) {
@@ -261,6 +256,11 @@ public class SocketClientHandler implements VirtualViewSocket {
     }
 
     // ===== PING UTILITY METHODS ===== //
+    /**
+     * Sends a ping request to the server to ensure the connection remains active.
+     *
+     * @throws Exception if an error occurs during the ping operation
+     */
     public void ping() throws Exception {
         this.controller.clientPing(this);
     }

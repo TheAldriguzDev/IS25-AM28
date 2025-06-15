@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Loader;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.polimi.ingsw.is25am28.Loader.Cards.*;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.EventCards.*;
@@ -19,12 +18,26 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * Responsible for loading and creating a list of {@link EventCard} objects
+ * based on the data contained in the {@code cards.json} file.
+ *
+ * This class handles parsing the file, generating the cards, and assigning each one a unique ID.
+ */
 public class CardLoader extends Loader<Cards> {
 
     public CardLoader() throws IOException {
         super(CardLoader.class.getResourceAsStream("/json/cards.json"), Cards.class);
     }
 
+    /**
+     * Generates a list of {@link EventCard} objects for the given game level, assigning each a unique ID.
+     *
+     * @param board the current game board
+     * @param resourceBank the resource bank of the game
+     * @param level the level of the game
+     * @return a {@link List} of generated {@code EventCard} objects
+     */
     public List<EventCard> getCards(Board board, ResourceBank resourceBank, int level) {
         // cards will store the generated events cards
         List<EventCard> cards = new ArrayList<>();

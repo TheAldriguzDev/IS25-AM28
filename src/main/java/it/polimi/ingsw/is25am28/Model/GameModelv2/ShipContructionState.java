@@ -449,7 +449,6 @@ public final class ShipContructionState extends State implements TimerObserver {
             Answer answer = new Answer()
                     .setState(state);
 
-            // TODO: Understand if this is the correct solution to update the client about the timer end
             if (this.model.getCurrentState().equals(this)) {
                 this.model.broadCastUpdate(answer);
             }

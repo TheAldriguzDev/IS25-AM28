@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Model.EventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -29,7 +28,7 @@ public abstract class EventCard {
     protected boolean hasBeenActivated;
 
     /**
-     * General constructor shared between the classes
+     * Generic constructor shared between the classes
      */
     protected EventCard(String cardName, int cardLevel, Board board, int uniqueCardId, String path) {
         this.cardName = cardName;
@@ -49,17 +48,17 @@ public abstract class EventCard {
      */
     public int getCardTypeId(){
         return switch (this) {
-            case AbandonedShip _    -> 0;
-            case AbandonedStation _ -> 1;
-            case Epidemy _          -> 2;
-            case MeteorShower _     -> 3;
-            case OpenSpace _        -> 4;
-            case Pirates _          -> 5;
-            case Slavers _          -> 6;
-            case Smugglers _        -> 7;
-            case Stardust _         -> 8;
-            case VisitPlanets _     -> 9;
-            case WarZone _          -> 10;
+            case AbandonedShip _    -> ABANDONED_SHIP.ordinal();
+            case AbandonedStation _ -> ABANDONED_STATION.ordinal();
+            case Epidemy _          -> EPIDEMY.ordinal();
+            case MeteorShower _     -> METEOR_SHOWER.ordinal();
+            case OpenSpace _        -> OPEN_SPACE.ordinal();
+            case Pirates _          -> PIRATES.ordinal();
+            case Slavers _          -> SLAVERS.ordinal();
+            case Smugglers _        -> SMUGGLERS.ordinal();
+            case Stardust _         -> STARDUST.ordinal();
+            case VisitPlanets _     -> VISIT_PLANETS.ordinal();
+            case WarZone _          -> WARZONE.ordinal();
             default -> throw new IllegalStateException("ERROR: Unexpected EventCard instance \"" + this + "\"");
         };
     }
@@ -270,12 +269,14 @@ public abstract class EventCard {
         if (!updatedPositions.isEmpty()) {
             cardState.setNeedsBoardUpdate(true);
             cardState.setNeedsUpdatedPositions(true);
+
             cardState.setUpdatedPositions(
                 new HashMap<>(
                     updatedPositions.entrySet().stream()
                         .collect(Collectors.toMap(Map.Entry::getKey, e -> e.getValue() % getBoard().getSize()))
                 )
             );
+
             updatedPositions.clear();
         }
     }

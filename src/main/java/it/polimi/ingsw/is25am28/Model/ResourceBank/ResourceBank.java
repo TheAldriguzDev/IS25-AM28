@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Model.ResourceBank;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Components.Storage;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
@@ -12,8 +11,11 @@ public class ResourceBank {
     private final Map<ItemColor, Integer> resources;
 
     /**
-     * Create the resource bank and initialize it with the correct amount of resources
-     * */
+     * Creates and initializes the ResourceBank object with either a finite number of resources for each color based on a specific game level
+     * or an unlimited number of resources for all colors.
+     *
+     * @param gameLevel the game level determining resource limits.
+     */
     public ResourceBank(int gameLevel) {
         this.resources = new HashMap<>();
 
@@ -32,47 +34,75 @@ public class ResourceBank {
     }
 
     /**
-     * This method is used to reset the current quantity of the resources when a player reconnects to the game and needs to rebuild the model information
-     * */
+     * Resets the quantities of resources available in the resource bank
+     * based on the specified map of resources.
+     * Useful to recreate the {@code ClientModel} information after a client reconnection
+     *
+     * @param availableResources a map where the key is an {@code ItemColor} representing
+     *                           the resource color and the value is an {@code Integer}
+     *                           representing the available quantity for that color.
+     */
     public void resetResourcesQuantity(Map<ItemColor, Integer> availableResources) {
         this.resources.putAll(availableResources);
     }
 
     /**
-     * Returns the Map that contains the ResourceColor and the amount available
-     * */
+     * Retrieves the current mapping of resource colors and their respective quantities
+     * available in the resource bank.
+     *
+     * @return a map where the keys represent {@code ItemColor} instances
+     *         (indicating resource colors) and the values represent the corresponding quantities
+     *         of each resource.
+     */
     public synchronized Map<ItemColor, Integer> getResources() {
         return resources;
     }
 
     /**
-     * Return the amount of availability of the given resource color
-     * */
+     * Retrieves the quantity of available resources of a specific color from the resource bank.
+     *
+     * @param color the {@code ItemColor} representing the resource color whose availability
+     *              is to be retrieved.
+     * @return an {@code int} indicating the quantity of available resources of the specified color.
+     */
     public synchronized int getResourceAvailabilityFromColor(ItemColor color) {
         return resources.get(color);
     }
 
     /**
-     * Increase the amount of availability for the given resource color
-     * */
+     * Increments the quantity of the specified resource color in the resource bank by one.
+     *
+     * @param color the {@code ItemColor} representing the resource color to be added.
+     */
     public synchronized void addResourceToBank(ItemColor color) {
         resources.put(color, resources.get(color) + 1);
     }
 
     /**
-     * Decrease the amount of availability for the given resource color
-     * */
+     * Decreases the quantity of the specified resource color in the resource bank by one.
+     *
+     * @param color the {@code ItemColor} representing the resource color to be removed.
+     */
     public synchronized void removeResourceFromBank(ItemColor color) {
         resources.put(color, resources.get(color) - 1);
     }
 
     /**
-     * It checks if:
-     * 1. The given component is a Storage
-     * 2. If the storage has enough space to store the item
-     * 3. If the storage can store the given item (used for RED resources)
-     * 4. If the player is not eliminated and the bank has the requested resource --> added to the given storage
-     * */
+     * Transfers a resource of a specified color from the resource bank to a player's storage,
+     * provided the storage is valid, has enough space, and the player is not eliminated.
+     * Ensures that RED resources can only be stored in special storage components.
+     * The operation is performed only if the resource bank has at least one resource
+     * of the specified color available.
+     *
+     * @param player the {@code Player} receiving the resource.
+     * @param color the {@code ItemColor} of the resource to be transferred.
+     * @param i the row index of the target storage component on the player's ship.
+     * @param j the column index of the target storage component on the player's ship.
+     * @return the {@code ResourceBank} instance after the operation is executed.
+     * @throws IllegalStateException if the specified storage component is invalid,
+     *                               has no more space, or cannot store RED resources.
+     * @throws NoSuchElementException if the resource bank does not have the specified resource.
+     */
     public synchronized ResourceBank addResourceToPlayerFromBank(Player player, ItemColor color, int i, int j) throws IllegalStateException, NoSuchElementException {
         Storage storage;
 
@@ -101,10 +131,18 @@ public class ResourceBank {
     }
 
     /**
-     * It checks if:
-     * 1. The given component is a Storage
-     * 2. If the player has bot been eliminated and the item is found in the storage --> removed from the storage and added to the bank
-     * */
+     * Transfers a resource of a specified color from a player's storage component to the resource bank.
+     * Validates whether the specified storage component exists and has an item of the provided color.
+     * The operation is performed only if the player is not eliminated.
+     *
+     * @param player the {@code Player} whose resource is to be transferred to the bank.
+     * @param color the {@code ItemColor} representing the color of the resource to be transferred.
+     * @param i the row index of the storage component on the player's ship.
+     * @param j the column index of the storage component on the player's ship.
+     * @return the {@code ResourceBank} instance after the operation is executed.
+     * @throws IllegalStateException if the specified storage component at indices {@code i}, {@code j} is invalid.
+     * @throws NoSuchElementException if there is no resource of the specified {@code ItemColor} in the selected storage.
+     */
     public synchronized ResourceBank addResourceToBankFromPlayer(Player player, ItemColor color, int i, int j) throws IllegalStateException, NoSuchElementException {
         Storage storage;
 

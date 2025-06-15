@@ -23,6 +23,7 @@ public class BoardLevel2 extends Board {
     /**
      * buildBoard builds the board and sets the cells where the players can be placed.
      * */
+    @Override
     public void buildBoard() {
         ArrayList<Cell> initialCells = new ArrayList<>();
 
@@ -82,7 +83,7 @@ public class BoardLevel2 extends Board {
         for (int i = 0; i < playerCount; i++) {
             coloredNickname = PrintUtils.addColor(
                     activePlayers.get(i).getNickname(),
-                    activePlayers.get(i).getPlayerColor().getColorString()
+                    activePlayers.get(i).getColor().getColorString()
             );
 
             boardInfoWidget.appendString(placements.get(i) + " - " + coloredNickname);
@@ -104,7 +105,7 @@ public class BoardLevel2 extends Board {
             for (int i = 0; i < playerCount; i++) {
                 coloredNickname = PrintUtils.addColor(
                         eliminatedPlayers.get(i).getNickname(),
-                        eliminatedPlayers.get(i).getPlayerColor().getColorString()
+                        eliminatedPlayers.get(i).getColor().getColorString()
                 );
 
                 boardInfoWidget.appendString(redX + placements.get(totalPlacements - 1 - i) + " - " + coloredNickname);
@@ -121,6 +122,7 @@ public class BoardLevel2 extends Board {
      * @return A TUIPage border-wrapped widget containing the board's text representation
      *         as well as other information about itself
      */
+    @Override
     public WidgetTUI generateWidget() {
         // Only create the widget if the board has been created
         if (this.getSize() > 0) {
@@ -152,7 +154,7 @@ public class BoardLevel2 extends Board {
                     allCells.add(
                         PrintUtils.addColor(
                             UnicodeCharacters.FULL_BLOCK,
-                            optionalPlayer.get().getPlayerColor().getColorString()
+                            optionalPlayer.get().getColor().getColorString()
                         )
                     );
                 }

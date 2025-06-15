@@ -9,11 +9,17 @@ public class Meteor {
         this.orientation = orientation;
     }
 
+    /**
+     * @return This meteor's size
+     */
     public int getSize() {
-        return size;
+        return this.size;
     }
 
+    /**
+     * @return This meteor's orientation
+     */
     public int getOrientation() {
-        return orientation;
+        return this.orientation;
     }
 }

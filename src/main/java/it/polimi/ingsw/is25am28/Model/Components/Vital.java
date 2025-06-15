@@ -14,6 +14,7 @@ public final class Vital extends Component {
     public static final String alias = "VITAL";
     private final VitalType vitalType;
 
+    // Constructor
     public Vital(List<Integer> connectors, int type, String path) {
         super(connectors, path);
 
@@ -28,6 +29,9 @@ public final class Vital extends Component {
         }
     }
 
+    /**
+     * @return This vital's VitalType instance.
+     */
     public VitalType getVitalType() {
         return vitalType;
     }

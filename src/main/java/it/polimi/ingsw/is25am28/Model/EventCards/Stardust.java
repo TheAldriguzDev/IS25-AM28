@@ -12,6 +12,7 @@ public class Stardust extends EventCard {
     private final Map<String, Integer> updatedPositions;
     private final List<String> eliminatedPlayers;
 
+    // Constructor
     public Stardust(String name, int cardLevel, Board board, int uniqueCardId, String path) {
         super(name, cardLevel, board, uniqueCardId, path);
         this.updatedPositions = new HashMap<>();
@@ -20,34 +21,42 @@ public class Stardust extends EventCard {
 
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         StardustJSON stardustData;
+
         try {
             stardustData = (StardustJSON) data;
-        } catch (ClassCastException e) {
+        }
+        catch (ClassCastException e) {
             throw new ClassCastException("Card data type in invalid");
         }
+
         Optional<Player> playerOptional = getCurrentPlayer();
+
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
                     String playerNickname = stardustData.getPlayerNickname();
+
                     if (playerNickname == null || playerNickname.isEmpty() || !playerNickname.equals(player.getNickname())) {
                         throw new IllegalArgumentException("The given player does not match with the current one");
                     }
 
                     int movementSteps = player.getShip().getExposedConnectorAmount();
+                    getBoard().movePlayerBackward(player, movementSteps);
 
-                    getBoard().movePlayerBackwards(player, movementSteps);
                     if (movementSteps != 0) {
                         this.updatedPositions.put(player.getNickname(), player.getCursor());
                     }
 
                     if (player.equals(this.players.getLast())) {
                         this.cardUsed(); // Mark the card as used
+
                         int tmp = getBoard().getEliminatedPlayers().size();
                         this.getBoard().validatePlayersPosition();
+
                         for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // FIXME: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
                             this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
                         }
-                    } else {
+                    }
+                    else {
                         this.getNextPlayer();
                     }
                 },
@@ -55,6 +64,7 @@ public class Stardust extends EventCard {
                     throw new IllegalArgumentException("here is no player playing in this moment");
                 }
         );
+
         return this;
     }
 
@@ -65,13 +75,15 @@ public class Stardust extends EventCard {
 
     @Override
     public void initCardPlayers() throws IllegalArgumentException {
-        if ( getBoard().getPlayers() == null || getBoard().getPlayers().isEmpty() || getBoard().getPlayers().size() < 2 ) {
+        if (getBoard().getPlayers() == null || getBoard().getPlayers().isEmpty() || getBoard().getPlayers().size() < 2 ) {
             throw new IllegalArgumentException("The player list is null or contains less than two player");
-        } else {
-            this.players = new ArrayList<>(getBoard().getPlayers());
-            Collections.reverse(players);
-            currentPlayer = Optional.of(players.getFirst());
         }
+        else {
+            this.players = new ArrayList<>(getBoard().getPlayers());
+            Collections.reverse(this.players);
+            this.currentPlayer = Optional.of(this.players.getFirst());
+        }
+
         activateCard();
     }
 
@@ -79,6 +91,7 @@ public class Stardust extends EventCard {
     public CardStateJSON generateState() {
         Optional<Player> playerOptional = getCurrentPlayer();
         CardStateJSON stardustStateJSON = new CardStateJSON();
+
         stardustStateJSON.setUniqueCardId(this.uniqueCardId);
 
         if (hasBeenActivated()) {
@@ -95,7 +108,8 @@ public class Stardust extends EventCard {
                 // Sets the eliminatedPlayer (if there are any)
                 setUpdatedEliminatedPlayersIfNecessary(stardustStateJSON, this.eliminatedPlayers);
             }
-        } else {
+        }
+        else {
             stardustStateJSON.setCardTypeId(this.cardTypeId);
             stardustStateJSON.setCardName(getCardName());
             stardustStateJSON.setImagePath(this.path);
@@ -110,6 +124,7 @@ public class Stardust extends EventCard {
     @Override
     public CardStateJSON generateStaticState() {
         CardStateJSON cardState = new CardStateJSON();
+        
         cardState.setCardTypeId(this.cardTypeId);
         cardState.setUniqueCardId(this.uniqueCardId);
         cardState.setCardName(getCardName());

@@ -22,11 +22,8 @@ public class Smugglers extends EventCard {
     private final int greenItems;
     private final ResourceBank resourceBank;
     private final int takenItems;
-    //private boolean hasBeenDefeated;
     private ArrayList<String> defeatedPlayers;
-    //private boolean firstRound;
     private boolean isPlayerDefeated;
-    private ArrayList<Player> playersToTakeItemsFrom;
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
     private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
@@ -35,8 +32,24 @@ public class Smugglers extends EventCard {
 
     private String prevPlayerNickname;
 
-    public Smugglers(String name, int cardLevel, int movementSteps, int requiredFirepower, int takenItems ,int redItems, int yellowItems,  int greenItems, int blueItems, Board board, ResourceBank resourceBank, int uniqueCardId, String path) {
+    // Constructor
+    public Smugglers(
+            String name,
+            int cardLevel,
+            int movementSteps,
+            int requiredFirepower,
+            int takenItems,
+            int redItems,
+            int yellowItems,
+            int greenItems,
+            int blueItems,
+            Board board,
+            ResourceBank resourceBank,
+            int uniqueCardId,
+            String path
+    ) {
         super(name, cardLevel, board, uniqueCardId, path);
+
         this.requiredFirepower = requiredFirepower;
         this.movementSteps = movementSteps;
         this.redItems = redItems;
@@ -45,11 +58,8 @@ public class Smugglers extends EventCard {
         this.greenItems = greenItems;
         this.resourceBank = resourceBank;
         this.takenItems = takenItems;
-        //this.hasBeenDefeated = false;
         this.defeatedPlayers = new ArrayList<>();
-        //this.firstRound = true;
         this.isPlayerDefeated = false;
-        this.playersToTakeItemsFrom = new ArrayList<>();
         this.updatedPositions = new HashMap<>();
         this.droppedResources = new HashMap<>();
         this.takenResources = new HashMap<>();
@@ -57,30 +67,9 @@ public class Smugglers extends EventCard {
         this.eliminatedPlayers = new ArrayList<>();
     }
 
-    /*
-     * Se il tipo di response non è corretto la classe
-     * lancia un'eccezione di tipo ClassCastException
-     * */
-
-//    @Override
-//    public void initCardPlayers() throws IllegalArgumentException {
-//        if ( this.getBoard().getPlayers() == null || this.getBoard().getPlayers().isEmpty() || this.getBoard().getPlayers().size() < 2 ) {
-//            throw new IllegalArgumentException("The player list is null or contains less than two player");
-//        } else {
-//            if (firstRound) {
-//                this.players = new ArrayList<>(this.getBoard().getPlayers());
-//            } else {
-//                if (!playersToTakeItemsFrom.isEmpty()) {
-//                    this.players = new ArrayList<>(this.playersToTakeItemsFrom);
-//                }
-//            }
-//            currentPlayer = Optional.of(players.getFirst());
-//        }
-//        activateCard();
-//    }
-
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         SmugglersJSON smugglersData;
+
         try {
             smugglersData = (SmugglersJSON) data;
         }
@@ -89,6 +78,7 @@ public class Smugglers extends EventCard {
         }
 
         Optional<Player> playerOptional = getCurrentPlayer();
+
         playerOptional.ifPresentOrElse(
                 (Player player) -> {
                     String playerNickname = smugglersData.getPlayerNickname();
@@ -120,9 +110,10 @@ public class Smugglers extends EventCard {
 
                         if (playerFirepower > requiredFirepower) {
                             cardUsed();
+
                             if (smugglersData.getTakeLoot()) {
                                 bonusEffect(data);
-                                getBoard().movePlayerBackwards(player, movementSteps);
+                                getBoard().movePlayerBackward(player, movementSteps);
 
                                 this.updatedPositions.put(playerNickname, player.getCursor());
                                 int tmp = getBoard().getEliminatedPlayers().size();
@@ -132,12 +123,14 @@ public class Smugglers extends EventCard {
                                     this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
                                 }
                             }
-                        } else if (playerFirepower < requiredFirepower) {
+                        }
+                        else if (playerFirepower < requiredFirepower) {
                             this.isPlayerDefeated = true;
                             // playersToTakeItemsFrom.add(player);
                             // malusEffect(smugglersData);
                         }
-                    } else {
+                    }
+                    else {
                         malusEffect(data);
                         this.isPlayerDefeated = false;
                     }
@@ -163,21 +156,26 @@ public class Smugglers extends EventCard {
     protected void bonusEffect(ActionJSON data) throws ClassCastException {
         SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
+
         playerOptional.ifPresent(
             (Player player) -> {
                 List<ComponentHelper<ItemColor>> resourcesToLoad = smugglersData.getItemsToBeTaken();
                 List<ComponentHelper<ItemColor>> resourcesToDrop = smugglersData.getItemsToBeRemoved();
+
                 if (!resourcesToDrop.isEmpty()) {
                     this.droppedResources.put(player.getNickname(), resourcesToDrop);
                 }
+
                 if (!resourcesToLoad.isEmpty()) {
                     this.takenResources.put(player.getNickname(), resourcesToLoad);
                 }
+
                 // Items to drop
                 for ( ComponentHelper<ItemColor> resourceDrop : resourcesToDrop) {
                     resourceDrop.getItem().ifPresent( i ->
                             this.resourceBank.addResourceToBankFromPlayer(player, i, resourceDrop.getI(), resourceDrop.getJ()));
                 }
+
                 // Items to take
                 for ( ComponentHelper<ItemColor> resourceTake : resourcesToLoad) {
                     resourceTake.getItem().ifPresent( i ->
@@ -191,6 +189,7 @@ public class Smugglers extends EventCard {
     protected void malusEffect(ActionJSON data) {
         SmugglersJSON smugglersData = (SmugglersJSON) data;
         Optional<Player> playerOptional = getCurrentPlayer();
+
         playerOptional.ifPresent(
             (Player player) -> {
                 // Creates a tmp List of the n=takenItems most valuable item colors in the ship
@@ -221,7 +220,8 @@ public class Smugglers extends EventCard {
                     // This exception is triggered only if a wrong number of batteries is sent, the
                     // case in which the player cannot select the required number of batteries is checked
                     throw new IllegalArgumentException("The given up batteries are not enough!");
-                } else if (stolenBatteries.size() > batteriesToTake) {
+                }
+                else if (stolenBatteries.size() > batteriesToTake) {
                     throw new IllegalArgumentException("You didn't remove the right amount of batteries, please try again");
                 }
 
@@ -274,15 +274,16 @@ public class Smugglers extends EventCard {
 
     private Map<ItemColor, Integer> countOccurrences(List<ItemColor> colors) {
         Map<ItemColor, Integer> occurrences = new HashMap<>();
+
         for(ItemColor itemColor : colors) {
             occurrences.put(itemColor, occurrences.getOrDefault(itemColor, 0) + 1);
         }
+
         return occurrences;
     }
 
     @Override
     public CardStateJSON generateState() {
-
         if (hasBeenActivated()) {
             Optional<Player> playerOptional = getCurrentPlayer();
             CardStateJSON smugglersStateJSON = new CardStateJSON();
@@ -314,16 +315,13 @@ public class Smugglers extends EventCard {
             setUpdatedEliminatedPlayersIfNecessary(smugglersStateJSON, this.eliminatedPlayers);
 
             smugglersStateJSON.setCardEnded(this.hasFinished());
-            return smugglersStateJSON;
 
-        } else {
+            return smugglersStateJSON;
+        }
+        else {
             // Setting the static info about the card
             return this.generateStaticState();
         }
-
-
-
-
     }
 
     @Override
