@@ -110,9 +110,9 @@ public final class ShipContructionState extends State implements TimerObserver {
             throw new IllegalStateException("The time to select the sub-decks has ended");
         }
 
-        if (this.players_done.contains(player)) {
-            throw new IllegalStateException("The action is not allowed since you already sent your ship!");
-        }
+//        if (this.players_done.contains(player)) {
+//            throw new IllegalStateException("The action is not allowed since you already sent your ship!");
+//        }
 
         if (isSelectAction) {
             if (this.selectedSubDecks.containsKey(selectedDeck)) {

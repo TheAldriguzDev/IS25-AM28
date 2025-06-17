@@ -26,7 +26,7 @@ public final class CardRoundState extends State {
 
         this.round = 0;
         this.deck = this.model.getGameDeck();
-        this.shuffleDeck();
+        // this.shuffleDeck();
 
         this.board = this.model.getBoard();
         this.isFirstState = true;
