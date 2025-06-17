@@ -111,7 +111,10 @@ public class ShipConstructionController extends GUIController {
     private ClientComponent selectedComponent;
     private boolean isSelectedTileReserved;
 
-    // Method used to initialize the page information that needs to be displayed
+
+    /**
+     * Initializes all the elements of the Ship Construction Scene, handling also the case of a reconnection
+     */
     public void initShipConstruction() {
         this.clientModel = GUIHandler.getClientModel();
 
@@ -156,6 +159,9 @@ public class ShipConstructionController extends GUIController {
         this.setVisibility(this.reservedVBOX, !this.clientModel.getState().getReservedComponents().isEmpty());
     }
 
+    /**
+     * initializes the components on the shipConstruction's grid, showing the real component image if it has already been flipped (selected and deselected)
+     */
     private void initComponents() {
         tileFlow.getChildren().clear();
         this.clientModel.getState().getConstructionShipComponents().forEach(c -> {
@@ -180,6 +186,9 @@ public class ShipConstructionController extends GUIController {
         });
     }
 
+    /**
+     * Initializes the side panel of the ship construction view
+     */
     private void initSidePanel() {
         // Display and start the timer container only if the game level is != 0
         if (this.clientModel.getDifficultyLevel() != 0) {
@@ -193,6 +202,10 @@ public class ShipConstructionController extends GUIController {
         this.populateViewShipButtons();
     }
 
+
+    /**
+     * Populates the viewOtherShipGrid with buttons to view the other player's ships
+     */
     private void populateViewShipButtons() {
         // Clear all the nodes
         this.viewOtherShipsGrid.getChildren().clear();
@@ -264,6 +277,9 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+    /**
+     * Inits the subDecks
+     */
     private void initSubdecks() {
         this.subdeckImages = new ArrayList<>();
 
@@ -340,6 +356,9 @@ public class ShipConstructionController extends GUIController {
         this.shipGrid.add(cell, col, row);
     }
 
+    /**
+     * Handles request (through the click of a button) to view another player's ship, displaying it
+     */
     @FXML
     private void handleViewShipRequest(String requestedPlayerShip) {
         // If we have a selected component, we need to deselect it first
@@ -386,6 +405,9 @@ public class ShipConstructionController extends GUIController {
         this.setVisibility(this.viewShipContainer, true);
     }
 
+    /**
+     * Handles the click of the "Resume Ship Construction" button
+     */
     @FXML
     // Method used to return to the main screen when the player is viewing other ship
     private void handleGoBackToConstructionButton() {
@@ -406,6 +428,9 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+    /**
+     * Handles the click of the "Flip Timer" button
+     */
     @FXML
     private void handleFlipTimer() {
         GUIHandler.setCommandCTX(
@@ -433,6 +458,9 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+    /**
+     * Handles the click of the "Ship Ready" button, used to complete the finished ship
+     */
     // Send the player ship to the server
     @FXML public void handleConfirmShip() {
         if (!this.clientModel.getState().getPlayerFinishedBuildingShip(this.clientModel.getNickname())) {
@@ -457,6 +485,10 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+
+    /**
+     * Updates the visibility of many GUI elements to disable the possibility of selecting other tiles (since the ship is finished)
+     */
     private void showEndedShipConstruction() {
         this.setVisibility(this.shipContainer, false);
         this.setVisibility(this.tileVBOX, false);
@@ -484,6 +516,9 @@ public class ShipConstructionController extends GUIController {
         this.setVisibility(this.viewShipContainer, true);
     }
 
+    /**
+     * Handles the selection of a subDeck to view, setting its container to visible
+     */
     @FXML
     private void handleViewSubDeck(MouseEvent event) {
         // If we have a selected component, we need to deselect it first
@@ -566,6 +601,9 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+    /**
+     * Handles the "Deselect" button during a subDeck visualization, making the subDeck's container not visible
+     */
     private void handleDeselectSubdeck() {
         GUIHandler.setCommandCTX(
             new CommandCTX(
@@ -603,7 +641,10 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
-    // Method used when a tile is selected by the user
+    /**
+     * Handles the selection of a tile (by clicking on it), setting the CommandCTX and displaying the selected component
+     * @param selectedComponent
+     */
     private void handleTileSelection(ClientComponent selectedComponent) {
 
         if (this.clientModel.getState().getReservedComponents().contains(selectedComponent)) {
@@ -629,6 +670,10 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+    /**
+     * Sets a series of flags to display the right containers
+     * @param selectedComponent to display
+     */
     private void displaySelectedComponent(ClientComponent selectedComponent) {
         Platform.runLater(() -> {
             this.selectedComponent = selectedComponent;
@@ -646,6 +691,9 @@ public class ShipConstructionController extends GUIController {
         });
     }
 
+    /**
+     * Handles the click of the "Deselect" button, deselecting the selected tile and returning to the tile selection
+     */
     @FXML
     private void handleDeselectTile() {
         // Check if the selected component is reserved
@@ -672,6 +720,11 @@ public class ShipConstructionController extends GUIController {
         });
     }
 
+
+    /**
+     * Sets the CommandCTX with the "deselectTile" command.
+     * @param task a Runnable representing the task to be executed if the tile is a reserved tile.
+     */
     private void deselectTileCommand(Runnable task) {
         GUIHandler.setCommandCTX(
             new CommandCTX(
@@ -698,6 +751,11 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+    /**
+     * Handles the click of th "Reserve" button, reserving the tile (up to a maximum of 2, throwing an error if the user tries to reserve a third tile)
+     * On successfully reserving a tile, the UI gets updated accordingly to reflect the changes.
+     *
+     */
     @FXML
     private void handleReserveTile() {
         List<ClientComponent> reservedComp = this.clientModel.getState().getReservedComponents();
@@ -769,6 +827,14 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+    /**
+     * Handles the placement of a tile on the game board. This method is triggered when a user attempts to place
+     * a tile in a specific location.
+     * When a tile is successfully placed, it updates the game board state and client-side views accordingly.
+     *
+     * @param i The row index where the tile is to be placed.
+     * @param j The column index where the tile is to be placed.
+     */
     @FXML
     private void handlePlaceTile(int i, int j) {
         URL resource = getClass().getResource(this.selectedComponent.getPath());
@@ -824,6 +890,9 @@ public class ShipConstructionController extends GUIController {
         }
     }
 
+    /**
+     * Handles the click of the "Rotate right" button, rotating right the selected component
+     */
     @FXML
     private void handleRotateRight() {
         if (rotationInProgress) return;
@@ -839,6 +908,9 @@ public class ShipConstructionController extends GUIController {
         rotate.play();
     }
 
+    /**
+     * Handles the click of the "Rotate left" button, rotating left the selected component
+     */
     @FXML
     private void handleRotateLeft() {
         if (rotationInProgress) return;
@@ -854,8 +926,10 @@ public class ShipConstructionController extends GUIController {
         rotate.play();
     }
 
+    /**
+     * Handles the click of the board's image, displaying it.
+     */
     @FXML
-    // Method used to display the current game board
     private void handleViewGameBoard() {
         // If we have a selected component, we need to deselect it first
         if (this.selectedComponent != null) {
@@ -888,11 +962,20 @@ public class ShipConstructionController extends GUIController {
 
     // ========== UTILS METHODS ========== //
 
+    /**
+     * @return The image specified in the path, with the specified size
+     */
     private Image getImageFromPath(String path, int width, int height) {
         URL resource = Objects.requireNonNull(getClass().getResource(path));
         return new Image(resource.toExternalForm(), width, height, true, true);
     }
 
+
+    /**
+     * @param c the clientComponent
+     * @param img to set in the returned imageView
+     * @return A configured ImageView for the specified component and image.
+     */
     private ImageView getComponentImageView(ClientComponent c, Image img) {
         ImageView imgView = new ImageView(img);
         imgView.setFitWidth(85);
@@ -911,6 +994,9 @@ public class ShipConstructionController extends GUIController {
         return imgView;
     }
 
+    /**
+     * Updates the reserved components area
+     */
     private void updateReservedComponents() {
         this.reservedTileFlow.getChildren().clear();
         this.reservedComponentGrid.getChildren().clear();
@@ -938,6 +1024,10 @@ public class ShipConstructionController extends GUIController {
         this.setVisibility(this.reservedVBOX, !this.clientModel.getState().getReservedComponents().isEmpty());
     }
 
+    /**
+     * @param c Component to build the image of
+     * @return ImageView containing the component c's image
+     */
     private ImageView buildComponentImageView(ClientComponent c) {
         int size = this.clientModel.getState().getReservedComponents().contains(c) ? 85 : 105;
 
@@ -1061,18 +1151,27 @@ public class ShipConstructionController extends GUIController {
         });
     }
 
+    /**
+     * Disables the "Flip Timer" button
+     */
     public void disableTimerButton() {
         Platform.runLater(() -> {
             this.flipTimerButton.setDisable(true);
         });
     }
 
+    /**
+     * Enables the "Flip Timer" button
+     */
     public void resetTimer() {
         Platform.runLater(() -> {
             this.flipTimerButton.setDisable(false);
         });
     }
 
+    /**
+     * Places the player with the given nickName in the board
+     */
     public void placePlayerInTheBoard(String playerNickname) {
         this.showToast(playerNickname + " has finished building his ship", ToastType.INFO);
 

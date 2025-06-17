@@ -16,6 +16,10 @@ public class EndGameController extends GUIController {
     @FXML private VBox leaderBoard;
     @FXML private Button quitButton;
 
+    /**
+     * Creates the leaderBoard showing each player's credits
+     * @param state Containing the necessary info to create the leaderBoard
+     */
     public void setLeaderBoard(EndGameDTO state) {
         if (state.getWinner() != null) {
             Label label = new Label(state.getWinner() + " won the game!");
@@ -47,6 +51,12 @@ public class EndGameController extends GUIController {
         }
     }
 
+    /**
+     * Handles the event triggered by clicking the "Quit" button.
+     * This method closes the application window and terminates the program.
+     *
+     * @param actionEvent The action event triggered by clicking the "Quit" button.
+     */
     public void onQuitButtonClick(ActionEvent actionEvent) {
         GUIHandler.getInstance().getStage().close();
         System.exit(0);

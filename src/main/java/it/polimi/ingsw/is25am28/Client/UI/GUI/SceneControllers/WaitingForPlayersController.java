@@ -19,10 +19,21 @@ public class WaitingForPlayersController extends GUIController {
 
     private String base = "Waiting";
 
+    /**
+     * Initializes the controller by triggering the loading animation.
+     */
     public void initialize() {
         startLoadingAnimation();
     }
 
+
+    /**
+     * Displays the list of currently connected players in the game lobby along with their respective colors
+     * and updates the information regarding the total number of players needed to start the game.
+     *
+     * @param state The current state of the players in the lobby, including the connected players' nicknames,
+     *              their assigned colors, and the total number of slots in the lobby.
+     */
     public void showConnectedPlayers(WaitPlayersStateDTO state) {
         int i = 1;
 
@@ -46,6 +57,10 @@ public class WaitingForPlayersController extends GUIController {
         }
     }
 
+
+    /**
+     * Starts a loading animation that loops indefinitely until explicitly stopped or interrupted (like when all required players are present)
+     */
     private void startLoadingAnimation() {
         Timeline loadingAnimation = new Timeline(
                 new KeyFrame(Duration.seconds(0), e -> loadingLabel.setText(base + ".")),

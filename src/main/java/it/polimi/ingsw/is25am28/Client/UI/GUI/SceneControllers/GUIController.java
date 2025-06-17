@@ -35,10 +35,23 @@ public abstract class GUIController {
     @FXML
     protected StackPane rootPane;
 
+
+    /**
+     * @return the root pane of the GUI.
+     */
     public StackPane getRootPane() {
         return rootPane;
     }
 
+
+    /**
+     * Displays a toast message with the given text and type. The toast fades in,
+     * remains visible for a short duration, and then fades out before being removed
+     * from the user interface.
+     *
+     * @param text the text content to be displayed in the toast message
+     * @param type the {@link ToastType} indicating the style or category of the toast
+     */
     public void showToast(String text, ToastType type) {
         Label errorLabel = new Label(text);
         errorLabel.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-font-weight: bold;");
@@ -65,6 +78,14 @@ public abstract class GUIController {
         });
     }
 
+
+    /**
+     * Creates a sequential transition that applies a fade-in effect, a pause, and a fade-out effect
+     * to the specified error box. Once the fade-out is complete, the error box is removed from the root pane.
+     *
+     * @param errorBox the HBox instance representing the error box to which the transitions will be applied
+     * @return a {@link SequentialTransition} consisting of a fade-in, pause, and fade-out animation on the given error box
+     */
     private SequentialTransition getTransition(HBox errorBox) {
         FadeTransition fadeIn = new FadeTransition(Duration.millis(200), errorBox);
         fadeIn.setFromValue(0);
@@ -81,6 +102,10 @@ public abstract class GUIController {
         return new SequentialTransition(fadeIn, pause, fadeOut);
     }
 
+    /**
+     * @param color to be mapped to a hex code
+     * @return a hex code based on the input playerColor
+     */
     protected String mapColor(PlayerColor color) {
         return switch (color) {
             case BLUE -> "#4da6ff";
@@ -91,6 +116,14 @@ public abstract class GUIController {
     }
 
     // Method used to set the visibility of a certain node
+
+    /**
+     * Sets the visibility and managed state of a given JavaFX Node.
+     *
+     * @param <T>      the type of the JavaFX Node, which extends {@link Node}
+     * @param node     the Node whose visibility is to be set
+     * @param visible  true to make the Node visible and managed, false to make it invisible and unmanaged
+     */
     protected <T extends Node> void setVisibility(T node, boolean visible) {
         node.setVisible(visible);
         node.setManaged(visible);

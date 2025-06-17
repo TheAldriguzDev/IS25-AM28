@@ -13,6 +13,13 @@ public class ReconnectGameController extends GUIController {
     @FXML private TextField nicknameTextField;
     @FXML private Button submitReconnectGameButton;
 
+    /**
+     * Handles the action when the "Reconnect Game" button is clicked.
+     * Validates the user's nickname input and initiates the reconnection process using the provided nickname.
+     * If the nickname is invalid, an error toast message is displayed.
+     *
+     * @param actionEvent the event triggered by the "Reconnect Game" button click
+     */
     public void onSubmitReconnectGameButtonClick(ActionEvent actionEvent) {
         System.out.println("Clicked");
         String nickname = this.nicknameTextField.getText() == null ? "" : this.nicknameTextField.getText().trim().strip();

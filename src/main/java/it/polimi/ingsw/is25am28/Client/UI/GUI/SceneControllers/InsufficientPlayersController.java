@@ -14,6 +14,13 @@ public class InsufficientPlayersController extends GUIController {
     private int countDown;
     private Timeline timer;
 
+    /**
+     * Sets the countdown timer for the remaining time to wait for other players to reconnect.
+     * The countdown text includes a message indicating that the user will win if the time runs out.
+     * If a previous timer is running, it is stopped before initiating a new timer.
+     *
+     * @param dto the {@code InsufficientPlayerDTO} containing the countdown duration in milliseconds.
+     */
     public void setCountDown(InsufficientPlayerDTO dto) {
         this.countDown = dto.getCountdown() / 1000;
 

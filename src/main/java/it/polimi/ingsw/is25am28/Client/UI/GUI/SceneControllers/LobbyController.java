@@ -26,6 +26,12 @@ import javafx.stage.Stage;
 import java.util.Objects;
 import java.util.stream.Stream;
 
+/**
+ * The LobbyController class manages the lobby screen of the GUI application, allowing users
+ * to interact with available games, create new games, reconnect to a game, or exit the application.
+ * It extends the GUIController class and interacts with various UI elements to provide a functional
+ * lobby user experience.
+ */
 public class LobbyController extends GUIController {
     @FXML private Button createGameButton;
     @FXML private Button reconnectGameButton;
@@ -34,6 +40,13 @@ public class LobbyController extends GUIController {
     @FXML private Button refreshGamesButton;
     @FXML private ScrollPane lobbyListScrollPane;
 
+
+    /**
+     * Initializes the lobby view by populating a list of available games and configuring the UI elements.
+     * Each game is displayed with its details as a button, allowing the user to join the game.
+     *
+     * @param state The current state containing the list of available games to display in the lobby.
+     */
     public void init(AvailableGamesDTO state) {
         VBox gameList = new VBox();
         gameList.setSpacing(10);
@@ -75,6 +88,13 @@ public class LobbyController extends GUIController {
         }
     }
 
+
+    /**
+     * Handles the event triggered by clicking the "Create Game" button.
+     * This method loads the CreateGame scene, initializes its controller,
+     * and updates the GUI
+     * @param actionEvent The action event triggered by clicking the "Create Game" button.
+     */
     public void onCreateGameButtonClick(ActionEvent actionEvent) {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
@@ -105,6 +125,15 @@ public class LobbyController extends GUIController {
         });
     }
 
+    /**
+     * Handles the event triggered when the "Join Game" button is clicked.
+     * This method transitions the user to the JoinGame scene, initializes its controller with
+     * the provided game information and updates the GUI
+     *
+     * @param actionEvent The action event triggered by clicking the "Join Game" button.
+     * @param state The information related to the selected game, such as game ID, level,
+     *              total players, actual players, and available colors.
+     */
     public void onJoinGameButtonClick(ActionEvent actionEvent, GameInfoDTO state) {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
@@ -135,6 +164,13 @@ public class LobbyController extends GUIController {
         });
     }
 
+    /**
+     * Handles the event triggered by clicking the "Reconnect Game" button.
+     * This method transitions to the ReconnectGame scene, initializes its controller and
+     * updates the GUI
+     *
+     * @param actionEvent The action event triggered by clicking the "Reconnect Game" button.
+     */
     public void onReconnectGameButtonClick(ActionEvent actionEvent) {
         Platform.runLater(() -> {
             FXMLLoader loader = new FXMLLoader(
@@ -166,6 +202,12 @@ public class LobbyController extends GUIController {
         });
     }
 
+    /**
+     * Handles the event triggered by clicking the "Refresh Games" button.
+     * This method requests the virtual client to refresh the list of available games.
+     *
+     * @param actionEvent The action event triggered by clicking the "Refresh Games" button.
+     */
     public void onRefreshGamesButtonClick(ActionEvent actionEvent) {
         try {
             GUIHandler.getVirtualClient().refreshGames();
@@ -175,6 +217,12 @@ public class LobbyController extends GUIController {
         }
     }
 
+    /**
+     * Handles the event triggered by clicking the "Quit" button.
+     * This method closes the application window and terminates the program.
+     *
+     * @param actionEvent The action event triggered by clicking the "Quit" button.
+     */
     public void onQuitButtonClick(ActionEvent actionEvent) {
         GUIHandler.getInstance().getStage().close();
         System.exit(0);

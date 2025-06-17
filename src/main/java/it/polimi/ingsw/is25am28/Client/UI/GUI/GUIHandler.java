@@ -55,30 +55,54 @@ public class GUIHandler extends Application implements ClientUI {
      */
     private GuiScenes currentScene;
 
+    /**
+     * @return the GUIHandler's instance
+     */
     public static GUIHandler getInstance() {
         return GUIHandler.instance;
     }
 
+    /**
+     * @return the clientModel instance associated ith the GUIHandler.
+     */
     public static ClientModel getClientModel() {
         return GUIHandler.model;
     }
 
+    /**
+     * @return the VirtualView instance associated with the GUIHandler.
+     */
     public static VirtualView getVirtualClient() {
         return GUIHandler.virtualClient;
     }
 
+    /**
+     * @return the current {@code CommandCTX} instance associated with the {@code GUIHandler}.
+     */
     public static CommandCTX getCommandCTX() {
         return GUIHandler.ctx;
     }
 
+    /**
+     * Sets the {@code CommandCTX} instance for the {@code GUIHandler}.
+     *
+     * @param ctx the {@code CommandCTX} instance to be set. It defines the command's name,
+     *            success callback, error callback, and its usability status.
+     */
     public static void setCommandCTX(CommandCTX ctx) {
         GUIHandler.ctx = ctx;
     }
 
+    /**
+     * Resets the command context (`ctx`) associated with the GUIHandler by setting it to null.
+     */
     public static void clearCommandCTX() {
         GUIHandler.ctx = null;
     }
 
+    /**
+     * @return the {@code Stage} associated with the {@code GUIHandler}
+     */
     public Stage getStage() {
         return this.stage;
     }

@@ -26,6 +26,13 @@ public class JoinGameController extends GUIController {
     private int gameID;
     private int gameLevel;
 
+    /**
+     * Initializes the game interface with the provided game state information.
+     * Sets up the game ID, game level, label text, and populates the color selection dropdown.
+     * Clears any previous data from the nickname field and color dropdown.
+     *
+     * @param state The GameInfoDTO containing the game data to be used for initialization.
+     */
     public void init(GameInfoDTO state) {
         this.gameID = state.getId();
         this.gameLevel = state.getLevel();
@@ -47,6 +54,13 @@ public class JoinGameController extends GUIController {
         }
     }
 
+    /**
+     * Handles the event triggered when the "Join Game" button is clicked.
+     * Validates user input and performs the process of joining a game using the provided nickname
+     * and selected player color. Displays appropriate error messages for invalid inputs.
+     *
+     * @param actionEvent The ActionEvent associated with the button click.
+     */
     public void onSubmitJoinGameButtonClick(ActionEvent actionEvent) {
         String nickname = this.nicknameTextField.getText() == null ? "" : this.nicknameTextField.getText().trim().strip();
         PlayerColor color = this.colorComboBox.getValue();

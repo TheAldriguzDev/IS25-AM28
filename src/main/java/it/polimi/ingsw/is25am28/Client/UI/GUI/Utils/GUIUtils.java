@@ -51,6 +51,12 @@ public class GUIUtils {
         this.shipOffsets = AbstractShip.shipOffsets.get(this.clientModel.getDifficultyLevel());
     }
 
+    /**
+     * A map that holds predefined positions of rockets for different levels of a game board.
+     * Each position is represented by a unique key and associated with a pair of coordinates
+     * (X, Y), where the X-coordinate represents the horizontal position and the Y-coordinate
+     * represents the vertical position.
+     */
     private final Map<String, Pair<Double, Double>> rocketPositions = Map.ofEntries(
             // Level 2 board
             Map.entry("level_2_0", new Pair<>(156.0, 81.0)),
@@ -198,6 +204,9 @@ public class GUIUtils {
         return imagesMap;
     }
 
+    /**
+     * Sets the image in the given {@code imageView} with the correct background based on the game's difficulty level
+     */
     public void setShipGridBackground(ImageView shipImageView) {
         // Initializing the ship to display
         String path = "/imgs/cardboard/level_" + this.clientModel.getDifficultyLevel() + ".jpg";
@@ -208,6 +217,16 @@ public class GUIUtils {
         shipImageView.setPreserveRatio(true);
     }
 
+    /**
+     * Places a player's rocket on the game board. If the player's rocket is already present on the board,
+     * its position is updated based on the player's current cursor and the game's difficulty level.
+     *
+     * @param playerNickname The nickname of the player whose rocket is to be placed or updated on the board.
+     * @param difficultyLevel The current difficulty level of the game, which determines the game board configuration.
+     * @param boardSize The total number of cells on the board, determining the wrapping behavior of player positions.
+     * @param gameBoardPane The container (Pane) representing the game board where the player's rocket is positioned.
+     * @param playersRocketBoard A map that stores the association between player nicknames and their rockets (ImageView objects) on the board.
+     */
     public void placePlayerInBoard(String playerNickname,
                                    int difficultyLevel,
                                    int boardSize,
@@ -260,7 +279,7 @@ public class GUIUtils {
 
     /**
      * Adds the lifeForm icons to the shipGrid in input
-     * @return A map containing the panes containing the icons
+     * @return A map containing the flowPanes containing the icons
      */
     public Map<String, FlowPane> initShipLifeFormIcons(String playerNickname, GridPane shipGrid) {
         Map<String, FlowPane> lifeFormsMap = new HashMap<>();
@@ -294,7 +313,7 @@ public class GUIUtils {
     }
 
     /**
-     * @return A HBox containing the cabin's lifeForms icons
+     * Inits/updates the given ClientCabin's icons
      */
     public void initCabinLifeFormIcons(ClientCabin cabin, FlowPane cabinBox) {
         cabinBox.getChildren().clear();
@@ -311,7 +330,7 @@ public class GUIUtils {
 
     /**
      * Adds the item icons to the shipGrid in input
-     * @return A map containing the HBoxes containing the icons
+     * @return A map containing the flowPanes containing the icons
      */
     public Map<String, FlowPane> initShipItemIcons(String playerNickname, GridPane shipGrid) {
         Map<String, FlowPane> itemsMap = new HashMap<>();
@@ -345,7 +364,7 @@ public class GUIUtils {
     }
 
     /**
-     * @return A HBox containing the storage's items icons
+     * Inits/updates the given ClientStorage's icons
      */
     public void initStorageItemIcons(ClientStorage storage, FlowPane storageBox) {
         storageBox.getChildren().clear();
@@ -365,6 +384,10 @@ public class GUIUtils {
         }
     }
 
+    /**
+     * Adds the battery icons to the shipGrid in input
+     * @return A map containing the flowPanes containing the icons
+     */
     public Map<String, FlowPane> initShipBatteryIcons(String playerNickname, GridPane shipGrid) {
         Map<String, FlowPane> batteryMap = new HashMap<>();
 
@@ -396,6 +419,9 @@ public class GUIUtils {
         return batteryMap;
     }
 
+    /**
+     * Inits/updates the given ClientBattery's icons
+     */
     public void initBatteryIcons(ClientBattery battery, FlowPane batteryBox) {
         batteryBox.getChildren().clear();
         URL resource;
@@ -434,6 +460,18 @@ public class GUIUtils {
 
     // TODO: have the main player ship and grid reference
 
+
+    /**
+     * Restores the visual state of the ship grid, including icons and regions, based on the {@code emptiedIcons} and the {@code emptiedRegions}, using the passed function
+     *
+     * @param shipGrid The gridPane representing the ship grid where visuals should be restored.
+     * @param emptiedIcons A map containing keys associated with FlowPane objects that were previously removed.
+     * @param emptiedRegions A map containing keys associated with Region objects that were previously removed.
+     * @param currentRegions A map representing the regions in which to add the regions to restore
+     * @param castType The class type used to cast ship components during restoration.
+     * @param initIcons A function used to initialize the icons for specific components in the grid.
+     *                  Accepts a type parameter T and a FlowPane for the initialization logic.
+     */
     public <T> void revertVisuals(GridPane shipGrid, Map<String, FlowPane> emptiedIcons, Map<String, Region> emptiedRegions, Map<String, Region> currentRegions,  Class<T> castType, BiConsumer<T, FlowPane> initIcons) {
         // Getting the player's ship
         ClientShip ship = this.clientModel.getShipOfPlayer(this.clientModel.getNickname()).orElse(null);

@@ -25,6 +25,14 @@ public class CreateGameController extends GUIController {
     @FXML private ComboBox<Integer> levelComboBox;
     @FXML private ComboBox<Integer> lobbySizeComboBox;
 
+
+    /**
+     * Initializes the CreateGameController,
+     * Specifically:
+     * - Populates the color combo box with all available PlayerColor values.
+     * - Sets the level combo box with predefined levels (0 and 2).
+     * - Configures the lobby size combo box with predefined sizes (2, 3, and 4).
+     */
     public void init() {
         this.nicknameTextField.setText(null);
 
@@ -40,10 +48,21 @@ public class CreateGameController extends GUIController {
         this.lobbySizeComboBox.getItems().addAll(2, 3, 4);
     }
 
+    /**
+     * Parses and formats the provided nickname by removing any leading or trailing whitespace
+     * and excess internal spacing.
+     */
     private String parseNickname(String nickname) {
         return nickname.trim().strip();
     }
 
+    /**
+     * Handles the action triggered by clicking the "SubmitGameConfig" button.
+     * Validates the inputs provided for nickname, player color, game level, and lobby size.
+     * If validation passes, a new game is created with the specified configuration.
+     *
+     * @param actionEvent The action event triggered by the button click.
+     */
     public void onSubmitGameConfigButtonClick(ActionEvent actionEvent) {
         String nickname = this.nicknameTextField.getText() == null ? "" : this.nicknameTextField.getText().trim().strip();
         PlayerColor color = this.colorComboBox.getValue();
