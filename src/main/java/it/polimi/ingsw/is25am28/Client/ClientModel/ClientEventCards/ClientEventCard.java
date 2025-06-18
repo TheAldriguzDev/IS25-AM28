@@ -58,6 +58,9 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         }
     }
 
+    /**
+     * @return the {@code enabledCommands}
+     */
     public List<String> getAvailableCommands() {
         return this.enabledCommands;
     }
@@ -121,107 +124,196 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
 //        this.model = model;
 //    }
 
+    /**
+     * Clears the JSON used to store the player's decision when playing the card
+     */
     public abstract void clearJSON();
 
 
     // ======== Players' ActionJSON Compilation Methods ======== //
 
-    // LIFEFORMS
+    /**
+     * Sets which lifeForms to remove in the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void setCrewToRemove(List<ComponentHelper<LifeformType>> crewToRemove) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setCrewToRemove()' is not supported in " + this + " state");
     }
 
+    /**
+     * @return the lifeForms to remove from the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public List<ComponentHelper<LifeformType>> getCrewToRemove() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getCrewToRemove()' is not supported in " + this + " state");
     }
 
-    // ITEMS
+    /**
+     * Sets which items to remove in the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void setItemsToBeRemoved(List<ComponentHelper<ItemColor>> itemsToBeRemoved) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setItemsToBeRemoved()' is not supported in " + this + " state");
     }
 
+    /**
+     * @return the items to remove from the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public List<ComponentHelper<ItemColor>> getItemsToBeRemoved() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getItemsToBeRemoved()' is not supported in " + this + " state");
     }
 
+    /**
+     * Sets which items to take in the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void setItemsToBeTaken(List<ComponentHelper<ItemColor>> itemsToBeTaken) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setItemsToBeTaken()' is not supported in " + this + " state");
     }
 
+    /**
+     * @return the items to take from the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public List<ComponentHelper<ItemColor>> getItemsToBeTaken() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getItemsToBeTaken()' is not supported in " + this + " state");
     }
 
-    // VARIOUS FLAGS AND INDEXES
+    /**
+     * Sets the takeReward attribute in the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void setTakeReward(boolean takeReward) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setTakeReward()' is not supported in " + this + " state");
     }
 
+    /**
+     * @return the takeReward attribute from the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public Boolean getTakeReward() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getTakeReward()' is not supported in " + this + " state");
     }
 
+    /**
+     * Sets the chosenPlanetIndex in the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void setChosenPlanetIndex(int chosenPlanetIndex) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setChosenPlanetIndex()' is not supported in " + this + " state");
     }
 
+    /**
+     * @return the chosenPlanetIndex form the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public Integer getChosenPlanetIndex() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getChosenPlanetIndex()' is not supported in " + this + " state");
     }
 
+    /**
+     * Sets the wantsToVisit attribute in the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void setWantsToVisit(boolean wantsToVisit) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setWantsToVisit()' is not supported in " + this + " state");
     }
 
+    /**
+     * @return the wantsToVisit attribute from the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public Boolean getWantsToVisit() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getWantsToVisit()' is not supported in " + this + " state");
     }
 
-    // SHIELDS
+    /**
+     * Sets which shields to activate in the card's JSON, along with the associated battery to power them
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void setShieldsToActivate(List<Pair<CoordinatePair, CoordinatePair>> shieldsToActivate) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setShieldsToActivate()' is not supported in " + this + " state");
     }
 
+    /**
+     * @return the shields to activate from the card's JSON, along with the associated battery to power them
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public List<Pair<CoordinatePair, CoordinatePair>> getShieldsToActivate() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getShieldsToActivate()' is not supported in " + this + " state");
     }
 
-    // CANNONS
+    /**
+     * Sets which doubleCannons to activate in the card's JSON, along with the associated battery to power them
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void setDoubleCannonsToActivate(List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivate) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setDoubleCannonsToActivate()' is not supported in " + this + " state");
     }
 
+    /**
+     * @return the doubleCannons to activate from the card's JSON, along with the associated battery to power them
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public List<Pair<CoordinatePair, CoordinatePair>> getDoubleCannonsToActivate() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getDoubleCannonsToActivate()' is not supported in " + this + " state");
     }
 
-    // ENGINES
+    /**
+     * Sets which doubleEngines to activate in the card's JSON, along with the associated battery to power them
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void setDoubleEnginesToActivate(List<Pair<CoordinatePair, CoordinatePair>> doubleEnginesToActivate) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setDoubleEnginesToActivate()' is not supported in " + this + " state");
     }
 
+    /**
+     * @return the doubleEngines to activate from the card's JSON, along with the associated battery to power them
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public List<Pair<CoordinatePair, CoordinatePair>> getDoubleEnginesToActivate() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getDoubleEnginesToActivate()' is not supported in " + this + " state");
     }
 
-    // BATTERIES TO STEAL (by Smugglers & co.)
+    /**
+     * Sets which batteries to remove in the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void setBatteriesToBeStolen(List<CoordinatePair> batteriesToBeStolen) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'setBatteriesToBeStolen()' is not supported in " + this + " state");
     }
 
+    /**
+     * @return the batteries to activate from the card's JSON
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public List<CoordinatePair> getBatteriesToBeStolen() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getBatteriesToBeStolen()' is not supported in " + this + " state");
     }
 
     // Card specific methods
+
+    /**
+     * @return the card's available itemColors
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public List<ItemColor> getAvailableItemColors() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getAvailableColors()' is not supported in " + this + " card");
     }
 
+    /**
+     * Removes a single item of the given itemColor from the card's resources
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public void removeItem(ItemColor itemColor) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'removeColor()' is not supported in " + this + " card");
     }
 
+    /**
+     * @return the card's firepower
+     * @throws UnsupportedOperationException if the card does not support this method
+     */
     public int getFirepower() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getFirepower()' is not supported in " + this + " card");
     }

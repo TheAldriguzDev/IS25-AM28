@@ -16,6 +16,9 @@ public final class ClientEngine extends ClientComponent {
         this.power = power;
     }
 
+    /**
+     * @return the engine's power
+     */
     public int getSpeed() {
         return power;
     }

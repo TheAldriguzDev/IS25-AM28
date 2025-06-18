@@ -125,6 +125,9 @@ public class ClientWarZone extends ClientEventCard {
         }
     }
 
+    /**
+     * @return the current warZone's action
+     */
     private String getCurrAction() {
         return switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
             case "Humans" -> "Crew";
@@ -134,6 +137,9 @@ public class ClientWarZone extends ClientEventCard {
         };
     }
 
+    /**
+     * @return the current warZone's consequence
+     */
     private String getCurrConsequence() {
         return switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
             case "RequiredCrew" -> "Taken Crew";

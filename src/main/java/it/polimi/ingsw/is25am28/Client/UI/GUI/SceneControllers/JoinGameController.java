@@ -18,6 +18,9 @@ import javafx.scene.control.TextField;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * This controller class is responsible for handling the "Join Game" interface of the application.
+ */
 public class JoinGameController extends GUIController {
     @FXML private Label joinGameTitleLabel;
     @FXML private TextField nicknameTextField;

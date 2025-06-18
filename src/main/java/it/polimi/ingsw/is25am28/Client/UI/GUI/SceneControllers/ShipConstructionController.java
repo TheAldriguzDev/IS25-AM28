@@ -32,6 +32,10 @@ import java.net.URL;
 import java.util.*;
 import java.util.List;
 
+/**
+ * This controller manages the Ship Construction phase in the GUI, allowing players to build ships,
+ * reserve components, view subdecks, handle tile interactions, and proceed with other construction-related operations.
+ */
 public class ShipConstructionController extends GUIController {
     private static final int VIEWABLE_SUBDECK_AMOUNT = 3;
     private static final int TIMER_DURATION = 97; // seconds

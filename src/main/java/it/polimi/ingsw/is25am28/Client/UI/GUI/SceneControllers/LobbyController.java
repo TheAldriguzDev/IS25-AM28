@@ -29,8 +29,6 @@ import java.util.stream.Stream;
 /**
  * The LobbyController class manages the lobby screen of the GUI application, allowing users
  * to interact with available games, create new games, reconnect to a game, or exit the application.
- * It extends the GUIController class and interacts with various UI elements to provide a functional
- * lobby user experience.
  */
 public class LobbyController extends GUIController {
     @FXML private Button createGameButton;

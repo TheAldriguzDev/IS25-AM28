@@ -197,6 +197,10 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
+    /**
+     * This method removes the specified component from the specified player's ship.
+     * It also sets the ship as fixed if it is valid
+     */
     @Override
     public void visit(FixedComponentDTO state) throws Exception {
         synchronized (this.model) {
@@ -214,6 +218,10 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
+    /**
+     * This method adds the specified lifeForm to the specified player's ship.
+     * It also sets the ship as full if needed
+     */
     @Override
     public void visit(PopulateShipComponentDTO state) throws Exception {
         synchronized (this.model) {
@@ -274,6 +282,9 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
+    /**
+     * This method sets the specified player status to indicate they have finished building their ship, then it places the player's rocket on the board (GUI)
+     */
     @Override
     public void visit(PlayerEndedShipDTO state) throws Exception {
         synchronized (this.model) {
@@ -341,6 +352,9 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
+    /**
+     * Invokes the {@code update(CardRoundDTO state)} method and updates the ui visuals (GUI)
+     */
     public void updateCardResult(CardRoundDTO state) throws Exception {
         try {
             this.update(state);
@@ -351,6 +365,17 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
+
+    /**
+     * Updates the client's model with the provided `CardRoundDTO` state.
+     * This includes updating the client board, client ships, and client players
+     * if the corresponding flags in the `CardRoundDTO` indicate updates are required.
+     * The method is synchronized on the model to ensure thread safety during updates.
+     *
+     * @param state the `CardRoundDTO` object containing the data necessary to update
+     *              the client's model, including board, card information, and potential updates
+     *              for positions, ships, players, and other components.
+     */
     private void update(CardRoundDTO state) {
         synchronized (this.model) {
             if (!(this.model.getState() instanceof ClientCardRoundState)) {

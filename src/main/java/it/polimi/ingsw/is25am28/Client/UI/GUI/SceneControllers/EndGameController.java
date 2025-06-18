@@ -12,6 +12,10 @@ import javafx.scene.control.Label;
 
 import java.util.*;
 
+
+/**
+ * The EndGameController class is responsible for managing the end-game screen in a GUI application.
+ */
 public class EndGameController extends GUIController {
     @FXML private VBox leaderBoard;
     @FXML private Button quitButton;

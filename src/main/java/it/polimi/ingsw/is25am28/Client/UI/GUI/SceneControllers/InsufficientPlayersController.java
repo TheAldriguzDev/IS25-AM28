@@ -7,6 +7,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.util.Duration;
 
+/**
+ * The InsufficientPlayersController is responsible for managing the user interface
+ * when there are insufficient players in the game.
+ */
 public class InsufficientPlayersController extends GUIController {
     @FXML
     public Label countDownToWin;

@@ -25,6 +25,9 @@ public final class ClientStorage extends ClientComponent {
         this.storedItems = new ArrayList<>();
     }
 
+    /**
+     * @return the storage's capacity
+     */
     public int getCapacity() {
         return capacity;
     }

@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.*;
 
 import java.util.List;
 
+/**
+ * Defines the JSON structure used to parse and load the tiles of a certain ship to create with the fastShip command
+ */
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 
 public class FastShipTiles {

@@ -12,6 +12,10 @@ import javafx.util.Duration;
 
 import java.util.Map;
 
+/**
+ * The WaitingForPlayersController is responsible for managing the GUI of the game lobby where players wait for all participants
+ * to connect before the game starts.
+ */
 public class WaitingForPlayersController extends GUIController {
     @FXML private VBox connectedPlayers;
     @FXML private Label playerCounters;

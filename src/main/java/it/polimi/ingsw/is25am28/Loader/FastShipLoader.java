@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Loader;
 
 import it.polimi.ingsw.is25am28.Loader.FastShipTiles.FastShipTiles;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
+import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -9,6 +10,11 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
+/**
+ * Responsible for handling the loading and dumping of ship configurations
+ * using a JSON data source.
+ */
 
 public class FastShipLoader extends Loader<FastShipTiles> {
     private int shipToDump = 0;
@@ -27,8 +33,11 @@ public class FastShipLoader extends Loader<FastShipTiles> {
     }
 
     /**
-     * @param ship
-     * This method creates a JSON that can be used to recreate the given ship
+     * Dumps the JSON representation of the given ship to the standard output.
+     * This method generates a JSON-like structure for the specified ship object
+     * based on its components, dimensions, and positioning.
+     *
+     * @param ship the ship object to be dumped into JSON format; if null, the method returns without performing any operation
      */
     public void dumpShipJSON(Ship ship) {
 
@@ -70,8 +79,10 @@ public class FastShipLoader extends Loader<FastShipTiles> {
     }
 
     /**
-     * @param ship
-     * This method modifies the given ship to a pre-made one
+     * Loads ship components and configurations from the JSON data source
+     * and populates the given ship object.
+     *
+     * @param ship the ship object to be populated with components read from JSON
      */
     public void loadShipFromJSON(Ship ship) {
 

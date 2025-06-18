@@ -71,12 +71,24 @@ public class ClientBoard {
         }
     }
 
+    /**
+     * @return the difficulty level set in the {@code ClientBoard}
+     */
     public int getLevel() { return this.level; }
 
+    /**
+     * @return The eliminated players
+     */
     public List<ClientPlayer> getEliminatedPlayers() { return this.eliminatedPlayers; }
 
+    /**
+     * @return the {@code ClientBoard}'s size
+     */
     public int getSize() { return this.size; }
 
+    /**
+     * @return the players
+     */
     public List<ClientPlayer> getPlayers() {
         return this.players.values().stream().toList();
     }

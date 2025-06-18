@@ -16,18 +16,30 @@ public class ClientState {
         this.model = model;
     }
 
+    /**
+     * @return the list of available construction ship components.
+     */
     public List<ClientComponent> getConstructionShipComponents() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'getConstructionShipComponents' is not supported in the " + this + " state");
     }
 
+    /**
+     * @return the components reserved by the client
+     */
     public List<ClientComponent> getReservedComponents() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'getReservedComponents' is not supported in the " + this + " state");
     }
 
+    /**
+     * Indicates whether a specified player has finished building their ship.
+     */
     public boolean getPlayerFinishedBuildingShip(String playerNickname) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'getPlayerFinishedBuildingShip' is not supported in the " + this + " state");
     }
 
+    /**
+     * Sets the specified player's status to indicate they have finished building their ship.
+     */
     public void setPlayerFinishedBuildingShip(String playerNickname, int cursor) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The 'setPlayerFinishedBuildingShip' is not supported in the " + this + " state");
     }

@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+/**
+ * Defines the JSON structure used to parse and load saved fastShipTiles into the game, providing methods to retrieve tile-specific parameters.
+ */
+
 public class FastShipTilesInfo {
     @JsonProperty("id")
     private int id;

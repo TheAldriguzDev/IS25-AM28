@@ -28,6 +28,9 @@ public final class ClientVital extends ClientComponent {
         }
     }
 
+    /**
+     * @return the Vital's type
+     */
     public VitalType getVitalType() {
         return this.vitalType;
     }

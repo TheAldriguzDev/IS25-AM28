@@ -39,6 +39,13 @@ import java.util.stream.Stream;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.TAB;
 
+/**
+ * The CardRoundController class is responsible for managing the interaction
+ * and behavior of all GUI elements during the card round phase of the game.
+ * It includes methods to initialize and update graphical components, handle
+ * user interactions, and manage player actions related to game cards.
+ */
+
 public class CardRoundController extends GUIController {
     @FXML private ImageView cardImageView;
     @FXML private ImageView shipBoardImageView;
@@ -2296,7 +2303,9 @@ public class CardRoundController extends GUIController {
 
             // Updating the storages icons
             if (cardStateJSON.getNeedsUpdatedDroppedResources() || cardStateJSON.getNeedsUpdatedTakenResources()) {
-                for (String playerNickname : Stream.concat(cardStateJSON.getDroppedResources().keySet().stream(), cardStateJSON.getTakenResources().keySet().stream()).distinct().toList()) {
+                Map<String, List<ComponentHelper<ItemColor>>> droppedResources = cardStateJSON.getDroppedResources();
+                Map<String, List<ComponentHelper<ItemColor>>> takenResources = cardStateJSON.getTakenResources();
+                for (String playerNickname : Stream.concat(droppedResources != null ? droppedResources.keySet().stream() : Stream.empty(), takenResources != null ? takenResources.keySet().stream() : Stream.empty()).distinct().toList()) {
                     if (!(this.clientModel.getNickname() != null && this.clientModel.getNickname().equals(cardStateJSON.getPrevPlayerNickname()) && cardStateJSON.getSkipStoragesUpdate())) {
                         this.clientModel.getShipOfPlayer(playerNickname).ifPresent(
                                 (ship) -> {

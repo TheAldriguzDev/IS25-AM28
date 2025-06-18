@@ -30,6 +30,10 @@ import javafx.scene.text.TextFlow;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The FixShipController class manages the GUI elements and user interactions
+ * related to the visual fixing of a player's ship in the game
+ */
 public class FixShipController extends GUIController {
 
     @FXML private ImageView shipImageView;

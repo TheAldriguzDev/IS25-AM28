@@ -16,10 +16,6 @@ import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 
 import java.util.*;
 
-/**
- * This class represent the client-side model. It will contain all the data that are needed to handle the game from the
- * client perspective.
- * */
 public class ClientModel {
     // Nickname of the client
     private String nickname;
@@ -43,18 +39,31 @@ public class ClientModel {
 //        this.resourceBank = new ResourceBank(2);
     }
 
+    /**
+     * @return the client's nickname
+     */
     public String getNickname() {
         return nickname;
     }
 
+    /**
+     * Sets the client's nickname
+     */
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
 
+    /**
+     * @return the client's difficulty level
+     */
     public int getDifficultyLevel() {
         return this.difficultyLevel;
     }
 
+    /**
+     * Sets the client's difficulty level
+     * Also sets the client's resourceBank as a new one of the same level
+     */
     public void setDifficultyLevel(int difficultyLevel) {
         this.difficultyLevel = difficultyLevel;
         this.resourceBank = new ResourceBank(difficultyLevel);
@@ -205,11 +214,16 @@ public class ClientModel {
         }
     }
 
+
     /**
-     * Updates the current clientPlayer stats (only the credits, the other stats are updated by the clientShip
-     * (Batteries, lostComponents, dropped/taken resources, removedLifeforms) or clientBoard
-     * (Cursor, eliminatedPlayers)) (if needed)
-     * */
+     * Updates the players' state based on the provided card state data.
+     * This method performs the following updates:
+     * - Updates players' credits if required.
+     * - Updates players' lost pieces if required.
+     *
+     * @param cardStateJSON The object containing the necessary data for updating players,
+     *                      including updated credits and updated lost pieces.
+     */
     public void updatePlayers(CardStateJSON cardStateJSON) {
         if (cardStateJSON.getNeedsUpdatedCredits()) {
             for (String playerNickname : cardStateJSON.getUpdatedCredits().keySet()) {
@@ -224,6 +238,21 @@ public class ClientModel {
         }
     }
     // new flag system
+
+    /**
+     * Updates the state of ships based on the provided card state data.
+     * This method handles the following updates:
+     * - Removes destroyed components from ships.
+     * - Removes specified lifeforms from ships.
+     * - Removes specified resources from ships.
+     * - Adds specified resources to ships.
+     * - Removes the specified amount of batteries from ships.
+     *
+     * Some of these updates are skipped if a local update has been performed instead (indicated by an opportune flag)
+     *
+     * @param cardStateJSON The object containing the necessary data for updating ships, such as
+     *                      removed components, removed lifeforms, dropped/taken resources, and batteries.
+     */
     public void updateShips(CardStateJSON cardStateJSON) {
         // Removes the destroyed components from the specified ship // TODO test this both in meteor shower, pirates, and smugglers
         if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {

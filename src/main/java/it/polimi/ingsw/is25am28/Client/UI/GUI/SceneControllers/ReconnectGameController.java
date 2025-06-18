@@ -9,6 +9,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 
+/**
+ * ReconnectGameController is responsible for handling the user interface logic
+ * related to reconnecting to a game.
+ */
 public class ReconnectGameController extends GUIController {
     @FXML private TextField nicknameTextField;
     @FXML private Button submitReconnectGameButton;

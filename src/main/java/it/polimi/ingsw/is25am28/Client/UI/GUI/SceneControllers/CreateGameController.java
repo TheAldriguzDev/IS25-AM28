@@ -19,6 +19,10 @@ import javafx.util.Duration;
 
 import java.util.Objects;
 
+/**
+ * The CreateGameController class handles the logic and UI interactions for creating a new game
+ * within the GUI application.
+ */
 public class CreateGameController extends GUIController {
     @FXML private TextField nicknameTextField;
     @FXML private ComboBox<PlayerColor> colorComboBox;

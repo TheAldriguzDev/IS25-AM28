@@ -39,6 +39,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * The PopulateShipController class manages the GUI interactions and logic required for populating
+ * the player's ship with lifeforms and handling the visual updates to the ship.
+ */
 public class PopulateShipController extends GUIController {
 
     @FXML private ImageView shipImageView;
