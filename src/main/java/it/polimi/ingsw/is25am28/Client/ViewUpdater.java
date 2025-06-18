@@ -112,6 +112,7 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
+
     @Override
     public void visit(ShipConstructionDTO state) throws Exception {
         // Set the model state to the ShipConstructionState that will initialize all the components
@@ -130,10 +131,6 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
-    /**
-     * This method will be used to set the component as Visible or not Visible. In addition, the component will be marked
-     * as flipped.
-     * */
     @Override
     public void visit(ConstructionComponentDTO state) throws Exception {
         synchronized (this.model) {
@@ -153,9 +150,7 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
-    /**
-     * This method reserve the component for the target player
-     * */
+
     @Override
     public void visit(ReservedComponentDTO state) throws Exception {
         if (state.getPlayerNickname().equals(this.model.getNickname())) {
@@ -164,14 +159,7 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
-    /**
-     * Given the FastShipDTO, it overwrites the target player's client ship
-     * with the one described in the former, allowing the target player to
-     * skip the ship building phase altogether.
-     * <br>
-     * NOTE: This method is meant to be used only for demonstration purposes only.
-     * NOTE: This method overwrites the target player's ship.
-     */
+
     @Override
     public void visit(FastShipDTO state) throws Exception {
         try {
@@ -197,10 +185,6 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
-    /**
-     * This method removes the specified component from the specified player's ship.
-     * It also sets the ship as fixed if it is valid
-     */
     @Override
     public void visit(FixedComponentDTO state) throws Exception {
         synchronized (this.model) {
@@ -218,10 +202,7 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
-    /**
-     * This method adds the specified lifeForm to the specified player's ship.
-     * It also sets the ship as full if needed
-     */
+
     @Override
     public void visit(PopulateShipComponentDTO state) throws Exception {
         synchronized (this.model) {
@@ -261,11 +242,7 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
-    /**
-     * This method is used to create in real time the players ship in the ShipConstructionState.
-     * It will get the player ship based on the given nickname and add the component with the proper rotation in the
-     * given coordinates (i, j)
-     * */
+
     @Override
     public void visit(PlacedComponentDTO state) throws Exception {
         synchronized (this.model) {
@@ -282,9 +259,7 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
-    /**
-     * This method sets the specified player status to indicate they have finished building their ship, then it places the player's rocket on the board (GUI)
-     */
+
     @Override
     public void visit(PlayerEndedShipDTO state) throws Exception {
         synchronized (this.model) {
