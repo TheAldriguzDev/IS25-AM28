@@ -108,12 +108,10 @@ public class OpenSpace extends EventCard {
                     // When we have moved the last player we need to re-validate the positions
                     if (this.getCurrentPlayer().get().equals(this.players.getLast())) {
                         this.cardUsed();
-                        int tmp = getBoard().getEliminatedPlayers().size();
                         this.getBoard().validatePlayersPosition();
 
-                        for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
-                            this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
-                        }
+                        // Revalidate the board position and add the lapped players to the eliminated players
+                        this.eliminatedPlayers.addAll(this.getBoard().validatePlayersPosition());
                     }
                     else {
                         this.getNextPlayer();

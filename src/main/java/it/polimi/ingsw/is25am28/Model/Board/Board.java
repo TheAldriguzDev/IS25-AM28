@@ -263,8 +263,11 @@ public abstract class Board implements WidgetTUIGenerator {
     /**
      * Checks the players' cursors to identify any doubled players and eliminate them.
      * Also resets the player list to maintain the correct turn order.
+     * @return A list containing the nicknames of the players eliminated
      */
-    public synchronized void validatePlayersPosition() {
+    public synchronized List<String> validatePlayersPosition() {
+        List<String> lappedPlayersNickname = new ArrayList<>();
+
         int maxCursor = players.stream()
                 .mapToInt(Player::getCursor)
                 .max()
@@ -278,6 +281,7 @@ public abstract class Board implements WidgetTUIGenerator {
         // Remove the player from the current players and add it to the eliminated ones
         // Set the cell to null, since it has been removed from the board and mark the player as eliminated
         for (Player player : doubledPlayers) {
+            lappedPlayersNickname.add(player.getNickname());
             players.remove(player);
             eliminatedPlayer.add(player);
 
@@ -288,6 +292,8 @@ public abstract class Board implements WidgetTUIGenerator {
 
         // Re-order the current players by theirs cursor
         players.sort((p1, p2) -> Integer.compare(p2.getCursor(), p1.getCursor()));
+
+        return lappedPlayersNickname;
     }
 
     /**

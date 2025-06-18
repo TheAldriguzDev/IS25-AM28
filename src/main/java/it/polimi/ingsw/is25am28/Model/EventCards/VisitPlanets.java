@@ -150,12 +150,8 @@ public class VisitPlanets extends EventCard {
             }
         }
 
-        int tmp = this.getBoard().getEliminatedPlayers().size();
-        this.getBoard().validatePlayersPosition();
-
-        for (int j = 0; j < this.getBoard().getEliminatedPlayers().size() - tmp; j++) {
-            this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - j - 1).getNickname());
-        }
+        // Revalidate the board position and add the lapped players to the eliminated players
+        this.eliminatedPlayers.addAll(this.getBoard().validatePlayersPosition());
     }
 
     @Override

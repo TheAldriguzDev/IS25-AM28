@@ -155,12 +155,9 @@ public class AbandonedShip extends EventCard {
             // Move the player and re-validate the positions
             this.getBoard().movePlayerBackward(this.getCurrentPlayer().get(), this.movementStep);
             this.updatedPositions.put(this.getCurrentPlayer().get().getNickname(), this.getCurrentPlayer().get().getCursor());
-            int tmp = getBoard().getEliminatedPlayers().size();
-            this.getBoard().validatePlayersPosition();
 
-            for (int i = 0; i < getBoard().getEliminatedPlayers().size() - tmp; i++) { // TODO: This should add the lapped eliminate players to eliminatedPlayers, further testing is required
-                this.eliminatedPlayers.add(this.getBoard().getEliminatedPlayers().get(tmp - i - 1).getNickname());
-            }
+            // Revalidate the board position and add the lapped players to the eliminated players
+            this.eliminatedPlayers.addAll(this.getBoard().validatePlayersPosition());
 
             Ship ship = this.getCurrentPlayer().get().getShip();
 
