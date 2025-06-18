@@ -10,6 +10,12 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 
 import java.util.Map;
 
+/**
+ * Represents a data transfer data object that holds information about the board, the players, and the card's to be played, and the effects that they have on the players
+ *
+ * * Annotations from the Jackson library are used for JSON serialization and deserialization,
+ *  * ensuring that only non-null values are included in the JSON output.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class CardRoundDTO extends StateDTO {
     private int round;

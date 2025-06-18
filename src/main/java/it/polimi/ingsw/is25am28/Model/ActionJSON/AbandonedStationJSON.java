@@ -7,6 +7,10 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the players' actions in the {@code abandonedStation} card in JSON format.
+ * The class is designed to be serialized and deserialized using Jackson annotations
+ */
 public class AbandonedStationJSON extends ActionJSON {
     private Boolean wantToVisitStation;
     private List<ComponentHelper<ItemColor>> itemsToBeRemoved;

@@ -6,6 +6,11 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the players' actions in the {@code abandonedShip} card in JSON format.
+ * The class is designed to be serialized and deserialized using Jackson annotations
+ */
+
 public class AbandonedShipJSON extends ActionJSON {
     private Boolean wantToVisitShip;
     private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;

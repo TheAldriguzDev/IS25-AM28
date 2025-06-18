@@ -8,6 +8,11 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 
 import java.io.Serializable;
 
+/**
+ * Represents the base class for the players' actions for evey eventCard in JSON format.
+ * The class is designed to be serialized and deserialized using Jackson annotations
+ */
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,

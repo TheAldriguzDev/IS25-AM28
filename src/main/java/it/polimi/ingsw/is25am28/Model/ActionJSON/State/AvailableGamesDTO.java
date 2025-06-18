@@ -8,6 +8,12 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import java.io.Serializable;
 import java.util.List;
 
+/**
+ * Represents a data transfer data object that holds information about the available games
+ *
+ * * Annotations from the Jackson library are used for JSON serialization and deserialization,
+ *  * ensuring that only non-null values are included in the JSON output.
+ */
 public final class AvailableGamesDTO extends StateDTO implements Serializable {
     private List<String> usedNicknames;
     private List<GameInfoDTO> availableGames;

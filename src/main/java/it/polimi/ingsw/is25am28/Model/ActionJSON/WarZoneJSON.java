@@ -11,6 +11,10 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the players' actions in the {@code warZone} card in JSON format.
+ * The class is designed to be serialized and deserialized using Jackson annotations
+ */
 public class WarZoneJSON extends ActionJSON {
     private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
     private List<ComponentHelper<ItemColor>> itemsToBeRemoved;

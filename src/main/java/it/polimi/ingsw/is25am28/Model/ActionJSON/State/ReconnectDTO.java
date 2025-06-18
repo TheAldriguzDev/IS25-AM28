@@ -13,11 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This data container will contain:
- * 1. All the players information (with ship)
- * 2. The board
- * 3.
- * */
+ * This calss contains all the information necessary to reconnect a disconnected player to the game
+ */
 
 public final class ReconnectDTO extends StateDTO {
     private String targetNickname;

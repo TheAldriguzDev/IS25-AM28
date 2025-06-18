@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the board's data actions in JSON format.
+ * The class is designed to be serialized and deserialized using Jackson annotations
+ */
 public class BoardJSON implements Serializable {
 
     @JsonProperty("size")

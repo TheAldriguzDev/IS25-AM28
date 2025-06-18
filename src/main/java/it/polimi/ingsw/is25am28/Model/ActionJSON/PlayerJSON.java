@@ -8,6 +8,10 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class represents the players' data in JSON format.
+ * The class is designed to be serialized and deserialized using Jackson annotations
+ */
 public class PlayerJSON implements Serializable {
     private String nickname;
     private String color;

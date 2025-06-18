@@ -7,6 +7,14 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.util.List;
 
+
+/**
+ * A DTO representing the state for creating a game.
+ * This class is an extension of StateDTO and includes details specific to the creation of a game,
+ * such as available colors for selection and already used nicknames.
+ *
+ * This class is immutable and serializable.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class CreateGameStateDTO extends StateDTO {
     List<String> availableColors;

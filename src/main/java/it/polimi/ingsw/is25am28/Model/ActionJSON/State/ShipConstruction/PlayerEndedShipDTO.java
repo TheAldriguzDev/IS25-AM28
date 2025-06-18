@@ -9,6 +9,12 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
 import java.util.List;
 
+/**
+ * Represents a data transfer data object that holds information about the players that have finished building their ships
+ *
+ * * Annotations from the Jackson library are used for JSON serialization and deserialization,
+ *  * ensuring that only non-null values are included in the JSON output.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class PlayerEndedShipDTO extends ShipConstructionEventDTO {
     // Contains the name of the player that ended the ship

@@ -7,6 +7,16 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import java.io.Serializable;
 import java.util.List;
 
+
+/**
+ * Data Transfer Object representing the details of a game.
+ * This class is used to encapsulate game-related information including
+ * the game ID, level, total players, actual players currently in the game,
+ * and the list of available colors used in the game.
+ * <p>
+ * Annotations from the Jackson library are used for JSON serialization and deserialization,
+ * ensuring that only non-null values are included in the JSON output.
+ */
 public class GameInfoDTO implements Serializable {
     private int id;
     private int level;

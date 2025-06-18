@@ -10,6 +10,14 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Represents the state of the game lobby where players are waiting to join.
+ *
+ * This state can be handled by the {@link StateVisitor} interface, allowing
+ * for visitor-based processing in the application.
+ *
+ * This class is immutable and serializable.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class WaitPlayersStateDTO extends StateDTO implements Serializable {
     private List<String> availableColors;

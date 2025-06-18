@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 /**
- * class that offers a really light component representation
+ * Class that offers a really light component representation
  */
 public class ComponentJSON {
       @JsonProperty("lifeforms")

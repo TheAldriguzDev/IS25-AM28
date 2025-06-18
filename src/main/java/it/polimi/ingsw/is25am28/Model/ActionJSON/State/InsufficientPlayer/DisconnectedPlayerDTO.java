@@ -7,6 +7,12 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
+/**
+ * Represents a data transfer data object that holds information about a disconnected player
+ *
+ * * Annotations from the Jackson library are used for JSON serialization and deserialization,
+ *  * ensuring that only non-null values are included in the JSON output.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class DisconnectedPlayerDTO extends StateDTO {
     private String nickname;

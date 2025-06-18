@@ -10,6 +10,10 @@ import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents the players' actions in the {@code visitPlanets} card in JSON format.
+ * The class is designed to be serialized and deserialized using Jackson annotations
+ */
 public class VisitPlanetsJSON extends ActionJSON {
     private int chosenPlanetIndex;
     private List<ComponentHelper<ItemColor>> itemsToDrop;

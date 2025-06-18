@@ -8,6 +8,12 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Represents a data transfer data object that holds information about the leaderboard at the end of the game
+ *
+ * * Annotations from the Jackson library are used for JSON serialization and deserialization,
+ *  * ensuring that only non-null values are included in the JSON output.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class EndGameDTO extends StateDTO {
     private String winner;

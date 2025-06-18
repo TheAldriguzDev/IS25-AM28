@@ -6,6 +6,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
+/**
+ * Represents a data transfer data object that holds information about the subDecks in the construction phase
+ *
+ * * Annotations from the Jackson library are used for JSON serialization and deserialization,
+ *  * ensuring that only non-null values are included in the JSON output.
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ConstructionDeckDTO extends ShipConstructionEventDTO {
     private String playerNickname;
