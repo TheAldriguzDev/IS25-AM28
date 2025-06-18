@@ -2387,4 +2387,8 @@ public class CardRoundController extends GUIController {
         });
 
     }
+
+    public void handleRemovePlayerFromBoard(String playerNickname) {
+        this.guiUtils.removePlayerFromBoard(playerNickname, this.clientModel.getDifficultyLevel() == 0 ? viewGameBoardStackPaneLevel0 : viewGameBoardStackPaneLevel2, playersRocketBoard);
+    }
 }

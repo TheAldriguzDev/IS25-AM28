@@ -338,6 +338,14 @@ public class GUIHandler extends Application implements ClientUI {
     }
 
     @Override
+    public void handleRemovePlayerFromBoard(String playerNickname) {
+        if (this.currentScene != null && this.currentScene.equals(GuiScenes.CARD_ROUND_SCENE)) {
+            CardRoundController controller = (CardRoundController) this.controllers.get(GuiScenes.CARD_ROUND_SCENE);
+            controller.handleRemovePlayerFromBoard(playerNickname);
+        }
+    }
+
+    @Override
     public void interruptCurrScreen() {
         // Empty because this method is used only in the TUI to force quit the screen
     }

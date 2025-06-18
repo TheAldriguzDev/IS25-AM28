@@ -230,6 +230,11 @@ public class TUIHandler implements ClientUI {
         // Empty because in the TUI will not be used, only the model will be updated
     }
 
+    @Override
+    public void handleRemovePlayerFromBoard(String playerNickname) {
+        // Empty because in the TUI will not be used, only the model will be updated
+    }
+
     /**
      * Interrupts the current screen's input request process.
      */

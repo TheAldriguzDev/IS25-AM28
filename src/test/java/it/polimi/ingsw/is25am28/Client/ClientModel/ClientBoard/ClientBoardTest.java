@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.BoardLevel2;
@@ -66,7 +67,7 @@ class ClientBoardTest {
         state.setUpdatedPositions(Map.of("Player 1", 15));
         state.setNeedsUpdatedEliminatedPlayers(true);
         state.setEliminatedPlayers(Arrays.asList("Player 2"));
-        clientModel.getClientBoard().updateBoard(state);
+        clientModel.getClientBoard().updateBoard(state, new TUIHandler(null, null)); // null just for testing, not in production
 
         System.out.println("DOPO LA MODIFICA");
         clientBoardWidget = clientBoard.generateWidget();
@@ -98,7 +99,7 @@ class ClientBoardTest {
             serverBoard.movePlayerForward(serverBoard.getPlayers().getFirst(), 1);
             serverBoard.validatePlayersPosition();
 
-            clientModel.getClientBoard().updateBoard(state);
+            clientModel.getClientBoard().updateBoard(state, new TUIHandler(null, null)); // Null just in testing, not in production
         }
     }
 }

@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
+import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
@@ -55,18 +56,22 @@ public class ClientBoard {
     /**
      * This method updates only what has been changed (regarding players' info)
      * */
-    public void updateBoard(CardStateJSON cardState) {
+    public void updateBoard(CardStateJSON cardState, ClientUI ui) {
         // If a player's position has been changed we need to set it again
         if (cardState.getNeedsUpdatedPositions()) {
             for (String playerNickname : cardState.getUpdatedPositions().keySet()) {
                 this.players.get(playerNickname).setCursor(cardState.getUpdatedPositions().get(playerNickname));
             }
         }
+
         // If a player has been eliminated we need to remove him from the player's list, and add him to the eliminatedPlayers list
         if (cardState.getNeedsUpdatedEliminatedPlayers()) {
             for (String playerNickname : cardState.getEliminatedPlayers()) {
                 this.eliminatedPlayers.add(players.get(playerNickname));
                 this.players.remove(playerNickname);
+
+                // Remove the player from the board
+                ui.handleRemovePlayerFromBoard(playerNickname);
             }
         }
     }

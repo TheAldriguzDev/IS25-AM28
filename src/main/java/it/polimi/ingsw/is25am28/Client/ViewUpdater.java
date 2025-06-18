@@ -341,7 +341,7 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
-    public void updateCardResult(CardRoundDTO state) throws Exception {
+    public void updateCardResult(CardRoundDTO state) {
         try {
             this.update(state);
             // Update the component in the GUI
@@ -361,7 +361,7 @@ public class ViewUpdater implements StateVisitor {
 
             // Updates the ClientBoard if necessary (Positions, EliminatedPlayers)
             if(state.getCardInfo().getNeedsBoardUpdate()) {
-                this.model.getClientBoard().updateBoard(state.getCardInfo());
+                this.model.getClientBoard().updateBoard(state.getCardInfo(), this.ui);
             }
 
             // Updates the ClientShips if necessary (Removed Components, Batteries, Dropped/Taken Resources, Removed Lifeforms)
