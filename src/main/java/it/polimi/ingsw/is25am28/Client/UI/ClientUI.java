@@ -171,4 +171,12 @@ public interface ClientUI {
      * @param playerNickname The nickname of the player that fast built his ship.
      */
     void handlePlayerFastShip(String playerNickname);
+
+    /**
+     * Updates for each player in the game the GUI graphics of the game board in order to
+     * remove the rocket of the eliminated player
+     *
+     * @param playerNickname The nickname of the player that has been eliminated
+     */
+    void handleRemovePlayerFromBoard(String playerNickname);
 }

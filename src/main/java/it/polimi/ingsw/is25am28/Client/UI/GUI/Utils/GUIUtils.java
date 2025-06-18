@@ -14,6 +14,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEn
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
+import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -34,10 +35,7 @@ import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Stack;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -104,8 +102,6 @@ public class GUIUtils {
             Map.entry("level_0_16", new Pair<>(68.0, 188.0)),
             Map.entry("level_0_17", new Pair<>(107.0, 108.0))
     );
-
-
 
     /**
      * Creates and returns an empty ship grid represented as a {@code GridPane}.
@@ -273,6 +269,22 @@ public class GUIUtils {
 
                 gameBoardPane.getChildren().add(newRocket);
                 playersRocketBoard.put(playerNickname, newRocket);
+            }
+        });
+    }
+
+    /**
+     * Removes a player's rocket from the game board.
+     *
+     * @param playerNickname The nickname of the player whose rocket is to be placed or updated on the board.
+     * @param gameBoardPane The container (Pane) representing the game board where the player's rocket is positioned.
+     * @param playersRocketBoard A map that stores the association between player nicknames and their rockets (ImageView objects) on the board.
+     */
+    public void removePlayerFromBoard(String playerNickname, Pane gameBoardPane, Map<String, ImageView> playersRocketBoard) {
+        Platform.runLater(() -> {
+            if (playersRocketBoard.get(playerNickname) != null) {
+                gameBoardPane.getChildren().remove(playersRocketBoard.get(playerNickname));
+                playersRocketBoard.remove(playerNickname);
             }
         });
     }
@@ -550,13 +562,17 @@ public class GUIUtils {
             Pane viewGameBoardStackPaneLevel2,
             Map<String, ImageView> playersRocketBoard
     ) {
+        List<ClientPlayer> players = this.clientModel.getClientBoard() != null ? this.clientModel.getClientBoard().getPlayers() : this.clientModel.getAllClientPlayers().values().stream().toList();
+
         if (this.clientModel.getDifficultyLevel() == 2) {
             viewGameBoardStackPaneLevel2.setVisible(true);
             viewGameBoardStackPaneLevel2.setManaged(true);
+            viewGameBoardStackPaneLevel0.setVisible(false);
+            viewGameBoardStackPaneLevel0.setManaged(false);
 
-            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+            for (ClientPlayer player : players) {
                 this.placePlayerInBoard(
-                        playerNickname,
+                        player.getNickname(),
                         2,
                         24,
                         viewGameBoardStackPaneLevel2,
@@ -567,10 +583,12 @@ public class GUIUtils {
         else {
             viewGameBoardStackPaneLevel0.setVisible(true);
             viewGameBoardStackPaneLevel0.setManaged(true);
+            viewGameBoardStackPaneLevel2.setVisible(false);
+            viewGameBoardStackPaneLevel2.setManaged(false);
 
-            for (String playerNickname : this.clientModel.getAllPlayersNicknames()) {
+            for (ClientPlayer player : players) {
                 this.placePlayerInBoard(
-                        playerNickname,
+                        player.getNickname(),
                         0,
                         18,
                         viewGameBoardStackPaneLevel0,
