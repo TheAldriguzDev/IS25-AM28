@@ -305,7 +305,7 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(1)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(2)); // AbandonedShip
 //        fakeDeck.add(AllCards.get(3)); // AbandonedShip
-        fakeDeck.add(AllCards.get(4)); // AbandonedStation OK
+//        fakeDeck.add(AllCards.get(4)); // AbandonedStation OK
 //        fakeDeck.add(AllCards.get(5)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(6)); // AbandonedStation
 //        fakeDeck.add(AllCards.get(7)); // AbandonedStation
@@ -326,14 +326,14 @@ public class GameModel {
 //        fakeDeck.add(AllCards.get(22)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(23)); // VisitPlanets
 //        fakeDeck.add(AllCards.get(24)); // OpenSpace OK
-        fakeDeck.add(AllCards.get(25)); // OpenSpace
+//        fakeDeck.add(AllCards.get(25)); // OpenSpace
 //        fakeDeck.add(AllCards.get(26)); // OpenSpace
 //        fakeDeck.add(AllCards.get(27)); // OpenSpace
 //        fakeDeck.add(AllCards.get(28)); // OpenSpace
 //        fakeDeck.add(AllCards.get(29)); // OpenSpace
 //        fakeDeck.add(AllCards.get(30)); // OpenSpace
 //        fakeDeck.add(AllCards.get(31)); // Epidemy OK
-//        fakeDeck.add(AllCards.get(32)); // Smugglers OK
+        fakeDeck.add(AllCards.get(32)); // Smugglers OK
 //        fakeDeck.add(AllCards.get(33)); // Smugglers
         fakeDeck.add(AllCards.get(34)); // Slavers OK
         fakeDeck.add(AllCards.get(35)); // Slavers

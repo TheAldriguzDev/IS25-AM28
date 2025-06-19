@@ -244,7 +244,7 @@ public class CardRoundController extends GUIController {
         } catch (UnsupportedOperationException e) {
             // Do nothing
         }
-        // TODO TEST
+
         List<ClientShield> nonActivatedShields = this.mainShip.getShieldList();
         try {
             nonActivatedShields.removeAll(this.currEventCard.getShieldsToActivate().stream()
@@ -256,7 +256,7 @@ public class CardRoundController extends GUIController {
         } catch (UnsupportedOperationException e) {
             // Do nothing
         }
-        // TODO TEST
+
         List<ClientEngine> nonActivatedEngines = this.mainShip.getEngineList();
         try {
             nonActivatedEngines.removeAll(this.currEventCard.getDoubleEnginesToActivate().stream()
@@ -322,7 +322,7 @@ public class CardRoundController extends GUIController {
      * Sets the current card's image based on the ID
      */
     private void setCurrentEventCard(CardStateJSON cardInfo) {
-        // Updates the image only if necessary //TODO TEST
+        // Updates the image only if necessary
         if (this.currEventCard == null || this.currEventCard.getUniqueCardId() != cardInfo.getUniqueCardId()) {
             // Setting the current eventCard
             for(ClientEventCard card : this.cards) {
@@ -669,7 +669,7 @@ public class CardRoundController extends GUIController {
                     case "setShieldsToActivate" -> {this.enableRegion(this.shieldsRegions); if (this.shieldsRegions.isEmpty()) initCommandDescriptionBox("There are no available\nshields to activate!");}
                     case "setDoubleCannonsToActivate" -> {this.enableRegion(this.doubleCannonsRegions); if (this.doubleCannonsRegions.isEmpty()) initCommandDescriptionBox("There are no available\ndouble cannons to activate!");}
                     case "setDoubleEnginesToActivate" -> {this.enableRegion(this.doubleEnginesRegions); if (this.doubleEnginesRegions.isEmpty()) initCommandDescriptionBox("There are no available\ndouble engines to activate!");}
-                    case "batteriesToBeStolen" -> {this.enableRegion(this.batteriesRegions); if (this.batteriesRegions.isEmpty()) initCommandDescriptionBox("There are no available\nbatteries give up!");} // TODO: coverage in handleMandatory may be missing
+                    case "batteriesToBeStolen" -> {this.enableRegion(this.batteriesRegions); if (this.batteriesRegions.isEmpty()) initCommandDescriptionBox("There are no available\nbatteries give up!");}
                 }
             }
         });
@@ -713,8 +713,8 @@ public class CardRoundController extends GUIController {
         this.commandsGrid.add(goBackButton, 0, 0);
 
         int commandCol = 1;
-        for (Item item : storage.getStoredItems()) { // TODO: should filter to remove duplicates
-            ItemColor itemColor = item.getColor();
+        for (ItemColor itemColor: storage.getStoredItems().stream().map(Item::getColor).distinct().toList()) {
+//            ItemColor itemColor = item.getColor();
             Button itemColorButton = this.createColorButton(itemColor);
             itemColorButton.setOnAction(event -> {
                 this.chosenItemColor = itemColor;
@@ -736,8 +736,12 @@ public class CardRoundController extends GUIController {
         ClientStorage storage = (ClientStorage) this.mainShip.getComponent(row, col);
         this.commandsGrid.getChildren().clear();
         List<ItemColor> cardItemColors = this.currEventCard.getAvailableItemColors();
-        if (!cardItemColors.isEmpty()) { //TODO: caso solo rossi su storage non rosso
-            this.initCommandDescriptionBox("Choose an itemColor to add!");
+        if (!cardItemColors.isEmpty()) {
+            if (!storage.isSpecialStorage() && cardItemColors.stream().allMatch(color -> color.equals(ItemColor.RED))) {
+                this.initCommandDescriptionBox("There are only red items available\nand this storage is not\nsuitable to store them!");
+            } else {
+                this.initCommandDescriptionBox("Choose an itemColor to add!");
+            }
         } else {
             this.initCommandDescriptionBox("There are no available\nitem colors in the card!");
         }
@@ -754,6 +758,8 @@ public class CardRoundController extends GUIController {
             this.initCommandBox();
         });
         this.commandsGrid.add(goBackButton, 0, 0);
+
+//        if (this.clientModel.getResourceBank()) // TODO RB filter
 
         int commandCol = 1;
         for(ItemColor itemColor : cardItemColors) {
@@ -931,7 +937,6 @@ public class CardRoundController extends GUIController {
         // (2) - Take reward?
         try {
             Boolean takeReward = this.currEventCard.getTakeReward();
-            // TODO add condition based on the defeated player in the JSON // TEST, also put this in the tui as well
             if (takeReward != null && !this.currEventCard.isPlayerDefeated()) {
                 label = new Label();
                 label.setText("Take reward?: " + (takeReward ? "Yes" : "No"));
@@ -1402,8 +1407,6 @@ public class CardRoundController extends GUIController {
 
             this.shipGrid.getChildren().remove(regionToRemove);
 //            System.out.println("LISTA STORAGES DA SVUOTARE DISPONIBILI (PRIMA): " + this.storagesToEmptyRegions);
-//            this.storagesToEmptyRegions.remove(regionToRemove); //TODO: OnSuccess // TODO BUG: if not commented introduces a bug, if commented another bug (one on removal(2) and one on revert(1))
-            this.storagesToEmptyRegions.remove(this.guiUtils.keyFromCoords(row, col)); //TODO: OnSuccess // TODO BUG: if not commented introduces a bug, if commented another bug (one on removal(2) and one on revert(1))
 //            System.out.println("Regione rimossa: " + regionToRemove);
 //            System.out.println("LISTA STORAGES DA SVUOTARE DISPONIBILI (DOPO): " + this.storagesToEmptyRegions);
 //            this.itemsMap.remove(guiUtils.keyFromCoords(row, col));
@@ -1651,7 +1654,7 @@ public class CardRoundController extends GUIController {
             }
             case SHIELD -> {
                 energyConsumerRegion = this.shieldsRegions.get(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
-                this.doubleCannonsRegions.remove(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
+                this.shieldsRegions.remove(guiUtils.keyFromCoords(energyConsumerRow, energyConsumerCol));
                 this.addShieldToActivate(this.currEnergyConsumer.getValue(), batteryCoords);
             }
         }

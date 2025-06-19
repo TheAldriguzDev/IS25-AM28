@@ -26,32 +26,32 @@ public interface ClientUI {
     void showWaitingForPlayers(WaitPlayersStateDTO waitingForPlayers);
 
     /**
-     * TUI screen entry point for the ship construction phase
+     * TUI/GUI entry point for the ship construction phase
      */
     void showShipConstruction(ShipConstructionDTO shipConstruction) throws Exception;
 
     /**
-     * TUI screen entry point for the ship fix phase
+     * TUI/GUI entry point for the ship fix phase
      */
     void showShipFixing(FixShipDTO fixShip) throws Exception;
 
     /**
-     * TUI screen entry point for the ship populate phase
+     * TUI/GUI entry point for the ship populate phase
      */
     void showShipPopulate(PopulateShipDTO populateShip) throws Exception;
 
     /**
-     * TUI screen entry point for the card round game phase
+     * TUI/GUI entry point for the card round game phase
      */
     void showCardRound(CardRoundDTO cardRound) throws Exception;
 
     /**
-     * TUI screen entry point for the end game phase
+     * TUI/GUI entry point for the end game phase
      */
     void showEndGame(EndGameDTO endGame);
 
     /**
-     * TUI screen entry point for the insufficient players condition
+     * TUI/GUI entry point for the insufficient players condition
      */
     void showInsufficientPlayer(InsufficientPlayerDTO insufficientPlayer);
 
