@@ -322,18 +322,21 @@ public class CardRoundController extends GUIController {
      * Sets the current card's image based on the ID
      */
     private void setCurrentEventCard(CardStateJSON cardInfo) {
-        // Setting the current eventCard
-        for(ClientEventCard card : this.cards) {
-            if(card.getUniqueCardId() == cardInfo.getUniqueCardId()) {
-                this.currEventCard = card;
+        // Updates the image only if necessary //TODO TEST
+        if (this.currEventCard == null || this.currEventCard.getUniqueCardId() != cardInfo.getUniqueCardId()) {
+            // Setting the current eventCard
+            for(ClientEventCard card : this.cards) {
+                if(card.getUniqueCardId() == cardInfo.getUniqueCardId()) {
+                    this.currEventCard = card;
+                }
             }
-        }
 
-        // Setting the card's image
-        URL resource;
-        resource = Objects.requireNonNull(getClass().getResource(this.currEventCard.getCardPath()));
-        Image img = new Image(resource.toExternalForm(), 235, 315, true, true);
-        this.cardImageView.setImage(img);
+            // Setting the card's image
+            URL resource;
+            resource = Objects.requireNonNull(getClass().getResource(this.currEventCard.getCardPath()));
+            Image img = new Image(resource.toExternalForm(), 235, 315, true, true);
+            this.cardImageView.setImage(img);
+        }
 
         // Updating the card
         this.currEventCard.updateCard(cardInfo);
@@ -928,8 +931,8 @@ public class CardRoundController extends GUIController {
         // (2) - Take reward?
         try {
             Boolean takeReward = this.currEventCard.getTakeReward();
-            // TODO add condition based on the defeated player in the JSON
-            if (takeReward != null) {
+            // TODO add condition based on the defeated player in the JSON // TEST, also put this in the tui as well
+            if (takeReward != null && !this.currEventCard.isPlayerDefeated()) {
                 label = new Label();
                 label.setText("Take reward?: " + (takeReward ? "Yes" : "No"));
                 actionsContainer.getChildren().add(label);
@@ -2197,8 +2200,6 @@ public class CardRoundController extends GUIController {
     public void updateCardRound(CardStateJSON cardStateJSON) {
 
         Platform.runLater(() -> {
-
-            // TODO: do a separate method to only update within the same round, for now is setting the card again
 
             this.updateVisuals(cardStateJSON);
 

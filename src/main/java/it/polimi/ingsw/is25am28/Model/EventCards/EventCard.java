@@ -426,6 +426,4 @@ public abstract class EventCard {
             lostPieces.clear();
         }
     }
-
-    // TODO: eventCards should also set the lapped eliminated players -> modify validatePlayersPositions
 }

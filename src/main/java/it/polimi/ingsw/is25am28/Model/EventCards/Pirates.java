@@ -132,7 +132,6 @@ public class Pirates extends EventCard {
         }
     }
 
-    // TODO: need rework on when the card ends
     public EventCard useCard(ActionJSON data) throws ClassCastException, IllegalArgumentException {
         PiratesJSON piratesData;
 

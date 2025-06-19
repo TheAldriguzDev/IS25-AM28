@@ -54,7 +54,6 @@ public class ClientPirates extends ClientEventCard {
         }
     }
 
-    // TODO: Add colors to the plasma shot widget
     @Override
     public WidgetTUI generateWidget() {
         WidgetTUI cardWidget = new WidgetTUI();
@@ -85,20 +84,20 @@ public class ClientPirates extends ClientEventCard {
                 cardInfoWidget.appendString("Current Player: " + this.playerNickname);
             }
         } else {
-            cardInfoWidget.appendString("                 █                ");
-            cardInfoWidget.appendString("                ███               ");
-            cardInfoWidget.appendString("               █████              ");
-            cardInfoWidget.appendString("               █████              ");
-            cardInfoWidget.appendString("              ███████             ");
-            cardInfoWidget.appendString("       █    ███████████    █      ");
-            cardInfoWidget.appendString("       ██  █████████████  ██      ");
-            cardInfoWidget.appendString("  ██    ███████████████████    ██ ");
-            cardInfoWidget.appendString("  ███    █████████████████    ███ ");
-            cardInfoWidget.appendString("   ████ ███████████████████ ████  ");
-            cardInfoWidget.appendString("     █████████████████████████    ");
-            cardInfoWidget.appendString("      ███████████████████████     ");
-            cardInfoWidget.appendString("         █████████████████        ");
-            cardInfoWidget.appendString("            ███████████           ");
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "                 █                " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "                ███               " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "               █████              " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "               █████              " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "              ███████             " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "       █    ███████████    █      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "       ██  █████████████  ██      " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "  ██    ███████████████████    ██ " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "  ███    █████████████████    ███ " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "   ████ ███████████████████ ████  " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "     █████████████████████████    " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "      ███████████████████████     " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "         █████████████████        " + ANSIColors.RESET);
+            cardInfoWidget.appendString(ANSIColors.MAGENTA + "            ███████████           " + ANSIColors.RESET);
             cardInfoWidget.wrapWidgetWithBorder();
 
             cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");
@@ -183,6 +182,12 @@ public class ClientPirates extends ClientEventCard {
     @Override
     public int getFirepower() {
         return this.requiredFirepower;
+    }
+
+    @Override
+    public boolean isPlayerDefeated() {
+        // Since only the defeated players will play the second round, this can be used as a "isPlayerDefeated" attribute, akin to Smugglers and Slavers
+        return !this.firstRound;
     }
 }
 

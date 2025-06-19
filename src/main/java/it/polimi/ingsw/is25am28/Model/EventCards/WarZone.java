@@ -882,20 +882,20 @@ public class WarZone extends EventCard {
 
 
     // TODO this should be useless
-        Map<String, Float> playersFirePowerMap = this.playersFirePower.entrySet().stream()
-                .collect(Collectors.toMap(
-                        entry -> entry.getKey().getNickname(),
-                        Map.Entry::getValue
-                ));
-
-        Map<String, Integer> playersEnginePowerMap = this.playersEnginePower.entrySet().stream()
-                .collect(Collectors.toMap(
-                        entry -> entry.getKey().getNickname(),
-                        Map.Entry::getValue
-                ));
-
-        cardState.setPlayersFirePower(playersFirePowerMap);
-        cardState.setPlayersEnginePower(playersEnginePowerMap);
+//        Map<String, Float> playersFirePowerMap = this.playersFirePower.entrySet().stream()
+//                .collect(Collectors.toMap(
+//                        entry -> entry.getKey().getNickname(),
+//                        Map.Entry::getValue
+//                ));
+//
+//        Map<String, Integer> playersEnginePowerMap = this.playersEnginePower.entrySet().stream()
+//                .collect(Collectors.toMap(
+//                        entry -> entry.getKey().getNickname(),
+//                        Map.Entry::getValue
+//                ));
+//
+//        cardState.setPlayersFirePower(playersFirePowerMap);
+//        cardState.setPlayersEnginePower(playersEnginePowerMap);
 
         cardState.setCardEnded(this.hasFinished());
 

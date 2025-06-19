@@ -427,7 +427,6 @@ class PiratesTest {
 //
 //        assertTrue(pirates.hasFinished());
 
-        // TODO: FIX TEST
         assertNull(ship_2.getComponent(6, 7));
         assertNull(ship_2.getComponent(5, 6));
 
