@@ -1,0 +1,1751 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>/Users/teo/Desktop/University/Terzo anno/Progetto_ING_SW/Esercitazione/IS25-AM28/src/main/java/it/polimi/ingsw/is25am28</OriginalElement>
+  <nodes>
+    <node x="7254.650075688093" y="4880.030641074309">it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON</node>
+    <node x="9484.170018825878" y="265.39037641861296">it.polimi.ingsw.is25am28.Model.Player.Player</node>
+    <node x="6457.154463288517" y="3594.8813109080265">it.polimi.ingsw.is25am28.Model.GameModelv2.EndGameState</node>
+    <node x="10132.080884652576" y="402.8792722202388">it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors</node>
+    <node x="10452.384771058225" y="2927.391260085068">it.polimi.ingsw.is25am28.Client.UI.ConnectionType</node>
+    <node x="10976.414706820582" y="3725.4439259520414">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController</node>
+    <node x="7917.199905535732" y="6219.013964158954">it.polimi.ingsw.is25am28.Model.EventCards.WarZone</node>
+    <node x="10538.042238885175" y="3616.563912998401">it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver</node>
+    <node x="8380.349372420556" y="3661.5310876072544">it.polimi.ingsw.is25am28.Loader.Tiles.Engine</node>
+    <node x="10111.331958220468" y="2843.4131818684127">it.polimi.ingsw.is25am28.Timer.HourGlass</node>
+    <node x="8970.575739285729" y="3493.3331144227222">it.polimi.ingsw.is25am28.Model.Exceptions.TooManyAliensException</node>
+    <node x="8378.302934248593" y="8220.646969675745">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.ShipConstructionController</node>
+    <node x="1312.3787005127097" y="4592.780882825531">it.polimi.ingsw.is25am28.Network.Messages.SelectDeselectSubdeck</node>
+    <node x="9515.50209336455" y="5326.146027714603">it.polimi.ingsw.is25am28.Model.EventCards.Stardust</node>
+    <node x="9582.902734295281" y="2100.0127926354535">it.polimi.ingsw.is25am28.Network.Server.GameInstance</node>
+    <node x="7018.939611292123" y="2997.330147435119">it.polimi.ingsw.is25am28.Model.Exceptions.InsufficientEnergyException</node>
+    <node x="607.648989576957" y="5620.364504331908">it.polimi.ingsw.is25am28.Model.Components.Vital</node>
+    <node x="9070.687235352194" y="796.0844104234416">it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket</node>
+    <node x="5002.647423412154" y="4776.549201712465">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.CreateGameController</node>
+    <node x="7573.138955799004" y="2143.9106210110554">it.polimi.ingsw.is25am28.Model.EventCards.WarZoneConsequence</node>
+    <node x="4163.2017077935925" y="6246.740187597667">it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientBattery</node>
+    <node x="4194.9473920716155" y="4676.982468668597">it.polimi.ingsw.is25am28.Model.EventCards.WarZoneActionConsequencePair</node>
+    <node x="3567.7151592537816" y="5350.491473482336">it.polimi.ingsw.is25am28.Network.Messages.ConfigGame</node>
+    <node x="8404.601328923873" y="1442.8269525703756">it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler</node>
+    <node x="7768.693317595244" y="9017.59248937059">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientAbandonedShip</node>
+    <node x="7881.176678689871" y="7657.422853980519">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.FixShipController</node>
+    <node x="5115.240756409624" y="4053.552328790904">it.polimi.ingsw.is25am28.Network.Messages.FastShip</node>
+    <node x="3492.5634950550784" y="3559.6978464917393">it.polimi.ingsw.is25am28.Loader.Cards.Stardust</node>
+    <node x="9495.572153217037" y="2972.7033235122603">it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler</node>
+    <node x="1929.3763379083293" y="5569.384907910733">it.polimi.ingsw.is25am28.Model.Components.Cabin</node>
+    <node x="8282.818142377067" y="556.3077700332433">it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities.Meteor</node>
+    <node x="8115.844663505544" y="10402.398274414285">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientStardust</node>
+    <node x="531.502545126996" y="4152.250237596312">it.polimi.ingsw.is25am28.Model.ActionJSON.State.CreateGameStateDTO</node>
+    <node x="1086.7924727049055" y="5043.356751694546">it.polimi.ingsw.is25am28.Model.Components.Component</node>
+    <node x="8004.2735594647365" y="5288.851378273168">it.polimi.ingsw.is25am28.Model.EventCards.Smugglers</node>
+    <node x="9033.516521328156" y="2542.1931739912598">it.polimi.ingsw.is25am28.Client.ViewUpdater</node>
+    <node x="2571.5441854937094" y="3865.010959957869">it.polimi.ingsw.is25am28.Client.ClientModel.ClientFixShipState</node>
+    <node x="3550.8302205936984" y="3461.226780578178">it.polimi.ingsw.is25am28.Model.Exceptions.OutOfShipException</node>
+    <node x="9346.425088265718" y="9978.291771290904">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientSlavers</node>
+    <node x="9113.419709562037" y="331.0181682358525">it.polimi.ingsw.is25am28.Network.Queue.Queue</node>
+    <node x="6639.141282444314" y="3900.5364709799105">it.polimi.ingsw.is25am28.Loader.Cards.OpenSpace</node>
+    <node x="8462.202571045826" y="10269.84980012704">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.EndGameController</node>
+    <node x="4489.033936215238" y="4083.5005854123706">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PopulateShipComponentDTO</node>
+    <node x="4074.652213990816" y="3074.991657936587">it.polimi.ingsw.is25am28.Network.Socket.Client.VirtualServerSocket</node>
+    <node x="9919.15553901964" y="1323.0853371686846">it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient</node>
+    <node x="9544.274026563244" y="6920.068521413433">it.polimi.ingsw.is25am28.Model.EventCards.Slavers</node>
+    <node x="8975.976316107637" y="1811.9562478155156">it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank</node>
+    <node x="2867.4503930228093" y="4677.008254210986">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO</node>
+    <node x="7352.8364042789" y="5227.390322345746">it.polimi.ingsw.is25am28.Model.EventCards.AbandonedStation</node>
+    <node x="7394.445765666581" y="1020.1541472845781">it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON</node>
+    <node x="1071.3471852728403" y="3479.531854147356">it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.CommandWidgetTUI</node>
+    <node x="2255.4205351549213" y="4196.95021950717">it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO</node>
+    <node x="2764.5586464466987" y="5892.239935127653">it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStorage</node>
+    <node x="8784.492348673637" y="272.86506569967696">it.polimi.ingsw.is25am28.Model.Board.Cell</node>
+    <node x="10667.993399724906" y="4120.349096308262">it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON</node>
+    <node x="7295.890132161179" y="2434.592283254967">it.polimi.ingsw.is25am28.Model.Connector</node>
+    <node x="1043.428207837071" y="5747.902026298504">it.polimi.ingsw.is25am28.Model.Components.Structural</node>
+    <node x="6127.374462944262" y="3688.643973024753">it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.EndGameScreen</node>
+    <node x="8981.514812080972" y="4509.109891726548">it.polimi.ingsw.is25am28.Model.EventCards.Epidemy</node>
+    <node x="7204.081408485421" y="1487.4214503019225">it.polimi.ingsw.is25am28.Model.EventCards.HazardEntities.PlasmaShot</node>
+    <node x="2724.9987523822124" y="2993.329136617089">it.polimi.ingsw.is25am28.Network.RMI.Server.RMIServer</node>
+    <node x="3268.9338178108005" y="3701.6016734910318">it.polimi.ingsw.is25am28.Client.ClientModel.ClientCardRoundState</node>
+    <node x="1965.865172393429" y="5239.104261689048">it.polimi.ingsw.is25am28.Network.Messages.SendShipConfirmation</node>
+    <node x="2194.6813468319897" y="3061.263756992002">it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI</node>
+    <node x="9367.974644258555" y="1070.355725995272">it.polimi.ingsw.is25am28.Network.Socket.Server.SocketClientHandler</node>
+    <node x="9865.551281113987" y="5580.598230293326">it.polimi.ingsw.is25am28.Model.EventCards.MeteorShower</node>
+    <node x="3706.686156815953" y="4597.0210789171615">it.polimi.ingsw.is25am28.Network.Messages.FixShip</node>
+    <node x="7847.488789909891" y="2440.4280135595154">it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.ShipConstructionScreen</node>
+    <node x="8645.159534289245" y="3064.856848652299">it.polimi.ingsw.is25am28.Client.UI.TUI.Input.InputThread</node>
+    <node x="7845.64683730083" y="39.59791913987374">it.polimi.ingsw.is25am28.Model.Items.Item</node>
+    <node x="3046.7668939942073" y="6272.356980038942">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard</node>
+    <node x="7889.65313566098" y="1079.913542800251">it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters</node>
+    <node x="7404.9829160297695" y="1845.3908017398442">it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils</node>
+    <node x="7370.7072099303905" y="2721.7696891157384">it.polimi.ingsw.is25am28.Model.EventCards.WarZoneAction</node>
+    <node x="7967.672864578679" y="5075.7393120835795">it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON</node>
+    <node x="8156.747898912332" y="-13.292791062759761">it.polimi.ingsw.is25am28.Client.Client</node>
+    <node x="4609.43105874981" y="4779.405940977531">it.polimi.ingsw.is25am28.Model.Board.BoardTestFlight</node>
+    <node x="9729.582670894162" y="3786.634371930264">it.polimi.ingsw.is25am28.Loader.Tiles.Battery</node>
+    <node x="4047.732993063805" y="3838.5438682945023">it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO</node>
+    <node x="4243.076607633868" y="4428.854853939705">it.polimi.ingsw.is25am28.Network.Messages.NewPlayer</node>
+    <node x="3965.6465547021808" y="4941.396296008388">it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip</node>
+    <node x="6843.079491126519" y="1850.3606695279275">it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils</node>
+    <node x="1390.327790322926" y="3766.6835357805217">it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.ConsoleWidgetTUI</node>
+    <node x="7075.293552083794" y="1127.9350583308408">it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI</node>
+    <node x="6413.150026376839" y="2566.0912050683914">it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard.ClientBoard</node>
+    <node x="6700.779525470022" y="3006.2604333747913">it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType</node>
+    <node x="3701.2324920739534" y="4193.3266420198415">it.polimi.ingsw.is25am28.Model.Exceptions.ExistingComponentException</node>
+    <node x="600.3543930373936" y="3889.414238418074">it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO</node>
+    <node x="1506.418824251498" y="4913.4570442131535">it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent</node>
+    <node x="6197.291592159508" y="1724.726022506402">it.polimi.ingsw.is25am28.Model.EventCards.CardTypes</node>
+    <node x="2102.4338671245973" y="4632.290953959515">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO</node>
+    <node x="6190.574761183894" y="2258.9691233456306">it.polimi.ingsw.is25am28.Network.Socket.Server.TCPServer</node>
+    <node x="5129.59831329103" y="4274.201060832742">it.polimi.ingsw.is25am28.Network.Messages.PlaceTile</node>
+    <node x="10474.964013052151" y="2011.2064272692646">it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor</node>
+    <node x="4370.263501162809" y="3159.6044886695117">it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState</node>
+    <node x="10954.167776027825" y="4319.289704068925">it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedShipJSON</node>
+    <node x="-151.52109478519264" y="4102.901234303291">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO</node>
+    <node x="6692.007282095688" y="4460.334878823616">it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedStationJSON</node>
+    <node x="440.057009984345" y="4483.946894178549">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.FixedComponentDTO</node>
+    <node x="7298.795477149669" y="7293.183275735895">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientPirates</node>
+    <node x="842.6745086933993" y="5911.170176907134">it.polimi.ingsw.is25am28.Model.Components.Shield</node>
+    <node x="5758.626162078445" y="2184.9956085314166">it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO</node>
+    <node x="8427.503999227054" y="4365.114876278434">it.polimi.ingsw.is25am28.Model.EventCards.VisitPlanets</node>
+    <node x="743.7208024047806" y="5284.671348433479">it.polimi.ingsw.is25am28.Model.Components.Battery</node>
+    <node x="929.9003588240234" y="2749.5605679802743">it.polimi.ingsw.is25am28.Loader.Loader</node>
+    <node x="1084.785343999153" y="3246.7172138148553">it.polimi.ingsw.is25am28.Loader.FastShipLoader</node>
+    <node x="10436.908962725687" y="5259.658461880617">it.polimi.ingsw.is25am28.Model.EventCards.Pirates</node>
+    <node x="4142.42534167462" y="2293.529104655785">it.polimi.ingsw.is25am28.Client.ClientModel.ClientState</node>
+    <node x="2938.866787360863" y="3608.246746258661">it.polimi.ingsw.is25am28.Loader.Tiles.Tiles</node>
+    <node x="9974.005346317612" y="7865.6164322815575">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.CardRoundController</node>
+    <node x="2401.374738430706" y="3606.800574684928">it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException</node>
+    <node x="5932.061290941576" y="4436.747659097799">it.polimi.ingsw.is25am28.Network.Messages.SelectTile</node>
+    <node x="4409.558749873303" y="2946.811631651053">it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer</node>
+    <node x="9589.422035293663" y="4708.438898265423">it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON</node>
+    <node x="7020.557942226358" y="2521.4487021204714">it.polimi.ingsw.is25am28.Loader.Cards.AbandonedShip</node>
+    <node x="9226.008875805417" y="3900.750674572333">it.polimi.ingsw.is25am28.Loader.Tiles.Structural</node>
+    <node x="4570.8799068157805" y="1113.6432555971394">it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer</node>
+    <node x="8352.47360539336" y="3840.8062129989758">it.polimi.ingsw.is25am28.Model.GameModelv2.PopulateShipState</node>
+    <node x="6660.570456147217" y="5048.717099355297">it.polimi.ingsw.is25am28.Model.EventCards.EventCard</node>
+    <node x="6838.8675744048405" y="3540.979774582393">it.polimi.ingsw.is25am28.Model.GameModelv2.State</node>
+    <node x="3249.766185557024" y="5925.840418170093">it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStructural</node>
+    <node x="9470.529659665137" y="3846.1607136720413">it.polimi.ingsw.is25am28.Loader.Tiles.Shield</node>
+    <node x="5680.663050817943" y="1810.6307884969408">it.polimi.ingsw.is25am28.Model.Components.VitalType</node>
+    <node x="1815.8503988077155" y="3796.9338800545033">it.polimi.ingsw.is25am28.Model.Exceptions.NullComponentException</node>
+    <node x="9874.30661113473" y="4300.588026643085">it.polimi.ingsw.is25am28.Model.ActionJSON.EpidemyJSON</node>
+    <node x="5092.222087351007" y="873.9018276903494">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.ToastType</node>
+    <node x="4884.0203720409045" y="1146.3930676872276">it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel</node>
+    <node x="4536.974809907862" y="5113.654589192541">it.polimi.ingsw.is25am28.Model.Board.BoardLevel2</node>
+    <node x="2758.261375941324" y="4318.221796429732">it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO</node>
+    <node x="6550.226460575201" y="6595.163578761288">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientVisitPlanets</node>
+    <node x="1545.346220602955" y="5914.328339993987">it.polimi.ingsw.is25am28.Model.Board.Board</node>
+    <node x="5921.014136444634" y="2754.1651333589684">it.polimi.ingsw.is25am28.Loader.FastShipTiles.FastShipTilesInfo</node>
+    <node x="5735.457039118245" y="3686.464453017563">it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO</node>
+    <node x="9362.478380653969" y="3989.4710844642464">it.polimi.ingsw.is25am28.Model.GameModelv2.FixShipState</node>
+    <node x="2520.7103412312363" y="4666.807721719598">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO</node>
+    <node x="2852.2953404815053" y="5686.8237755064">it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCannon</node>
+    <node x="4497.166529133264" y="6520.292508907501">it.polimi.ingsw.is25am28.Model.Ship.Ship</node>
+    <node x="7067.491304971775" y="503.04691095000203">it.polimi.ingsw.is25am28.Network.VirtualView</node>
+    <node x="10099.062419683472" y="3415.9084917817663">it.polimi.ingsw.is25am28.Loader.Tiles.Storage</node>
+    <node x="5239.888978273188" y="2707.8932339750263">it.polimi.ingsw.is25am28.Network.UpdateHandler.UpdateHandler</node>
+    <node x="4315.15764255479" y="1675.7130190264127">it.polimi.ingsw.is25am28.Model.Player.PlayerColor</node>
+    <node x="7054.598573380258" y="6346.095008880353">it.polimi.ingsw.is25am28.Network.Messages.DeselectTile</node>
+    <node x="3578.1519725845583" y="1342.416917342462">it.polimi.ingsw.is25am28.Model.GameModelv2.GameModel</node>
+    <node x="2501.80285557651" y="5711.176095638781">it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientShield</node>
+    <node x="3627.97651392553" y="6129.030693087717">it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientVital</node>
+    <node x="3802.7606375254463" y="3029.5709769279892">it.polimi.ingsw.is25am28.Model.Items.ItemColor</node>
+    <node x="897.7681152256546" y="3798.6803552035476">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO</node>
+    <node x="6586.285652991092" y="951.5818190418681">it.polimi.ingsw.is25am28.Loader.Cards.Cards</node>
+    <node x="8730.090060662416" y="10515.462166591942">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientSmugglers</node>
+    <node x="537.4756403449901" y="2926.085550210471">it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI</node>
+    <node x="5474.510909856788" y="4998.766329399246">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientOpenSpace</node>
+    <node x="4930.969365665232" y="3994.410524423835">it.polimi.ingsw.is25am28.Network.Messages.Message</node>
+    <node x="10849.681295727614" y="4657.247214029547">it.polimi.ingsw.is25am28.Model.EventCards.OpenSpace</node>
+    <node x="3551.3504499404394" y="3233.6650908996407">it.polimi.ingsw.is25am28.Client.UI.UIType</node>
+    <node x="9740.042489277395" y="6195.911698278104">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.LobbyController</node>
+    <node x="3717.872796635362" y="2591.1793792750123">it.polimi.ingsw.is25am28.Loader.Cards.ItemsInfo</node>
+    <node x="852.4620705384668" y="4502.7325146619605">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO</node>
+    <node x="6352.131928641365" y="3136.6161284181553">it.polimi.ingsw.is25am28.Loader.Cards.Pirate</node>
+    <node x="6014.707632350819" y="3161.9769503705274">it.polimi.ingsw.is25am28.Loader.Cards.Warzone</node>
+    <node x="7274.353611075291" y="6737.497518385287">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.InsufficientPlayersController</node>
+    <node x="7485.485847665895" y="3994.969884543788">it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen</node>
+    <node x="5398.098988780158" y="3116.925571497997">it.polimi.ingsw.is25am28.Loader.Cards.AbandonedStation</node>
+    <node x="3951.772897992556" y="3409.437337453407">it.polimi.ingsw.is25am28.Loader.FastShipTiles.FastShipTiles</node>
+    <node x="6624.3111878173795" y="6176.829574671423">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.WaitingForPlayersController</node>
+    <node x="3408.593756899392" y="2916.212692200821">it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform</node>
+    <node x="3293.5837064424113" y="3140.7261131504065">it.polimi.ingsw.is25am28.Network.RMI.ThrowingRunnable</node>
+    <node x="3286.642337201881" y="4418.398248848147">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO</node>
+    <node x="1664.0391214433757" y="4635.331900721783">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ReservedComponentDTO</node>
+    <node x="5645.269175332432" y="4695.268412451161">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.JoinGameController</node>
+    <node x="3182.291130227595" y="2418.0663685855843">it.polimi.ingsw.is25am28.Network.Server.PingHelper</node>
+    <node x="2880.311790932047" y="2631.614285298806">it.polimi.ingsw.is25am28.Utils.Pair.Pair</node>
+    <node x="1403.6306886971388" y="4348.519239868762">it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO</node>
+    <node x="3121.85461282876" y="2740.201767419988">it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair</node>
+    <node x="7015.04525737926" y="3109.24253906945">it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.LobbyScreen</node>
+    <node x="8815.575539346763" y="4041.0086147374627">it.polimi.ingsw.is25am28.Model.ActionJSON.VisitPlanetsJSON</node>
+    <node x="9029.460240164852" y="3801.2172735140402">it.polimi.ingsw.is25am28.Loader.Tiles.Cabin</node>
+    <node x="8686.477966549486" y="3610.023712943411">it.polimi.ingsw.is25am28.Loader.Tiles.Vital</node>
+    <node x="8013.198120052381" y="8417.954974355984">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEpidemy</node>
+    <node x="2220.248303921714" y="2429.9664334262925">it.polimi.ingsw.is25am28.Controller.GameController</node>
+    <node x="8519.041893846113" y="714.5050204822796">it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient</node>
+    <node x="436.462116020002" y="2802.6763000546516">it.polimi.ingsw.is25am28.Loader.TileLoader</node>
+    <node x="2653.9496503200953" y="1914.9386998187167">it.polimi.ingsw.is25am28.Client.UI.GUI.GuiScenes</node>
+    <node x="9191.401418652866" y="3681.6151565809037">it.polimi.ingsw.is25am28.Loader.Tiles.Cannon</node>
+    <node x="2266.7242565366773" y="5438.465727609032">it.polimi.ingsw.is25am28.Model.Components.Engine</node>
+    <node x="10179.425879258251" y="4646.506675345477">it.polimi.ingsw.is25am28.Model.ActionJSON.SmugglersJSON</node>
+    <node x="6242.674612053668" y="4296.945235608483">it.polimi.ingsw.is25am28.Model.GameModelv2.CreateGameState</node>
+    <node x="7573.949129896214" y="296.6617845919941">it.polimi.ingsw.is25am28.Client.UI.ClientUI</node>
+    <node x="9325.448043634353" y="4260.706564963194">it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON</node>
+    <node x="1853.3141365213792" y="3244.548846727055">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.EnergyConsumers</node>
+    <node x="1460.3676824420747" y="3312.81693281329">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionType</node>
+    <node x="10097.315240388209" y="2612.779616286927">it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObservable</node>
+    <node x="3069.08497457069" y="5186.444770778537">it.polimi.ingsw.is25am28.Network.Messages.FlipTimer</node>
+    <node x="3604.600036495146" y="3753.4474767524607">it.polimi.ingsw.is25am28.Loader.Cards.Meteor</node>
+    <node x="3599.116303821883" y="5880.667980580714">it.polimi.ingsw.is25am28.Model.Exceptions.CoreDeletionAttemptException</node>
+    <node x="5483.792247704672" y="5349.275552257612">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientMeteorShower</node>
+    <node x="3501.293039407029" y="3952.649232317494">it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO</node>
+    <node x="3041.408106647157" y="5470.001672144948">it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientEngine</node>
+    <node x="3256.1043637515786" y="3293.3575847273087">it.polimi.ingsw.is25am28.Network.Socket.Client.SocketServerHandler</node>
+    <node x="214.73320821822585" y="3252.799824938914">it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper</node>
+    <node x="2123.443954769288" y="3733.7929082549786">it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.InputWidgetTUI</node>
+    <node x="5367.107022127238" y="2000.6899839845742">it.polimi.ingsw.is25am28.Loader.Cards.Planet</node>
+    <node x="5976.379547513318" y="3887.101953362033">it.polimi.ingsw.is25am28.Model.ActionJSON.SlaversJSON</node>
+    <node x="1873.9295804290136" y="2979.048591546821">it.polimi.ingsw.is25am28.Utils.ValidateIP</node>
+    <node x="10430.775751776275" y="3295.0323962063035">it.polimi.ingsw.is25am28.Loader.Tiles.Tile</node>
+    <node x="9515.797416560375" y="8181.526323298884">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.ReconnectGameController</node>
+    <node x="10104.971137027605" y="3748.9538876302813">it.polimi.ingsw.is25am28.Model.GameModelv2.ShipContructionState</node>
+    <node x="2169.005803191213" y="5017.581949335725">it.polimi.ingsw.is25am28.Network.Messages.Reconnect</node>
+    <node x="6783.574272277275" y="3452.540931818472">it.polimi.ingsw.is25am28.Loader.Cards.Epidemic</node>
+    <node x="8883.344387737925" y="4881.002577809844">it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON</node>
+    <node x="885.3392416254841" y="4920.25425533053">it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator</node>
+    <node x="4645.89682445538" y="1923.2605224124432">it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.CardRoundScreen</node>
+    <node x="2652.0993137551854" y="5491.665045648224">it.polimi.ingsw.is25am28.Model.Exceptions.NoSupportVitalFoundException</node>
+    <node x="1862.7223242453592" y="2099.862694788165">it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON</node>
+    <node x="1597.4509568902" y="2958.6180454969635">it.polimi.ingsw.is25am28.Client.UI.CommandCTX</node>
+    <node x="2122.1862444625494" y="5913.900851225337">it.polimi.ingsw.is25am28.Model.Components.Storage</node>
+    <node x="9813.704709913307" y="3963.931449394912">it.polimi.ingsw.is25am28.Model.GameModelv2.InsufficientPlayerState</node>
+    <node x="7331.236625027845" y="5818.44780956276">it.polimi.ingsw.is25am28.Model.EventCards.AbandonedShip</node>
+    <node x="4457.063405226707" y="3826.6340997137017">it.polimi.ingsw.is25am28.Client.ClientModel.ClientPopulateShipState</node>
+    <node x="4867.912975281783" y="3793.2001854653527">it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO</node>
+    <node x="8039.609790626711" y="4444.952816514242">it.polimi.ingsw.is25am28.Model.GameModelv2.CardRoundState</node>
+    <node x="1203.1716278301146" y="5943.677280234505">it.polimi.ingsw.is25am28.Model.Components.Cannon</node>
+    <node x="6398.3129444470815" y="4535.182674242018">it.polimi.ingsw.is25am28.Network.Messages.RefreshGames</node>
+    <node x="5727.652763839244" y="3234.236389585458">it.polimi.ingsw.is25am28.Loader.Cards.Smuggler</node>
+    <node x="6637.519557422589" y="4163.21191623262">it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.FixShipScreen</node>
+    <node x="5473.947634264495" y="4484.705367087938">it.polimi.ingsw.is25am28.Network.Messages.Ping</node>
+    <node x="3799.2082732296763" y="6452.831333640297">it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCabin</node>
+    <node x="1717.4798112737294" y="2663.192624768215">it.polimi.ingsw.is25am28.Network.VirtualServer</node>
+    <node x="3709.398221824382" y="4334.577327889954">it.polimi.ingsw.is25am28.Network.Messages.PopulateShip</node>
+    <node x="116.37449502813445" y="3677.25141586908">it.polimi.ingsw.is25am28.Model.ActionJSON.State.FastShipDTO</node>
+    <node x="5427.984993967259" y="3996.55308907591">it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.PopulateShipScreen</node>
+    <node x="4649.725662582138" y="4455.51290927536">it.polimi.ingsw.is25am28.Network.Messages.PlayCard</node>
+    <node x="5408.704599633001" y="1365.5417747558467">it.polimi.ingsw.is25am28.Network.Answer.Answer</node>
+    <node x="3276.4132304878917" y="4217.062456809901">it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO</node>
+    <node x="1414.9405448703483" y="2675.6539955424696">it.polimi.ingsw.is25am28.Loader.Cards.Action</node>
+    <node x="6165.951151456736" y="2675.6438179107217">it.polimi.ingsw.is25am28.Loader.Cards.Card</node>
+    <node x="4877.933596927965" y="5243.5271988207805">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientWarZone</node>
+    <node x="6024.848088736905" y="6275.006534566568">it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientAbandonedStation</node>
+    <node x="1177.9554758060804" y="2924.564822498225">it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentJSON</node>
+    <node x="6154.297145098368" y="5011.901055561782">it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.PopulateShipController</node>
+    <node x="4979.338900213325" y="3384.3889286873627">it.polimi.ingsw.is25am28.Loader.Cards.Slaver</node>
+    <node x="8377.940039703079" y="4114.080840017175">it.polimi.ingsw.is25am28.Model.GameModelv2.WaitPlayersState</node>
+    <node x="1807.8084981172306" y="3568.5074958614196">it.polimi.ingsw.is25am28.Loader.CardLoader</node>
+    <node x="5309.364957451006" y="3750.4215282276778">it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.InsufficientPlayerScreen</node>
+    <node x="1826.0252684801321" y="4157.187864801718">it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO</node>
+    <node x="3382.6982706148438" y="4912.223800438796">it.polimi.ingsw.is25am28.Network.Messages.ReserveTile</node>
+    <node x="981.9055868730578" y="1848.161271053585">it.polimi.ingsw.is25am28.Network.Server.Server</node>
+    <node x="2541.2598166292382" y="5165.639169088126">it.polimi.ingsw.is25am28.Model.Ship.AbstractShip</node>
+    <node x="562.2444502901135" y="5185.730088202228">it.polimi.ingsw.is25am28.Model.Exceptions.TooLowDifficultyLevelException</node>
+    <node x="5280.482478815118" y="3908.3341834925595">it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON</node>
+    <node x="515.8103877845265" y="2265.4013477744975">it.polimi.ingsw.is25am28.Network.Server.ServerLogger</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientWarZone" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="260.5004030720356" y="143.9728011792199" />
+      <point x="5735.0" y="5733.5" />
+      <point x="5735.0" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.FlipTimer" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="122.00002542930997" y="2.292214635417622E-4" />
+      <point x="3823.186" y="5244.445" />
+      <point x="3823.186" y="4919.724" />
+      <point x="3881.616" y="4919.724" />
+      <point x="3881.616" y="4912.0" />
+      <point x="4559.0" y="4912.0" />
+      <point x="4559.0" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.AbandonedStation" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="246.49959572110038" y="-3.223457465537649E-4" />
+      <point x="7885.0" y="5465.389999999999" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="-181.5002304878917" y="-4.568099016069027E-4" />
+      <point x="3241.367" y="4287.062" />
+      <point x="3241.367" y="4562.0" />
+      <point x="1386.131" y="4562.0" />
+      <point x="1386.131" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" target="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator" relationship="REALIZATION">
+      <point x="-14.999893994207468" y="562.0000199610577" />
+      <point x="3292.267" y="7673.0" />
+      <point x="1185.672" y="7673.0" />
+      <point x="1185.672" y="5918.67" />
+      <point x="1477.0" y="5918.67" />
+      <point x="1477.0" y="4951.754" />
+      <point x="113.99975837451592" y="-2.5533052985338145E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientSmugglers" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="-260.5000606624171" y="-1.6659194261592347E-4" />
+      <point x="6521.0" y="10861.462" />
+      <point x="6521.0" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ViewUpdater" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor" relationship="REALIZATION">
+      <point x="0.0" y="-370.0" />
+      <point x="9181.516521328156" y="2082.5127926354535" />
+      <point x="-147.5" y="-188.19363463381086" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.Stardust" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="56.99950494492168" y="1.5350826106441673E-4" />
+      <point x="3921.6" y="3573.6980000000003" />
+      <point x="3921.6" y="3710.937" />
+      <point x="4342.273" y="3710.937" />
+      <point x="4342.273" y="3130.492" />
+      <point x="5222.389" y="3130.492" />
+      <point x="5222.389" y="3640.0" />
+      <point x="6322.0" y="3640.0" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.JoinGameController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="-178.00017533243135" y="-4.124511606278247E-4" />
+      <point x="5456.448" y="4801.268" />
+      <point x="5456.448" y="7226.0" />
+      <point x="8854.0" y="7226.0" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.FixShip" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="-1.5681595277783344E-4" y="141.99992108283914" />
+      <point x="3838.186" y="4912.0" />
+      <point x="4559.0" y="4912.0" />
+      <point x="4559.0" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="-175.4999752817821" y="-54.06618546535242" />
+      <point x="4012.732" y="3809.134" />
+      <point x="4012.732" y="4086.149" />
+      <point x="3226.367" y="4086.149" />
+      <point x="3226.367" y="4562.0" />
+      <point x="1386.131" y="4562.0" />
+      <point x="1386.131" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Components.Component" target="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator" relationship="REALIZATION">
+      <point x="179.49952729509437" y="2.483054545336927E-4" />
+      <point x="1477.0" y="5365.357" />
+      <point x="1477.0" y="4951.754" />
+      <point x="113.99975837451592" y="-2.5533052985338145E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.OpenSpace" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="-2.824443145073019E-4" y="-14.000470979910233" />
+      <point x="6708.141" y="3851.0" />
+      <point x="5702.0" y="3851.0" />
+      <point x="5702.0" y="3640.0" />
+      <point x="6322.0" y="3640.0" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.CardRoundScreen" target="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen" relationship="GENERALIZATION">
+      <point x="1.7554462010593852E-4" y="586.0004775875568" />
+      <point x="4912.397" y="3739.1040000000003" />
+      <point x="5236.413" y="3739.1040000000003" />
+      <point x="5236.413" y="3661.0" />
+      <point x="6370.132" y="3661.0" />
+      <point x="6370.132" y="3512.98" />
+      <point x="6821.0" y="3512.98" />
+      <point x="6821.0" y="4144.102" />
+      <point x="-246.99984766589478" y="-232.86788454378802" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO" relationship="GENERALIZATION">
+      <point x="199.49992946153316" y="4.853380401073082E-4" />
+      <point x="1294.879" y="4680.733" />
+      <point x="1294.879" y="4541.0" />
+      <point x="2005.0" y="4541.0" />
+      <point x="2005.0" y="4589.0" />
+      <point x="3256.367" y="4589.0" />
+      <point x="3256.367" y="4389.562" />
+      <point x="3683.732" y="4389.562" />
+      <point x="50.43896059297094" y="57.99976768250599" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.Epidemy" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="1.8791902857628884E-4" y="82.00010827345159" />
+      <point x="9237.015" y="4794.615" />
+      <point x="9486.0" y="4794.615" />
+      <point x="9486.0" y="4838.5" />
+      <point x="7885.0" y="4838.5" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.Warzone" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="138.5003676491806" y="4.9629472641754546E-5" />
+      <point x="6322.0" y="3363.977" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientCardRoundState" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientState" relationship="GENERALIZATION">
+      <point x="1.8218919967694092E-4" y="46.000326508968556" />
+      <point x="3406.434" y="3912.0" />
+      <point x="3918.5" y="3912.0" />
+      <point x="3918.5" y="3786.0" />
+      <point x="4327.273" y="3786.0" />
+      <point x="-25.152341674619038" y="261.999895344215" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Components.Vital" target="it.polimi.ingsw.is25am28.Model.Components.Component" relationship="GENERALIZATION">
+      <point x="1.0423043022456113E-5" y="82.00049566809139" />
+      <point x="746.149" y="5883.0" />
+      <point x="1407.0" y="5883.0" />
+      <point x="1407.0" y="5725.0" />
+      <point x="1266.292" y="5725.0" />
+      <point x="-4.727049055901489E-4" y="322.00024830545453" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.FastShipDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="179.99950497186558" y="-38.07141586908028" />
+      <point x="707.354" y="3781.1800000000003" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.Meteor" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="-3.649514610515325E-5" y="-58.000476752461054" />
+      <point x="3747.6" y="3710.937" />
+      <point x="4342.273" y="3710.937" />
+      <point x="4342.273" y="3130.492" />
+      <point x="5222.389" y="3130.492" />
+      <point x="5222.389" y="3640.0" />
+      <point x="6322.0" y="3640.0" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.PopulateShipController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="-1.4509836819343036E-4" y="477.9999444382179" />
+      <point x="6342.297" y="6106.217" />
+      <point x="7037.099" y="6106.217" />
+      <point x="7037.099" y="7226.0" />
+      <point x="8854.0" y="7226.0" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientAbandonedShip" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="-3.1759524335939204E-4" y="-178.0004893705909" />
+      <point x="8000.193" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.GameModelv2.CreateGameState" target="it.polimi.ingsw.is25am28.Model.GameModelv2.State" relationship="GENERALIZATION">
+      <point x="162.000387946332" y="-2.3560848285342217E-4" />
+      <point x="7467.986" y="4352.445" />
+      <point x="7467.986" y="3811.0" />
+      <point x="7824.989" y="3811.0" />
+      <point x="7824.989" y="3772.928" />
+      <point x="293.00042559515987" y="-6.051774582392909" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Components.Battery" target="it.polimi.ingsw.is25am28.Model.Components.Component" relationship="GENERALIZATION">
+      <point x="30.279197595219443" y="129.99965156652115" />
+      <point x="912.5" y="5725.0" />
+      <point x="1266.292" y="5725.0" />
+      <point x="-4.727049055901489E-4" y="322.00024830545453" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.MeteorShowerJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="-4.363435255072545E-5" y="94.00043503680581" />
+      <point x="9568.448" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="4.6484507879540615E-4" y="-142.0002195071702" />
+      <point x="2473.9210000000003" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.GameModelv2.ShipContructionState" target="it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver" relationship="REALIZATION">
+      <point x="-251.5001370276059" y="1.1236971886319225E-4" />
+      <point x="10072.0" y="4046.954" />
+      <point x="10072.0" y="3648.0640000000003" />
+      <point x="-82.00023888517535" y="8.700159924046602E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.FixedComponentDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO" relationship="GENERALIZATION">
+      <point x="-9.984344956137647E-6" y="178.0001058214507" />
+      <point x="616.057" y="4876.233" />
+      <point x="1294.879" y="4876.233" />
+      <point x="1294.879" y="4541.0" />
+      <point x="2005.0" y="4541.0" />
+      <point x="2005.0" y="4589.0" />
+      <point x="3256.367" y="4589.0" />
+      <point x="3256.367" y="4389.562" />
+      <point x="3683.732" y="4389.562" />
+      <point x="50.43896059297094" y="57.99976768250599" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="-132.0000394070289" y="-2.3231749401020352E-4" />
+      <point x="3226.367" y="4010.649" />
+      <point x="3226.367" y="4562.0" />
+      <point x="1386.131" y="4562.0" />
+      <point x="1386.131" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Tiles.Engine" target="it.polimi.ingsw.is25am28.Loader.Tiles.Tile" relationship="GENERALIZATION">
+      <point x="96.49962757944377" y="30.96891239274555" />
+      <point x="9158.0" y="3750.5" />
+      <point x="9158.0" y="3822.0" />
+      <point x="9427.0" y="3822.0" />
+      <point x="9427.0" y="3750.0" />
+      <point x="9997.072" y="3750.0" />
+      <point x="9997.072" y="3389.032" />
+      <point x="-132.99975177627493" y="-3.9620630354875175E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.ConsoleWidgetTUI" target="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI" relationship="GENERALIZATION">
+      <point x="2.096770740536158E-4" y="-165.99953578052168" />
+      <point x="1572.828" y="3735.0" />
+      <point x="1053.847" y="3735.0" />
+      <point x="1053.847" y="3332.0860000000002" />
+      <point x="236.5003596550099" y="4.4978952905694314E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientPirates" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="-4.771496687681065E-4" y="-250.00027573589523" />
+      <point x="7559.295" y="7247.0" />
+      <point x="6521.0" y="7247.0" />
+      <point x="6521.0" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.Reconnect" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="103.00019680878722" y="46.9260506642745" />
+      <point x="3785.215" y="5122.508" />
+      <point x="3785.215" y="4919.724" />
+      <point x="3881.616" y="4919.724" />
+      <point x="3881.616" y="4912.0" />
+      <point x="4559.0" y="4912.0" />
+      <point x="4559.0" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.EpidemyJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="-31.3066111347307" y="13.99997335691478" />
+      <point x="9922.5" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.GameModelv2.FixShipState" target="it.polimi.ingsw.is25am28.Model.GameModelv2.State" relationship="GENERALIZATION">
+      <point x="-189.50038065396984" y="-8.446424635621952E-5" />
+      <point x="9332.948" y="4059.471" />
+      <point x="9332.948" y="4011.0" />
+      <point x="8324.0" y="4011.0" />
+      <point x="8324.0" y="3811.0" />
+      <point x="7824.989" y="3811.0" />
+      <point x="7824.989" y="3772.928" />
+      <point x="293.00042559515987" y="-6.051774582392909" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientVital" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent" relationship="GENERALIZATION">
+      <point x="-138.4995139255302" y="3.0691228312207386E-4" />
+      <point x="3564.0" y="6187.031" />
+      <point x="3564.0" y="5649.0" />
+      <point x="2634.599" y="5649.0" />
+      <point x="2634.599" y="5396.603999999999" />
+      <point x="179.50017574850187" y="89.14695578684587" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Tiles.Battery" target="it.polimi.ingsw.is25am28.Loader.Tiles.Tile" relationship="GENERALIZATION">
+      <point x="3.291058383183554E-4" y="-58.00037193026424" />
+      <point x="9832.583" y="3750.0" />
+      <point x="9997.072" y="3750.0" />
+      <point x="9997.072" y="3389.032" />
+      <point x="-132.99975177627493" y="-3.9620630354875175E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.Slaver" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="104.00009978667458" y="60.03707131263718" />
+      <point x="5222.389" y="3610.426" />
+      <point x="5222.389" y="3640.0" />
+      <point x="6322.0" y="3640.0" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="1.3542132091970416E-4" y="-58.0003120835795" />
+      <point x="8225.672999999999" y="4849.0" />
+      <point x="8964.015" y="4849.0" />
+      <point x="8964.015" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.Epidemic" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="-33.07427227727476" y="14.000068181527922" />
+      <point x="6810.5" y="3851.0" />
+      <point x="5702.0" y="3851.0" />
+      <point x="5702.0" y="3640.0" />
+      <point x="6322.0" y="3640.0" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientPopulateShipState" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientState" relationship="GENERALIZATION">
+      <point x="-4.05226706789108E-4" y="-70.00009971370173" />
+      <point x="4626.063" y="3786.0" />
+      <point x="4327.273" y="3786.0" />
+      <point x="-25.152341674619038" y="261.999895344215" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedShipJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="-256.49977602782565" y="2.959310750156874E-4" />
+      <point x="10789.993" y="4425.29" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.LobbyController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="129.23151072260407" y="154.000301721896" />
+      <point x="10072.774" y="7605.569" />
+      <point x="9945.297" y="7605.569" />
+      <point x="9945.297" y="9934.503" />
+      <point x="8854.0" y="9934.503" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.TileLoader" target="it.polimi.ingsw.is25am28.Loader.Loader" relationship="GENERALIZATION">
+      <point x="-1.1602000199673057E-4" y="31.499699945348198" />
+      <point x="548.962" y="2898.176" />
+      <point x="1038.5" y="2898.176" />
+      <point x="14.599641175976615" y="58.00043201972585" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.RMI.Client.RMIClient" target="it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI" relationship="REALIZATION">
+      <point x="-215.0" y="-45.8508731977015" />
+      <point x="7282.491" y="1002.6541472845781" />
+      <point x="88.69744791620633" y="-43.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.WaitPlayersStateDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="-2.684801321493069E-4" y="-177.9998648017181" />
+      <point x="2010.525" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.ReserveTile" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="121.99972938515612" y="1.9956120377173647E-4" />
+      <point x="3744.186" y="5006.224" />
+      <point x="3744.186" y="5122.508" />
+      <point x="3785.215" y="5122.508" />
+      <point x="3785.215" y="4919.724" />
+      <point x="3881.616" y="4919.724" />
+      <point x="3881.616" y="4912.0" />
+      <point x="4559.0" y="4912.0" />
+      <point x="4559.0" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientFixShipState" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientState" relationship="GENERALIZATION">
+      <point x="7.9548145062906315" y="-69.99995995786912" />
+      <point x="2732.499" y="3580.1980000000003" />
+      <point x="3238.604" y="3580.1980000000003" />
+      <point x="3238.604" y="3912.0" />
+      <point x="3918.5" y="3912.0" />
+      <point x="3918.5" y="3786.0" />
+      <point x="4327.273" y="3786.0" />
+      <point x="-25.152341674619038" y="261.999895344215" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.AbandonedStation" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="1.1219842235732358E-5" y="238.00042850200293" />
+      <point x="5496.099" y="3610.426" />
+      <point x="5222.389" y="3610.426" />
+      <point x="5222.389" y="3640.0" />
+      <point x="6322.0" y="3640.0" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Tiles.Cabin" target="it.polimi.ingsw.is25am28.Loader.Tiles.Tile" relationship="GENERALIZATION">
+      <point x="47.499759835148325" y="-2.7351404037290195E-4" />
+      <point x="9158.0" y="3815.217" />
+      <point x="9158.0" y="3822.0" />
+      <point x="9427.0" y="3822.0" />
+      <point x="9427.0" y="3750.0" />
+      <point x="9997.072" y="3750.0" />
+      <point x="9997.072" y="3389.032" />
+      <point x="-132.99975177627493" y="-3.9620630354875175E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.WarZone" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="-273.49990553573207" y="3.584104615583783E-5" />
+      <point x="7885.0" y="6709.014" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.FastShip" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="-121.99975640962384" y="-3.2879090394999366E-4" />
+      <point x="5076.5" y="4111.552" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.GameModelv2.InsufficientPlayerState" target="it.polimi.ingsw.is25am28.Model.GameModelv2.State" relationship="GENERALIZATION">
+      <point x="-114.99970991330702" y="-109.96044939491185" />
+      <point x="9233.509" y="3971.971" />
+      <point x="9233.509" y="4011.0" />
+      <point x="8324.0" y="4011.0" />
+      <point x="8324.0" y="3811.0" />
+      <point x="7824.989" y="3811.0" />
+      <point x="7824.989" y="3772.928" />
+      <point x="293.00042559515987" y="-6.051774582392909" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen" target="it.polimi.ingsw.is25am28.Client.UI.ClientUI" relationship="REALIZATION">
+      <point x="1.5233410522341728E-4" y="-381.9998845437881" />
+      <point x="7732.486" y="2397.411" />
+      <point x="8327.0" y="2397.411" />
+      <point x="8327.0" y="724.5" />
+      <point x="246.99987010378572" y="144.3382154080059" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.Ping" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="3.657355055111111E-4" y="13.99963291206177" />
+      <point x="5515.948" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.Pirate" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="-138.49992864136584" y="-1.2841815510000743E-4" />
+      <point x="6322.0" y="3302.616" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler" target="it.polimi.ingsw.is25am28.Client.UI.ClientUI" relationship="REALIZATION">
+      <point x="-247.00032892387298" y="4.7429624373762636E-5" />
+      <point x="8327.0" y="1968.827" />
+      <point x="8327.0" y="724.5" />
+      <point x="246.99987010378572" y="144.3382154080059" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ReservedComponentDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO" relationship="GENERALIZATION">
+      <point x="-1.2144337563313456E-4" y="-105.99990072178389" />
+      <point x="1852.539" y="4589.0" />
+      <point x="3256.367" y="4589.0" />
+      <point x="3256.367" y="4389.562" />
+      <point x="3683.732" y="4389.562" />
+      <point x="50.43896059297094" y="57.99976768250599" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="-169.49999306380505" y="33.60513170549757" />
+      <point x="3226.367" y="4086.149" />
+      <point x="3226.367" y="4562.0" />
+      <point x="1386.131" y="4562.0" />
+      <point x="1386.131" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Tiles.Structural" target="it.polimi.ingsw.is25am28.Loader.Tiles.Tile" relationship="GENERALIZATION">
+      <point x="-61.999875805417105" y="3.254276671214029E-4" />
+      <point x="9158.0" y="3914.751" />
+      <point x="9158.0" y="3822.0" />
+      <point x="9427.0" y="3822.0" />
+      <point x="9427.0" y="3750.0" />
+      <point x="9997.072" y="3750.0" />
+      <point x="9997.072" y="3389.032" />
+      <point x="-132.99975177627493" y="-3.9620630354875175E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Tiles.Vital" target="it.polimi.ingsw.is25am28.Loader.Tiles.Tile" relationship="GENERALIZATION">
+      <point x="92.00003345051391" y="2.8705658883154683E-4" />
+      <point x="9158.0" y="3668.024" />
+      <point x="9158.0" y="3822.0" />
+      <point x="9427.0" y="3822.0" />
+      <point x="9427.0" y="3750.0" />
+      <point x="9997.072" y="3750.0" />
+      <point x="9997.072" y="3389.032" />
+      <point x="-132.99975177627493" y="-3.9620630354875175E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO" relationship="GENERALIZATION">
+      <point x="1.3287540264173003E-4" y="-141.9999539595142" />
+      <point x="2280.934" y="4589.0" />
+      <point x="3256.367" y="4589.0" />
+      <point x="3256.367" y="4389.562" />
+      <point x="3683.732" y="4389.562" />
+      <point x="50.43896059297094" y="57.99976768250599" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Components.Storage" target="it.polimi.ingsw.is25am28.Model.Components.Component" relationship="GENERALIZATION">
+      <point x="-2.4446254951726587E-4" y="-165.9998512253369" />
+      <point x="2260.6859999999997" y="5883.0" />
+      <point x="1407.0" y="5883.0" />
+      <point x="1407.0" y="5725.0" />
+      <point x="1266.292" y="5725.0" />
+      <point x="-4.727049055901489E-4" y="322.00024830545453" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Ship.Ship" target="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator" relationship="REALIZATION">
+      <point x="-355.4995291332639" y="478.20749109249937" />
+      <point x="3322.267" y="7692.5" />
+      <point x="3322.267" y="7673.0" />
+      <point x="1185.672" y="7673.0" />
+      <point x="1185.672" y="5918.67" />
+      <point x="1477.0" y="5918.67" />
+      <point x="1477.0" y="4951.754" />
+      <point x="113.99975837451592" y="-2.5533052985338145E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.CardRoundController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="-230.50034631761264" y="894.8865677184422" />
+      <point x="8854.0" y="9934.503" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.InsufficientPlayerScreen" target="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen" relationship="GENERALIZATION">
+      <point x="4.25489934059442E-5" y="-31.49952822767773" />
+      <point x="5491.865" y="3661.0" />
+      <point x="6370.132" y="3661.0" />
+      <point x="6370.132" y="3512.98" />
+      <point x="6821.0" y="3512.98" />
+      <point x="6821.0" y="4144.102" />
+      <point x="-246.99984766589478" y="-232.86788454378802" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip" target="it.polimi.ingsw.is25am28.Model.Ship.AbstractShip" relationship="GENERALIZATION">
+      <point x="252.50044529781917" y="-2.960083875223063E-4" />
+      <point x="4666.0" y="5563.396000000001" />
+      <point x="4666.0" y="6217.896" />
+      <point x="3922.477" y="6217.896" />
+      <point x="3922.477" y="5319.945" />
+      <point x="192.50018337076176" y="48.30583091187327" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="3.1130286117786454E-4" y="69.99976013123751" />
+      <point x="1571.1309999999999" y="4562.0" />
+      <point x="1386.131" y="4562.0" />
+      <point x="1386.131" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.DeselectTile" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="4.266197420292883E-4" y="-94.00000888035265" />
+      <point x="7176.599" y="4954.768" />
+      <point x="5391.147" y="4954.768" />
+      <point x="5391.147" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.SendShipConfirmation" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="112.99982760657099" y="-2.616890487843193E-4" />
+      <point x="2422.5060000000003" y="5309.103999999999" />
+      <point x="2422.5060000000003" y="5122.508" />
+      <point x="3785.215" y="5122.508" />
+      <point x="3785.215" y="4919.724" />
+      <point x="3881.616" y="4919.724" />
+      <point x="3881.616" y="4912.0" />
+      <point x="4559.0" y="4912.0" />
+      <point x="4559.0" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.FixShipController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="3.213101290384657E-4" y="-297.9998539805192" />
+      <point x="8052.177" y="7226.0" />
+      <point x="8854.0" y="7226.0" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientStardust" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="3.364944559507421E-4" y="-82.00027441428574" />
+      <point x="8244.845000000001" y="9812.0" />
+      <point x="6521.0" y="9812.0" />
+      <point x="6521.0" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PopulateShipComponentDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO" relationship="GENERALIZATION">
+      <point x="-276.499936215238" y="58.543414587629286" />
+      <point x="3683.732" y="4284.044" />
+      <point x="50.43896059297094" y="57.99976768250599" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent" target="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator" relationship="REALIZATION">
+      <point x="-179.49982425149813" y="-4.421315406943904E-5" />
+      <point x="1477.0" y="5307.457" />
+      <point x="1477.0" y="4951.754" />
+      <point x="113.99975837451592" y="-2.5533052985338145E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Components.Cannon" target="it.polimi.ingsw.is25am28.Model.Components.Component" relationship="GENERALIZATION">
+      <point x="3.7216988539512386E-4" y="-106.00028023450477" />
+      <point x="1341.672" y="5883.0" />
+      <point x="1407.0" y="5883.0" />
+      <point x="1407.0" y="5725.0" />
+      <point x="1266.292" y="5725.0" />
+      <point x="-4.727049055901489E-4" y="322.00024830545453" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.WaitingForPlayersController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="183.9998121826202" y="5.118425328577359" />
+      <point x="7037.099" y="6287.948" />
+      <point x="7037.099" y="7226.0" />
+      <point x="8854.0" y="7226.0" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.PiratesJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="-7.568809360236628E-5" y="-129.99964107430833" />
+      <point x="7553.15" y="4849.0" />
+      <point x="8964.015" y="4849.0" />
+      <point x="8964.015" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.GameModelv2.InsufficientPlayerState" target="it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver" relationship="REALIZATION">
+      <point x="115.00029008669298" y="-4.49394911811396E-4" />
+      <point x="10072.0" y="4081.931" />
+      <point x="10072.0" y="3648.0640000000003" />
+      <point x="-82.00023888517535" y="8.700159924046602E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="-3.8773792402935214E-4" y="-2517.999577809844" />
+      <point x="9169.344000000001" y="4849.0" />
+      <point x="8964.015" y="4849.0" />
+      <point x="8964.015" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.PlaceTile" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="-3.132910296699265E-4" y="201.99993916725862" />
+      <point x="5248.598" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.Pirates" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="-255.4999627256875" y="-321.01246188061714" />
+      <point x="9486.0" y="5308.646000000001" />
+      <point x="9486.0" y="4838.5" />
+      <point x="7885.0" y="4838.5" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.PlayCard" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="3.37417861828726E-4" y="94.00009072464036" />
+      <point x="4778.726000000001" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.Slavers" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="-255.50002656324432" y="4.785865676240064E-4" />
+      <point x="9486.0" y="7134.069" />
+      <point x="9486.0" y="4838.5" />
+      <point x="7885.0" y="4838.5" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.GameModelv2.CardRoundState" target="it.polimi.ingsw.is25am28.Model.GameModelv2.State" relationship="GENERALIZATION">
+      <point x="2.093732882713084E-4" y="-165.9998165142424" />
+      <point x="8203.11" y="4011.0" />
+      <point x="8324.0" y="4011.0" />
+      <point x="8324.0" y="3811.0" />
+      <point x="7824.989" y="3811.0" />
+      <point x="7824.989" y="3772.928" />
+      <point x="293.00042559515987" y="-6.051774582392909" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Socket.Server.SocketClientHandler" target="it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket" relationship="REALIZATION">
+      <point x="-214.99964425855433" y="2.740047279985447E-4" />
+      <point x="9338.0" y="1380.356" />
+      <point x="9338.0" y="839.5840000000001" />
+      <point x="118.49976464780593" y="-4.1042344150810095E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.RMI.Server.RMIServer" target="it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI" relationship="REALIZATION">
+      <point x="-234.5" y="17.434620374913038" />
+      <point x="234.5" y="0.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.GameModelv2.PopulateShipState" target="it.polimi.ingsw.is25am28.Model.GameModelv2.State" relationship="GENERALIZATION">
+      <point x="-292.99960539335916" y="-2.1299897548487934E-4" />
+      <point x="8324.0" y="3910.806" />
+      <point x="8324.0" y="3811.0" />
+      <point x="7824.989" y="3811.0" />
+      <point x="7824.989" y="3772.928" />
+      <point x="293.00042559515987" y="-6.051774582392909" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.NewPlayer" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="112.50039236613293" y="1.460602943552658E-4" />
+      <point x="4559.0" y="4522.855" />
+      <point x="4559.0" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler" target="it.polimi.ingsw.is25am28.Client.UI.ClientUI" relationship="REALIZATION">
+      <point x="-247.00015321703722" y="-3.235122603655327E-4" />
+      <point x="8327.0" y="3342.703" />
+      <point x="8327.0" y="724.5" />
+      <point x="246.99987010378572" y="144.3382154080059" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.LobbyScreen" target="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen" relationship="GENERALIZATION">
+      <point x="-2.573792598923319E-4" y="178.00046093054993" />
+      <point x="7237.545" y="3498.041" />
+      <point x="6359.632" y="3498.041" />
+      <point x="6359.632" y="3661.0" />
+      <point x="6370.132" y="3661.0" />
+      <point x="6370.132" y="3512.98" />
+      <point x="6821.0" y="3512.98" />
+      <point x="6821.0" y="4144.102" />
+      <point x="-246.99984766589478" y="-232.86788454378802" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.CommandWidgetTUI" target="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI" relationship="GENERALIZATION">
+      <point x="-125.07918527284019" y="106.00014585264375" />
+      <point x="1093.768" y="3735.0" />
+      <point x="1053.847" y="3735.0" />
+      <point x="1053.847" y="3332.0860000000002" />
+      <point x="236.5003596550099" y="4.4978952905694314E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Socket.Client.VirtualServerSocket" target="it.polimi.ingsw.is25am28.Network.VirtualServer" relationship="INTERFACE_GENERALIZATION">
+      <point x="-2.1399081606432446E-4" y="-31.499657936587255" />
+      <point x="4191.152" y="2970.679" />
+      <point x="3690.094" y="2970.679" />
+      <point x="3690.094" y="2898.7129999999997" />
+      <point x="3365.355" y="2898.7129999999997" />
+      <point x="3365.355" y="2955.0" />
+      <point x="1823.5" y="2955.0" />
+      <point x="32.02018872627059" y="14.000375231784801" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientAbandonedStation" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="232.49991126309487" y="4.654334316001041E-4" />
+      <point x="6521.0" y="6549.007" />
+      <point x="6521.0" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Timer.HourGlass" target="it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObservable" relationship="GENERALIZATION">
+      <point x="24.98328216774098" y="-178.0" />
+      <point x="0.0" y="70.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Components.Shield" target="it.polimi.ingsw.is25am28.Model.Components.Component" relationship="GENERALIZATION">
+      <point x="4.913066007361522E-4" y="-70.00017690713412" />
+      <point x="981.175" y="5883.0" />
+      <point x="1407.0" y="5883.0" />
+      <point x="1407.0" y="5725.0" />
+      <point x="1266.292" y="5725.0" />
+      <point x="-4.727049055901489E-4" y="322.00024830545453" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientShield" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent" relationship="GENERALIZATION">
+      <point x="1.444234901555319E-4" y="55.49990436121925" />
+      <point x="2640.303" y="5854.0" />
+      <point x="3564.0" y="5854.0" />
+      <point x="3564.0" y="5649.0" />
+      <point x="2634.599" y="5649.0" />
+      <point x="2634.599" y="5396.603999999999" />
+      <point x="179.50017574850187" y="89.14695578684587" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="-1.1522565461064005E-4" y="-322.00035520354754" />
+      <point x="1108.768" y="3781.1800000000003" />
+      <point x="707.354" y="3781.1800000000003" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.Smuggler" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="-107.49976383924331" y="-3.8958545792411314E-4" />
+      <point x="5702.0" y="3400.236" />
+      <point x="5702.0" y="3610.426" />
+      <point x="5222.389" y="3610.426" />
+      <point x="5222.389" y="3640.0" />
+      <point x="6322.0" y="3640.0" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEpidemy" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="-1.2005238022538833E-4" y="82.0000256440153" />
+      <point x="8142.198" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.InputWidgetTUI" target="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI" relationship="GENERALIZATION">
+      <point x="-193.99995476928825" y="9.174502133646456E-5" />
+      <point x="2080.35" y="3887.7929999999997" />
+      <point x="2080.35" y="3735.0" />
+      <point x="1053.847" y="3735.0" />
+      <point x="1053.847" y="3332.0860000000002" />
+      <point x="236.5003596550099" y="4.4978952905694314E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.Smugglers" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="-246.4995594647362" y="-3.7827316828042967E-4" />
+      <point x="7885.0" y="5574.851000000001" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.RefreshGames" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="5.555291863856837E-5" y="14.00032575798241" />
+      <point x="6478.313" y="4924.768" />
+      <point x="5391.147" y="4924.768" />
+      <point x="5391.147" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.AbandonedShip" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="5.777364185632905E-5" y="130.00029787952838" />
+      <point x="7119.558" y="2979.83" />
+      <point x="6322.0" y="2979.83" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.EndGameScreen" target="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen" relationship="GENERALIZATION">
+      <point x="-4.629442619261681E-4" y="-31.49997302475299" />
+      <point x="6261.874" y="3661.0" />
+      <point x="6370.132" y="3661.0" />
+      <point x="6370.132" y="3512.98" />
+      <point x="6821.0" y="3512.98" />
+      <point x="6821.0" y="4144.102" />
+      <point x="-246.99984766589478" y="-232.86788454378802" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.MeteorShower" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="-255.5002811139875" y="-2.3029332578516915E-4" />
+      <point x="9486.0" y="5806.598" />
+      <point x="9486.0" y="4838.5" />
+      <point x="7885.0" y="4838.5" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.SlaversJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="-49.704547513318175" y="130.000046637967" />
+      <point x="6225.175" y="4849.0" />
+      <point x="8964.015" y="4849.0" />
+      <point x="8964.015" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.TimerDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO" relationship="GENERALIZATION">
+      <point x="-3.412312360069336E-4" y="-177.9997217195978" />
+      <point x="2663.21" y="4639.0" />
+      <point x="2873.0" y="4639.0" />
+      <point x="2873.0" y="4589.0" />
+      <point x="3256.367" y="4589.0" />
+      <point x="3256.367" y="4389.562" />
+      <point x="3683.732" y="4389.562" />
+      <point x="50.43896059297094" y="57.99976768250599" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.GameModelv2.EndGameState" target="it.polimi.ingsw.is25am28.Model.GameModelv2.State" relationship="GENERALIZATION">
+      <point x="-4.632885165847256E-4" y="-106.00031090802645" />
+      <point x="6617.154" y="3523.48" />
+      <point x="7839.989" y="3523.48" />
+      <point x="7839.989" y="3811.0" />
+      <point x="7824.989" y="3811.0" />
+      <point x="7824.989" y="3772.928" />
+      <point x="293.00042559515987" y="-6.051774582392909" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.SelectDeselectSubdeck" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="122.00029948729025" y="-107.98988282553137" />
+      <point x="3243.95" y="4614.791" />
+      <point x="3243.95" y="4794.898" />
+      <point x="3683.732" y="4794.898" />
+      <point x="3683.732" y="4912.0" />
+      <point x="4559.0" y="4912.0" />
+      <point x="4559.0" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.FastShipLoader" target="it.polimi.ingsw.is25am28.Loader.Loader" relationship="GENERALIZATION">
+      <point x="-3.439991529461395E-4" y="-82.00021381485544" />
+      <point x="1206.285" y="3215.0" />
+      <point x="1038.5" y="3215.0" />
+      <point x="14.599641175976615" y="58.00043201972585" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientSlavers" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="-260.50008826571866" y="2.2870909560879227E-4" />
+      <point x="8264.193" y="10228.292" />
+      <point x="8264.193" y="9812.0" />
+      <point x="6521.0" y="9812.0" />
+      <point x="6521.0" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.Stardust" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="-147.50009336454968" y="-2.7714603220374556E-5" />
+      <point x="9486.0" y="5420.146000000001" />
+      <point x="9486.0" y="4838.5" />
+      <point x="7885.0" y="4838.5" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.PopulateShipScreen" target="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen" relationship="GENERALIZATION">
+      <point x="-243.9999939672589" y="-178.14208907591" />
+      <point x="5236.413" y="4008.411" />
+      <point x="5236.413" y="3661.0" />
+      <point x="6370.132" y="3661.0" />
+      <point x="6370.132" y="3512.98" />
+      <point x="6821.0" y="3512.98" />
+      <point x="6821.0" y="4144.102" />
+      <point x="-246.99984766589478" y="-232.86788454378802" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.AbandonedShip" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="255.50037497215544" y="1.9043724023504183E-4" />
+      <point x="7885.0" y="6044.448" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStructural" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent" relationship="GENERALIZATION">
+      <point x="138.499814442976" y="-4.1817009241640335E-4" />
+      <point x="3564.0" y="5957.34" />
+      <point x="3564.0" y="5649.0" />
+      <point x="2634.599" y="5649.0" />
+      <point x="2634.599" y="5396.603999999999" />
+      <point x="179.50017574850187" y="89.14695578684587" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Board.Board" target="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator" relationship="REALIZATION">
+      <point x="-2.20602955096183E-4" y="-358.0003399939874" />
+      <point x="1742.846" y="5718.957" />
+      <point x="1477.0" y="5718.957" />
+      <point x="1477.0" y="4951.754" />
+      <point x="113.99975837451592" y="-2.5533052985338145E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.FixShipScreen" target="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen" relationship="GENERALIZATION">
+      <point x="-4.01955742258906" y="-81.99991623262031" />
+      <point x="6795.5" y="3824.3810000000003" />
+      <point x="6083.957" y="3824.3810000000003" />
+      <point x="6083.957" y="3661.0" />
+      <point x="6370.132" y="3661.0" />
+      <point x="6370.132" y="3512.98" />
+      <point x="6821.0" y="3512.98" />
+      <point x="6821.0" y="4144.102" />
+      <point x="-246.99984766589478" y="-232.86788454378802" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCannon" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent" relationship="GENERALIZATION">
+      <point x="-3.404815049634635E-4" y="70.00022449359949" />
+      <point x="2990.795" y="5854.0" />
+      <point x="3564.0" y="5854.0" />
+      <point x="3564.0" y="5649.0" />
+      <point x="2634.599" y="5649.0" />
+      <point x="2634.599" y="5396.603999999999" />
+      <point x="179.50017574850187" y="89.14695578684587" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO" relationship="GENERALIZATION">
+      <point x="-3.930228092485777E-4" y="-214.000254210986" />
+      <point x="3046.95" y="4639.0" />
+      <point x="2873.0" y="4639.0" />
+      <point x="2873.0" y="4589.0" />
+      <point x="3256.367" y="4589.0" />
+      <point x="3256.367" y="4389.562" />
+      <point x="3683.732" y="4389.562" />
+      <point x="50.43896059297094" y="57.99976768250599" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Ship.Ship" target="it.polimi.ingsw.is25am28.Model.Ship.AbstractShip" relationship="GENERALIZATION">
+      <point x="4.708667361228436E-4" y="-693.999508907501" />
+      <point x="4852.6669999999995" y="5884.5" />
+      <point x="4666.0" y="5884.5" />
+      <point x="4666.0" y="6217.896" />
+      <point x="3922.477" y="6217.896" />
+      <point x="3922.477" y="5319.945" />
+      <point x="192.50018337076176" y="48.30583091187327" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.InsufficientPlayersController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="3.889247091137804E-4" y="70.00048161471295" />
+      <point x="7432.854" y="7226.0" />
+      <point x="8854.0" y="7226.0" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI" target="it.polimi.ingsw.is25am28.Network.VirtualView" relationship="INTERFACE_GENERALIZATION">
+      <point x="4.479162062125397E-4" y="-43.50005833084083" />
+      <point x="7193.794" y="986.0" />
+      <point x="7282.491" y="986.0" />
+      <point x="-3.049717752219294E-4" y="223.500089049998" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientOpenSpace" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="258.0000901432122" y="-3.293992463113682E-4" />
+      <point x="6032.348" y="5104.766" />
+      <point x="6032.348" y="6021.217" />
+      <point x="5744.292" y="6021.217" />
+      <point x="5744.292" y="7247.0" />
+      <point x="6521.0" y="7247.0" />
+      <point x="6521.0" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientVisitPlanets" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="-232.50046057520103" y="4.212387120787753E-4" />
+      <point x="6521.0" y="6833.164" />
+      <point x="6521.0" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Cards.Planet" target="it.polimi.ingsw.is25am28.Loader.Cards.Card" relationship="GENERALIZATION">
+      <point x="-126.00002212723848" y="1.6015425813975526E-5" />
+      <point x="5222.389" y="2166.69" />
+      <point x="5222.389" y="3640.0" />
+      <point x="6322.0" y="3640.0" />
+      <point x="6322.0" y="3078.665" />
+      <point x="6258.951" y="3078.665" />
+      <point x="-1.5145673569350038E-4" y="94.00018208927816" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="265.0000947851927" y="71.27876569670889" />
+      <point x="1312.268" y="4460.18" />
+      <point x="1312.268" y="4562.0" />
+      <point x="1386.131" y="4562.0" />
+      <point x="1386.131" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.VisitPlanetsJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="4.606532374964445E-4" y="130.0003852625373" />
+      <point x="9026.076000000001" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.SelectTile" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="-122.00029094157617" y="3.4090220060534193E-4" />
+      <point x="5515.948" y="4530.748" />
+      <point x="5515.948" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedStationJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="-2.820956888172077E-4" y="154.00012117638335" />
+      <point x="6924.507" y="4849.0" />
+      <point x="8964.015" y="4849.0" />
+      <point x="8964.015" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Socket.Client.TCPClient" target="it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket" relationship="REALIZATION">
+      <point x="-214.99953901964" y="38.77066283131535" />
+      <point x="9338.0" y="1707.856" />
+      <point x="9338.0" y="839.5840000000001" />
+      <point x="118.49976464780593" y="-4.1042344150810095E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.WarZoneJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="-3.5293662222102284E-5" y="-249.99989826542287" />
+      <point x="9845.922" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.VisitPlanets" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="-246.4999992270541" y="203.33812372156626" />
+      <point x="7885.0" y="4794.4529999999995" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer" target="it.polimi.ingsw.is25am28.Network.Answer.Answer" relationship="GENERALIZATION">
+      <point x="82.36659180131619" y="-58.0" />
+      <point x="4579.92534167462" y="1894.8930676872276" />
+      <point x="5541.704599633001" y="1894.8930676872276" />
+      <point x="0.0" y="130.0" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Board.BoardLevel2" target="it.polimi.ingsw.is25am28.Model.Board.Board" relationship="GENERALIZATION">
+      <point x="-127.49980990786253" y="4.108074595023936E-4" />
+      <point x="4504.0" y="5181.155000000001" />
+      <point x="4504.0" y="6202.896" />
+      <point x="4018.147" y="6202.896" />
+      <point x="4018.147" y="6279.857" />
+      <point x="3606.616" y="6279.857" />
+      <point x="3606.616" y="6202.031" />
+      <point x="2907.059" y="6202.031" />
+      <point x="2907.059" y="6279.857" />
+      <point x="197.4997793970449" y="7.528660006012615" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientMeteorShower" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard" relationship="GENERALIZATION">
+      <point x="-2.477046718922793E-4" y="178.00044774238768" />
+      <point x="5744.292" y="7247.0" />
+      <point x="6521.0" y="7247.0" />
+      <point x="6521.0" y="8800.0" />
+      <point x="3307.267" y="8800.0" />
+      <point x="1.06005792531505E-4" y="562.0000199610577" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="-165.50003911824479" y="-47.57545301756295" />
+      <point x="5251.413" y="3708.889" />
+      <point x="5251.413" y="3760.947" />
+      <point x="4012.732" y="3760.947" />
+      <point x="4012.732" y="4086.149" />
+      <point x="3226.367" y="4086.149" />
+      <point x="3226.367" y="4562.0" />
+      <point x="1386.131" y="4562.0" />
+      <point x="1386.131" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.EventCards.OpenSpace" target="it.polimi.ingsw.is25am28.Model.EventCards.EventCard" relationship="GENERALIZATION">
+      <point x="-2.9572761377494317E-4" y="117.99978597045356" />
+      <point x="11041.681" y="5242.157999999999" />
+      <point x="9486.0" y="5242.157999999999" />
+      <point x="9486.0" y="4838.5" />
+      <point x="7885.0" y="4838.5" />
+      <point x="7885.0" y="5720.889999999999" />
+      <point x="239.49954385278306" y="182.17290064470262" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Socket.Client.SocketServerHandler" target="it.polimi.ingsw.is25am28.Network.Socket.Client.VirtualServerSocket" relationship="REALIZATION">
+      <point x="116.5" y="39.807506172332296" />
+      <point x="4191.152213990816" y="3391.1650908996407" />
+      <point x="0.0" y="31.5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.CreateGameController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="185.49957658784524" y="87.21879828753526" />
+      <point x="5456.448" y="4969.768" />
+      <point x="5456.448" y="7226.0" />
+      <point x="8854.0" y="7226.0" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="-3.759413239095011E-4" y="106.00020357026779" />
+      <point x="2974.261" y="4562.0" />
+      <point x="1386.131" y="4562.0" />
+      <point x="1386.131" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.GameModelv2.WaitPlayersState" target="it.polimi.ingsw.is25am28.Model.GameModelv2.State" relationship="GENERALIZATION">
+      <point x="-146.50003970307898" y="1.599828242433432E-4" />
+      <point x="8324.0" y="4169.581" />
+      <point x="8324.0" y="3811.0" />
+      <point x="7824.989" y="3811.0" />
+      <point x="7824.989" y="3772.928" />
+      <point x="293.00042559515987" y="-6.051774582392909" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientBattery" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent" relationship="GENERALIZATION">
+      <point x="-138.49970779359182" y="-1.875976668088697E-4" />
+      <point x="3937.5" y="6352.74" />
+      <point x="3937.5" y="6059.0" />
+      <point x="3564.0" y="6059.0" />
+      <point x="3564.0" y="5649.0" />
+      <point x="2634.599" y="5649.0" />
+      <point x="2634.599" y="5396.603999999999" />
+      <point x="179.50017574850187" y="89.14695578684587" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionDeckDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionEventDTO" relationship="GENERALIZATION">
+      <point x="-178.5003372018814" y="1.6017511518534775" />
+      <point x="3256.367" y="4562.0" />
+      <point x="3256.367" y="4389.562" />
+      <point x="3683.732" y="4389.562" />
+      <point x="50.43896059297094" y="57.99976768250599" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientEngine" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent" relationship="GENERALIZATION">
+      <point x="-1.0664715728125884E-4" y="70.00032785505164" />
+      <point x="3179.908" y="5649.0" />
+      <point x="2634.599" y="5649.0" />
+      <point x="2634.599" y="5396.603999999999" />
+      <point x="179.50017574850187" y="89.14695578684587" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Components.Engine" target="it.polimi.ingsw.is25am28.Model.Components.Component" relationship="GENERALIZATION">
+      <point x="-2.5653667739788943E-4" y="106.0002723909679" />
+      <point x="2405.224" y="5883.0" />
+      <point x="1407.0" y="5883.0" />
+      <point x="1407.0" y="5725.0" />
+      <point x="1266.292" y="5725.0" />
+      <point x="-4.727049055901489E-4" y="322.00024830545453" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Tiles.Storage" target="it.polimi.ingsw.is25am28.Loader.Tiles.Tile" relationship="GENERALIZATION">
+      <point x="-103.0004196834725" y="-4.9178176618625E-4" />
+      <point x="9997.072" y="3509.908" />
+      <point x="9997.072" y="3389.032" />
+      <point x="-132.99975177627493" y="-3.9620630354875175E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.SmugglersJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="1.2074174810550176E-4" y="-201.9996753454766" />
+      <point x="10477.926" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Tiles.Cannon" target="it.polimi.ingsw.is25am28.Loader.Tiles.Tile" relationship="GENERALIZATION">
+      <point x="-4.1865286675601965E-4" y="57.99984341909635" />
+      <point x="9285.901" y="3822.0" />
+      <point x="9427.0" y="3822.0" />
+      <point x="9427.0" y="3750.0" />
+      <point x="9997.072" y="3750.0" />
+      <point x="9997.072" y="3389.032" />
+      <point x="-132.99975177627493" y="-3.9620630354875175E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Components.Structural" target="it.polimi.ingsw.is25am28.Model.Components.Component" relationship="GENERALIZATION">
+      <point x="-2.07837071116046E-4" y="-46.000026298504054" />
+      <point x="1181.9279999999999" y="5725.0" />
+      <point x="1266.292" y="5725.0" />
+      <point x="-4.727049055901489E-4" y="322.00024830545453" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.ShipConstructionScreen" target="it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen" relationship="GENERALIZATION">
+      <point x="-223.49978990989166" y="387.6129864404843" />
+      <point x="6359.632" y="3498.041" />
+      <point x="6359.632" y="3661.0" />
+      <point x="6370.132" y="3661.0" />
+      <point x="6370.132" y="3512.98" />
+      <point x="6821.0" y="3512.98" />
+      <point x="6821.0" y="4144.102" />
+      <point x="-246.99984766589478" y="-232.86788454378802" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip" target="it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUIGenerator" relationship="REALIZATION">
+      <point x="239.55544529781946" y="621.999703991612" />
+      <point x="4457.702" y="7673.0" />
+      <point x="1185.672" y="7673.0" />
+      <point x="1185.672" y="5918.67" />
+      <point x="1477.0" y="5918.67" />
+      <point x="1477.0" y="4951.754" />
+      <point x="113.99975837451592" y="-2.5533052985338145E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientCabin" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent" relationship="GENERALIZATION">
+      <point x="-0.2082732296762515" y="-118.00033364029696" />
+      <point x="3937.5" y="6059.0" />
+      <point x="3564.0" y="6059.0" />
+      <point x="3564.0" y="5649.0" />
+      <point x="2634.599" y="5649.0" />
+      <point x="2634.599" y="5396.603999999999" />
+      <point x="179.50017574850187" y="89.14695578684587" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.ShipConstructionController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="222.5000657514056" y="3.0324254112201743E-5" />
+      <point x="8854.0" y="9214.647" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.StardustJSON" target="it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON" relationship="GENERALIZATION">
+      <point x="-4.7881511818559375E-4" y="-14.0001834925597" />
+      <point x="5358.982" y="3869.602" />
+      <point x="6620.02" y="3869.602" />
+      <point x="6620.02" y="4849.0" />
+      <point x="8964.015" y="4849.0" />
+      <point x="8964.015" y="4479.0" />
+      <point x="10789.993" y="4479.0" />
+      <point x="-3.9972490594664123E-4" y="57.99990369173793" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket" target="it.polimi.ingsw.is25am28.Network.VirtualView" relationship="INTERFACE_GENERALIZATION">
+      <point x="-2.3535219406767283E-4" y="-43.50041042344151" />
+      <point x="9189.187" y="688.808" />
+      <point x="8469.318" y="688.808" />
+      <point x="8469.318" y="986.0" />
+      <point x="7282.491" y="986.0" />
+      <point x="-3.049717752219294E-4" y="223.500089049998" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.PopulateShip" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="236.4997781756183" y="-17.222327889954613" />
+      <point x="4559.0" y="4411.355" />
+      <point x="4559.0" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Board.BoardTestFlight" target="it.polimi.ingsw.is25am28.Model.Board.Board" relationship="GENERALIZATION">
+      <point x="-5.87498102504469E-5" y="31.500059022469486" />
+      <point x="4696.9310000000005" y="5096.155000000001" />
+      <point x="4504.0" y="5096.155000000001" />
+      <point x="4504.0" y="6202.896" />
+      <point x="4018.147" y="6202.896" />
+      <point x="4018.147" y="6279.857" />
+      <point x="3606.616" y="6279.857" />
+      <point x="3606.616" y="6202.031" />
+      <point x="2907.059" y="6202.031" />
+      <point x="2907.059" y="6279.857" />
+      <point x="197.4997793970449" y="7.528660006012615" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.Components.Cabin" target="it.polimi.ingsw.is25am28.Model.Components.Component" relationship="GENERALIZATION">
+      <point x="-3.379083292429641E-4" y="142.00009208926758" />
+      <point x="2067.876" y="5883.0" />
+      <point x="1407.0" y="5883.0" />
+      <point x="1407.0" y="5725.0" />
+      <point x="1266.292" y="5725.0" />
+      <point x="-4.727049055901489E-4" y="322.00024830545453" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.EndGameController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="138.50042895417573" y="1.998729603656102E-4" />
+      <point x="8854.0" y="10339.85" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.CardLoader" target="it.polimi.ingsw.is25am28.Loader.Loader" relationship="GENERALIZATION">
+      <point x="-161.4944981172307" y="-31.500495861419722" />
+      <point x="1835.8139999999999" y="3215.0" />
+      <point x="1038.5" y="3215.0" />
+      <point x="14.599641175976615" y="58.00043201972585" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.ReconnectGameController" target="it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController" relationship="GENERALIZATION">
+      <point x="-4.1656037501525134E-4" y="57.99967670111619" />
+      <point x="9714.297" y="9934.503" />
+      <point x="8854.0" y="9934.503" />
+      <point x="8854.0" y="10427.35" />
+      <point x="8731.703000000001" y="10427.35" />
+      <point x="8731.703000000001" y="10495.792" />
+      <point x="11251.181" y="10495.792" />
+      <point x="11251.181" y="4593.79" />
+      <point x="10625.471" y="4593.79" />
+      <point x="10625.471" y="3879.444" />
+      <point x="-223.4997068205812" y="7.404795860566082E-5" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.GameModelv2.ShipContructionState" target="it.polimi.ingsw.is25am28.Model.GameModelv2.State" relationship="GENERALIZATION">
+      <point x="-251.5001370276059" y="-100.52288763028128" />
+      <point x="9233.509" y="3946.431" />
+      <point x="9233.509" y="4011.0" />
+      <point x="8324.0" y="4011.0" />
+      <point x="8324.0" y="3811.0" />
+      <point x="7824.989" y="3811.0" />
+      <point x="7824.989" y="3772.928" />
+      <point x="293.00042559515987" y="-6.051774582392909" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientShipConstructionState" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientState" relationship="GENERALIZATION">
+      <point x="4.988371911167633E-4" y="285.99951133048853" />
+      <point x="4598.264" y="3786.0" />
+      <point x="4327.273" y="3786.0" />
+      <point x="-25.152341674619038" y="261.999895344215" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.Messages.ConfigGame" target="it.polimi.ingsw.is25am28.Network.Messages.Message" relationship="REALIZATION">
+      <point x="112.49984074621852" y="-4.734823364742624E-4" />
+      <point x="3881.616" y="5468.491" />
+      <point x="3881.616" y="4912.0" />
+      <point x="4559.0" y="4912.0" />
+      <point x="4559.0" y="4728.0" />
+      <point x="5076.5" y="4728.0" />
+      <point x="5076.5" y="4008.411" />
+      <point x="58.499634334768416" y="4.755761651722423E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI" target="it.polimi.ingsw.is25am28.Network.VirtualServer" relationship="INTERFACE_GENERALIZATION">
+      <point x="-3.468319896455796E-4" y="-223.49975699200218" />
+      <point x="2429.181" y="2955.0" />
+      <point x="1823.5" y="2955.0" />
+      <point x="32.02018872627059" y="14.000375231784801" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStorage" target="it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent" relationship="GENERALIZATION">
+      <point x="3.535533010108338E-4" y="-141.99993512765286" />
+      <point x="2903.059" y="5854.0" />
+      <point x="3564.0" y="5854.0" />
+      <point x="3564.0" y="5649.0" />
+      <point x="2634.599" y="5649.0" />
+      <point x="2634.599" y="5396.603999999999" />
+      <point x="179.50017574850187" y="89.14695578684587" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Loader.Tiles.Shield" target="it.polimi.ingsw.is25am28.Loader.Tiles.Tile" relationship="GENERALIZATION">
+      <point x="3.4033486372209154E-4" y="-13.999713672041025" />
+      <point x="9519.03" y="3822.0" />
+      <point x="9427.0" y="3822.0" />
+      <point x="9427.0" y="3750.0" />
+      <point x="9997.072" y="3750.0" />
+      <point x="9997.072" y="3389.032" />
+      <point x="-132.99975177627493" y="-3.9620630354875175E-4" />
+    </edge>
+    <edge source="it.polimi.ingsw.is25am28.Model.ActionJSON.State.CreateGameStateDTO" target="it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO" relationship="GENERALIZATION">
+      <point x="4.548730040028204E-4" y="93.99976240368778" />
+      <point x="674.5029999999999" y="4460.18" />
+      <point x="1312.268" y="4460.18" />
+      <point x="1312.268" y="4562.0" />
+      <point x="1386.131" y="4562.0" />
+      <point x="1386.131" y="4128.0" />
+      <point x="1372.828" y="4128.0" />
+      <point x="1372.828" y="3713.0" />
+      <point x="1108.768" y="3713.0" />
+      <point x="1108.768" y="3755.5860000000002" />
+      <point x="707.354" y="3755.5860000000002" />
+      <point x="-3.930373936213982E-4" y="-82.0002384180741" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.10266323024054982" showDependencies="false" x="5667.999999999999" y="5607.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Fields</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

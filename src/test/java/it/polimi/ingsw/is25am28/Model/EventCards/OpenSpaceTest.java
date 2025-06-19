@@ -333,5 +333,5 @@ class OpenSpaceTest {
         assertEquals(5, this.board.getPlayers().getFirst().getShip().getAvailableEnergy());
     }
 
-    // Test case con potenza dichiarata a zero --> Eliminare il player
+    // TODO: Aggiungi test per player doppiato e quindi eliminato
 }
