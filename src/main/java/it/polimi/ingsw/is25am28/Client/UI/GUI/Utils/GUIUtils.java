@@ -470,9 +470,6 @@ public class GUIUtils {
         return cell;
     }
 
-    // TODO: have the main player ship and grid reference
-
-
     /**
      * Restores the visual state of the ship grid, including icons and regions, based on the {@code emptiedIcons} and the {@code emptiedRegions}, using the passed function
      *

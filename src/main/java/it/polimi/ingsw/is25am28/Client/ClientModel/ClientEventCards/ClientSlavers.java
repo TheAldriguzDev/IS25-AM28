@@ -45,7 +45,6 @@ public class ClientSlavers extends ClientEventCard {
     @Override
     public void updateCard(CardStateJSON slaversCardState) {
         this.playerNickname = slaversCardState.getPlayerNickname();
-//        this.firstRound = slaversCardState.getFirstRound();
         this.isPlayerDefeated = slaversCardState.getIsPlayerDefeated();
         enabledCommands.clear();
         enabledCommands.add("playCard");
@@ -54,12 +53,6 @@ public class ClientSlavers extends ClientEventCard {
         } else {
             enabledCommands.add("setDoubleCannonsToActivate");
         }
-
-
-
-//        if (!this.firstRound) {
-//            this.defeatedPlayers = slaversCardState.getDefeatedPlayers();
-//        }
     }
 
     @Override
@@ -151,5 +144,10 @@ public class ClientSlavers extends ClientEventCard {
     @Override
     public int getFirepower() {
         return this.requiredFirepower;
+    }
+
+    @Override
+    public boolean isPlayerDefeated() {
+        return this.isPlayerDefeated;
     }
 }

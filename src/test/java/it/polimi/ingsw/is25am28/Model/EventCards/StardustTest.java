@@ -180,7 +180,7 @@ class StardustTest {
         assertFalse(cardState.getNeedsPlayerUpdate());
         assertFalse(cardState.getNeedsBoardUpdate());
         assertFalse(cardState.getNeedsUpdatedPositions());
-        assertEquals("Player 1", cardState.getPlayerNickname()); //TODO: Since the card has been used the getNextPlayer was not invoked, see what to do with isCardUsable
+        assertEquals("Player 1", cardState.getPlayerNickname());
         // =============================== //
         // ======== WIDGET TEST ======== //
         clientStardust.updateCard(cardState);

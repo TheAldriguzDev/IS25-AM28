@@ -64,7 +64,6 @@ public class ClientSmugglers extends ClientEventCard {
         if (this.isPlayerDefeated) {
             enabledCommands.add("setItemsToBeRemoved");
 
-            // TODO: (@Filippo) Make it so that this flag is enabled <==> The items are not enough
             enabledCommands.add("batteriesToBeStolen");
         }
         else {
@@ -220,5 +219,10 @@ public class ClientSmugglers extends ClientEventCard {
     @Override
     public int getFirepower() {
         return this.requiredFirepower;
+    }
+
+    @Override
+    public boolean isPlayerDefeated() {
+        return this.isPlayerDefeated;
     }
 }

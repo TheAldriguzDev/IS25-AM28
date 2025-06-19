@@ -317,4 +317,11 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     public int getFirepower() throws UnsupportedOperationException {
         throw new UnsupportedOperationException("The method 'getFirepower()' is not supported in " + this + " card");
     }
+
+    /**
+     * @return wether a player has been defeated by the card (e.g. Slavers)
+     */
+    public boolean isPlayerDefeated() throws UnsupportedOperationException{
+        throw new UnsupportedOperationException("The method 'isPlayerDefeated()' is not supported in " + this + " card");
+    }
 }

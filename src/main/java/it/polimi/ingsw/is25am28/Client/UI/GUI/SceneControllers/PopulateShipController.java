@@ -424,7 +424,6 @@ public class PopulateShipController extends GUIController {
         }
     }
 
-    // TODO: create method in upper class to remove duplicate code
     /**
      * Creates a 0*1 grid, subsequently adding a number of rows (each one containing a toggleButton) equal to the number of players - 1 in the current game
      */

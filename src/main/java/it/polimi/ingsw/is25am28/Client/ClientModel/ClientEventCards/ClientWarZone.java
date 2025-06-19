@@ -198,20 +198,20 @@ public class ClientWarZone extends ClientEventCard {
                     cardInfoWidget.appendString("───────────────────────────────");
                 }
                 case "ShootingSequence" -> {
-                    cardInfoWidget.appendString("                 █                ");
-                    cardInfoWidget.appendString("                ███               ");
-                    cardInfoWidget.appendString("               █████              ");
-                    cardInfoWidget.appendString("               █████              ");
-                    cardInfoWidget.appendString("              ███████             ");
-                    cardInfoWidget.appendString("       █    ███████████    █      ");
-                    cardInfoWidget.appendString("       ██  █████████████  ██      ");
-                    cardInfoWidget.appendString("  ██    ███████████████████    ██ ");
-                    cardInfoWidget.appendString("  ███    █████████████████    ███ ");
-                    cardInfoWidget.appendString("   ████ ███████████████████ ████  ");
-                    cardInfoWidget.appendString("     █████████████████████████    ");
-                    cardInfoWidget.appendString("      ███████████████████████     ");
-                    cardInfoWidget.appendString("         █████████████████        ");
-                    cardInfoWidget.appendString("            ███████████           ");
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "                 █                " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "                ███               " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "               █████              " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "               █████              " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "              ███████             " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "       █    ███████████    █      " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "       ██  █████████████  ██      " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "  ██    ███████████████████    ██ " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "  ███    █████████████████    ███ " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "   ████ ███████████████████ ████  " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "     █████████████████████████    " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "      ███████████████████████     " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "         █████████████████        " + ANSIColors.RESET);
+                    cardInfoWidget.appendString(ANSIColors.MAGENTA + "            ███████████           " + ANSIColors.RESET);
                     cardInfoWidget.wrapWidgetWithBorder();
 
                     if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {

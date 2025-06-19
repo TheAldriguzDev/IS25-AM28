@@ -89,7 +89,7 @@ public class CardRoundScreen extends Screen {
         try {
             Boolean takeReward = this.currEventCard.getTakeReward();
 
-            if (takeReward != null) {
+            if (takeReward != null && !this.currEventCard.isPlayerDefeated()) {
                 this.playerActionsRecapWidget
                         .appendString("Take reward?: " + (takeReward ? "Yes" : "No"));
             }
