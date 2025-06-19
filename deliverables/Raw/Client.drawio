@@ -1,0 +1,765 @@
+<mxGraphModel dx="0" dy="0" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" background="none" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+    <mxCell id="node2" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ANSIColors&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ RESET: String&lt;br/&gt;+ WHITE: String&lt;br/&gt;+ BRIGHT_WHITE: String&lt;br/&gt;+ BACKGROUND_CYAN: String&lt;br/&gt;+ BRIGHT_BACKGROUND_BLUE: String&lt;br/&gt;+ BRIGHT_YELLOW: String&lt;br/&gt;+ BRIGHT_BLUE: String&lt;br/&gt;+ YELLOW: String&lt;br/&gt;+ BRIGHT_BACKGROUND_GREEN: String&lt;br/&gt;+ BACKGROUND_GREEN: String&lt;br/&gt;+ RED: String&lt;br/&gt;+ BRIGHT_RED: String&lt;br/&gt;+ BRIGHT_CYAN: String&lt;br/&gt;+ BRIGHT_BACKGROUND_RED: String&lt;br/&gt;+ BACKGROUND_RED: String&lt;br/&gt;+ GREEN: String&lt;br/&gt;+ BLACK: String&lt;br/&gt;+ BACKGROUND_BLACK: String&lt;br/&gt;+ BRIGHT_BACKGROUND_WHITE: String&lt;br/&gt;+ BLUE: String&lt;br/&gt;+ BACKGROUND_YELLOW: String&lt;br/&gt;+ BRIGHT_BACKGROUND_MAGENTA: String&lt;br/&gt;+ BRIGHT_BACKGROUND_CYAN: String&lt;br/&gt;+ BRIGHT_BACKGROUND_BLACK: String&lt;br/&gt;+ MAGENTA: String&lt;br/&gt;+ BRIGHT_BACKGROUND_YELLOW: String&lt;br/&gt;+ BACKGROUND_BLUE: String&lt;br/&gt;+ BRIGHT_MAGENTA: String&lt;br/&gt;+ BACKGROUND_MAGENTA: String&lt;br/&gt;+ BACKGROUND_WHITE: String&lt;br/&gt;+ BRIGHT_BLACK: String&lt;br/&gt;+ CYAN: String&lt;br/&gt;+ BRIGHT_GREEN: String&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4994" y="2056" width="305" height="831" as="geometry" />
+    </mxCell>
+    <mxCell id="node60" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;CardRoundController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- shipBoardImageView: ImageView&lt;br/&gt;- doubleEnginesRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- emptiedCabinsRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- commandsGrid: GridPane&lt;br/&gt;- emptiedBatteriesMap: Map&amp;lt;String, FlowPane&amp;gt;&lt;br/&gt;- statsBox: VBox&lt;br/&gt;- viewGameBoardStackPaneLevel0: Pane&lt;br/&gt;- doubleCannonsRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- resourceBankVBox: VBox&lt;br/&gt;- emptiedItemsMap: Map&amp;lt;String, FlowPane&amp;gt;&lt;br/&gt;- commandDescriptionBox: VBox&lt;br/&gt;- viewGameBoardContainer: VBox&lt;br/&gt;- storagesToFillRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- shieldsRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- cabinsRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- chosenItemColor: ItemColor&lt;br/&gt;- commandsToggleGroup: ToggleGroup&lt;br/&gt;- additionalInfoBox: VBox&lt;br/&gt;- boardImageView: ImageView&lt;br/&gt;- mainShip: ClientShip&lt;br/&gt;- playerActionsScrollPane: ScrollPane&lt;br/&gt;- viewGameBoardStackPaneLevel2: Pane&lt;br/&gt;- batteriesRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- allComponentMaps: List&amp;lt;Map&amp;lt;String, Region&amp;gt;&amp;gt;&lt;br/&gt;- allCommands: List&amp;lt;String&amp;gt;&lt;br/&gt;- currEventCard: ClientEventCard&lt;br/&gt;- shipGrid: GridPane&lt;br/&gt;- emptiedLifeforms: Map&amp;lt;String, FlowPane&amp;gt;&lt;br/&gt;- itemsMap: Map&amp;lt;String, Map&amp;lt;String, FlowPane&amp;gt;&amp;gt;&lt;br/&gt;- availableCommands: List&amp;lt;String&amp;gt;&lt;br/&gt;- playersRocketBoard: Map&amp;lt;String, ImageView&amp;gt;&lt;br/&gt;- viewOtherShipsGrid: GridPane&lt;br/&gt;- commandsBox: HBox&lt;br/&gt;- emptiedBatteriesRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- cardImageView: ImageView&lt;br/&gt;- imagePane: StackPane&lt;br/&gt;- goBackToCardRoundButtonFromViewBoard: Button&lt;br/&gt;- storagesToEmptyRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- actionsVBox: VBox&lt;br/&gt;- viewOtherShipsToggleGroup: ToggleGroup&lt;br/&gt;- cards: List&amp;lt;ClientEventCard&amp;gt;&lt;br/&gt;- statsVBox: VBox&lt;br/&gt;- shipImageView: ImageView&lt;br/&gt;- batteriesMap: Map&amp;lt;String, Map&amp;lt;String, FlowPane&amp;gt;&amp;gt;&lt;br/&gt;- currentRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- resourceBankBox: VBox&lt;br/&gt;- emptiedStoragesRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- turnBox: VBox&lt;br/&gt;- lifeFormsMap: Map&amp;lt;String, Map&amp;lt;String, FlowPane&amp;gt;&amp;gt;&lt;br/&gt;- currEnergyConsumer: Pair&amp;lt;EnergyConsumers, CoordinatePair&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- initAddColorCommands(int, int): void&lt;br/&gt;- initTurnBox(): void&lt;br/&gt;- addItemToRemove(int, int, ItemColor): void&lt;br/&gt;- initRemoveColorCommands(int, int): void&lt;br/&gt;- handleChosenPlanetIndex(): void&lt;br/&gt;- handleWantsToVisit(): void&lt;br/&gt;- addShieldToActivate(CoordinatePair, CoordinatePair): void&lt;br/&gt;- handleDoubleEnginesToActivate(int, int): void&lt;br/&gt;- addDoubleCannonToActivate(CoordinatePair, CoordinatePair): void&lt;br/&gt;- addCrewToRemove(int, int, LifeformType): void&lt;br/&gt;- handleEnergyConsumers(int, int): void&lt;br/&gt;- addWantsToVisit(boolean): void&lt;br/&gt;- addTakeReward(boolean): void&lt;br/&gt;- addChosenPlanetIndex(int): void&lt;br/&gt;- initCommandDescriptionBox(String): void&lt;br/&gt;- initStatsBox(): void&lt;br/&gt;- handleMandatoryBatteryCoords(int, int): void&lt;br/&gt;- handleItemToTake(int, int): void&lt;br/&gt;- setShipGrid(String): void&lt;br/&gt;- initRegionMap(Map&amp;lt;String, Region&amp;gt;, List&amp;lt;ClientComponent&amp;gt;, BiConsumer&amp;lt;Integer, Integer&amp;gt;): void&lt;br/&gt;- handleGoBackToCardRoundButton(ActionEvent): void&lt;br/&gt;- handleItemToRemove(int, int): void&lt;br/&gt;- initViewOtherShipsGrid(): void&lt;br/&gt;- initResourceBankBox(): void&lt;br/&gt;+ playCard(): void&lt;br/&gt;- disableRegion(Map&amp;lt;String, Region&amp;gt;): void&lt;br/&gt;- visualizePlayerActions(): void&lt;br/&gt;- createColorButton(ItemColor): Button&lt;br/&gt;- addItemToTake(int, int, ItemColor): void&lt;br/&gt;+ updateVisuals(CardStateJSON): void&lt;br/&gt;- enableRegion(Map&amp;lt;String, Region&amp;gt;): void&lt;br/&gt;- handleCrewToRemove(int, int): void&lt;br/&gt;+ init(CardRoundDTO): void&lt;br/&gt;+ updateCardRound(CardStateJSON): void&lt;br/&gt;- handleBatteriesToBeStolen(int, int): void&lt;br/&gt;- handleDoubleCannonToActivate(int, int): void&lt;br/&gt;- initCommandBox(): void&lt;br/&gt;- createBackToCommandsButton(): Button&lt;br/&gt;- addDoubleEngineToActivate(CoordinatePair, CoordinatePair): void&lt;br/&gt;- initAdditionalInfoBox(): void&lt;br/&gt;- handleShieldsToActivate(int, int): void&lt;br/&gt;- setCurrentEventCard(CardStateJSON): void&lt;br/&gt;+ handleRemovePlayerFromBoard(String): void&lt;br/&gt;- addBatteryToBeStolen(CoordinatePair): void&lt;br/&gt;- handleTakeReward(): void&lt;br/&gt;- handleViewGameBoard(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4497" y="3960" width="461" height="2344" as="geometry" />
+    </mxCell>
+    <mxCell id="node24" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;CardRoundScreen&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- resourceBankWidget: WidgetTUI&lt;br/&gt;- otherPlayerShipCommandsWidget: InputWidgetTUI&lt;br/&gt;- currEventCard: ClientEventCard&lt;br/&gt;- indexedCardInputMethods: Map&amp;lt;String, Pair&amp;lt;Boolean, CommandWidgetTUI&amp;gt;&amp;gt;&lt;br/&gt;- otherPlayerShipWidget: WidgetTUI&lt;br/&gt;- COMMAND_GROUPING_FACTOR: int&lt;br/&gt;- cardRoundCommandsWidget: InputWidgetTUI&lt;br/&gt;- shipGridWidget: WidgetTUI&lt;br/&gt;- availableLifeforms: InputWidgetTUI&lt;br/&gt;- currPlayerNickname: String&lt;br/&gt;- playerNameWidget: WidgetTUI&lt;br/&gt;- playerTurnWidget: WidgetTUI&lt;br/&gt;- availableItemColors: InputWidgetTUI&lt;br/&gt;- currEventCardWidget: WidgetTUI&lt;br/&gt;- currEventCardState: CardStateJSON&lt;br/&gt;- shipStatsWidget: WidgetTUI&lt;br/&gt;- boardWidget: WidgetTUI&lt;br/&gt;- playerActionsRecapWidget: WidgetTUI&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- getCurrEventCard(): void&lt;br/&gt;+ getDoubleCannonToActivate(): void&lt;br/&gt;- getCardRoundCommand(): void&lt;br/&gt;+ showCardRound(CardRoundDTO): void&lt;br/&gt;- generatePlayerActionsRecapWidget(): void&lt;br/&gt;- getOtherShipCommand(): void&lt;br/&gt;- playCard(): void&lt;br/&gt;+ getDoubleEngineToActivate(): void&lt;br/&gt;- generateCurrEventCardWidget(): void&lt;br/&gt;- generateAvailableLifeformsWidget(List&amp;lt;LifeformType&amp;gt;, AtomicReference&amp;lt;LifeformType&amp;gt;): void&lt;br/&gt;- getCrewToRemove(): void&lt;br/&gt;- generatePlayerNameWidget(): void&lt;br/&gt;- generateAvailableItemColorsWidget(List&amp;lt;ItemColor&amp;gt;, AtomicReference&amp;lt;ItemColor&amp;gt;): void&lt;br/&gt;- generateOtherPlayerShipCommandsWidget(): void&lt;br/&gt;- generateResourceBankWidget(): void&lt;br/&gt;+ getChosenPlanetIndex(): void&lt;br/&gt;+ getWantsToVisit(): void&lt;br/&gt;- generateStatsWidget(): void&lt;br/&gt;+ getBooleanAnswerToQuestion(String): boolean&lt;br/&gt;+ getBatteryToConsume(): CoordinatePair&lt;br/&gt;- getItemToBeRemoved(): void&lt;br/&gt;- getItemToBeTaken(): void&lt;br/&gt;- generateIndexedCardInputMethodsMap(): void&lt;br/&gt;- printCardRoundWidgets(): void&lt;br/&gt;- generateCardRoundCommandsWidget(): void&lt;br/&gt;+ getTakeReward(): void&lt;br/&gt;- generateShipWidgets(): void&lt;br/&gt;- generatePlayerTurnWidget(): void&lt;br/&gt;+ getShieldToActivate(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2431" y="1388" width="533" height="1168" as="geometry" />
+    </mxCell>
+    <mxCell id="node21" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Client&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ TCP_SOCKET_PORT: int&lt;br/&gt;- uiTypeSelectorWidget: InputWidgetTUI&lt;br/&gt;- connectionTypeSelectorWidget: InputWidgetTUI&lt;br/&gt;+ IP_LOOPBACK_ADDRESS: String&lt;br/&gt;- inputThread: InputThread&lt;br/&gt;+ RMI_PORT: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- getIpAddress(): String?&lt;br/&gt;- getUITypeCommand(): void&lt;br/&gt;- generateUITypeSelectorWidget(AtomicReference&amp;lt;UIType&amp;gt;): void&lt;br/&gt;+ main(String[]): void&lt;br/&gt;- stopInputThread(): void&lt;br/&gt;- getConnectionTypeCommand(): void&lt;br/&gt;- startInputThread(): void&lt;br/&gt;- generateConnectionTypeSelectorWidget(AtomicReference&amp;lt;ConnectionType&amp;gt;): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2728" y="4069" width="499" height="376" as="geometry" />
+    </mxCell>
+    <mxCell id="node37" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientAbandonedShip&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- abandonedShipJSON: AbandonedShipJSON&lt;br/&gt;- requiredCrew: int&lt;br/&gt;- givenCredits: int&lt;br/&gt;- movementStep: int&lt;br/&gt;- isCardUsable: boolean&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ clearJSON(): void&lt;br/&gt;+ getWantsToVisit(): Boolean&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ useCard(): ActionJSON&lt;br/&gt;+ setCrewToRemove(List&amp;lt;ComponentHelper&amp;lt;LifeformType&amp;gt;&amp;gt;): void&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ getCrewToRemove(): List&amp;lt;ComponentHelper&amp;lt;LifeformType&amp;gt;&amp;gt;&lt;br/&gt;+ setWantsToVisit(boolean): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2191" y="5536" width="463" height="352" as="geometry" />
+    </mxCell>
+    <mxCell id="node56" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientAbandonedStation&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- requiredCrew: int&lt;br/&gt;~ yellowItems: int&lt;br/&gt;- movementStep: int&lt;br/&gt;- isCardUsable: boolean&lt;br/&gt;~ blueItems: int&lt;br/&gt;~ greenItems: int&lt;br/&gt;- abandonedStationJSON: AbandonedStationJSON&lt;br/&gt;~ redItems: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getItemsToBeRemoved(): List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;&lt;br/&gt;+ removeItem(ItemColor): void&lt;br/&gt;+ getItemsToBeTaken(): List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;&lt;br/&gt;+ getWantsToVisit(): Boolean&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ setWantsToVisit(boolean): void&lt;br/&gt;+ getAdditionalCardInfo(): String&lt;br/&gt;+ useCard(): ActionJSON&lt;br/&gt;+ getAvailableItemColors(): List&amp;lt;ItemColor&amp;gt;&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ clearJSON(): void&lt;br/&gt;+ setItemsToBeRemoved(List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;): void&lt;br/&gt;+ setItemsToBeTaken(List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="597" y="4846" width="465" height="544" as="geometry" />
+    </mxCell>
+    <mxCell id="node32" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientBattery&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- available: int&lt;br/&gt;- maxAvailability: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getMaxAvailability(): int&lt;br/&gt;+ setAvailability(int): void&lt;br/&gt;+ getAvailability(): int&lt;br/&gt;+ getComponentScreen(): List&amp;lt;String&amp;gt;&lt;br/&gt;+ useBattery(int): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4297" y="3682" width="277" height="208" as="geometry" />
+    </mxCell>
+    <mxCell id="node31" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientBoard&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- size: int&lt;br/&gt;- boardDimensions: Map&amp;lt;Integer, Pair&amp;lt;Integer, Integer&amp;gt;&amp;gt;&lt;br/&gt;- eliminatedPlayers: List&amp;lt;ClientPlayer&amp;gt;&lt;br/&gt;- level: int&lt;br/&gt;- players: Map&amp;lt;String, ClientPlayer&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getPlayers(): List&amp;lt;ClientPlayer&amp;gt;&lt;br/&gt;- getIntegerStringMap(): Map&amp;lt;Integer, String&amp;gt;&lt;br/&gt;+ updateBoard(CardStateJSON, ClientUI): void&lt;br/&gt;+ getLevel(): int&lt;br/&gt;+ getSize(): int&lt;br/&gt;- getBoardTitleWidget(): WidgetTUI&lt;br/&gt;- getBoardInfoWidget(): WidgetTUI&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ getEliminatedPlayers(): List&amp;lt;ClientPlayer&amp;gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2273" y="4156" width="395" height="376" as="geometry" />
+    </mxCell>
+    <mxCell id="node44" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientCabin&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- isCore: boolean&lt;br/&gt;- inhabitants: ArrayList&amp;lt;Lifeform&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ isCore(): boolean&lt;br/&gt;+ getAvailableSpace(): int&lt;br/&gt;+ addInhabitant(Lifeform): void&lt;br/&gt;+ getComponentScreen(): List&amp;lt;String&amp;gt;&lt;br/&gt;+ getInhabitants(): List&amp;lt;Lifeform&amp;gt;&lt;br/&gt;+ removeInhabitant(Lifeform): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3751" y="4197" width="277" height="232" as="geometry" />
+    </mxCell>
+    <mxCell id="node6" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientCannon&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- force: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getComponentScreen(): List&amp;lt;String&amp;gt;&lt;br/&gt;+ requiresEnergy(): boolean&lt;br/&gt;+ getFirePower(): float&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="5003" y="3708" width="277" height="147" as="geometry" />
+    </mxCell>
+    <mxCell id="node67" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientCardRoundState&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- cardRoundDTO: CardRoundDTO&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getCardRoundDTO(): CardRoundDTO&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2810" y="4508" width="275" height="95" as="geometry" />
+    </mxCell>
+    <mxCell id="node35" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientComponent&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;# path: String&lt;br/&gt;# direction: int&lt;br/&gt;- isFlipped: boolean&lt;br/&gt;- isVisible: boolean&lt;br/&gt;- row: int&lt;br/&gt;# sides: Connector[]&lt;br/&gt;- col: int&lt;br/&gt;- id: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ setI(int): void&lt;br/&gt;+ getJ(): int&lt;br/&gt;+ getLeftSide(): Connector&lt;br/&gt;+ rotateLeft(): ClientComponent&lt;br/&gt;+ isVisible(): boolean&lt;br/&gt;+ getID(): int&lt;br/&gt;+ getI(): int&lt;br/&gt;+ getTopSide(): Connector&lt;br/&gt;+ isFlipped(): boolean&lt;br/&gt;# generateComponentCustomBorder(): List&amp;lt;String&amp;gt;&lt;br/&gt;+ getPath(): String&lt;br/&gt;+ setPosition(int, int): void&lt;br/&gt;+ getBottomSide(): Connector&lt;br/&gt;+ setIsVisible(boolean): void&lt;br/&gt;+ setJ(int): void&lt;br/&gt;+ rotateRight(): ClientComponent&lt;br/&gt;+ getRightSide(): Connector&lt;br/&gt;+ setRotation(int): ClientComponent&lt;br/&gt;+ requiresEnergy(): boolean&lt;br/&gt;+ getComponentScreen(): List&amp;lt;String&amp;gt;&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ getDirection(): int&lt;br/&gt;+ setAsFlipped(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="969" y="3770" width="359" height="784" as="geometry" />
+    </mxCell>
+    <mxCell id="node10" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientEngine&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- power: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getSpeed(): int&lt;br/&gt;+ requiresEnergy(): boolean&lt;br/&gt;+ getComponentScreen(): List&amp;lt;String&amp;gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4978" y="3508" width="277" height="147" as="geometry" />
+    </mxCell>
+    <mxCell id="node64" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientEpidemy&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- epidemyJSON: EpidemyJSON&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ clearJSON(): void&lt;br/&gt;+ useCard(): ActionJSON&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1796" y="5172" width="258" height="160" as="geometry" />
+    </mxCell>
+    <mxCell id="node12" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientEventCard&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;# uniqueCardId: int&lt;br/&gt;# inputThread: InputThread&lt;br/&gt;# playerNickname: String&lt;br/&gt;# path: String&lt;br/&gt;# cardLevel: int&lt;br/&gt;# model: ClientModel&lt;br/&gt;# enabledCommands: List&amp;lt;String&amp;gt;&lt;br/&gt;# hasBeenActivated: boolean&lt;br/&gt;# cardName: String&lt;br/&gt;# hasBeenUsed: boolean&lt;br/&gt;# cardTypeId: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ setAvailableCommands(Map&amp;lt;String, Pair&amp;lt;Boolean, CommandWidgetTUI&amp;gt;&amp;gt;): void&lt;br/&gt;+ clearJSON(): void&lt;br/&gt;+ setDoubleEnginesToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;br/&gt;+ setChosenPlanetIndex(int): void&lt;br/&gt;+ getFirepower(): int&lt;br/&gt;+ getTakeReward(): Boolean&lt;br/&gt;+ setShieldsToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;br/&gt;+ setItemsToBeTaken(List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;): void&lt;br/&gt;+ setCrewToRemove(List&amp;lt;ComponentHelper&amp;lt;LifeformType&amp;gt;&amp;gt;): void&lt;br/&gt;+ getItemsToBeRemoved(): List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;&lt;br/&gt;+ setTakeReward(boolean): void&lt;br/&gt;+ getCardPath(): String&lt;br/&gt;+ getChosenPlanetIndex(): Integer&lt;br/&gt;+ getDoubleCannonsToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ getPlayerNickname(): String&lt;br/&gt;+ setDoubleCannonsToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;br/&gt;+ useCard(): ActionJSON&lt;br/&gt;+ getWantsToVisit(): Boolean&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ getAvailableItemColors(): List&amp;lt;ItemColor&amp;gt;&lt;br/&gt;+ getAdditionalCardInfo(): String&lt;br/&gt;+ setBatteriesToBeStolen(List&amp;lt;CoordinatePair&amp;gt;): void&lt;br/&gt;+ setWantsToVisit(boolean): void&lt;br/&gt;+ getCardTypeId(): int&lt;br/&gt;+ getUniqueCardId(): int&lt;br/&gt;+ removeItem(ItemColor): void&lt;br/&gt;+ getItemsToBeTaken(): List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ getBatteriesToBeStolen(): List&amp;lt;CoordinatePair&amp;gt;&lt;br/&gt;+ getDoubleEnginesToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ setItemsToBeRemoved(List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;): void&lt;br/&gt;+ getShieldsToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ getAvailableCommands(): List&amp;lt;String&amp;gt;&lt;br/&gt;+ getCrewToRemove(): List&amp;lt;ComponentHelper&amp;lt;LifeformType&amp;gt;&amp;gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="-61" y="1284" width="521" height="1120" as="geometry" />
+    </mxCell>
+    <mxCell id="node46" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientFixShipState&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- fixShipDTO: FixShipDTO&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ removeComponentFromShip(int, int): void&lt;br/&gt;+ getFixShipDTO(): FixShipDTO&lt;br/&gt;+ removePlayerFromFixList(String): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1812" y="3006" width="306" height="147" as="geometry" />
+    </mxCell>
+    <mxCell id="node9" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientMeteorShower&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- meteorShowerJSON: MeteorShowerJSON&lt;br/&gt;- currMeteorDescriptor: Map&amp;lt;String, Integer&amp;gt;&lt;br/&gt;- currMeteorIndex: int&lt;br/&gt;- diceThrowResult: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ setShieldsToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;br/&gt;+ useCard(): ActionJSON&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ getDoubleCannonsToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ getAdditionalCardInfo(): String&lt;br/&gt;+ getShieldsToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ clearJSON(): void&lt;br/&gt;+ setDoubleCannonsToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3183" y="4587" width="521" height="352" as="geometry" />
+    </mxCell>
+    <mxCell id="node70" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientModel&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- difficultyLevel: int&lt;br/&gt;- resourceBank: ResourceBank&lt;br/&gt;- board: ClientBoard&lt;br/&gt;- nickname: String&lt;br/&gt;- timerDTO: TimerDTO&lt;br/&gt;- currState: ClientState&lt;br/&gt;- eventCards: List&amp;lt;ClientEventCard&amp;gt;&lt;br/&gt;- players: Map&amp;lt;String, ClientPlayer&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getAllClientPlayers(): Map&amp;lt;String, ClientPlayer&amp;gt;&lt;br/&gt;+ getState(): ClientState&lt;br/&gt;+ addNewPlayer(String, PlayerColor): void&lt;br/&gt;+ setClientBoard(ClientBoard): void&lt;br/&gt;+ getResourceBank(): ResourceBank&lt;br/&gt;+ getNickname(): String&lt;br/&gt;+ getShipOfPlayer(String): Optional&amp;lt;ClientShip&amp;gt;&lt;br/&gt;+ setState(ClientState): void&lt;br/&gt;+ setTimerDTO(TimerDTO): void&lt;br/&gt;+ generateClientEventCards(List&amp;lt;CardStateJSON&amp;gt;): void&lt;br/&gt;+ getClientEventCards(): List&amp;lt;ClientEventCard&amp;gt;&lt;br/&gt;+ updatePlayers(CardStateJSON): void&lt;br/&gt;+ getAllPlayersNicknames(): List&amp;lt;String&amp;gt;&lt;br/&gt;+ addNewPlayer(String, PlayerColor, int, int, List&amp;lt;Map&amp;lt;String, Object&amp;gt;&amp;gt;): void&lt;br/&gt;+ getClientBoard(): ClientBoard&lt;br/&gt;+ updateShips(CardStateJSON): void&lt;br/&gt;+ setNickname(String): void&lt;br/&gt;+ getDifficultyLevel(): int&lt;br/&gt;+ getTimerDTO(): TimerDTO&lt;br/&gt;+ setDifficultyLevel(int): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="975" y="2965" width="443" height="712" as="geometry" />
+    </mxCell>
+    <mxCell id="node23" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientOpenSpace&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- openSpaceJSON: OpenSpaceJSON&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ setDoubleEnginesToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;br/&gt;+ getDoubleEnginesToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ useCard(): ActionJSON&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ clearJSON(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="344" y="4350" width="516" height="208" as="geometry" />
+    </mxCell>
+    <mxCell id="node53" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientPirates&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- movementSteps: int&lt;br/&gt;- piratesJSON: PiratesJSON&lt;br/&gt;- firstRound: boolean&lt;br/&gt;- diceThrowResult: int&lt;br/&gt;- requiredFirepower: int&lt;br/&gt;- givenCredits: int&lt;br/&gt;~ currentPlasmaShot: Map&amp;lt;String, Integer&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ setDoubleCannonsToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;br/&gt;+ getDoubleCannonsToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ useCard(): ActionJSON&lt;br/&gt;+ getFirepower(): int&lt;br/&gt;+ getShieldsToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ setShieldsToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;br/&gt;+ setTakeReward(boolean): void&lt;br/&gt;+ clearJSON(): void&lt;br/&gt;+ getTakeReward(): Boolean&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ getAdditionalCardInfo(): String&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2194" y="4963" width="521" height="496" as="geometry" />
+    </mxCell>
+    <mxCell id="node65" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientPlayer&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- cursor: int&lt;br/&gt;- lostComponents: int&lt;br/&gt;- nickname: String&lt;br/&gt;- ship: ClientShip&lt;br/&gt;- credits: int&lt;br/&gt;- color: PlayerColor&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ setCredits(int): void&lt;br/&gt;+ getCredits(): int&lt;br/&gt;+ setCursor(int): void&lt;br/&gt;+ getColor(): PlayerColor&lt;br/&gt;+ getCursor(): int&lt;br/&gt;+ setLostComponents(int): void&lt;br/&gt;+ addLostComponent(int): void&lt;br/&gt;+ getShip(): ClientShip&lt;br/&gt;+ getNickname(): String&lt;br/&gt;+ getLostComponents(): int&lt;br/&gt;+ modifyCredits(int): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1508" y="3167" width="231" height="448" as="geometry" />
+    </mxCell>
+    <mxCell id="node38" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientPopulateShipState&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- populateShipDTO: PopulateShipDTO&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getPopulateShipDTO(): PopulateShipDTO&lt;br/&gt;+ addPlayerToPopulateList(String): void&lt;br/&gt;+ addLifeFormToShip(int, int, LifeformType): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="982" y="2583" width="338" height="147" as="geometry" />
+    </mxCell>
+    <mxCell id="node16" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientShield&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getCoveredSide(): int[]&lt;br/&gt;+ requiresEnergy(): boolean&lt;br/&gt;+ getComponentScreen(): List&amp;lt;String&amp;gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4640" y="3674" width="277" height="120" as="geometry" />
+    </mxCell>
+    <mxCell id="node25" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientShip&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- brownAlienPosition: ClientCabin&lt;br/&gt;- cabinList: List&amp;lt;ClientCabin&amp;gt;&lt;br/&gt;- vitalList: List&amp;lt;ClientVital&amp;gt;&lt;br/&gt;- batteryList: List&amp;lt;ClientBattery&amp;gt;&lt;br/&gt;- shieldList: List&amp;lt;ClientShield&amp;gt;&lt;br/&gt;- cannonList: List&amp;lt;ClientCannon&amp;gt;&lt;br/&gt;- components: ClientComponent[][]&lt;br/&gt;- core: ClientCabin&lt;br/&gt;- engineList: List&amp;lt;ClientEngine&amp;gt;&lt;br/&gt;- storageList: List&amp;lt;ClientStorage&amp;gt;&lt;br/&gt;- purpleAlienPosition: ClientCabin&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getBatteryList(): List&amp;lt;ClientBattery&amp;gt;&lt;br/&gt;+ getPurpleAlienPosition(): ClientCabin&lt;br/&gt;+ traverse(Consumer&amp;lt;ClientComponent&amp;gt;): void&lt;br/&gt;+ isShipPopulated(): boolean&lt;br/&gt;+ getShipStatsWidget(): WidgetTUI&lt;br/&gt;+ initGrid(): ClientComponent[][]&lt;br/&gt;+ getComponent(int, int): ClientComponent&lt;br/&gt;+ removeComponent(int, int): void&lt;br/&gt;+ getCore(): ClientCabin&lt;br/&gt;+ getBaselineEnginePower(): int&lt;br/&gt;+ getBrownAlienPosition(): ClientCabin&lt;br/&gt;+ getAllItems(): List&amp;lt;Item&amp;gt;&lt;br/&gt;+ substituteShipWithPremadeConfiguration(List&amp;lt;Map&amp;lt;String, Object&amp;gt;&amp;gt;, List&amp;lt;ClientComponent&amp;gt;): void&lt;br/&gt;+ getNearestReachableComponents(ClientComponent): ClientComponent[]&lt;br/&gt;+ getAvailableEnergy(): int&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ generateComponentSubLists(): void&lt;br/&gt;+ getEngineList(): List&amp;lt;ClientEngine&amp;gt;&lt;br/&gt;+ getCabinList(): List&amp;lt;ClientCabin&amp;gt;&lt;br/&gt;+ addComponent(ClientComponent, int, int): void&lt;br/&gt;+ addLifeformToCabin(int, int, LifeformType): void&lt;br/&gt;+ getBaselineFirepower(): float&lt;br/&gt;+ getFirePower(List&amp;lt;CoordinatePair&amp;gt;): float&lt;br/&gt;+ getVitalList(): List&amp;lt;ClientVital&amp;gt;&lt;br/&gt;+ getEnginePower(List&amp;lt;CoordinatePair&amp;gt;): int&lt;br/&gt;+ getStorageList(): List&amp;lt;ClientStorage&amp;gt;&lt;br/&gt;+ addLifeformVerifier(int, int, LifeformType): boolean&lt;br/&gt;- generateEmptySpaceScreen(int): List&amp;lt;String&amp;gt;&lt;br/&gt;- generateComponentPlaceholderWidget(): WidgetTUI&lt;br/&gt;+ getShieldList(): List&amp;lt;ClientShield&amp;gt;&lt;br/&gt;+ getCannonList(): List&amp;lt;ClientCannon&amp;gt;&lt;br/&gt;+ getDoubleCannons(): List&amp;lt;ClientCannon&amp;gt;&lt;br/&gt;+ consumeEnergy(List&amp;lt;CoordinatePair&amp;gt;): void&lt;br/&gt;+ getShipGridWidget(): WidgetTUI&lt;br/&gt;+ getAllLifeforms(): List&amp;lt;Lifeform&amp;gt;&lt;br/&gt;+ getDoubleEngines(): List&amp;lt;ClientEngine&amp;gt;&lt;br/&gt;- wrapShipWidgetWithCoordinatesBorder(WidgetTUI, int, int): WidgetTUI&lt;br/&gt;+ removeLifeformFromCabin(int, int, LifeformType): void&lt;br/&gt;- createComponentsFromData(List&amp;lt;Map&amp;lt;String, Object&amp;gt;&amp;gt;, PlayerColor): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="408" y="2467" width="505" height="1240" as="geometry" />
+    </mxCell>
+    <mxCell id="node50" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientShipConstructionState&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- currentlySelectedSubdecks: Map&amp;lt;Integer, Boolean&amp;gt;&lt;br/&gt;- shipConstructionDTO: ShipConstructionDTO&lt;br/&gt;- playersFinishedBuildingShip: Map&amp;lt;String, Boolean&amp;gt;&lt;br/&gt;+ SELECTABLE_SUBDECK_AMOUNT: int&lt;br/&gt;- currentShip: List&amp;lt;ClientComponent&amp;gt;&lt;br/&gt;- components: List&amp;lt;ClientComponent&amp;gt;&lt;br/&gt;- reservedComponents: List&amp;lt;ClientComponent&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getShipConstructionDTO(): ShipConstructionDTO&lt;br/&gt;+ setPlayerFinishedBuildingShip(String, int): void&lt;br/&gt;- generateClientComponents(List&amp;lt;Map&amp;lt;String, Object&amp;gt;&amp;gt;, List&amp;lt;Integer&amp;gt;, List&amp;lt;Integer&amp;gt;): void&lt;br/&gt;+ setSubdeckStatus(Integer, boolean): void&lt;br/&gt;+ getPlayerFinishedBuildingShip(String): boolean&lt;br/&gt;+ reserveTile(ClientComponent): void&lt;br/&gt;+ flipTimer(): void&lt;br/&gt;+ isSubdeckSelected(Integer): boolean&lt;br/&gt;+ getReservedComponents(): List&amp;lt;ClientComponent&amp;gt;&lt;br/&gt;+ deselectTile(ClientComponent, int, int): void&lt;br/&gt;+ getConstructionShipComponents(): List&amp;lt;ClientComponent&amp;gt;&lt;br/&gt;- initPlayersFinishedBuildingShip(): void&lt;br/&gt;- initCurrentlySelectedSubdecksMap(): void&lt;br/&gt;+ selectTile(int, int): ClientComponent&lt;br/&gt;+ addComponent(ClientComponent, int, int): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1900" y="3464" width="456" height="568" as="geometry" />
+    </mxCell>
+    <mxCell id="node49" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientSlavers&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- takenCrew: int&lt;br/&gt;- requiredFirepower: int&lt;br/&gt;- givenCredits: int&lt;br/&gt;- isPlayerDefeated: boolean&lt;br/&gt;- slaversJSON: SlaversJSON&lt;br/&gt;- movementSteps: int&lt;br/&gt;- isShipEmpty: boolean&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ setTakeReward(boolean): void&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ clearJSON(): void&lt;br/&gt;+ getDoubleCannonsToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ getTakeReward(): Boolean&lt;br/&gt;+ getAdditionalCardInfo(): String&lt;br/&gt;+ getCrewToRemove(): List&amp;lt;ComponentHelper&amp;lt;LifeformType&amp;gt;&amp;gt;&lt;br/&gt;+ useCard(): ActionJSON&lt;br/&gt;+ setCrewToRemove(List&amp;lt;ComponentHelper&amp;lt;LifeformType&amp;gt;&amp;gt;): void&lt;br/&gt;+ getFirepower(): int&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ setDoubleCannonsToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="388" y="3788" width="521" height="496" as="geometry" />
+    </mxCell>
+    <mxCell id="node18" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientSmugglers&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- movementSteps: int&lt;br/&gt;- greenItems: int&lt;br/&gt;- yellowItems: int&lt;br/&gt;- redItems: int&lt;br/&gt;- smugglersJSON: SmugglersJSON&lt;br/&gt;- takenItems: int&lt;br/&gt;- blueItems: int&lt;br/&gt;- requiredFirepower: int&lt;br/&gt;- isPlayerDefeated: boolean&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ useCard(): ActionJSON&lt;br/&gt;+ removeItem(ItemColor): void&lt;br/&gt;+ setItemsToBeTaken(List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;): void&lt;br/&gt;+ setBatteriesToBeStolen(List&amp;lt;CoordinatePair&amp;gt;): void&lt;br/&gt;+ getBatteriesToBeStolen(): List&amp;lt;CoordinatePair&amp;gt;&lt;br/&gt;+ getTakeReward(): Boolean&lt;br/&gt;+ getAvailableItemColors(): List&amp;lt;ItemColor&amp;gt;&lt;br/&gt;+ getAdditionalCardInfo(): String&lt;br/&gt;+ setTakeReward(boolean): void&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ clearJSON(): void&lt;br/&gt;+ getFirepower(): int&lt;br/&gt;+ getItemsToBeRemoved(): List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;&lt;br/&gt;+ getItemsToBeTaken(): List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ getDoubleCannonsToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ setDoubleCannonsToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;br/&gt;+ setItemsToBeRemoved(List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1609" y="5450" width="521" height="688" as="geometry" />
+    </mxCell>
+    <mxCell id="node42" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientStardust&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- stardustJSON: StardustJSON&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ useCard(): ActionJSON&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ clearJSON(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1046" y="4622" width="258" height="160" as="geometry" />
+    </mxCell>
+    <mxCell id="node58" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientState&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;# model: ClientModel&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ selectTile(int, int): ClientComponent&lt;br/&gt;+ deselectTile(ClientComponent, int, int): void&lt;br/&gt;+ setSubdeckStatus(Integer, boolean): void&lt;br/&gt;+ getPlayerFinishedBuildingShip(String): boolean&lt;br/&gt;+ removeComponentFromShip(int, int): void&lt;br/&gt;+ removePlayerFromFixList(String): void&lt;br/&gt;+ addPlayerToPopulateList(String): void&lt;br/&gt;+ getReservedComponents(): List&amp;lt;ClientComponent&amp;gt;&lt;br/&gt;+ isSubdeckSelected(Integer): boolean&lt;br/&gt;+ confirmPopulation(): void&lt;br/&gt;+ setPlayerFinishedBuildingShip(String, int): void&lt;br/&gt;+ reserveTile(ClientComponent): void&lt;br/&gt;+ flipTimer(): void&lt;br/&gt;+ confirmFix(): void&lt;br/&gt;+ getConstructionShipComponents(): List&amp;lt;ClientComponent&amp;gt;&lt;br/&gt;+ addLifeFormToShip(int, int, LifeformType): void&lt;br/&gt;+ getFixShipDTO(): FixShipDTO&lt;br/&gt;+ getPopulateShipDTO(): PopulateShipDTO&lt;br/&gt;+ getCardRoundDTO(): CardRoundDTO&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1762" y="2273" width="420" height="520" as="geometry" />
+    </mxCell>
+    <mxCell id="node57" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientStorage&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- storedItems: List&amp;lt;Item&amp;gt;&lt;br/&gt;- capacity: int&lt;br/&gt;- isSpecialStorage: boolean&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ isSpecialStorage(): boolean&lt;br/&gt;+ getCapacity(): int&lt;br/&gt;+ storeItem(Item): void&lt;br/&gt;+ removeItem(Item): void&lt;br/&gt;+ availableSpace(): int&lt;br/&gt;+ getComponentScreen(): List&amp;lt;String&amp;gt;&lt;br/&gt;+ getStoredItems(): List&amp;lt;Item&amp;gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3957" y="3765" width="277" height="280" as="geometry" />
+    </mxCell>
+    <mxCell id="node66" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientStructural&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getComponentScreen(): List&amp;lt;String&amp;gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3950" y="3611" width="277" height="68" as="geometry" />
+    </mxCell>
+    <mxCell id="node3" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br/&gt;&lt;b&gt;ClientUI&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ showInsufficientPlayer(InsufficientPlayerDTO): void&lt;br/&gt;+ showShipConstruction(ShipConstructionDTO): void&lt;br/&gt;+ interruptCurrScreen(): void&lt;br/&gt;+ isCTXAvailable(): boolean&lt;br/&gt;+ showShipFixing(FixShipDTO): void&lt;br/&gt;+ placePlayerInTheBoard(String): void&lt;br/&gt;+ receiveTimerDTO(TimerDTO): void&lt;br/&gt;+ setVirtualClient(VirtualView): void&lt;br/&gt;+ showLobbies(AvailableGamesDTO, boolean): void&lt;br/&gt;+ handlePlayerFastShip(String): void&lt;br/&gt;+ updateVisuals(CardRoundDTO): void&lt;br/&gt;+ handleRemovePlayerFromBoard(String): void&lt;br/&gt;+ showError(ErrorAnswer): void&lt;br/&gt;+ updateShipPlacedLifeForm(PopulateShipComponentDTO): void&lt;br/&gt;+ showWaitingForPlayers(WaitPlayersStateDTO): void&lt;br/&gt;+ commitCommand(String): void&lt;br/&gt;+ updateShipPlacedComponent(PlacedComponentDTO): void&lt;br/&gt;+ showShipPopulate(PopulateShipDTO): void&lt;br/&gt;+ showCardRound(CardRoundDTO): void&lt;br/&gt;+ updateShipRemovedComponent(FixedComponentDTO): void&lt;br/&gt;+ showEndGame(EndGameDTO): void&lt;br/&gt;+ updateShipConstructionComponent(ConstructionComponentDTO): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1384" y="813" width="494" height="567" as="geometry" />
+    </mxCell>
+    <mxCell id="node0" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientVisitPlanets&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- visitPlanetsJSON: VisitPlanetsJSON&lt;br/&gt;- availablePlanets: Map&amp;lt;Integer, Map&amp;lt;ItemColor, Integer&amp;gt;&amp;gt;&lt;br/&gt;- chosenPlanetIndex: int&lt;br/&gt;- movementSteps: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ clearJSON(): void&lt;br/&gt;+ setItemsToBeRemoved(List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;): void&lt;br/&gt;+ getAvailablePlanets(): Map&amp;lt;Integer, Map&amp;lt;ItemColor, Integer&amp;gt;&amp;gt;&lt;br/&gt;+ removeItem(ItemColor): void&lt;br/&gt;+ getItemsToBeTaken(): List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;&lt;br/&gt;+ useCard(): ActionJSON&lt;br/&gt;+ getChosenPlanetIndex(): Integer&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ setItemsToBeTaken(List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;): void&lt;br/&gt;+ getAvailableItemColors(): List&amp;lt;ItemColor&amp;gt;&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ getAdditionalCardInfo(): String&lt;br/&gt;+ getItemsToBeRemoved(): List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;&lt;br/&gt;+ setChosenPlanetIndex(int): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="-135" y="3253" width="465" height="472" as="geometry" />
+    </mxCell>
+    <mxCell id="node17" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientVital&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- vitalType: VitalType&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getVitalType(): VitalType&lt;br/&gt;+ getComponentScreen(): List&amp;lt;String&amp;gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4289" y="3503" width="277" height="121" as="geometry" />
+    </mxCell>
+    <mxCell id="node54" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ClientWarZone&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- requiredCrew: int&lt;br/&gt;- diceThrowResult: int&lt;br/&gt;- currActionIndex: int&lt;br/&gt;- movementSteps: int&lt;br/&gt;- actionAndConsequences: List&amp;lt;List&amp;lt;String&amp;gt;&amp;gt;&lt;br/&gt;- affectedPlayer: String&lt;br/&gt;- requiredResources: int&lt;br/&gt;- currentPlasmaShot: Map&amp;lt;String, Integer&amp;gt;&lt;br/&gt;- warZoneJSON: WarZoneJSON&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- getCurrConsequence(): String&lt;br/&gt;+ getItemsToBeRemoved(): List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;&lt;br/&gt;+ updateCard(CardStateJSON): void&lt;br/&gt;+ setCrewToRemove(List&amp;lt;ComponentHelper&amp;lt;LifeformType&amp;gt;&amp;gt;): void&lt;br/&gt;+ getCrewToRemove(): List&amp;lt;ComponentHelper&amp;lt;LifeformType&amp;gt;&amp;gt;&lt;br/&gt;+ useCard(): ActionJSON&lt;br/&gt;- getCurrAction(): String&lt;br/&gt;+ getDoubleCannonsToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ clearJSON(): void&lt;br/&gt;+ setShieldsToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;br/&gt;+ getDoubleEnginesToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ setItemsToBeRemoved(List&amp;lt;ComponentHelper&amp;lt;ItemColor&amp;gt;&amp;gt;): void&lt;br/&gt;+ generateWidget(): WidgetTUI&lt;br/&gt;+ getShieldsToActivate(): List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;&lt;br/&gt;+ setDoubleCannonsToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;br/&gt;+ getAdditionalCardInfo(): String&lt;br/&gt;+ getBatteriesToBeStolen(): List&amp;lt;CoordinatePair&amp;gt;&lt;br/&gt;+ setDoubleEnginesToActivate(List&amp;lt;Pair&amp;lt;CoordinatePair, CoordinatePair&amp;gt;&amp;gt;): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1520" y="4311" width="521" height="688" as="geometry" />
+    </mxCell>
+    <mxCell id="node29" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;CommandCTX&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- onError: Runnable&lt;br/&gt;- onSuccess: Runnable&lt;br/&gt;- hasBeenUsed: boolean&lt;br/&gt;- commandName: String&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ isUsable(): boolean&lt;br/&gt;+ handleSuccess(): void&lt;br/&gt;+ handleError(String): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3289" y="3995" width="198" height="208" as="geometry" />
+    </mxCell>
+    <mxCell id="node55" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;CommandWidgetTUI&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- command: Runnable&lt;br/&gt;- commandId: String&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getCommandId(): String&lt;br/&gt;+ setCommand(Runnable): void&lt;br/&gt;+ runCommand(): void&lt;br/&gt;+ appendString(String): WidgetTUI&lt;br/&gt;+ appendScreen(List&amp;lt;String&amp;gt;): WidgetTUI&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="5321" y="3134" width="295" height="208" as="geometry" />
+    </mxCell>
+    <mxCell id="node1" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;enumeration&amp;gt;&amp;gt;&lt;/i&gt;&lt;br/&gt;&lt;b&gt;ConnectionType&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ TCP_SOCKET: &lt;br/&gt;+ RMI: &lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ valueOf(String): ConnectionType&lt;br/&gt;+ values(): ConnectionType[]&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="5679" y="2949" width="250" height="170" as="geometry" />
+    </mxCell>
+    <mxCell id="node28" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ConsoleWidgetTUI&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- maxWidth: int&lt;br/&gt;- areTimestampsEnabled: boolean&lt;br/&gt;- maxHeight: int&lt;br/&gt;+ LINE_START_SYMBOL: String&lt;br/&gt;+ TIMESTAMP_FORMAT: String&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ disableTimestamps(): void&lt;br/&gt;- getTimestamp(): String&lt;br/&gt;+ appendString(String): WidgetTUI&lt;br/&gt;+ areTimestampsEnabled(): boolean&lt;br/&gt;+ appendStringWithSender(String, String): WidgetTUI&lt;br/&gt;+ appendScreen(List&amp;lt;String&amp;gt;): WidgetTUI&lt;br/&gt;+ enableTimestamps(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3883" y="2796" width="365" height="328" as="geometry" />
+    </mxCell>
+    <mxCell id="node33" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;CreateGameController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- levelComboBox: ComboBox&amp;lt;Integer&amp;gt;&lt;br/&gt;- colorComboBox: ComboBox&amp;lt;PlayerColor&amp;gt;&lt;br/&gt;- lobbySizeComboBox: ComboBox&amp;lt;Integer&amp;gt;&lt;br/&gt;- nicknameTextField: TextField&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ init(): void&lt;br/&gt;- parseNickname(String): String&lt;br/&gt;+ onSubmitGameConfigButtonClick(ActionEvent): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2695" y="4660" width="371" height="208" as="geometry" />
+    </mxCell>
+    <mxCell id="node51" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;EndGameController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- leaderBoard: VBox&lt;br/&gt;- quitButton: Button&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ setLeaderBoard(EndGameDTO): void&lt;br/&gt;+ onQuitButtonClick(ActionEvent): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4626" y="3450" width="277" height="147" as="geometry" />
+    </mxCell>
+    <mxCell id="node62" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;EndGameScreen&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ showEndGame(EndGameDTO): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4816" y="2950" width="269" height="68" as="geometry" />
+    </mxCell>
+    <mxCell id="node5" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;enumeration&amp;gt;&amp;gt;&lt;/i&gt;&lt;br/&gt;&lt;b&gt;EnergyConsumers&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ CANNON: &lt;br/&gt;+ ENGINE: &lt;br/&gt;+ SHIELD: &lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ values(): EnergyConsumers[]&lt;br/&gt;+ valueOf(String): EnergyConsumers&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4489" y="3203" width="262" height="160" as="geometry" />
+    </mxCell>
+    <mxCell id="node39" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;FixShipController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- viewGameBoardStackPaneLevel0: Pane&lt;br/&gt;- fixShipLabel: TextFlow&lt;br/&gt;- componentsRegionMap: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- shipImageView: ImageView&lt;br/&gt;- boardImageView: ImageView&lt;br/&gt;- viewGameBoardContainer: VBox&lt;br/&gt;- isShipValid: boolean&lt;br/&gt;- viewOtherShipsGrid: GridPane&lt;br/&gt;- playersRocketBoard: Map&amp;lt;String, ImageView&amp;gt;&lt;br/&gt;~ viewOtherShipsToggleGroup: ToggleGroup&lt;br/&gt;- imagePane: StackPane&lt;br/&gt;- goBackToFixButtonFromViewBoard: Button&lt;br/&gt;- shipGrid: GridPane&lt;br/&gt;- fixShipVBox: VBox&lt;br/&gt;- viewGameBoardStackPaneLevel2: Pane&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ handleGoBackToFixButton(ActionEvent): void&lt;br/&gt;+ handleRemoveComponent(int, int): void&lt;br/&gt;- initViewOtherShipsGrid(): void&lt;br/&gt;+ init(FixShipDTO): void&lt;br/&gt;- setShipLabelText(boolean): void&lt;br/&gt;+ removeComponent(FixedComponentDTO): void&lt;br/&gt;- setShipGrid(String): void&lt;br/&gt;- handleViewGameBoard(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3547" y="3534" width="342" height="592" as="geometry" />
+    </mxCell>
+    <mxCell id="node43" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;FixShipScreen&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- currPlayerShip: ClientShip&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- printShipFixStatusWidget(boolean): void&lt;br/&gt;- getComponentCoordinates(): CoordinatePair&lt;br/&gt;- removeComponent(): void&lt;br/&gt;+ showShipFixing(FixShipDTO): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3498" y="2996" width="324" height="160" as="geometry" />
+    </mxCell>
+    <mxCell id="node4" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;GUIController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;# clientModel: ClientModel&lt;br/&gt;# playersShipGridPane: Map&amp;lt;String, GridPane&amp;gt;&lt;br/&gt;# guiUtils: GUIUtils&lt;br/&gt;~ shipOffsets: Pair&amp;lt;Integer, Integer&amp;gt;&lt;br/&gt;# componentsImagesMap: Map&amp;lt;String, Map&amp;lt;String, ImageView&amp;gt;&amp;gt;&lt;br/&gt;# rootPane: StackPane&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;# mapColor(PlayerColor): String&lt;br/&gt;+ showToast(String, ToastType): void&lt;br/&gt;+ getRootPane(): StackPane&lt;br/&gt;# setVisibility(T, boolean): void&lt;br/&gt;- getTransition(HBox): SequentialTransition&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4813" y="3079" width="447" height="304" as="geometry" />
+    </mxCell>
+    <mxCell id="node34" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;GUIHandler&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ GALAXY_TRUCKER: String&lt;br/&gt;- instance: GUIHandler&lt;br/&gt;- roots: Map&amp;lt;GuiScenes, Parent&amp;gt;&lt;br/&gt;- stage: Stage&lt;br/&gt;- ctx: CommandCTX&lt;br/&gt;- currentScene: GuiScenes&lt;br/&gt;- model: ClientModel&lt;br/&gt;- virtualClient: VirtualView&lt;br/&gt;- controllers: Map&amp;lt;GuiScenes, GUIController&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ getInstance(): GUIHandler&lt;br/&gt;+ getStage(): Stage&lt;br/&gt;+ showEndGame(EndGameDTO): void&lt;br/&gt;+ isCTXAvailable(): boolean&lt;br/&gt;+ onQuitHandler(WindowEvent): void&lt;br/&gt;+ setCommandCTX(CommandCTX): void&lt;br/&gt;+ showInsufficientPlayer(InsufficientPlayerDTO): void&lt;br/&gt;+ setVirtualClient(VirtualView): void&lt;br/&gt;+ switchScene(GuiScenes): void&lt;br/&gt;+ commitCommand(String): void&lt;br/&gt;+ showError(ErrorAnswer): void&lt;br/&gt;+ updateShipRemovedComponent(FixedComponentDTO): void&lt;br/&gt;+ updateShipPlacedComponent(PlacedComponentDTO): void&lt;br/&gt;+ start(Stage): void&lt;br/&gt;+ showShipConstruction(ShipConstructionDTO): void&lt;br/&gt;+ showShipPopulate(PopulateShipDTO): void&lt;br/&gt;+ showLobbies(AvailableGamesDTO, boolean): void&lt;br/&gt;+ showShipFixing(FixShipDTO): void&lt;br/&gt;+ clearCommandCTX(): void&lt;br/&gt;+ interruptCurrScreen(): void&lt;br/&gt;+ receiveTimerDTO(TimerDTO): void&lt;br/&gt;+ updateShipConstructionComponent(ConstructionComponentDTO): void&lt;br/&gt;+ getClientModel(): ClientModel&lt;br/&gt;+ placePlayerInTheBoard(String): void&lt;br/&gt;+ saveRootAndController(GuiScenes, Parent, Object): void&lt;br/&gt;+ getCommandCTX(): CommandCTX&lt;br/&gt;+ updateShipPlacedLifeForm(PopulateShipComponentDTO): void&lt;br/&gt;+ updateVisuals(CardRoundDTO): void&lt;br/&gt;+ handleRemovePlayerFromBoard(String): void&lt;br/&gt;+ getVirtualClient(): VirtualView&lt;br/&gt;+ showWaitingForPlayers(WaitPlayersStateDTO): void&lt;br/&gt;+ showCardRound(CardRoundDTO): void&lt;br/&gt;+ handlePlayerFastShip(String): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="818" y="1095" width="494" height="1048" as="geometry" />
+    </mxCell>
+    <mxCell id="node26" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;GUIUtils&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- clientModel: ClientModel&lt;br/&gt;- shipOffsets: Pair&amp;lt;Integer, Integer&amp;gt;&lt;br/&gt;- rocketPositions: Map&amp;lt;String, Pair&amp;lt;Double, Double&amp;gt;&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ initShipItemIcons(String, GridPane): Map&amp;lt;String, FlowPane&amp;gt;&lt;br/&gt;+ coordsFromKey(String): Pair&amp;lt;Integer, Integer&amp;gt;&lt;br/&gt;+ setShipGridBackground(ImageView): void&lt;br/&gt;+ initCabinLifeFormIcons(ClientCabin, FlowPane): void&lt;br/&gt;+ initStorageItemIcons(ClientStorage, FlowPane): void&lt;br/&gt;+ placePlayerInBoard(String, int, int, Pane, Map&amp;lt;String, ImageView&amp;gt;): void&lt;br/&gt;+ createShipVisuals(String, GridPane): Map&amp;lt;String, ImageView&amp;gt;&lt;br/&gt;+ removePlayerFromBoard(String, Pane, Map&amp;lt;String, ImageView&amp;gt;): void&lt;br/&gt;+ initViewGameBoard(Pane, Pane, ImageView, Map&amp;lt;String, ImageView&amp;gt;): void&lt;br/&gt;+ initPlayersOnGameBoard(Pane, Pane, Map&amp;lt;String, ImageView&amp;gt;): void&lt;br/&gt;+ createEmptyShipGrid(ClientPlayer): GridPane&lt;br/&gt;+ initShipLifeFormIcons(String, GridPane): Map&amp;lt;String, FlowPane&amp;gt;&lt;br/&gt;+ initBatteryIcons(ClientBattery, FlowPane): void&lt;br/&gt;+ keyFromCoords(int, int): String&lt;br/&gt;+ revertVisuals(GridPane, Map&amp;lt;String, FlowPane&amp;gt;, Map&amp;lt;String, Region&amp;gt;, Map&amp;lt;String, Region&amp;gt;, Class&amp;lt;T&amp;gt;, BiConsumer&amp;lt;T, FlowPane&amp;gt;): void&lt;br/&gt;+ generateDisabledRegion(): Region&lt;br/&gt;+ initShipBatteryIcons(String, GridPane): Map&amp;lt;String, FlowPane&amp;gt;&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2418" y="3483" width="486" height="520" as="geometry" />
+    </mxCell>
+    <mxCell id="node68" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;enumeration&amp;gt;&amp;gt;&lt;/i&gt;&lt;br/&gt;&lt;b&gt;GuiScenes&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ WAITING_FOR_PLAYERS_SCENE: &lt;br/&gt;+ CARD_ROUND_SCENE: &lt;br/&gt;+ LOGIN_SCENE: &lt;br/&gt;+ FIX_SHIP_SCENE: &lt;br/&gt;+ JOIN_GAME_SCENE: &lt;br/&gt;+ POPULATE_SHIP_SCENE: &lt;br/&gt;- fxmlFile: String&lt;br/&gt;+ LOBBY_SCENE: &lt;br/&gt;+ CREATE_GAME_SCENE: &lt;br/&gt;+ INSUFFICIENT_PLAYER_SCENE: &lt;br/&gt;+ RECONNECT_GAME_SCENE: &lt;br/&gt;+ END_GAME_SCENE: &lt;br/&gt;+ SHIP_CONSTRUCTION_SCENE: &lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ toString(): String&lt;br/&gt;+ valueOf(String): GuiScenes&lt;br/&gt;+ getFxmlFile(): String&lt;br/&gt;+ values(): GuiScenes[]&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1450" y="2446" width="251" height="448" as="geometry" />
+    </mxCell>
+    <mxCell id="node8" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;InputThread&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- buffer: StringBuilder&lt;br/&gt;- hasBeenForced: boolean&lt;br/&gt;- isReadingEnable: boolean&lt;br/&gt;- inputLock: Object&lt;br/&gt;- line: String&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ interruptInputReader(): void&lt;br/&gt;+ run(): void&lt;br/&gt;+ waitForInput(): String&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3515" y="3239" width="219" height="232" as="geometry" />
+    </mxCell>
+    <mxCell id="node15" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;InputWidgetTUI&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- commandsPerCol: int&lt;br/&gt;- commands: Map&amp;lt;String, CommandWidgetTUI&amp;gt;&lt;br/&gt;+ DEFAULT_GROUPING_FACTOR: int&lt;br/&gt;- inputThread: InputThread&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ selectCommand(String): boolean&lt;br/&gt;+ addCommand(CommandWidgetTUI): void&lt;br/&gt;+ printWidget(): void&lt;br/&gt;+ setColumnGroupingAmount(int): void&lt;br/&gt;+ getCommandMap(): Map&amp;lt;String, CommandWidgetTUI&amp;gt;&lt;br/&gt;+ setCommands(List&amp;lt;CommandWidgetTUI&amp;gt;): void&lt;br/&gt;+ setInputThread(InputThread): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3043" y="3572" width="388" height="304" as="geometry" />
+    </mxCell>
+    <mxCell id="node63" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;InsufficientPlayerScreen&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ showInsufficientPlayer(InsufficientPlayerDTO): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="5204" y="2954" width="365" height="68" as="geometry" />
+    </mxCell>
+    <mxCell id="node36" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;InsufficientPlayersController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ countDownToWin: Label&lt;br/&gt;- timer: Timeline&lt;br/&gt;- countDown: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ setCountDown(InsufficientPlayerDTO): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3297" y="4373" width="317" height="147" as="geometry" />
+    </mxCell>
+    <mxCell id="node52" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;JoinGameController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- colorComboBox: ComboBox&amp;lt;PlayerColor&amp;gt;&lt;br/&gt;- gameID: int&lt;br/&gt;- joinGameTitleLabel: Label&lt;br/&gt;- nicknameTextField: TextField&lt;br/&gt;- gameLevel: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ init(GameInfoDTO): void&lt;br/&gt;+ onSubmitJoinGameButtonClick(ActionEvent): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="5321" y="3409" width="356" height="208" as="geometry" />
+    </mxCell>
+    <mxCell id="node30" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;LobbyController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- refreshGamesButton: Button&lt;br/&gt;- createGameButton: Button&lt;br/&gt;- reconnectGameButton: Button&lt;br/&gt;- lobbyListScrollPane: ScrollPane&lt;br/&gt;- quitButton: Button&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ onQuitButtonClick(ActionEvent): void&lt;br/&gt;+ init(AvailableGamesDTO): void&lt;br/&gt;+ onJoinGameButtonClick(ActionEvent, GameInfoDTO): void&lt;br/&gt;+ onReconnectGameButtonClick(ActionEvent): void&lt;br/&gt;+ onCreateGameButtonClick(ActionEvent): void&lt;br/&gt;+ onRefreshGamesButtonClick(ActionEvent): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2103" y="4594" width="407" height="304" as="geometry" />
+    </mxCell>
+    <mxCell id="node59" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;LobbyScreen&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- AVAILABLE_GAMES_GROUPING_FACTOR: int&lt;br/&gt;- availableGamesWidget: InputWidgetTUI&lt;br/&gt;- lobbyCommandsWidget: InputWidgetTUI&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- joinGameInput(GameInfoDTO, List&amp;lt;String&amp;gt;): void&lt;br/&gt;- refreshGames(): void&lt;br/&gt;- reconnectToGameInput(AvailableGamesDTO, List&amp;lt;String&amp;gt;): void&lt;br/&gt;+ showLobbies(AvailableGamesDTO, boolean): void&lt;br/&gt;- initLobbyCommandsWidget(AvailableGamesDTO): void&lt;br/&gt;- printTitle(): void&lt;br/&gt;+ showWaitingForPlayers(WaitPlayersStateDTO): void&lt;br/&gt;- initAvailableGamesWidget(AvailableGamesDTO): void&lt;br/&gt;- getLobbyCommand(): void&lt;br/&gt;- createGameInput(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="4308" y="2776" width="445" height="352" as="geometry" />
+    </mxCell>
+    <mxCell id="node61" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;PopulateShipController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- isShipFull: boolean&lt;br/&gt;- brownAlienCabinRegion: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- playersRocketBoard: Map&amp;lt;String, ImageView&amp;gt;&lt;br/&gt;- boardImageView: ImageView&lt;br/&gt;- lifeFormsMap: Map&amp;lt;String, Map&amp;lt;String, FlowPane&amp;gt;&amp;gt;&lt;br/&gt;- currentSelectableLifeForm: LifeformType&lt;br/&gt;- goBackToPopulateButtonFromViewBoard: Button&lt;br/&gt;- populateShipVBox: VBox&lt;br/&gt;- viewOtherShipsGrid: GridPane&lt;br/&gt;- purpleToggle: ToggleButton&lt;br/&gt;- viewGameBoardStackPaneLevel2: Pane&lt;br/&gt;- mainShip: ClientShip&lt;br/&gt;- purpleAlienCabinRegion: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- cabinRegions: Map&amp;lt;String, Region&amp;gt;&lt;br/&gt;- shipImageView: ImageView&lt;br/&gt;- canEnableBrown: boolean&lt;br/&gt;- populateShipLabel: TextFlow&lt;br/&gt;- canEnablePurple: boolean&lt;br/&gt;- imagePane: StackPane&lt;br/&gt;- viewGameBoardContainer: VBox&lt;br/&gt;- viewGameBoardStackPaneLevel0: Pane&lt;br/&gt;- lifeFormsToggles: ToggleGroup&lt;br/&gt;- canEnableWhite: boolean&lt;br/&gt;~ viewOtherShipsToggleGroup: ToggleGroup&lt;br/&gt;- whiteToggle: ToggleButton&lt;br/&gt;- shipGrid: GridPane&lt;br/&gt;- brownToggle: ToggleButton&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- handleViewGameBoard(): void&lt;br/&gt;- setShipGrid(String): void&lt;br/&gt;+ placeLifeform(PopulateShipComponentDTO): void&lt;br/&gt;- enableRegion(Map&amp;lt;String, Region&amp;gt;): void&lt;br/&gt;- initLifeFormsToggles(): void&lt;br/&gt;- setShipLabelText(boolean): void&lt;br/&gt;- initViewOtherShipsGrid(): void&lt;br/&gt;+ init(PopulateShipDTO): void&lt;br/&gt;+ handleGoBackToPopulateButton(ActionEvent): void&lt;br/&gt;- disableRegion(): void&lt;br/&gt;+ handlePlacedLifeform(int, int): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="5737" y="3652" width="376" height="952" as="geometry" />
+    </mxCell>
+    <mxCell id="node48" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;PopulateShipScreen&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- currPlayerShip: ClientShip&lt;br/&gt;- availableLifeformsWidget: InputWidgetTUI&lt;br/&gt;- availableCabinsWidget: InputWidgetTUI&lt;br/&gt;- playerNameWidget: WidgetTUI&lt;br/&gt;- chosenCabin: AtomicReference&amp;lt;ClientCabin&amp;gt;&lt;br/&gt;- chosenLifeform: AtomicReference&amp;lt;LifeformType&amp;gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- getAvailableCabinsCommand(): void&lt;br/&gt;- generateAvailableLifeformsWidget(AtomicReference&amp;lt;LifeformType&amp;gt;): void&lt;br/&gt;- generateAvailableCabinsWidget(AtomicReference&amp;lt;ClientCabin&amp;gt;): void&lt;br/&gt;- printShipPopulateStatusWidget(): void&lt;br/&gt;+ showShipPopulate(PopulateShipDTO): void&lt;br/&gt;- populateShip(): void&lt;br/&gt;- getAvailableLifeformsCommand(): void&lt;br/&gt;- generatePlayerNameWidget(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3846" y="2314" width="488" height="376" as="geometry" />
+    </mxCell>
+    <mxCell id="node14" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;PrintUtils&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ SPACE: String&lt;br/&gt;+ TAB: String&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ addColor(String, String): String&lt;br/&gt;+ removeUnicodeFromString(String): String&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3499" y="2773" width="304" height="147" as="geometry" />
+    </mxCell>
+    <mxCell id="node20" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ReconnectGameController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- nicknameTextField: TextField&lt;br/&gt;- submitReconnectGameButton: Button&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ onSubmitReconnectGameButtonClick(ActionEvent): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1749" y="4134" width="397" height="121" as="geometry" />
+    </mxCell>
+    <mxCell id="node41" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;Screen&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;# inputThread: InputThread&lt;br/&gt;# ctx: CommandCTX&lt;br/&gt;# model: ClientModel&lt;br/&gt;+ UNKNOWN_COMMAND_ERROR: String&lt;br/&gt;# client: VirtualView&lt;br/&gt;+ DEFAULT_COMMAND_PREFIX: String&lt;br/&gt;+ COMPUTER_MSG_TAG: String&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ handlePlayerFastShip(String): void&lt;br/&gt;+ showShipFixing(FixShipDTO): void&lt;br/&gt;+ updateShipRemovedComponent(FixedComponentDTO): void&lt;br/&gt;+ showError(ErrorAnswer): void&lt;br/&gt;+ forceStopScreen(): void&lt;br/&gt;+ setVirtualClient(VirtualView): void&lt;br/&gt;+ isCTXAvailable(): boolean&lt;br/&gt;+ receiveTimerDTO(TimerDTO): void&lt;br/&gt;+ showLobbies(AvailableGamesDTO, boolean): void&lt;br/&gt;+ showShipConstruction(ShipConstructionDTO): void&lt;br/&gt;+ showCardRound(CardRoundDTO): void&lt;br/&gt;+ commitCommand(String): void&lt;br/&gt;+ updateShipConstructionComponent(ConstructionComponentDTO): void&lt;br/&gt;+ updateVisuals(CardRoundDTO): void&lt;br/&gt;+ updateShipPlacedComponent(PlacedComponentDTO): void&lt;br/&gt;+ showInsufficientPlayer(InsufficientPlayerDTO): void&lt;br/&gt;+ showWaitingForPlayers(WaitPlayersStateDTO): void&lt;br/&gt;+ interruptCurrScreen(): void&lt;br/&gt;+ showEndGame(EndGameDTO): void&lt;br/&gt;+ handleRemovePlayerFromBoard(String): void&lt;br/&gt;+ placePlayerInTheBoard(String): void&lt;br/&gt;+ updateShipPlacedLifeForm(PopulateShipComponentDTO): void&lt;br/&gt;+ showShipPopulate(PopulateShipDTO): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="992" y="-12" width="494" height="760" as="geometry" />
+    </mxCell>
+    <mxCell id="node13" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ShipConstructionController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- VIEWABLE_SUBDECK_AMOUNT: int&lt;br/&gt;- shipGrid: GridPane&lt;br/&gt;- subdeckImages: List&amp;lt;ImageView&amp;gt;&lt;br/&gt;- allSubdeckCardsContainer: HBox&lt;br/&gt;- subdeckCards: List&amp;lt;Node&amp;gt;&lt;br/&gt;- viewOtherShipStackPane: StackPane&lt;br/&gt;- isSelectedTileReserved: boolean&lt;br/&gt;- viewOtherShipsGrid: GridPane&lt;br/&gt;- reservedTileFlow: FlowPane&lt;br/&gt;- deselectSubdeckLabel: Label&lt;br/&gt;- selectedComponent: ClientComponent&lt;br/&gt;- tilesScrollPane: ScrollPane&lt;br/&gt;- deselectSubdeckButton: Button&lt;br/&gt;- playersShipGridPane: Map&amp;lt;String, GridPane&amp;gt;&lt;br/&gt;- fastShipButton: Button&lt;br/&gt;- reservedVBOX: VBox&lt;br/&gt;- tileVBOX: VBox&lt;br/&gt;- viewGameBoardStackPaneLevel2: Pane&lt;br/&gt;- tileFlow: FlowPane&lt;br/&gt;- TIMER_DURATION: int&lt;br/&gt;- timer: Timeline&lt;br/&gt;- shipContainer: VBox&lt;br/&gt;- subdeckViewerContainer: VBox&lt;br/&gt;- shipImageView: ImageView&lt;br/&gt;- rotationInProgress: boolean&lt;br/&gt;- timerContainer: HBox&lt;br/&gt;- subDeckTwo: ImageView&lt;br/&gt;- selectedSubdeckId: int&lt;br/&gt;- reservedComponentGrid: GridPane&lt;br/&gt;- subDeckOne: ImageView&lt;br/&gt;- viewShipContainer: VBox&lt;br/&gt;- viewGameBoardContainer: VBox&lt;br/&gt;- goBackToConstructionButtonFromViewBoard: Button&lt;br/&gt;- hasFinishedShip: boolean&lt;br/&gt;- viewOtherShipImage: ImageView&lt;br/&gt;- boardImageView: ImageView&lt;br/&gt;- contentContainer: StackPane&lt;br/&gt;- goBackToConstructionButton: Button&lt;br/&gt;- components: Map&amp;lt;Integer, ImageView&amp;gt;&lt;br/&gt;- playersRocketBoard: Map&amp;lt;String, ImageView&amp;gt;&lt;br/&gt;- shipOffsets: Pair&amp;lt;Integer, Integer&amp;gt;&lt;br/&gt;- viewPlayerShipLabel: Label&lt;br/&gt;- flipTimerButton: Button&lt;br/&gt;- confirmShipButton: Button&lt;br/&gt;- subDeckThree: ImageView&lt;br/&gt;- viewGameBoardStackPaneLevel0: Pane&lt;br/&gt;- selectedComponentImage: ImageView&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- deselectTileCommand(Runnable): void&lt;br/&gt;+ placePlayerInTheBoard(String): void&lt;br/&gt;- handleReserveTile(): void&lt;br/&gt;- handleRotateLeft(): void&lt;br/&gt;- displaySelectedComponent(ClientComponent): void&lt;br/&gt;- buildComponentImageView(ClientComponent): ImageView&lt;br/&gt;+ handlePlayerShipConstruction(PlacedComponentDTO): void&lt;br/&gt;- handleTileSelection(ClientComponent): void&lt;br/&gt;+ handleConfirmShip(): void&lt;br/&gt;- handlePlaceTile(int, int): void&lt;br/&gt;+ handlePlayerFastShip(String): void&lt;br/&gt;- handleRotateRight(): void&lt;br/&gt;+ initShipConstruction(): void&lt;br/&gt;- handleDeselectTile(): void&lt;br/&gt;- showEndedShipConstruction(): void&lt;br/&gt;~ requestFastShip(): void&lt;br/&gt;- populateViewShipButtons(): void&lt;br/&gt;- handleViewGameBoard(): void&lt;br/&gt;- initComponents(): void&lt;br/&gt;- initSubdecks(): void&lt;br/&gt;- handleDeselectSubdeck(): void&lt;br/&gt;- initSidePanel(): void&lt;br/&gt;+ resetTimer(): void&lt;br/&gt;- handleViewSubDeck(MouseEvent): void&lt;br/&gt;- handleViewShipRequest(String): void&lt;br/&gt;- addCellEventListener(int, int): void&lt;br/&gt;- handleGoBackToConstructionButton(): void&lt;br/&gt;+ disableTimerButton(): void&lt;br/&gt;- getImageFromPath(String, int, int): Image&lt;br/&gt;- getComponentImageView(ClientComponent, Image): ImageView&lt;br/&gt;- updateReservedComponents(): void&lt;br/&gt;- initShipPage(): void&lt;br/&gt;+ updateComponent(Integer): void&lt;br/&gt;- handleFlipTimer(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1104" y="5464" width="445" height="1984" as="geometry" />
+    </mxCell>
+    <mxCell id="node7" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ShipConstructionScreen&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- isSelectedTileReserved: boolean&lt;br/&gt;- shipConstructionCommandsWidget: InputWidgetTUI&lt;br/&gt;- cardSubdeckWidget: WidgetTUI&lt;br/&gt;- selectedComponent: ClientComponent&lt;br/&gt;- playersFinishedShipWidget: WidgetTUI&lt;br/&gt;+ COMPONENT_SELECTION_COMMAND_GROUPING_FACTOR: int&lt;br/&gt;- otherPlayerShipWidget: WidgetTUI&lt;br/&gt;- emptyComponentWidget: WidgetTUI&lt;br/&gt;- otherShipId: AtomicInteger&lt;br/&gt;- componentSelectionWidget: WidgetTUI&lt;br/&gt;+ DEFAULT_COMPONENT_ROWS: int&lt;br/&gt;- cardSubdeckCommandsWidget: InputWidgetTUI&lt;br/&gt;- currPlayerShip: ClientShip&lt;br/&gt;- otherPlayerShipCommandsWidget: InputWidgetTUI&lt;br/&gt;- selectedSubdeckId: AtomicInteger&lt;br/&gt;- coveredComponentWidget: WidgetTUI&lt;br/&gt;+ DEFAULT_COMPONENT_COLS: int&lt;br/&gt;- reservedComponentsWidget: WidgetTUI&lt;br/&gt;- currPlayerShipWidget: WidgetTUI&lt;br/&gt;- componentSelectionCommandsWidget: InputWidgetTUI&lt;br/&gt;+ SHIP_CONSTRUCTION_COMMAND_GROUPING_FACTOR: int&lt;br/&gt;- selectedComponentWidget: WidgetTUI&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- generateSelectedComponentWidget(): void&lt;br/&gt;- getShipConstructionCommand(): void&lt;br/&gt;- generateOtherPlayerShipCommandsWidget(AtomicInteger): void&lt;br/&gt;- composeShipConstructionWidgets(): WidgetTUI&lt;br/&gt;- sendShipOnTimerEnd(): void&lt;br/&gt;- composeComponentSelectionWidgets(): WidgetTUI&lt;br/&gt;- getOtherShipCommand(): void&lt;br/&gt;- getShipFinishedConfirmation(): boolean&lt;br/&gt;- getComponentCoordinates(): CoordinatePair&lt;br/&gt;+ receiveTimerDTO(TimerDTO): void&lt;br/&gt;- selectTile(): void&lt;br/&gt;- requestPremadeShip(): void&lt;br/&gt;- getCardSubdeckCommand(): void&lt;br/&gt;- getTileIndex(): int&lt;br/&gt;- generateComponentSelectionCommands(): void&lt;br/&gt;- deselectSubdeck(int): void&lt;br/&gt;+ showShipConstruction(ShipConstructionDTO): void&lt;br/&gt;- generateCardSubdeckWidget(List&amp;lt;ClientEventCard&amp;gt;): void&lt;br/&gt;- getComponentSelectionCommand(): void&lt;br/&gt;- placeSelectedTile(): void&lt;br/&gt;- selectReservedTile(): void&lt;br/&gt;- generateShipConstructionCommands(): void&lt;br/&gt;- flipTimer(): void&lt;br/&gt;- generateCoveredComponentWidget(): void&lt;br/&gt;- sendFinishedShip(): void&lt;br/&gt;- deselectTile(): void&lt;br/&gt;- generateReservedComponentsWidget(): void&lt;br/&gt;- generateComponentSelectionWidget(): void&lt;br/&gt;- generateEmptyComponentWidget(): void&lt;br/&gt;- reserveTile(): void&lt;br/&gt;- generateCardSubdeckCommandsWidget(AtomicInteger): void&lt;br/&gt;- generatePlayersFinishedShipWidget(): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1940" y="-14" width="447" height="1336" as="geometry" />
+    </mxCell>
+    <mxCell id="node40" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;TUIHandler&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- screen: Screen&lt;br/&gt;- ioLock: Object&lt;br/&gt;- model: ClientModel&lt;br/&gt;- virtualClient: VirtualView&lt;br/&gt;- inputThread: InputThread&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ showShipPopulate(PopulateShipDTO): void&lt;br/&gt;+ showCardRound(CardRoundDTO): void&lt;br/&gt;- setScreen(Screen): void&lt;br/&gt;+ showLobbies(AvailableGamesDTO, boolean): void&lt;br/&gt;+ showShipConstruction(ShipConstructionDTO): void&lt;br/&gt;+ isCTXAvailable(): boolean&lt;br/&gt;+ clearTerminal(): void&lt;br/&gt;+ updateShipRemovedComponent(FixedComponentDTO): void&lt;br/&gt;+ showEndGame(EndGameDTO): void&lt;br/&gt;+ showError(ErrorAnswer): void&lt;br/&gt;+ handlePlayerFastShip(String): void&lt;br/&gt;+ showInsufficientPlayer(InsufficientPlayerDTO): void&lt;br/&gt;+ updateShipPlacedLifeForm(PopulateShipComponentDTO): void&lt;br/&gt;+ interruptCurrScreen(): void&lt;br/&gt;+ showWaitingForPlayers(WaitPlayersStateDTO): void&lt;br/&gt;+ setVirtualClient(VirtualView): void&lt;br/&gt;+ commitCommand(String): void&lt;br/&gt;+ updateShipPlacedComponent(PlacedComponentDTO): void&lt;br/&gt;+ handleRemovePlayerFromBoard(String): void&lt;br/&gt;+ updateVisuals(CardRoundDTO): void&lt;br/&gt;+ placePlayerInTheBoard(String): void&lt;br/&gt;+ receiveTimerDTO(TimerDTO): void&lt;br/&gt;+ updateShipConstructionComponent(ConstructionComponentDTO): void&lt;br/&gt;+ showShipFixing(FixShipDTO): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1376" y="1463" width="494" height="736" as="geometry" />
+    </mxCell>
+    <mxCell id="node69" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;enumeration&amp;gt;&amp;gt;&lt;/i&gt;&lt;br/&gt;&lt;b&gt;ToastType&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ ERROR: &lt;br/&gt;+ INFO: &lt;br/&gt;+ SUCCESS: &lt;br/&gt;+ WARNING: &lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ toString(): String&lt;br/&gt;+ valueOf(String): ToastType&lt;br/&gt;+ values(): ToastType[]&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1111" y="2284" width="213" height="208" as="geometry" />
+    </mxCell>
+    <mxCell id="node27" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;enumeration&amp;gt;&amp;gt;&lt;/i&gt;&lt;br/&gt;&lt;b&gt;UIType&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ GUI: &lt;br/&gt;+ TUI: &lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ valueOf(String): UIType&lt;br/&gt;+ values(): UIType[]&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="1389" y="3844" width="191" height="170" as="geometry" />
+    </mxCell>
+    <mxCell id="node11" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;UnicodeCharacters&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ CONNECTOR_LEFT_CENTER_TOP: String&lt;br/&gt;+ CONNECTOR_TOP_CENTER_LEFT: String&lt;br/&gt;+ VERTICAL_RIGHT_SINGLE_LINE: String&lt;br/&gt;+ CONNECTOR_LEFT_CENTER: String&lt;br/&gt;+ BACKGROUND_MESH: String&lt;br/&gt;+ SINGLE_RIGHT_ARROW: String&lt;br/&gt;+ CONNECTOR_BOTTOM_CENTER_RIGHT: String&lt;br/&gt;+ SINGLE_LINE_BR_CORNER: String&lt;br/&gt;+ BULLET_POINT: String&lt;br/&gt;+ CONNECTOR_RIGHT_CENTER: String&lt;br/&gt;+ CONNECTOR_RIGHT_CENTER_BOTTOM: String&lt;br/&gt;+ SINGLE_LINE_BL_CORNER: String&lt;br/&gt;+ CONNECTOR_RIGHT_CENTER_TOP: String&lt;br/&gt;+ CONNECTOR_TOP_CENTER: String&lt;br/&gt;+ HORIZONTAL_TOP_SINGLE_LINE: String&lt;br/&gt;+ CONNECTOR_BOTTOM_CENTER_LEFT: String&lt;br/&gt;+ SINGLE_LEFT_ARROW: String&lt;br/&gt;+ CIRCLED_STAR: String&lt;br/&gt;+ SINGLE_LINE_TR_CORNER: String&lt;br/&gt;+ SINGLE_BOTTOM_ARROW: String&lt;br/&gt;+ CONNECTOR_LEFT_CENTER_BOTTOM: String&lt;br/&gt;+ SINGLE_TOP_ARROW: String&lt;br/&gt;+ SINGLE_LINE_TL_CORNER: String&lt;br/&gt;+ VERTICAL_LEFT_SINGLE_LINE: String&lt;br/&gt;+ CONNECTOR_TOP_CENTER_RIGHT: String&lt;br/&gt;+ SPACE_SYMBOLS: String[]&lt;br/&gt;+ FULL_BLOCK: String&lt;br/&gt;+ CONNECTOR_BOTTOM_CENTER: String&lt;br/&gt;+ HORIZONTAL_BOTTOM_SINGLE_LINE: String&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2776" y="5046" width="335" height="735" as="geometry" />
+    </mxCell>
+    <mxCell id="node47" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;ViewUpdater&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- model: ClientModel&lt;br/&gt;- ui: ClientUI&lt;br/&gt;- isFirstAccess: boolean&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ isCTXAvailable(): boolean&lt;br/&gt;+ visit(PopulateShipDTO): void&lt;br/&gt;- update(CardRoundDTO): void&lt;br/&gt;+ visit(InsufficientPlayerDTO): void&lt;br/&gt;+ visit(PlacedComponentDTO): void&lt;br/&gt;+ visit(DisconnectedPlayerDTO): void&lt;br/&gt;+ visit(ReservedComponentDTO): void&lt;br/&gt;+ visit(ConstructionDeckDTO): void&lt;br/&gt;+ visit(ShipConstructionDTO): void&lt;br/&gt;+ visit(PopulateShipComponentDTO): void&lt;br/&gt;+ visit(ReconnectDTO): void&lt;br/&gt;+ visit(ConstructionComponentDTO): void&lt;br/&gt;+ visit(FastShipDTO): void&lt;br/&gt;+ visit(FixedComponentDTO): void&lt;br/&gt;+ visit(TimerDTO): void&lt;br/&gt;+ interruptCurrScreen(): void&lt;br/&gt;+ commitCommand(String): void&lt;br/&gt;+ visit(WaitPlayersStateDTO): void&lt;br/&gt;+ updateCardResult(CardRoundDTO): void&lt;br/&gt;+ visit(EndGameDTO): void&lt;br/&gt;+ reportError(String): void&lt;br/&gt;+ visit(CardRoundDTO): void&lt;br/&gt;+ visit(PlayerEndedShipDTO): void&lt;br/&gt;+ visit(FixShipDTO): void&lt;br/&gt;+ visit(AvailableGamesDTO): void&lt;br/&gt;+ visit(StateDTO): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2246" y="2665" width="296" height="736" as="geometry" />
+    </mxCell>
+    <mxCell id="node45" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;WaitingForPlayersController&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- connectedPlayers: VBox&lt;br/&gt;- base: String&lt;br/&gt;- playerCounters: Label&lt;br/&gt;- loadingLabel: Label&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;- startLoadingAnimation(): void&lt;br/&gt;+ initialize(): void&lt;br/&gt;+ showConnectedPlayers(WaitPlayersStateDTO): void&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="3953" y="3211" width="368" height="208" as="geometry" />
+    </mxCell>
+    <mxCell id="node19" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;WidgetTUI&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;# borderCount: int&lt;br/&gt;# width: int&lt;br/&gt;# screen: List&amp;lt;String&amp;gt;&lt;br/&gt;+ defaultBorderCharacters: List&amp;lt;String&amp;gt;&lt;br/&gt;# height: int&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ fillScreenWithSpaces(List&amp;lt;String&amp;gt;): List&amp;lt;String&amp;gt;&lt;br/&gt;+ setScreen(List&amp;lt;String&amp;gt;): WidgetTUI&lt;br/&gt;+ composeTwoWidgetsHorizontally(WidgetTUI, WidgetTUI): WidgetTUI&lt;br/&gt;+ getWidth(): int&lt;br/&gt;+ appendString(String): WidgetTUI&lt;br/&gt;+ composeScreensVertically(List&amp;lt;List&amp;lt;String&amp;gt;&amp;gt;): List&amp;lt;String&amp;gt;&lt;br/&gt;+ composeScreensHorizontally(List&amp;lt;List&amp;lt;String&amp;gt;&amp;gt;): List&amp;lt;String&amp;gt;&lt;br/&gt;+ setWidth(int): WidgetTUI&lt;br/&gt;+ composeTwoWidgetsVertically(WidgetTUI, WidgetTUI): WidgetTUI&lt;br/&gt;+ composeWidgetsHorizontally(List&amp;lt;WidgetTUI&amp;gt;): WidgetTUI&lt;br/&gt;+ unwrapWidgetFromBorder(): WidgetTUI&lt;br/&gt;+ resetScreenAndDimensions(): WidgetTUI&lt;br/&gt;+ getScreen(): List&amp;lt;String&amp;gt;&lt;br/&gt;+ wrapScreenWithBorder(List&amp;lt;String&amp;gt;): List&amp;lt;String&amp;gt;&lt;br/&gt;+ composeWidgetsVertically(List&amp;lt;WidgetTUI&amp;gt;): WidgetTUI&lt;br/&gt;+ wrapScreenWithBorder(List&amp;lt;String&amp;gt;, List&amp;lt;String&amp;gt;): List&amp;lt;String&amp;gt;&lt;br/&gt;+ wrapWidgetWithBorder(): WidgetTUI&lt;br/&gt;+ getBorderCount(): int&lt;br/&gt;+ centerWidgetScreen(): WidgetTUI&lt;br/&gt;+ printWidget(): void&lt;br/&gt;+ addPadding(int, int, int, int): WidgetTUI&lt;br/&gt;+ setBorderCount(int): void&lt;br/&gt;+ setHeight(int): WidgetTUI&lt;br/&gt;+ wrapWidgetWithBorder(List&amp;lt;String&amp;gt;): WidgetTUI&lt;br/&gt;+ appendScreen(List&amp;lt;String&amp;gt;): WidgetTUI&lt;br/&gt;+ fillScreenWithSpaces(WidgetTUI): WidgetTUI&lt;br/&gt;+ getHeight(): int&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="2964" y="2620" width="473" height="808" as="geometry" />
+    </mxCell>
+    <mxCell id="node22" parent="1" vertex="1" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br/&gt;&lt;b&gt;WidgetTUIGenerator&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot;/&gt;&lt;p style=&quot;margin:0 0 0 4px;line-height:1.6;&quot;&gt;+ generateWidget(): WidgetTUI&lt;/p&gt;" style="verticalAlign=top;align=left;overflow=fill;fontSize=14;fontFamily=Helvetica;html=1;rounded=0;shadow=0;comic=0;labelBackgroundColor=none;strokeWidth=1;">
+      <mxGeometry x="712" y="2281" width="228" height="79" as="geometry" />
+    </mxCell>
+    <mxCell id="edge10" edge="1" value="" parent="1" source="node60" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4981" y="5133" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge30" edge="1" value="" parent="1" source="node24" target="node41" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.500;entryY=0.001;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="3652" y="1973" />
+          <mxPoint x="3652" y="-31" />
+          <mxPoint x="1239" y="-31" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge3" edge="1" value="" parent="1" source="node37" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="2147" y="5713" />
+          <mxPoint x="2147" y="5422" />
+          <mxPoint x="1628" y="5422" />
+          <mxPoint x="1628" y="5087" />
+          <mxPoint x="1297" y="5087" />
+          <mxPoint x="1297" y="4801" />
+          <mxPoint x="942" y="4801" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge31" edge="1" value="" parent="1" source="node56" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=1.002;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="830" y="5422" />
+          <mxPoint x="1628" y="5422" />
+          <mxPoint x="1628" y="5087" />
+          <mxPoint x="1297" y="5087" />
+          <mxPoint x="1297" y="4801" />
+          <mxPoint x="942" y="4801" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge25" edge="1" value="" parent="1" source="node32" target="node35" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.000;entryY=0.679;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4600" y="3787" />
+          <mxPoint x="4600" y="3921" />
+          <mxPoint x="4377" y="3921" />
+          <mxPoint x="4377" y="4250" />
+          <mxPoint x="4397" y="4250" />
+          <mxPoint x="4397" y="7468" />
+          <mxPoint x="323" y="7468" />
+          <mxPoint x="323" y="4304" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge28" edge="1" value="" parent="1" source="node44" target="node35" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.000;entryY=0.679;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4377" y="4314" />
+          <mxPoint x="4377" y="4250" />
+          <mxPoint x="4397" y="4250" />
+          <mxPoint x="4397" y="7468" />
+          <mxPoint x="323" y="7468" />
+          <mxPoint x="323" y="4304" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge1" edge="1" value="" parent="1" source="node6" target="node35" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.688;exitDx=0;exitDy=0;entryX=0.000;entryY=0.679;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4600" y="3802" />
+          <mxPoint x="4600" y="3921" />
+          <mxPoint x="4377" y="3921" />
+          <mxPoint x="4377" y="4250" />
+          <mxPoint x="4397" y="4250" />
+          <mxPoint x="4397" y="7468" />
+          <mxPoint x="323" y="7468" />
+          <mxPoint x="323" y="4304" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge43" edge="1" value="" parent="1" source="node67" target="node58" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.500;entryY=1.002;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="2209" y="4553" />
+          <mxPoint x="2209" y="4077" />
+          <mxPoint x="1776" y="4077" />
+          <mxPoint x="1776" y="2989" />
+          <mxPoint x="1972" y="2989" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge17" edge="1" value="" parent="1" source="node35" target="node22" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=1;startArrow=none;endArrow=block;endSize=12;strokeColor=#008200;exitX=0.500;exitY=0.001;exitDx=0;exitDy=0;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1149" y="3727" />
+          <mxPoint x="378" y="3727" />
+          <mxPoint x="378" y="2450" />
+          <mxPoint x="826" y="2450" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge39" edge="1" value="" parent="1" source="node10" target="node35" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.000;entryY=0.679;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4921" y="3577" />
+          <mxPoint x="4921" y="3646" />
+          <mxPoint x="4600" y="3646" />
+          <mxPoint x="4600" y="3921" />
+          <mxPoint x="4377" y="3921" />
+          <mxPoint x="4377" y="4250" />
+          <mxPoint x="4397" y="4250" />
+          <mxPoint x="4397" y="7468" />
+          <mxPoint x="323" y="7468" />
+          <mxPoint x="323" y="4304" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge29" edge="1" value="" parent="1" source="node64" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.006;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1925" y="5087" />
+          <mxPoint x="1297" y="5087" />
+          <mxPoint x="1297" y="4801" />
+          <mxPoint x="942" y="4801" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge49" edge="1" value="" parent="1" source="node12" target="node22" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=1;startArrow=none;endArrow=block;endSize=12;strokeColor=#008200;exitX=0.500;exitY=1.001;exitDx=0;exitDy=0;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="199" y="3098" />
+          <mxPoint x="378" y="3098" />
+          <mxPoint x="378" y="2450" />
+          <mxPoint x="826" y="2450" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge32" edge="1" value="" parent="1" source="node46" target="node58" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.500;entryY=1.002;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1776" y="3075" />
+          <mxPoint x="1776" y="2989" />
+          <mxPoint x="1972" y="2989" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge34" edge="1" value="" parent="1" source="node9" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.935;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="2111" y="4918" />
+          <mxPoint x="2111" y="5087" />
+          <mxPoint x="1297" y="5087" />
+          <mxPoint x="1297" y="4801" />
+          <mxPoint x="942" y="4801" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge44" edge="1" value="" parent="1" source="node23" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="942" y="4455" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge8" edge="1" value="" parent="1" source="node53" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="2162" y="5212" />
+          <mxPoint x="2162" y="5087" />
+          <mxPoint x="1297" y="5087" />
+          <mxPoint x="1297" y="4801" />
+          <mxPoint x="942" y="4801" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge27" edge="1" value="" parent="1" source="node38" target="node58" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=1.007;exitDx=0;exitDy=0;entryX=0.500;entryY=1.002;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1151" y="2948" />
+          <mxPoint x="1776" y="2948" />
+          <mxPoint x="1776" y="2989" />
+          <mxPoint x="1972" y="2989" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge9" edge="1" value="" parent="1" source="node16" target="node35" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;entryX=0.000;entryY=0.679;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4778" y="3646" />
+          <mxPoint x="4600" y="3646" />
+          <mxPoint x="4600" y="3921" />
+          <mxPoint x="4377" y="3921" />
+          <mxPoint x="4377" y="4250" />
+          <mxPoint x="4397" y="4250" />
+          <mxPoint x="4397" y="7468" />
+          <mxPoint x="323" y="7468" />
+          <mxPoint x="323" y="4304" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge37" edge="1" value="" parent="1" source="node25" target="node22" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=1;startArrow=none;endArrow=block;endSize=12;strokeColor=#008200;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.500;entryY=1.000;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="378" y="3088" />
+          <mxPoint x="378" y="2450" />
+          <mxPoint x="826" y="2450" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge14" edge="1" value="" parent="1" source="node50" target="node58" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.500;entryY=1.002;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1776" y="3749" />
+          <mxPoint x="1776" y="2989" />
+          <mxPoint x="1972" y="2989" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge45" edge="1" value="" parent="1" source="node49" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="942" y="4037" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge4" edge="1" value="" parent="1" source="node18" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.001;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1869" y="5422" />
+          <mxPoint x="1628" y="5422" />
+          <mxPoint x="1628" y="5087" />
+          <mxPoint x="1297" y="5087" />
+          <mxPoint x="1297" y="4801" />
+          <mxPoint x="942" y="4801" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge41" edge="1" value="" parent="1" source="node42" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="942" y="4703" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge19" edge="1" value="" parent="1" source="node57" target="node35" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.683;exitDx=0;exitDy=0;entryX=0.000;entryY=0.679;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4377" y="3957" />
+          <mxPoint x="4377" y="4250" />
+          <mxPoint x="4397" y="4250" />
+          <mxPoint x="4397" y="7468" />
+          <mxPoint x="323" y="7468" />
+          <mxPoint x="323" y="4304" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge7" edge="1" value="" parent="1" source="node66" target="node35" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.000;entryY=0.679;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4600" y="3643" />
+          <mxPoint x="4600" y="3921" />
+          <mxPoint x="4377" y="3921" />
+          <mxPoint x="4377" y="4250" />
+          <mxPoint x="4397" y="4250" />
+          <mxPoint x="4397" y="7468" />
+          <mxPoint x="323" y="7468" />
+          <mxPoint x="323" y="4304" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge2" edge="1" value="" parent="1" source="node0" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=1.002;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="98" y="3745" />
+          <mxPoint x="942" y="3745" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge16" edge="1" value="" parent="1" source="node17" target="node35" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=1.009;exitDx=0;exitDy=0;entryX=0.000;entryY=0.679;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4427" y="3643" />
+          <mxPoint x="4600" y="3643" />
+          <mxPoint x="4600" y="3921" />
+          <mxPoint x="4377" y="3921" />
+          <mxPoint x="4377" y="4250" />
+          <mxPoint x="4397" y="4250" />
+          <mxPoint x="4397" y="7468" />
+          <mxPoint x="323" y="7468" />
+          <mxPoint x="323" y="4304" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge21" edge="1" value="" parent="1" source="node54" target="node12" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=1.001;exitDx=0;exitDy=0;entryX=1.000;entryY=0.970;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1781" y="5087" />
+          <mxPoint x="1297" y="5087" />
+          <mxPoint x="1297" y="4801" />
+          <mxPoint x="942" y="4801" />
+          <mxPoint x="942" y="2372" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge33" edge="1" value="" parent="1" source="node55" target="node19" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.005;exitDx=0;exitDy=0;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="5468" y="3061" />
+          <mxPoint x="4786" y="3061" />
+          <mxPoint x="4786" y="3186" />
+          <mxPoint x="3468" y="3186" />
+          <mxPoint x="3468" y="3025" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge11" edge="1" value="" parent="1" source="node28" target="node19" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="3468" y="2961" />
+          <mxPoint x="3468" y="3025" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge40" edge="1" value="" parent="1" source="node33" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="3165" y="4765" />
+          <mxPoint x="3165" y="4550" />
+          <mxPoint x="4262" y="4550" />
+          <mxPoint x="4262" y="3942" />
+          <mxPoint x="4981" y="3942" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge6" edge="1" value="" parent="1" source="node51" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.248;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4262" y="3485" />
+          <mxPoint x="4262" y="3942" />
+          <mxPoint x="4981" y="3942" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge13" edge="1" value="" parent="1" source="node62" target="node41" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;entryX=0.500;entryY=0.001;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4951" y="2733" />
+          <mxPoint x="3652" y="2733" />
+          <mxPoint x="3652" y="-31" />
+          <mxPoint x="1239" y="-31" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge35" edge="1" value="" parent="1" source="node39" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.002;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="3718" y="3504" />
+          <mxPoint x="4262" y="3504" />
+          <mxPoint x="4262" y="3942" />
+          <mxPoint x="4981" y="3942" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge22" edge="1" value="" parent="1" source="node43" target="node41" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.996;exitY=0.006;exitDx=0;exitDy=0;entryX=0.500;entryY=0.001;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="3821" y="2733" />
+          <mxPoint x="3652" y="2733" />
+          <mxPoint x="3652" y="-31" />
+          <mxPoint x="1239" y="-31" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge15" edge="1" value="" parent="1" source="node34" target="node3" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=1;startArrow=none;endArrow=block;endSize=12;strokeColor=#008200;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1344" y="1620" />
+          <mxPoint x="1344" y="782" />
+          <mxPoint x="1631" y="782" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge47" edge="1" value="" parent="1" source="node15" target="node19" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=1.000;entryY=0.500;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="3468" y="3725" />
+          <mxPoint x="3468" y="3025" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge26" edge="1" value="" parent="1" source="node63" target="node41" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.000;exitDx=0;exitDy=0;entryX=0.500;entryY=0.001;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="5387" y="1354" />
+          <mxPoint x="3652" y="1354" />
+          <mxPoint x="3652" y="-31" />
+          <mxPoint x="1239" y="-31" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge23" edge="1" value="" parent="1" source="node36" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=1.007;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="3455" y="4550" />
+          <mxPoint x="4262" y="4550" />
+          <mxPoint x="4262" y="3942" />
+          <mxPoint x="4981" y="3942" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge48" edge="1" value="" parent="1" source="node52" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=1.005;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="5499" y="3690" />
+          <mxPoint x="4981" y="3690" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge20" edge="1" value="" parent="1" source="node30" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.157;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="3165" y="4643" />
+          <mxPoint x="3165" y="4550" />
+          <mxPoint x="4262" y="4550" />
+          <mxPoint x="4262" y="3942" />
+          <mxPoint x="4981" y="3942" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge42" edge="1" value="" parent="1" source="node59" target="node41" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.003;exitDx=0;exitDy=0;entryX=0.500;entryY=0.001;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4531" y="2733" />
+          <mxPoint x="3652" y="2733" />
+          <mxPoint x="3652" y="-31" />
+          <mxPoint x="1239" y="-31" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge38" edge="1" value="" parent="1" source="node61" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4981" y="4129" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge12" edge="1" value="" parent="1" source="node48" target="node41" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=1.003;exitDx=0;exitDy=0;entryX=0.500;entryY=0.001;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4090" y="2733" />
+          <mxPoint x="3652" y="2733" />
+          <mxPoint x="3652" y="-31" />
+          <mxPoint x="1239" y="-31" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge46" edge="1" value="" parent="1" source="node20" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=0.009;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1948" y="4052" />
+          <mxPoint x="3026" y="4052" />
+          <mxPoint x="3026" y="3504" />
+          <mxPoint x="4262" y="3504" />
+          <mxPoint x="4262" y="3942" />
+          <mxPoint x="4981" y="3942" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge18" edge="1" value="" parent="1" source="node41" target="node3" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=1;startArrow=none;endArrow=block;endSize=12;strokeColor=#008200;exitX=0.500;exitY=1.001;exitDx=0;exitDy=0;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1239" y="782" />
+          <mxPoint x="1631" y="782" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge5" edge="1" value="" parent="1" source="node13" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4262" y="6457" />
+          <mxPoint x="4262" y="3942" />
+          <mxPoint x="4981" y="3942" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge36" edge="1" value="" parent="1" source="node7" target="node41" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=1.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.500;entryY=0.001;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="3652" y="655" />
+          <mxPoint x="3652" y="-31" />
+          <mxPoint x="1239" y="-31" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge0" edge="1" value="" parent="1" source="node40" target="node3" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=1;startArrow=none;endArrow=block;endSize=12;strokeColor=#008200;exitX=0.000;exitY=0.500;exitDx=0;exitDy=0;entryX=0.500;entryY=0.000;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="1344" y="1832" />
+          <mxPoint x="1344" y="782" />
+          <mxPoint x="1631" y="782" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+    <mxCell id="edge24" edge="1" value="" parent="1" source="node45" target="node4" style="html=1;rounded=1;edgeStyle=orthogonalEdgeStyle;dashed=0;startArrow=none;endArrow=block;endSize=12;strokeColor=#000082;exitX=0.500;exitY=1.005;exitDx=0;exitDy=0;entryX=0.306;entryY=1.003;entryDx=0;entryDy=0;">
+      <mxGeometry width="50" height="50" relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="4137" y="3504" />
+          <mxPoint x="4262" y="3504" />
+          <mxPoint x="4262" y="3942" />
+          <mxPoint x="4981" y="3942" />
+          <mxPoint x="4981" y="3777" />
+          <mxPoint x="4950" y="3777" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+  </root>
+</mxGraphModel>
