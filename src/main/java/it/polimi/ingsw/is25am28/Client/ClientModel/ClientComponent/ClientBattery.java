@@ -36,7 +36,7 @@ public final class ClientBattery extends ClientComponent {
     }
 
     /**
-     * @return Sets the battery's availability
+     * Sets the battery's availability
      */
     public void setAvailability(int energyLevel) throws IllegalArgumentException {
             available = energyLevel;

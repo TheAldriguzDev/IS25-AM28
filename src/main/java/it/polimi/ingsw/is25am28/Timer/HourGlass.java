@@ -55,8 +55,11 @@ public class HourGlass extends TimerObservable {
     }
 
     /**
-     * Sets this timer's number of available flips
-     * If <code>flipCount < 0</code>, then the timer is set at 0 remaining flips
+     * Sets the number of available flips for this timer.
+     * <p>
+     * If {@code flipCount} is negative, the number of remaining flips is set to {@code 0}.
+     *
+     * @param flipCount the number of flips to set
      */
     public void setRemainingFlips(long flipCount) {
         this.remainingFlips = Math.max(0, flipCount);
@@ -70,8 +73,11 @@ public class HourGlass extends TimerObservable {
     }
 
     /**
-     * Sets this timer's duration (in milliseconds) and regenerates the remaining duration attribute.
-     * If <code>durationInMillis < 0</code>, then the timer is set at 0 duration
+     * Sets the duration of this timer in milliseconds and regenerates the remaining duration attribute.
+     * <p>
+     * If {@code durationInMillis} is negative, the timer's duration is set to {@code 0}.
+     *
+     * @param durationInMillis the duration to set, in milliseconds
      */
     public void setDurationInMillis(long durationInMillis) {
         this.durationInMillis = Math.max(0, durationInMillis);
