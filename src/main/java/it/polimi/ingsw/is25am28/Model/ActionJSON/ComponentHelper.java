@@ -11,6 +11,8 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 
 /**
  * This class helps use to deal with the JSON data to take / drop resources from / to a user
+ *
+ * @param <T> is the Type of the item that will be stored in the ComponentHelper instance.
  * */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ComponentHelper<T> implements Serializable {
