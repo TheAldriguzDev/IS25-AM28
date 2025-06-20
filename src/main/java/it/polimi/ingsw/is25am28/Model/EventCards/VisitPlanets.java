@@ -29,6 +29,7 @@ public class VisitPlanets extends EventCard {
 
     private final int movementSteps;
     private int chosenPlanetIndex;
+    private int selectedIndexes;
     private String prevPlayerNickname;
 
     // Constructor
@@ -55,6 +56,7 @@ public class VisitPlanets extends EventCard {
 
         this.movementSteps = movementSteps;
         this.chosenPlanetIndex = -1;
+        this.selectedIndexes = 0;
         this.itemsPerPlanet = new HashMap<>();
 
         int planetIndex = 0;
@@ -285,6 +287,8 @@ public class VisitPlanets extends EventCard {
                         chosenPlanetIndex,
                         this.currentPlayer.get()
                     );
+
+                    this.selectedIndexes++;
                 }
                 else {
                     throw new IllegalArgumentException("ERROR: Chosen planet index was already chosen by someone else");
@@ -297,7 +301,7 @@ public class VisitPlanets extends EventCard {
 
         // Set the "hasBeenUsed" flag to true iff all the available planets
         // have been chosen or if all players have answered to the card (i.e.: currPlayer == players.getLast())
-        if (this.itemsPerPlanet.isEmpty() || this.currentPlayer.isEmpty()) {
+        if (this.selectedIndexes == this.itemsPerPlanet.size() || this.currentPlayer.isEmpty()) {
             this.malusEffect();
             this.cardUsed();
         }
@@ -323,9 +327,6 @@ public class VisitPlanets extends EventCard {
 
             if (itemsPerPlanet.containsKey(chosenPlanetIndex)) {
                 cardState.setChosenPlanetIndex(chosenPlanetIndex);
-
-                // Removing the planet that the current player selected (if present)
-                this.itemsPerPlanet.remove(this.chosenPlanetIndex);
 
                 setUpdatedDroppedResourcesIfNecessary(cardState, this.droppedResources);
                 setUpdatedTakenResourcesIfNecessary(cardState, this.takenResources);
