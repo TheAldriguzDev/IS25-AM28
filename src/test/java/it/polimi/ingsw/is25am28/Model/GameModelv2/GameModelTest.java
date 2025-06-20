@@ -292,8 +292,6 @@ class GameModelTest {
 
         // p1 - p2 - p4 add astronauts to their ship, instead p3 add a brown alien
 
-        // TODO: Add some errors to test the correct behavior of the model
-
         ComponentHelper<LifeformType> addAstronauts = new ComponentHelper<LifeformType>(6, 7).addItem(LifeformType.ASTRONAUT);
 
         ComponentHelper<LifeformType> addBrownAlien = new ComponentHelper<LifeformType>(6, 7).addItem(LifeformType.BROWN_ALIEN);
@@ -404,8 +402,6 @@ class GameModelTest {
 
         json = mapper.writeValueAsString(this.model.generateState());
         // System.out.println(json);
-
-        // TODO: try to execute some command with errors
     }
 
     /**
@@ -605,8 +601,6 @@ class GameModelTest {
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 2");
         assertTrue(tileState.isSelected());
-
-        // TODO: Test flip timer
 
         // Create the ship for each player: all the players will only have the core cabin --> all valid ships
         List<StateDTO> playerEndedShipStates = model.playerEndedSendShip("Player 1", 2);
