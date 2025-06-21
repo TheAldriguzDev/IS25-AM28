@@ -72,10 +72,8 @@ public class ClientWarZone extends ClientEventCard {
                     enabledCommands.add("setCrewToRemove");
                 }
                 case "ShootingSequence" -> {
-                    System.out.println("Imposto plasmashot");
                     this.currentPlasmaShot = cardState.getCurrPlasmaShotDescriptor();
                     this.diceThrowResult = cardState.getDiceThrowResult();
-                    System.out.println("ENABLED SHOOTING SEQUENCE");
                     enabledCommands.add("setShieldsToActivate");
                 }
                 case "LossItems" -> {
