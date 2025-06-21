@@ -72,8 +72,6 @@ public final class EndGameState extends State {
         for (Player p : alivePlayers) {
             p.addCredits(p.getShip().getAllItemValue());
             p.addCredits(-1 * p.getLostPieces());
-
-
         }
 
         // Eliminated players

@@ -189,10 +189,15 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
         throw new IllegalStateException("The 'playCard' command is not allowed in the " + this + " state");
     }
 
-    // This method is used exclusively in the ShipConstructionState to handle disconnection to free the locked resources by a player
-    // If a player has selected a subdeck, it must be deselected to allow other players to use it.
+    /**
+     * Handles the disconnection of a player during the ShipConstructionState,
+     * freeing any resources locked by the player. In particular, if the player
+     * has selected a subdeck, it will be deselected to allow other players to use it.
+     *
+     * @param player the username of the player who has disconnected
+     */
     public void handlePlayerDisconnection(String player) {
-        // TODO
+        throw new IllegalStateException("The 'populateShip' command is not allowed in the " + this + " state");
     }
 
     /**

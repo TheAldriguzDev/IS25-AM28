@@ -64,12 +64,10 @@ public class Player {
       }
 
       /**
-       * @return The actual number of credits of this player, given
-       *         that each lost piece costs 1 credit.
+       * @return The total credits amount
        */
-      // TODO remove - lost pieces, change end game accordingly
       public int getCredits(){
-            return credits - lostPieces;
+            return credits;
       }
 
       /**
