@@ -378,7 +378,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
      */
     public List<ClientEngine> getDoubleEngines() {
         return new ArrayList<ClientEngine>(
-            this.engineList.stream()
+            this.getEngineList().stream()
                 .filter(e -> e.getSpeed() == 2)
                 .toList()
         );
@@ -389,7 +389,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
      */
     public List<ClientCannon> getDoubleCannons() {
         return new ArrayList<ClientCannon>(
-            this.cannonList.stream()
+            this.getCannonList().stream()
                 .filter(c -> c.getFirePower() == 2)
                 .toList()
         );

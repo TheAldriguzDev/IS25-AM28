@@ -9,6 +9,11 @@ public class ClientFixShipState extends ClientState {
     public ClientFixShipState(ClientModel model, FixShipDTO fixShipDTO) {
         super(model);
         this.fixShipDTO = fixShipDTO;
+
+        // Generating the component sublist when the ship is fixed
+        this.model.getShipOfPlayer(this.model.getNickname()).ifPresent(
+                ClientShip::generateComponentSubLists
+        );
     }
 
     @Override
