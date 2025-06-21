@@ -225,6 +225,8 @@ public abstract class EventCard {
     /**
      * Initializes the flags needed to know which fields need to be updated
      * in order to perform a differential update of the card's state.
+     *
+     * @param cardState that needs the flags to be set
      */
     protected void initStateFlags(CardStateJSON cardState) {
         // Initializing the three main flags
@@ -261,6 +263,9 @@ public abstract class EventCard {
      * <br>
      * This method clears the list after being used (if it wasn't empty to begin with), so that the
      * old data is not sent back to the clients another time
+     *
+     * @param cardState that needs the fields to be set
+     * @param updatedPositions contains the updated positions of each player
      */
     protected void setUpdatedPositionsIfNecessary(
             CardStateJSON cardState,
@@ -287,6 +292,9 @@ public abstract class EventCard {
      * <br>
      * This method clears the list after being used (if it wasn't empty to begin with), so
      * that the old data is not sent back to the clients another time.
+     *
+     * @param cardState that needs the fields to be set
+     * @param eliminatedPlayers contains the eliminated players
      */
     protected void setUpdatedEliminatedPlayersIfNecessary(
             CardStateJSON cardState,
@@ -306,6 +314,9 @@ public abstract class EventCard {
      * <br>
      * This method clears the list after being used (if it wasn't empty to begin with), so
      * that the old data is not sent back to the clients another time.
+     *
+     * @param cardState that needs the fields to be set
+     * @param updatedCredits contains the updated credits of each player
      */
     protected void setUpdatedCreditsIfNecessary(
             CardStateJSON cardState,
@@ -325,6 +336,9 @@ public abstract class EventCard {
      * <br>
      * This method clears the list after being used (if it wasn't empty to begin with), so
      * that the old data is not sent back to the clients another time.
+     *
+     * @param cardState that needs the fields to be set
+     * @param droppedResources contains the dropped resources of each player
      */
     protected void setUpdatedDroppedResourcesIfNecessary(
             CardStateJSON cardState,
@@ -345,6 +359,9 @@ public abstract class EventCard {
      * <br>
      * This method clears the list after being used (if it wasn't empty to begin with), so
      * that the old data is not sent back to the clients another time.
+     *
+     * @param cardState that needs the fields to be set
+     * @param takenResources contains the taken resources of each player
      */
     protected void setUpdatedTakenResourcesIfNecessary(
             CardStateJSON cardState,
@@ -364,6 +381,9 @@ public abstract class EventCard {
      * <br>
      * This method clears the list after being used (if it wasn't empty to begin with), so
      * that the old data is not sent back to the clients another time.
+     *
+     * @param cardState that needs the fields to be set
+     * @param removedComponents contains the removed components of each player
      */
     protected void setUpdatedRemovedComponentsIfNecessary(
             CardStateJSON cardState,
@@ -383,6 +403,9 @@ public abstract class EventCard {
      * <br>
      * This method clears the list after being used (if it wasn't empty to begin with), so
      * that the old data is not sent back to the clients another time.
+     *
+     * @param cardState that needs the fields to be set
+     * @param removedLifeforms contains the removed lifeForms of each player
      */
     protected void setUpdatedRemovedLifeformsIfNecessary(
             CardStateJSON cardState,
@@ -402,6 +425,9 @@ public abstract class EventCard {
      * <br>
      * This method clears the list after being used (if it wasn't empty to begin with), so
      * that the old data is not sent back to the clients another time.
+     *
+     * @param cardState that needs the fields to be set
+     * @param removedBatteries contains the removed batteries of each player
      */
     protected void setUpdatedRemovedBatteriesIfNecessary(
             CardStateJSON cardState,
@@ -415,6 +441,16 @@ public abstract class EventCard {
         }
     }
 
+    /**
+     * If the map of lostPieces is not empty, it means that there is something to send
+     * to the clients, so we set the field in the cardState.
+     * <br>
+     * This method clears the list after being used (if it wasn't empty to begin with), so
+     * that the old data is not sent back to the clients another time.
+     *
+     * @param cardState that needs the fields to be set
+     * @param lostPieces contains the lost pieces of each player
+     */
     protected void setUpdatedLostPiecesIfNecessary(
             CardStateJSON cardState,
             Map<String, Integer> lostPieces

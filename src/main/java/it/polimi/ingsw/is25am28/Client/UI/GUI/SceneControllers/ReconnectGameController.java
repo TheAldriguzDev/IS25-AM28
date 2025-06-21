@@ -25,7 +25,6 @@ public class ReconnectGameController extends GUIController {
      * @param actionEvent the event triggered by the "Reconnect Game" button click
      */
     public void onSubmitReconnectGameButtonClick(ActionEvent actionEvent) {
-        System.out.println("Clicked");
         String nickname = this.nicknameTextField.getText() == null ? "" : this.nicknameTextField.getText().trim().strip();
 
         Platform.runLater(() -> {

@@ -146,17 +146,16 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
                     ClientCabin component = new ClientCabin(id, connectorOrdinals, isCore, isCore ? "/imgs/tiles/core_" + color.getPlayerColorString() + ".jpg" : path);
                     if (isCore) {
+                        component.getInhabitants().clear();
                         this.core = component;
                     }
 
-                    if (!isCore) {
-                        for (LifeformType lifeformType : lifeform) {
-                            component.addInhabitant(new Lifeform(lifeformType));
-                            if (lifeformType.equals(LifeformType.BROWN_ALIEN)) {
-                                this.brownAlienPosition = component;
-                            } else if (lifeformType.equals(LifeformType.PURPLE_ALIEN)) {
-                                this.purpleAlienPosition = component;
-                            }
+                    for (LifeformType lifeformType : lifeform) {
+                        component.addInhabitant(new Lifeform(lifeformType));
+                        if (lifeformType.equals(LifeformType.BROWN_ALIEN)) {
+                            this.brownAlienPosition = component;
+                        } else if (lifeformType.equals(LifeformType.PURPLE_ALIEN)) {
+                            this.purpleAlienPosition = component;
                         }
                     }
 
