@@ -72,7 +72,7 @@ public final class ShipContructionState extends State implements TimerObserver {
             this.hourGlass = new HourGlass(this.gameLevel);
             this.hourGlass.addTimerSubscriber(this);
 
-//            this.hourGlass.setDurationInMillis(3000);   // 3s
+            this.hourGlass.setDurationInMillis(3000);   // 3s
 //            this.hourGlass.setDurationInMillis(10000);  // 10s
 
             this.hourGlass.flip();

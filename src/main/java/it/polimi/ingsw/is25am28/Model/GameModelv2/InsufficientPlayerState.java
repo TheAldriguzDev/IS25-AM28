@@ -37,7 +37,7 @@ public final class InsufficientPlayerState extends State implements TimerObserve
     }
 
     /**
-     * Unsubscribe the
+     * Unsubscribe the countdown
      * */
     private void removeTimer() {
         if (this.countdown != null) {
