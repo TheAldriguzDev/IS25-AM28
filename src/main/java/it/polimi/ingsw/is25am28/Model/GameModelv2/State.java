@@ -197,7 +197,8 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
      * @param player the username of the player who has disconnected
      */
     public void handlePlayerDisconnection(String player) {
-        throw new IllegalStateException("The 'populateShip' command is not allowed in the " + this + " state");
+        // Empty since, each state can invoke this method when a player disconnects, but it's only
+        // used in the ShipConstructionState to free the eventual selected subdeck from the given player
     }
 
     /**
