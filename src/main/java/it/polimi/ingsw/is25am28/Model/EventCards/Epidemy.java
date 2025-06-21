@@ -9,11 +9,12 @@ import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
+import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 
 public class Epidemy extends EventCard {
-    private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
+    private final Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
 
     // Constructor
     public Epidemy(String name, int cardLevel, Board board, int uniqueCardId, String path) {
@@ -73,8 +74,7 @@ public class Epidemy extends EventCard {
                 );
             }
 
-            this.removedLifeforms = new HashMap<>();
-            this.removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), previousPlayerRemovedLifeforms);
+            this.removedLifeforms.put(this.currentPlayer.get().getNickname(), previousPlayerRemovedLifeforms);
         }
 
         // Getting the next player (in order of leaderboard placements)
@@ -102,6 +102,9 @@ public class Epidemy extends EventCard {
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
 
             setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
+
+            System.out.println("LATO SERVER: ");
+            printAllEpidemyCardstate(cardState);
         }
         else {
             cardState.setCardTypeId(this.cardTypeId);
@@ -127,5 +130,17 @@ public class Epidemy extends EventCard {
         cardState.setImagePath(this.path);
 
         return cardState;
+    }
+
+    // todo only for testing delete after resolving bug
+    public static void printAllEpidemyCardstate(CardStateJSON cardState) {
+        if (!cardState.getNeedsUpdatedRemovedLifeforms()) return;
+        for (String p : cardState.getRemovedLifeforms().keySet()) {
+            System.out.println("Player: " + p + ", removed lifeforms: ");
+            for(ComponentHelper<LifeformType> lifeForm : cardState.getRemovedLifeforms().get(p)) {
+                System.out.println(lifeForm.toString());
+            }
+            System.out.println("PREVIOUS: " + cardState.getPrevPlayerNickname());
+        }
     }
 }

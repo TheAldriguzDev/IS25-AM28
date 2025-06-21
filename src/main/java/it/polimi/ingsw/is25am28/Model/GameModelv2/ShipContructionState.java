@@ -350,6 +350,15 @@ public final class ShipContructionState extends State implements TimerObserver {
         state.setStateName(this.toString());
         state.setEventType(ShipConstructionType.SHIP_EVENT.toString());
 
+        // TODO remove after testing
+//        try {
+//            FastShipLoader fastShipLoader = new FastShipLoader();
+//            fastShipLoader.dumpShipJSON(this.model.getPlayers().get(player).getShip());
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+
+
         return state;
     }
 

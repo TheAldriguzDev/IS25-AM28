@@ -586,9 +586,20 @@ public class WarZone extends EventCard {
         // Get the list of components where we need to remove the lifeForm of the given player
         List<ComponentHelper<LifeformType>> lifeFormToBeRemoved = new ArrayList<>(warZoneJSON.getLifeformsToBeRemoved());
 
-        if (lifeFormToBeRemoved.size() != this.requiredCrew && lifeFormToBeRemoved.size() != player.getShip().getAllLifeforms().size()) {
-            throw new IllegalArgumentException("The removed crew members are not enough!");
-        } else if (lifeFormToBeRemoved.size() > this.requiredCrew) {
+//        if (lifeFormToBeRemoved.size() != this.requiredCrew && lifeFormToBeRemoved.size() != player.getShip().getAllLifeforms().size()) {
+//            throw new IllegalArgumentException("The removed crew members are not enough!");
+//        } else if (lifeFormToBeRemoved.size() > this.requiredCrew) {
+//            throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
+//        }
+
+        int numOfCrewToRemove = warZoneJSON.getLifeformsToBeRemoved().size();
+        int numOfTotalCrew = player.getShip().getAllLifeforms().size();
+
+        if (
+                (numOfCrewToRemove != this.requiredCrew && numOfCrewToRemove != numOfTotalCrew)
+                        || (numOfCrewToRemove > this.requiredCrew)
+        ) {
+            // Exception thrown if the removed crew members are too few or too much
             throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
         }
 

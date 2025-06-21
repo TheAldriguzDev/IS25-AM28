@@ -13,6 +13,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
+import it.polimi.ingsw.is25am28.Model.EventCards.Epidemy;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
@@ -2288,6 +2289,13 @@ public class CardRoundController extends GUIController {
 //                    }
 //                }
 //            }
+            // TODO remove after finding bug
+            if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
+                System.out.println("LATO CLIENT: ");
+                if (this.currEventCard instanceof ClientEpidemy) {
+                    Epidemy.printAllEpidemyCardstate(cardStateJSON);
+                }
+            }
 
 
             // Updating the lifeForms icons
