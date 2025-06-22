@@ -253,9 +253,14 @@ public class ShipConstructionScreen extends Screen {
         command = new CommandWidgetTUI(
             "7",
             () -> {
-                this.getOtherShipCommand();
-                clearTerminal();
-                this.getComponentSelectionCommand();
+                try {
+                    this.getOtherShipCommand();
+                    clearTerminal();
+                    this.getComponentSelectionCommand();
+                }
+                catch (InterruptedException e) {
+                    // A forced interrupt arrived
+                }
             }
         );
         command.appendString("Visualize ships");
@@ -984,7 +989,7 @@ public class ShipConstructionScreen extends Screen {
      * Asks the player which other player's ship he wants to view
      * and prints it to terminal
      */
-    private void getOtherShipCommand() {
+    private void getOtherShipCommand() throws InterruptedException {
         boolean commandExecuted;
 
         this.otherShipId.set(-1);
@@ -1037,13 +1042,10 @@ public class ShipConstructionScreen extends Screen {
                 .wrapWidgetWithBorder()
                 .printWidget();
 
-            try {
-                System.out.print("Press any key and then press [ENTER] to go back...");
-                this.inputThread.waitForInput();
-            }
-            catch (InterruptedException e) {
-                // A forced interrupt arrived
-            }
+            System.out.print("Press any key and then press [ENTER] to go back...");
+            String line = this.inputThread.waitForInput();
+
+            if (line == null) throw new InterruptedException();
         }
     }
 

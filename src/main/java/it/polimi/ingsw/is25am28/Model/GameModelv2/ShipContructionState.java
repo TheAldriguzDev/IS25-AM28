@@ -252,7 +252,8 @@ public final class ShipContructionState extends State implements TimerObserver {
                 throw new RuntimeException("An error occurred while reading the json file: " + e);
             }
         }
-        this.fastShipLoader.loadShipFromJSON(targetShip);
+        List<Integer> usedComponents = this.fastShipLoader.loadShipFromJSON(targetShip);
+        this.selected_components.addAll(usedComponents);
 
         // Adding the player to the ones that have finished
         this.playerEndedSendShip(playerNickname, 0);

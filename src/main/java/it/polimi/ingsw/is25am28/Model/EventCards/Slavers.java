@@ -92,8 +92,6 @@ public class Slavers extends EventCard {
                                         .toList()
                         );
 
-                        System.out.println("FP: " + playerFirepower);
-
                         if (playerFirepower > requiredFirepower) {
                             cardUsed();
                             if (slaversData.getTakeCredits()) {

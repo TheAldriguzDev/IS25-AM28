@@ -1,6 +1,7 @@
 package it.polimi.ingsw.is25am28.Loader;
 
 import it.polimi.ingsw.is25am28.Loader.FastShipTiles.FastShipTiles;
+import it.polimi.ingsw.is25am28.Loader.FastShipTiles.FastShipTilesInfo;
 import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
@@ -10,6 +11,7 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Responsible for handling the loading and dumping of ship configurations
@@ -83,8 +85,10 @@ public class FastShipLoader extends Loader<FastShipTiles> {
      * and populates the given ship object.
      *
      * @param ship the ship object to be populated with components read from JSON
+     *
+     * @return the List of the id's of the used components
      */
-    public void loadShipFromJSON(Ship ship) {
+    public List<Integer> loadShipFromJSON(Ship ship) {
 
         FastShipTiles fastShipTilesData = this.getReadJSON();
 
@@ -108,7 +112,14 @@ public class FastShipLoader extends Loader<FastShipTiles> {
 
 //        System.out.println("Finished adding components");
 
+        List<Integer> usedItems = this.getReadJSON().getFastShipTilesInfo(shipToLoad)
+                .stream()
+                .map(FastShipTilesInfo::getId)
+                .toList();
+
         shipToLoad++;
+
+        return usedItems;
     }
 
 }
