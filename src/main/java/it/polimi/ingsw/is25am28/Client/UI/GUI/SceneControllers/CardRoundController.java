@@ -567,7 +567,6 @@ public class CardRoundController extends GUIController {
 
         try {
 
-            this.mainShip.generateComponentSubLists();
             List<CoordinatePair> activatedCannonsCoords = this.currEventCard.getDoubleCannonsToActivate().stream()
                     .map(Pair::getKey)
                     .toList();
@@ -760,7 +759,6 @@ public class CardRoundController extends GUIController {
         });
         this.commandsGrid.add(goBackButton, 0, 0);
 
-//        if (this.clientModel.getResourceBank()) // TODO RB filter // TEST
         if (this.clientModel.getResourceBank().getResources().values().stream().allMatch(res -> res == 0)) {
             cardItemColors.clear();
             this.initCommandDescriptionBox("There are no available\nitem colors in the resource bank!");
@@ -1226,12 +1224,15 @@ public class CardRoundController extends GUIController {
                     this.emptiedBatteriesRegions.clear();
                     this.emptiedBatteriesMap.clear();
 
-                    this.mainShip.generateComponentSubLists();
+                    List<ClientCannon> doubleCannons = this.mainShip.getDoubleCannons();
+                    List<ClientEngine> doubleEngines = this.mainShip.getDoubleEngines();
+                    List<ClientShield> shields = this.mainShip.getShieldList();
+
                     Platform.runLater(
                             () -> {
-                                this.initRegionMap(this.doubleCannonsRegions, new ArrayList<>(this.mainShip.getDoubleCannons()), this::handleDoubleCannonToActivate);
-                                this.initRegionMap(this.doubleEnginesRegions, new ArrayList<>(this.mainShip.getDoubleEngines()), this::handleDoubleEnginesToActivate);
-                                this.initRegionMap(this.shieldsRegions, new ArrayList<>(this.mainShip.getShieldList()), this::handleShieldsToActivate);
+                                this.initRegionMap(this.doubleCannonsRegions, new ArrayList<>(doubleCannons), this::handleDoubleCannonToActivate);
+                                this.initRegionMap(this.doubleEnginesRegions, new ArrayList<>(doubleEngines), this::handleDoubleEnginesToActivate);
+                                this.initRegionMap(this.shieldsRegions, new ArrayList<>(shields), this::handleShieldsToActivate);
 
                                 this.visualizePlayerActions();
                             }
@@ -1272,7 +1273,6 @@ public class CardRoundController extends GUIController {
                                     // Reverts the storagesToEmptyRegions/icons
                                     guiUtils.revertVisuals(this.shipGrid, this.emptiedItemsMap, this.emptiedStoragesRegions, this.storagesToEmptyRegions,ClientStorage.class, guiUtils::initStorageItemIcons);
                                     // Reverts the storagesToFillRegions (in the removeItem the storagesToFillRegions can only increase, so a simple check on the available capacity of the storages is enough, since we do not have to create new regions but only to remove some)
-                                    this.mainShip.generateComponentSubLists();
                                     for (ClientStorage storage : this.mainShip.getStorageList()) {
                                         if (storage.getStoredItems().size() == storage.getCapacity()) {
                                             // If the region already does not exist, nothing happens
@@ -1409,7 +1409,7 @@ public class CardRoundController extends GUIController {
 
 //            System.out.println(PrintUtils.addColor("RIMOSSO STORAGE DA SVUOTARE DALLE REGIONI", ANSIColors.MAGENTA));
             this.emptiedStoragesRegions.put(guiUtils.keyFromCoords(row, col), this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
-
+            this.storagesToEmptyRegions.remove(guiUtils.keyFromCoords(row, col));
             this.shipGrid.getChildren().remove(regionToRemove);
 //            System.out.println("LISTA STORAGES DA SVUOTARE DISPONIBILI (PRIMA): " + this.storagesToEmptyRegions);
 //            System.out.println("Regione rimossa: " + regionToRemove);

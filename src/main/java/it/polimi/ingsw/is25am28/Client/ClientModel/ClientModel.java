@@ -264,6 +264,9 @@ public class ClientModel {
                         }
                     );
                 }
+                this.getShipOfPlayer(playerNickname).ifPresent(
+                        ClientShip::generateComponentSubLists
+                );
             }
         }
 
