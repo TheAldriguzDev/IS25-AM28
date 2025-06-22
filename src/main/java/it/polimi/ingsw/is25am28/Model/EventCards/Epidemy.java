@@ -102,9 +102,6 @@ public class Epidemy extends EventCard {
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
 
             setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
-
-            System.out.println("LATO SERVER: ");
-            printAllEpidemyCardstate(cardState);
         }
         else {
             cardState.setCardTypeId(this.cardTypeId);
@@ -130,17 +127,5 @@ public class Epidemy extends EventCard {
         cardState.setImagePath(this.path);
 
         return cardState;
-    }
-
-    // todo only for testing delete after resolving bug
-    public static void printAllEpidemyCardstate(CardStateJSON cardState) {
-        if (!cardState.getNeedsUpdatedRemovedLifeforms()) return;
-        for (String p : cardState.getRemovedLifeforms().keySet()) {
-            System.out.println("Player: " + p + ", removed lifeforms: ");
-            for(ComponentHelper<LifeformType> lifeForm : cardState.getRemovedLifeforms().get(p)) {
-                System.out.println(lifeForm.toString());
-            }
-            System.out.println("PREVIOUS: " + cardState.getPrevPlayerNickname());
-        }
     }
 }

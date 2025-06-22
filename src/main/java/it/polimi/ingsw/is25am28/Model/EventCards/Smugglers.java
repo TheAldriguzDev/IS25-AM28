@@ -210,7 +210,7 @@ public class Smugglers extends EventCard {
                 if (resourcesToDrop.size() != mostValuableItems.size()) {
                     throw new IllegalArgumentException("The dropped items are not enough!");
                 }
-                else if (this.countOccurrences(mostValuableItems).equals(colorsToDrop)) {
+                else if (!this.countOccurrences(mostValuableItems).equals(this.countOccurrences(colorsToDrop))) {
                     throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board!");
                 }
                 else if (stolenBatteries.size() != batteriesToTake && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {

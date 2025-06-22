@@ -736,7 +736,7 @@ public class CardRoundController extends GUIController {
 
         ClientStorage storage = (ClientStorage) this.mainShip.getComponent(row, col);
         this.commandsGrid.getChildren().clear();
-        List<ItemColor> cardItemColors = this.currEventCard.getAvailableItemColors();
+        List<ItemColor> cardItemColors = new ArrayList<>(this.currEventCard.getAvailableItemColors());
         if (!cardItemColors.isEmpty()) {
             if (!storage.isSpecialStorage() && cardItemColors.stream().allMatch(color -> color.equals(ItemColor.RED))) {
                 this.initCommandDescriptionBox("There are only red items available\nand this storage is not\nsuitable to store them!");
@@ -760,7 +760,11 @@ public class CardRoundController extends GUIController {
         });
         this.commandsGrid.add(goBackButton, 0, 0);
 
-//        if (this.clientModel.getResourceBank()) // TODO RB filter
+//        if (this.clientModel.getResourceBank()) // TODO RB filter // TEST
+        if (this.clientModel.getResourceBank().getResources().values().stream().allMatch(res -> res == 0)) {
+            cardItemColors.clear();
+            this.initCommandDescriptionBox("There are no available\nitem colors in the resource bank!");
+        }
 
         int commandCol = 1;
         for(ItemColor itemColor : cardItemColors) {
@@ -2246,57 +2250,6 @@ public class CardRoundController extends GUIController {
     public void updateVisuals(CardStateJSON cardStateJSON) {
 
         Platform.runLater(() -> {
-            // Updating other ship's visuals
-//            for (Map.Entry<String, GridPane> entry : this.playersShipGridPane.entrySet()) {
-//
-//                String playerNickname = entry.getKey();
-//                GridPane shipGrid = entry.getValue();
-//
-//                if (
-//                        (cardStateJSON.getPrevPlayerNickname() == null)
-//                        || (
-//                                !(playerNickname.equals(cardStateJSON.getPrevPlayerNickname()) && this.clientModel.getNickname().equals(playerNickname))
-//                        )
-//                ) {
-//                    // Getting the player's ship
-//                    ClientShip ship = this.clientModel.getShipOfPlayer(playerNickname).orElse(null);
-//                    if (ship == null) {
-//                        System.out.println(PrintUtils.addColor("[ERROR] [GuiController] ClientShip is null", ANSIColors.RED));
-//                        return;
-//                    }
-//
-//                    ship.generateComponentSubLists();
-//
-//                    // Updating batteries icons
-//                    if (cardStateJSON.getNeedsUpdatedBatteries()) {
-//                        for (ClientBattery battery : ship.getBatteryList()) {
-//                            guiUtils.initBatteryIcons(battery, this.batteriesMap.get(playerNickname).get(guiUtils.keyFromCoords(battery.getI(), battery.getJ())));
-//                        }
-//                    }
-//
-//                    // Updating the lifeForms icons
-//                    if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
-//                        for (ClientCabin cabin : ship.getCabinList()) {
-//                            guiUtils.initCabinLifeFormIcons(cabin, this.lifeFormsMap.get(playerNickname).get(guiUtils.keyFromCoords(cabin.getI(), cabin.getJ())));
-//                        }
-//                    }
-//
-//                    // Updating the storages icon
-//                    if (cardStateJSON.getNeedsUpdatedDroppedResources() || cardStateJSON.getNeedsUpdatedTakenResources()) {
-//                        for (ClientStorage storage : ship.getStorageList()) {
-//                            guiUtils.initStorageItemIcons(storage, this.itemsMap.get(playerNickname).get(guiUtils.keyFromCoords(storage.getI(), storage.getJ())));
-//                        }
-//                    }
-//                }
-//            }
-            // TODO remove after finding bug
-            if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
-                System.out.println("LATO CLIENT: ");
-                if (this.currEventCard instanceof ClientEpidemy) {
-                    Epidemy.printAllEpidemyCardstate(cardStateJSON);
-                }
-            }
-
 
             // Updating the lifeForms icons
             if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {

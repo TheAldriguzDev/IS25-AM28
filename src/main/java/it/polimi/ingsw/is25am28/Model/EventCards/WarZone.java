@@ -504,7 +504,7 @@ public class WarZone extends EventCard {
         if (resourcesToDrop.size() != mostValuableItems.size()) {
             throw new IllegalArgumentException("The dropped items are not enough");
         }
-        else if (this.countOccurrencies(mostValuableItems).equals(colorsToDrop)) {
+        else if (!this.countOccurrencies(mostValuableItems).equals(this.countOccurrencies(colorsToDrop))) {
             this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
             throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
         }
