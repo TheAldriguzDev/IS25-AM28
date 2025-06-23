@@ -429,7 +429,7 @@ class WarZoneTest {
         List<ComponentHelper<ItemColor>> itemsToBeRemoved = new ArrayList<>();
         itemsToBeRemoved.add(new ComponentHelper<ItemColor>(5, 5).addItem(ItemColor.RED));
         itemsToBeRemoved.add(new ComponentHelper<ItemColor>(7, 4).addItem(ItemColor.YELLOW));
-        itemsToBeRemoved.add(new ComponentHelper<ItemColor>(7, 4).addItem(ItemColor.BLUE));
+        itemsToBeRemoved.add(new ComponentHelper<ItemColor>(7, 4).addItem(ItemColor.GREEN));
 
         actionJSON = new WarZoneJSON("Player 4", lifeformsToRemove_empty, itemsToBeRemoved, new ArrayList<>(), doubleCannons_empty, new ArrayList<>(), new ArrayList<>());
         warzone.useCard(actionJSON);
@@ -438,7 +438,7 @@ class WarZoneTest {
         // Verifying storage changes
         assertEquals(0, p4.getShip().getStorageList().get(0).getStoredItems().size()); // Special storage is now empty
         assertEquals(1, p4.getShip().getStorageList().get(1).getStoredItems().size()); // Normal storage should have only 1 item left
-        assertEquals(ItemColor.GREEN, p4.getShip().getStorageList().get(1).getStoredItems().getFirst().getColor()); // That item should be a blue item
+        assertEquals(ItemColor.BLUE, p4.getShip().getStorageList().get(1).getStoredItems().getFirst().getColor()); // That item should be a blue item
 
         // Verifying changes to the battery counts
         assertEquals(2, p1.getShip().getAvailableEnergy()); // did use 1 battery for the doubleBooster | BASELINE: 3
