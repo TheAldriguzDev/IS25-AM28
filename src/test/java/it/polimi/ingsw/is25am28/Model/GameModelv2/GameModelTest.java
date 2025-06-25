@@ -14,10 +14,10 @@ import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.EventCards.OpenSpace;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
+import it.polimi.ingsw.is25am28.Timer.HourGlass;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.management.timer.Timer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
@@ -25,6 +25,8 @@ import java.util.concurrent.atomic.AtomicReference;
 import static org.junit.jupiter.api.Assertions.*;
 
 class GameModelTest {
+    private static final boolean ENABLE_FULL_TEST_GAME_MODEL_HOURGLASS = false;
+
     private GameModel model;
     ObjectMapper mapper;
 
@@ -773,12 +775,31 @@ class GameModelTest {
         states = model.addNewPlayer("Player 4", PlayerColor.GREEN, null);
         assertEquals(2, states.size());
 
+        // Static flag used to skip the ship construction phase of this test (if necessary)
+        // (e.g. timer too long but cannot make it shorted due to other tests needing the real timer)
+        if (!ENABLE_FULL_TEST_GAME_MODEL_HOURGLASS) return;
+
         // ========================================
         // SHIP CONSTRUCTION STATE --> THE PLAYERS WILL BE ABLE TO CREATE THEIR SHIP
         // ========================================
         assertInstanceOf(ShipContructionState.class, model.getCurrentState());
         json = mapper.writeValueAsString(model.getCurrentState().generateState());
         // System.out.println(json);
+
+        long hourglassDurationInMillis = HourGlass.DEFAULT_DURATION_IN_MILLIS;
+        long timerOffsetInMillis = 100L;
+
+        try {
+            // If the hourglass inside the ship construction state is modified in the constructor
+            // to have a shorter duration, then
+            hourglassDurationInMillis = ((ShipContructionState) this.model.getCurrentState()).getTimer().getDurationInMillis();
+        }
+        catch (NullPointerException e) {
+            throw new RuntimeException("ERROR: Couldn't retrieve hourglass duration from ship construction state (hourglass is null).");
+        }
+
+        // Adding some offset just to avoid weird asynchronisms
+        hourglassDurationInMillis += timerOffsetInMillis;
 
         // Select the tile
         ConstructionComponentDTO tileState = model.selectTile("Player 1", 19);
@@ -856,7 +877,7 @@ class GameModelTest {
         TimerDTO timerDTO;
 
         try {
-            Thread.sleep(4 * Timer.ONE_SECOND);
+            Thread.sleep(hourglassDurationInMillis);
         }
         catch (Exception e) {
             fail("ERROR");
@@ -868,7 +889,7 @@ class GameModelTest {
         assertTrue(timerDTO.getCanBeFlipped());
 
         try {
-            Thread.sleep(4 * Timer.ONE_SECOND);
+            Thread.sleep(hourglassDurationInMillis);
         }
         catch (Exception e) {
             fail("ERROR");
@@ -880,7 +901,7 @@ class GameModelTest {
         assertFalse(timerDTO.getCanBeFlipped());
 
         try {
-            Thread.sleep(4 * Timer.ONE_SECOND);
+            Thread.sleep(hourglassDurationInMillis);
         }
         catch (Exception e) {
             fail("ERROR");
