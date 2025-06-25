@@ -122,12 +122,12 @@ public class ClientPirates extends ClientEventCard {
     @Override
     public String getAdditionalCardInfo() {
         if (!this.firstRound) {
-            return "[CURRENT PLASMASHOT INFO]\nComing from: "
+            return "[CURRENT PLASMASHOT]\nComing from: "
                     + switch (this.currentPlasmaShot.get("shotDirection")) {
                 case 0 -> "ABOVE";
                 case 1 -> "RIGHT";
-                case 2 -> ": BELOW";
-                case 3 -> ": LEFT";
+                case 2 -> "BELOW";
+                case 3 -> "LEFT";
                 default -> "";
             }
                     + "\nSize: "

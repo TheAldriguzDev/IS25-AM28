@@ -63,7 +63,7 @@ public class ClientMeteorShower extends ClientEventCard {
 
         if (this.playerNickname != null) {
             meteorShowerInfo
-                    .appendString("[CURRENT METEOR INFO]")
+                    .appendString("[CURRENT METEOR]")
                     .appendString("Meteor #" + (this.currMeteorIndex + 1));
 
             switch (this.currMeteorDescriptor.get("meteorDirection")) {

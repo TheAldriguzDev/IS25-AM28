@@ -1069,7 +1069,7 @@ public class CardRoundController extends GUIController {
                     Label componentLabel = new Label();
                     Label batteryLabel = new Label();
 
-                    componentLabel.setText(TAB + "Double Cannon @ (row=" + (doubleCannonToActivate.getKey().getI() + 1) + ", col=" + (doubleCannonToActivate.getKey().getJ() + 1) + ")");
+                    componentLabel.setText(TAB + "Cannon @ (row=" + (doubleCannonToActivate.getKey().getI() + 1) + ", col=" + (doubleCannonToActivate.getKey().getJ() + 1) + ")");
                     batteryLabel.setText(TAB + TAB + "Battery @ (row=" + (doubleCannonToActivate.getValue().getI() + 1) + ", col=" + (doubleCannonToActivate.getValue().getJ() + 1) + ")");
 
                     actionsContainer.getChildren().add(componentLabel);
@@ -1086,7 +1086,7 @@ public class CardRoundController extends GUIController {
 
             if (doubleEnginesToActivate != null && !doubleEnginesToActivate.isEmpty()) {
                 label = new Label();
-                label.setText("Double engines to activate:");
+                label.setText("Engines to activate:");
                 actionsContainer.getChildren().add(label);
 
                 for (Pair<CoordinatePair, CoordinatePair> doubleEngineToActivate : doubleEnginesToActivate) {

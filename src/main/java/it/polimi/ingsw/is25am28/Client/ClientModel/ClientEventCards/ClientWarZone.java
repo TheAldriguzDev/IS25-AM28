@@ -96,15 +96,15 @@ public class ClientWarZone extends ClientEventCard {
 
         switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
             case "RequiredCrew" -> {
-                return "Choose the crew members to give up";
+                return "Choose the crew members to give up!";
             }
             case "ShootingSequence" -> {
-                return "[CURRENT PLASMASHOT INFO]\nComing from: "
+                return "[CURRENT PLASMASHOT]\nComing from: "
                         + switch (this.currentPlasmaShot.get("shotDirection")) {
                     case 0 -> "ABOVE";
                     case 1 -> "RIGHT";
-                    case 2 -> ": BELOW";
-                    case 3 -> ": LEFT";
+                    case 2 -> "BELOW";
+                    case 3 -> "LEFT";
                     default -> "";
                 }
                         + "\nSize: "
