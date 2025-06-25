@@ -14,8 +14,8 @@ import java.util.List;
  * The class is designed to be serialized and deserialized using Jackson annotations
  */
 public class AbandonedShipJSON extends ActionJSON {
-    private Boolean wantToVisitShip;
-    private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
+    @JsonProperty("wantToVisitShip")        private Boolean wantToVisitShip;
+    @JsonProperty("lifeformsToBeRemoved")   private List<ComponentHelper<LifeformType>> lifeformsToBeRemoved;
 
     @JsonCreator
     public AbandonedShipJSON() {

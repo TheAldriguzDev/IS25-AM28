@@ -1,7 +1,9 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 
 import java.io.Serializable;
@@ -22,15 +24,14 @@ public class PlayerJSON implements Serializable {
     private boolean isConnected;
     private List<Map<String, Object>> ship;
 
-    /**
-     * Default constructor used client side.
-     */
+    @JsonCreator
     public PlayerJSON() {}
 
     /**
      * Constructor that initializes the JSON with a given ship.
      * This is used mainly server-side to prepare the data for serialization.
      */
+    @JsonCreator
     public PlayerJSON(
             @JsonProperty("nickname") String nickname,
             @JsonProperty("color") String color,
@@ -81,7 +82,6 @@ public class PlayerJSON implements Serializable {
         }
     }
 
-    // Metodi getter per permettere la serializzazione da parte di Jackson
     @JsonGetter("nickname")
     public String getNickname() {
         return nickname;

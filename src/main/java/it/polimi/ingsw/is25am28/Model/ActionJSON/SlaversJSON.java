@@ -1,8 +1,10 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -19,12 +21,14 @@ public class SlaversJSON extends ActionJSON {
     private List<ComponentHelper<LifeformType>> crewToRemove;
     private List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates;
 
+    @JsonCreator
     public SlaversJSON() {
         this.takeCredits = false;
         this.crewToRemove = new ArrayList<>();
         this.doubleCannonsToActivateCoordinates = new ArrayList<>();
     }
 
+    @JsonCreator
     public SlaversJSON (
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("takeCredits") boolean takeCredits,
@@ -32,6 +36,7 @@ public class SlaversJSON extends ActionJSON {
             @JsonProperty("doubleCannonsToActivateCoordinates") List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates
     ) {
         super(playerNickname);
+
         this.takeCredits = takeCredits;
         this.crewToRemove = crewToRemove;
         this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;

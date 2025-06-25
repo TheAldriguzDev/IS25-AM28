@@ -8,7 +8,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * The class is designed to be serialized and deserialized using Jackson annotations
  */
 public class EpidemyJSON extends ActionJSON {
-
     @JsonCreator
     public EpidemyJSON() {}
 

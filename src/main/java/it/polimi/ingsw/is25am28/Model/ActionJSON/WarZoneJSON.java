@@ -1,8 +1,10 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
@@ -23,9 +25,7 @@ public class WarZoneJSON extends ActionJSON {
     private List<Pair<CoordinatePair, CoordinatePair>> engineList;
     private List<CoordinatePair> batteriesToBeStolen;
 
-    /**
-     * Default constructor
-     * */
+    @JsonCreator
     public WarZoneJSON() {
         this.lifeformsToBeRemoved = new ArrayList<>();
         this.itemsToBeRemoved = new ArrayList<>();
@@ -35,6 +35,7 @@ public class WarZoneJSON extends ActionJSON {
         this.batteriesToBeStolen = new ArrayList<>();
     }
 
+    @JsonCreator
     public WarZoneJSON(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("lifeformsToBeRemoved") List<ComponentHelper<LifeformType>> lifeformsToBeRemoved,

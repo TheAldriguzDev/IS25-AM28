@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
@@ -19,10 +20,10 @@ public final class PopulateShipComponentDTO extends ShipConstructionEventDTO {
     private ComponentHelper<LifeformType> component;
     private boolean isShipPopulated;
 
-    // Constructor #1
+    @JsonCreator
     public PopulateShipComponentDTO() {}
 
-    // Constructor #2
+    @JsonCreator
     public PopulateShipComponentDTO(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("component") ComponentHelper<LifeformType> component,

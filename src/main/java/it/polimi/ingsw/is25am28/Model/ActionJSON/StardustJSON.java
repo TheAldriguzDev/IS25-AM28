@@ -1,5 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
@@ -7,10 +8,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * The class is designed to be serialized and deserialized using Jackson annotations
  */
 public class StardustJSON extends ActionJSON {
-
+    @JsonCreator
     public StardustJSON() {}
 
-    public StardustJSON (@JsonProperty("playerNickname") String playerNickname) {
+    @JsonCreator
+    public StardustJSON (
+            @JsonProperty("playerNickname") String playerNickname
+    ) {
         super(playerNickname);
     }
 }

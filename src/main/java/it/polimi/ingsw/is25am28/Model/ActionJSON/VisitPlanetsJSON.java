@@ -19,6 +19,7 @@ public class VisitPlanetsJSON extends ActionJSON {
     private List<ComponentHelper<ItemColor>> itemsToDrop;
     private List<ComponentHelper<ItemColor>> itemsToTake;
 
+    @JsonCreator
     public VisitPlanetsJSON() {
         this.chosenPlanetIndex = -1;
         this.itemsToDrop = new ArrayList<>();

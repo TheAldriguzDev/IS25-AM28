@@ -29,53 +29,53 @@ public class CardStateJSON extends ActionJSON {
     private boolean cardEnded; // WHEN THIS FLAG IS SET TO TRUE THE CURRENT CLIENT CARD MUST NOT BE UPDATED, NOR PRINTED, ONLY THE GENERATE STATE (TO UPDATE THE LAST DATA SENT) IS NECESSARY
 
     // ==== CLIENT PLAYER FLAGS/INFORMATION ==== //
-        private boolean needsPlayerUpdate;
-        private boolean needsUpdatedCredits;
-        private boolean needsUpdatedLostPieces;
-        private Map<String, Integer> updatedCredits;
-        private Map<String, Integer> updatedLostPieces;
+    private boolean needsPlayerUpdate;
+    private boolean needsUpdatedCredits;
+    private boolean needsUpdatedLostPieces;
+    private Map<String, Integer> updatedCredits;
+    private Map<String, Integer> updatedLostPieces;
     // ========================================= //
 
     // ======== CLIENT BOARD FLAGS/INFORMATION ======== //
-        private boolean needsBoardUpdate;
-        private boolean needsUpdatedPositions;
-        private boolean needsUpdatedEliminatedPlayers;
-        private Map<String, Integer> updatedPositions;
-        private List<String> eliminatedPlayers;
+    private boolean needsBoardUpdate;
+    private boolean needsUpdatedPositions;
+    private boolean needsUpdatedEliminatedPlayers;
+    private Map<String, Integer> updatedPositions;
+    private List<String> eliminatedPlayers;
     // =================================================//
 
     // ==== ATTRIBUTES TO SKIP UPDATES (For local updates) ==== //
-        private String prevPlayerNickname;
-        private boolean skipBatteriesUpdate;
-        private boolean skipCrewUpdate;
-        private boolean skipStoragesUpdate;
+    private String prevPlayerNickname;
+    private boolean skipBatteriesUpdate;
+    private boolean skipCrewUpdate;
+    private boolean skipStoragesUpdate;
     // ======================================================== //
 
     // ======= CLIENT SHIP FLAGS/INFORMATION ======== //
-        private boolean needsShipUpdate;
-        private boolean needsUpdatedDroppedResources;
-        private boolean needsUpdatedTakenResources;
-        private boolean needsUpdatedRemovedLifeforms;
-        private boolean needsUpdatedBatteries;
-        private boolean needsUpdatedRemovedComponents;
-        private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
-        private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
-        private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
-        private Map<String, List<CoordinatePair>> removedBatteries;
-        private Map<String, List<Map<String, Object>>> removedComponents;
+    private boolean needsShipUpdate;
+    private boolean needsUpdatedDroppedResources;
+    private boolean needsUpdatedTakenResources;
+    private boolean needsUpdatedRemovedLifeforms;
+    private boolean needsUpdatedBatteries;
+    private boolean needsUpdatedRemovedComponents;
+    private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
+    private Map<String, List<ComponentHelper<ItemColor>>> takenResources;
+    private Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms;
+    private Map<String, List<CoordinatePair>> removedBatteries;
+    private Map<String, List<Map<String, Object>>> removedComponents;
     // ===============================================//
 
 
     // ======== RESOURCES/CREW INFORMATION ======== //
-        private List<ComponentHelper<ItemColor>> resourcesToTake;
-        private List<ComponentHelper<ItemColor>> resourcesToDrop;
-        private List<ComponentHelper<LifeformType>> lifeformsToRemove;
+    private List<ComponentHelper<ItemColor>> resourcesToTake;
+    private List<ComponentHelper<ItemColor>> resourcesToDrop;
+    private List<ComponentHelper<LifeformType>> lifeformsToRemove;
     // =============================================//
 
 
-    // ======== START MODEL INFORMATION ======== //
+    // ========== MODEL INFORMATION ========== //
     private BoardJSON board;
-    // ======== END MODEL INFORMATION ======== //
+    // ======================================= //
 
 
     // ======== START PLAYER INFORMATION ======== //
@@ -136,7 +136,7 @@ public class CardStateJSON extends ActionJSON {
         this.board = board;
     }
 
-    // ======== Player information methods ======== //
+    // ======== Player Information Methods ======== //
     @JsonGetter("playersFirePower")
     public Map<String, Float> getPlayersFirePower() {
         return this.playersFirePower;
@@ -868,10 +868,4 @@ public class CardStateJSON extends ActionJSON {
     public void setPreviousPlayerRemovedComponents(Map<String, List<Map<String, Object>>> removedComponentsPerPlayer) {
         this.previousPlayerRemovedComponents = removedComponentsPerPlayer;
     }
-
-    // ======== //
-
-    // ======== VARIABLES, SETTERS AND GETTERS FOR CLIENT RESPONSES ======== //
-
-
 }

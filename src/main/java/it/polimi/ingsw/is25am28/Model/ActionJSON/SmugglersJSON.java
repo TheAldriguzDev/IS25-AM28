@@ -1,8 +1,10 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
@@ -21,6 +23,7 @@ public class SmugglersJSON extends ActionJSON {
     private List<CoordinatePair> batteriesToBeStolen;
     private List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates;
 
+    @JsonCreator
     public SmugglersJSON() {
         this.takeLoot = false;
         this.itemsToBeTaken = new ArrayList<>();
@@ -29,6 +32,7 @@ public class SmugglersJSON extends ActionJSON {
         this.doubleCannonsToActivateCoordinates = new ArrayList<>();
     }
 
+    @JsonCreator
     public SmugglersJSON(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("takeLoot") boolean takeLoot,
@@ -38,6 +42,7 @@ public class SmugglersJSON extends ActionJSON {
             @JsonProperty("doubleCannonsToActivateCoordinates") List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates
     ) {
         super(playerNickname);
+
         this.takeLoot = takeLoot;
         this.itemsToBeTaken = itemsToBeTaken;
         this.itemsToBeRemoved = itemsToBeRemoved;
@@ -94,5 +99,4 @@ public class SmugglersJSON extends ActionJSON {
     public void setDoubleCannonsToActivateCoordinates(List<Pair<CoordinatePair, CoordinatePair>> doubleCannonsToActivateCoordinates) {
         this.doubleCannonsToActivateCoordinates = doubleCannonsToActivateCoordinates;
     }
-
 }

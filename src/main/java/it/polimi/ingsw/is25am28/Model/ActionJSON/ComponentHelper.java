@@ -1,31 +1,25 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.*;
 
 import java.io.Serializable;
 import java.util.Optional;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.JsonSetter;
-
 
 /**
  * This class helps use to deal with the JSON data to take / drop resources from / to a user
  *
  * @param <T> is the Type of the item that will be stored in the ComponentHelper instance.
- * */
+ */
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class ComponentHelper<T> implements Serializable {
-    @JsonProperty("i")
-    private int i;
-    @JsonProperty("j")
-    private int j;
+    @JsonProperty("i") private int i;
+    @JsonProperty("j") private int j;
+    @JsonProperty("item") private T item;
 
-    @JsonProperty("item")
-    private T item;
-
+    @JsonCreator
     public ComponentHelper() {}
 
+    @JsonCreator
     public ComponentHelper(int i, int j) {
         this.i = i;
         this.j = j;
