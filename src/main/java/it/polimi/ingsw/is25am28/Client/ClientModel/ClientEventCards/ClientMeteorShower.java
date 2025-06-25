@@ -103,8 +103,8 @@ public class ClientMeteorShower extends ClientEventCard {
         {
             case 0  -> "ABOVE";
             case 1  -> "RIGHT";
-            case 2  -> ": BELOW";
-            case 3  -> ": LEFT";
+            case 2  -> "BELOW";
+            case 3  -> "LEFT";
             default -> "";
         };
 
