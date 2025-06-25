@@ -20,7 +20,10 @@ public class ComponentHelper<T> implements Serializable {
     public ComponentHelper() {}
 
     @JsonCreator
-    public ComponentHelper(int i, int j) {
+    public ComponentHelper(
+            @JsonProperty("i") int i,
+            @JsonProperty("j") int j
+    ) {
         this.i = i;
         this.j = j;
         this.item = null;

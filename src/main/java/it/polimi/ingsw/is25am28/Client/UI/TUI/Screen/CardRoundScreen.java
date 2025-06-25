@@ -2176,7 +2176,6 @@ public class CardRoundScreen extends Screen {
                             this.model.getResourceBank().removeResourceFromBank(ic);
                         }
                     }
-
                 }
 
                 if (this.indexedCardInputMethods.get("batteriesToBeStolen").getKey() && this.currEventCard.getBatteriesToBeStolen() != null && !this.currEventCard.getBatteriesToBeStolen().isEmpty()) {
@@ -2189,11 +2188,9 @@ public class CardRoundScreen extends Screen {
                     }
                 }
 
-                System.out.println(PrintUtils.addColor("[ERROR] There was an error while playing the card. Please try again.", ANSIColors.RED));
                 this.ctx = null;
                 this.currEventCard.clearJSON();
 
-                clearTerminal();
                 this.getCardRoundCommand();
             }
         );
