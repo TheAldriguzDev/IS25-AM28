@@ -609,7 +609,6 @@ public class Server {
         }
     }
 
-
     // TODO: MAKE THIS METHOD PUBLIC IN ORDER TO BE INVOKED BY THE GAME MODEL TO END THE GAME
     private void deleteGame(int gameID) {
         // Remove the reference to the gameInstance to be removed by the Garbage Collector

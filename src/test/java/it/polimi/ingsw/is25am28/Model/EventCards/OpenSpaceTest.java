@@ -332,6 +332,4 @@ class OpenSpaceTest {
         // The power that initially was 6, now has been decreased to 5
         assertEquals(5, this.board.getPlayers().getFirst().getShip().getAvailableEnergy());
     }
-
-    // TODO: Aggiungi test per player doppiato e quindi eliminato
 }
