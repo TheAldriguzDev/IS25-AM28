@@ -143,7 +143,7 @@ class SmugglersTest {
 
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
-        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.BLUE));
+        itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.GREEN));
         itemsToBeRemoved3.add(new ComponentHelper<ItemColor>(6, 9).addItem(ItemColor.RED));
 
         // No batteries are removed from p3
@@ -278,7 +278,7 @@ class SmugglersTest {
 //        }
 
         assertEquals(3, ship_3.getAvailableEnergy()); // Rimossi 4 items e 0 batterie
-        assertEquals(ItemColor.GREEN, ship_3.getStorageList().get(1).getStoredItems().get(0).getColor());
+        assertEquals(ItemColor.BLUE, ship_3.getStorageList().get(1).getStoredItems().get(0).getColor());
 
 
         assertEquals(3, ship_4.getAvailableEnergy()); // Rimossi 4 items e 0 batterie
