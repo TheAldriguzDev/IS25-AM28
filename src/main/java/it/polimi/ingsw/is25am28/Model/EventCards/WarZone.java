@@ -508,11 +508,11 @@ public class WarZone extends EventCard {
             this.targetPlayer = this.affectedPlayer.orElse(null).getNickname();
             throw new IllegalArgumentException("The dropped items do not correspond to the most valuable items on board");
         }
-        else if ((stolenBatteries.size() != batteriesToTake) && player.getShip().getAvailableEnergy() != stolenBatteries.size()) {
-            // This exception is triggered only if a wrong number of batteries is sent, the case in which the player cannot select the required number of batteries is checked
-            throw new IllegalArgumentException("The given up batteries are not enough!");
-        }
-        else if (stolenBatteries.size() > batteriesToTake) {
+        else if (
+                (stolenBatteries.size() != batteriesToTake && player.getShip().getAvailableEnergy() != stolenBatteries.size())
+                        || (stolenBatteries.size() > batteriesToTake)) {
+            // This exception is triggered only if a wrong number of batteries is sent, the
+            // case in which the player cannot select the required number of batteries is checked
             throw new IllegalArgumentException("You didn't remove the right amount of batteries, please try again");
         }
 

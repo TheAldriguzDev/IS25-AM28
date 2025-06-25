@@ -274,9 +274,7 @@ public class Pirates extends EventCard {
                     List<Shield> activatedShields = activatedShieldsCoordinates.stream()
                             .map(Pair::getKey)
                             .map(
-                                (p) -> {
-                                    return player.getShip().getComponent(p.getI(), p.getJ());
-                                }
+                                (p) -> player.getShip().getComponent(p.getI(), p.getJ())
                             )
                             .map(
                                 (c) -> {
@@ -329,21 +327,7 @@ public class Pirates extends EventCard {
                                 int column = diceThrowResult - 1;
                                 for (int row = 4; row < 9; row++) {
                                     if (player.getShip().getComponent(row, column) != null) {
-                                        try {
-                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
-                                            this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
-                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
-                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
-                                        }
-                                        catch (CoreDeletionAttemptException e) {
-                                            eliminatedPlayers.add(player.getNickname());
-                                            getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
-                                            playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
-
-                                            if (playersToHit.isEmpty()) {
-                                                cardUsed();
-                                            }
-                                        }
+                                        this.destroyComponent(row, column, player);
                                         break;
                                     }
                                 }
@@ -353,21 +337,7 @@ public class Pirates extends EventCard {
                                 int row = diceThrowResult - 1;
                                 for (int column = 3; column < 10; column++) {
                                     if (player.getShip().getComponent(row, column) != null) {
-                                        try {
-                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
-                                            this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
-                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
-                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
-                                        }
-                                        catch (CoreDeletionAttemptException e) {
-                                            eliminatedPlayers.add(player.getNickname());
-                                            getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
-                                            playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
-
-                                            if (playersToHit.isEmpty()) {
-                                                cardUsed();
-                                            }
-                                        }
+                                        this.destroyComponent(row, column, player);
                                         break;
                                     }
                                 }
@@ -377,21 +347,7 @@ public class Pirates extends EventCard {
                                 int column = diceThrowResult - 1;
                                 for (int row = 8; row > 3; row--) {
                                     if (player.getShip().getComponent(row, column) != null) {
-                                        try {
-                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
-                                            this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
-                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
-                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
-                                        }
-                                        catch (CoreDeletionAttemptException e) {
-                                            eliminatedPlayers.add(player.getNickname());
-                                            getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
-                                            playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
-
-                                            if (playersToHit.isEmpty()) {
-                                                cardUsed();
-                                            }
-                                        }
+                                        this.destroyComponent(row, column, player);
                                         break;
                                     }
                                 }
@@ -401,21 +357,7 @@ public class Pirates extends EventCard {
                                 int row = diceThrowResult - 1;
                                 for (int column = 9; column > 2; column--) {
                                     if (player.getShip().getComponent(row, column) != null) {
-                                        try {
-                                            previousPlayerRemovedComponents = player.getShip().removeComponent(row, column); // Eseguito solo se c'è un componente
-                                            this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
-                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces());
-                                            this.getCurrentPlayer().get().setLostPieces(this.getCurrentPlayer().get().getLostPieces() + previousPlayerRemovedComponents.size());
-                                        }
-                                        catch (CoreDeletionAttemptException e) {
-                                            eliminatedPlayers.add(player.getNickname());
-                                            getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
-                                            playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
-
-                                            if (playersToHit.isEmpty()) {
-                                                cardUsed();
-                                            }
-                                        }
+                                        this.destroyComponent(row, column, player);
                                         break;
                                     }
                                 }
@@ -439,7 +381,7 @@ public class Pirates extends EventCard {
                         }
 
                         if (!removedAliensList.isEmpty()) {
-                            this.removedLifeforms.put(this.getCurrentPlayer().get().getNickname(), removedAliensList);
+                            this.removedLifeforms.put(player.getNickname(), removedAliensList);
                         }
                     }
 
@@ -448,6 +390,33 @@ public class Pirates extends EventCard {
                     currentPlasmaShot = Map.of("shotSize", shotSize, "shotDirection", shotDirection);
                 }
         );
+    }
+
+    /**
+     * Removes the component in the specified coordinates (row, col), setting all the necessary attributes for the state generation.
+     * If the core is deleted, an exception is thrown instead, resulting in the player beign eliminated
+     *
+     * @param row row of the component
+     * @param col column of the component
+     * @param player necessary to get the ship that needs the component removed
+     */
+    private void destroyComponent(int row, int col, Player player) throws CoreDeletionAttemptException{
+        try {
+            this.previousPlayerRemovedComponents = player.getShip().removeComponent(row, col);
+            this.removedComponents.put(player.getNickname(), previousPlayerRemovedComponents.stream().map(Component::toMap).toList());
+            player.setLostPieces(player.getLostPieces());
+            player.setLostPieces(player.getLostPieces() + previousPlayerRemovedComponents.size());
+            this.lostPieces.put(player.getNickname(), player.getLostPieces());
+        }
+        catch (CoreDeletionAttemptException e) {
+            this.eliminatedPlayers.add(player.getNickname());
+            getBoard().eliminatePlayer(player); // Core destroyed, player eliminated
+            this.playersToHit.remove(player); // Further shots must not be headed to the player's ship since it has been destroyed
+
+            if (playersToHit.isEmpty()) {
+                cardUsed();
+            }
+        }
     }
 
     @Override

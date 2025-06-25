@@ -137,7 +137,7 @@ public class ClientPirates extends ClientEventCard {
                 default -> "";
             } + "\nDice Throw Result: " + this.diceThrowResult;
         } else {
-            return "Choose how to deal\nwith the slavers!";
+            return "Choose how to deal\nwith the pirates!";
         }
     }
 

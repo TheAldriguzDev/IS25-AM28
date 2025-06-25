@@ -258,7 +258,7 @@ public class CardRoundController extends GUIController {
             // Do nothing
         }
 
-        List<ClientEngine> nonActivatedEngines = this.mainShip.getEngineList();
+        List<ClientEngine> nonActivatedEngines = this.mainShip.getDoubleEngines();
         try {
             nonActivatedEngines.removeAll(this.currEventCard.getDoubleEnginesToActivate().stream()
                     .map(pair -> {
@@ -714,7 +714,6 @@ public class CardRoundController extends GUIController {
 
         int commandCol = 1;
         for (ItemColor itemColor: storage.getStoredItems().stream().map(Item::getColor).distinct().toList()) {
-//            ItemColor itemColor = item.getColor();
             Button itemColorButton = this.createColorButton(itemColor);
             itemColorButton.setOnAction(event -> {
                 this.chosenItemColor = itemColor;
@@ -1086,14 +1085,14 @@ public class CardRoundController extends GUIController {
 
             if (doubleEnginesToActivate != null && !doubleEnginesToActivate.isEmpty()) {
                 label = new Label();
-                label.setText("Engines to activate:");
+                label.setText("Double engines to activate:");
                 actionsContainer.getChildren().add(label);
 
                 for (Pair<CoordinatePair, CoordinatePair> doubleEngineToActivate : doubleEnginesToActivate) {
                     Label componentLabel = new Label();
                     Label batteryLabel = new Label();
 
-                    componentLabel.setText(TAB + "Double Engine @ (row=" + (doubleEngineToActivate.getKey().getI() + 1) + ", col=" + (doubleEngineToActivate.getKey().getJ() + 1) + ")");
+                    componentLabel.setText(TAB + "Engine @ (row=" + (doubleEngineToActivate.getKey().getI() + 1) + ", col=" + (doubleEngineToActivate.getKey().getJ() + 1) + ")");
                     batteryLabel.setText(TAB + TAB + "Battery @ (row=" + (doubleEngineToActivate.getValue().getI() + 1) + ", col=" + (doubleEngineToActivate.getValue().getJ() + 1) + ")");
 
                     actionsContainer.getChildren().add(componentLabel);
@@ -1679,6 +1678,7 @@ public class CardRoundController extends GUIController {
 //            this.shipGrid.getChildren().remove(boxToUpdate);
 
             this.batteriesMap.remove(guiUtils.keyFromCoords(batteryRow, batteryCol));
+            this.batteriesRegions.remove(this.guiUtils.keyFromCoords(batteryRow, batteryCol));
         }
 
 
@@ -1703,6 +1703,9 @@ public class CardRoundController extends GUIController {
         // Get the current region, then enable the battery regions
         Region selectedRegion = this.currentRegions.get(guiUtils.keyFromCoords(row, col));
         this.enableRegion(this.batteriesRegions);
+        if (this.batteriesRegions.isEmpty()) {
+            this.initCommandDescriptionBox("There are no available\nbatteries consume!");
+        }
         // Coloring the region red to highlight the selectedRegion
         selectedRegion.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
     }
