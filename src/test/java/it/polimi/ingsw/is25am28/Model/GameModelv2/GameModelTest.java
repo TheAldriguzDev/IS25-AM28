@@ -831,8 +831,6 @@ class GameModelTest {
         assertEquals(tileState.getPlayerNickname(), "Player 2");
         assertTrue(tileState.isSelected());
 
-        // TODO: Test flip timer
-
         // Create the ship for each player:
         // Player 1: Valid ship
         // Player 2: Valid ship
@@ -1041,5 +1039,21 @@ class GameModelTest {
         );
 
         assertInstanceOf(ShipContructionState.class, model.getCurrentState());
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> model.reserveTile("Player 1", 33),
+                "The component cannot be reserved since it's not selected"
+        );
+
+        model.selectTile("Player 1", 33);
+
+        assertDoesNotThrow(() -> model.reserveTile("Player 1", 33));
+
+        assertThrows(
+                IllegalStateException.class,
+                () -> model.reserveTile("Player 1", 33),
+                "The component cannot be reserved since it's already reserved"
+        );
     }
 }

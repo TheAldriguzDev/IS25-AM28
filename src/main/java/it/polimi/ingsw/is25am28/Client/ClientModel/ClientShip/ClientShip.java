@@ -388,6 +388,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
      * @return The list of DoubleCannons present on the ship
      */
     public List<ClientCannon> getDoubleCannons() {
+        System.out.println(cannonList.size());
         return new ArrayList<ClientCannon>(
             this.getCannonList().stream()
                 .filter(c -> c.getFirePower() == 2)
