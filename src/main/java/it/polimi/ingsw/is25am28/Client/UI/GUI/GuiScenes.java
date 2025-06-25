@@ -16,10 +16,14 @@ public enum GuiScenes {
 
     private final String fxmlFile;
 
+    // Constructor
     GuiScenes(String fxmlFile) {
         this.fxmlFile = fxmlFile;
     }
 
+    /**
+     * @return The FXML file associated with the current game phase.
+     */
     public String getFxmlFile() {
         return "/GUI/FXML/" + fxmlFile;
     }

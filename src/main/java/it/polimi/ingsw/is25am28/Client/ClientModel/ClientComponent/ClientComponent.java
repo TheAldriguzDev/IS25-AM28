@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public sealed abstract class ClientComponent implements WidgetTUIGenerator permits ClientBattery, ClientCabin, ClientCannon, ClientEngine, ClientShield, ClientStorage, ClientStructural, ClientVital {
-    // The id represent the coordinate of the component in the shipConstructionPhase. It's calculated with (19 * i) + j
+    // The id represent the coordinate of the component in the shipConstructionPhase.
+    // It's calculated with (19 * i) + j
     private int id;
 
     protected Connector[] sides;
@@ -19,12 +20,15 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
 
     protected String path;
 
-    // isFlipped is used to decide if the tile needs to be shown in the shipConstructionState phase
+    // isFlipped is used to decide if the tile needs
+    // to be shown in the shipConstructionState phase
     private boolean isFlipped;
-    // isVisible is used to decide if the tile is "present" on the table where the user can decide which tile to select
-    // when is set to true we will render an invisible component
+
+    // isVisible is used to decide if the tile is "present" on the table where the user can
+    // decide which tile to select when is set to true we will render an invisible component
     private boolean isVisible;
 
+    // Constructor
     public ClientComponent(int id, List<Integer> connectors, String path) {
         this.id = id;
 
@@ -83,46 +87,78 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
         this.col = col;
     }
 
+    /**
+     * Rotates this component to the left (counter-clockwise, CCW)
+     */
     public ClientComponent rotateLeft(){
         direction--;
         if (direction < 0) { direction = 3; }
         return this;
     }
 
+    /**
+     * Rotates this component to the right (clockwise, CW)
+     */
     public ClientComponent rotateRight(){
         direction++;
         if (direction > 3) { direction = 0; }
         return this;
     }
 
+    /**
+     * Sets this component's current rotation.
+     * @param rotation This component's new rotation.
+     */
     public ClientComponent setRotation(int rotation) {
         this.direction = rotation;
         return this;
     }
 
+    /**
+     * @return This component's left connector relative to its default rotation.
+     */
     public Connector getLeftSide() {
         int normalizedPos = 3 - direction;
         if (normalizedPos < 0) normalizedPos += 4;
         return sides[normalizedPos % 4];
     }
 
+    /**
+     * @return This component's right connector relative to its default rotation.
+     */
     public Connector getRightSide() {
         int normalizedPos = 1 - direction;
         if (normalizedPos < 0) normalizedPos += 4;
         return sides[normalizedPos % 4];
     }
 
+    /**
+     * @return This component's top connector relative to its default rotation.
+     */
     public Connector getTopSide() {
         int normalizedPos = 4 - direction;
         return sides[normalizedPos % 4];
     }
 
+    /**
+     * @return This component's bottom connector relative to its default rotation.
+     */
     public Connector getBottomSide() {
         int normalizedPos = 2 - direction;
         if (normalizedPos < 0) normalizedPos += 4;
         return sides[normalizedPos % 4];
     }
 
+    /**
+     * Returns a flag, which is FALSE by default, that says whether this
+     * component needs energy to be used.
+     * <br>
+     * NOTE: If a component actually needs energy, then it has to
+     *       override this method and set the return value to TRUE.
+     *
+     * @return TRUE if this component needs energy to be activated,
+     *         FALSE otherwise.
+     */
     public boolean requiresEnergy() {
         return false;
     }
@@ -158,16 +194,22 @@ public sealed abstract class ClientComponent implements WidgetTUIGenerator permi
         this.isVisible = isVisible;
     }
 
+    /**
+     * @return This component's unique ID.
+     */
     public int getID() {
         return this.id;
     }
 
+    /**
+     * @return This component's image path (GUI).
+     */
     public String getPath() {
         return this.path;
     }
 
     /**
-     * @return This component's screen
+     * @return This component's screen (TUI)
      */
     public abstract List<String> getComponentScreen();
 

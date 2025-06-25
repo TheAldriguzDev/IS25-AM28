@@ -1,18 +1,14 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.*;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Represents a data transfer data object that holds information about the leaderboard at the end of the game
- *
- * * Annotations from the Jackson library are used for JSON serialization and deserialization,
- *  * ensuring that only non-null values are included in the JSON output.
+ * <br>
+ * Annotations from the Jackson library are used for JSON serialization and deserialization,
+ * ensuring that only non-null values are included in the JSON output.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class EndGameDTO extends StateDTO {
@@ -20,8 +16,10 @@ public final class EndGameDTO extends StateDTO {
     private Map<String, Integer> playersCredits;
     private Map<String, Integer> playersPositionResult;
 
+    @JsonCreator
     public EndGameDTO() {}
 
+    @JsonCreator
     public EndGameDTO(
             @JsonProperty("winner") String winner,
             @JsonProperty("playersCredits") Map<String, Integer> playersCredits,

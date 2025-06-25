@@ -16,6 +16,7 @@ public class ClientMeteorShower extends ClientEventCard {
 
     private MeteorShowerJSON meteorShowerJSON;
 
+    // Constructor
     public ClientMeteorShower(CardStateJSON cardState) {
         super(cardState);
         this.meteorShowerJSON = new MeteorShowerJSON();
@@ -95,20 +96,27 @@ public class ClientMeteorShower extends ClientEventCard {
 
     @Override
     public String getAdditionalCardInfo() {
-        return "[CURRENT METEOR INFO]\nComing from: "
-                + switch (this.currMeteorDescriptor.get("meteorDirection")) {
-                    case 0 -> "ABOVE";
-                    case 1 -> "RIGHT";
-                    case 2 -> ": BELOW";
-                    case 3 -> ": LEFT";
-                    default -> "";
-                }
-                + "\nSize: "
-                + switch (this.currMeteorDescriptor.get("meteorSize")) {
-                    case 1 -> "SMALL";
-                    case 2 -> "BIG";
-                    default -> "";
-                } + "\nDice Throw Result: " + this.diceThrowResult;
+        String direction;
+        String size;
+
+        direction = switch (this.currMeteorDescriptor.get("meteorDirection"))
+        {
+            case 0  -> "ABOVE";
+            case 1  -> "RIGHT";
+            case 2  -> ": BELOW";
+            case 3  -> ": LEFT";
+            default -> "";
+        };
+
+        size = switch (this.currMeteorDescriptor.get("meteorSize")) {
+            case 1  -> "SMALL";
+            case 2  -> "BIG";
+            default -> "";
+        };
+
+        return "[CURRENT METEOR INFO]\nComing from: " + direction
+                + "\nSize: " + size
+                + "\nDice Throw Result: " + this.diceThrowResult;
     }
 
     @Override

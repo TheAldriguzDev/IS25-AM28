@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class FixShip implements Message {
     private static final int GRID_SIZE = 12;
 

@@ -15,6 +15,7 @@ public final class ClientBattery extends ClientComponent {
     private final int maxAvailability;
     private int available;
 
+    // Constructor
     public ClientBattery(int id, List<Integer> sides, int maxAvailability, String path) {
         super(id, sides, path);
         this.maxAvailability = maxAvailability;
@@ -114,4 +115,3 @@ public final class ClientBattery extends ClientComponent {
         return WidgetTUI.wrapScreenWithBorder(screen, customBorderScheme);
     }
 }
-

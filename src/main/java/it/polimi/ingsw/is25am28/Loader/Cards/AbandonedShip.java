@@ -13,12 +13,9 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "people",
 })
 public final class AbandonedShip extends Card {
-    @JsonProperty("credits")
-    private Integer credits;
-    @JsonProperty("days")
-    private Integer days;
-    @JsonProperty("people")
-    private Integer people;
+    @JsonProperty("credits")    private Integer credits;
+    @JsonProperty("days")       private Integer days;
+    @JsonProperty("people")     private Integer people;
 
     @JsonGetter("credits")
     public Integer getCredits() {

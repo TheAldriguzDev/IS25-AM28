@@ -7,8 +7,7 @@ import com.fasterxml.jackson.annotation.*;
         "speed",
 })
 public final class Engine extends Tile {
-    @JsonProperty("speed")
-    private Integer speed;
+    @JsonProperty("speed")  private Integer speed;
 
     @JsonGetter("speed")
     public Integer getSpeed() {

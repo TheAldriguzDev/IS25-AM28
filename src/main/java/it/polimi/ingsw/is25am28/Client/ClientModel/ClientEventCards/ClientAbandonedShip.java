@@ -18,6 +18,7 @@ public class ClientAbandonedShip extends ClientEventCard {
 
     private AbandonedShipJSON abandonedShipJSON;
 
+    // Constructor
     public ClientAbandonedShip(CardStateJSON cardState) {
         super(cardState);
 
@@ -38,10 +39,11 @@ public class ClientAbandonedShip extends ClientEventCard {
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
         this.isCardUsable = cardState.getIsCardUsable();
+
         enabledCommands.clear();
         enabledCommands.add("playCard");
+
         if (this.isCardUsable) {
-//            enabledCommands.add("setCrewToRemove");
             enabledCommands.add("setWantsToVisit");
         }
     }
@@ -71,6 +73,7 @@ public class ClientAbandonedShip extends ClientEventCard {
         cardInfoWidget.appendString("Days: " + this.movementStep + "      Crew: " + this.requiredCrew);
         cardInfoWidget.appendString("───────────────────────────────");
         cardInfoWidget.appendString("Given Credits: " + this.givenCredits);
+
         if (this.playerNickname != null) {
             cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Current Player: " + this.playerNickname);

@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
@@ -16,24 +14,20 @@ public class ClientSlavers extends ClientEventCard {
     private final int movementSteps;
     private final int givenCredits;
     private final int takenCrew;
-//    private boolean firstRound;
     private boolean isPlayerDefeated;
-    //private List<String> defeatedPlayers;
-    private boolean isShipEmpty;
 
     private SlaversJSON slaversJSON;
 
+    // Constructor
     public ClientSlavers(CardStateJSON cardState) {
         super(cardState);
+
         this.requiredFirepower = cardState.getRequiredFirepower();
         this.movementSteps = cardState.getMovementSteps();
         this.givenCredits = cardState.getGivenCredits();
         this.takenCrew = cardState.getTakenCrew();
-        //this.defeatedPlayers = new ArrayList<>();
-//        this.firstRound = true;
         this.isPlayerDefeated = false;
         this.slaversJSON = new SlaversJSON();
-
     }
 
     @Override
@@ -46,11 +40,14 @@ public class ClientSlavers extends ClientEventCard {
     public void updateCard(CardStateJSON slaversCardState) {
         this.playerNickname = slaversCardState.getPlayerNickname();
         this.isPlayerDefeated = slaversCardState.getIsPlayerDefeated();
+
         enabledCommands.clear();
         enabledCommands.add("playCard");
+
         if (this.isPlayerDefeated) {
             enabledCommands.add("setCrewToRemove");
-        } else {
+        }
+        else {
             enabledCommands.add("setDoubleCannonsToActivate");
         }
     }
@@ -77,28 +74,33 @@ public class ClientSlavers extends ClientEventCard {
         cardInfoWidget.wrapWidgetWithBorder();
 
         if (!this.isPlayerDefeated) {
-//            cardInfoWidget.appendString("─────────PREREQUISITES─────────");
             cardInfoWidget.appendString("Days: " + this.movementSteps + "      Firepower: " + this.requiredFirepower);
             cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Given credits: " + this.givenCredits);
             cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Taken Crew: " + this.takenCrew);
+
             if (this.playerNickname != null) {
                 cardInfoWidget.appendString("───────────────────────────────");
                 cardInfoWidget.appendString("Current Player: " + this.playerNickname);
             }
-        } else {
+        }
+        else {
             cardInfoWidget.appendString("Crew members to remove: " + this.takenCrew);
             cardInfoWidget.appendString("Target: " + this.playerNickname);
         }
-        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget)
+                .centerWidgetScreen()
+                .wrapWidgetWithBorder();
     }
 
     @Override
     public String getAdditionalCardInfo() {
         if (this.isPlayerDefeated) {
             return "Choose the crew members\nto give up!";
-        } else {
+        }
+        else {
             return "Choose how to deal\nwith the slavers!";
         }
     }

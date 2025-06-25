@@ -16,6 +16,7 @@ import java.util.List;
 public final class PopulateShipState extends State {
     private final List<String> playersReady;
 
+    // Constructor
     public PopulateShipState(GameModel model) {
         super(model);
         this.playersReady = new ArrayList<>();

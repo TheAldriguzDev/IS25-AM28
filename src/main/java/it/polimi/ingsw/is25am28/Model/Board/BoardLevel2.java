@@ -13,7 +13,7 @@ import java.util.Optional;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public class BoardLevel2 extends Board {
-
+    // Constructor
     public BoardLevel2() {
         super();
         this.setSize(24);
@@ -22,7 +22,7 @@ public class BoardLevel2 extends Board {
 
     /**
      * buildBoard builds the board and sets the cells where the players can be placed.
-     * */
+     */
     @Override
     public void buildBoard() {
         ArrayList<Cell> initialCells = new ArrayList<>();

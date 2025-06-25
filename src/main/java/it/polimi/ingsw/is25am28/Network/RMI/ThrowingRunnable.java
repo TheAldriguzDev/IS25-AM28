@@ -5,8 +5,6 @@ package it.polimi.ingsw.is25am28.Network.RMI;
  * Unlike {@link Runnable}, this interface allows exceptions to be declared and propagated,
  * enabling cleaner lambda expressions without internal try-catch blocks.
  */
-
-
 @FunctionalInterface
 public interface ThrowingRunnable {
     void run() throws Exception;

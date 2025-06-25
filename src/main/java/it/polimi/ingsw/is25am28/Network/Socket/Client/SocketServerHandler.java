@@ -1,20 +1,12 @@
 package it.polimi.ingsw.is25am28.Network.Socket.Client;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Messages.Message;
 
 import java.io.BufferedWriter;
 import java.io.PrintWriter;
-import java.util.List;
-import java.util.UUID;
 
 public class SocketServerHandler implements VirtualServerSocket {
     private final ObjectMapper mapper;

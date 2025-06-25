@@ -10,6 +10,7 @@ import java.util.List;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public final class ClientStructural extends ClientComponent {
+    // Constructor
     public ClientStructural(int id, List<Integer> sides, String path) {
         super(id, sides, path);
     }

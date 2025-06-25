@@ -1,14 +1,11 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -22,6 +19,7 @@ public class ClientPirates extends ClientEventCard {
 
     private PiratesJSON piratesJSON;
 
+    // Constructor
     public ClientPirates(CardStateJSON cardState) {
         super(cardState);
         this.firstRound = true;
@@ -44,12 +42,14 @@ public class ClientPirates extends ClientEventCard {
 
         enabledCommands.clear();
         enabledCommands.add("playCard");
+
         if (!this.firstRound) {
             this.diceThrowResult = piratesState.getDiceThrowResult();
             this.currentPlasmaShot = piratesState.getCurrPlasmaShotDescriptor();
 
             enabledCommands.add("setShieldsToActivate");
-        } else {
+        }
+        else {
             enabledCommands.add("setDoubleCannonsToActivate");
         }
     }
@@ -80,10 +80,12 @@ public class ClientPirates extends ClientEventCard {
             cardInfoWidget.appendString("Given credits: " + this.givenCredits);
             cardInfoWidget.appendString("Days: " + this.movementSteps);
             cardInfoWidget.appendString("Required Firepower: " + this.requiredFirepower);
+
             if (this.playerNickname != null) {
                 cardInfoWidget.appendString("Current Player: " + this.playerNickname);
             }
-        } else {
+        }
+        else {
             cardInfoWidget.appendString(ANSIColors.MAGENTA + "                 █                " + ANSIColors.RESET);
             cardInfoWidget.appendString(ANSIColors.MAGENTA + "                ███               " + ANSIColors.RESET);
             cardInfoWidget.appendString(ANSIColors.MAGENTA + "               █████              " + ANSIColors.RESET);
@@ -101,17 +103,21 @@ public class ClientPirates extends ClientEventCard {
             cardInfoWidget.wrapWidgetWithBorder();
 
             cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");
+
             switch (this.currentPlasmaShot.get("shotDirection")) {
                 case 0 -> cardInfoWidget.appendString("Inbound Direction: ABOVE");
                 case 1 -> cardInfoWidget.appendString("Outbound Direction: RIGHT");
                 case 2 -> cardInfoWidget.appendString("Outbound Direction: BELOW");
                 case 3 -> cardInfoWidget.appendString("Inbound Direction: LEFT");
             }
+
             if (this.currentPlasmaShot.get("shotSize") == 1) {
                 cardInfoWidget.appendString("Size: SMALL PLASMASHOT");
-            } else {
+            }
+            else {
                 cardInfoWidget.appendString("Size: BIG PLASMASHOT");
             }
+
             cardInfoWidget.appendString("Dice Throw Result: " + this.diceThrowResult);
             cardInfoWidget.appendString("Target: " + this.playerNickname);
         }
@@ -121,22 +127,30 @@ public class ClientPirates extends ClientEventCard {
 
     @Override
     public String getAdditionalCardInfo() {
+        String direction;
+        String size;
+
         if (!this.firstRound) {
-            return "[CURRENT PLASMASHOT]\nComing from: "
-                    + switch (this.currentPlasmaShot.get("shotDirection")) {
-                case 0 -> "ABOVE";
-                case 1 -> "RIGHT";
-                case 2 -> "BELOW";
-                case 3 -> "LEFT";
+            direction = switch (this.currentPlasmaShot.get("shotDirection"))
+            {
+                case 0  -> "ABOVE";
+                case 1  -> "RIGHT";
+                case 2  -> "BELOW";
+                case 3  -> "LEFT";
                 default -> "";
-            }
-                    + "\nSize: "
-                    + switch (this.currentPlasmaShot.get("shotSize")) {
-                case 1 -> "SMALL";
-                case 2 -> "BIG";
+            };
+
+            size = switch (this.currentPlasmaShot.get("shotSize")) {
+                case 1  -> "SMALL";
+                case 2  -> "BIG";
                 default -> "";
-            } + "\nDice Throw Result: " + this.diceThrowResult;
-        } else {
+            };
+
+            return "[CURRENT PLASMASHOT]\nComing from: " + direction
+                    + "\nSize: " + size
+                    + "\nDice Throw Result: " + this.diceThrowResult;
+        }
+        else {
             return "Choose how to deal\nwith the pirates!";
         }
     }
@@ -186,7 +200,8 @@ public class ClientPirates extends ClientEventCard {
 
     @Override
     public boolean isPlayerDefeated() {
-        // Since only the defeated players will play the second round, this can be used as a "isPlayerDefeated" attribute, akin to Smugglers and Slavers
+        // Since only the defeated players will play the second round, this can be
+        // used as a "isPlayerDefeated" attribute, akin to Smugglers and Slavers.
         return !this.firstRound;
     }
 }

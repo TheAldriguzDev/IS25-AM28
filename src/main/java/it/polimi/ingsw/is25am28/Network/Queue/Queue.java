@@ -7,14 +7,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  * A thread-safe task queue that executes Runnable tasks sequentially.
  * This class uses a blocking queue to store tasks and processes them one at a time.
  * It is intended to run continuously in its own thread, executing tasks as they are enqueued.
- *
+ * <br>
  * Primarily used to make RMI communication asynchronous and prevent UI blocking
  * when sending messages between client and server.
  */
-
 public class Queue implements Runnable {
     private final BlockingQueue<Runnable> queue;
 
+    // Constructor
     public Queue() {
         this.queue = new LinkedBlockingQueue<>();
     }

@@ -18,6 +18,7 @@ public final class ClientStorage extends ClientComponent {
     private final boolean isSpecialStorage;
     private final List<Item> storedItems;
 
+    // Constructor
     public ClientStorage(int id, List<Integer> sides, int capacity, boolean isSpecialStorage, String path) {
         super(id, sides, path);
         this.capacity = capacity;
@@ -39,10 +40,17 @@ public final class ClientStorage extends ClientComponent {
         return capacity - storedItems.size();
     }
 
+    /**
+     * @return TRUE if this storage can store special cargo (RED items),
+     *         FALSE otherwise.
+     */
     public boolean isSpecialStorage() {
         return isSpecialStorage;
     }
 
+    /**
+     * @return A list of all the items this storage contains.
+     */
     public List<Item> getStoredItems() {
         return storedItems;
     }

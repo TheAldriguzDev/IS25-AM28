@@ -12,6 +12,7 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 public final class ClientCannon extends ClientComponent {
     private final int force;
 
+    // Constructor
     public ClientCannon(int id, List<Integer> sides, int force, String path) {
         super(id, sides, path);
         this.force = force;
@@ -25,10 +26,6 @@ public final class ClientCannon extends ClientComponent {
         return (getDirection() != 0) ? (((float) force) / 2) : force;
     }
 
-    /**
-     * @return If the current cannon is a double cannon and thus
-     * requires energy to be activated
-     */
     @Override
     public boolean requiresEnergy() {
         return (force > 1);

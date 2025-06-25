@@ -6,10 +6,10 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public final class WaitPlayersState extends State {
+    // Constructor
     public WaitPlayersState(GameModel model) {
         super(model);
     }
@@ -32,6 +32,7 @@ public final class WaitPlayersState extends State {
 
         Map<String, PlayerColor> nicknamesAndColors = new HashMap<>();
         Map<String, Player> players = model.getPlayers();
+
         for (Player player : players.values()) {
             nicknamesAndColors.put(player.getNickname(), player.getColor());
         }

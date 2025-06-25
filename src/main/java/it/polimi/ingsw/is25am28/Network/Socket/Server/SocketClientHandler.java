@@ -20,18 +20,19 @@ import java.io.PrintWriter;
  * Handles client socket connections and provides the needed methods for the communication between the server
  * and a specific client.
  */
-
 public class SocketClientHandler implements VirtualViewSocket {
     private final Server controller;
 
     // Channel used to read from the socket
     private final BufferedReader input;
+
     // Channel used to write in the socket
     private final PrintWriter output;
 
     // Mapper used to serialize and deserialize JSON used in the communication
     private final ObjectMapper mapper;
 
+    // Constructor
     public SocketClientHandler(Server gameController, BufferedReader input, PrintWriter output) {
         this.controller = gameController;
         this.input = input;
@@ -43,7 +44,8 @@ public class SocketClientHandler implements VirtualViewSocket {
 
         try {
             this.onClientConnection();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -256,6 +258,7 @@ public class SocketClientHandler implements VirtualViewSocket {
     }
 
     // ===== PING UTILITY METHODS ===== //
+
     /**
      * Sends a ping request to the server to ensure the connection remains active.
      *

@@ -27,9 +27,7 @@ public abstract class EventCard {
     protected boolean hasBeenUsed;
     protected boolean hasBeenActivated;
 
-    /**
-     * Generic constructor shared between the classes
-     */
+    // Constructor
     protected EventCard(String cardName, int cardLevel, Board board, int uniqueCardId, String path) {
         this.cardName = cardName;
         this.cardLevel = cardLevel;
@@ -121,12 +119,23 @@ public abstract class EventCard {
     }
 
     /**
-     * Bonus and malus effects are left empty and will be implemented only
-     * by those event cards that actually benefit from this distinction.
+     * Bonus effect applied by this card (without an action required)
      */
     protected void bonusEffect() {}
+
+    /**
+     * Malus effect applied by this card (without an action required)
+     */
     protected void malusEffect() {}
+
+    /**
+     * Bonus effect applied by this card (with an action required)
+     */
     protected void bonusEffect(ActionJSON data) {}
+
+    /**
+     * Malus effect applied by this card (with an action required)
+     */
     protected void malusEffect(ActionJSON data) {}
 
     /**

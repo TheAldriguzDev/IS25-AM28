@@ -9,7 +9,6 @@ import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
-import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
 import java.util.*;
 

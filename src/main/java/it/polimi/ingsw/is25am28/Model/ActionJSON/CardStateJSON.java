@@ -1,10 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.*;
+import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
@@ -15,9 +12,9 @@ import java.util.ArrayList;
 
 /**
  * This class needs to contain all the attribute that can be used by the clients to interact with the cards
- *
+ * <br>
  * We can just use this single class to cover all the desired data
- * */
+ */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CardStateJSON extends ActionJSON {
     private int cardTypeId;
@@ -297,14 +294,13 @@ public class CardStateJSON extends ActionJSON {
     }
 
 
-    /**
-     * Default constructor
-     * */
+    @JsonCreator
     public CardStateJSON() {
         this.cardLevel = 0;
         this.isCardUsable = true;
     }
 
+    @JsonCreator
     public CardStateJSON(
             @JsonProperty("uniqueCardId") int uniqueCardId,
             @JsonProperty("playerNickname") String playerNickname,

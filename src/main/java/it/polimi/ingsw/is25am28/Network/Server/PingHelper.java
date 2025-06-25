@@ -5,13 +5,12 @@ package it.polimi.ingsw.is25am28.Network.Server;
  * It is used to monitor the reliability of a client's connection through ping attempts
  * and determine whether the client is still connected.
  */
-
-
 public class PingHelper {
     private String nickname;
     private int failedPings;
     private boolean isConnected;
 
+    // Constructor
     public PingHelper(String nickname) {
         this.nickname = nickname;
         this.failedPings = 0;

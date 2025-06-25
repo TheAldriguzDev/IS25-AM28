@@ -7,8 +7,7 @@ import com.fasterxml.jackson.annotation.*;
         "force",
 })
 public final class Cannon extends Tile {
-    @JsonProperty("force")
-    private Integer force;
+    @JsonProperty("force")  private Integer force;
 
     @JsonGetter("force")
     public Integer getForce() {

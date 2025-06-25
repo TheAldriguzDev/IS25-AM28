@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @JsonTypeName("ConfigGame")
 public final class ConfigGame implements Message {
     private final String playerNickname;

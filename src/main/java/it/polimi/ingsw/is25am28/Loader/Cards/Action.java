@@ -8,10 +8,8 @@ import com.fasterxml.jackson.annotation.*;
         "consequence"
 })
 public final class Action {
-    @JsonProperty("action")
-    private Integer action;
-    @JsonProperty("consequence")
-    private Integer consequence;
+    @JsonProperty("action")         private Integer action;
+    @JsonProperty("consequence")    private Integer consequence;
 
     @JsonGetter("action")
     public Integer getAction() {

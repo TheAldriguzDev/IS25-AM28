@@ -14,7 +14,6 @@ import java.util.List;
  * It listens for incoming client connections, handles them via individual threads, and allows communication
  * between clients by maintaining a list of connected clients.
  */
-
 public class TCPServer {
     // Socket that waits for clients connections
     final ServerSocket listenSocket;
@@ -46,7 +45,8 @@ public class TCPServer {
         new Thread(() -> {
             try {
                 this.runServer();
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException("TCP server failed", e);
             }
         }).start();
@@ -61,6 +61,7 @@ public class TCPServer {
      */
     private void runServer() throws IOException {
         Socket clientSocket;
+
         while ((clientSocket = listenSocket.accept()) != null) {
             ServerLogger.info("SERVER SOCKET", "New client connected");
 
@@ -81,7 +82,8 @@ public class TCPServer {
             new Thread(() -> {
                 try {
                     clientHandler.run();
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }).start();

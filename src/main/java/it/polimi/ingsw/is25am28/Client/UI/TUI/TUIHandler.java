@@ -26,6 +26,7 @@ public class TUIHandler implements ClientUI {
     private final Object ioLock;
     private VirtualView virtualClient;
 
+    // Constructor
     public TUIHandler(ClientModel model, InputThread inputThread) {
         this.model = model;
         this.inputThread = inputThread;
@@ -235,9 +236,6 @@ public class TUIHandler implements ClientUI {
         // Empty because in the TUI will not be used, only the model will be updated
     }
 
-    /**
-     * Interrupts the current screen's input request process.
-     */
     public void interruptCurrScreen() {
         this.inputThread.interruptInputReader();
     }

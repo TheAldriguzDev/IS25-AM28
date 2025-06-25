@@ -5,7 +5,6 @@ package it.polimi.ingsw.is25am28.Network.Server;
  * log levels (INFO, DEBUG, WARN, ERROR). This class supports both generic logging and logging
  * specific to a game instance by accepting an optional game ID.
  */
-
 public class ServerLogger {
     private static final String RESET = "\u001B[0m";
     private static final String CYAN = "\u001B[36m";
@@ -31,7 +30,8 @@ public class ServerLogger {
         );
     }
 
-    // ========== Methods with the GAME-ID ==========
+    // ========== Methods with the GAME-ID ========== //
+
     /**
      * Logs an informational message to the console with a specific tag and game ID.
      *
@@ -76,7 +76,8 @@ public class ServerLogger {
         System.out.println(format("ERROR", RED, tag, gameId, message));
     }
 
-    // ========== Methods without the GAME-ID ==========
+    // ========== Methods without the GAME-ID ========== //
+
     /**
      * Logs an informational message to the console with a specific tag.
      *

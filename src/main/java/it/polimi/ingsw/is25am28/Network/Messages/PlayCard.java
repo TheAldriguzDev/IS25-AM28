@@ -4,9 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 
-import java.util.List;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 
 public final class PlayCard implements Message {
     private String playerNickname;

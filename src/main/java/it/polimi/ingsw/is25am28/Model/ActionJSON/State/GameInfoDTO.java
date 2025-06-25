@@ -1,12 +1,12 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
 import java.io.Serializable;
 import java.util.List;
-
 
 /**
  * Data Transfer Object representing the details of a game.
@@ -24,14 +24,17 @@ public class GameInfoDTO implements Serializable {
     private int actualPlayers;
     private List<String> availableColors;
 
+    @JsonCreator
     public GameInfoDTO() {}
 
+    @JsonCreator
     public GameInfoDTO(
             @JsonProperty("id") int id,
             @JsonProperty("level") int level,
             @JsonProperty("totalPlayers") int totalPlayers,
             @JsonProperty("actualPlayers") int actualPlayers,
-            @JsonProperty("availableColors") List<String> availableColors) {
+            @JsonProperty("availableColors") List<String> availableColors
+    ) {
         this.id = id;
         this.level = level;
         this.totalPlayers = totalPlayers;

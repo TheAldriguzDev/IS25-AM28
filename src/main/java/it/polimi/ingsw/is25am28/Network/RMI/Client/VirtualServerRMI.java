@@ -17,10 +17,10 @@ import java.util.UUID;
  * This interface extends {@link VirtualServer} to include methods specific to the RMI communication model.
  * In particular, RMI requires the client's UUID to identify the origin of each request,
  * which is not necessary in other types of communication.
- *
+ * <br>
  * These methods are defined 1:1 with those in the {@link VirtualView} for the RMI connection protocol,
  * as this protocol invokes the exact same methods to create the illusion of running locally, abstracting away the network layer.
- *
+ * <br>
  * For this reason, the methods in this interface are not documented individually to avoid redundant comments.
  */
 public interface VirtualServerRMI extends Remote, VirtualServer {

@@ -9,10 +9,10 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI.WidgetTUI;
 public class ClientEpidemy extends ClientEventCard {
     private EpidemyJSON epidemyJSON;
 
+    // Constructor
     public ClientEpidemy(CardStateJSON cardState) {
         super(cardState);
         this.epidemyJSON = new EpidemyJSON();
-
     }
 
     @Override

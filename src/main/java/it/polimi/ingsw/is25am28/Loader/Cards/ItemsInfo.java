@@ -10,16 +10,13 @@ import com.fasterxml.jackson.annotation.*;
         "red"
 })
 public class ItemsInfo {
+    // Constructor
     public ItemsInfo() {}
 
-    @JsonProperty("blue")
-    private int blue;
-    @JsonProperty("green")
-    private int green;
-    @JsonProperty("yellow")
-    private int yellow;
-    @JsonProperty("red")
-    private int red;
+    @JsonProperty("blue")       private int blue;
+    @JsonProperty("green")      private int green;
+    @JsonProperty("yellow")     private int yellow;
+    @JsonProperty("red")        private int red;
 
     @JsonGetter("blue")
     public int getBlue() {

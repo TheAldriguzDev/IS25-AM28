@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Network.RMI.Server;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
@@ -10,8 +9,8 @@ import java.rmi.RemoteException;
 
 public interface VirtualViewRMI extends Remote, VirtualView {
     @Override
-    public void updateState(Answer answer) throws Exception;
+    void updateState(Answer answer) throws Exception;
 
     @Override
-    public void reportError(ErrorAnswer error) throws RemoteException;
+    void reportError(ErrorAnswer error) throws RemoteException;
 }

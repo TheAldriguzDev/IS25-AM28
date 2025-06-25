@@ -5,6 +5,11 @@ public enum WarZoneAction {
     ENGINEPOWER,
     HUMANS;
 
+    /**
+     * @param ordinal The integer value associated with a specific WarZone action
+     * @return The WarZone action corresponding to the given ordinal value.
+     * @throws IllegalArgumentException If the given ordinal is invalid (i.e.: doesn't have a corresponding action)
+     */
     public static WarZoneAction fromInteger(Integer ordinal) throws IllegalArgumentException {
         return switch (ordinal) {
             case 0 -> FIREPOWER;
@@ -20,7 +25,6 @@ public enum WarZoneAction {
             case FIREPOWER -> "Firepower";
             case ENGINEPOWER -> "Enginepower";
             case HUMANS -> "Humans";
-            default -> throw new IllegalArgumentException("Unknown action: " + this);
         };
     }
 }

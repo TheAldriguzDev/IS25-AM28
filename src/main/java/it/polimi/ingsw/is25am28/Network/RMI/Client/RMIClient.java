@@ -112,7 +112,7 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
     /**
      * Initiates a periodic task to send a heartbeat (ping) to the server.
      * This method schedules a fixed-rate executor that periodically sends a ping message to the server.
-     *
+     * <br>
      * The ping task runs at a fixed interval of 5000 milliseconds.
      */
     private void pingServer() {

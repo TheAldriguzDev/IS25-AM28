@@ -60,12 +60,10 @@ public class Pirates extends EventCard {
         this.shootingSequence = shootingSequence;
 
         this.random = new Random();
-//        this.playerUseCount = 0;
         this.diceThrowResult = -1;
         this.plasmaShotIndex = 0;
         this.firstRound = true;
         this.playersToHit = new ArrayList<>();
-//        this.hasBeenDefeated = false;
         this.updatedPositions = new HashMap<>();
         this.updatedCredits = new HashMap<>();
         this.removedComponents = new HashMap<>();
@@ -95,7 +93,8 @@ public class Pirates extends EventCard {
         activateCard();
     }
 
-    // Override necessary to not set the card as used when the last index of the player's list is reached
+    // Override necessary to not set the card as used when
+    // the last index of the player's list is reached
     @Override
     protected Optional<Player> getNextPlayer() {
         if (players == null || players.isEmpty()) {
@@ -432,13 +431,13 @@ public class Pirates extends EventCard {
             this.diceThrowResult = (this.random.nextInt(6) + 1) + (this.random.nextInt(6) + 1);
         }
 
-        //piratesStateJSON.setHasBeenActivated(hasBeenActivated());
         if (hasBeenActivated()) {
             initStateFlags(piratesStateJSON);
 
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> piratesStateJSON.setPlayerNickname(player.getNickname()));
             piratesStateJSON.setPrevPlayerNickname(this.prevPlayerNickname);
+
             // The prevPlayer's batteries are always updated locally in this card
             piratesStateJSON.setSkipBatteriesUpdate(true);
 

@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class PlaceTile implements Message {
     private String nickname;
     private Integer componentID;
@@ -21,7 +18,8 @@ public final class PlaceTile implements Message {
             @JsonProperty("componentID") Integer componentID,
             @JsonProperty("i") Integer i,
             @JsonProperty("j") Integer j,
-            @JsonProperty("rotation") Integer rotation ) {
+            @JsonProperty("rotation") Integer rotation
+    ) {
         this.nickname = nickname;
         this.componentID = componentID;
         this.i = i;

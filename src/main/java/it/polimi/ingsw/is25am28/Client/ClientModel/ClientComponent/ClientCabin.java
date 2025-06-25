@@ -16,6 +16,7 @@ public final class ClientCabin extends ClientComponent {
     private final boolean isCore;
     private final ArrayList<Lifeform> inhabitants;
 
+    // Constructor
     public ClientCabin(int id, List<Integer> sides, boolean isCore, String path) {
         super(id, sides, path);
         this.isCore = isCore;

@@ -24,13 +24,11 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-
 /**
  * This class is responsible for starting the network server and listening for incoming client requests.
  * It manages multiple concurrent games and routes each client request to the correct game instance
  * based on the client's name. It ensures that actions are executed within the appropriate game context.
  */
-
 public class Server {
     // Server constants
     public static final String RMIServerName = "GameRMIServer";
@@ -57,7 +55,7 @@ public class Server {
      * This constructor sets up the server by prompting the user to input a valid IPv4 address,
      * initializes the TCP and RMI servers, and prepares various data structures
      * required for managing game instances, connected clients, and scheduling tasks.
-     *
+     * <br>
      * The constructor also initiates a periodic check to monitor client connectivity by collecting pings.
      *
      * @throws Exception if an error occurs during the server setup or initialization process
@@ -108,6 +106,7 @@ public class Server {
         this.checkClientsConnection();
     }
 
+    // Main
     public static void main(String[] args) throws Exception {
         new Server();
     }

@@ -11,7 +11,6 @@ import java.io.Serializable;
  * A class representing a pair of coordinates with two integer values, i and j.
  * Useful for network communication where serialization is required.
  */
-
 public class CoordinatePair implements Serializable {
     @JsonProperty private Integer i;
     @JsonProperty private Integer j;

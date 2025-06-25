@@ -12,6 +12,7 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.addColor;
 
 public final class ClientShield extends ClientComponent {
+    // Constructor
     public ClientShield(int id, List<Integer> sides, String path) {
         super(id, sides, path);
     }

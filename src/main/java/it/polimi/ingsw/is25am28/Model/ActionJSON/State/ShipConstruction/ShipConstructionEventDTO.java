@@ -1,19 +1,20 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.*;
+
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public sealed class ShipConstructionEventDTO extends StateDTO permits ConstructionComponentDTO, ConstructionDeckDTO, FixedComponentDTO, PlacedComponentDTO, PlayerEndedShipDTO, PopulateShipComponentDTO, ReservedComponentDTO, TimerDTO {
     private String eventType;
 
+    @JsonCreator
     public ShipConstructionEventDTO() {}
 
-    public ShipConstructionEventDTO(@JsonProperty("eventType") String eventType) {
+    @JsonCreator
+    public ShipConstructionEventDTO(
+            @JsonProperty("eventType") String eventType
+    ) {
         this.eventType = eventType;
     }
 

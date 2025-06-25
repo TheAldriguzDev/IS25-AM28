@@ -14,6 +14,7 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.addColor;
 public final class ClientVital extends ClientComponent {
     private final VitalType vitalType;
 
+    // Constructor
     public ClientVital(int id, List<Integer> sides, int type, String path) {
         super(id, sides, path);
 

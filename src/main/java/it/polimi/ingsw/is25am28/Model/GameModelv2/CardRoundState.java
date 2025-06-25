@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
-import it.polimi.ingsw.is25am28.Loader.CardLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
@@ -8,9 +7,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.Model.ResourceBank.ResourceBank;
 
-import java.io.IOException;
 import java.util.*;
 
 public final class CardRoundState extends State {
@@ -21,12 +18,13 @@ public final class CardRoundState extends State {
 
     private boolean isFirstState;
 
+    // Constructor
     public CardRoundState(GameModel model) {
         super(model);
 
         this.round = 0;
         this.deck = this.model.getGameDeck();
-//        this.shuffleDeck(); // TODO: remove before ending the project
+//        this.shuffleDeck(); // TODO: uncomment before 27/06/2025
 
         this.board = this.model.getBoard();
         this.isFirstState = true;
@@ -85,7 +83,8 @@ public final class CardRoundState extends State {
         if (card.hasFinished()) {
             // If the card is already finished, we skip to the next one
             card = this.nextRound();
-        } else {
+        }
+        else {
             // Execute the action given by the client
             card = card.useCard(action);
 
@@ -127,7 +126,6 @@ public final class CardRoundState extends State {
         return result;
     }
 
-
     @Override
     public void onComplete() {
         // If all the cards has been played, we go to EndGameState
@@ -151,7 +149,6 @@ public final class CardRoundState extends State {
 
         return state;
     }
-
 
     /**
      * Substitutes the deck with a fake one.

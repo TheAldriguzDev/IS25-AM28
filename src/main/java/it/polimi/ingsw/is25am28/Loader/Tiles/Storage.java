@@ -8,10 +8,8 @@ import com.fasterxml.jackson.annotation.*;
         "special"
 })
 public final class Storage extends Tile {
-    @JsonProperty("capacity")
-    private Integer capacity;
-    @JsonProperty("special")
-    private Boolean special;
+    @JsonProperty("capacity")   private Integer capacity;
+    @JsonProperty("special")    private Boolean special;
 
     @JsonGetter("capacity")
     public Integer getCapacity() {

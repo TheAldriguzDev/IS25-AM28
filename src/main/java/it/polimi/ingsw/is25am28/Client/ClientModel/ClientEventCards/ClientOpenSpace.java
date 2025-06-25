@@ -2,7 +2,6 @@ package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
@@ -20,10 +19,11 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 public class ClientOpenSpace extends ClientEventCard {
     private OpenSpaceJSON openSpaceJSON;
 
+    // Constructor
     public ClientOpenSpace(CardStateJSON cardState) {
         super(cardState);
-        openSpaceJSON = new OpenSpaceJSON();
 
+        openSpaceJSON = new OpenSpaceJSON();
         enabledCommands.add("setDoubleEnginesToActivate");
     }
 
@@ -80,6 +80,7 @@ public class ClientOpenSpace extends ClientEventCard {
             twinkling_space.appendString(spaceString.toString());
         }
         twinkling_space.wrapWidgetWithBorder();
+
         if(this.playerNickname != null) {
             twinkling_space.appendString("Current player: " + this.playerNickname);
         }

@@ -1,27 +1,22 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
-import it.polimi.ingsw.is25am28.Model.Components.Component;
-import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Timer.HourGlass;
 import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class InsufficientPlayerState extends State implements TimerObserver {
-    //public static int countdownMillis = 90 * 1000;
     private static final int countdownMillis = 20 * 1000;
 
     // This is the previous game state that was active before we entered the "InsufficientPlayerState"
     private final State prevState;
     private final HourGlass countdown;
 
+    // Constructor
     public InsufficientPlayerState(GameModel model, State prevState) {
         super(model);
         this.prevState = prevState;
@@ -76,12 +71,12 @@ public final class InsufficientPlayerState extends State implements TimerObserve
                     .setState(this.model.generateState());
 
             this.model.broadCastUpdate(answer);
-        } else if (connectedPlayers.size() > 1) {
+        }
+        else if (connectedPlayers.size() > 1) {
             this.removeTimer();
             this.model.setCurrentState(prevState);
         }
     }
-
 
     @Override
     public StateDTO generateState() {

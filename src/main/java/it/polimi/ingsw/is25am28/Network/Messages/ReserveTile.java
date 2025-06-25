@@ -1,17 +1,18 @@
 package it.polimi.ingsw.is25am28.Network.Messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-
-import java.util.List;
 
 public final class ReserveTile implements Message {
     private String playerNickname;
     private Integer id;
 
+    @JsonCreator
     public ReserveTile() {}
 
+    @JsonCreator
     public ReserveTile(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("id") Integer id
@@ -19,7 +20,6 @@ public final class ReserveTile implements Message {
         this.playerNickname = playerNickname;
         this.id = id;
     }
-
 
     @JsonGetter("playerNickname")
     public String getPlayerNickname() {

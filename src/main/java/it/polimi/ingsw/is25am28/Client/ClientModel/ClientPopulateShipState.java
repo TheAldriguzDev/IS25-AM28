@@ -7,8 +7,10 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 public class ClientPopulateShipState extends ClientState {
     private final PopulateShipDTO populateShipDTO;
 
+    // Constructor
     public ClientPopulateShipState(ClientModel model, PopulateShipDTO populateShipDTO) {
         super(model);
+
         this.populateShipDTO = populateShipDTO;
 
         // Generating the component sublist when the ship is fixed

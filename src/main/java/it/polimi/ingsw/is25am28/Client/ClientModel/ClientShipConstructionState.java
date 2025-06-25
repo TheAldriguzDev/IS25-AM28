@@ -213,7 +213,7 @@ public class ClientShipConstructionState extends ClientState {
      * */
     @Override
     public void deselectTile(ClientComponent component, int i, int j) throws UnsupportedOperationException {
-
+        // Nothing
     }
 
     /**
@@ -282,6 +282,7 @@ public class ClientShipConstructionState extends ClientState {
             if (this.playersFinishedBuildingShip != null) {
                 this.playersFinishedBuildingShip.put(playerNickname, true);
                 ClientPlayer p = this.model.getAllClientPlayers().get(playerNickname);
+
                 if (p != null) {
                     p.setCursor(cursor);
                 }

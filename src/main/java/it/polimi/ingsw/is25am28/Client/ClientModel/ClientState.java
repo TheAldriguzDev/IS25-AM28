@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.PopulateShipDTO;

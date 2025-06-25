@@ -1,21 +1,21 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
+
 import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ShipConstructionDTO;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * This calss contains all the information necessary to reconnect a disconnected player to the game
+ * This class contains all the information necessary to reconnect a disconnected player to the game
  */
-
 public final class ReconnectDTO extends StateDTO {
     private String targetNickname;
     private List<PlayerJSON> players;
@@ -29,8 +29,10 @@ public final class ReconnectDTO extends StateDTO {
     // Card list that contains the information about the deck in the game
     private List<CardStateJSON> cards;
 
+    @JsonCreator
     public ReconnectDTO() {}
 
+    @JsonCreator
     public ReconnectDTO(
             @JsonProperty("targetNickname") String targetNickname,
             @JsonProperty("players") List<PlayerJSON> players,

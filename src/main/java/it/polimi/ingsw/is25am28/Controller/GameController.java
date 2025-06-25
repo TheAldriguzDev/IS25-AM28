@@ -2,8 +2,6 @@ package it.polimi.ingsw.is25am28.Controller;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FastShipDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ReconnectDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.GameModelv2.*;
@@ -16,10 +14,10 @@ import java.util.List;
 /**
  * The GameController class handles the dispatching of client-triggered events to the GameModel
  * */
-
 public class GameController {
     private final GameModel model;
 
+    // Constructor
     public GameController() {
         this.model = new GameModel();
     }

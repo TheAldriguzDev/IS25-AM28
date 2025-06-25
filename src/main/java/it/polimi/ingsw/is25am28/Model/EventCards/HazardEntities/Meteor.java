@@ -4,6 +4,7 @@ public class Meteor {
     private final int size;
     private final int orientation;
 
+    // Constructor
     public Meteor(int size, int orientation) {
         this.size = size;
         this.orientation = orientation;

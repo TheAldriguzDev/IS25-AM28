@@ -27,11 +27,16 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     protected String path;
     protected int cardLevel;
     protected boolean hasBeenUsed;
-    protected boolean hasBeenActivated; // this flag allows the card to send its full static information (like when only visualized at the start of the game) only when ita has not been used a single time wit useCard()
+
+    // This flag allows the card to send its full static information
+    // (like when only visualized at the start of the game) only when
+    // it has not been used a single time wit useCard()
+    protected boolean hasBeenActivated;
 
     protected ClientModel model;
     protected InputThread inputThread;
 
+    // Constructor
     public ClientEventCard(CardStateJSON cardState) {
         this.uniqueCardId = cardState.getUniqueCardId();
         this.cardTypeId = cardState.getCardTypeId();
@@ -116,19 +121,10 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
         return "No additional info\nin this card!";
     }
 
-
-//    /**
-//     * Sets the clientModel in the card (needed for input validity checks)
-//     */
-//    public void setModel(ClientModel model) {
-//        this.model = model;
-//    }
-
     /**
      * Clears the JSON used to store the player's decision when playing the card
      */
     public abstract void clearJSON();
-
 
     // ======== Players' ActionJSON Compilation Methods ======== //
 
@@ -295,7 +291,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     // Card specific methods
 
     /**
-     * @return the card's available itemColors
+     * @return The card's available itemColors
      * @throws UnsupportedOperationException if the card does not support this method
      */
     public List<ItemColor> getAvailableItemColors() throws UnsupportedOperationException {
@@ -311,7 +307,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     }
 
     /**
-     * @return the card's firepower
+     * @return The card's firepower
      * @throws UnsupportedOperationException if the card does not support this method
      */
     public int getFirepower() throws UnsupportedOperationException {
@@ -319,7 +315,7 @@ public abstract class ClientEventCard implements WidgetTUIGenerator {
     }
 
     /**
-     * @return wether a player has been defeated by the card (e.g. Slavers)
+     * @return whether a player has been defeated by the card (e.g. Slavers)
      */
     public boolean isPlayerDefeated() throws UnsupportedOperationException{
         throw new UnsupportedOperationException("The method 'isPlayerDefeated()' is not supported in " + this + " card");

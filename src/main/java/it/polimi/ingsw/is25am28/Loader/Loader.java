@@ -12,11 +12,11 @@ import java.io.InputStream;
  *
  * @param <T> The type of the object that the JSON data will be parsed into.
  */
-
 public class Loader<T> {
     private static final ObjectMapper mapper = new ObjectMapper(); // Used to parse the JSON file
     private final T readJSON;
 
+    // Constructor
     public Loader(InputStream stream, Class<T> classType) throws IOException {
         if (stream == null) {
             throw new FileNotFoundException("Resource stream is null");

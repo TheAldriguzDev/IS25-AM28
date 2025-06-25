@@ -1,9 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.*;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.io.Serializable;
@@ -12,10 +9,10 @@ import java.util.Map;
 
 /**
  * Represents the state of the game lobby where players are waiting to join.
- *
+ * <br>
  * This state can be handled by the {@link StateVisitor} interface, allowing
  * for visitor-based processing in the application.
- *
+ * <br>
  * This class is immutable and serializable.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -25,14 +22,16 @@ public final class WaitPlayersStateDTO extends StateDTO implements Serializable 
     private int lobbyTotalSpot;
     private int availableSpots;
 
+    @JsonCreator
     public WaitPlayersStateDTO() {}
 
+    @JsonCreator
     public WaitPlayersStateDTO(
-                @JsonProperty("availableColors") List<String> availableColors,
-                @JsonProperty("usedNicknames") Map<String, PlayerColor> usedNicknames,
-                @JsonProperty("lobbyTotalSpot") int lobbyTotalSpot,
-                @JsonProperty("availableSpots") int availableSpots
-            ) {
+            @JsonProperty("availableColors") List<String> availableColors,
+            @JsonProperty("usedNicknames") Map<String, PlayerColor> usedNicknames,
+            @JsonProperty("lobbyTotalSpot") int lobbyTotalSpot,
+            @JsonProperty("availableSpots") int availableSpots
+    ) {
         this.availableColors = availableColors;
         this.usedNicknames = usedNicknames;
         this.lobbyTotalSpot = lobbyTotalSpot;

@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  * Defines the abstract JSON structure for parsing card configurations saved in a JSON file.
  * Each concrete implementation of this {@code Card} class provides methods to retrieve card-specific parameters.
  */
-
 public sealed abstract class Card permits AbandonedShip, AbandonedStation, Epidemic, Meteor, OpenSpace, Pirate, Planet, Slaver, Smuggler, Stardust, Warzone {
     private Integer level;
     private String path;

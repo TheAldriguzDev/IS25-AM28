@@ -2,7 +2,6 @@ package it.polimi.ingsw.is25am28.Loader;
 
 import it.polimi.ingsw.is25am28.Loader.Tiles.Tiles;
 import it.polimi.ingsw.is25am28.Model.Components.*;
-import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -11,11 +10,11 @@ import java.util.List;
 /**
  * Responsible for loading and creating a list of {@link Component} objects
  * based on the data contained in the {@code tiles.json} file.
- *
+ * <br>
  * This class handles parsing the file, generating the tiles, and assigning each one a unique ID.
  */
 public class TileLoader extends Loader<Tiles> {
-
+    // Constructor
     public TileLoader() throws IOException {
         super(TileLoader.class.getResourceAsStream("/json/tiles.json"), Tiles.class);
     }
@@ -109,7 +108,7 @@ public class TileLoader extends Loader<Tiles> {
             );
         });
 
-        for(int i = 0; i < tiles.size(); i++){
+        for (int i = 0; i < tiles.size(); i++) {
             tiles.get(i).setId(i);
         }
 

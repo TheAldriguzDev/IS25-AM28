@@ -7,8 +7,7 @@ import com.fasterxml.jackson.annotation.*;
         "type"
 })
 public final class Vital extends Tile {
-    @JsonProperty("type")
-    private Integer type;
+    @JsonProperty("type")   private Integer type;
 
     @JsonGetter("type")
     public Integer getType() {

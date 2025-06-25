@@ -118,7 +118,8 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
             if (connectorsObj != null) {
                 try {
                     connectorOrdinals = (List<Integer>) connectorsObj;
-                } catch (ClassCastException e) {
+                }
+                catch (ClassCastException e) {
                     throw new RuntimeException(e);
                 }
             }
@@ -145,6 +146,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
                             .toList();
 
                     ClientCabin component = new ClientCabin(id, connectorOrdinals, isCore, isCore ? "/imgs/tiles/core_" + color.getPlayerColorString() + ".jpg" : path);
+
                     if (isCore) {
                         component.getInhabitants().clear();
                         this.core = component;
@@ -152,9 +154,11 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
                     for (LifeformType lifeformType : lifeform) {
                         component.addInhabitant(new Lifeform(lifeformType));
+
                         if (lifeformType.equals(LifeformType.BROWN_ALIEN)) {
                             this.brownAlienPosition = component;
-                        } else if (lifeformType.equals(LifeformType.PURPLE_ALIEN)) {
+                        }
+                        else if (lifeformType.equals(LifeformType.PURPLE_ALIEN)) {
                             this.purpleAlienPosition = component;
                         }
                     }
@@ -259,6 +263,7 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
 
             int comp_i = (int) map.get("row");
             int comp_j = (int ) map.get("col");
+
             if (comp_i == 6 && comp_j == 6) {
                 continue;
             }

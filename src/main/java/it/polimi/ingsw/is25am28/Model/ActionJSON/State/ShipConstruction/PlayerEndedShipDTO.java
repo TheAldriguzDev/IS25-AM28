@@ -1,19 +1,14 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
+import com.fasterxml.jackson.annotation.*;
 
-import java.util.List;
+import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
 /**
  * Represents a data transfer data object that holds information about the players that have finished building their ships
- *
- * * Annotations from the Jackson library are used for JSON serialization and deserialization,
- *  * ensuring that only non-null values are included in the JSON output.
+ * <br>
+ * Annotations from the Jackson library are used for JSON serialization and deserialization,
+ * ensuring that only non-null values are included in the JSON output.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class PlayerEndedShipDTO extends ShipConstructionEventDTO {
@@ -22,8 +17,10 @@ public final class PlayerEndedShipDTO extends ShipConstructionEventDTO {
     private Integer playerCredits;
     private Integer playerCursors;
 
+    @JsonCreator
     public PlayerEndedShipDTO() {}
 
+    @JsonCreator
     public PlayerEndedShipDTO(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("playerCredits") Integer playerCredits,

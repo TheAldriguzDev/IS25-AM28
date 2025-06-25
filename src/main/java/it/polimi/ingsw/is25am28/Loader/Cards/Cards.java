@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.*;
 /**
  * Defines the JSON structure used to parse and load saved cards into the game.
  */
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "abandonedShip",
@@ -23,28 +22,17 @@ import com.fasterxml.jackson.annotation.*;
         "warzone"
 })
 public class Cards {
-    @JsonProperty("abandonedShip")
-    private List<AbandonedShip> abandonedShip;
-    @JsonProperty("abandonedStation")
-    private List<AbandonedStation> abandonedStation;
-    @JsonProperty("meteors")
-    private List<Meteor> meteors;
-    @JsonProperty("pirates")
-    private List<Pirate> pirates;
-    @JsonProperty("planets")
-    private List<Planet> planets;
-    @JsonProperty("space")
-    private List<OpenSpace> openSpace;
-    @JsonProperty("epidemic")
-    private List<Epidemic> epidemic;
-    @JsonProperty("smugglers")
-    private List<Smuggler> smugglers;
-    @JsonProperty("slavers")
-    private List<Slaver> slavers;
-    @JsonProperty("stardust")
-    private List<Stardust> stardust;
-    @JsonProperty("warzone")
-    private List<Warzone> warzone;
+    @JsonProperty("abandonedShip")      private List<AbandonedShip> abandonedShip;
+    @JsonProperty("abandonedStation")   private List<AbandonedStation> abandonedStation;
+    @JsonProperty("meteors")            private List<Meteor> meteors;
+    @JsonProperty("pirates")            private List<Pirate> pirates;
+    @JsonProperty("planets")            private List<Planet> planets;
+    @JsonProperty("space")              private List<OpenSpace> openSpace;
+    @JsonProperty("epidemic")           private List<Epidemic> epidemic;
+    @JsonProperty("smugglers")          private List<Smuggler> smugglers;
+    @JsonProperty("slavers")            private List<Slaver> slavers;
+    @JsonProperty("stardust")           private List<Stardust> stardust;
+    @JsonProperty("warzone")            private List<Warzone> warzone;
 
     @JsonGetter("abandonedShip")
     public List<AbandonedShip> getAbandonedShip() {

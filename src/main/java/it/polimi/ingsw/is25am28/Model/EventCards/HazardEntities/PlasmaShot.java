@@ -4,6 +4,7 @@ public class PlasmaShot {
     private final int size;
     private final int orientation;
 
+    // Constructor
     public PlasmaShot(int size, int orientation) {
         this.size = size;
         this.orientation = orientation;

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.Player;
 
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 
 public enum PlayerColor {
     GREEN(ANSIColors.GREEN),

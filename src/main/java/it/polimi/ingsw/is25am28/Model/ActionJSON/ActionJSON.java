@@ -1,10 +1,6 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON;
 
 import com.fasterxml.jackson.annotation.*;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 
 import java.io.Serializable;
 
@@ -12,7 +8,6 @@ import java.io.Serializable;
  * Represents the base class for the players' actions for evey eventCard in JSON format.
  * The class is designed to be serialized and deserialized using Jackson annotations
  */
-
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -52,9 +47,6 @@ public class ActionJSON implements Serializable {
         this.playerNickname = playerNickname;
     }
 
-    /**
-     * Returns the player Nickname
-     */
     @JsonGetter("playerNickname")
     public String getPlayerNickname() throws IllegalStateException {
         if (this.playerNickname == null || this.playerNickname.isEmpty()) {
@@ -64,9 +56,7 @@ public class ActionJSON implements Serializable {
         return this.playerNickname;
     }
 
-    /**
-     * Set the playerNickname to the given data
-     */
+    @JsonSetter("playerNickname")
     public void setPlayerNickname(String playerNickname) throws IllegalStateException {
         if (playerNickname == null || playerNickname.isEmpty()) {
             throw new IllegalStateException("playerNickname cannot be null or empty");

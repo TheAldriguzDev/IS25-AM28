@@ -11,22 +11,22 @@ import java.util.List;
 public class ClientAbandonedStation extends ClientEventCard {
     private final int requiredCrew;
     private final int movementStep;
-//    private List<ItemColor> stationResources;
     private boolean isCardUsable;
-    int redItems = 0;
-    int yellowItems = 0;
-    int blueItems = 0;
-    int greenItems = 0;
 
+    int redItems;
+    int yellowItems;
+    int blueItems;
+    int greenItems;
 
     private AbandonedStationJSON abandonedStationJSON;
 
+    // Constructor
     public ClientAbandonedStation(CardStateJSON cardState) {
         super(cardState);
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementStep = cardState.getMovementSteps();
         this.isCardUsable = cardState.getIsCardUsable();
-//        this.stationResources = cardState.getStationResources();
+
         this.abandonedStationJSON = new AbandonedStationJSON();
 
         this.redItems = 0;
@@ -42,8 +42,6 @@ public class ClientAbandonedStation extends ClientEventCard {
                 case ItemColor.GREEN -> greenItems++;
             }
         }
-
-
     }
 
     @Override
@@ -56,8 +54,10 @@ public class ClientAbandonedStation extends ClientEventCard {
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
         this.isCardUsable = cardState.getIsCardUsable();
+
         enabledCommands.clear();
         enabledCommands.add("playCard");
+
         if (this.isCardUsable) {
             enabledCommands.add("setWantsToVisit");
         }
@@ -88,6 +88,7 @@ public class ClientAbandonedStation extends ClientEventCard {
         cardInfoWidget.appendString("───────────────────────────────");
         cardInfoWidget.appendString("Available ╿ " + ANSIColors.RED + "R: " + ANSIColors.RESET + redItems + "," + ANSIColors.YELLOW + " Y: " + ANSIColors.RESET + yellowItems);
         cardInfoWidget.appendString("Resources ╽ " + ANSIColors.BLUE + "B: " + ANSIColors.RESET + blueItems + "," + ANSIColors.GREEN + " G: " + ANSIColors.RESET + greenItems);
+
         if (this.playerNickname != null) {
             cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Current Player: " + this.playerNickname);
@@ -138,18 +139,10 @@ public class ClientAbandonedStation extends ClientEventCard {
         return this.abandonedStationJSON.getWantToVisitStation();
     }
 
-    // Method necessary to the availableColors widget
-    // Returns a list of the available colors
     @Override
     public List<ItemColor> getAvailableItemColors() {
-//        List<ItemColor> availableColors = new ArrayList<>();
-//        for(ItemColor color : ItemColor.values()) {
-//            if (this.stationResources.contains(color)) {
-//                availableColors.add(color);
-//            }
-//        }
-//        return availableColors;
         List<ItemColor> availableColors = new ArrayList<>();
+
         if (redItems > 0) {
             availableColors.add(ItemColor.RED);
         }
@@ -162,12 +155,12 @@ public class ClientAbandonedStation extends ClientEventCard {
         if (greenItems > 0) {
             availableColors.add(ItemColor.GREEN);
         }
+
         return availableColors;
     }
 
     @Override
     public void removeItem(ItemColor itemColor) {
-//        this.stationResources.remove(itemColor);
         switch (itemColor) {
             case RED -> this.redItems--;
             case YELLOW -> this.yellowItems--;
@@ -175,6 +168,4 @@ public class ClientAbandonedStation extends ClientEventCard {
             case GREEN -> this.greenItems--;
         }
     }
-
-
 }

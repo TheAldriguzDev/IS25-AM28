@@ -1,20 +1,20 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer;
 
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 
 import java.util.List;
 import java.util.Map;
 
 public class ClientPlayer {
-    private  String nickname; // final
-    private  PlayerColor color; // final
+    private  String nickname;
+    private  PlayerColor color;
     private int credits;
     private int lostComponents;
     private int cursor;
-    private  ClientShip ship; // final
+    private ClientShip ship;
 
+    // Constructor #1
     public ClientPlayer(String nickname, PlayerColor color, int level) {
         this.nickname = nickname;
         this.color = color;
@@ -25,14 +25,21 @@ public class ClientPlayer {
         this.ship = new ClientShip(level, color);
     }
 
-    public ClientPlayer(String nickname, PlayerColor color, int level, int credits, int lostPieces, List<Map<String, Object>> ship) {
-            this.nickname = nickname;
-            this.color = color;
-            this.credits = credits;
-            this.lostComponents = lostPieces;
-            this.cursor = 0;
-
-            this.ship = new ClientShip(level, ship, color);
+    // Constructor #2
+    public ClientPlayer(
+            String nickname,
+            PlayerColor color,
+            int level,
+            int credits,
+            int lostPieces,
+            List<Map<String, Object>> ship
+    ) {
+        this.nickname = nickname;
+        this.color = color;
+        this.credits = credits;
+        this.lostComponents = lostPieces;
+        this.cursor = 0;
+        this.ship = new ClientShip(level, ship, color);
     }
 
     /**
@@ -111,5 +118,4 @@ public class ClientPlayer {
     public ClientShip getShip() {
         return this.ship;
     }
-
 }

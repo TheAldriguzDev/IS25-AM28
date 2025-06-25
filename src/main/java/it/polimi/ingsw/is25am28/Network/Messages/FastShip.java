@@ -1,10 +1,9 @@
 package it.polimi.ingsw.is25am28.Network.Messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 public final class FastShip implements Message {
     private String playerNickname;
@@ -14,10 +13,12 @@ public final class FastShip implements Message {
         this.playerNickname = playerNickname;
     }
 
+    @JsonGetter("playerNickname")
     public String getPlayerNickname() {
         return playerNickname;
     }
 
+    @JsonSetter("playerNickname")
     public void setPlayerNickname(String playerNickname) {
         this.playerNickname = playerNickname;
     }

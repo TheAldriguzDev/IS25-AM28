@@ -29,8 +29,10 @@ public class ClientWarZone extends ClientEventCard {
 
     private WarZoneJSON warZoneJSON;
 
+    // Constructor
     public ClientWarZone(CardStateJSON cardState) {
         super(cardState);
+
         this.actionAndConsequences = cardState.getActionsAndConsequences();
         this.requiredCrew = cardState.getRequiredCrewMembers();
         this.movementSteps = cardState.getMovementSteps();
@@ -46,16 +48,15 @@ public class ClientWarZone extends ClientEventCard {
 
     @Override
     public void updateCard(CardStateJSON cardState) {
-        this.playerNickname = cardState.getPlayerNickname(); // If present, the current action (not the general card thumbnail) will be shown
+        this.playerNickname = cardState.getPlayerNickname();    // If present, the current action (not the general card thumbnail) will be shown
         this.affectedPlayer = cardState.getAffectedPlayer();
-        this.currActionIndex = cardState.getCurrActionIndex(); // Will be used in the generateWidget to determine what to display
+        this.currActionIndex = cardState.getCurrActionIndex();  // Will be used in the generateWidget to determine what to display
         this.diceThrowResult = cardState.getDiceThrowResult();
 
         enabledCommands.clear();
         enabledCommands.add("playCard");
 
         if (this.affectedPlayer == null || this.affectedPlayer.isEmpty()) { // Sets the commands relative to the Actions
-
             switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
                 case "Enginepower" -> {
                     enabledCommands.add("setDoubleEnginesToActivate");
@@ -65,8 +66,9 @@ public class ClientWarZone extends ClientEventCard {
                 }
                 default -> {} // "Humans" does not need user input
             }
-        } else { // Sets the commands relative to the Consequences
-
+        }
+        else {
+            // Sets the commands relative to the Consequences
             switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
                 case "RequiredCrew" -> {
                     enabledCommands.add("setCrewToRemove");
@@ -90,7 +92,7 @@ public class ClientWarZone extends ClientEventCard {
         String tmpAction = getCurrAction();
         String tmpConsequence = getCurrConsequence();
 
-        if(!(this.affectedPlayer != null && !this.affectedPlayer.isEmpty())) {
+        if (!(this.affectedPlayer != null && !this.affectedPlayer.isEmpty())) {
             return tmpAction + " --> " + tmpConsequence;
         }
 
@@ -99,20 +101,27 @@ public class ClientWarZone extends ClientEventCard {
                 return "Choose the crew members to give up!";
             }
             case "ShootingSequence" -> {
-                return "[CURRENT PLASMASHOT]\nComing from: "
-                        + switch (this.currentPlasmaShot.get("shotDirection")) {
-                    case 0 -> "ABOVE";
-                    case 1 -> "RIGHT";
-                    case 2 -> "BELOW";
-                    case 3 -> "LEFT";
+                String direction;
+                String size;
+
+                direction = switch (this.currentPlasmaShot.get("shotDirection"))
+                {
+                    case 0  -> "ABOVE";
+                    case 1  -> "RIGHT";
+                    case 2  -> "BELOW";
+                    case 3  -> "LEFT";
                     default -> "";
-                }
-                        + "\nSize: "
-                        + switch (this.currentPlasmaShot.get("shotSize")) {
-                    case 1 -> "SMALL";
-                    case 2 -> "BIG";
+                };
+
+                size = switch (this.currentPlasmaShot.get("shotSize")) {
+                    case 1  -> "SMALL";
+                    case 2  -> "BIG";
                     default -> "";
-                } + "\nDice Throw Result: " + this.diceThrowResult;
+                };
+
+                return "[CURRENT PLASMASHOT]\nComing from: " + direction
+                        + "\nSize: " + size
+                        + "\nDice Throw Result: " + this.diceThrowResult;
             }
             case "LossItems" -> {
                 return "Choose the items to give up!";
@@ -155,22 +164,10 @@ public class ClientWarZone extends ClientEventCard {
 
         String tmpAction = getCurrAction();
         String tmpConsequence = getCurrConsequence();
-//        switch (this.actionAndConsequences.get(currActionIndex).getFirst()) {
-//            case "Humans" -> tmpAction = "Crew";
-//            case "Enginepower" -> tmpAction = "EnginePower";
-//            case "Firepower" -> tmpAction = "FirePower";
-//        }
-//        switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
-//            case "RequiredCrew" -> tmpConsequence = "Taken Crew";
-//            case "MovementSteps" -> tmpConsequence = "Days";
-//            case "ShootingSequence" -> tmpConsequence = "PlasmaShots";
-//            case "LossItems" -> tmpConsequence = "Taken Items";
-//        }
 
         cardWidget.appendString("[" + this.cardName.toUpperCase() + " - LVL: " + this.cardLevel + "]");
 
         if (this.playerNickname != null) {
-
             switch (this.actionAndConsequences.get(currActionIndex).getLast()) {
                 case "RequiredCrew" -> {
                     cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
@@ -187,12 +184,14 @@ public class ClientWarZone extends ClientEventCard {
                     cardInfoWidget.appendString(ANSIColors.WHITE + "     ██    ██        ██        " + ANSIColors.RESET);
                     cardInfoWidget.wrapWidgetWithBorder();
 
-                    if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+                    if (this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
                         cardInfoWidget.appendString("Affected player: " + affectedPlayer);
                         cardInfoWidget.appendString("Taken crew: " + requiredCrew);
-                    } else {
+                    }
+                    else {
                         cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
                     }
+
                     cardInfoWidget.appendString("───────────────────────────────");
                 }
                 case "ShootingSequence" -> {
@@ -212,7 +211,7 @@ public class ClientWarZone extends ClientEventCard {
                     cardInfoWidget.appendString(ANSIColors.MAGENTA + "            ███████████           " + ANSIColors.RESET);
                     cardInfoWidget.wrapWidgetWithBorder();
 
-                    if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+                    if (this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
                         cardInfoWidget.appendString("==== CURRENT PLASMASHOT INFO ====");
 
                         switch (this.currentPlasmaShot.get("shotDirection")) {
@@ -230,7 +229,8 @@ public class ClientWarZone extends ClientEventCard {
                         }
 
                         cardInfoWidget.appendString("Dice Throw Result: " + this.diceThrowResult);
-                    } else {
+                    }
+                    else {
                         cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
                     }
                     cardInfoWidget.appendString("───────────────────────────────");
@@ -251,9 +251,10 @@ public class ClientWarZone extends ClientEventCard {
                     cardInfoWidget.appendString(ANSIColors.RED +"████                       ████" + ANSIColors.RESET);
                     cardInfoWidget.wrapWidgetWithBorder();
 
-                    if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
+                    if (this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
                         cardInfoWidget.appendString("RequiredResources: " + requiredResources);
-                    } else {
+                    }
+                    else {
                         cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
                     }
                     cardInfoWidget.appendString("───────────────────────────────");
@@ -297,7 +298,8 @@ public class ClientWarZone extends ClientEventCard {
 
                     if(this.affectedPlayer != null && !this.affectedPlayer.isEmpty()) {
                         cardInfoWidget.appendString("Taken items: " + requiredCrew);
-                    } else {
+                    }
+                    else {
                         cardInfoWidget.appendString(tmpAction + " --> " + tmpConsequence);
                     }
                     cardInfoWidget.appendString("───────────────────────────────");
@@ -305,7 +307,6 @@ public class ClientWarZone extends ClientEventCard {
             }
 
             cardInfoWidget.appendString("Current Player: " + this.playerNickname);
-
         }
         else {
             cardInfoWidget.appendString(ANSIColors.WHITE + "      ██  ██  ███  ██  ██      " + ANSIColors.RESET);

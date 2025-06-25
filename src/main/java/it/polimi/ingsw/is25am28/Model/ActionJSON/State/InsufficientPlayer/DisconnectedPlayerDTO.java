@@ -1,15 +1,13 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.*;
+
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 
 /**
  * Represents a data transfer data object that holds information about a disconnected player
- *
+ * <br>
  * * Annotations from the Jackson library are used for JSON serialization and deserialization,
  *  * ensuring that only non-null values are included in the JSON output.
  */
@@ -17,11 +15,11 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 public final class DisconnectedPlayerDTO extends StateDTO {
     private String nickname;
 
+    @JsonCreator
     public DisconnectedPlayerDTO() {}
 
-    public DisconnectedPlayerDTO(
-            @JsonProperty("nickname") String nickname
-    ) {
+    @JsonCreator
+    public DisconnectedPlayerDTO(@JsonProperty("nickname") String nickname) {
         this.nickname = nickname;
     }
 

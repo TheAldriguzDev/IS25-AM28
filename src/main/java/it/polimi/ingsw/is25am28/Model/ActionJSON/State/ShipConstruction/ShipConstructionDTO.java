@@ -1,9 +1,7 @@
 package it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction;
 
-import com.fasterxml.jackson.annotation.JsonGetter;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.*;
+
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
@@ -11,12 +9,11 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateVisitor;
 import java.util.List;
 import java.util.Map;
 
-
 /**
  * Represents a data transfer data object that holds all the main information necessary for the ship construction phase
- *
- * * Annotations from the Jackson library are used for JSON serialization and deserialization,
- *  * ensuring that only non-null values are included in the JSON output.
+ * <br>
+ * Annotations from the Jackson library are used for JSON serialization and deserialization,
+ * ensuring that only non-null values are included in the JSON output.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public final class ShipConstructionDTO extends StateDTO {
@@ -30,8 +27,10 @@ public final class ShipConstructionDTO extends StateDTO {
     // Card list that contains the information about the deck in the game
     private List<CardStateJSON> cards;
 
+    @JsonCreator
     public ShipConstructionDTO() {}
 
+    @JsonCreator
     public ShipConstructionDTO(
             @JsonProperty("all_components") List<Map<String, Object>> all_components,
             @JsonProperty("flipped_components") List<Integer> flipped_components,

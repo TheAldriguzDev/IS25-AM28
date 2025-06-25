@@ -4,14 +4,12 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.*;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -355,7 +353,6 @@ public class GUIHandler extends Application implements ClientUI {
         Platform.runLater(() -> {
             // Check if the FIX_SHIP_SCENE is already loaded
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.FIX_SHIP_SCENE)) {
-
                 return;
             }
 
@@ -380,7 +377,6 @@ public class GUIHandler extends Application implements ClientUI {
                 this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
                 this.stage.setScene(newScene);
                 this.stage.show();
-
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
@@ -389,7 +385,6 @@ public class GUIHandler extends Application implements ClientUI {
                 this.currentScene = GuiScenes.FIX_SHIP_SCENE;
             }
         });
-
     }
 
     @Override
@@ -397,7 +392,6 @@ public class GUIHandler extends Application implements ClientUI {
         Platform.runLater(() -> {
             // Check if the POPULATE_SHIP_SCENE is already loaded
             if (this.currentScene != null && this.currentScene.equals(GuiScenes.POPULATE_SHIP_SCENE)) {
-
                 return;
             }
 
@@ -422,7 +416,6 @@ public class GUIHandler extends Application implements ClientUI {
                 this.stage.setOnCloseRequest(GUIHandler::onQuitHandler);
                 this.stage.setScene(newScene);
                 this.stage.show();
-
             }
             catch (IOException e) {
                 throw new RuntimeException(e);
@@ -465,9 +458,11 @@ public class GUIHandler extends Application implements ClientUI {
                 this.stage.setScene(newScene);
                 this.stage.show();
 
-            } catch (IOException e) {
+            }
+            catch (IOException e) {
                 throw new RuntimeException(e);
-            } finally {
+            }
+            finally {
                 this.currentScene = GuiScenes.CARD_ROUND_SCENE;
             }
         });
@@ -549,13 +544,6 @@ public class GUIHandler extends Application implements ClientUI {
                 controller.handleConfirmShip();
             }
             else {
-//                if (!timerDTO.getIsServerAction()) {
-//                    controller.startCountDownTimer();
-//                }
-//                else {
-//                    controller.resetTimer();
-//                }
-
                 if (!timerDTO.getIsServerAction()) {
                     controller.disableTimerButton();
                 }
@@ -583,7 +571,7 @@ public class GUIHandler extends Application implements ClientUI {
             System.err.println(error.getError());
         }
 
-        GUIController controller = (GUIController) this.controllers.get(this.currentScene);
+        GUIController controller = this.controllers.get(this.currentScene);
 
         if (controller == null) {
             System.err.println("No controller has been found for the current scene");

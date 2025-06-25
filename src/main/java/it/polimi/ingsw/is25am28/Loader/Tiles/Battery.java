@@ -7,8 +7,7 @@ import com.fasterxml.jackson.annotation.*;
         "capacity",
 })
 public final class Battery extends Tile {
-    @JsonProperty("capacity")
-    private Integer capacity;
+    @JsonProperty("capacity")   private Integer capacity;
 
     @JsonGetter("capacity")
     public Integer getCapacity() {

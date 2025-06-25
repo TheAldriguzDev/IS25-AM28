@@ -1,17 +1,18 @@
 package it.polimi.ingsw.is25am28.Network.Messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
-
-import java.util.List;
 
 public final class SelectTile implements Message {
     private String playerNickname;
     private Integer id;
 
+    @JsonCreator
     public SelectTile() {}
 
+    @JsonCreator
     public SelectTile(
             @JsonProperty("playerNickname") String playerNickname,
             @JsonProperty("id") Integer id

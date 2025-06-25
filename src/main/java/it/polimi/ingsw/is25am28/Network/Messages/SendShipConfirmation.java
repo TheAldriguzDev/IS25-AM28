@@ -3,11 +3,6 @@ package it.polimi.ingsw.is25am28.Network.Messages;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.ConstructionComponentDTO;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public final class SendShipConfirmation implements Message {
     private final String playerNickname;

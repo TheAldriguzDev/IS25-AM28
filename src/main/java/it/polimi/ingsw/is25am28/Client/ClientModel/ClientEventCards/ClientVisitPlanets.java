@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
@@ -19,12 +18,11 @@ public class ClientVisitPlanets extends ClientEventCard {
 
     public ClientVisitPlanets(CardStateJSON cardState) {
         super(cardState);
+
         this.availablePlanets = cardState.getAvailablePlanets();
         this.visitPlanetsJSON = new VisitPlanetsJSON();
         this.movementSteps = cardState.getMovementSteps();
 
-//        enabledCommands.add("setItemsToBeRemoved");
-//        enabledCommands.add("setItemsToBeTaken");
         enabledCommands.add("setChosenPlanetIndex");
     }
 
@@ -37,10 +35,13 @@ public class ClientVisitPlanets extends ClientEventCard {
     @Override
     public void updateCard(CardStateJSON cardState) {
         this.playerNickname = cardState.getPlayerNickname();
-        // If a valid planet has been chosen by a player, the corresponding planed will be removed form the avaiable planets
+
+        // If a valid planet has been chosen by a player, the corresponding
+        // planet will be removed form the available ones
         this.chosenPlanetIndex = cardState.getChosenPlanetIndex();
-        if (chosenPlanetIndex != -1) {
-            availablePlanets.remove(cardState.getChosenPlanetIndex());
+
+        if (this.chosenPlanetIndex != -1) {
+            this.availablePlanets.remove(cardState.getChosenPlanetIndex());
         }
     }
 
@@ -71,15 +72,14 @@ public class ClientVisitPlanets extends ClientEventCard {
 
         cardInfoWidget.wrapWidgetWithBorder();
 
-//        cardInfoWidget.appendString("Available Planets: ");
         cardInfoWidget.appendString("Days: " + this.movementSteps);
 
         for (Map.Entry<Integer, Map<ItemColor, Integer>> entry : availablePlanets.entrySet()) {
-//            cardInfoWidget.appendString(entry.getKey() + ": " + entry.getValue().toString());
             redItems = (entry.getValue().getOrDefault(ItemColor.RED, 0));
             yellowItems = (entry.getValue().getOrDefault(ItemColor.YELLOW, 0));
             blueItems = (entry.getValue().getOrDefault(ItemColor.BLUE, 0));
             greenItems = (entry.getValue().getOrDefault(ItemColor.GREEN, 0));
+
             cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Planet ╿ Available ╿ " + ANSIColors.RED + "R: " + ANSIColors.RESET + redItems + "," + ANSIColors.YELLOW + " Y: " + ANSIColors.RESET + yellowItems);
             cardInfoWidget.appendString("Num: " + entry.getKey() + " ╽ Resources ╽ " + ANSIColors.BLUE + "B: " + ANSIColors.RESET + blueItems + "," + ANSIColors.GREEN + " G: " + ANSIColors.RESET + greenItems);
@@ -97,9 +97,15 @@ public class ClientVisitPlanets extends ClientEventCard {
     public String getAdditionalCardInfo() {
         if (this.visitPlanetsJSON.getChosenPlanetIndex() == -1) {
             return "No planet is currently selected";
-        } else {
+        }
+        else {
             Map<ItemColor, Integer> availableResources = availablePlanets.get(this.visitPlanetsJSON.getChosenPlanetIndex());
-            return "[AVAILABLE RESOURCES]\n" + availableResources.get(ItemColor.RED) + "🟥 " + availableResources.get(ItemColor.YELLOW) + "🟨 " + availableResources.get(ItemColor.GREEN) + "🟩 " + availableResources.get(ItemColor.BLUE) + "🟦 ";
+
+            return "[AVAILABLE RESOURCES]\n"
+                    + availableResources.get(ItemColor.RED) + "🟥 "
+                    + availableResources.get(ItemColor.YELLOW) + "🟨 "
+                    + availableResources.get(ItemColor.GREEN) + "🟩 "
+                    + availableResources.get(ItemColor.BLUE) + "🟦 ";
         }
     }
 
@@ -145,15 +151,14 @@ public class ClientVisitPlanets extends ClientEventCard {
         return this.availablePlanets;
     }
 
-    // Method necessary to the availableColors widget
-    // Returns a list of the available colors
-    /**
-     * For this method to work correctly, it must be invoked only when a valid chosenPlanetIndex has been set
-     * */
+    // For this method to work correctly, it must be invoked only
+    // when a valid chosenPlanetIndex has been set
     @Override
     public List<ItemColor> getAvailableItemColors() {
         List<ItemColor> availableColors = new ArrayList<>();
+
         Map<ItemColor, Integer> availableResources = availablePlanets.get(chosenPlanetIndex);
+
         if (availableResources.get(ItemColor.RED) > 0) {
             availableColors.add(ItemColor.RED);
         }
@@ -166,12 +171,12 @@ public class ClientVisitPlanets extends ClientEventCard {
         if (availableResources.get(ItemColor.GREEN) > 0) {
             availableColors.add(ItemColor.GREEN);
         }
+
         return availableColors;
     }
 
-    /**
-     * For this method to work correctly, it must be invoked only when a valid chosenPlanetIndex has been set
-     * */
+    // For this method to work correctly, it must be invoked only
+    // when a valid chosenPlanetIndex has been set
     @Override
     public void removeItem(ItemColor itemColor) {
         Map<ItemColor, Integer> availableResources = availablePlanets.get(chosenPlanetIndex);

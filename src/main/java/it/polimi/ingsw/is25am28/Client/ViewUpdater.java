@@ -5,15 +5,12 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard.ClientBoard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.ClientUI;
-import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.BoardJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.PlayerJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.DisconnectedPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
-import it.polimi.ingsw.is25am28.Model.GameModelv2.ShipContructionState;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
@@ -26,13 +23,12 @@ import java.util.Map;
 import java.util.Optional;
 
 import static it.polimi.ingsw.is25am28.Client.UI.TUI.Screen.Screen.COMPUTER_MSG_TAG;
-import static it.polimi.ingsw.is25am28.Client.UI.TUI.TUIHandler.clearTerminal;
 import static it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType.ASTRONAUT;
 
 /**
  * Uses the Visitor Pattern to update the {@link ClientModel} based on updates received from the server,
  * and optionally triggers a UI render.
- *
+ * <br>
  * Each method is invoked by a concrete implementation of {@link StateDTO} to activate the appropriate handlers.
  */
 public class ViewUpdater implements StateVisitor {
@@ -67,7 +63,8 @@ public class ViewUpdater implements StateVisitor {
             }
 
             this.ui.showWaitingForPlayers(state);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -77,7 +74,6 @@ public class ViewUpdater implements StateVisitor {
         try {
             synchronized (this.model) {
                 if (this.model.getNickname().equals(state.getTargetNickname())) {
-
                     this.model.setNickname(state.getTargetNickname());
                     this.model.setDifficultyLevel(state.getGameLevel());
 
@@ -98,7 +94,8 @@ public class ViewUpdater implements StateVisitor {
                     this.model.generateClientEventCards(state.getCards());
 
                     System.out.println("Ended reconnecting to the game.");
-                } else {
+                }
+                else {
                     System.out.println();
                     new WidgetTUI()
                             .appendString(COMPUTER_MSG_TAG + PrintUtils.addColor(state.getTargetNickname() + " reconnected to the game.", ANSIColors.BRIGHT_MAGENTA))
@@ -107,11 +104,11 @@ public class ViewUpdater implements StateVisitor {
                             .printWidget();
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public void visit(ShipConstructionDTO state) throws Exception {
@@ -119,14 +116,16 @@ public class ViewUpdater implements StateVisitor {
         synchronized (this.model) {
             try {
                 this.model.setState(new ClientShipConstructionState(this.model, state));
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 System.out.println(e.getMessage());
             }
         }
 
         try {
             this.ui.showShipConstruction(state);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -150,7 +149,6 @@ public class ViewUpdater implements StateVisitor {
         }
     }
 
-
     @Override
     public void visit(ReservedComponentDTO state) throws Exception {
         if (state.getPlayerNickname().equals(this.model.getNickname())) {
@@ -158,7 +156,6 @@ public class ViewUpdater implements StateVisitor {
             this.model.getState().reserveTile(comp);
         }
     }
-
 
     @Override
     public void visit(FastShipDTO state) throws Exception {
@@ -180,7 +177,8 @@ public class ViewUpdater implements StateVisitor {
                     }
                 );
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -201,7 +199,6 @@ public class ViewUpdater implements StateVisitor {
             this.ui.updateShipRemovedComponent(state);
         }
     }
-
 
     @Override
     public void visit(PopulateShipComponentDTO state) throws Exception {
@@ -233,7 +230,6 @@ public class ViewUpdater implements StateVisitor {
                 }
             );
 
-
             this.ui.updateShipPlacedLifeForm(state);
 
             if (state.isShipPopulated()) {
@@ -241,7 +237,6 @@ public class ViewUpdater implements StateVisitor {
             }
         }
     }
-
 
     @Override
     public void visit(PlacedComponentDTO state) throws Exception {
@@ -258,7 +253,6 @@ public class ViewUpdater implements StateVisitor {
             }
         }
     }
-
 
     @Override
     public void visit(PlayerEndedShipDTO state) throws Exception {
@@ -297,7 +291,8 @@ public class ViewUpdater implements StateVisitor {
             }
 
             this.ui.showShipFixing(state);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -317,12 +312,12 @@ public class ViewUpdater implements StateVisitor {
         try {
             synchronized (this.model) {
                 this.update(state);
-
                 this.model.setState(new ClientCardRoundState(this.model, state));
             }
 
             this.ui.showCardRound(state);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -339,7 +334,6 @@ public class ViewUpdater implements StateVisitor {
             e.printStackTrace();
         }
     }
-
 
     /**
      * Updates the client's model with the provided `CardRoundDTO` state.

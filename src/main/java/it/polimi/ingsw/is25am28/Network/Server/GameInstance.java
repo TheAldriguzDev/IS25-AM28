@@ -20,7 +20,6 @@ import java.util.concurrent.TimeUnit;
  * between the server and clients. Each instance corresponds to a single game configuration
  * and facilitates gameplay for multiple connected players.
  */
-
 public class GameInstance {
     private final GameController controller;
     private final Map<String, VirtualView> connectedClients;
@@ -94,9 +93,8 @@ public class GameInstance {
             default -> correctState = false;
         }
         
-        return
-                this.canBeJoined &&
-                !this.connectedClients.isEmpty()
+        return  this.canBeJoined
+                && !this.connectedClients.isEmpty()
                 && correctState;
     }
 

@@ -12,14 +12,10 @@ import com.fasterxml.jackson.annotation.*;
         "credits"
 })
 public final class Pirate extends Card {
-    @JsonProperty("firepower")
-    private Integer firepower;
-    @JsonProperty("shoots")
-    private List<List<Integer>> shoots;
-    @JsonProperty("days")
-    private Integer days;
-    @JsonProperty("credits")
-    private Integer credits;
+    @JsonProperty("firepower")      private Integer firepower;
+    @JsonProperty("shoots")         private List<List<Integer>> shoots;
+    @JsonProperty("days")           private Integer days;
+    @JsonProperty("credits")        private Integer credits;
 
     @JsonGetter("firepower")
     public Integer getFirepower() {

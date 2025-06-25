@@ -29,14 +29,11 @@ public class ClientModel {
     private ClientBoard board;
     private ResourceBank resourceBank;
 
-
+    // Constructor
     public ClientModel() {
         this.players = new HashMap<>();
         this.eventCards = new ArrayList<>();
         this.board = null;
-
-
-//        this.resourceBank = new ResourceBank(2);
     }
 
     /**
@@ -172,13 +169,6 @@ public class ClientModel {
         return this.resourceBank;
     }
 
-//    /**
-//     * Sets the current resourceBank to the given one
-//     */
-//    public void setClientResourceBank(ResourceBank resourceBank) {
-//        this.resourceBank = resourceBank;
-//    }
-
     /**
      * Generates all client event cards from the given list of card
      * states sent by the server and stores them in the client model
@@ -190,6 +180,7 @@ public class ClientModel {
 
         List<ClientEventCard> eventCards = this.getClientEventCards();
         eventCards.clear();
+
         for (CardStateJSON cardState : cards) {
             switch (cardState.getCardTypeId()) {
                 case 0 -> eventCards.add(new ClientAbandonedShip(cardState));
@@ -214,7 +205,6 @@ public class ClientModel {
         }
     }
 
-
     /**
      * Updates the players' state based on the provided card state data.
      * This method performs the following updates:
@@ -237,7 +227,6 @@ public class ClientModel {
             }
         }
     }
-    // new flag system
 
     /**
      * Updates the state of ships based on the provided card state data.

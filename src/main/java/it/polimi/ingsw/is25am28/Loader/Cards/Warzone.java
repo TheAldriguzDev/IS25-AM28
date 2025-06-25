@@ -13,16 +13,11 @@ import com.fasterxml.jackson.annotation.*;
         "actions",
 })
 public final class Warzone extends Card {
-    @JsonProperty("items")
-    private Integer items;
-    @JsonProperty("peoples")
-    private Integer peoples;
-    @JsonProperty("days")
-    private Integer days;
-    @JsonProperty("shoots")
-    private List<List<Integer>> shoots;
-    @JsonProperty("actions")
-    private List<Action> actions;
+    @JsonProperty("items")      private Integer items;
+    @JsonProperty("peoples")    private Integer peoples;
+    @JsonProperty("days")       private Integer days;
+    @JsonProperty("shoots")     private List<List<Integer>> shoots;
+    @JsonProperty("actions")    private List<Action> actions;
 
     @JsonGetter("items")
     public Integer getItems() {

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
-
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CreateGameStateDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
@@ -8,7 +7,7 @@ import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import java.util.ArrayList;
 
 public final class CreateGameState extends State {
-
+    // Constructor
     public CreateGameState(GameModel model) {
         super(model);
     }

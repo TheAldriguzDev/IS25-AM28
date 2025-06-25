@@ -71,7 +71,6 @@ public final class Battery extends Component {
         map.put("capacity", maxAvailability );
         map.put("available", available );
 
-
         return map;
     }
 

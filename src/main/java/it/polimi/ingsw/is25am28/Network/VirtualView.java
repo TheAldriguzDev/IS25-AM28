@@ -2,27 +2,20 @@ package it.polimi.ingsw.is25am28.Network;
 
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.StateDTO;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
-import it.polimi.ingsw.is25am28.Network.Messages.Message;
-import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
-
-import java.util.UUID;
 
 /**
  * This interface represents a virtual layer facilitating communication between the client and the server
  * for managing and interacting with the game state. It provides methods to create games, join games,
  * manage tile interactions, confirm actions, and receive updates or errors from the server.
  */
-
 public interface VirtualView {
-
     /**
      * Requests the server to provide an updated AvailableGamesDTO.
-     *
+     * <br>
      * This method interacts with the server to refresh and retrieve the current state of all available games.
      *
      * @throws Exception if any error occurs during the server communication or refresh process.

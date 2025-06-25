@@ -17,9 +17,7 @@ import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Utils.CoordinatePair.CoordinatePair;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 
-
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class WarZone extends EventCard {
     // Variables necessary for the card

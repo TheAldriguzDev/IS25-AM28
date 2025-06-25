@@ -21,11 +21,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * Responsible for loading and creating a list of {@link EventCard} objects
  * based on the data contained in the {@code cards.json} file.
- *
+ * <br>
  * This class handles parsing the file, generating the cards, and assigning each one a unique ID.
  */
 public class CardLoader extends Loader<Cards> {
-
+    // Constructor
     public CardLoader() throws IOException {
         super(CardLoader.class.getResourceAsStream("/json/cards.json"), Cards.class);
     }
@@ -90,7 +90,6 @@ public class CardLoader extends Loader<Cards> {
                     )
             );
         });
-
 
         cardsData.getMeteors().stream().filter(c -> c.getLevel() <= level).forEach(c -> {
            cards.add(

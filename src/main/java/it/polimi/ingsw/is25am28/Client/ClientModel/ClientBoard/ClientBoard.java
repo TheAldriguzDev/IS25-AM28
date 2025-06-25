@@ -31,22 +31,23 @@ public class ClientBoard {
 
     private final int size;
     private final int level;
-    // private List<String> playerNicknames;
     private List<ClientPlayer> eliminatedPlayers;
-    // private Map<String, Integer> currPlayersPositions;
-    // private final List<ClientPlayer> eliminatedPlayers;
 
     private final Map<String, ClientPlayer> players;
 
+    // Constructor
     public ClientBoard(BoardJSON BoardJSON, ClientModel clientModel) {
         this.size = BoardJSON.getSize();
         this.level = BoardJSON.getLevel();
         this.players = new HashMap<>(clientModel.getAllClientPlayers());
+
         // Setting the starting players' positions
         for (String playerNickName : BoardJSON.getStartingPlayersPositions().keySet()) {
             this.players.get(playerNickName).setCursor(BoardJSON.getStartingPlayersPositions().get(playerNickName));
         }
+
         this.eliminatedPlayers = new ArrayList<>();
+
         for (String playerNickName : BoardJSON.getEliminatedPlayersNickname()) {
             this.eliminatedPlayers.add(this.players.get(playerNickName));
             this.players.remove(playerNickName);
@@ -206,8 +207,8 @@ public class ClientBoard {
             for (int i = 0; i < this.getSize(); i++) {
                 if (coloredCells.containsKey(i)) {
                     allCells.add(PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, coloredCells.get(i)));
-                    //System.out.println("Added cell number " + i + " COLOR " + ANSIColors.RESET);
-                } else {
+                }
+                else {
                     allCells.add(UnicodeCharacters.FULL_BLOCK);
                 }
             }

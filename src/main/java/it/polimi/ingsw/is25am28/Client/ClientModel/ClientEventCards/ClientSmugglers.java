@@ -1,7 +1,5 @@
 package it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.*;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
@@ -20,15 +18,14 @@ public class ClientSmugglers extends ClientEventCard {
     private int blueItems;
     private int greenItems;
     private final int takenItems;
-    //private boolean firstRound;
-    //private List<String> defeatedPlayers;
     private boolean isPlayerDefeated;
-
 
     private SmugglersJSON smugglersJSON;
 
+    // Constructor
     public ClientSmugglers(CardStateJSON cardState) {
         super(cardState);
+
         this.requiredFirepower = cardState.getRequiredFirepower();
         this.movementSteps = cardState.getMovementSteps();
         this.redItems = cardState.getRedItems();
@@ -36,9 +33,7 @@ public class ClientSmugglers extends ClientEventCard {
         this.blueItems = cardState.getBlueItems();
         this.greenItems = cardState.getGreenItems();
         this.takenItems = cardState.getTakenItems();
-        //this.firstRound = true;
         this.isPlayerDefeated = false;
-        //this.defeatedPlayers = new ArrayList<>();
         this.smugglersJSON = new SmugglersJSON();
 
         enabledCommands.add("setDoubleCannonsToActivate");
@@ -63,7 +58,6 @@ public class ClientSmugglers extends ClientEventCard {
 
         if (this.isPlayerDefeated) {
             enabledCommands.add("setItemsToBeRemoved");
-
             enabledCommands.add("batteriesToBeStolen");
         }
         else {
@@ -75,10 +69,12 @@ public class ClientSmugglers extends ClientEventCard {
     public String getAdditionalCardInfo() {
         if (this.isPlayerDefeated) {
             return "Choose the items to give up!";
-        } else {
+        }
+        else {
             if (this.smugglersJSON.getTakeLoot()) {
                 return "[SMUGGLERS RESOURCES]\n" + this.redItems + "🟥 " + this.yellowItems + "🟨 " + this.greenItems + "🟩 " + this.blueItems + "🟦 ";
-            } else {
+            }
+            else {
                 return "Choose how to deal\nwith the smugglers!";
             }
         }
@@ -108,8 +104,6 @@ public class ClientSmugglers extends ClientEventCard {
 
         if (!this.isPlayerDefeated) {
             cardInfoWidget.appendString("Days: " + this.movementSteps + "      Firepower: " + this.requiredFirepower);
-//            cardInfoWidget.appendString("Days: " + this.movementSteps);
-//            cardInfoWidget.appendString("Required Firepower: " + this.requiredFirepower);
             cardInfoWidget.appendString("───────────────────────────────");
             cardInfoWidget.appendString("Available ╿ " + ANSIColors.RED + "R: " + ANSIColors.RESET + redItems + "," + ANSIColors.YELLOW + " Y: " + ANSIColors.RESET + yellowItems);
             cardInfoWidget.appendString("Resources ╽ " + ANSIColors.BLUE + "B: " + ANSIColors.RESET + blueItems + "," + ANSIColors.GREEN + " G: " + ANSIColors.RESET + greenItems);
@@ -126,7 +120,9 @@ public class ClientSmugglers extends ClientEventCard {
             cardInfoWidget.appendString("Target: " + this.playerNickname);
         }
 
-        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget).centerWidgetScreen().wrapWidgetWithBorder();
+        return WidgetTUI.composeTwoWidgetsVertically(cardWidget, cardInfoWidget)
+                .centerWidgetScreen()
+                .wrapWidgetWithBorder();
     }
 
     @Override
@@ -186,11 +182,10 @@ public class ClientSmugglers extends ClientEventCard {
         return this.smugglersJSON.getBatteriesToBeStolen();
     }
 
-    // Method necessary to the availableColors widget
-    // Returns a list of the available colors
     @Override
     public List<ItemColor> getAvailableItemColors() {
         List<ItemColor> availableColors = new ArrayList<>();
+
         if (redItems > 0) {
             availableColors.add(ItemColor.RED);
         }
@@ -203,6 +198,7 @@ public class ClientSmugglers extends ClientEventCard {
         if (greenItems > 0) {
             availableColors.add(ItemColor.GREEN);
         }
+
         return availableColors;
     }
 

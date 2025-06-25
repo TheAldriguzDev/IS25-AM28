@@ -12,7 +12,6 @@ import it.polimi.ingsw.is25am28.Model.Player.Player;
 import it.polimi.ingsw.is25am28.Model.Ship.Ship;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Timer.HourGlass;
-import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObservable;
 import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
 import java.io.IOException;
@@ -58,7 +57,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         // Load the tiles
         this.components = loader.getTiles();
-//        Collections.shuffle(this.components); // TODO uncomment in the final version of the game
+//        Collections.shuffle(this.components); // TODO uncomment before 27/06/2025
         this.selected_components = new HashSet<>();
         this.flipped_components = new HashSet<>();
 
@@ -75,7 +74,7 @@ public final class ShipContructionState extends State implements TimerObserver {
             this.hourGlass.addTimerSubscriber(this);
 
             // this.hourGlass.setDurationInMillis(3000);   // 3s
-            //this.hourGlass.setDurationInMillis(10000);  // 10s
+            // this.hourGlass.setDurationInMillis(10000);  // 10s
 
             this.hourGlass.flip();
         }
@@ -87,7 +86,6 @@ public final class ShipContructionState extends State implements TimerObserver {
         this.shipConfigEnded = false;
 
         this.cards = this.model.getGameDeck();
-
         this.selectedSubDecks = new HashMap<>();
     }
 
@@ -380,7 +378,6 @@ public final class ShipContructionState extends State implements TimerObserver {
 //            throw new RuntimeException(e);
 //        }
 
-
         return state;
     }
 
@@ -433,7 +430,6 @@ public final class ShipContructionState extends State implements TimerObserver {
                 p.getShip().generateComponentSubLists();
 
                 // Check if the player has an invalid ship
-//                System.out.println(p.getNickname());
                 if (!p.getShip().validateShip()) {
                     playersWithInvalidShip.add(p.getNickname());
                 }

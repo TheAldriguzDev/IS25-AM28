@@ -123,8 +123,6 @@ public class Smugglers extends EventCard {
                         }
                         else if (playerFirepower < requiredFirepower) {
                             this.isPlayerDefeated = true;
-                            // playersToTakeItemsFrom.add(player);
-                            // malusEffect(smugglersData);
                         }
                     }
                     else {

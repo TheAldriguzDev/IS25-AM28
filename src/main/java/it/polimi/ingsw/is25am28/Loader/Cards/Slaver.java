@@ -10,14 +10,10 @@ import com.fasterxml.jackson.annotation.*;
         "credits"
 })
 public final class Slaver extends Card {
-    @JsonProperty("days")
-    private Integer days;
-    @JsonProperty("cannons")
-    private Integer cannons;
-    @JsonProperty("penalty")
-    private Integer penalty;
-    @JsonProperty("credits")
-    private Integer credits;
+    @JsonProperty("days")       private Integer days;
+    @JsonProperty("cannons")    private Integer cannons;
+    @JsonProperty("penalty")    private Integer penalty;
+    @JsonProperty("credits")    private Integer credits;
 
     @JsonGetter("days")
     public Integer getDays() {

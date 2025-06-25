@@ -12,14 +12,10 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
         "penalty"
 })
 public final class Smuggler extends Card {
-    @JsonProperty("days")
-    private Integer days;
-    @JsonProperty("storage")
-    private ItemsInfo storage;
-    @JsonProperty("cannons")
-    private Integer cannons;
-    @JsonProperty("penalty")
-    private Integer penalty;
+    @JsonProperty("days")       private Integer days;
+    @JsonProperty("storage")    private ItemsInfo storage;
+    @JsonProperty("cannons")    private Integer cannons;
+    @JsonProperty("penalty")    private Integer penalty;
 
     @JsonProperty("days")
     public Integer getDays() {

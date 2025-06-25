@@ -2,7 +2,6 @@ package it.polimi.ingsw.is25am28.Loader.Cards;
 
 import com.fasterxml.jackson.annotation.*;
 
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "blue",
@@ -13,18 +12,12 @@ import com.fasterxml.jackson.annotation.*;
         "people",
 })
 public final class AbandonedStation extends Card {
-    @JsonProperty("blue")
-    private Integer blue;
-    @JsonProperty("green")
-    private Integer green;
-    @JsonProperty("yellow")
-    private Integer yellow;
-    @JsonProperty("red")
-    private Integer red;
-    @JsonProperty("days")
-    private Integer days;
-    @JsonProperty("people")
-    private Integer people;
+    @JsonProperty("blue")       private Integer blue;
+    @JsonProperty("green")      private Integer green;
+    @JsonProperty("yellow")     private Integer yellow;
+    @JsonProperty("red")        private Integer red;
+    @JsonProperty("days")       private Integer days;
+    @JsonProperty("people")     private Integer people;
 
     @JsonGetter("blue")
     public Integer getBlue() {

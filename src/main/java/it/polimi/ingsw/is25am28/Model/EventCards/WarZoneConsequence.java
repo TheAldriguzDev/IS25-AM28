@@ -6,7 +6,11 @@ public enum WarZoneConsequence {
     SHOOTINGSEQUENCE,
     LOSSITEMS;
 
-
+    /**
+     * @param ordinal The integer value associated with a specific WarZone consequence
+     * @return The WarZone consequence corresponding to the given ordinal value.
+     * @throws IllegalArgumentException If the given ordinal is invalid (i.e.: doesn't have a corresponding consequence)
+     */
     public static WarZoneConsequence fromInteger(Integer ordinal) throws IllegalArgumentException {
         return switch (ordinal) {
             case 0 -> REQUIREDCREW;
@@ -24,7 +28,6 @@ public enum WarZoneConsequence {
             case MOVEMENTSTEPS -> "MovementSteps";
             case SHOOTINGSEQUENCE -> "ShootingSequence";
             case LOSSITEMS -> "LossItems";
-            default -> throw new IllegalArgumentException("Unknown action consequence: " + this);
         };
     }
 }

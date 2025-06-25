@@ -11,13 +11,14 @@ import java.util.List;
 public final class ClientEngine extends ClientComponent {
     private final int power;
 
+    // Constructor
     public ClientEngine(int id, List<Integer> sides, int power, String path) {
         super(id, sides, path);
         this.power = power;
     }
 
     /**
-     * @return the engine's power
+     * @return The engine's power
      */
     public int getSpeed() {
         return power;

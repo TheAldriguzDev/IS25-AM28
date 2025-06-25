@@ -24,10 +24,9 @@ import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class GameModel {
-    private int level; // The level range can be 0 - 1 - 2 - 3
+    private int level;
     private Board board;
     private final List<EventCard> deck;
     private ResourceBank resourceBank;

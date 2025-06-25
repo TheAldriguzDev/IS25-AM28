@@ -10,14 +10,10 @@ import com.fasterxml.jackson.annotation.*;
         "planets"
 })
 public final class Planet extends Card {
-    @JsonProperty("level")
-    private Integer level;
-    @JsonProperty("days")
-    private Integer days;
-    @JsonProperty("planets")
-    private List<ItemsInfo> planets;
-    @JsonProperty("path")
-    private String path;
+    @JsonProperty("level")      private Integer level;
+    @JsonProperty("days")       private Integer days;
+    @JsonProperty("planets")    private List<ItemsInfo> planets;
+    @JsonProperty("path")       private String path;
 
     @JsonGetter("level")
     public Integer getLevel() {

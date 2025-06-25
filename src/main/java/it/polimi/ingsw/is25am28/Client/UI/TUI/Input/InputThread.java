@@ -5,7 +5,7 @@ import java.io.IOException;
 /**
  * A specialized thread for handling user input from {@code System.in}.
  * Reads input character by character, capturing complete input strings when a newline is encountered.
- *
+ * <br>
  * Provides thread-safe methods to control input behavior, allowing input interruption or waiting for user input.
  * Particularly useful for force-quitting the input screen to display new game states,
  * even when the thread is waiting for user input.
@@ -17,6 +17,7 @@ public class InputThread extends Thread {
     private boolean isReadingEnable;
     private boolean hasBeenForced;
 
+    // Constructor
     public InputThread() {
         this.inputLock = new Object();
         this.buffer = new StringBuilder();

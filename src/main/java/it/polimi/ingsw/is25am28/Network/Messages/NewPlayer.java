@@ -1,12 +1,10 @@
 package it.polimi.ingsw.is25am28.Network.Messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @JsonTypeName("NewPlayer")
 public final class NewPlayer implements Message {
@@ -25,14 +23,17 @@ public final class NewPlayer implements Message {
         this.gameID = gameID;
     }
 
+    @JsonGetter("playerNickname")
     public String getPlayerNickname() {
         return playerNickname;
     }
 
+    @JsonGetter("playerColor")
     public PlayerColor getPlayerColor() {
         return playerColor;
     }
 
+    @JsonGetter("gameID")
     public int getGameID() {
         return gameID;
     }

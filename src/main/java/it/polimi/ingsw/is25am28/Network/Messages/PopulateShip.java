@@ -7,9 +7,6 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class PopulateShip implements Message {
     private String playerNickname;
     private ComponentHelper<LifeformType> lifeformToAdd;

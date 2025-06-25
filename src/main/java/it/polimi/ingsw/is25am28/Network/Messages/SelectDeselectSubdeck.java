@@ -5,9 +5,6 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public final class SelectDeselectSubdeck implements Message {
     private String playerNickname;
     private Integer subdeck;

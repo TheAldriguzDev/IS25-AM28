@@ -7,7 +7,6 @@ import java.util.List;
 /**
  * Defines the JSON structure used to parse and load saved tiles into the game.
  */
-
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({
         "cannon",
@@ -20,22 +19,14 @@ import java.util.List;
         "vital"
 })
 public class Tiles {
-    @JsonProperty("cannon")
-    private List<Cannon> cannon;
-    @JsonProperty("shield")
-    private List<Shield> shield;
-    @JsonProperty("battery")
-    private List<Battery> battery;
-    @JsonProperty("cabin")
-    private List<Cabin> cabin;
-    @JsonProperty("engine")
-    private List<Engine> engine;
-    @JsonProperty("storage")
-    private List<Storage> storage;
-    @JsonProperty("structural")
-    private List<Structural> structural;
-    @JsonProperty("vital")
-    private List<Vital> vital;
+    @JsonProperty("cannon")         private List<Cannon> cannon;
+    @JsonProperty("shield")         private List<Shield> shield;
+    @JsonProperty("battery")        private List<Battery> battery;
+    @JsonProperty("cabin")          private List<Cabin> cabin;
+    @JsonProperty("engine")         private List<Engine> engine;
+    @JsonProperty("storage")        private List<Storage> storage;
+    @JsonProperty("structural")     private List<Structural> structural;
+    @JsonProperty("vital")          private List<Vital> vital;
 
     @JsonGetter("cannon")
     public List<Cannon> getCannon() {

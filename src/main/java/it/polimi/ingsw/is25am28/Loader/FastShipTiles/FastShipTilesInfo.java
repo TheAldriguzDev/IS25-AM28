@@ -9,22 +9,16 @@ import com.fasterxml.jackson.annotation.JsonSetter;
  */
 
 public class FastShipTilesInfo {
-    @JsonProperty("id")
-    private int id;
-
-    @JsonProperty("direction")
-    private int direction;
-
-    @JsonProperty("row")
-    private int row;
-
-    @JsonProperty("col")
-    private int col;
+    @JsonProperty("id")             private int id;
+    @JsonProperty("direction")      private int direction;
+    @JsonProperty("row")            private int row;
+    @JsonProperty("col")            private int col;
 
     @JsonGetter("id")
     public int getId() {
         return id;
     }
+
     @JsonSetter("id")
     public void setId(int id) {
         this.id = id;
@@ -34,6 +28,7 @@ public class FastShipTilesInfo {
     public int getDirection() {
         return direction;
     }
+
     @JsonSetter("direction")
     public void setDirection(int direction) {
         this.direction = direction;
@@ -43,6 +38,7 @@ public class FastShipTilesInfo {
     public int getRow() {
         return row;
     }
+
     @JsonSetter("row")
     public void setRow(int row) {
         this.row = row;
@@ -52,6 +48,7 @@ public class FastShipTilesInfo {
     public int getCol() {
         return col;
     }
+
     @JsonSetter("col")
     public void setCol(int col) {
         this.col = col;

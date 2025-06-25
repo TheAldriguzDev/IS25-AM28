@@ -18,7 +18,7 @@ public class ValidateIP {
         ipAddress = ipAddress.replaceAll("\\s+", "");
         String[] values;
 
-        if (ipAddress != null && !ipAddress.isEmpty()) {
+        if (!ipAddress.isEmpty()) {
             values = ipAddress.trim().split("\\.");
 
             if (values.length != 4) return false;

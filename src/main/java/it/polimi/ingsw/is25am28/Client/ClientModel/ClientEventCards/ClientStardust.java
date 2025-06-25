@@ -17,10 +17,10 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 public class ClientStardust extends ClientEventCard {
     private StardustJSON stardustJSON;
 
+    // Constructor
     public ClientStardust(CardStateJSON cardState) {
         super(cardState);
         this.stardustJSON = new StardustJSON();
-
     }
 
     @Override

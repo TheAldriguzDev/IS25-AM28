@@ -17,11 +17,10 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 /**
  * Abstract base class for board management, including board creation,
  * player movement, validation, and elimination.
- *
+ * <br>
  * Subclasses provide implementations for building specific board types
  * based on the current game level.
  */
-
 public abstract class Board implements WidgetTUIGenerator {
     private static final Map<Integer, Pair<Integer, Integer>> boardDimensions;
 
@@ -43,6 +42,7 @@ public abstract class Board implements WidgetTUIGenerator {
     private final List<Player> eliminatedPlayer;
     private int level;
 
+    // Constructor
     public Board() {
         this.players = new ArrayList<>();
         this.eliminatedPlayer = new ArrayList<>();

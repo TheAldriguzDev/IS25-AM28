@@ -14,7 +14,6 @@ import java.io.Serializable;
  * @param <K> the type of the key
  * @param <V> the type of the value
  */
-
 public class Pair <K, V> implements Serializable {
     @JsonProperty("key") private K key;
     @JsonProperty("value") private V value;

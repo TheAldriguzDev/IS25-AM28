@@ -5,7 +5,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
-import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Client.VirtualServerRMI;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
@@ -17,12 +16,10 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * This class defined the server side RMI protocol to handle the clients' communication.
  * */
-
 public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
     final Server controller;
     final Queue queueHandler;
@@ -262,7 +259,7 @@ public class RMIServer extends UnicastRemoteObject implements VirtualServerRMI {
      * Sends an error notification to the specified client. The error is encapsulated in an {@link ErrorAnswer}
      * and sent asynchronously through the queue handler. In case of failure while sending the error message,
      * it logs the failure and rethrows the exception wrapped in a {@link RuntimeException}.
-     *
+     * <br>
      * The method is used when a controller invocation has thrown an Exception to notify the target client.
      *
      * @param client the {@link VirtualView} instance representing the targeted client

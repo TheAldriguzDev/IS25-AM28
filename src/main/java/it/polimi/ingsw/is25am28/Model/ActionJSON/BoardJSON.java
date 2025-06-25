@@ -3,6 +3,7 @@ package it.polimi.ingsw.is25am28.Model.ActionJSON;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import it.polimi.ingsw.is25am28.Model.Board.Board;
 import it.polimi.ingsw.is25am28.Model.Board.Cell;
 import it.polimi.ingsw.is25am28.Model.Player.Player;
@@ -17,25 +18,15 @@ import java.util.Map;
  * The class is designed to be serialized and deserialized using Jackson annotations
  */
 public class BoardJSON implements Serializable {
+    @JsonProperty("size")                       private int size;
+    @JsonProperty("level")                      private int level;
+    @JsonProperty("playersNickname")            private List<String> playersNickname;
+    @JsonProperty("eliminatedPlayersNickname")  private List<String> eliminatedPlayersNickname;
+    @JsonProperty("startingPlayersPositions")   private Map<String, Integer> startingPlayersPositions = new HashMap<>();
 
-    @JsonProperty("size")
-    private int size;
-    @JsonProperty("level")
-    private int level;
-
-    private List<String> playersNickname;
-    private List<String> eliminatedPlayersNickname;
-    @JsonProperty("startingPlayersPositions")
-    private Map<String, Integer> startingPlayersPositions = new HashMap<>();
-
-    /**
-     * Default constructor used client side
-     */
+    @JsonCreator
     public BoardJSON() {}
 
-    /**
-     * Constructor used for deserialization
-     */
     @JsonCreator
     public BoardJSON(
             @JsonProperty("size") int size,
