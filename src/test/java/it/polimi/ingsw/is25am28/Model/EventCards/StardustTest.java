@@ -286,9 +286,8 @@ class StardustTest {
 
     public void ship_init2(Ship ship) {
 
-        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
-        // Il cannone doppio non viene attivato
+        // core + 3 cabins, 2 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);
@@ -382,8 +381,8 @@ class StardustTest {
 
     public void ship_init3(Ship ship) {
 
-        // core + 3 cabine, 3 cannoni singoli, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
+        // core + 3 cabins, 2 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);
@@ -482,8 +481,8 @@ class StardustTest {
 
     public void ship_init4(Ship ship) {
 
-        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
+        // core + 3 cabins, 2 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);

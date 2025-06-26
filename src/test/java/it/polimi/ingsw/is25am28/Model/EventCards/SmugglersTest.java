@@ -252,36 +252,15 @@ class SmugglersTest {
 
             // The defeated players now need to specify what resources to get rid of
 
-        assertEquals(0, ship_1.getAvailableEnergy()); // Non avendo items, subisce -4 alle batterie -> -3 in quanto ne ha solo 3
+        assertEquals(0, ship_1.getAvailableEnergy());
 
-        // System.out.println("p2 storage: ");
-//        for (Storage storage : ship_2.getStorageList()) {
-//            for(Item item : storage.getStoredItems()) {
-//                System.out.println(item.toString());
-//            }
-//        }
+        assertEquals(2, ship_2.getAvailableEnergy());
 
-        assertEquals(2, ship_2.getAvailableEnergy()); // Rimossi 3 items (G,G,Y) e 1 batteria
-
-
-//        System.out.println("StorageList3: ");
-//        for (Storage storage : storageList3) {
-//            for(Item item : storage.getStoredItems()) {
-//                System.out.println(item.toString());
-//            }
-//        }
-//        System.out.println("p3 storage: ");
-//        for (Storage storage : ship_3.getStorageList()) {
-//            for(Item item : storage.getStoredItems()) {
-//                System.out.println(item.toString());
-//            }
-//        }
-
-        assertEquals(3, ship_3.getAvailableEnergy()); // Rimossi 4 items e 0 batterie
+        assertEquals(3, ship_3.getAvailableEnergy());
         assertEquals(ItemColor.BLUE, ship_3.getStorageList().get(1).getStoredItems().get(0).getColor());
 
 
-        assertEquals(3, ship_4.getAvailableEnergy()); // Rimossi 4 items e 0 batterie
+        assertEquals(3, ship_4.getAvailableEnergy());
         assertEquals(0, ship_4.getStorageList().get(0).getStoredItems().size());
         assertEquals(0, ship_4.getStorageList().get(1).getStoredItems().size());
 
@@ -307,13 +286,6 @@ class SmugglersTest {
         itemsToBeTaken3.add(new ComponentHelper<ItemColor>(7, 8).addItem(ItemColor.YELLOW));
 
         List<Pair<CoordinatePair, CoordinatePair>> doubleCannonActivated = new ArrayList<>();
-//        List<Integer> x = new ArrayList<>();
-//        List<Integer> y = new ArrayList<>();
-//        x.add(7);
-//        y.add(9);
-//        doubleCannonActivated.add(x);
-//        doubleCannonActivated.add(y);
-//        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(7, 9)));
 
         doubleCannonActivated.add(
             new Pair<>(
@@ -357,19 +329,19 @@ class SmugglersTest {
 
 
 
-        assertEquals(1, ship_1.getAvailableEnergy()); // Non avendo items, subisce -2 alle batterie -> vanno a 1
+        assertEquals(1, ship_1.getAvailableEnergy());
 
-        assertEquals(3, ship_2.getAvailableEnergy()); // Non attiva cannoni doppi e non viene derubato delle batterie, il numero non varia
+        assertEquals(3, ship_2.getAvailableEnergy());
 
-        assertEquals(2, ship_3.getAvailableEnergy()); // Non viene derubato ma attviva comunque un cannone doppio -> -1 alle batterie -> ne riamngono 2
+        assertEquals(2, ship_3.getAvailableEnergy());
 
-        // Verfico che nello storage normale ci siano solo le casse gialle (da G,B,Y a Y,Y,Y)
+        // Checking the storages' items
         assertEquals(3, storageList3.get(0).getStoredItems().size());
         assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(0).getColor());
         assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(1).getColor());
         assertEquals(ItemColor.YELLOW, storageList3.get(0).getStoredItems().get(2).getColor());
 
-        // Verifico che solo la posizione del terzo player sia cambiata
+        // Checking the positions
         assertEquals(playerPositionsBefore.get(0), p1.getCursor());
         assertEquals(playerPositionsBefore.get(1), p2.getCursor());
         assertEquals(playerPositionsBefore.get(2) -3 -1, p3.getCursor()); // -3 di movementSteps, -1 per il "salto" oltre il player 4
@@ -383,9 +355,8 @@ class SmugglersTest {
 
     public void ship_init1(Ship ship) {
 
-        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
-        // Il cannone doppio viene attivato
+        // core + 3 cabins, 2 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);
@@ -476,9 +447,8 @@ class SmugglersTest {
 
     public void ship_init2(Ship ship) {
 
-        // core + 3 cabine, 3 cannoni singoli, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
-        // Il cannone doppio non viene attivato
+        // core + 3 cabins, 3 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);
@@ -574,8 +544,8 @@ class SmugglersTest {
 
     public void ship_init3(Ship ship) {
 
-        // core + 3 cabine, 3 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
+        // core + 3 cabins, 3 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);
@@ -680,8 +650,8 @@ class SmugglersTest {
 
     public void ship_init4(Ship ship) {
 
-        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
+        // core + 3 cabins, 2 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);

@@ -104,22 +104,17 @@ class PiratesTest {
         board.addPlayerToBoard(p3);
         board.addPlayerToBoard(p4);
 
-//        dicesResults = new ArrayList<>();
-//        dicesResults.add(7); // dall'alto, grosso
-//        dicesResults.add(5); // da sinistra, piccolo
-//        dicesResults.add(6); // dall'alto, piccolo
-
         shootingSequence = new ArrayList<>();
 
         plasmaShot1 = new ArrayList<Integer>();
-        plasmaShot1.add(2); // grande
-        plasmaShot1.add(0); // dall'alto
+        plasmaShot1.add(2); // big
+        plasmaShot1.add(0); // from above
         plasmaShot2 = new ArrayList<Integer>();
-        plasmaShot2.add(1); // piccolo
-        plasmaShot2.add(3); // da sinistra
+        plasmaShot2.add(1); // small
+        plasmaShot2.add(3); // from left
         plasmaShot3 = new ArrayList<Integer>();
-        plasmaShot3.add(1); // piccolo
-        plasmaShot3.add(0); // dall'alto
+        plasmaShot3.add(1); // small
+        plasmaShot3.add(0); // from above
 
         shootingSequence.add(plasmaShot1);
         shootingSequence.add(plasmaShot2);
@@ -188,7 +183,6 @@ class PiratesTest {
 
         // Start of destruction and defense rounds
         // First shot : big from above on column 7
-//        pirates.setDiceThrowResult(7);
           pirates.setDiceThrowResult(8);
 
         // ======== WIDGET TESTING ======== //
@@ -236,14 +230,12 @@ class PiratesTest {
                 new CoordinatePair(5, 7),
                 new CoordinatePair(7, 7)
             )
-        ); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
-        //ShieldsToActivate.add(new int[] {5, 7}); // Attivazione inutile, verrà distrutto, però verifico il consumo di energia
+        );
         actionJSON = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
         // Second shot : small from the left on row 5
-//        pirates.setDiceThrowResult(5);
         pirates.setDiceThrowResult(6);
 
         // First player should be no more
@@ -271,8 +263,7 @@ class PiratesTest {
                 new CoordinatePair(8, 5),
                 new CoordinatePair(7, 7)
             )
-        ); // Non lo proteggerà
-//        ShieldsToActivate.add(new int[] {8, 5}); // Non lo proteggerà
+        );
         actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
@@ -289,7 +280,7 @@ class PiratesTest {
                         new CoordinatePair(8, 5),
                         new CoordinatePair(7, 7)
                 )
-        ); // Lo proteggerà
+        );
         actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
@@ -306,14 +297,12 @@ class PiratesTest {
                         new CoordinatePair(8, 5),
                         new CoordinatePair(7, 7)
                 )
-        ); // Non lo proteggerà
-//        ShieldsToActivate.add(new int[] {8, 5});
+        );
         actionJSON = new PiratesJSON("Player 4", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
 
         // Third shot : small from above on column 6
-//        pirates.setDiceThrowResult(6);
         pirates.setDiceThrowResult(7);
 
         // ======== WIDGET TESTING ======== //
@@ -340,7 +329,6 @@ class PiratesTest {
                         new CoordinatePair(7, 7)
                 )
         ); // Non lo proteggerà
-//        ShieldsToActivate.add(new int[] {8, 5});
         actionJSON = new PiratesJSON("Player 2", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
@@ -357,8 +345,7 @@ class PiratesTest {
                         new CoordinatePair(8, 5),
                         new CoordinatePair(7, 7)
                 )
-        ); // Non lo proteggerà
-//        ShieldsToActivate.add(new int[] {8, 5});
+        );
         actionJSON = new PiratesJSON("Player 3", false, ShieldsToActivate, new ArrayList<>());
         pirates.useCard(actionJSON);
         assertFalse(pirates.hasFinished());
@@ -380,53 +367,6 @@ class PiratesTest {
         clientPirates.generateWidget().printWidget();
         // ================================ //
 
-
-
-
-
-
-
-
-
-
-
-
-//        // System.out.println("ship_1 before destruction");
-//        printGrid(ship_1);
-//        pirates.useCard(actionJSON1);
-//        assertFalse(pirates.hasFinished());
-//        // System.out.println("ship_1 after destruction");
-//        printGrid(ship_1);
-//
-//        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
-//
-//        // System.out.println("ship_2 before destruction");
-//        printGrid(ship_2);
-//        assertFalse(pirates.hasFinished());
-//        pirates.useCard(actionJSON2);
-//        // System.out.println("ship_2 after destruction");
-//        printGrid(ship_2);
-//
-//        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
-//
-//        // System.out.println("ship_3 before destruction");
-//        printGrid(ship_3);
-//        assertFalse(pirates.hasFinished());
-//        pirates.useCard(actionJSON3);
-//        // System.out.println("ship_3 after destruction");
-//        printGrid(ship_3);
-//
-//        // System.out.println("~~~~~~~~~~~~~~~~~~~~~~~");
-//
-//        // System.out.println("ship_4 before destruction");
-//        printGrid(ship_4);
-//        assertFalse(pirates.hasFinished());
-//        pirates.useCard(actionJSON4);
-//        // System.out.println("ship_4 after destruction");
-//        printGrid(ship_4);
-//
-//        assertTrue(pirates.hasFinished());
-
         assertNull(ship_2.getComponent(6, 7));
         assertNull(ship_2.getComponent(5, 6));
 
@@ -447,9 +387,7 @@ class PiratesTest {
         ShieldsToActivate = new ArrayList<>();
 
         List<Pair<CoordinatePair, CoordinatePair>> doubleCannonActivated = new ArrayList<>();
-//        x.add(5);
-//        y.add(6);
-//        doubleCannonActivated.add(new ArrayList<>(Arrays.asList(5, 6)));
+
         doubleCannonActivated.add(
                 new Pair<>(
                         new CoordinatePair(5, 6),
@@ -518,9 +456,8 @@ class PiratesTest {
 
     public void ship_init1(Ship ship) {
 
-        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
-        // Il cannone doppio viene attivato
+        // core + 3 cabins, 2 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);
@@ -592,9 +529,8 @@ class PiratesTest {
 
     public void ship_init2(Ship ship) {
 
-        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
-        // Il cannone doppio non viene attivato
+        // core + 3 cabins, 2 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);
@@ -687,8 +623,8 @@ class PiratesTest {
 
     public void ship_init3(Ship ship) {
 
-        // core + 3 cabine, 3 cannoni singoli, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
+        // core + 3 cabins, 3 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);
@@ -797,8 +733,8 @@ class PiratesTest {
 
     public void ship_init4(Ship ship) {
 
-        // core + 3 cabine, 2 cannoni singoli, un cannone doppio, un vital(BROWN), una batteria da 3
-        // 2 + 2 + 2 = umani + 1 alieno marrone
+        // core + 3 cabins, 2 single cannons, 1 double cannon, 1 vital(BROWN), 1 battery  (3)
+        // 2 + 2 + 2 humans + 1 brown alien
 
         List<Integer> connectors1 = new ArrayList<Integer>();
         connectors1.add(0);
