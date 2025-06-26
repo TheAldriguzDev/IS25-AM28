@@ -172,6 +172,8 @@ public interface VirtualView {
 
     // CALLBACKS USED BY THE SERVER
 
+    void pong() throws Exception;
+
     /**
      * Updates the current state of the game or application based on the provided server answer.
      * This method processes the given Answer object and refreshes the game model and/or the UI.

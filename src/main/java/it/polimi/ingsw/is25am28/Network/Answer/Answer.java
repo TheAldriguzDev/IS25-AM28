@@ -13,9 +13,10 @@ import java.io.Serializable;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Answer.class, name = "Answer"),
         @JsonSubTypes.Type(value = ErrorAnswer.class, name = "ErrorAnswer"),
+        @JsonSubTypes.Type(value = PongAnswer.class, name = "PongAnswer"),
 })
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public sealed class Answer implements Serializable permits ErrorAnswer {
+public sealed class Answer implements Serializable permits ErrorAnswer, PongAnswer {
     private String playerNickname;
     private StateDTO state;
     private StateDTO nextState;

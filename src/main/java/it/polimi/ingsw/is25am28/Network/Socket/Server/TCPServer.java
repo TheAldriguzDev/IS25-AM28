@@ -6,6 +6,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,9 +83,12 @@ public class TCPServer {
             new Thread(() -> {
                 try {
                     clientHandler.run();
-                }
-                catch (Exception e) {
-                    throw new RuntimeException(e);
+                } catch (SocketException e) {
+                    System.out.println("Connection closed by the client: " + e.getMessage());
+                } catch (IOException e) {
+                    System.out.println("IO error with the client: " + e.getMessage());
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }).start();
         }

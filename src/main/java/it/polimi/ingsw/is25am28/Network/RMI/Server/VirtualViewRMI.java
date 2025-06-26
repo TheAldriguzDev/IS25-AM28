@@ -9,6 +9,9 @@ import java.rmi.RemoteException;
 
 public interface VirtualViewRMI extends Remote, VirtualView {
     @Override
+    void pong() throws Exception;
+
+    @Override
     void updateState(Answer answer) throws Exception;
 
     @Override

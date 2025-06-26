@@ -8,13 +8,22 @@ import it.polimi.ingsw.is25am28.Timer.HourGlass;
 import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public final class InsufficientPlayerState extends State implements TimerObserver {
-    private static final int countdownMillis = 120 * 1000;
+    private final int countdownMillis = 120 * 1000;
+    private final AtomicInteger currentCountdown = new AtomicInteger(countdownMillis / 1000);
+    private final ScheduledExecutorService countDownScheduler = Executors.newSingleThreadScheduledExecutor();
 
     // This is the previous game state that was active before we entered the "InsufficientPlayerState"
     private final State prevState;
     private final HourGlass countdown;
+
+    private boolean isTimerEnded;
+
 
     // Constructor
     public InsufficientPlayerState(GameModel model, State prevState) {
@@ -23,9 +32,12 @@ public final class InsufficientPlayerState extends State implements TimerObserve
 
         // The countdown will last for one and half minute
         this.countdown = new HourGlass(1, countdownMillis);
+        this.startCountDown();
 
         // Subscribe the state to the countdown
         this.countdown.addTimerSubscriber(this);
+
+        this.isTimerEnded = false;
 
         // Start the countdown
         this.countdown.flip();
@@ -38,6 +50,10 @@ public final class InsufficientPlayerState extends State implements TimerObserve
         if (this.countdown != null) {
             this.countdown.removeTimerSubscriber(this);
         }
+    }
+
+    private void startCountDown() {
+        countDownScheduler.scheduleAtFixedRate(currentCountdown::decrementAndGet, 1, 1, TimeUnit.SECONDS);
     }
 
     /**
@@ -55,6 +71,7 @@ public final class InsufficientPlayerState extends State implements TimerObserve
      * */
     @Override
     public void onTimerEnd() {
+        this.isTimerEnded = true;
         this.tryResumeOrEndGame();
     }
 
@@ -63,8 +80,9 @@ public final class InsufficientPlayerState extends State implements TimerObserve
                 .filter(Player::isConnected)
                 .toList();
 
-        if (connectedPlayers.size() == 1) {
-            this.model.setCurrentState(new EndGameState(this.model, connectedPlayers.getFirst().getNickname()));
+        // If the timer has ended and the number of connected players is less or equal to 1 we switch to the EndGameState
+        if (connectedPlayers.size() <= 1 && isTimerEnded) {
+            this.model.setCurrentState(new EndGameState(this.model, !connectedPlayers.isEmpty() ? connectedPlayers.getFirst().getNickname() : null));
 
             Answer answer = new Answer()
                     .setPlayerNickname(connectedPlayers.getFirst().getNickname())
@@ -72,6 +90,7 @@ public final class InsufficientPlayerState extends State implements TimerObserve
 
             this.model.broadCastUpdate(answer);
         }
+        // After a client reconnect, if the number of player is enough for playing we can resume the game
         else if (connectedPlayers.size() > 1) {
             this.removeTimer();
             this.model.setCurrentState(prevState);
@@ -81,7 +100,7 @@ public final class InsufficientPlayerState extends State implements TimerObserve
     @Override
     public StateDTO generateState() {
         InsufficientPlayerDTO state = new InsufficientPlayerDTO()
-                .setCountdown(countdownMillis);
+                .setCountdown(this.currentCountdown.get() * 1000);
 
         state.setStateName(this.toString());
         return state;

@@ -10,6 +10,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
+import it.polimi.ingsw.is25am28.Network.Answer.PongAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.Server.Server;
 
@@ -275,6 +276,14 @@ public class SocketClientHandler implements VirtualViewSocket {
         } catch (Exception e) {
             this.reportError(new ErrorAnswer(e.getMessage()));
         }
+    }
+
+    @Override
+    public void pong() throws Exception {
+        String stateString = this.mapper.writeValueAsString(new PongAnswer());
+
+        this.output.println(stateString);
+        this.output.flush();
     }
 
     @Override

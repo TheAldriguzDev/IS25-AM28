@@ -92,8 +92,6 @@ public class ViewUpdater implements StateVisitor {
 
                     // 4. cards
                     this.model.generateClientEventCards(state.getCards());
-
-                    System.out.println("Ended reconnecting to the game.");
                 }
                 else {
                     System.out.println();

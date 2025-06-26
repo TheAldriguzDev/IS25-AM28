@@ -13,13 +13,18 @@ import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
 import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 import it.polimi.ingsw.is25am28.Network.RMI.ThrowingRunnable;
+import it.polimi.ingsw.is25am28.Network.Server.GameInstance;
+import it.polimi.ingsw.is25am28.Network.Server.PingHelper;
+import it.polimi.ingsw.is25am28.Network.Server.ServerLogger;
 import it.polimi.ingsw.is25am28.Network.UpdateHandler.UpdateHandler;
+import it.polimi.ingsw.is25am28.Network.VirtualView;
 
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.*;
 
@@ -28,7 +33,9 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
     private final Queue queueHandler;
     private final UpdateHandler updateHandler;
     private final ScheduledExecutorService pingScheduler;
+    private final ScheduledExecutorService pongScheduler;
     private final UUID uuid;
+    private int failedPong;
 
     /**
      * Initializes an RMIClient instance with the given parameters. Validates the input arguments,
@@ -76,11 +83,14 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
         this.updateHandler = new UpdateHandler(model, viewUpdater);
 
         this.pingScheduler = Executors.newSingleThreadScheduledExecutor();
+        this.pongScheduler = Executors.newSingleThreadScheduledExecutor();
+        failedPong = 0;
 
         this.run();
 
         // Start pinging the server
         this.pingServer();
+        this.listenForPongs();
     }
 
     /**
@@ -120,6 +130,26 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
             this.enqueueCommunication(() -> server.ping(this.uuid));
         }, 5000, 5000, TimeUnit.MILLISECONDS);
     }
+
+    private void listenForPongs() {
+        this.pongScheduler.scheduleAtFixedRate(() -> {
+            synchronized (this) {
+                this.failedPong ++;
+                if (this.failedPong > 3) {
+                    System.out.println("The connection with the server has been lost (NO INTERNET)");
+                    System.exit(0);
+                }
+            }
+        }, 5000, 5000, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public void pong() {
+        synchronized (this) {
+            this.failedPong = 0;
+        }
+    }
+
 
     @Override
     public void refreshGames() {
@@ -220,7 +250,6 @@ public class RMIClient extends UnicastRemoteObject implements VirtualViewRMI {
                 runnable.run();
             } catch (Exception e) {
                 System.out.println(ANSIColors.YELLOW + "[Server offline] The connection with the server has been lost" + ANSIColors.RESET);
-
                 System.exit(1);
             }
         });

@@ -13,15 +13,14 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
+import it.polimi.ingsw.is25am28.Network.Queue.Queue;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.RMIServer;
 import it.polimi.ingsw.is25am28.Network.Socket.Server.TCPServer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;
 import it.polimi.ingsw.is25am28.Utils.ValidateIP;
 
 import java.util.*;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -49,6 +48,8 @@ public class Server {
 
     // Ping scheduler thread that will check for client disconnections
     private final ScheduledExecutorService pingScheduler;
+
+    private final ExecutorService pongPool;
 
     /**
      * Initializes a new instance of the Server class.
@@ -101,6 +102,7 @@ public class Server {
         this.clientToGame = new HashMap<>();
         this.viewToPingHelper = new HashMap<>();
         this.pingScheduler = new ScheduledThreadPoolExecutor(1);
+        this.pongPool = Executors.newCachedThreadPool();
 
         // Starts to check for client disconnections
         this.checkClientsConnection();
@@ -492,6 +494,8 @@ public class Server {
      * Handles the ping operation for the provided client.
      * It resets the ping counter for the given client if a corresponding PingHelper exists.
      *
+     * It also sends back a Pong message to the clients in order to let them know if there is any network issue
+     *
      * @param clientView the VirtualView instance representing the client's view to be pinged
      * @throws Exception if an error occurs during the operation
      */
@@ -501,6 +505,14 @@ public class Server {
             if (pingHelper != null) {
                 pingHelper.resetPings();
             }
+
+            pongPool.submit(() -> {
+                try {
+                    clientView.pong();
+                } catch (Exception e) {
+                    ServerLogger.error("SERVER", "Detected network issue!");
+                }
+            });
         }
     }
 

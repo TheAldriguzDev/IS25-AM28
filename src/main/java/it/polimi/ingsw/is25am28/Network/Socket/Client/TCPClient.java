@@ -11,6 +11,7 @@ import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Network.Answer.Answer;
 import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
+import it.polimi.ingsw.is25am28.Network.Answer.PongAnswer;
 import it.polimi.ingsw.is25am28.Network.Messages.*;
 import it.polimi.ingsw.is25am28.Network.Socket.Server.VirtualViewSocket;
 import it.polimi.ingsw.is25am28.Network.UpdateHandler.UpdateHandler;
@@ -35,6 +36,9 @@ public class TCPClient implements VirtualViewSocket {
     private final UpdateHandler updateHandler;
 
     private final ScheduledExecutorService pingScheduler;
+    private final ScheduledExecutorService pongScheduler;
+
+    private int failedPong;
 
     /**
      * Constructs a new TCPClient instance that establishes a connection to a server
@@ -72,10 +76,13 @@ public class TCPClient implements VirtualViewSocket {
         this.updateHandler = new UpdateHandler(model, viewUpdater);
 
         this.pingScheduler = Executors.newSingleThreadScheduledExecutor();
+        this.pongScheduler = Executors.newSingleThreadScheduledExecutor();
+        this.failedPong = 0;
 
         // Run the client TCPClient
         this.run();
         this.pingServer();
+        this.listenForPongs();
     }
 
     /**
@@ -107,10 +114,16 @@ public class TCPClient implements VirtualViewSocket {
         while ((line = this.input.readLine()) != null) {
             Answer state = mapper.readValue(line, Answer.class);
 
-            if (Objects.requireNonNull(state) instanceof ErrorAnswer error) {
-                this.reportError(error);
-            } else {
-                this.updateState(state);
+            switch (state) {
+                case ErrorAnswer error -> {
+                    this.reportError(error);
+                }
+                case PongAnswer _ -> {
+                    this.pong();
+                }
+                case Answer _ ->  {
+                    this.updateState(state);
+                }
             }
         }
 
@@ -133,6 +146,21 @@ public class TCPClient implements VirtualViewSocket {
                 throw new RuntimeException(e);
             }
         }, 5000, 5000, TimeUnit.MILLISECONDS);
+    }
+
+    private void listenForPongs() {
+        this.pongScheduler.scheduleAtFixedRate(() -> {
+            this.failedPong ++;
+            if (this.failedPong > 3) {
+                System.out.println("The connection with the server has been lost (NO INTERNET)");
+                System.exit(0);
+            }
+        }, 5000, 5000, TimeUnit.MILLISECONDS);
+    }
+
+    @Override
+    public void pong() {
+        this.failedPong = 0;
     }
 
     @Override
