@@ -58,5 +58,7 @@ To use the software, it is mandatory to have [Java JDK 23.0.2 or higher](https:/
 3. Start the server: open a terminal in the folder containing the server JAR and run  
    `java -jar IS25-AM28-server.jar`
 4. Start the client: open a terminal in the folder containing the client JAR and run  
-   `java -jar IS25-AM28-client.jar`
+   We currently support MacOS (silicon) and Linux: 
+   - linux: `java -jar IS25-AM28-client-linux.jar`
+   - macos: `java -jar IS25-AM28-client-macos.jar`
 5. Follow the instructions shown in each terminal to play.
