@@ -213,15 +213,11 @@ public class Slavers extends EventCard {
 
             slaversStateJSON.setIsPlayerDefeated(this.isPlayerDefeated);
 
-            // Setting the removed lifeForms
+            // Setting the JSON's fields only if necessary
             setUpdatedRemovedLifeformsIfNecessary(slaversStateJSON, removedLifeforms);
-            // Setting the eliminated players
             setUpdatedEliminatedPlayersIfNecessary(slaversStateJSON, eliminatedPlayers);
-            // Setting the consumed batteries
             setUpdatedRemovedBatteriesIfNecessary(slaversStateJSON, removedBatteries);
-            // Setting the Updated positions
             setUpdatedPositionsIfNecessary(slaversStateJSON, updatedPositions);
-            // Setting the updated credits
             setUpdatedCreditsIfNecessary(slaversStateJSON, updatedCredits);
 
             slaversStateJSON.setCardEnded(this.hasFinished());

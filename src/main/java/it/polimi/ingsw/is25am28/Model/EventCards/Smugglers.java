@@ -296,16 +296,11 @@ public class Smugglers extends EventCard {
 
             smugglersStateJSON.setIsPlayerDefeated(this.isPlayerDefeated);
 
-            // Sets the dropped resources (if there are any) // this works both in case of defeat or victory
+            // Setting the JSON's fields only if necessary
             setUpdatedDroppedResourcesIfNecessary(smugglersStateJSON, this.droppedResources);
-
-            // Sets the removed batteries (if there are any), due to the smugglers
             setUpdatedRemovedBatteriesIfNecessary(smugglersStateJSON, this.removedBatteries);
-
             setUpdatedPositionsIfNecessary(smugglersStateJSON, this.updatedPositions);
-
             setUpdatedTakenResourcesIfNecessary(smugglersStateJSON, this.takenResources);
-
             setUpdatedEliminatedPlayersIfNecessary(smugglersStateJSON, this.eliminatedPlayers);
 
             smugglersStateJSON.setCardEnded(this.hasFinished());

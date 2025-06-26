@@ -326,6 +326,7 @@ public class VisitPlanets extends EventCard {
             // The prevPlayer's storages are always updated locally in this card
             cardState.setSkipStoragesUpdate(true);
 
+            // Setting the JSON's fields only if necessary
             if (itemsPerPlanet.containsKey(chosenPlanetIndex)) {
                 cardState.setChosenPlanetIndex(chosenPlanetIndex);
 

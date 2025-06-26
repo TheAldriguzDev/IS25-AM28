@@ -94,14 +94,12 @@ public class Stardust extends EventCard {
             // Initializing the state flags
             initStateFlags(stardustStateJSON);
 
-            // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> stardustStateJSON.setPlayerNickname(player.getNickname()));
 
-            // Sets the updatedPositions (if there are any)
+            // Setting the JSON's fields only if necessary
             setUpdatedPositionsIfNecessary(stardustStateJSON, updatedPositions);
 
             if (this.hasFinished()) {
-                // Sets the eliminatedPlayer (if there are any)
                 setUpdatedEliminatedPlayersIfNecessary(stardustStateJSON, this.eliminatedPlayers);
             }
         }

@@ -215,6 +215,7 @@ public class AbandonedShip extends EventCard {
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
 
             if (this.hasBeenUsedByPlayer) {
+                // Setting the JSON's fields only if necessary
                 setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
                 setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
                 setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);

@@ -477,22 +477,12 @@ public class MeteorShower extends EventCard {
             if (this.currMeteorIndex < this.meteorSequence.size()) {
                 cardState.setCurrMeteorDescriptor(Map.of("meteorSize", this.meteorSequence.get(this.currMeteorIndex).getSize(), "meteorDirection", this.meteorSequence.get(this.currMeteorIndex).getOrientation()));
             }
-            // The differential update happens always except when the card is
-            // first picked (since no one has been hit with a meteor yet)
 
-            // Setting which components were removed from the previous player, thus
-            // performing a differential update on what changed before the card
-            // transitioned to the next state
+            // Setting the JSON's fields only if necessary
             setUpdatedRemovedComponentsIfNecessary(cardState, this.removedComponents);
             setUpdatedLostPiecesIfNecessary(cardState, this.lostPieces);
-
-            // Setting the eliminated players (if there are any)
             setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
-
-            // Setting the batteries consumed by the shields and the doubleCannons
             setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
-
-            // Setting the lifeForms (only aliens) removed by the destruction of a necessary vital
             setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
         }
         else {

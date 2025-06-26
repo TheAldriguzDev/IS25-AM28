@@ -192,6 +192,8 @@ public class AbandonedStation extends EventCard {
             cardState.setSkipStoragesUpdate(true);
 
             cardState.setCardIsUsable(playersThatCanUseTheCard.contains(this.getCurrentPlayer().get().getNickname()));
+
+            // Setting the JSON's fields only if necessary
             setUpdatedDroppedResourcesIfNecessary(cardState, droppedResources);
             setUpdatedTakenResourcesIfNecessary(cardState, takenResources);
             setUpdatedPositionsIfNecessary(cardState, updatedPositions);

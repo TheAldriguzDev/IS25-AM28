@@ -449,17 +449,14 @@ public class Pirates extends EventCard {
                 piratesStateJSON.setCurrPlasmaShotDescriptor(currentPlasmaShot);
                 piratesStateJSON.setDiceThrowResult(this.diceThrowResult);
 
+                // Setting the JSON's fields only if necessary
                 setUpdatedRemovedComponentsIfNecessary(piratesStateJSON, this.removedComponents);
                 setUpdatedLostPiecesIfNecessary(piratesStateJSON, this.lostPieces);
                 setUpdatedEliminatedPlayersIfNecessary(piratesStateJSON, this.eliminatedPlayers);
-
-                // Batteries consumed due to the shield
                 setUpdatedRemovedBatteriesIfNecessary(piratesStateJSON, removedBatteries);
-
                 setUpdatedRemovedLifeformsIfNecessary(piratesStateJSON, removedLifeforms);
             }
             else {
-                // Batteries consumed due to activation of the double cannons
                 setUpdatedRemovedBatteriesIfNecessary(piratesStateJSON, removedBatteries);
             }
 

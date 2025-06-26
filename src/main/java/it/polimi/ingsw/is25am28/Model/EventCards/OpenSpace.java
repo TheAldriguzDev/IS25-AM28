@@ -144,7 +144,7 @@ public class OpenSpace extends EventCard {
             // The prevPlayer's batteries are always updated locally in this card
             cardState.setSkipBatteriesUpdate(true);
 
-
+            // Setting the JSON's fields only if necessary
             setUpdatedEliminatedPlayersIfNecessary(cardState, this.eliminatedPlayers);
             setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
             setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);

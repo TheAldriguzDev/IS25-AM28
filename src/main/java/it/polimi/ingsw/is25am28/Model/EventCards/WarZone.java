@@ -839,9 +839,9 @@ public class WarZone extends EventCard {
             cardState.setSkipCrewUpdate(this.skipCrewUpdate);
             this.skipCrewUpdate = true;
 
-            cardState.setCurrActionIndex(this.current_action); // Need a way to set this only when necessary, but it might not be worth it // should now be obsolete since there are flags
-            // If present set the current player (the one that needs to play the game)
+            cardState.setCurrActionIndex(this.current_action);
 
+            // If present set the current player (the one that needs to play)
             if(this.affectedPlayer.orElse(null) != null) {
                 cardState.setAffectedPlayer(this.affectedPlayer.get().getNickname());
 
@@ -855,6 +855,7 @@ public class WarZone extends EventCard {
             if (this.targetPlayer != null && !this.targetPlayer.isEmpty()) {
                 this.targetPlayer = null;
 
+                // Setting the JSON's fields only if necessary
                 setUpdatedRemovedBatteriesIfNecessary(cardState, this.removedBatteries);
                 setUpdatedPositionsIfNecessary(cardState, this.updatedPositions);
                 setUpdatedRemovedLifeformsIfNecessary(cardState, removedLifeforms);

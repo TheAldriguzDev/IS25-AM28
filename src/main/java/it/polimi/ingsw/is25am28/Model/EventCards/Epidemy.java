@@ -100,6 +100,7 @@ public class Epidemy extends EventCard {
             // Setting the playerNickname (if present)
             playerOptional.ifPresent(player -> cardState.setPlayerNickname(player.getNickname()));
 
+            // Setting the JSON's fields only if necessary
             setUpdatedRemovedLifeformsIfNecessary(cardState, this.removedLifeforms);
         }
         else {
