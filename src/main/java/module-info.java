@@ -86,4 +86,6 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Loader;
     exports it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI;
     exports it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard;
+    exports it.polimi.ingsw.is25am28.Client.UI.TUI.Input;
+    exports it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards;
 }
