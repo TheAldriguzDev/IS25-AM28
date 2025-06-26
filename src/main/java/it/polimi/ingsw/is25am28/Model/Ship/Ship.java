@@ -1105,6 +1105,20 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
             }
         }
 
+        switch (this.components[i][j]) {
+            case Cabin cabin -> {
+                if (cabin == this.purpleAlienPosition) {
+                    this.purpleAlienPosition = null;
+                } else if (cabin == this.brownAlienPosition) {
+                    this.brownAlienPosition = null;
+                }
+            }
+            case null -> {
+                throw new NullComponentException("ERROR: The component at " + i + ", " + j + " is null");
+            }
+            default -> {}
+        }
+
         previousShip = new Component[grid_rows][grid_cols];
         removedComponents = new ArrayList<Component>();
 

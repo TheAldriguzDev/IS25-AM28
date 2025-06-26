@@ -243,22 +243,6 @@ public class ClientModel {
      *                      removed components, removed lifeforms, dropped/taken resources, and batteries.
      */
     public void updateShips(CardStateJSON cardStateJSON) {
-        // Removes the destroyed components from the specified ship
-        if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
-            for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
-                for (Map<String, Object> componentToRemove : cardStateJSON.getRemovedComponents().get(playerNickname)) {
-                    this.getShipOfPlayer(playerNickname).ifPresent(
-                        (ship) -> {
-                            ship.removeComponent((int) componentToRemove.get("row"), (int) componentToRemove.get("col"));
-                        }
-                    );
-                }
-                this.getShipOfPlayer(playerNickname).ifPresent(
-                        ClientShip::generateComponentSubLists
-                );
-            }
-        }
-
         // Removes the specified lifeForms from the specified ships
         if (cardStateJSON.getNeedsUpdatedRemovedLifeforms()) {
             Map<String, List<ComponentHelper<LifeformType>>> removedLifeforms = cardStateJSON.getRemovedLifeforms();
@@ -272,6 +256,22 @@ public class ClientModel {
                         );
                     }
                 }
+            }
+        }
+
+        // Removes the destroyed components from the specified ship
+        if (cardStateJSON.getNeedsUpdatedRemovedComponents()) {
+            for (String playerNickname : cardStateJSON.getRemovedComponents().keySet()) {
+                for (Map<String, Object> componentToRemove : cardStateJSON.getRemovedComponents().get(playerNickname)) {
+                    this.getShipOfPlayer(playerNickname).ifPresent(
+                            (ship) -> {
+                                ship.removeComponent((int) componentToRemove.get("row"), (int) componentToRemove.get("col"));
+                            }
+                    );
+                }
+                this.getShipOfPlayer(playerNickname).ifPresent(
+                        ClientShip::generateComponentSubLists
+                );
             }
         }
 
