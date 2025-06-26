@@ -9,6 +9,7 @@ import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
+import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.UnicodeCharacters;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
@@ -555,11 +556,19 @@ public class CardRoundController extends GUIController {
         resourceBankLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
         this.resourceBankBox.getChildren().add(resourceBankLabel);
         Map<ItemColor, Integer> resources = this.clientModel.getResourceBank().getResources();
+
         int red = resources.get(ItemColor.RED);
         int yellow = resources.get(ItemColor.YELLOW);
         int green = resources.get(ItemColor.GREEN);
         int blue = resources.get(ItemColor.BLUE);
-        this.resourceBankBox.getChildren().add(new Label((red < 100 ? String.valueOf(red) : "∞") + "🟥 " + (yellow < 100 ? String.valueOf(yellow) : "∞") + "🟨 " + (green < 100 ? String.valueOf(green) : "∞") + "🟩 " + (blue < 100 ? String.valueOf(blue) : "∞") + "🟦 "));
+
+        this.resourceBankBox.getChildren().add(
+                new Label((red < 100 ? String.valueOf(red) : UnicodeCharacters.INFINITY) + "🟥 "
+                        + (yellow < 100 ? String.valueOf(yellow) : UnicodeCharacters.INFINITY) + "🟨 "
+                        + (green < 100 ? String.valueOf(green) : UnicodeCharacters.INFINITY) + "🟩 "
+                        + (blue < 100 ? String.valueOf(blue) : UnicodeCharacters.INFINITY) + "🟦 "
+                )
+        );
     }
 
     /**
