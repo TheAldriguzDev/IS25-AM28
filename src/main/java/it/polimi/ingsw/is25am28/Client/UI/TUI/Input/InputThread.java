@@ -53,7 +53,7 @@ public class InputThread extends Thread {
                     // If we encounter the newLine char we notify the caller about the end of the input phase
                     // otherwise we add the char to the buffer
                     if (ch == '\n') {
-                        this.line = this.buffer.toString();
+                        this.line = this.buffer.toString().trim();
                         this.buffer.setLength(0);
                         this.isReadingEnable = false;
                         this.inputLock.notifyAll();
