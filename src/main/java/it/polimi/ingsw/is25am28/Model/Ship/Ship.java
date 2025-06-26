@@ -1113,10 +1113,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
                     this.brownAlienPosition = null;
                 }
             }
-            case null -> {
-                throw new NullComponentException("ERROR: The component at " + i + ", " + j + " is null");
-            }
-            default -> {}
+            case null, default -> {}
         }
 
         previousShip = new Component[grid_rows][grid_cols];
