@@ -403,8 +403,6 @@ public class GameModel {
             states.add(this.currentState.generateState());
         }
 
-        System.out.println(states.size());
-
         return states;
     }
 

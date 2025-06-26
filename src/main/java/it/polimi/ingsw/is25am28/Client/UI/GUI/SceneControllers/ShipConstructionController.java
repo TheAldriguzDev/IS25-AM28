@@ -795,7 +795,8 @@ public class ShipConstructionController extends GUIController {
      * This method is used to request a fast ship configuration.
      * The successCallback will mark the player as finished and will display the ended configuration screen
      * */
-    @FXML void requestFastShip() {
+    @FXML
+    void requestFastShip() {
         if (!this.clientModel.getState().getPlayerFinishedBuildingShip(this.clientModel.getNickname())) {
             GUIHandler.setCommandCTX(new CommandCTX(
                     "sendShip",
