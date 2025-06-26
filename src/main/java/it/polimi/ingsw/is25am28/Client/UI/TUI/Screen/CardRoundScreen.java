@@ -33,6 +33,7 @@ import static it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils.SPACE;
 
 public class CardRoundScreen extends Screen {
     private static final int COMMAND_GROUPING_FACTOR = 2;
+    private static final int RESOURCE_THRESHOLD = 1000;
 
     private WidgetTUI boardWidget;
     private WidgetTUI currEventCardWidget;
@@ -1712,15 +1713,20 @@ public class CardRoundScreen extends Screen {
                 .appendString("[RESOURCE BANK]")
                 .addPadding(0, 0, 1, 0);
 
-        String redItems = availableResources.getOrDefault(ItemColor.RED, 0) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.RED.getANSIColor()) + SPACE;
-        String yellowItems = availableResources.getOrDefault(ItemColor.YELLOW, 0) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.YELLOW.getANSIColor()) + SPACE;
-        String greenItems = availableResources.getOrDefault(ItemColor.GREEN, 0) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.GREEN.getANSIColor()) + SPACE;
-        String blueItems = availableResources.getOrDefault(ItemColor.BLUE, 0) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.BLUE.getANSIColor());
+        int redItems = availableResources.getOrDefault(ItemColor.RED, 0);
+        int yellowItems = availableResources.getOrDefault(ItemColor.YELLOW, 0);
+        int greenItems = availableResources.getOrDefault(ItemColor.GREEN, 0);
+        int blueItems = availableResources.getOrDefault(ItemColor.BLUE, 0);
 
-        s.append(redItems);
-        s.append(yellowItems);
-        s.append(greenItems);
-        s.append(blueItems);
+        String redItemsString = (redItems > RESOURCE_THRESHOLD ? UnicodeCharacters.INFINITY : redItems) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.RED.getANSIColor()) + SPACE;
+        String yellowItemsString = (yellowItems > RESOURCE_THRESHOLD ? UnicodeCharacters.INFINITY : yellowItems) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.YELLOW.getANSIColor()) + SPACE;
+        String greenItemsString = (greenItems > RESOURCE_THRESHOLD ? UnicodeCharacters.INFINITY : greenItems) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.GREEN.getANSIColor()) + SPACE;
+        String blueItemsString = (blueItems > RESOURCE_THRESHOLD ? UnicodeCharacters.INFINITY : blueItems) + SPACE + PrintUtils.addColor(UnicodeCharacters.FULL_BLOCK, ItemColor.BLUE.getANSIColor());
+
+        s.append(redItemsString);
+        s.append(yellowItemsString);
+        s.append(greenItemsString);
+        s.append(blueItemsString);
 
         this.resourceBankWidget
                 .appendString(s.toString())
