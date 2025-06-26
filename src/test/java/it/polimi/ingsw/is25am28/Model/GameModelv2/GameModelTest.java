@@ -144,7 +144,7 @@ class GameModelTest {
         // ========================================
         assertInstanceOf(ShipContructionState.class, model.getCurrentState());
         json = mapper.writeValueAsString(model.getCurrentState().generateState());
-        System.out.println(json);
+        // System.out.println(json);
 
         // Select the tile
         ConstructionComponentDTO tileState = model.selectTile("Player 1", 21);
