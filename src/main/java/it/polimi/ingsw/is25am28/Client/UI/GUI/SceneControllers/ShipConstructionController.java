@@ -77,7 +77,7 @@ public class ShipConstructionController extends GUIController {
     // MAIN SECTIONS --> USED TO DISPLAY THE CONTENT DYNAMICALLY
     @FXML private StackPane contentContainer;
     @FXML private VBox tileVBOX;
-    @FXML private ScrollPane tilesScrollPane;;
+    @FXML private ScrollPane tilesScrollPane;
     @FXML private VBox shipContainer;
     @FXML private VBox viewShipContainer;
     @FXML private VBox viewGameBoardContainer;

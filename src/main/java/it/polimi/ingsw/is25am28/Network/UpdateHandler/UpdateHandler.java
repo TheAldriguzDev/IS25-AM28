@@ -80,10 +80,8 @@ public class UpdateHandler {
             case CardRoundDTO cardData -> {
                 if (nextState != null) {
                     future = this.updateCardResult(future, cardData);
-                    future = this.interruptScreen(future);
-                } else {
-                    future = this.interruptScreen(future);
                 }
+                future = this.interruptScreen(future);
                 future = this.commitCmd(future, nickname, inputThread);
                 if (nextState == null) {
                     future = this.acceptState(future, state, inputThread, "Error while executing the " + state.getStateName() + " input");

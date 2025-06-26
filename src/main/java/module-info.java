@@ -45,7 +45,7 @@ module it.polimi.ingsw.is25am {
     opens it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Client.UI.GUI to javafx.fxml;
 
-    // Export per RMI
+    // Export for RMI
     exports it.polimi.ingsw.is25am28.Network to java.rmi;
     exports it.polimi.ingsw.is25am28.Client to java.rmi;
     exports it.polimi.ingsw.is25am28.Network.Server to java.rmi;
@@ -53,7 +53,7 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Client.ClientModel to java.rmi;
     exports it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent to java.rmi;
 
-    // Altri export generici
+    // Other generics exports
     exports it.polimi.ingsw.is25am28.Model;
     exports it.polimi.ingsw.is25am28.Model.Board;
     exports it.polimi.ingsw.is25am28.Model.Components;
@@ -84,4 +84,6 @@ module it.polimi.ingsw.is25am {
     exports it.polimi.ingsw.is25am28.Network.Queue;
     exports it.polimi.ingsw.is25am28.Loader.FastShipTiles;
     exports it.polimi.ingsw.is25am28.Loader;
+    exports it.polimi.ingsw.is25am28.Client.UI.TUI.WidgetTUI;
+    exports it.polimi.ingsw.is25am28.Client.ClientModel.ClientBoard;
 }

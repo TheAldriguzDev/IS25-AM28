@@ -111,7 +111,7 @@ public abstract sealed class State permits CardRoundState, CreateGameState, EndG
      */
     public FastShipDTO fastShip(String playerNickname) throws IllegalStateException, IllegalArgumentException {
         throw new IllegalStateException("The 'reserveTile' command is not allowed in the " + this + " state");
-    };
+    }
 
     /**
      * Places a tile in the game at the specified location with the given orientation.

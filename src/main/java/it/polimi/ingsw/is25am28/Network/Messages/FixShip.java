@@ -10,7 +10,7 @@ public final class FixShip implements Message {
 
     private String playerNickname;
     private int i;
-    private int j;;
+    private int j;
 
     @JsonCreator
     public FixShip(

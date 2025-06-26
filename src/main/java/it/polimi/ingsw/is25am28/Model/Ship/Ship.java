@@ -1438,7 +1438,7 @@ public class Ship extends AbstractShip implements WidgetTUIGenerator {
 
             // Storing the old screen and clearing the previous one
             // since it's not wrapped
-            List<String> unwrappedScreen = shipGridWidget.unwrapWidgetFromBorder().getScreen();;
+            List<String> unwrappedScreen = shipGridWidget.unwrapWidgetFromBorder().getScreen();
 
             // Generating a mockup component to get its dimensions
             ClientStructural clientStructural = new ClientStructural(-1, Arrays.asList(0, 0, 0, 0), "");

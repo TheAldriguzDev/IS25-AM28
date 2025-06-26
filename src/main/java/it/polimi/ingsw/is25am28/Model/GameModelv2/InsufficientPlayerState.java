@@ -85,7 +85,7 @@ public final class InsufficientPlayerState extends State implements TimerObserve
             this.model.setCurrentState(new EndGameState(this.model, !connectedPlayers.isEmpty() ? connectedPlayers.getFirst().getNickname() : null));
 
             Answer answer = new Answer()
-                    .setPlayerNickname(connectedPlayers.getFirst().getNickname())
+                    .setPlayerNickname(!connectedPlayers.isEmpty() ? connectedPlayers.getFirst().getNickname() : "No players were connected")
                     .setState(this.model.generateState());
 
             this.model.broadCastUpdate(answer);
