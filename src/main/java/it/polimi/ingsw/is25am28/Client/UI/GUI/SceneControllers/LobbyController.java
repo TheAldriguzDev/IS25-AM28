@@ -1,11 +1,10 @@
 package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
-import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GuiScenes;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.AvailableGamesDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.GameInfoDTO;
-import it.polimi.ingsw.is25am28.Network.Messages.RefreshGames;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

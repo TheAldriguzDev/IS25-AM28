@@ -22,7 +22,6 @@ public class Smugglers extends EventCard {
     private final int greenItems;
     private final ResourceBank resourceBank;
     private final int takenItems;
-    private ArrayList<String> defeatedPlayers;
     private boolean isPlayerDefeated;
     private Map<String, Integer> updatedPositions;
     private Map<String, List<ComponentHelper<ItemColor>>> droppedResources;
@@ -58,7 +57,6 @@ public class Smugglers extends EventCard {
         this.greenItems = greenItems;
         this.resourceBank = resourceBank;
         this.takenItems = takenItems;
-        this.defeatedPlayers = new ArrayList<>();
         this.isPlayerDefeated = false;
         this.updatedPositions = new HashMap<>();
         this.droppedResources = new HashMap<>();

@@ -3,12 +3,10 @@ package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientComponent;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientEventCards.ClientEventCard;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
-import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
 import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.Utils.GUIUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlacedComponentDTO;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import javafx.animation.Interpolator;
@@ -30,7 +28,6 @@ import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
-import java.util.List;
 
 /**
  * This controller manages the Ship Construction phase in the GUI, allowing players to build ships,
@@ -195,13 +192,8 @@ public class ShipConstructionController extends GUIController {
      */
     private void initSidePanel() {
         // Display and start the timer container only if the game level is != 0
-        if (this.clientModel.getDifficultyLevel() != 0) {
-            this.timerContainer.setVisible(true);
-            // this.startCountDownTimer();
-        }
-        else {
-            this.timerContainer.setVisible(false);
-        }
+        // this.startCountDownTimer();
+        this.timerContainer.setVisible(this.clientModel.getDifficultyLevel() != 0);
 
         this.populateViewShipButtons();
     }
@@ -301,26 +293,20 @@ public class ShipConstructionController extends GUIController {
             allCards = allCards.subList(0, subdeckSize * VIEWABLE_SUBDECK_AMOUNT);
 
             for (ClientEventCard card : allCards) {
-                try {
-                    String cardImageURL =
-                            Objects.requireNonNull(
-                                    getClass().getResource(card.getCardPath())
-                            ).toExternalForm();
+                String cardImageURL =
+                        Objects.requireNonNull(
+                                getClass().getResource(card.getCardPath())
+                        ).toExternalForm();
 
-                    Image cardImage = new Image(cardImageURL, 600, 300, true, true);
-                    ImageView cardImageView = new ImageView(cardImage);
+                Image cardImage = new Image(cardImageURL, 600, 300, true, true);
+                ImageView cardImageView = new ImageView(cardImage);
 
-                    cardImageView.setId(Integer.toString(id));
-                    cardImageView.setPreserveRatio(true);
-                    id++;
+                cardImageView.setId(Integer.toString(id));
+                cardImageView.setPreserveRatio(true);
+                id++;
 
-                    this.setVisibility(cardImageView, false);
-                    this.allSubdeckCardsContainer.getChildren().add(cardImageView);
-                }
-                catch (Exception e) {
-                    System.out.println("CARD: " + card + " -> Missing path: " + card.getCardPath());
-                    e.printStackTrace();
-                }
+                this.setVisibility(cardImageView, false);
+                this.allSubdeckCardsContainer.getChildren().add(cardImageView);
             }
         });
     }

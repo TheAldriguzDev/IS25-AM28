@@ -4,8 +4,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.Network.Answer.ErrorAnswer;
-import it.polimi.ingsw.is25am28.Network.Messages.Message;
 import it.polimi.ingsw.is25am28.Network.RMI.Server.VirtualViewRMI;
 import it.polimi.ingsw.is25am28.Network.VirtualServer;
 import it.polimi.ingsw.is25am28.Network.VirtualView;

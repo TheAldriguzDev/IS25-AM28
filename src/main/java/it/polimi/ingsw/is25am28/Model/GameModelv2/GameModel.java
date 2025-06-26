@@ -235,12 +235,12 @@ public class GameModel {
      * This method loads event cards from an external source using {@code CardLoader}. The cards are
      * filtered and categorized into different levels based on their data. Depending on the
      * game level, specific subsets of cards are added to create the deck:
-     *
+     * <br>
      * - Level 0: All available cards are added to the deck.
      * - Level 1: The deck is divided into 4 sub-decks, each containing two level 1 cards.
      * - Level 2: The deck is divided into 4 sub-decks, each containing two level 2 cards and one level 1 card.
      * - Level 3: The deck is divided into 4 sub-decks, each containing two level 3 cards, one level 2 card, and one level 1 card.
-     *
+     * <br>
      * If the specified game level is invalid, an {@code IllegalStateException} is thrown. After the deck
      * is constructed, it is randomized using {@code Collections.shuffle()}.
      *

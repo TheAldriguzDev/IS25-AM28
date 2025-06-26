@@ -2,6 +2,7 @@ package it.polimi.ingsw.is25am28.Model.GameModelv2;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.polimi.ingsw.is25am28.Loader.TileLoader;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.AbandonedShipJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.OpenSpaceJSON;
@@ -9,6 +10,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.*;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.InsufficientPlayer.InsufficientPlayerDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.*;
 import it.polimi.ingsw.is25am28.Model.Board.Board;
+import it.polimi.ingsw.is25am28.Model.Components.Component;
 import it.polimi.ingsw.is25am28.Model.EventCards.AbandonedShip;
 import it.polimi.ingsw.is25am28.Model.EventCards.EventCard;
 import it.polimi.ingsw.is25am28.Model.EventCards.OpenSpace;
@@ -18,7 +20,9 @@ import it.polimi.ingsw.is25am28.Timer.HourGlass;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -204,9 +208,14 @@ class GameModelTest {
         // Player 4: Invalid ship
         List<ComponentHelper<ConstructionComponentDTO>> playerShipComponents = new ArrayList<>();
 
-        this.model.placeTile("Player 1", 21, 5, 6, 0);
-        this.model.placeTile("Player 1", 117, 5, 7, 2);
-        this.model.placeTile("Player 1", 60, 6, 7, 0);
+        List<Component> shuffledTiles = ((ShipContructionState) this.model.getCurrentState()).getComponents();
+        List<Component> unshuffledTiles = new ArrayList<>(shuffledTiles);
+
+        unshuffledTiles.sort(Comparator.comparingInt(Component::getId));
+
+        this.model.placeTile("Player 1", shuffledTiles.indexOf(unshuffledTiles.get(21)), 5, 6, 0);
+        this.model.placeTile("Player 1", shuffledTiles.indexOf(unshuffledTiles.get(117)), 5, 7, 2);
+        this.model.placeTile("Player 1", shuffledTiles.indexOf(unshuffledTiles.get(60)), 6, 7, 0);
 
         List<StateDTO> playerEndedShipStates = model.playerEndedSendShip("Player 1", 2);
         assertEquals(1, playerEndedShipStates.size());
@@ -218,28 +227,28 @@ class GameModelTest {
                 "The player should have already sent the ship"
         );
 
-        this.model.placeTile("Player 2", 21, 5, 6, 0);
-        this.model.placeTile("Player 2", 117, 5, 7, 2);
-        this.model.placeTile("Player 2", 60, 6, 7, 0);
-        this.model.placeTile("Player 2", 71, 7, 6, 0);
+        this.model.placeTile("Player 2", shuffledTiles.indexOf(unshuffledTiles.get(21)), 5, 6, 0);
+        this.model.placeTile("Player 2", shuffledTiles.indexOf(unshuffledTiles.get(117)), 5, 7, 2);
+        this.model.placeTile("Player 2", shuffledTiles.indexOf(unshuffledTiles.get(60)), 6, 7, 0);
+        this.model.placeTile("Player 2", shuffledTiles.indexOf(unshuffledTiles.get(71)), 7, 6, 0);
 
         playerEndedShipStates = model.playerEndedSendShip("Player 2", 0);
         assertEquals(1, playerEndedShipStates.size());
 
-        this.model.placeTile("Player 3", 21, 5, 6, 0);
-        this.model.placeTile("Player 3", 117, 5, 7, 2);
-        this.model.placeTile("Player 3", 60, 6, 7, 0);
-        this.model.placeTile("Player 3", 71, 7, 6, 0);
-        this.model.placeTile("Player 3", 34, 6, 4, 0);
+        this.model.placeTile("Player 3", shuffledTiles.indexOf(unshuffledTiles.get(21)), 5, 6, 0);
+        this.model.placeTile("Player 3", shuffledTiles.indexOf(unshuffledTiles.get(117)), 5, 7, 2);
+        this.model.placeTile("Player 3", shuffledTiles.indexOf(unshuffledTiles.get(60)), 6, 7, 0);
+        this.model.placeTile("Player 3", shuffledTiles.indexOf(unshuffledTiles.get(71)), 7, 6, 0);
+        this.model.placeTile("Player 3", shuffledTiles.indexOf(unshuffledTiles.get(34)), 6, 4, 0);
 
         playerEndedShipStates = model.playerEndedSendShip("Player 3", 1);
         assertEquals(1, playerEndedShipStates.size());
 
-        this.model.placeTile("Player 4", 21, 5, 6, 0);
-        this.model.placeTile("Player 4", 117, 5, 7, 2);
-        this.model.placeTile("Player 4", 60, 6, 7, 0);
-        this.model.placeTile("Player 4", 71, 7, 6, 0);
-        this.model.placeTile("Player 4", 34, 6, 4, 0);
+        this.model.placeTile("Player 4", shuffledTiles.indexOf(unshuffledTiles.get(21)), 5, 6, 0);
+        this.model.placeTile("Player 4", shuffledTiles.indexOf(unshuffledTiles.get(117)), 5, 7, 2);
+        this.model.placeTile("Player 4", shuffledTiles.indexOf(unshuffledTiles.get(60)), 6, 7, 0);
+        this.model.placeTile("Player 4", shuffledTiles.indexOf(unshuffledTiles.get(71)), 7, 6, 0);
+        this.model.placeTile("Player 4", shuffledTiles.indexOf(unshuffledTiles.get(34)), 6, 4, 0);
 
         playerEndedShipStates = model.playerEndedSendShip("Player 4", 0);
 
@@ -554,13 +563,17 @@ class GameModelTest {
         // ========================================
         assertInstanceOf(ShipContructionState.class, model.getCurrentState());
         json = mapper.writeValueAsString(model.getCurrentState().generateState());
-        // System.out.println(json);
+
+        List<Component> shuffledTiles = ((ShipContructionState) this.model.getCurrentState()).getComponents();
+        List<Component> unshuffledTiles = new ArrayList<>(shuffledTiles);
+
+        unshuffledTiles.sort(Comparator.comparingInt(Component::getId));
 
         // Select the tile
-        ConstructionComponentDTO tileState = model.selectTile("Player 1", 21);
+        ConstructionComponentDTO tileState = model.selectTile("Player 1", shuffledTiles.indexOf(unshuffledTiles.get(21)));
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
-        assertEquals(tileState.getPlayerNickname(), "Player 1");
+        assertEquals("Player 1", tileState.getPlayerNickname());
         assertTrue(tileState.isSelected());
 
         ConstructionDeckDTO deckState = model.selectDeselectSubdeck("Player 1", 1, true);
@@ -589,19 +602,19 @@ class GameModelTest {
         // Try to select the tile while is already selected by another player --> should throw an error
         assertThrows(
                 IllegalStateException.class,
-                () -> model.selectTile("Player 2", 21),
+                () -> model.selectTile("Player 2", shuffledTiles.indexOf(unshuffledTiles.get(21))),
                 "The selected tile should not be available for a select"
         );
 
         // Deselect the tile
-        tileState = model.deselectTile("Player 1", 21);
+        tileState = model.deselectTile("Player 1", shuffledTiles.indexOf(unshuffledTiles.get(21)));
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 1");
         assertFalse(tileState.isSelected());
 
         // Select again the tile
-        tileState = model.selectTile("Player 2", 21);
+        tileState = model.selectTile("Player 2", shuffledTiles.indexOf(unshuffledTiles.get(21)));
 
         assertEquals(tileState.getEventType(), ShipConstructionType.TILE_EVENT.toString());
         assertEquals(tileState.getPlayerNickname(), "Player 2");
@@ -624,7 +637,7 @@ class GameModelTest {
         playerEndedShipStates = model.playerEndedSendShip("Player 3", 1);
         assertEquals(1, playerEndedShipStates.size());
 
-        this.model.placeTile("Player 4", 71, 7, 6, 0);
+        this.model.placeTile("Player 4", shuffledTiles.indexOf(unshuffledTiles.get(71)), 7, 6, 0);
         playerEndedShipStates = model.playerEndedSendShip("Player 4", 0);
 
         // We should have two states since the state should change in CardRound because all the

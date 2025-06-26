@@ -9,16 +9,11 @@ module it.polimi.ingsw.is25am {
     requires javafx.graphics;
     requires javafx.fxml;
 
-    // Altre dipendenze
-    requires org.controlsfx.controls;
-    requires json.simple;
-    requires java.smartcardio;
-    requires java.desktop;
+    // Other dependencies
     requires java.rmi;
     requires java.management;
-    requires java.sql;
 
-    // Export e Open principali
+    // Main exports and opens
     opens it.polimi.ingsw.is25am28 to javafx.fxml;
 
     // Jackson opens
@@ -45,7 +40,7 @@ module it.polimi.ingsw.is25am {
     opens it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers to javafx.fxml;
     opens it.polimi.ingsw.is25am28.Client.UI.GUI to javafx.fxml;
 
-    // Export for RMI
+    // Exports for RMI
     exports it.polimi.ingsw.is25am28.Network to java.rmi;
     exports it.polimi.ingsw.is25am28.Client to java.rmi;
     exports it.polimi.ingsw.is25am28.Network.Server to java.rmi;

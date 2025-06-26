@@ -7,37 +7,26 @@ import it.polimi.ingsw.is25am28.Client.ClientModel.ClientComponent.ClientStorage
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientModel;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientPlayer.ClientPlayer;
 import it.polimi.ingsw.is25am28.Client.ClientModel.ClientShip.ClientShip;
-import it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers.GUIController;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.ANSIColors;
 import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
-import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.PlayerEndedShipDTO;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Lifeform.Lifeform;
-import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
-import it.polimi.ingsw.is25am28.Model.Player.Player;
-import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
+
 import javafx.animation.TranslateTransition;
 import javafx.application.Platform;
-import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import javafx.util.Duration;
 
 import java.net.URL;
 import java.util.*;
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 
 public class GUIUtils {
 

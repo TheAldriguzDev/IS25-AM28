@@ -1,23 +1,12 @@
 package it.polimi.ingsw.is25am28.Client.UI.GUI.SceneControllers;
 
-import it.polimi.ingsw.is25am28.Client.UI.CommandCTX;
 import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Model.Player.PlayerColor;
-import it.polimi.ingsw.is25am28.Network.Messages.ConfigGame;
-import javafx.animation.FadeTransition;
-import javafx.animation.PauseTransition;
-import javafx.animation.SequentialTransition;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
-import javafx.util.Duration;
-
-import java.util.Objects;
 
 /**
  * The CreateGameController class handles the logic and UI interactions for creating a new game

@@ -6,8 +6,6 @@ import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
 import java.util.*;
 
 import static it.polimi.ingsw.is25am28.Model.Connector.*;
-import static it.polimi.ingsw.is25am28.Model.Connector.ONE_PIPE;
-import static it.polimi.ingsw.is25am28.Model.Connector.TWO_PIPES;
 
 public abstract class AbstractShip {
     public static final Map<Integer, int[][]> shipProfiles = new HashMap<>();

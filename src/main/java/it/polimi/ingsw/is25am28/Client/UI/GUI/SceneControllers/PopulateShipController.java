@@ -16,8 +16,7 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.Populate
 import it.polimi.ingsw.is25am28.Model.Components.VitalType;
 import it.polimi.ingsw.is25am28.Model.Lifeform.LifeformType;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
-import it.polimi.ingsw.is25am28.Network.Messages.PopulateShip;
-import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +24,6 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -33,11 +31,9 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 /**
  * The PopulateShipController class manages the GUI interactions and logic required for populating

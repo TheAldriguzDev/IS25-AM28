@@ -10,12 +10,11 @@ import it.polimi.ingsw.is25am28.Client.UI.TUI.Utils.PrintUtils;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.FixShipDTO;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.ShipConstruction.FixedComponentDTO;
 import it.polimi.ingsw.is25am28.Model.Ship.AbstractShip;
-import it.polimi.ingsw.is25am28.Network.Messages.FixShip;
 import it.polimi.ingsw.is25am28.Utils.Pair.Pair;
+
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ToggleButton;

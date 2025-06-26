@@ -99,6 +99,19 @@ public final class ShipContructionState extends State implements TimerObserver {
     }
 
     /**
+     * Returns the reference of this state's components list
+     * <br>
+     * NOTE: This method is used ONLY in GameModelTest.java to
+     *       have the shuffled list of components and thus precisely
+     *       build the ship to test specific configurations.
+     *
+     * @return The shuffled list of components.
+     */
+    public List<Component> getComponents() {
+        return this.components;
+    }
+
+    /**
      * Either selects or deselects the given subdeck
      *
      * @param player The player that initiated this action

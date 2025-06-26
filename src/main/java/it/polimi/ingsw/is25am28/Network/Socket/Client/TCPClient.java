@@ -18,7 +18,6 @@ import it.polimi.ingsw.is25am28.Network.UpdateHandler.UpdateHandler;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Objects;
 import java.util.concurrent.*;
 
 public class TCPClient implements VirtualViewSocket {
@@ -210,11 +209,7 @@ public class TCPClient implements VirtualViewSocket {
 
     @Override
     public void flipTimer(String playerNickname) throws Exception {
-        try {
-            this.sendMessage(new FlipTimer(playerNickname));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.sendMessage(new FlipTimer(playerNickname));
     }
 
     @Override
@@ -258,11 +253,8 @@ public class TCPClient implements VirtualViewSocket {
      * @param message the {@code Message} object to be sent to the server, representing
      *                client-to-server communication data
      */
-    private void sendMessage(Message message) {
-        try {
-            this.output.sendMessage(message); // This will invoke the SocketServerHandler
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    private void sendMessage(Message message) throws Exception {
+        // This will invoke the SocketServerHandler
+        this.output.sendMessage(message);
     }
 }
