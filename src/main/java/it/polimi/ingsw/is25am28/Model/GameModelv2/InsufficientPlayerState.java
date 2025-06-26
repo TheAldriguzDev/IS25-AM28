@@ -10,7 +10,7 @@ import it.polimi.ingsw.is25am28.Timer.TimerObserver.TimerObserver;
 import java.util.List;
 
 public final class InsufficientPlayerState extends State implements TimerObserver {
-    private static final int countdownMillis = 20 * 1000;
+    private static final int countdownMillis = 120 * 1000;
 
     // This is the previous game state that was active before we entered the "InsufficientPlayerState"
     private final State prevState;
