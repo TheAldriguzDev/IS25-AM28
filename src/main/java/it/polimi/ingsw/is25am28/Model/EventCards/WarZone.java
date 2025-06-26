@@ -514,11 +514,6 @@ public class WarZone extends EventCard {
             throw new IllegalArgumentException("You didn't remove the right amount of batteries, please try again");
         }
 
-        // This check cannot be made, if the list sent by the player is smaller than requiredItems, the player's batteries must be taken instead
-//        if (itemsToBeRemoved.size() != this.requiredItems) {
-//            throw new IllegalArgumentException("The itemsToBeRemoved size does not match with the card requirements!");
-//        }
-
         if (!itemsToBeRemoved.isEmpty()) {
             this.droppedResources.put(player.getNickname(), itemsToBeRemoved);
         }
@@ -583,12 +578,6 @@ public class WarZone extends EventCard {
     private WarZone handleRequiredCrew(Player player, WarZoneJSON warZoneJSON) {
         // Get the list of components where we need to remove the lifeForm of the given player
         List<ComponentHelper<LifeformType>> lifeFormToBeRemoved = new ArrayList<>(warZoneJSON.getLifeformsToBeRemoved());
-
-//        if (lifeFormToBeRemoved.size() != this.requiredCrew && lifeFormToBeRemoved.size() != player.getShip().getAllLifeforms().size()) {
-//            throw new IllegalArgumentException("The removed crew members are not enough!");
-//        } else if (lifeFormToBeRemoved.size() > this.requiredCrew) {
-//            throw new IllegalArgumentException("You didn't remove the right amount of crew members, please try again");
-//        }
 
         int numOfCrewToRemove = warZoneJSON.getLifeformsToBeRemoved().size();
         int numOfTotalCrew = player.getShip().getAllLifeforms().size();

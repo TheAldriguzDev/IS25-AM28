@@ -14,7 +14,6 @@ import it.polimi.ingsw.is25am28.Model.ActionJSON.ActionJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.CardStateJSON;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.ComponentHelper;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.CardRoundDTO;
-import it.polimi.ingsw.is25am28.Model.EventCards.Epidemy;
 import it.polimi.ingsw.is25am28.Model.Exceptions.OutOfGridException;
 import it.polimi.ingsw.is25am28.Model.Items.Item;
 import it.polimi.ingsw.is25am28.Model.Items.ItemColor;
@@ -1419,14 +1418,9 @@ public class CardRoundController extends GUIController {
             regionToRemove.setDisable(true);
             regionToRemove.setStyle("-fx-background-color: transparent;");
 
-//            System.out.println(PrintUtils.addColor("RIMOSSO STORAGE DA SVUOTARE DALLE REGIONI", ANSIColors.MAGENTA));
             this.emptiedStoragesRegions.put(guiUtils.keyFromCoords(row, col), this.storagesToEmptyRegions.get(guiUtils.keyFromCoords(row, col)));
             this.storagesToEmptyRegions.remove(guiUtils.keyFromCoords(row, col));
             this.shipGrid.getChildren().remove(regionToRemove);
-//            System.out.println("LISTA STORAGES DA SVUOTARE DISPONIBILI (PRIMA): " + this.storagesToEmptyRegions);
-//            System.out.println("Regione rimossa: " + regionToRemove);
-//            System.out.println("LISTA STORAGES DA SVUOTARE DISPONIBILI (DOPO): " + this.storagesToEmptyRegions);
-//            this.itemsMap.remove(guiUtils.keyFromCoords(row, col));
         }
 
         this.initStatsBox();

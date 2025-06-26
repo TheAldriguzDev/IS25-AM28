@@ -57,7 +57,7 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         // Load the tiles
         this.components = loader.getTiles();
-//        Collections.shuffle(this.components); // TODO uncomment before 27/06/2025
+        Collections.shuffle(this.components);
         this.selected_components = new HashSet<>();
         this.flipped_components = new HashSet<>();
 
@@ -72,10 +72,6 @@ public final class ShipContructionState extends State implements TimerObserver {
         if (this.gameLevel != 0) {
             this.hourGlass = new HourGlass(this.gameLevel);
             this.hourGlass.addTimerSubscriber(this);
-
-            // this.hourGlass.setDurationInMillis(3000);   // 3s
-            // this.hourGlass.setDurationInMillis(10000);  // 10s
-
             this.hourGlass.flip();
         }
         else {
@@ -369,14 +365,6 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         state.setStateName(this.toString());
         state.setEventType(ShipConstructionType.SHIP_EVENT.toString());
-
-        // TODO remove after testing
-//        try {
-//            FastShipLoader fastShipLoader = new FastShipLoader();
-//            fastShipLoader.dumpShipJSON(this.model.getPlayers().get(player).getShip());
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
 
         return state;
     }

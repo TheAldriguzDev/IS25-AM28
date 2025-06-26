@@ -4,9 +4,7 @@ import it.polimi.ingsw.is25am28.Client.UI.GUI.GUIHandler;
 import it.polimi.ingsw.is25am28.Model.ActionJSON.State.EndGameDTO;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Label;
 
@@ -32,10 +30,7 @@ public class EndGameController extends GUIController {
             leaderBoard.getChildren().add(label);
         }
 
-//TODO: color through model
-
-        List<String> orderedPlayers = new ArrayList<>();
-        orderedPlayers = state.getPlayersPositionResult().entrySet()
+        List<String> orderedPlayers = state.getPlayersPositionResult().entrySet()
                 .stream()
                 .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
                 .map(Map.Entry::getKey)

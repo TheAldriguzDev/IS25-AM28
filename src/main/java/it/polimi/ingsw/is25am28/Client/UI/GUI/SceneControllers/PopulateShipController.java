@@ -317,14 +317,7 @@ public class PopulateShipController extends GUIController {
                 // Updating the icons
                 ClientCabin cabin = (ClientCabin) targetShip.getComponent(row, col);
                 guiUtils.initCabinLifeFormIcons(cabin, this.lifeFormsMap.get(targetPlayer).get(guiUtils.keyFromCoords(row, col)));
-
-//                Region cell = new Region();
-//                cell.setStyle("-fx-background-color: rgba(255, 0, 0, 0.5);");
-//
-//                this.playersShipGridPane.get(targetPlayer).add(cell, ofsCol, ofsRow);
             }
-
-
         });
     }
 
