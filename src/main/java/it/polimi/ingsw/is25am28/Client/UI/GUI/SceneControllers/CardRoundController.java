@@ -555,7 +555,11 @@ public class CardRoundController extends GUIController {
         resourceBankLabel.setFont(Font.font("System", FontWeight.BOLD, 13));
         this.resourceBankBox.getChildren().add(resourceBankLabel);
         Map<ItemColor, Integer> resources = this.clientModel.getResourceBank().getResources();
-        this.resourceBankBox.getChildren().add(new Label(resources.get(ItemColor.RED) + "🟥 " + resources.get(ItemColor.YELLOW) + "🟨 " + resources.get(ItemColor.GREEN) + "🟩 " + resources.get(ItemColor.BLUE) + "🟦 "));
+        int red = resources.get(ItemColor.RED);
+        int yellow = resources.get(ItemColor.YELLOW);
+        int green = resources.get(ItemColor.GREEN);
+        int blue = resources.get(ItemColor.BLUE);
+        this.resourceBankBox.getChildren().add(new Label((red < 100 ? String.valueOf(red) : "∞") + "🟥 " + (yellow < 100 ? String.valueOf(yellow) : "∞") + "🟨 " + (green < 100 ? String.valueOf(green) : "∞") + "🟩 " + (blue < 100 ? String.valueOf(blue) : "∞") + "🟦 "));
     }
 
     /**
