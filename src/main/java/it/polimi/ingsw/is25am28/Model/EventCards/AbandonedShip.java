@@ -179,7 +179,7 @@ public class AbandonedShip extends EventCard {
                                 .findFirst()
                                 .orElseThrow(() -> new NoSuchElementException("The requested lifeform has not been found in the given cabin"));
 
-                        tmpCabin.removeInhabitant(tmpLifeFormToBeRemoved);
+                        ship.removeLifeformFromCabin(lifeform.getI(), lifeform.getJ(), tmpLifeFormToBeRemoved.getLifeformType());
                     }
                 );
             }

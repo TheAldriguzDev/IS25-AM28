@@ -177,9 +177,9 @@ public class Slavers extends EventCard {
                             Lifeform tmpLifeFormToBeRemoved = tmpCabin.getInhabitants().stream()
                                     .filter( i -> i.getLifeformType().equals(l))
                                     .findFirst()
-                                    .orElseThrow( () -> new NoSuchElementException("The requested lifeForm has not been found in the given cabin"));
+                                    .orElseThrow(() -> new NoSuchElementException("The requested lifeForm has not been found in the given cabin"));
 
-                            tmpCabin.removeInhabitant(tmpLifeFormToBeRemoved);
+                            player.getShip().removeLifeformFromCabin(lifeForm.getI(), lifeForm.getJ(), tmpLifeFormToBeRemoved.getLifeformType());
                         });
                     }
 
