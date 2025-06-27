@@ -168,14 +168,28 @@ public class PopulateShipController extends GUIController {
                         for(ClientComponent component : this.mainShip.getNearestReachableComponents(cabin)) {
                             if (component != null && component.getClass().equals(ClientVital.class)) {
                                 ClientVital vital = (ClientVital) component;
-                                if (vital.getVitalType().equals(VitalType.PURPLE_VITAL)) {
-                                    this.purpleToggle.setDisable(false);
-                                    // Add the cabin to the purpleAlienRegion
-                                    this.purpleAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
-                                } else { // Purple vital
-                                    this.brownToggle.setDisable(false);
-                                    // Add the cabin to the brownAlienRegion
-                                    this.brownAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                                boolean anotherAlienPresent = false;
+                                for (ClientComponent component2 : this.mainShip.getNearestReachableComponents(vital)) {
+                                    if (component2 != null && component2.getClass().equals(ClientCabin.class)) {
+                                        ClientCabin cabin2 = (ClientCabin) component2;
+                                        // If there is another cabin near the vital with an alien, the corresponding alien button stays disabled
+                                        if (!cabin2.equals(cabin) && !cabin2.getInhabitants().isEmpty() && !cabin2.getInhabitants().getFirst().getLifeformType().equals(LifeformType.ASTRONAUT)) {
+                                            anotherAlienPresent = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (!anotherAlienPresent) {
+                                    if (vital.getVitalType().equals(VitalType.PURPLE_VITAL)) {
+                                        this.purpleToggle.setDisable(false);
+                                        // Add the cabin to the purpleAlienRegion
+                                        this.purpleAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                                    } else { // Purple vital
+                                        this.brownToggle.setDisable(false);
+                                        // Add the cabin to the brownAlienRegion
+                                        this.brownAlienCabinRegion.put(this.guiUtils.keyFromCoords(cabin.getI(), cabin.getJ()), cell);
+                                    }
                                 }
                             }
                         }
