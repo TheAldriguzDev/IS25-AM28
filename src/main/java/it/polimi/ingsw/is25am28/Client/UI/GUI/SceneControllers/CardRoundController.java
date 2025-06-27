@@ -2372,6 +2372,10 @@ public class CardRoundController extends GUIController {
 
     }
 
+    /**
+     * Removes the given player form the board
+     * @param playerNickname the nickname of the player to remove from the board
+     */
     public void handleRemovePlayerFromBoard(String playerNickname) {
         this.guiUtils.removePlayerFromBoard(playerNickname, this.clientModel.getDifficultyLevel() == 0 ? viewGameBoardStackPaneLevel0 : viewGameBoardStackPaneLevel2, playersRocketBoard);
     }
