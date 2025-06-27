@@ -67,7 +67,12 @@ public class ClientShipConstructionState extends ClientState {
         if (reservedComponents != null) {
             this.reservedComponents.clear();
             for (Integer id : reservedComponents) {
-                this.reservedComponents.add(this.components.get(id));
+                Optional<ClientComponent> compOpt = this.components
+                                                    .stream()
+                                                    .filter(c -> c.getID() == id)
+                                                    .findFirst();
+
+                compOpt.ifPresent(this.reservedComponents::add);
             }
         }
     }
