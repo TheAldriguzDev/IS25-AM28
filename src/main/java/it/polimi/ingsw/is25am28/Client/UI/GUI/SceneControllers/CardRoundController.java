@@ -2359,7 +2359,7 @@ public class CardRoundController extends GUIController {
                         for (Map.Entry<String, Integer> entry : cardStateJSON.getUpdatedPositions().entrySet()) {
                             this.guiUtils.placePlayerInBoard(
                                     entry.getKey(),
-                                    2,
+                                    0,
                                     18,
                                     viewGameBoardStackPaneLevel0,
                                     playersRocketBoard
