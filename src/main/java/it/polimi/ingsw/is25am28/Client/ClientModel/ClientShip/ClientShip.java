@@ -262,13 +262,13 @@ public class ClientShip extends AbstractShip implements WidgetTUIGenerator {
             int id = (int) map.get("id");
 
             int comp_i = (int) map.get("row");
-            int comp_j = (int ) map.get("col");
+            int comp_j = (int) map.get("col");
 
             if (comp_i == 6 && comp_j == 6) {
                 continue;
             }
 
-            int direction = (int ) map.get("direction");
+            int direction = (int) map.get("direction");
 
             ClientComponent comp = componentMap.get(id);
             if (comp != null) {

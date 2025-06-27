@@ -192,8 +192,8 @@ public class ShipConstructionController extends GUIController {
      */
     private void initSidePanel() {
         // Display and start the timer container only if the game level is != 0
-        // this.startCountDownTimer();
         this.timerContainer.setVisible(this.clientModel.getDifficultyLevel() != 0);
+        this.fastShipButton.setVisible(this.clientModel.getDifficultyLevel() != 0);
 
         this.populateViewShipButtons();
     }

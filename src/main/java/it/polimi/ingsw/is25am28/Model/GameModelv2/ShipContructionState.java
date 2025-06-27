@@ -25,6 +25,7 @@ public final class ShipContructionState extends State implements TimerObserver {
     private final List<String> players_done; // List of players nickname that ended to build their ship
 
     private final List<Component> components;
+    private final Map<Integer, Component> componentMap;
 
     // Needed to send the data to the clients --> they need to understand in which state is each component
     private final Set<Integer> selected_components;
@@ -57,6 +58,12 @@ public final class ShipContructionState extends State implements TimerObserver {
 
         // Load the tiles
         this.components = loader.getTiles();
+        this.componentMap = new HashMap<>();
+
+        for (Component component : components) {
+            componentMap.put(component.getId(), component);
+        }
+
         Collections.shuffle(this.components);
         this.selected_components = new HashSet<>();
         this.flipped_components = new HashSet<>();
@@ -326,7 +333,7 @@ public final class ShipContructionState extends State implements TimerObserver {
         }
 
         // Get the component, set the rotation and add it to the player ship
-        Component baseComp = components.get(componentID);
+        Component baseComp = componentMap.get(componentID);
         baseComp.setRotation(rotation);
         ship.addComponent(baseComp, i, j);
 
