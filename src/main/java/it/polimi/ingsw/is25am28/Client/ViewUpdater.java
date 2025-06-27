@@ -150,8 +150,14 @@ public class ViewUpdater implements StateVisitor {
     @Override
     public void visit(ReservedComponentDTO state) throws Exception {
         if (state.getPlayerNickname().equals(this.model.getNickname())) {
-            ClientComponent comp = this.model.getState().getConstructionShipComponents().get(state.getId());
-            this.model.getState().reserveTile(comp);
+            Optional<ClientComponent> compOpt = this.model.getState().getConstructionShipComponents()
+                    .stream()
+                    .filter(c -> c.getID() == state.getId())
+                    .findFirst();
+
+            compOpt.ifPresent(comp -> {
+                this.model.getState().reserveTile(comp);
+            });
         }
     }
 
@@ -241,11 +247,16 @@ public class ViewUpdater implements StateVisitor {
         synchronized (this.model) {
             if (state.getEventType().equals(ShipConstructionType.PLACE_EVENT.toString())) {
                 // Get the component
-                ClientComponent comp = this.model.getState().getConstructionShipComponents().get(state.getId());
-                comp.setRotation(state.getRotation());
+                Optional<ClientComponent> compOpt = this.model.getState().getConstructionShipComponents()
+                        .stream()
+                        .filter(c -> c.getID() == state.getId())
+                        .findFirst();
 
-                Optional<ClientShip> optionalShip = this.model.getShipOfPlayer(state.getPlayerNickname());
-                optionalShip.ifPresent(ship -> ship.addComponent(comp, state.getI(), state.getJ()));
+                compOpt.ifPresent(comp -> {
+                    comp.setRotation(state.getRotation());
+                    Optional<ClientShip> optionalShip = this.model.getShipOfPlayer(state.getPlayerNickname());
+                    optionalShip.ifPresent(ship -> ship.addComponent(comp, state.getI(), state.getJ()));
+                });
 
                 this.ui.updateShipPlacedComponent(state);
             }
