@@ -174,50 +174,54 @@ public class ShipConstructionScreen extends Screen {
             command.appendString("Finish ship");
             this.componentSelectionCommandsWidget.addCommand(command);
 
-            // (4) - Fast build
+            if (this.model.getDifficultyLevel() != 0) {
+                // (4) - Fast build
+                command = new CommandWidgetTUI(
+                        "4",
+                        () -> {
+                            try {
+                                // Receiving the custom ship from the server
+                                this.requestPremadeShip();
+                            }
+                            catch (Exception e) {
+                                System.out.println(PrintUtils.addColor("ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.", ANSIColors.RED));
+                            }
+                        }
+                );
+                command.appendString("Fast build");
+                this.componentSelectionCommandsWidget.addCommand(command);
+            }
+        }
+
+        if (this.model.getDifficultyLevel() != 0) {
+            // (5) - Flip timer
             command = new CommandWidgetTUI(
-                    "4",
+                    "5",
                     () -> {
                         try {
-                            // Receiving the custom ship from the server
-                            this.requestPremadeShip();
+                            this.flipTimer();
                         }
                         catch (Exception e) {
-                            System.out.println(PrintUtils.addColor("ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.", ANSIColors.RED));
+                            clearTerminal();
+
+                            new WidgetTUI()
+                                    .appendString(
+                                            PrintUtils.addColor(
+                                                    "ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.",
+                                                    ANSIColors.RED
+                                            )
+                                    )
+                                    .addPadding(0, 1, 0, 1)
+                                    .wrapWidgetWithBorder()
+                                    .printWidget();
+
+                            this.getComponentSelectionCommand();
                         }
                     }
             );
-            command.appendString("Fast build");
+            command.appendString("Flip timer");
             this.componentSelectionCommandsWidget.addCommand(command);
         }
-
-        // (5) - Flip timer
-        command = new CommandWidgetTUI(
-            "5",
-            () -> {
-                try {
-                    this.flipTimer();
-                }
-                catch (Exception e) {
-                    clearTerminal();
-
-                    new WidgetTUI()
-                        .appendString(
-                            PrintUtils.addColor(
-                                "ERROR: \"" + e.getClass().getSimpleName() + "\" exception was thrown. Please try again.",
-                                ANSIColors.RED
-                            )
-                        )
-                        .addPadding(0, 1, 0, 1)
-                        .wrapWidgetWithBorder()
-                        .printWidget();
-
-                    this.getComponentSelectionCommand();
-                }
-            }
-        );
-        command.appendString("Flip timer");
-        this.componentSelectionCommandsWidget.addCommand(command);
 
         // (6) - Visualize subdeck
         command = new CommandWidgetTUI(
